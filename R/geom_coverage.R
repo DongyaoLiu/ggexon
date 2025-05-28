@@ -43,13 +43,6 @@ GeomCoverage <- ggproto("GeomCoverage", GeomRect,
                         print("didn't constrain the visualization region")
                       }
 
-                      #' get translation data.
-                      data = data %>% group_by(track) %>%
-                        mutate(xmin2 = min(xmin)) %>%
-                        mutate(x_adjustment = 0) %>%
-                        mutate(xmin = xmin - xmin2, xmax = xmax - xmin2)
-                      translation_data = unique(data$xmin2)
-
 
                       #' select transcript data.
                       data = data  %>% filter(type == params$annotation_type)
@@ -109,7 +102,7 @@ GeomCoverage <- ggproto("GeomCoverage", GeomRect,
                       CoverageTable = CoverageTable %>% filter(height >= params$y_threshold)
 
                       #' translation of coordinates of CoverageTable
-                      CoverageTable = CoverageTable %>% mutate(position = position - translation_data)
+                      #CoverageTable = CoverageTable %>% mutate(position = position - translation_data)
 
 
 
@@ -148,7 +141,8 @@ GeomCoverage <- ggproto("GeomCoverage", GeomRect,
                                                                xmax = position + 0.5,
                                                                PANEL = 1,
                                                                ymax = height2 + ymin)
-                      CoverageTable
+
+                      return(CoverageTable)
                     },
 
                     draw_key = draw_key_polygon
@@ -185,38 +179,32 @@ geom_coverage <- function(mapping = NULL, data = NULL,
 
 
 # Function to read a specific region from a BigWig file and add a group column
-read_bigwig_region <- function(bigwig_file, chr, start, end, track_name = "track1", 
+read_bigwig_region <- function(bigwig_file, chr, start, end, track_name = "track1",
                                x_threshold = 1, y_threshold = 0) {
-  # Load the rtracklayer package
-  if (!requireNamespace("rtracklayer", quietly = TRUE)) {
-    install.packages("rtracklayer")
-  }
-  library(rtracklayer)
-  
   # Define the genomic region of interest
   region <- GRanges(seqnames = chr, ranges = IRanges(start = start, end = end))
-  
+
   # Import the BigWig file for the specified region
-  bigwig_data <- import(bigwig_file, which = region)
-  
+  bigwig_data <- rtracklayer::import(bigwig_file, which = region, as = "GRanges")
+
   # Convert to a data frame
   bigwig_df <- as.data.frame(bigwig_data)
-  
+
   # Create the initial table
-  result <- data.frame(
+  result <- tibble(
     track = track_name,
     chr = bigwig_df$seqnames,
     position = bigwig_df$start,
     height = bigwig_df$score
   )
-  
+
   # Apply y_threshold: Treat heights below y_threshold as 0
   result$height[result$height < y_threshold] <- 0
-  
+
   # Add a group column based on consecutive rows with height = 0
   result$group <- 1 # Initialize the group column
   zero_count <- 0 # Counter for consecutive rows with height = 0
-  
+
   if (nrow(result) > 1) {
     for (i in 2:nrow(result)) {
       if (result$height[i] == 0) {
@@ -224,7 +212,7 @@ read_bigwig_region <- function(bigwig_file, chr, start, end, track_name = "track
       } else {
         zero_count <- 0
       }
-      
+
       # If the number of consecutive rows with height = 0 exceeds the x_threshold, start a new group
       if (zero_count > x_threshold) {
         result$group[i] <- result$group[i - 1] + 1
@@ -233,7 +221,6 @@ read_bigwig_region <- function(bigwig_file, chr, start, end, track_name = "track
       }
     }
   }
-  
   return(result)
 }
 
