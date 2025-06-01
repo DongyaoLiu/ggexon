@@ -182,28 +182,8 @@ print.rel <- function(x, ...) print(noquote(paste(x, " *", sep = "")))
 #' @keywords internal
 is.rel <- function(x) inherits(x, "rel")
 
-#' Render a specified theme element into a grob
-#'
-#' Given a theme object and element name, returns a grob for the element.
-#' Uses [`element_grob()`] to generate the grob.
-#' @param theme The theme object
-#' @param element The element name given as character vector
-#' @param ... Other arguments provided to [`element_grob()`]
-#' @param name Character vector added to the name of the grob
-#' @keywords internal
 #' @export
-element_render <- function(theme, element, ..., name = NULL) {
-
-  # Get the element from the theme, calculating inheritance
-  el <- calc_element(element, theme)
-  if (is.null(el)) {
-    cli::cli_inform("Theme element {.var {element}} is missing")
-    return(zeroGrob())
-  }
-
-  grob <- element_grob(el, ...)
-  ggname(paste(element, name, sep = "."), grob)
-}
+element_render <- ggplot2::element_render 
 
 
 # Returns NULL if x is length 0
@@ -213,100 +193,8 @@ len0_null <- function(x) {
 }
 
 
-#' Generate grid grob from theme element
-#'
-#' @param element Theme element, i.e. `element_rect` or similar.
-#' @param ... Other arguments to control specific of rendering. This is
-#'   usually at least position. See the source code for individual methods.
-#' @keywords internal
 #' @export
-element_grob <- function(element, ...) {
-  UseMethod("element_grob")
-}
-
-#' @export
-element_grob.element_blank <- function(element, ...)  zeroGrob()
-
-#' @export
-element_grob.element_rect <- function(element, x = 0.5, y = 0.5,
-  width = 1, height = 1,
-  fill = NULL, colour = NULL, linewidth = NULL, linetype = NULL, ..., size = deprecated()) {
-
-  if (lifecycle::is_present(size)) {
-    deprecate_soft0("3.4.0", "element_grob.element_rect(size)", "element_grob.element_rect(linewidth)")
-    linewidth <- size
-  }
-
-  # The gp settings can override element_gp
-  gp <- gpar(lwd = len0_null(linewidth * .pt), col = colour, fill = fill, lty = linetype)
-  element_gp <- gpar(lwd = len0_null(element$linewidth * .pt), col = element$colour,
-    fill = element$fill, lty = element$linetype)
-
-  rectGrob(x, y, width, height, gp = modify_list(element_gp, gp), ...)
-}
-
-
-#' @export
-element_grob.element_text <- function(element, label = "", x = NULL, y = NULL,
-  family = NULL, face = NULL, colour = NULL, size = NULL,
-  hjust = NULL, vjust = NULL, angle = NULL, lineheight = NULL,
-  margin = NULL, margin_x = FALSE, margin_y = FALSE, ...) {
-
-  if (is.null(label))
-    return(zeroGrob())
-
-  vj <- vjust %||% element$vjust
-  hj <- hjust %||% element$hjust
-  margin <- margin %||% element$margin
-
-  angle <- angle %||% element$angle %||% 0
-
-  # The gp settings can override element_gp
-  gp <- gpar(fontsize = size, col = colour,
-    fontfamily = family, fontface = face,
-    lineheight = lineheight)
-  element_gp <- gpar(fontsize = element$size, col = element$colour,
-    fontfamily = element$family, fontface = element$face,
-    lineheight = element$lineheight)
-
-  titleGrob(label, x, y, hjust = hj, vjust = vj, angle = angle,
-    gp = modify_list(element_gp, gp), margin = margin,
-    margin_x = margin_x, margin_y = margin_y, debug = element$debug, ...)
-}
-
-
-
-#' @export
-element_grob.element_line <- function(element, x = 0:1, y = 0:1,
-  colour = NULL, linewidth = NULL, linetype = NULL, lineend = NULL,
-  default.units = "npc", id.lengths = NULL, ..., size = deprecated()) {
-
-  if (lifecycle::is_present(size)) {
-    deprecate_soft0("3.4.0", "element_grob.element_line(size)", "element_grob.element_line(linewidth)")
-    linewidth <- size
-  }
-
-  # The gp settings can override element_gp
-  gp <- gpar(
-    col = colour, fill = colour,
-    lwd = len0_null(linewidth * .pt), lty = linetype, lineend = lineend
-  )
-  element_gp <- gpar(
-    col = element$colour, fill = element$colour,
-    lwd = len0_null(element$linewidth * .pt), lty = element$linetype,
-    lineend = element$lineend
-  )
-  arrow <- if (is.logical(element$arrow) && !element$arrow) {
-    NULL
-  } else {
-    element$arrow
-  }
-  polylineGrob(
-    x, y, default.units = default.units,
-    gp = modify_list(element_gp, gp),
-    id.lengths = id.lengths, arrow = arrow, ...
-  )
-}
+element_grob <- ggplot2::element_grob
 
 #' Define and register new theme elements
 #'
