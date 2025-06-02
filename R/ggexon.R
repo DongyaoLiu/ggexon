@@ -8,11 +8,33 @@ ggexon <- function(data = NULL, mapping = aes(), ...,
 #' @export
 ggexon.default <- function(data = NULL, mapping = aes(), ...,
                            environment = parent.frame()){
-    p = ggplot2::ggplot(data = data, mapping = mapping, ...,
-                            environment = environment)
-    class(p) = c("ggexon", "ggplot","gg")
-    print(class(p))
-    return(p)
+  if (!missing(mapping) && !is_mapping(mapping)) {
+    cli::cli_abort(c(
+      "{.arg mapping} must be created with {.fn aes}.",
+      "x" = "You've supplied {.obj_type_friendly {mapping}}."
+    ))
+  }
+
+  data <- fortify(data, ...)
+  print(environment)
+
+  p <- structure(list(
+    data = data,
+    layers = list(),
+    scales = ggplot2:::scales_list(),
+    guides = ggplot2:::guides_list(),
+    mapping = mapping,
+    theme = list(),
+    coordinates = coord_cartesian(default = TRUE),
+    facet = ggplot2::facet_null(),
+    plot_env = environment,
+    layout = ggplot2::ggproto(NULL, Layout)), class = c("gg", "ggplot", "ggexon"))
+
+  p$labels <- make_labels(mapping)
+
+  set_last_plot(p)
+  class(p) = c("ggexon", "ggplot","gg")
+  return(p)
 }
 
 #' @export
@@ -20,7 +42,7 @@ is.ggexon <- function(x) inherits(x, "ggexon")
 
 
 
-#' @export 
+#' @export
 print.ggexon <- function(x, newpage = is.null(vp), vp = NULL, ...) {
   set_last_plot(x)
   if (newpage) grid.newpage()
@@ -34,11 +56,12 @@ print.ggexon <- function(x, newpage = is.null(vp), vp = NULL, ...) {
   )
   cli::cli_alert_info("Building......")
   data <- ggplot_build(x)
+  print(class(data))
   cli::cli_alert_success("Building finished")
 
 
   cli::cli_alert_info("Start Gtabling")
-  gtable <- ggplot_gtable(data)
+  gtable <- ggplot_gtable2(data)
   cli::cli_alert_success("Gtabling finished")
   if (is.null(vp)) {
     grid.draw(gtable)

@@ -16,7 +16,7 @@ geom_track_backgroud <- function(mapping = NULL, data = NULL,
   )
 }
 
-GeomTrackbBackgroud <- ggproto("GeomRect", Geom,
+GeomTrackbBackgroud <- ggproto("GeomTrackbBackgroud", Geom,
                              required_aes = c("ymin", "track", "start", "end"),
                              non_missing_aes = c("linetype", "linewidth", "shape"),
                              extra_params = c("na.rm", "exon_height", "x_buffer"),
@@ -39,14 +39,8 @@ GeomTrackbBackgroud <- ggproto("GeomRect", Geom,
                                  mutate(ymin = min(ymin)) %>% slice(1) %>% ungroup() %>%
                                  mutate(xmin = xmin, track_order = dense_rank(ymin)) %>%
                                  mutate(fill = if_else(track_order %% 2 == 0,  "green", "blue"))
-                               print(data)
 
-                                 #
-                                 #mutate(fill = if_else(track_order %% 2 == 0,  "green", "blue"))
-                               ##fill
-                              print(data)
-
-                             }
+                                 }
                              ,
 
                              draw_panel = function(data, panel_params, coord){
