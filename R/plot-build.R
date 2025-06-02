@@ -36,6 +36,8 @@ ggplot_gtable2.ggexon_built <- function(data) {
 
   plot_table <- layout$render(geom_grobs, data, theme, plot$labels)
 
+  #Try rewrite the link geom data here. 
+
   # Legends
   legend_box <- plot$guides$assemble(theme)
   plot_table <- table_add_legends(plot_table, legend_box, theme)

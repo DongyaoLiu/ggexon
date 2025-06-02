@@ -17,7 +17,7 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
 
                          draw_panel = function(data, panel_params, coord, check_overlap= F){
                            data2 = data %>%group_by(transcripts) %>% mutate(gene_xmin = min(xmin), gene_xmax = max(xmax))  %>%
-                             mutate(gene_ymax = ymax , x_mid = (gene_xmax + gene_xmin)/2) %>% slice(1) %>%
+                             mutate(gene_ymax = ymax , x_mid = (gene_xmax + gene_xmin)/2) %>% dplyr::slice(1) %>%
                              dplyr::rename(x = x_mid, y = gene_ymax)
                            #print(data2, n =100)
                            data <- coord$transform(data2, panel_params)
