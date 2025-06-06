@@ -20,7 +20,7 @@ ggplot_build.ggexon <- function(plot) {
 #' @export
 ggplot_gtable2 <- function(data) {
   # Attaching the plot env to be fetched by deprecations etc.
-  attach_plot_env(data$plot$plot_env)
+  ggplot2:::attach_plot_env(data$plot$plot_env)
   print(data$plot$plot_env)
   UseMethod('ggplot_gtable2')
 }
@@ -32,9 +32,36 @@ ggplot_gtable2.ggexon_built <- function(data) {
   data <- data$data
   theme <- ggplot2:::plot_theme(plot)
 
+  
   geom_grobs <- by_layer(function(l, d) l$draw_geom(d, layout), plot$layers, data, "converting geom to grob")
-
   plot_table <- layout$render(geom_grobs, data, theme, plot$labels)
+
+
+  facet_bg <- layout$facet$draw_back(data, layout$layout, layout$panel_scales_x, 
+        layout$panel_scales_y, theme, layout$facet_params)
+  facet_fg <- layout$facet$draw_front(data, layout$layout, layout$panel_scales_x, 
+        layout$panel_scales_y, theme, layout$facet_params)
+  panels  = geom_grobs
+  panels <- lapply(seq_along(panels[[1]]), function(i) {
+        panel <- lapply(panels, `[[`, i)
+        panel <- c(facet_bg[i], panel, facet_fg[i])
+        coord_fg <- layout$coord$render_fg(layout$panel_params[[i]],
+            theme)
+        coord_bg <- layout$coord$render_bg(layout$panel_params[[i]],
+            theme)
+        if (isTRUE(theme$panel.ontop)) {
+            panel <- c(panel, list(coord_bg), list(coord_fg))
+        }
+        else {
+            panel <- c(list(coord_bg), panel, list(coord_fg))
+        }
+        ggname(paste("panel", i, sep = "-"), gTree(children = inject(gList(!!!panel))))
+    })
+  print(panels)
+  plot_table <- layout$facet$draw_panels(panels, layout$layout, 
+        layout$panel_scales_x, layout$panel_scales_y, layout$panel_params, 
+        layout$coord, data, theme, layout$facet_params)
+  return(plot_table)
 
   #Try rewrite the link geom data here. 
 
