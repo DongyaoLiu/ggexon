@@ -343,7 +343,7 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
        ROW_Target = layout[which(pair_track[2] == layout$track), "ROW"]
        new_x_Target <- ggplot2:::scale_apply(link_data, c("TStart","TEnd"), "map", SCALE_X, self$panel_scales_x)
        link_data[, c("TStart", "TEnd")] <- new_x_Target
-       }
+       
       
        y_range = self$panel_scales_y[[1]]$range$range
        if (ROW_Query > ROW_Target){
