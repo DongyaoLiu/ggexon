@@ -6,7 +6,7 @@ ggexon <- function(data = NULL, mapping = aes(), ...,
 
 
 #' @export
-ggexon.default <- function(data = NULL, mapping = aes(), ...,
+ggexon.default <- function(data = NULL, mapping = aes(), nuc_link = NULL, pro_link = NULL, ...,
                            environment = parent.frame()){
   if (!missing(mapping) && !is_mapping(mapping)) {
     cli::cli_abort(c(
@@ -28,7 +28,9 @@ ggexon.default <- function(data = NULL, mapping = aes(), ...,
     coordinates = coord_cartesian(default = TRUE),
     facet = ggplot2::facet_null(),
     plot_env = environment,
-    layout = ggplot2::ggproto(NULL, Layout)), class = c("gg", "ggplot", "ggexon"))
+    nuc_link = nuc_link %||% NULL,
+    pro_link = pro_link %||% NULL,
+    layout = ggplot2::ggproto(NULL, Layout2)), class = c("gg", "ggplot", "ggexon"))
 
   p$labels <- make_labels(mapping)
 

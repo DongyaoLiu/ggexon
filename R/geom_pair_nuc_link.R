@@ -69,19 +69,3 @@ GeomNucLink <- ggproto("GeomPanel", Geom,
                              }
 )
 
-
-
-ggplot(data = track_data) + geom_pairwise_panel(aes(xmin = start, xmax = end, 
-                                                    track = track), sandwich_ratio = c(1,2,3)) + 
-  geom_nuclink(data = nuclink_data, aes(tstart = tstart, tend = tend, tstrand = tstrand,
-                                        qstart = qstart, qend = qend, qstrand = qstrand), 
-               sandwich_ratio = c(1,2,3)) + 
-  theme_void()
-
-nuclink_data = data.frame(tstart = c(3000,10000),
-        tend = c(8000, 18000),
-        tstrand = c("+", "+"),
-        qstart = c(5000, 8000),
-        qend = c(7000, 10000),
-        qstrand = c("+", "-"))
-

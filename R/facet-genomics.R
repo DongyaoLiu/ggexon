@@ -65,18 +65,15 @@ facet_genomics <- function(facets, nrow = NULL, ncol = NULL, scales = "fixed",
 }
 
 #' @export
-FacetGenomics <- ggproto("FacetGenomics", FacetWrap, 
+FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
 
-  # for intergrating the linkage data in to original layout
-  # layout_link is the dataframe strore the layout information of link panels data.
-  layout_link = NULL,
 
   compute_link_layout = function(self, link_data){
 
     link_table <- data.frame(
       Query = sapply(strsplit(names(link_data), "_"), `[`, 1),
-      Target = sapply(strsplit(names(link_data), "_"), `[`, 2))  
-    
+      Target = sapply(strsplit(names(link_data), "_"), `[`, 2))
+
   },
 
   draw_panels = function(self, panels, layout, x_scales, y_scales, ranges, coord, data, theme, params) {
@@ -144,17 +141,23 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
 
 
   # code for arrange the extra panel for linkage data.
-  if (!is.null(params$nuc_link)) {
+  # This is unique feature of ggexon
+  # proto-code for only one link panel between two panels.
+
+
+
+  if (!is.null(params$nuc_link) && length(params$nuc_link) > 0) {
+
+    # target_query
     cli::cli_alert_info("processing nuc_link data")
+    pair_track = strsplit(names(params$nuc_link), "_")[[1]]
     link_data_names = names(params$nuc_link)
     nrow = nrow + length(link_data_names)
     panel_pos = c(1, 3, 2)
-    panels = append(panels, list(rectGrob(
-    x = 0.5, y = 0.5,        # Center position (0-1 relative coordinates)
-    width = 0.8, height = 0.6, # Width and height (relative units)
-    gp = gpar(fill = "black", col = "black") # Fill and border color
-  )))
-     }else{
+    link_grob = self$map_link_position(params$nuc_link, layout, pair_track[1], pair_track[2], x_scales, y_scales)
+    panels = append(panels, link_grob)
+
+  }else{
     cli::cli_alert_info("no nuc_link data, no extra data")
   }
 
@@ -322,43 +325,4 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
     }
   }
   panel_table
-},
-  map_link_position = function(self, link_data) {
-     # map the position of linkage data, should only used in facet-genomics.
-     layout <- self$layout
-
-     lapply(link_data, function(link_data) {
-       # c("Query", "Target")
-       pair_track = strsplit(names(link_data), "_")[[1]]
-       pair_layout = layout %>% filter(track %in% pair_track)
-       
-       # map the query position
-       SCALE_X = layout[which(pair_track[1] == layout$track) ,"SCALE_X"]
-       ROW_Query = layout[which(pair_track[1] == layout$track), "ROW"]
-       new_x_Query <- ggplot2:::scale_apply(link_data, c("QStart","QEnd"), "map", SCALE_X, self$panel_scales_x)
-       link_data[, c("QStart", "QEnd")] <- new_x_Query
-
-       # map the target position
-       SCALE_X = layout[which(pair_track[2] == layout$track) ,"SCALE_X"]
-       ROW_Target = layout[which(pair_track[2] == layout$track), "ROW"]
-       new_x_Target <- ggplot2:::scale_apply(link_data, c("TStart","TEnd"), "map", SCALE_X, self$panel_scales_x)
-       link_data[, c("TStart", "TEnd")] <- new_x_Target
-       
-      
-       y_range = self$panel_scales_y[[1]]$range$range
-       if (ROW_Query > ROW_Target){
-         Query_y = max(y_range)
-         Target_y = min(y_range)
-       }else{
-         Query_y = min(y_range)
-         Target_y = max(y_range)
-       }
-       # transform wide into a long table ? 
-
-       SCALE_Y <- layout$SCALE_Y[1]
-       new_y <- ggplot2:::scale_apply(link_data, y_vars,"map",         SCALE_Y, self$panel_scales_y)
-       link_data[, y_vars] <- new_y
-       
-       link_data
-     })
-   })
+})

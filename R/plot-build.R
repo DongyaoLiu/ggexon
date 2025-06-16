@@ -2,19 +2,98 @@
 
 #' @export
 ggplot_build.ggexon <- function(plot) {
-    # First perform standard ggplot building
-    class(plot) = "ggplot"
-  built <- ggplot2:::ggplot_build.ggplot(plot)
+    plot <- plot_clone(plot)
+    if (length(plot$layers) == 0) {
+      plot <- plot + geom_blank()
+    }
 
-      # Your custom modifications here
-  #built$custom_data <- transform_data(built$data)
-   #   built$custom_layout <- calculate_layout(built$layout)
+    layers <- plot$layers
+    data <- rep(list(NULL), length(layers))
 
-      # Preserve the original class structure
-  structure(
-    built,
-    class = c("ggexon_built", "ggplot_built")
-      )
+    scales <- plot$scales
+
+
+    # Allow all layers to make any final adjustments based
+    # on raw input data and plot info
+    data <- by_layer(function(l, d) l$layer_data(plot$data), layers, data, "computing layer data")
+    data <- by_layer(function(l, d) l$setup_layer(d, plot), layers, data, "setting up layer")
+
+    # Initialise panels, add extra data for margins & missing faceting
+    # variables, and add on a PANEL variable to data
+    layout <- create_layout2(plot$facet, plot$coordinates, plot$layout)
+    data <- layout$setup(data, plot$data, plot$plot_env)
+
+    # Compute aesthetics to produce data with generalised variable names
+    data <- by_layer(function(l, d) l$compute_aesthetics(d, plot), layers, data, "computing aesthetics")
+    data <- .ignore_data(data)
+
+    # Transform all scales
+    data <- lapply(data, scales$transform_df)
+
+    # Map and train positions so that statistics have access to ranges
+    # and all positions are numeric
+    scale_x <- function() scales$get_scales("x")
+    scale_y <- function() scales$get_scales("y")
+
+    layout$train_position(data, scale_x(), scale_y())
+    data <- layout$map_position(data)
+    data <- .expose_data(data)
+
+
+
+    # Apply and map statistics
+    data <- by_layer(function(l, d) l$compute_statistic(d, layout), layers, data, "computing stat")
+    data <- by_layer(function(l, d) l$map_statistic(d, plot), layers, data, "mapping stat to aesthetics")
+
+    # Make sure missing (but required) aesthetics are added
+    plot$scales$add_missing(c("x", "y"), plot$plot_env)
+
+    # Reparameterise geoms from (e.g.) y and width to ymin and ymax
+    data <- by_layer(function(l, d) l$compute_geom_1(d), layers, data, "setting up geom")
+
+    # Apply position adjustments
+    data <- by_layer(function(l, d) l$compute_position(d, layout), layers, data, "computing position")
+
+    # Reset position scales, then re-train and map.  This ensures that facets
+    # have control over the range of a plot: is it generated from what is
+    # displayed, or does it include the range of underlying data
+    data <- .ignore_data(data)
+    layout$reset_scales()
+    layout$train_position(data, scale_x(), scale_y())
+    layout$setup_panel_params()
+    data <- layout$map_position(data)
+
+    # Hand off position guides to layout
+    layout$setup_panel_guides(plot$guides, plot$layers)
+
+    # Train and map non-position scales and guides
+    npscales <- scales$non_position_scales()
+    if (npscales$n() > 0) {
+      lapply(data, npscales$train_df)
+      plot$guides <- plot$guides$build(npscales, plot$layers, plot$labels, data)
+      data <- lapply(data, npscales$map_df)
+    } else {
+      # Only keep custom guides if there are no non-position scales
+      plot$guides <- plot$guides$get_custom()
+    }
+    data <- .expose_data(data)
+
+    # Fill in defaults etc.
+    data <- by_layer(function(l, d) l$compute_geom_2(d), layers, data, "setting up geom aesthetics")
+
+    # Let layer stat have a final say before rendering
+    data <- by_layer(function(l, d) l$finish_statistics(d), layers, data, "finishing layer stat")
+
+    # Let Layout modify data before rendering
+    data <- layout$finish_data(data)
+
+    # Consolidate alt-text
+    plot$labels$alt <- get_alt_text(plot)
+
+    structure(
+      list(data = data, layout = layout, plot = plot, nuc_link = plot$nuc_link, pro_link = plot$pro_link),
+      class = "ggexon_built"
+    )
 }
 
 #' @export
@@ -27,19 +106,37 @@ ggplot_gtable2 <- function(data) {
 
 #' @export
 ggplot_gtable2.ggexon_built <- function(data) {
+  nuc_link <- data$nuc_link
+  pro_link <- data$pro_link
   plot <- data$plot
   layout <- data$layout
   data <- data$data
   theme <- ggplot2:::plot_theme(plot)
+  #nucleotide data.
+    if (length(nuc_link)>0) {
+      nuc_link = purrr::imap(nuc_link, layout$map_link_position)
+      print(nuc_link)
+      nuc_link = layout$map_position(nuc_link)
+      print("processing nuc_link data")
+      print(nuc_link)
+    }else{
+      nuc_link == NULL
+      print("no nuc_link data")
+    }
 
-  
+    if (length(pro_link)>0){
+      pro_link == purrr::imap(pro_link, layout$map_link_position)
+    }else{
+      pro_link == NULL
+    }
+
   geom_grobs <- by_layer(function(l, d) l$draw_geom(d, layout), plot$layers, data, "converting geom to grob")
   plot_table <- layout$render(geom_grobs, data, theme, plot$labels)
 
 
-  facet_bg <- layout$facet$draw_back(data, layout$layout, layout$panel_scales_x, 
+  facet_bg <- layout$facet$draw_back(data, layout$layout, layout$panel_scales_x,
         layout$panel_scales_y, theme, layout$facet_params)
-  facet_fg <- layout$facet$draw_front(data, layout$layout, layout$panel_scales_x, 
+  facet_fg <- layout$facet$draw_front(data, layout$layout, layout$panel_scales_x,
         layout$panel_scales_y, theme, layout$facet_params)
   panels  = geom_grobs
   panels <- lapply(seq_along(panels[[1]]), function(i) {
@@ -57,13 +154,12 @@ ggplot_gtable2.ggexon_built <- function(data) {
         }
         ggname(paste("panel", i, sep = "-"), gTree(children = inject(gList(!!!panel))))
     })
-  print(panels)
-  plot_table <- layout$facet$draw_panels(panels, layout$layout, 
-        layout$panel_scales_x, layout$panel_scales_y, layout$panel_params, 
+  plot_table <- layout$facet$draw_panels(panels, layout$layout,
+        layout$panel_scales_x, layout$panel_scales_y, layout$panel_params,
         layout$coord, data, theme, layout$facet_params)
   return(plot_table)
 
-  #Try rewrite the link geom data here. 
+  #Try rewrite the link geom data here.
 
   # Legends
   legend_box <- plot$guides$assemble(theme)
