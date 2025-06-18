@@ -76,7 +76,7 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
 
   },
 
-  draw_panels = function(self, panels, layout, x_scales, y_scales, ranges, coord, data, theme, params) {
+  draw_panels = function(self, panels, layout, x_scales, y_scales, ranges, coord, data, theme, params, nuc_link_grob = NULL, pro_link_grob = NULL) {
     if ((params$free$x || params$free$y) && !coord$is_free()) {
       cli::cli_abort("{.fn {snake_class(self)}} can't use free scales with {.fn {snake_class(coord)}}.")
     }
@@ -146,25 +146,24 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
 
 
 
-  if (!is.null(params$nuc_link) && length(params$nuc_link) > 0) {
+  if (!is.null(nuc_link_grob) && length(nuc_link_grob) > 0) {
 
     # target_query
-    cli::cli_alert_info("processing nuc_link data")
-    pair_track = strsplit(names(params$nuc_link), "_")[[1]]
-    link_data_names = names(params$nuc_link)
+    cli::cli_alert_info("processing nuc_link data by facet_genomics")
+    pair_track = strsplit(names(nuc_link_grob), "_")[[1]]
+    link_data_names = names(nuc_link_grob)
     nrow = nrow + length(link_data_names)
     panel_pos = c(1, 3, 2)
-    link_grob = self$map_link_position(params$nuc_link, layout, pair_track[1], pair_track[2], x_scales, y_scales)
-    panels = append(panels, link_grob)
-
+    panels = append(panels, nuc_link_grob)
   }else{
-    cli::cli_alert_info("no nuc_link data, no extra data")
+    cli::cli_alert_info("nuc_link is empty")
   }
 
   empty_table <- matrix(list(zeroGrob()), nrow = nrow, ncol = ncol)
   panel_table <- empty_table
   panel_table[panel_pos] <- panels
-  print(panel_table)
+
+
   empties <- apply(panel_table, c(1,2), function(x) is.zero(x[[1]]))
 
   panel_table <- gtable_matrix("layout", panel_table,

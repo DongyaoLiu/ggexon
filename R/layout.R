@@ -28,11 +28,11 @@ Layout2 <- ggproto("Layout2", Layout,
     y_panel_range = self$panel_params[[1]]$y$scale$range$range
 
     if (ROW_Query > ROW_Target){
-      Query_y = max(y_range)
-      Target_y = min(y_range)
-    }else{
       Query_y = min(y_range)
       Target_y = max(y_range)
+    }else{
+      Query_y = max(y_range)
+      Target_y = min(y_range)
     }
 
     apply_rescale <- function(x, panel, scales_list) {
@@ -71,7 +71,8 @@ Layout2 <- ggproto("Layout2", Layout,
       select(id ,draw_order, x, y, PANEL) %>% group_by(id) %>%
       filter(!any(if_any(c(x, y), is.na))) %>% group_by(PANEL) %>%
       mutate(x_scaled = apply_rescale(x, dplyr::first(PANEL), x_panel_range_list)) %>% group_by(id) %>%
-      filter(all(x_scaled <= 1)) %>% ungroup()
+      filter(all(x_scaled <= 1)) %>% ungroup() %>% 
+      mutate(y_scaled = rescale(y, c(0, 1), y_panel_range))
 
       return(data2)
    }

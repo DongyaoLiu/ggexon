@@ -115,10 +115,14 @@ ggplot_gtable2.ggexon_built <- function(data) {
   #nucleotide data.
     if (length(nuc_link)>0) {
       nuc_link = purrr::imap(nuc_link, layout$map_link_position)
-      print(nuc_link)
       nuc_link = layout$map_position(nuc_link)
       print("processing nuc_link data")
-      print(nuc_link)
+      nuc_link_grob = lapply(nuc_link, function(nuc_link) ggplot2:::ggname("geom_polygon", grid::polygonGrob(nuc_link$x_scaled,            nuc_link$y_scaled,
+            default.units = "native", id = nuc_link$id, gp = gpar(col = NULL,
+                fill = fill_alpha("grey80", 0.8),
+                lwd = 0 * .pt, lty = 1,
+                lineend = "butt", linejoin = "round", linemitre = 10))))
+      print(nuc_link_grob)
     }else{
       nuc_link == NULL
       print("no nuc_link data")
@@ -131,7 +135,7 @@ ggplot_gtable2.ggexon_built <- function(data) {
     }
 
   geom_grobs <- by_layer(function(l, d) l$draw_geom(d, layout), plot$layers, data, "converting geom to grob")
-  plot_table <- layout$render(geom_grobs, data, theme, plot$labels)
+  #plot_table <- layout$render(geom_grobs, data, theme, plot$labels)
 
 
   facet_bg <- layout$facet$draw_back(data, layout$layout, layout$panel_scales_x,
@@ -156,7 +160,7 @@ ggplot_gtable2.ggexon_built <- function(data) {
     })
   plot_table <- layout$facet$draw_panels(panels, layout$layout,
         layout$panel_scales_x, layout$panel_scales_y, layout$panel_params,
-        layout$coord, data, theme, layout$facet_params)
+        layout$coord, data, theme, layout$facet_params, nuc_link_grob, pro_link)
   return(plot_table)
 
   #Try rewrite the link geom data here.
