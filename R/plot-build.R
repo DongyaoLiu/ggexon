@@ -116,21 +116,22 @@ ggplot_gtable2.ggexon_built <- function(data) {
 
 
   geom_grobs <- by_layer(function(l, d) l$draw_geom(d, layout), plot$layers, data, "converting geom to grob")
-
+  print(geom_grobs)
   if (!is.null(nuc_link) || !is.null(pro_link) ){
+
+    cli::cli_alert_info("link data detected")
     if (length(nuc_link)>0) {
+      cli::cli_alert_info("proccessing nuc link data")
       nuc_link = purrr::imap(nuc_link, layout$map_link_position)
       nuc_link = layout$map_position(nuc_link)
-      print("processing nuc_link data")
       nuc_link_grob = lapply(nuc_link, function(nuc_link) ggplot2:::ggname("geom_polygon", grid::polygonGrob(nuc_link$x_scaled,            nuc_link$y_scaled,
             default.units = "native", id = nuc_link$id, gp = gpar(col = NULL,
                 fill = fill_alpha("grey80", 0.8),
                 lwd = 0 * .pt, lty = 1,
                 lineend = "butt", linejoin = "round", linemitre = 10))))
-      print(nuc_link_grob)
     }else{
       nuc_link_grob = NULL
-      print("no nuc_link data")
+      cli::cli_alert_info("no nuc link data supplied")
     }
 
     if (length(pro_link)>0){
@@ -166,13 +167,16 @@ ggplot_gtable2.ggexon_built <- function(data) {
         ggname(paste("panel", i, sep = "-"), gTree(children = inject(gList(!!!panel))))
     })
 
+  print(panels)
+
   plot_table <- layout$facet$draw_panels(panels, layout$layout,
         layout$panel_scales_x, layout$panel_scales_y, layout$panel_params,
         layout$coord, data, theme, layout$facet_params, nuc_link_grob, pro_link)
 
+  }else{
+    plot_table <- layout$render(geom_grobs, data, theme, plot$labels)
   }
 
-  plot_table <- layout$render(geom_grobs, data, theme, plot$labels)
 
   #Try rewrite the link geom data here.
 

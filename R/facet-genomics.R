@@ -130,7 +130,6 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
   # If user hasn't set aspect ratio, ask the coordinate system if
   # it wants to specify one
   aspect_ratio <- theme$aspect.ratio %||% coord$aspect(ranges[[1]])
-  print(aspect_ratio)
   if (is.null(aspect_ratio)) {
     aspect_ratio <- 1
     respect <- FALSE
