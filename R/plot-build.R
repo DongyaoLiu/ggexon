@@ -124,14 +124,14 @@ ggplot_gtable2.ggexon_built <- function(data) {
                 lineend = "butt", linejoin = "round", linemitre = 10))))
       print(nuc_link_grob)
     }else{
-      nuc_link == NULL
+      nuc_link_grob = NULL
       print("no nuc_link data")
     }
 
     if (length(pro_link)>0){
-      pro_link == purrr::imap(pro_link, layout$map_link_position)
+      pro_link = purrr::imap(pro_link, layout$map_link_position)
     }else{
-      pro_link == NULL
+      pro_link = NULL
     }
 
   geom_grobs <- by_layer(function(l, d) l$draw_geom(d, layout), plot$layers, data, "converting geom to grob")
