@@ -112,7 +112,12 @@ ggplot_gtable2.ggexon_built <- function(data) {
   layout <- data$layout
   data <- data$data
   theme <- ggplot2:::plot_theme(plot)
-  #nucleotide data.
+
+
+
+  geom_grobs <- by_layer(function(l, d) l$draw_geom(d, layout), plot$layers, data, "converting geom to grob")
+
+  if (!is.null(nuc_link) || !is.null(pro_link) ){
     if (length(nuc_link)>0) {
       nuc_link = purrr::imap(nuc_link, layout$map_link_position)
       nuc_link = layout$map_position(nuc_link)
@@ -130,13 +135,15 @@ ggplot_gtable2.ggexon_built <- function(data) {
 
     if (length(pro_link)>0){
       pro_link = purrr::imap(pro_link, layout$map_link_position)
+      #' under develpment
+
+
+
+
     }else{
       pro_link = NULL
+      pro_link_grob = NULL
     }
-
-  geom_grobs <- by_layer(function(l, d) l$draw_geom(d, layout), plot$layers, data, "converting geom to grob")
-  #plot_table <- layout$render(geom_grobs, data, theme, plot$labels)
-
 
   facet_bg <- layout$facet$draw_back(data, layout$layout, layout$panel_scales_x,
         layout$panel_scales_y, theme, layout$facet_params)
@@ -158,10 +165,14 @@ ggplot_gtable2.ggexon_built <- function(data) {
         }
         ggname(paste("panel", i, sep = "-"), gTree(children = inject(gList(!!!panel))))
     })
+
   plot_table <- layout$facet$draw_panels(panels, layout$layout,
         layout$panel_scales_x, layout$panel_scales_y, layout$panel_params,
         layout$coord, data, theme, layout$facet_params, nuc_link_grob, pro_link)
-  return(plot_table)
+
+  }
+
+  plot_table <- layout$render(geom_grobs, data, theme, plot$labels)
 
   #Try rewrite the link geom data here.
 
