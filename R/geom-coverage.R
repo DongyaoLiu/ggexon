@@ -1,4 +1,5 @@
 #' designed for plot coverage data.
+#' detect there is imcompbility with scale_x_reverse
 
 
 GeomCoverage <- ggproto("GeomCoverage", GeomRect,
@@ -32,7 +33,6 @@ GeomCoverage <- ggproto("GeomCoverage", GeomRect,
                         cli_abort(c("bigwig file path is required"))
                       }
 
-
                       #' extract the subset coordinates.
                       if (!is.null(params$subset)) {
                         #' filter base on the subset region.
@@ -43,35 +43,23 @@ GeomCoverage <- ggproto("GeomCoverage", GeomRect,
                         print("didn't constrain the visualization region")
                       }
 
-
                       #' select transcript data.
-                      data = data  %>% filter(type == params$annotation_type)
-                      rec_data = seq_add_y(data = data,
-                                           track_proportion = params$transcripts_track_ratio,
-                                           y_scale = params$y_scale,
-                                           exon_proportion = 0.8, blank_proportion = 0.2,
-                                           sandwich_ratio = params$sandwich_ratio,
-                                           exon_height = params$exon_height)
-                      track_data = rec_data %>% ungroup() %>% select(ymin, transcripts, xmin, xmax)
+                      ymin = min(data$ymin) + params$exon_height
+                      print(ymin)
+                      data = data %>% select(track, PANEL, fill) %>% base::unique()
+                      print(data)
 
 
-                      #' extract the bigwig data.
-                      #' deal with more than one bigwig data.
-                      #' one transcript, more coverage track.
-                      #' one transcript, one coverage track.
-                      #' specify the multi-track multi-coverage by named list.
-
-                      Chrlist = unique(rec_data$track)
+                      Chrlist = params$ref_chr
 
                       print(paste("The Chrlist is", Chrlist, sep = " "))
 
                       if (length(Chrlist) == 1) {
-                        bigwig_list = params$bigwig[[Chrlist]]
-                        print(paste("The bigwig list is ", params$bigwig,sep = ""))
-                        if (length(bigwig_list) == 1) {
+                        print(paste("The bigwig list is ", params$bigwig, sep = ""))
+                        if (length(params$bigwig) == 1) {
                           #' single track single bigwig
                           print("single track single bigwig")
-                          CoverageTable = read_bigwig_region(bigwig_list, params$ref_chr, start = start1, end = end1, track_name = Chrlist,
+                          CoverageTable = read_bigwig_region(params$bigwig[[1]], params$ref_chr, start = start1, end = end1, track_name = Chrlist,
                                                              x_threshold = params$x_threshold, y_threshold = params$y_threshold)
                         } else {
                           #' single track multiple bigwig
@@ -98,49 +86,18 @@ GeomCoverage <- ggproto("GeomCoverage", GeomRect,
                         CoverageTable = do.call(rbind, CoverageTableList)
                       }
 
-                      #' do y_threshold.
-                      CoverageTable = CoverageTable %>% filter(height >= params$y_threshold)
 
-                      #' translation of coordinates of CoverageTable
-                      #CoverageTable = CoverageTable %>% mutate(position = position - translation_data)
-
-
-
-                      #' do bigwig track normalization.
-                      if (is.na(params$bigwig_height_normalize)) {
-                        cli_about(c("bigwig_height_normalize is required"))
-                      }else if(params$bigwig_height_normalize == T) {
-                        CoverageTable = CoverageTable %>% ungroup() %>%
-                          mutate(height_max = max(height), height2 = (height/height_max)*params$bigwig_track_height)
-                        print("normalize bigwig_height tracks")
-                      }else{
-                        print("don't normalize the bigwig track.")
-                      }
-
-
-                      #' processing the coverage data and merging with track information
-                      CoverageTable = add_transcript_name_fuzzy(CoverageTable, track_data) %>%
-                        mutate(across(everything(), ~ ifelse(is.na(.x), min(.x, na.rm = TRUE), .x))) %>%
-                        mutate(group2 = paste(track, transcripts, sep = "_"), ymax = ymin + height2)
-
-                      if (params$region_based_calling == F) {
-                        #' extract coverage based on subset genomic region.
-                        print("region based coverage calling is turned off, here is used for develope region based\
-                        scale for coverage data")
-                      }else{
-                        #' extract base on specific region.
-                        print("region based coverage calling, extracting the coverage data base on ...")
-
-                      }
-                      #' CoverageTable$PANLE = 1
-                      #' print(CoverageTable)
-                      #' all the munipulation of
                       #' ./R/utilities.R:empty <- function(df) will exam the data at rendering
                       #' layout$panel_params[[data$PANEL[1]]] this will check the PANEL col
+                      print(CoverageTable)
                       CoverageTable = CoverageTable %>% mutate(xmin = position - 0.5,
                                                                xmax = position + 0.5,
-                                                               PANEL = 1,
-                                                               ymax = height2 + ymin)
+                                                               ymax = rescale(height, to = c(ymin, ymin + params$bigwig_track_height)),
+                                                               ymin = ymin,
+                                                               PANEL = data$PANEL[1],
+                                                               fill = data$fill[1])
+                      print(CoverageTable)
+
 
                       return(CoverageTable)
                     },
@@ -185,10 +142,20 @@ read_bigwig_region <- function(bigwig_file, chr, start, end, track_name = "track
   region <- GRanges(seqnames = chr, ranges = IRanges(start = start, end = end))
 
   # Import the BigWig file for the specified region
-  bigwig_data <- rtracklayer::import(bigwig_file, which = region, as = "GRanges")
+  bw_data <- rtracklayer::import.bw(bigwig_file, which = region, as = "GRanges")
+
+  # Covert the width = 1
+  single_base_gr <- GRanges(
+    seqnames = rep(seqnames(bw_data), width(bw_data)),
+    ranges = IRanges(
+      start = unlist(Map(seq, start(bw_data), end(bw_data))),
+      width = 1
+    ),
+    score = rep(bw_data$score, width(bw_data))
+  )
 
   # Convert to a data frame
-  bigwig_df <- as.data.frame(bigwig_data)
+  bigwig_df <- as.data.frame(single_base_gr)
 
   # Create the initial table
   result <- tibble(
