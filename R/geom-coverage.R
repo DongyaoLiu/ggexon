@@ -7,7 +7,7 @@ GeomCoverage <- ggproto("GeomCoverage", GeomRect,
                     non_missing_aes = c("ymax", "linewidth", "shape"),
                     extra_params = c("exon_height", "na.rm", "x_translation", "layout", "annotation_type", "subset", "y_threshold",
                                      "x_threshold", "region_based_calling", "bigwig", "ref_chr",
-                                     "bigwig_track_height", "bigwig_height_normalize"),
+                                     "bigwig_track_height", "bigwig_height_normalize", "track_max"),
                     default_aes = aes(linewidth = 0, linejoin = "mitre", fill="grey80",
                                       colour = NULL,
                                       size = 15,
@@ -25,12 +25,7 @@ GeomCoverage <- ggproto("GeomCoverage", GeomRect,
                       }else if(params$annotation_type == "transcript"){
                         print("gtf file format detected" )
                       }else{
-                        cli_abort(c("Please offer gff or gtf format"))
-                      }
-
-                      #' assess the validation of annotation_type
-                      if (is.na(params$bigwig)) {
-                        cli_abort(c("bigwig file path is required"))
+                        cli::cli_abort(c("Please offer gff or gtf format"))
                       }
 
                       #' extract the subset coordinates.
@@ -61,14 +56,37 @@ GeomCoverage <- ggproto("GeomCoverage", GeomRect,
                           print("single track single bigwig")
                           CoverageTable = read_bigwig_region(params$bigwig[[1]], params$ref_chr, start = start1, end = end1, track_name = Chrlist,
                                                              x_threshold = params$x_threshold, y_threshold = params$y_threshold)
+
+
+                          CoverageTable = CoverageTable %>% mutate(xmin = position - 0.5,
+                                                                   xmax = position + 0.5,
+                                                                   ymax = rescale(height, to = c(ymin, ymin + params$bigwig_track_height)),
+                                                                   ymin = ymin,
+                                                                   PANEL = data$PANEL[1],
+                                                                   fill = data$fill[1])
                         } else {
                           #' single track multiple bigwig
+                          CoverageTableList = list()
+
                           for (i in 1:length(params$bigwig)) {
-                            TmpCoverageTable = read_bigwig_region(bigwig_list[i], params$ref_chr, start = start1, end = end1, track_name = Chrlist[i],
+                            range = seq(ymin, 20, 2)
+                            TmpCoverageTable = read_bigwig_region(params$bigwig[[i]], params$ref_chr, start = start1, end = end1,
+                                                                  track_name = names(params$bigwig)[i],
                                                                   x_threshold = params$x_threshold, y_threshold = params$y_threshold)
-                            TmpCoverageTable = TmpCoverageTable %>% mutate(group = paste(track_name, group, sep = "_"))
-                            CoverageTableList[i] = TmpCoverageTable
+                            TmpCoverageTable = TmpCoverageTable %>% mutate(group = paste(names(params$bigwig)[i],
+                                                                                         group, sep = "_"),
+                                                                           xmin = position - 0.5,
+                                                                           xmax = position + 0.5,
+                                                                           ymax = rescale(height, to = c(range[i], range[i] + params$bigwig_track_height)),
+                                                                           PANEL = data$PANEL[1],
+                                                                           fill = data$fill[1],
+                                                                           ymin = range[i])
+                            print(head(TmpCoverageTable))
+                            CoverageTableList = append(CoverageTableList,  list(TmpCoverageTable))
+                            #print(CoverageTableList)
+                            print(class(CoverageTableList))
                           }
+                          CoverageTable = do.call(base::rbind,CoverageTableList)
                         }
                       }else{
                         CoverageTableList = list()
@@ -85,18 +103,8 @@ GeomCoverage <- ggproto("GeomCoverage", GeomRect,
                         }
                         CoverageTable = do.call(rbind, CoverageTableList)
                       }
-
-
                       #' ./R/utilities.R:empty <- function(df) will exam the data at rendering
                       #' layout$panel_params[[data$PANEL[1]]] this will check the PANEL col
-                      print(CoverageTable)
-                      CoverageTable = CoverageTable %>% mutate(xmin = position - 0.5,
-                                                               xmax = position + 0.5,
-                                                               ymax = rescale(height, to = c(ymin, ymin + params$bigwig_track_height)),
-                                                               ymin = ymin,
-                                                               PANEL = data$PANEL[1],
-                                                               fill = data$fill[1])
-                      print(CoverageTable)
 
 
                       return(CoverageTable)
@@ -110,7 +118,7 @@ geom_coverage <- function(mapping = NULL, data = NULL,
                       ..., na.rm = FALSE, show.legend = NA, exon_height=1.5,
                       x_translation = NULL, layout = "up" ,subset = NULL, annotation_type = NULL, y_threshold =2,
                       x_threshold =1, region_based_calling = F, bigwig = NULL, ref_chr = NULL, bigwig_height_normalize = T, bigwig_track_height =1.5,
-                      inherit.aes = TRUE) {
+                      inherit.aes = TRUE, track_max = NULL) {
   layer(
     data = data,
     mapping = mapping,
@@ -131,7 +139,8 @@ geom_coverage <- function(mapping = NULL, data = NULL,
                   annotation_type = annotation_type,
                   ref_chr = ref_chr,
                   bigwig_height_normalize = bigwig_height_normalize,
-                  bigwig_track_height = bigwig_track_height))
+                  bigwig_track_height = bigwig_track_height,
+                  track_max = track_max))
 }
 
 
