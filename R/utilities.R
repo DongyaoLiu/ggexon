@@ -1,3 +1,16 @@
+#' utilities for new S7 class definition
+warn_dots_empty <- function(env = caller_env(), call = caller_env()) {
+  check_dots_empty(
+    env = env, call = call,
+    error = function(cnd) {
+      msg <- gsub("\n", "\f", cnd_message(cnd))
+      cli::cli_warn(msg, call = call)
+    }
+  )
+}
+
+
+
 #' @export
 #' @examples
 #' ggplot(mpg, aes(displ, hwy)) +

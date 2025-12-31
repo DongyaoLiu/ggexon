@@ -1,30 +1,48 @@
-
-
 #' @export
-ggplot_build.ggexon <- function(plot) {
+#' ggplot2 4.0.0 above is using S7 OOP system
+
+
+ggexon_build <- function(plot, ...) {
+  # TODO: Swap to S7 generic once S7/#543 is resolved
+  env <- try_prop(plot, "plot_env")
+  if (!is.null(env)) {
+    attach_plot_env(env)
+  }
+  UseMethod("ggexon_build")
+}
+
+S7::method(ggexon_build, class_ggexon_built) <- function(plot, ...) {
+  plot # This is a no-op
+}
+
+
+build_ggexon <- S7::method(ggexon_build, class_ggexon) <- function(plot, ...) {
     plot <- plot_clone(plot)
-    if (length(plot$layers) == 0) {
+    if (length(plot@layers) == 0) {
       plot <- plot + geom_blank()
     }
 
-    layers <- plot$layers
+    layers <- plot@layers
     data <- rep(list(NULL), length(layers))
 
-    scales <- plot$scales
+    scales <- plot@scales
 
 
     # Allow all layers to make any final adjustments based
     # on raw input data and plot info
-    data <- by_layer(function(l, d) l$layer_data(plot$data), layers, data, "computing layer data")
+    data <- by_layer(function(l, d) l$layer_data(plot@data), layers, data, "computing layer data")
     data <- by_layer(function(l, d) l$setup_layer(d, plot), layers, data, "setting up layer")
 
     # Initialise panels, add extra data for margins & missing faceting
     # variables, and add on a PANEL variable to data
-    layout <- create_layout2(plot$facet, plot$coordinates, plot$layout)
-    data <- layout$setup(data, plot$data, plot$plot_env)
+    layout <- ggplot2:::create_layout(plot@facet, plot@coordinates, plot@layout)
+    data <- layout$setup(data, plot@data, plot@plot_env)
 
     # Compute aesthetics to produce data with generalised variable names
     data <- by_layer(function(l, d) l$compute_aesthetics(d, plot), layers, data, "computing aesthetics")
+
+    # TODO: future labels presentation should do with this function.
+    plot@labels <- ggplot2:::setup_plot_labels(plot, layers, data)
     data <- .ignore_data(data)
 
     # Transform all scales
@@ -39,14 +57,12 @@ ggplot_build.ggexon <- function(plot) {
     data <- layout$map_position(data)
     data <- .expose_data(data)
 
-
-
     # Apply and map statistics
     data <- by_layer(function(l, d) l$compute_statistic(d, layout), layers, data, "computing stat")
     data <- by_layer(function(l, d) l$map_statistic(d, plot), layers, data, "mapping stat to aesthetics")
 
     # Make sure missing (but required) aesthetics are added
-    plot$scales$add_missing(c("x", "y"), plot$plot_env)
+    plot$scales$add_missing(c("x", "y"), plot@plot_env)
 
     # Reparameterise geoms from (e.g.) y and width to ymin and ymax
     data <- by_layer(function(l, d) l$compute_geom_1(d), layers, data, "setting up geom")
@@ -64,25 +80,29 @@ ggplot_build.ggexon <- function(plot) {
     data <- layout$map_position(data)
 
     # Hand off position guides to layout
-    layout$setup_panel_guides(plot$guides, plot$layers)
+    layout$setup_panel_guides(plot@guides, plot@layers)
+
+    # ggplot2 4.0.0 above, change the code for theme rendering
+    plot@theme <- ggplot2:::plot_theme(plot)
 
     # Train and map non-position scales and guides
     npscales <- scales$non_position_scales()
     if (npscales$n() > 0) {
+      npscales$set_palettes(plot@theme)
       lapply(data, npscales$train_df)
-      plot$guides <- plot$guides$build(npscales, plot$layers, plot$labels, data)
+      plot@guides <- plot$guides$build(npscales, plot@layers, plot@labels, data, plot@theme)
       data <- lapply(data, npscales$map_df)
     } else {
       # Only keep custom guides if there are no non-position scales
-      plot$guides <- plot$guides$get_custom()
+      plot@guides <- plot$guides$get_custom()
     }
     data <- .expose_data(data)
 
     # Fill in defaults etc.
-    data <- by_layer(function(l, d) l$compute_geom_2(d), layers, data, "setting up geom aesthetics")
+    data <- by_layer(function(l, d) l$compute_geom_2(d, theme = plot@theme), layers, data, "setting up geom aesthetics")
 
     # Let layer stat have a final say before rendering
-    data <- by_layer(function(l, d) l$finish_statistics(d), layers, data, "finishing layer stat")
+    data <- by_layer(function(l, d) l$finish_statistics(d, theme =plot@theme), layers, data, "finishing layer stat")
 
     # Let Layout modify data before rendering
     data <- layout$finish_data(data)
@@ -90,22 +110,30 @@ ggplot_build.ggexon <- function(plot) {
     # Consolidate alt-text
     plot$labels$alt <- get_alt_text(plot)
 
-    structure(
-      list(data = data, layout = layout, plot = plot, nuc_link = plot$nuc_link, pro_link = plot$pro_link),
-      class = "ggexon_built"
-    )
+    build <- class_ggexon_build(data = data, layout = layout, plot = plot, nuclink = plot@nuclink, prolink = plot@pro_link)
+    class(build) = union(c("ggexon_built", "ggplot2::ggplot_built"), class(build))
+    build
 }
 
 #' @export
+
 ggplot_gtable2 <- function(data) {
   # Attaching the plot env to be fetched by deprecations etc.
-  ggplot2:::attach_plot_env(data$plot$plot_env)
+  ggplot2:::attach_plot_env(data@plot@plot_env)
   print(data$plot$plot_env)
   UseMethod('ggplot_gtable2')
 }
 
+
+
+#' below code is from the plot-render,
+#' Insert a blank panel for drawing the link_data, this maybe not the best solution.
+#' ggplot2 4.0.0 above encapsulates the plot annotation into separate functions.
 #' @export
-ggplot_gtable2.ggexon_built <- function(data) {
+
+
+
+S7::method(ggplot_gtable2, class_ggexon_built) <- function(data) {
   nuc_link <- data$nuc_link
   pro_link <- data$pro_link
   plot <- data$plot
@@ -274,11 +302,6 @@ ggplot_gtable2.ggexon_built <- function(data) {
 }
 
 
-#' @export
-#' @rdname ggplot_build
-layer_data <- function(plot = last_plot(), i = 1L) {
-  ggplot_build(plot)$data[[i]]
-}
 
 #' @export
 #' @rdname ggplot_build

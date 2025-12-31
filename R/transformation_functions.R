@@ -209,9 +209,11 @@ protein_link_data = data.frame(x = c(0, 100, 30, 40),
                                group = c(1,1,1,1))
 
 #' from ggforce
-getSplines <- function(x, y, id, detail, type = "clamped") {
-  .Call('_ggforce_getSplines', PACKAGE = 'ggforce', x, y, id, detail, type)
-}
+#getSplines <- function(x, y, id, detail, type = "clamped") {
+#  .Call('_ggforce_getSplines', PACKAGE = 'ggforce', x, y, id, detail, type)
+#}
+
+
 
 Splines_link_generate = function(data, detail = 100){
   withr::with_package("dplyr", {
@@ -232,12 +234,12 @@ Splines_link_generate = function(data, detail = 100){
     arrange(group, attr)
 
 
-  spline_1 = getSplines(x = min_spline$x, y = min_spline$y,
-                        id = min_spline$group, detail = detail)
+  spline_1 = ggforce:::getSplines(x = min_spline$x, y = min_spline$y,
+                        id = min_spline$group, detail = detail, type = "clamped")
   spline_1_data = spline_1$paths %>% as.data.frame() %>% mutate(group = spline_1$pathID)
 
-  spline_2 = getSplines(x = max_spline$x, y = max_spline$y,
-                        id = max_spline$group, detail = detail)
+  spline_2 = ggforce:::getSplines(x = max_spline$x, y = max_spline$y,
+                        id = max_spline$group, detail = detail, type = "clamped")
   spline_2_data = spline_2$paths %>% as.data.frame() %>% mutate(group = spline_2$pathID)
 
   spline_shape = rbind(spline_1_data, spline_2_data)
@@ -246,22 +248,6 @@ Splines_link_generate = function(data, detail = 100){
     }
   )
 }
-
-
-s_shape = Splines_link_generate(data = protein_link_data)
-
-ggplot(data = s_shape) +
-  geom_polygon(aes(x= x, y = y), linewidth = 0, fill = "gray", colour = "black") + theme_void()
-
-
-
-
-
-
-
-
-
-
 
 
 

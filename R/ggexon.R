@@ -18,75 +18,63 @@ ggexon.default <- function(data = NULL, mapping = aes(), nuc_link = NULL, pro_li
   data <- fortify(data, ...)
   print(environment)
 
-  p <- structure(list(
+  p <- class_ggexon(
     data = data,
-    layers = list(),
-    scales = ggplot2:::scales_list(),
-    guides = ggplot2:::guides_list(),
     mapping = mapping,
-    theme = list(),
-    coordinates = coord_cartesian(default = TRUE),
-    facet = ggplot2::facet_null(),
     plot_env = environment,
     nuc_link = nuc_link %||% NULL,
     pro_link = pro_link %||% NULL,
-    layout = ggplot2::ggproto(NULL, Layout2)), class = c("gg", "ggplot", "ggexon"))
+    )
 
-  p$labels <- make_labels(mapping)
+  class(p) = union(union(c("ggexon", "ggplot2::ggplot", "ggplot"), class(p)), "gg")
 
   set_last_plot(p)
-  class(p) = c("ggexon", "ggplot","gg")
   return(p)
 }
 
 #' @export
-is.ggexon <- function(x) inherits(x, "ggexon")
+#is.ggexon <- function(x) inherits(x, "ggexon")
+#switch to S7
+is_ggexon <- function(x) S7::S7_inherits(x, class_ggexon)
 
+local({
+  S7::method(print, class_ggexon) <- S7::method(plot, class_ggexon) <-
+    function(x, newpage = is.null(vp), vp = NULL, ...) {
+      set_last_plot(x)
+      if (newpage) grid.newpage()
 
+      # Record dependency on 'ggplot2' on the display list
+      # (AFTER grid.newpage())
+      grDevices::recordGraphics(
+        requireNamespace("ggplot2", quietly = TRUE),
+        list(),
+        getNamespace("ggplot2")
+      )
 
-#' @export
-print.ggexon <- function(x, newpage = is.null(vp), vp = NULL, ...) {
-  set_last_plot(x)
-  if (newpage) grid.newpage()
+      data <- ggplot_build(x)
 
-  # Record dependency on 'ggplot2' on the display list
-  # (AFTER grid.newpage())
-  grDevices::recordGraphics(
-    requireNamespace("ggexon", quietly = TRUE),
-    list(),
-    getNamespace("ggexon")
-  )
-  cli::cli_alert_info("Building......")
-  data <- ggplot_build(x)
-  print(class(data))
-  cli::cli_alert_success("Building finished")
+#only rewrite the code inside ggplot_gtable
+      gtable <- ggplot_gtable(data)
+      if (is.null(vp)) {
+        grid.draw(gtable)
+      } else {
+        if (is.character(vp)) seekViewport(vp) else pushViewport(vp)
+        grid.draw(gtable)
+        upViewport()
+      }
 
+      if (isTRUE(getOption("BrailleR.VI")) && rlang::is_installed("BrailleR")) {
+        print(asNamespace("BrailleR")$VI(x))
+      }
 
-  cli::cli_alert_info("Start Gtabling")
-  gtable <- ggplot_gtable2(data)
-  cli::cli_alert_success("Gtabling finished")
-  if (is.null(vp)) {
-    grid.draw(gtable)
-  } else {
-    if (is.character(vp)) seekViewport(vp) else pushViewport(vp)
-    grid.draw(gtable)
-    upViewport()
-  }
+      invisible(x)
+    }
+})
 
-  if (isTRUE(getOption("BrailleR.VI")) && rlang::is_installed("BrailleR")) {
-    print(asNamespace("BrailleR")$VI(x))
-  }
-
-  invisible(x)
-}
 
 plot_clone <- function(plot) {
   p <- plot
-  p$scales <- plot$scales$clone()
+  p@scales <- plot@scales@clone()
 
   p
 }
-
-#' @export
-plot.ggexon <- print.ggexon
-
