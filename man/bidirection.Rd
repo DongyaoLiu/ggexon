@@ -80,32 +80,32 @@ features in the data correspond to:
 \itemize{
 \item \code{main_is_orthogonal}: This argument controls how the existence of only a \code{x}
 or \code{y} aesthetic is understood. If \code{TRUE} then the existing aesthetic
-would be then secondary axis. This behaviour is present in \code{\link[=stat_ydensity]{stat_ydensity()}}
-and \code{\link[=stat_boxplot]{stat_boxplot()}}. If \code{FALSE} then the existing aesthetic is the main
-axis as seen in e.g. \code{\link[=stat_bin]{stat_bin()}}, \code{\link[=geom_count]{geom_count()}}, and \code{\link[=stat_density]{stat_density()}}.
+would be then secondary axis. This behaviour is present in \code{\link[ggplot2:stat_ydensity]{ggplot2::stat_ydensity()}}
+and \code{\link[ggplot2:stat_boxplot]{ggplot2::stat_boxplot()}}. If \code{FALSE} then the existing aesthetic is the main
+axis as seen in e.g. \code{\link[ggplot2:stat_bin]{ggplot2::stat_bin()}}, \code{\link[ggplot2:geom_count]{ggplot2::geom_count()}}, and \code{\link[ggplot2:stat_density]{ggplot2::stat_density()}}.
 \item \code{range_is_orthogonal}: This argument controls whether the existence of
 range-like aesthetics (e.g. \code{xmin} and \code{xmax}) represents the main or
 secondary axis. If \code{TRUE} then the range is given for the secondary axis as
-seen in e.g. \code{\link[=geom_ribbon]{geom_ribbon()}} and \code{\link[=geom_linerange]{geom_linerange()}}.
+seen in e.g. \code{\link[ggplot2:geom_ribbon]{ggplot2::geom_ribbon()}} and \code{\link[ggplot2:geom_linerange]{ggplot2::geom_linerange()}}.
 \item \code{group_has_equal}: This argument controls whether to test for equality of
 all \code{x} and \code{y} values inside each group and set the main axis to the one
 where all is equal. This test is only performed if \code{TRUE}, and only after
 less computationally heavy tests has come up empty handed. Examples are
-\code{\link[=stat_boxplot]{stat_boxplot()}} and \link{stat_ydensity}
+\code{\link[ggplot2:stat_boxplot]{ggplot2::stat_boxplot()}} and \link[ggplot2:stat_ydensity]{ggplot2::stat_ydensity}
 \item \code{ambiguous}: This argument tells the function that the layer, while
 bidirectional, doesn't treat each axis differently. It will circumvent any
 data based guessing and only take hint from the \code{orientation} element in
 \code{params}. If this is not present it will fall back to \code{FALSE}. Examples are
-\code{\link[=geom_line]{geom_line()}} and \code{\link[=geom_area]{geom_area()}}
+\code{\link[ggplot2:geom_line]{ggplot2::geom_line()}} and \code{\link[ggplot2:geom_area]{ggplot2::geom_area()}}
 \item \code{main_is_continuous}: This argument controls how the test for discreteness
 in the scales should be interpreted. If \code{TRUE} then the main axis will be
 the one which is not discrete-like. Conversely, if \code{FALSE} the main axis
-will be the discrete-like one. Examples of \code{TRUE} is \code{\link[=stat_density]{stat_density()}} and
-\code{\link[=stat_bin]{stat_bin()}}, while examples of \code{FALSE} is \code{\link[=stat_ydensity]{stat_ydensity()}} and
-\code{\link[=stat_boxplot]{stat_boxplot()}}
+will be the discrete-like one. Examples of \code{TRUE} is \code{\link[ggplot2:stat_density]{ggplot2::stat_density()}} and
+\code{\link[ggplot2:stat_bin]{ggplot2::stat_bin()}}, while examples of \code{FALSE} is \code{\link[ggplot2:stat_ydensity]{ggplot2::stat_ydensity()}} and
+\code{\link[ggplot2:stat_boxplot]{ggplot2::stat_boxplot()}}
 \item \code{main_is_optional}: This argument controls the rare case of layers were the
 main direction is an optional aesthetic. This is only seen in
-\code{\link[=stat_boxplot]{stat_boxplot()}} where \code{x} is set to \code{0} if not given. If \code{TRUE} there will
+\code{\link[ggplot2:stat_boxplot]{ggplot2::stat_boxplot()}} where \code{x} is set to \code{0} if not given. If \code{TRUE} there will
 be a check for whether all \code{x} or all \code{y} are equal to \code{0}
 }
 }

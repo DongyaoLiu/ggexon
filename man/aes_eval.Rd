@@ -33,7 +33,7 @@ expression using variables calculated by the stat.}
 expression using layer aesthetics.}
 }
 \description{
-Most \link[=aes]{aesthetics} are mapped from variables found in the data.
+Most \link[ggplot2:aes]{aesthetics} are mapped from variables found in the data.
 Sometimes, however, you want to delay the mapping until later in the
 rendering process. ggplot2 has three stages of the data that you can map
 aesthetics from, and three functions to control at which stage aesthetics
@@ -62,9 +62,9 @@ ggplot(mtcars) + geom_point(aes(x = mpg, y = disp))
 
 The second stage is after the data has been transformed by the layer
 stat. The most common example of mapping from stat transformed data is the
-height of bars in \code{\link[=geom_histogram]{geom_histogram()}}: the height does not come from a
+height of bars in \code{\link[ggplot2:geom_histogram]{ggplot2::geom_histogram()}}: the height does not come from a
 variable in the underlying data, but is instead mapped to the \code{count}
-computed by \code{\link[=stat_bin]{stat_bin()}}. In order to map from stat transformed data you
+computed by \code{\link[ggplot2:stat_bin]{ggplot2::stat_bin()}}. In order to map from stat transformed data you
 should use the \code{after_stat()} function to flag that evaluation of the
 aesthetic mapping should be postponed until after stat transformation.
 Evaluation after stat transformation will have access to the variables

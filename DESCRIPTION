@@ -7,7 +7,6 @@ Authors@R:
 Description: visulize genomic tracks with associate meta information.
 Depends:
     methods,
-    ggplot2,
     gtable,
     ggforce,
     ggridges,
@@ -20,9 +19,44 @@ Depends:
     reshape2,
     rlang,
     vctrs,
+    S7
 Imports:
+    ggplot2,
+Suggests:
+    testthat
 License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
     license
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
+Collate: 
+    'GADclass.R'
+    'aes-evaluation.R'
+    'ggplot-global.R'
+    'all-classes-S7.R'
+    'axis-secondary.R'
+    'facet-genomics.R'
+    'geom-coverage.R'
+    'geom-coverageMUT.R'
+    'geom-direction.R'
+    'geom-exon.R'
+    'geom-gene.R'
+    'geom-genetag.R'
+    'geom-motif.R'
+    'geom_genelabel.R'
+    'geom_pair_nuc_link.R'
+    'geom_ruler.R'
+    'geom_tracklabel.R'
+    'geom_transcriptstrack.R'
+    'ggexon.R'
+    'ggplot-functions.R'
+    'grob-null.R'
+    'import-standalone-types-check.R'
+    'import.R'
+    'layout.R'
+    'plot-build.R'
+    'track_backgroud.R'
+    'transformation_functions.R'
+    'utilities-checks.R'
+    'utilities-grid.R'
+    'utilities.R'

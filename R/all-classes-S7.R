@@ -351,10 +351,10 @@ class_ggplot <- S7::new_class(
       S7::S7_object(),
       data        = data,
       layers      = layers,
-      scales      = scales %||% scales_list(),
-      guides      = guides %||% guides_list(),
+      scales      = scales %||% ggplot2:::scales_list(),
+      guides      = guides %||% ggplot2:::guides_list(),
       mapping     = mapping,
-      theme       = theme %||% theme(),
+      theme       = theme %||% ggplot2:::theme(),
       coordinates = coordinates,
       facet       = facet,
       layout      = layout %||% ggproto(NULL, Layout),
@@ -405,42 +405,9 @@ class_ggexon_built <- S7::new_class(
   }
 )
 
-# Methods -----------------------------------------------------------------
-
-#' @importFrom S7 convert
-# S7 currently attaches the S3 method to the calling environment which gives `ggplot2:::as.list`
-# Wrap in `local()` to provide a temp environment which throws away the attachment
-local({
-  list_classes <- class_mapping | class_theme | class_labels
-  prop_classes <- class_ggplot | class_ggexon_built
-
-  S7::method(convert, list(from = prop_classes, to = S7::class_list)) <-
-    function(from, to, ...) S7::props(from)
-
-  S7::method(convert, list(from = list_classes, to = S7::class_list)) <-
-    function(from, to, ...) S7::S7_data(from)
-
-  # We're not using union classes here because of S7#510
-  S7::method(as.list, class_gg) <-
-    S7::method(as.list, class_mapping) <-
-    S7::method(as.list, class_theme) <-
-    S7::method(as.list, class_labels) <-
-    function(x, ...) convert(x, S7::class_list)
-
-  S7::method(convert, list(from = S7::class_list, to = prop_classes)) <-
-    function(from, to, ...) inject(to(!!!from))
-
-  S7::method(convert, list(from = S7::class_list, to = list_classes)) <-
-    function(from, to, ...) to(from)
-})
-
-
 ## ggexon --------------------------------------------------------
 
 #' The major ggexon object
-
-class_gg <- S7::new_class("gg", abstract = TRUE)
-
 #' @param prolink named list
 #' @param nuclink named list
 
@@ -451,14 +418,14 @@ class_ggexon <- S7::new_class(
     layers  = S7::class_list,
     scales  = class_scales_list,
     guides  = class_guides,
-    mapping = class_mapping,
-    theme   = class_theme,
+    mapping = ggplot2::class_mapping,
+    theme   = ggplot2::class_theme,
     coordinates = class_coord,
     facet   = class_facet,
     layout  = class_layout,
-    labels  = class_labels,
-    prolink = class_list,
-    nuclink = class_list,
+    labels  = ggplot2::class_labels,
+    prolink = S7::class_list,
+    nuclink = S7::class_list,
     plot_env = S7::class_environment
   ),
   constructor = function(
@@ -482,17 +449,49 @@ class_ggexon <- S7::new_class(
       S7::S7_object(),
       data        = data,
       layers      = layers,
-      scales      = scales %||% scales_list(),
-      guides      = guides %||% guides_list(),
+      scales      = scales %||% ggplot2:::scales_list(),
+      guides      = guides %||% ggplot2:::guides_list(),
       mapping     = mapping,
-      theme       = theme %||% theme(),
+      theme       = theme %||% ggplot2::theme(),
       coordinates = coordinates,
       facet       = facet,
       layout      = layout %||% ggproto(NULL, Layout),
       labels      = labels,
-      prolink     = prolink,
-      nuclink     = nuclink,
+      prolink     = prolink %||% list(),
+      nuclink     = nuclink %||% list(),
       plot_env    = plot_env
     )
   }
 )
+
+
+# Methods -----------------------------------------------------------------
+
+#' @importFrom S7 convert
+# S7 currently attaches the S3 method to the calling environment which gives `ggplot2:::as.list`
+# Wrap in `local()` to provide a temp environment which throws away the attachment
+local({
+  list_classes <- class_mapping | class_theme | class_labels
+  prop_classes <- class_ggexon | class_ggexon_built
+
+  S7::method(convert, list(from = prop_classes, to = S7::class_list)) <-
+    function(from, to, ...) S7::props(from)
+
+  S7::method(convert, list(from = list_classes, to = S7::class_list)) <-
+    function(from, to, ...) S7::S7_data(from)
+
+  # We're not using union classes here because of S7#510
+  S7::method(as.list, class_gg) <-
+    S7::method(as.list, class_mapping) <-
+    S7::method(as.list, class_theme) <-
+    S7::method(as.list, class_labels) <-
+    function(x, ...) convert(x, S7::class_list)
+
+  S7::method(convert, list(from = S7::class_list, to = prop_classes)) <-
+    function(from, to, ...) inject(to(!!!from))
+
+  S7::method(convert, list(from = S7::class_list, to = list_classes)) <-
+    function(from, to, ...) to(from)
+})
+
+

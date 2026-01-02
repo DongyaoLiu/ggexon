@@ -48,7 +48,7 @@ derive()
 }}
 
 \item{guide}{A position guide that will be used to render
-the axis on the plot. Usually this is \code{\link[=guide_axis]{guide_axis()}}.}
+the axis on the plot. Usually this is \code{\link[ggplot2:guide_axis]{ggplot2::guide_axis()}}.}
 
 \item{trans}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}}
 }
