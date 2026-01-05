@@ -22,8 +22,8 @@ ggexon.default <- function(data = NULL, mapping = aes(), nuc_link = NULL, pro_li
     data = data,
     mapping = mapping,
     plot_env = environment,
-    nuc_link = nuc_link %||% NULL,
-    pro_link = pro_link %||% NULL,
+    nuc_link = nuc_link  %||% NULL,
+    pro_link = pro_link %||% NULL
     )
 
   class(p) = union(union(c("ggexon", "ggplot2::ggplot", "ggplot"), class(p)), "gg")
@@ -74,7 +74,6 @@ local({
 
 plot_clone <- function(plot) {
   p <- plot
-  p@scales <- plot@scales@clone()
-
+  p@scales <- plot@scales$clone()
   p
 }

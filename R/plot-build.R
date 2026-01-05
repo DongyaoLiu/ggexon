@@ -4,7 +4,7 @@
 
 ggexon_build <- function(plot, ...) {
   # TODO: Swap to S7 generic once S7/#543 is resolved
-  env <- try_prop(plot, "plot_env")
+  env <- ggplot2:::try_prop(plot, "plot_env")
   if (!is.null(env)) {
     attach_plot_env(env)
   }
@@ -62,7 +62,7 @@ build_ggexon <- S7::method(ggexon_build, class_ggexon) <- function(plot, ...) {
     data <- by_layer(function(l, d) l$map_statistic(d, plot), layers, data, "mapping stat to aesthetics")
 
     # Make sure missing (but required) aesthetics are added
-    plot$scales$add_missing(c("x", "y"), plot@plot_env)
+    plot@scales$add_missing(c("x", "y"), plot@plot_env)
 
     # Reparameterise geoms from (e.g.) y and width to ymin and ymax
     data <- by_layer(function(l, d) l$compute_geom_1(d), layers, data, "setting up geom")
@@ -90,11 +90,11 @@ build_ggexon <- S7::method(ggexon_build, class_ggexon) <- function(plot, ...) {
     if (npscales$n() > 0) {
       npscales$set_palettes(plot@theme)
       lapply(data, npscales$train_df)
-      plot@guides <- plot$guides$build(npscales, plot@layers, plot@labels, data, plot@theme)
+      plot@guides <- plot@guides$build(npscales, plot@layers, plot@labels, data, plot@theme)
       data <- lapply(data, npscales$map_df)
     } else {
       # Only keep custom guides if there are no non-position scales
-      plot@guides <- plot$guides$get_custom()
+      plot@guides <- plot@guides$get_custom()
     }
     data <- .expose_data(data)
 
@@ -102,15 +102,16 @@ build_ggexon <- S7::method(ggexon_build, class_ggexon) <- function(plot, ...) {
     data <- by_layer(function(l, d) l$compute_geom_2(d, theme = plot@theme), layers, data, "setting up geom aesthetics")
 
     # Let layer stat have a final say before rendering
-    data <- by_layer(function(l, d) l$finish_statistics(d, theme =plot@theme), layers, data, "finishing layer stat")
+    # finish_stat no longer need theme parameter
+    data <- by_layer(function(l, d) l$finish_statistics(d), layers, data, "finishing layer stat")
 
     # Let Layout modify data before rendering
     data <- layout$finish_data(data)
 
     # Consolidate alt-text
-    plot$labels$alt <- get_alt_text(plot)
+    plot@labels$alt <- get_alt_text(plot)
 
-    build <- class_ggexon_build(data = data, layout = layout, plot = plot, nuclink = plot@nuclink, prolink = plot@pro_link)
+    build <- class_ggexon_built(data = data, layout = layout, plot = plot, nuclink = plot@nuclink, prolink = plot@pro_link)
     class(build) = union(c("ggexon_built", "ggplot2::ggplot_built"), class(build))
     build
 }
