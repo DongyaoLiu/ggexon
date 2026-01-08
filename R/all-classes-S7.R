@@ -365,45 +365,6 @@ class_ggplot <- S7::new_class(
   }
 )
 
-## Built ggplot ------------------------------------------------------------
-
-#' The ggplot built class
-#'
-#' The ggplot built class is an intermediate class and represents a processed
-#' ggplot object ready for rendering. It is constructed by calling
-#' [`ggplot_build()`] on a [ggplot][class_ggplot] object and is not meant to be
-#' instantiated directly. The class can be rendered to a gtable object by
-#' calling the [`ggplot_gtable()`] function on a ggplot built class object.
-#'
-#' @param ... Reserved for future expansion.
-#' @param data A list of plain data frames; one for each layer.
-#' @param layout A Layout ggproto object.
-#' @param plot A completed ggplot class object.
-#'
-#' @keywords internal
-#' @export
-class_ggexon_built <- S7::new_class(
-  "ggexon_built", parent = class_gg,
-  properties = list(
-    data   = S7::class_list,
-    layout = class_layout,
-    plot   = class_ggplot
-  ),
-  constructor = function(..., data = NULL, layout = NULL, plot = NULL) {
-    warn_dots_empty()
-    if (is.null(data) || is.null(layout) || is.null(plot)) {
-      cli::cli_abort(
-        "The {.cls ggplot_built} class should be constructed by {.fn ggplot_build}."
-      )
-    }
-    S7::new_object(
-      S7::S7_object(),
-      data = data,
-      layout = layout,
-      plot = plot
-    )
-  }
-)
 
 ## ggexon --------------------------------------------------------
 
@@ -440,8 +401,8 @@ class_ggexon <- S7::new_class(
     facet = facet_null(),
     layout = NULL,
     labels = labs(),
-    prolink = NULL,
-    nuclink = NULL,
+    prolink = list(),
+    nuclink = list(),
     plot_env = parent.frame()
   ) {
     warn_dots_empty()
@@ -460,6 +421,46 @@ class_ggexon <- S7::new_class(
       prolink     = prolink %||% list(),
       nuclink     = nuclink %||% list(),
       plot_env    = plot_env
+    )
+  }
+)
+
+## Built ggplot ------------------------------------------------------------
+
+#' The ggplot built class
+#'
+#' The ggplot built class is an intermediate class and represents a processed
+#' ggplot object ready for rendering. It is constructed by calling
+#' [`ggplot_build()`] on a [ggplot][class_ggplot] object and is not meant to be
+#' instantiated directly. The class can be rendered to a gtable object by
+#' calling the [`ggplot_gtable()`] function on a ggplot built class object.
+#'
+#' @param ... Reserved for future expansion.
+#' @param data A list of plain data frames; one for each layer.
+#' @param layout A Layout ggproto object.
+#' @param plot A completed ggplot class object.
+#'
+#' @keywords internal
+#' @export
+class_ggexon_built <- S7::new_class(
+  "ggexon_built", parent = class_gg,
+  properties = list(
+    data   = S7::class_list,
+    layout = class_layout,
+    plot   = class_ggexon
+    ),
+  constructor = function(..., data = NULL, layout = NULL, plot = NULL) {
+    warn_dots_empty()
+    if (is.null(data) || is.null(layout) || is.null(plot) ) {
+      cli::cli_abort(
+        "The {.cls ggexon_built} class should be constructed by {.fn ggexon_build}."
+      )
+    }
+    S7::new_object(
+      S7::S7_object(),
+      data = data,
+      layout = layout,
+      plot = plot
     )
   }
 )
