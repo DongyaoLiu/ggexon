@@ -169,6 +169,7 @@ class_scales_list <- S7::new_S3_class("ScalesList")
 #' @export
 #' @format NULL
 #' @usage NULL
+#'
 class_S3_gg <- S7::new_S3_class("gg")
 
 #' @rdname class_definitions
@@ -357,7 +358,7 @@ class_ggplot <- S7::new_class(
       theme       = theme %||% ggplot2:::theme(),
       coordinates = coordinates,
       facet       = facet,
-      layout      = layout %||% ggproto(NULL, Layout),
+      layout      = layout %||% ggproto(NULL, Layout2),
       labels      = labels,
       meta        = meta,
       plot_env    = plot_env
@@ -369,8 +370,7 @@ class_ggplot <- S7::new_class(
 ## ggexon --------------------------------------------------------
 
 #' The major ggexon object
-#' @param prolink named list
-#' @param nuclink named list
+
 
 class_ggexon <- S7::new_class(
   name = "ggexon", parent = class_gg,
@@ -385,8 +385,6 @@ class_ggexon <- S7::new_class(
     facet   = class_facet,
     layout  = class_layout,
     labels  = ggplot2::class_labels,
-    prolink = S7::class_list,
-    nuclink = S7::class_list,
     plot_env = S7::class_environment
   ),
   constructor = function(
@@ -401,8 +399,6 @@ class_ggexon <- S7::new_class(
     facet = facet_null(),
     layout = NULL,
     labels = labs(),
-    prolink = list(),
-    nuclink = list(),
     plot_env = parent.frame()
   ) {
     warn_dots_empty()
@@ -416,10 +412,8 @@ class_ggexon <- S7::new_class(
       theme       = theme %||% ggplot2::theme(),
       coordinates = coordinates,
       facet       = facet,
-      layout      = layout %||% ggproto(NULL, Layout),
+      layout      = layout %||% ggproto(NULL, Layout2),
       labels      = labels,
-      prolink     = prolink %||% list(),
-      nuclink     = nuclink %||% list(),
       plot_env    = plot_env
     )
   }

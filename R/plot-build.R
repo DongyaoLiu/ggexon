@@ -35,17 +35,33 @@ build_ggexon <- S7::method(ggexon_build, class_ggexon) <- function(plot, ...) {
 
     # Initialise panels, add extra data for margins & missing faceting
     # variables, and add on a PANEL variable to data
-    layout <- ggplot2:::create_layout(plot@facet, plot@coordinates, plot@layout)
+    layout <- create_layout2(plot@facet, plot@coordinates, plot@layout)
     data <- layout$setup(data, plot@data, plot@plot_env)
 
-    # Compute aesthetics to produce data with generalised variable names
+    # add aesthetics mapping to preserve "ty" "qy" variable. this is specialized for ggexon
+
+    lapply(seq_along(layers), function(i) {
+      name <- names(layers)[i]
+
+      # only consider link layers
+      if (name == "geom_nuclink"){
+        outside_mapping = unlist(layers[[i]]$computed_mapping)
+        inside_mapping = unlist(ggplot2::aes(ty = ty, qy = qy))
+        layers[[i]]$computed_mapping = ggplot2::class_mapping(c(outside_mapping, inside_mapping), env = parent.frame())
+
+        print(layers[[i]]$computed_mapping)
+      }
+    })
+
+
+    # Compute aesthetics to produce data with generalised variable names.
     data <- by_layer(function(l, d) l$compute_aesthetics(d, plot), layers, data, "computing aesthetics")
 
     # TODO: future labels presentation should do with this function.
     plot@labels <- ggplot2:::setup_plot_labels(plot, layers, data)
     data <- .ignore_data(data)
 
-    # Transform all scales, globally not layer specific. I should learn this project ggnewscale
+    # Transform all data table in the list 'data', globally not layer specific. I should learn this project ggnewscale
     data <- lapply(data, scales$transform_df)
 
     # Map and train positions so that statistics have access to ranges
@@ -53,16 +69,13 @@ build_ggexon <- S7::method(ggexon_build, class_ggexon) <- function(plot, ...) {
     scale_x <- function() scales$get_scales("x")
     scale_y <- function() scales$get_scales("y")
 
-
-    print("the scale_x")
-    print(scale_x)
-
-    print("the scale_y")
-    print(scale_y)
-
+    # init ScaleContinuousPosition for each panel and train position and stored
+    # in the range property of ScaleContinuousPosition
     layout$train_position(data, scale_x(), scale_y())
     data <- layout$map_position(data)
     data <- .expose_data(data)
+
+
 
     # Apply and map statistics
     data <- by_layer(function(l, d) l$compute_statistic(d, layout), layers, data, "computing stat")
@@ -155,7 +168,7 @@ S7::method(ggexon_gtable, class_ggexon_built) <- function(data) {
   print(plot_table)
   # Legends
   legend_box <- plot@guides$assemble(theme)
-  print(legend_box) # can not fix legend error. I just copy the orignial code
+  print(legend_box) # can not fix legend error. I just copy the originial code
   #plot_table <- table_add_legends(plot_table, legend_box, theme)
   #print(plot_table)
   # whole plot annotation

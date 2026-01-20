@@ -6,7 +6,7 @@ ggexon <- function(data = NULL, mapping = aes(), ...,
 
 
 #' @export
-ggexon.default <- function(data = NULL, mapping = aes(), nuc_link = NULL, pro_link = NULL, ...,
+ggexon.default <- function(data = NULL, mapping = aes(), ...,
                            environment = parent.frame()){
   if (!missing(mapping) && !is_mapping(mapping)) {
     cli::cli_abort(c(
@@ -16,17 +16,13 @@ ggexon.default <- function(data = NULL, mapping = aes(), nuc_link = NULL, pro_li
   }
 
   data <- fortify(data, ...)
-  print(environment)
 
   p <- class_ggexon(
     data = data,
     mapping = mapping,
     plot_env = environment,
-    nuc_link = nuc_link  %||% NULL,
-    pro_link = pro_link %||% NULL
     )
-
-  class(p) = union(union(c("ggexon", "ggplot2::ggplot", "ggplot"), class(p)), "gg")
+  class(p) = union(union(c("ggexon", "ggexon::ggexon", "ggplot2::ggplot"), class(p)), "gg")
 
   set_last_plot(p)
   return(p)
@@ -46,15 +42,14 @@ local({
       # Record dependency on 'ggplot2' on the display list
       # (AFTER grid.newpage())
       grDevices::recordGraphics(
-        requireNamespace("ggplot2", quietly = TRUE),
+        requireNamespace("ggexon", quietly = TRUE),
         list(),
-        getNamespace("ggplot2")
+        getNamespace("ggexon")
       )
+      print("using ggexon build")
+      data <- ggexon_build(x)
 
-      data <- ggplot_build(x)
-
-#only rewrite the code inside ggplot_gtable
-      gtable <- ggplot_gtable(data)
+      gtable <- ggplot2::ggplot_gtable(data)
       if (is.null(vp)) {
         grid.draw(gtable)
       } else {

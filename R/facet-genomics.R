@@ -3,9 +3,17 @@ facet_genomics <- function(facets, nrow = NULL, ncol = NULL, scales = "fixed",
                        shrink = TRUE, labeller = "label_value", as.table = TRUE,
                        switch = deprecated(), drop = TRUE, dir = "h",
                        strip.position = 'top', axes = "margins",
-                       axis.labels = "all", nuc_link = NULL, pro_link = NULL) {
+                       axis.labels = "all") {
   scales <- arg_match0(scales %||% "fixed", c("fixed", "free_x", "free_y", "free"))
-  dir <- arg_match0(dir, c("h", "v"))
+  dir <- arg_match0(dir, c("h", "v", "lt", "tl", "lb", "bl", "rt", "tr", "rb", "br"))
+
+  if (nchar(dir) == 1) {
+    dir <- base::switch(
+      dir,
+      h = if (as.table) "lt" else "lb",
+      v = if (as.table) "tl" else "tr"
+    )
+  }
   free <- list(
     x = any(scales %in% c("free_x", "free")),
     y = any(scales %in% c("free_y", "free"))
@@ -27,10 +35,10 @@ facet_genomics <- function(facets, nrow = NULL, ncol = NULL, scales = "fixed",
   )
 
   # Check for deprecated labellers
-  labeller <- ggplot2:::check_labeller(labeller)
+  labeller <- ggplot2:::validate_labeller(labeller)
 
   # Flatten all facets dimensions into a single one
-  facets <- ggplot2:::wrap_as_facets_list(facets)
+  facets <- ggplot2:::compact_facets(facets)
 
 
   strip.position <- arg_match0(strip.position, c("top", "bottom", "left", "right"))
@@ -58,8 +66,7 @@ facet_genomics <- function(facets, nrow = NULL, ncol = NULL, scales = "fixed",
       labeller = labeller,
       dir = dir,
       draw_axes = draw_axes,
-      axis_labels = axis_labels,
-      nuc_link = nuc_link
+      axis_labels = axis_labels
     )
   )
 }
@@ -68,259 +75,169 @@ facet_genomics <- function(facets, nrow = NULL, ncol = NULL, scales = "fixed",
 FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
 
 
-  compute_link_layout = function(self, link_data){
+    compute_layer_type = function(data, params) {
+    layer_type <- list(lapply(data, function(df) {
 
-    link_table <- data.frame(
-      Query = sapply(strsplit(names(link_data), "_"), `[`, 1),
-      Target = sapply(strsplit(names(link_data), "_"), `[`, 2))
+    if (is_waiver(df)){ return(NA) }
+
+    # Count occurrences of "start" in column names
+    start_count <- sum(grepl("start", colnames(df), ignore.case = TRUE))
+
+    # Determine output based on count of start
+    # one start is obvious annotation file
+    # two starts (e.g. qstart, tstart) should be the link file.
+    if (start_count == 1) {
+    return("annotation")
+    } else if (start_count == 2) {
+    return("link")
+    } else {
+    cli::cli_abort(c("can not detect start(case ignore) in the dataframe colnames"))
+    return(NA)
+    }
+    }))
+
+    params$.layer_type = c(unlist(layer_type))
+    params
+    },
+
+
+
+  compute_layout = function(self, data, params) {
+    vars <- params$facets
+
+    if (length(vars) == 0) {
+      return(layout_null())
+    }
+
+    ggplot2:::check_facet_vars(names(vars), name = snake_class(self))
+
+    base <- ggplot2:::combine_vars(data, params$plot_env, vars, drop = params$drop)
+
+    id <- ggplot2:::id(base, drop = TRUE)
+    n <- attr(id, "n")
+
+
+    dims <- ggplot2:::wrap_dims(n, params$nrow, params$ncol)
+    layout <- ggplot2:::wrap_layout(id, dims, params$dir)
+
+    panels <- vec_cbind(layout, base)
+    panels <- panels[order(panels$PANEL), , drop = FALSE]
+    rownames(panels) <- NULL
+
+    # Add scale identification
+    panels$SCALE_X <- if (params$free$x) seq_len(n) else 1L
+    panels$SCALE_Y <- if (params$free$y) seq_len(n) else 1L
+
+    panels
+  },
+
+  compute_alignment_layout = function(self, data, layout){
+
+    # compuate link data panel number
+    species_aln_list = lapply(data, function(df){
+      if("tspecies" %in% colnames(df)){
+        species_df = unique(df[ ,c("tspecies", "qspecies", "track")])
+      }
+    })
+    species_aln_list <- do.call(rbind, Filter(Negate(is.null), species_aln_list))
+
+    # PANEL ROW COL track SCALE_X SCALE_Y tspecies qspecies
+    layout2 = left_join(layout, species_aln_list, join_by(track == track))
+
+    # sort the panel order.
+    split_by_col = split(layout2, layout2$COL)
+
+    split_by_col = lapply(split_by_col, function(df){
+
+    link_layout = df[str_detect(df$track, "link"), c("tspecies", "qspecies")]
+
+    for (i in 1:nrow(link_layout)){
+
+      target_row_index = rownames(df[df$track == link_layout[i,"tspecies"], ])
+      query_row_index = rownames(df[df$track == link_layout[i,"qspecies"], ])
+      annotation_index = sort(c(target_row_index, query_row_index))
+      link_index_row = rownames(link_layout[i , ])
+
+      if (link_index_row < annotation_index[1] || link_index_row > annotation_index[2]) {
+        new_row_index = c(annotation_index[1], link_index_row, annotation_index[2])
+      }
+    }
+
+    # siuation 1: all species have a link panel
+    if (unique(sort(new_row_index) == rownames(df))){
+      df = df[new_row_index, ]
+    }else{
+    # siuation 2: there are some species no link table
+      df = df[c(new_row_index, setdiff(rownames(df), new_row_index)), ]
+    }
+    })
+
+    link_layout = do.call(rbind, Filter(Negate(is.null), split_by_col))
+    rownames(link_layout) = 1:nrow(link_layout)
+    link_layout$PANEL = 1:nrow(link_layout)
+    link_layout$ROW = 1:nrow(link_layout)
+
+
+    if (length(unique(link_layout$SCALE_X)) == 1){
+      link_layout$SCALE_X = 1
+    }else{
+      link_layout$SCALE_X = sort(link_layout$SCALE_X)
+    }
+
+    if (length(unique(link_layout$SCALE_Y)) == 1){
+      link_layout$SCALE_Y = 1
+    }else{
+      link_layout$SCALE_Y = sort(link_layout$SCALE_Y)
+    }
+
+    #print(link_layout)
+    link_layout
 
   },
 
-  draw_panels = function(self, panels, layout, x_scales, y_scales, ranges, coord, data, theme, params, nuc_link_grob = NULL, pro_link_grob = NULL) {
-    if ((params$free$x || params$free$y) && !coord$is_free()) {
-      cli::cli_abort("{.fn {snake_class(self)}} can't use free scales with {.fn {snake_class(coord)}}.")
-    }
+  map_link_direction = function(self, data, layout){
 
-  if (inherits(coord, "CoordFlip")) {
-    if (params$free$x) {
-      layout$SCALE_X <- seq_len(nrow(layout))
-    } else {
-      layout$SCALE_X <- 1L
-    }
-    if (params$free$y) {
-      layout$SCALE_Y <- seq_len(nrow(layout))
-    } else {
-      layout$SCALE_Y <- 1L
-    }
-  }
+    link_layout = layout[str_detect(layout$track, "link"), ]
 
-  ncol <- max(layout$COL)
-  nrow <- max(layout$ROW)
-  n <- nrow(layout)
-  panel_order <- order(layout$ROW, layout$COL)
-  layout <- layout[panel_order, ]
-  panels <- panels[panel_order]
+
+    link_y_list = list()
+    for (i in 1:nrow(link_layout)) {
+      link_index = as.numeric(rownames(link_layout[i,]))
+
+
+      tspecies = link_layout[i,"tspecies"]
+      qspecies = link_layout[i, "qspecies"]
+      uppper_panel_species = layout[link_index - 1, "track"]
 
 
 
-  panel_pos <- ggplot2:::convertInd(layout$ROW, layout$COL, nrow)
-
-  # Fill missing parameters for backward compatibility
-  params$draw_axes   <- params$draw_axes   %||% list(x = FALSE, y = FALSE)
-  params$axis_labels <- params$axis_labels %||% list(x = TRUE,  y = TRUE)
-
-  x_axis_order <- if (params$axis_labels$x) layout$SCALE_X else seq(n)
-  y_axis_order <- if (params$axis_labels$y) layout$SCALE_Y else seq(n)
-
-  ranges <- ggplot2:::censor_labels(ranges, layout, params$axis_labels)
-  axes <- ggplot2:::render_axes(ranges, ranges, coord, theme, transpose = TRUE)
-
-  if (length(params$facets) == 0) {
-    # Add a dummy label
-    labels_df <- data_frame0("(all)" = "(all)", .size = 1)
-  } else {
-    labels_df <- layout[names(params$facets)]
-  }
-  attr(labels_df, "facet") <- "wrap"
-  strips <- render_strips(
-    structure(labels_df, type = "rows"),
-    structure(labels_df, type = "cols"),
-    params$labeller, theme)
-
-  # If user hasn't set aspect ratio, ask the coordinate system if
-  # it wants to specify one
-  aspect_ratio <- theme$aspect.ratio %||% coord$aspect(ranges[[1]])
-  if (is.null(aspect_ratio)) {
-    aspect_ratio <- 1
-    respect <- FALSE
-  } else {
-    respect <- TRUE
-  }
-
-
-
-  # code for arrange the extra panel for linkage data.
-  # This is unique feature of ggexon
-  # proto-code for only one link panel between two panels.
-
-
-
-  if (!is.null(nuc_link_grob) && length(nuc_link_grob) > 0) {
-
-    # target_query
-    cli::cli_alert_info("processing nuc_link data by facet_genomics")
-    pair_track = strsplit(names(nuc_link_grob), "_")[[1]]
-    link_data_names = names(nuc_link_grob)
-    nrow = nrow + length(link_data_names)
-    panel_pos = c(1, 3, 2)
-    panels = append(panels, nuc_link_grob)
-  }else{
-    cli::cli_alert_info("nuc_link is empty")
-  }
-
-  empty_table <- matrix(list(zeroGrob()), nrow = nrow, ncol = ncol)
-  panel_table <- empty_table
-  panel_table[panel_pos] <- panels
-
-
-  empties <- apply(panel_table, c(1,2), function(x) is.zero(x[[1]]))
-
-  panel_table <- gtable_matrix("layout", panel_table,
-   widths = unit(rep(1, ncol), "null"),
-   heights = unit(rep(abs(aspect_ratio), nrow), "null"), respect = respect, clip = coord$clip, z = matrix(1, ncol = ncol, nrow = nrow))
-  panel_table$layout$name <- paste0('panel-', rep(seq_len(ncol), nrow), '-', rep(seq_len(nrow), each = ncol))
-  panel_table <- gtable_add_col_space(panel_table,
-    theme$panel.spacing.x %||% theme$panel.spacing)
-  panel_table <- gtable_add_row_space(panel_table,
-    theme$panel.spacing.y %||% theme$panel.spacing)
-
-  # Add axes
-  axis_mat_x_top <- empty_table
-  axis_mat_x_top[panel_pos] <- axes$x$top[x_axis_order]
-  axis_mat_x_bottom <- empty_table
-  axis_mat_x_bottom[panel_pos] <- axes$x$bottom[x_axis_order]
-  axis_mat_y_left <- empty_table
-  axis_mat_y_left[panel_pos] <- axes$y$left[y_axis_order]
-  axis_mat_y_right <- empty_table
-  axis_mat_y_right[panel_pos] <- axes$y$right[y_axis_order]
-  if (!(params$free$x || params$draw_axes$x)) {
-    axis_mat_x_top[-1,]<- list(zeroGrob())
-    axis_mat_x_bottom[-nrow,]<- list(zeroGrob())
-  }
-  if (!(params$free$y || params$draw_axes$y)) {
-    axis_mat_y_left[, -1] <- list(zeroGrob())
-    axis_mat_y_right[, -ncol] <- list(zeroGrob())
-  }
-
-
-  # Add back missing axes
-  if (any(empties)) {
-    row_ind <- row(empties)
-    col_ind <- col(empties)
-    inside <- (theme$strip.placement %||% "inside") == "inside"
-    empty_bottom <- apply(empties, 2, function(x) c(diff(x) == 1, FALSE))
-    if (any(empty_bottom)) {
-      pos <- which(empty_bottom)
-      panel_loc <- data_frame0(
-        ROW = row_ind[pos],
-        COL = col_ind[pos],
-        .size = length(pos)
-      )
-      panels <- vec_match(panel_loc, layout[, c("ROW", "COL")])
-      x_axes <- axes$x$bottom[x_axis_order[panels]]
-      if (params$strip.position == "bottom" &&
-          !inside &&
-          any(!vapply(x_axes, is.zero, logical(1))) &&
-          !params$free$x) {
-        cli::cli_warn("Suppressing axis rendering when {.code strip.position = \"bottom\"} and {.code strip.placement == \"outside\"}")
-      } else {
-        axis_mat_x_bottom[pos] <- x_axes
+      if (uppper_panel_species == tspecies){
+        ty = 1
+        qy = 0
+      }else{
+        ty = 0
+        qy = 1
       }
-    }
-    empty_top <- apply(empties, 2, function(x) c(FALSE, diff(x) == -1))
-    if (any(empty_top)) {
-      pos <- which(empty_top)
-      panel_loc <- data_frame0(
-        ROW = row_ind[pos],
-        COL = col_ind[pos],
-        .size = length(pos)
-      )
-      panels <- vec_match(panel_loc, layout[, c("ROW", "COL")])
-      x_axes <- axes$x$top[x_axis_order[panels]]
-      if (params$strip.position == "top" &&
-          !inside &&
-          any(!vapply(x_axes, is.zero, logical(1))) &&
-          !params$free$x) {
-        cli::cli_warn("Suppressing axis rendering when {.code strip.position = \"top\"} and {.code strip.placement == \"outside\"}")
-      } else {
-        axis_mat_x_top[pos] <- x_axes
-      }
-    }
-    empty_right <- t(apply(empties, 1, function(x) c(diff(x) == 1, FALSE)))
-    if (any(empty_right)) {
-      pos <- which(empty_right)
-      panel_loc <- data_frame0(
-        ROW = row_ind[pos],
-        COL = col_ind[pos],
-        .size = length(pos)
-      )
-      panels <- vec_match(panel_loc, layout[, c("ROW", "COL")])
-      y_axes <- axes$y$right[y_axis_order[panels]]
-      if (params$strip.position == "right" &&
-          !inside &&
-          any(!vapply(y_axes, is.zero, logical(1))) &&
-          !params$free$y) {
-        cli::cli_warn("Suppressing axis rendering when {.code strip.position = \"right\"} and {.code strip.placement == \"outside\"}")
-      } else {
-        axis_mat_y_right[pos] <- y_axes
-      }
-    }
-    empty_left <- t(apply(empties, 1, function(x) c(FALSE, diff(x) == -1)))
-    if (any(empty_left)) {
-      pos <- which(empty_left)
-      panel_loc <- data_frame0(
-        ROW = row_ind[pos],
-        COL = col_ind[pos],
-        .size = length(pos)
-      )
-      panels <- vec_match(panel_loc, layout[, c("ROW", "COL")])
-      y_axes <- axes$y$left[y_axis_order[panels]]
-      if (params$strip.position == "left" &&
-          !inside &&
-          any(!vapply(y_axes, is.zero, logical(1))) &&
-          !params$free$y) {
-        cli::cli_warn("Suppressing axis rendering when {.code strip.position = \"left\"} and {.code strip.placement == \"outside\"}")
-      } else {
-        axis_mat_y_left[pos] <- y_axes
-      }
-    }
-  }
-  panel_table <- ggplot2:::weave_axes(
-    panel_table,
-    axes = list(
-      top  = axis_mat_x_top,  bottom = axis_mat_x_bottom,
-      left = axis_mat_y_left, right  = axis_mat_y_right
-    ),
-    empty = empties
-  )
-  axis_size   <- panel_table$sizes
-  panel_table <- panel_table$panels
+      link_y_list = append(link_y_list, c("link" = link_layout[i,"track"], "ty" = ty, "qy" = qy))
 
-  strip_padding <- convertUnit(theme$strip.switch.pad.wrap, "cm")
-  strip_name <- paste0("strip-", substr(params$strip.position, 1, 1))
-  strip_mat <- empty_table
-  strip_mat[panel_pos] <- unlist(unname(strips), recursive = FALSE)[[params$strip.position]]
-  if (params$strip.position %in% c("top", "bottom")) {
-    inside_x <- (theme$strip.placement.x %||% theme$strip.placement %||% "inside") == "inside"
-    if (params$strip.position == "top") {
-      placement <- if (inside_x) -1 else -2
-      strip_pad <- axis_size$top
-    } else {
-      placement <- if (inside_x) 0 else 1
-      strip_pad <- axis_size$bottom
     }
-    strip_height <- unit(apply(strip_mat, 1, max_height, value_only = TRUE), "cm")
-    panel_table <- ggplot2:::weave_tables_row(panel_table, strip_mat, placement, strip_height, strip_name, 2, coord$clip)
-    if (!inside_x) {
-      strip_pad[as.numeric(strip_pad) != 0] <- strip_padding
-      panel_table <- ggplot2:::weave_tables_row(panel_table, row_shift = placement, row_height = strip_pad)
-    }
-  } else {
-    inside_y <- (theme$strip.placement.y %||% theme$strip.placement %||% "inside") == "inside"
-    if (params$strip.position == "left") {
-      placement <- if (inside_y) -1 else -2
-      strip_pad <- axis_size$left
-    } else {
-      placement <- if (inside_y) 0 else 1
-      strip_pad <- axis_size$right
-    }
-    strip_pad[as.numeric(strip_pad) != 0] <- strip_padding
-    strip_width <- unit(apply(strip_mat, 2, max_width, value_only = TRUE), "cm")
-    panel_table <- ggplot2:::weave_tables_col(panel_table, strip_mat, placement, strip_width, strip_name, 2, coord$clip)
-    if (!inside_y) {
-      strip_pad[as.numeric(strip_pad) != 0] <- strip_padding
-      panel_table <- ggplot2:::weave_tables_col(panel_table, col_shift = placement, col_width = strip_pad)
-    }
+    link_y_table = bind_rows(link_y_list)
+
+    data = lapply(data, function(df){
+      if (is_waiver(df)){ df }
+
+      #print(colnames(df))
+      #detect the link datatable
+      if (sum(grepl("start", colnames(df), ignore.case = TRUE)) == 2){
+        #print(df)
+        df = left_join(df, link_y_table, join_by(track == link))
+        #print(df)
+        #print(df)
+        df
+      }else{df}
+
+    })
+    #lapply(data, function(df) {print(colnames(df))})
+    data
   }
-  panel_table
-})
+)

@@ -1,79 +1,87 @@
 create_layout2 <- function(facet, coord, layout = NULL) {
-   layout <- layout %||% Layout
+   layout <- layout %||% Layout2
    ggplot2:::check_inherits(layout, "Layout2")
    ggproto(NULL, layout, facet = facet, coord = coord)
 }
 
 #' @export
 Layout2 <- ggproto("Layout2", Layout,
-  map_link_position = function(self, link_data, link_data_name) {
-     # map the position of linkage data, should only used in facet-genomics.
-     # transform the link data to long dataframe.
-     # print(layout)
+  setup = function(self, data, plot_data = data_frame0(), plot_env = emptyenv()) {
+    data <- c(list(plot_data), data)
 
-    layout = self$layout
-    y_range = self$panel_scales_y[[1]]$range$range
+    # Setup facets
+    self$facet_params <- self$facet$setup_params(data, self$facet$params)
 
+    # detect any link data inside the data list
+    # self$facet_params <- self$facet$compute_layer_type(data, self$facet_params)
 
-    target = str_split_1(link_data_name, "_")[1]
-    query = str_split_1(link_data_name, "_")[2]
-    ROW_Query = layout[which(query == layout$track), "ROW"]
-    ROW_Target = layout[which(target == layout$track), "ROW"]
-    Query_PANEL = as.numeric(layout[which(query == layout$track), "PANEL"])
-    Target_PANEL = as.numeric(layout[which(target == layout$track), "PANEL"])
+    self$facet_params$plot_env <- plot_env
+    data <- self$facet$setup_data(data, self$facet_params)
 
-    x_panel_range_list = purrr::map(self$panel_params, ~ .x$x$scale$get_limits())
-    names(x_panel_range_list) = layout$PANEL
-    print(x_panel_range_list)
-    y_panel_range = self$panel_params[[1]]$y$scale$range$range
+    # Setup coords
+    self$coord_params <- self$coord$setup_params(data)
+    data <- self$coord$setup_data(data, self$coord_params)
 
-    if (ROW_Query > ROW_Target){
-      Query_y = min(y_range)
-      Target_y = max(y_range)
-    }else{
-      Query_y = max(y_range)
-      Target_y = min(y_range)
+    # Generate panel layout
+    # PANEL ROW COL "facet variable" SCALE_X SCALE_Y
+    self$layout <- self$facet$compute_layout(data, self$facet_params)
+
+    # Rearrange the panel if detect the link data.
+    if (TRUE %in% str_detect( self$layout$track, "link") ){
+
+    # sort the order of link panel
+    self$layout <- self$facet$compute_alignment_layout(data, self$layout)
+
+    # redirection of link position.
+    data = self$facet$map_link_direction(data, self$layout)
     }
 
-    apply_rescale <- function(x, panel, scales_list) {
-        panel <- as.character(panel)
-        params <- scales_list[[panel]]
+    # PANEL ROW COL "facet variable" SCALE_X SCALE_Y COORD
+    self$layout <- self$coord$setup_layout(self$layout, self$coord_params)
 
-    if (is.null(params)) {
-        warning(paste("No scale parameters for PANEL", panel))
-        return(x)
-    }
-        #print(x)
-        #print(params)
-        rescaled = rescale(x, c(0, 1), params)
-    }
+    ggplot2:::check_layout(self$layout)
 
 
-    link_data$id = 1:nrow(link_data)
-    melt_data = link_data %>% select(id, TStart, TEnd, QStart, QEnd, Strand) %>%
-        melt(id = c("id", "Strand"), variable.name = "x_variable", value.name = "x")
-    data2 = melt_data %>% mutate(y = if_else(str_detect(x_variable,"^T"),
-                                             Target_y, Query_y)) %>%
-      mutate(align_direction = if_else(Strand == "+",
-                                       "same", "opposite")) %>%
-      arrange(id, x_variable) %>% rowwise() %>%
-      mutate(draw_order =
-               case_when(align_direction == "same" && x_variable == "TStart" ~ 1,
-                         align_direction == "same" && x_variable == "TEnd" ~ 2,
-                         align_direction == "same" && x_variable == "QStart" ~ 4,
-                         align_direction == "same" && x_variable == "QEnd" ~ 3,
-                         align_direction == "opposite" && x_variable == "TStart" ~ 1,
-                         align_direction == "opposite" && x_variable == "TEnd" ~ 2,
-                         align_direction == "opposite" && x_variable == "QStart" ~ 3,
-                         align_direction == "opposite" && x_variable == "QEnd" ~ 4)) %>%
-      arrange(id, draw_order) %>%
-      mutate(PANEL = if_else(str_detect(x_variable, "^T"), Target_PANEL, Query_PANEL)) %>%
-      select(id ,draw_order, x, y, PANEL) %>% group_by(id) %>%
-      filter(!any(if_any(c(x, y), is.na))) %>% group_by(PANEL) %>%
-      mutate(x_scaled = apply_rescale(x, dplyr::first(PANEL), x_panel_range_list)) %>% group_by(id) %>%
-      filter(all(x_scaled <= 1)) %>% ungroup() %>% 
-      mutate(y_scaled = rescale(y, c(0, 1), y_panel_range))
+    # Add panel coordinates to the data for each layer
+    lapply(data[-1], self$facet$map_data,
+      layout = self$layout,
+      params = self$facet_params
+    )
 
-      return(data2)
-   }
+    #final step to assign the y of target alignment and query alignment
+
+  },
+
+  map_position = function(self, data) {
+    layout <- self$layout
+
+    lapply(data, function(layer_data) {
+      match_id <- NULL
+
+      # Loop through each variable, mapping across each scale, then joining
+      # back together
+      x_vars <- intersect(self$panel_scales_x[[1]]$aesthetics, names(layer_data))
+      if (length(x_vars) > 0) {
+        match_id <- match(layer_data$PANEL, layout$PANEL)
+        names(x_vars) <- x_vars
+        SCALE_X <- layout$SCALE_X[match_id]
+        new_x <- ggplot2:::scale_apply(layer_data, x_vars, "map", SCALE_X, self$panel_scales_x)
+        layer_data[, x_vars] <- new_x
+      }
+
+      y_vars <- intersect(self$panel_scales_y[[1]]$aesthetics, names(layer_data))
+      if (length(y_vars) > 0) {
+        if (is.null(match_id)) {
+          match_id <- match(layer_data$PANEL, layout$PANEL)
+        }
+        names(y_vars) <- y_vars
+        SCALE_Y <- layout$SCALE_Y[match_id]
+        new_y <- ggplot2:::scale_apply(layer_data, y_vars, "map", SCALE_Y, self$panel_scales_y)
+        layer_data[, y_vars] <- new_y
+      }
+
+      layer_data
+    })
+  }
+
 )
