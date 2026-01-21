@@ -395,7 +395,7 @@ class_ggexon <- S7::new_class(
     guides = NULL,
     mapping = aes(),
     theme = NULL,
-    coordinates = coord_cartesian(default = TRUE),
+    coordinates = coord_cartesian_genomic(default = TRUE),
     facet = facet_null(),
     layout = NULL,
     labels = labs(),
