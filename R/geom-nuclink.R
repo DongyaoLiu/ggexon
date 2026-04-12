@@ -53,8 +53,9 @@ GeomNucLink <- ggproto("GeomPanel", Geom,
                                                     strand == "-" && x_variable == "tend" ~ 2,
                                                     strand == "-" && x_variable == "qstart" ~ 3,
                                                     strand == "-" && x_variable == "qend" ~ 4)) %>%
-                                 arrange(id, draw_order) %>% select(-group) %>% rename(group = id)
-                               print(melt_data)
+                                 arrange(id, draw_order) %>% select(-group)
+                               melt_data$group = melt_data$id
+                               #print(melt_data)
                                melt_data
                              },
 
@@ -84,7 +85,6 @@ GeomNucLink <- ggproto("GeomPanel", Geom,
                                              lineend = "butt", linejoin = "round", linemitre = 10){
                        upper_panel = as.numeric(panel) - 1
                        upper_panel_params = panel_params[[upper_panel]]
-                       print(upper_panel_params)
 
                        lower_panel = as.numeric(panel) + 1
                        lower_panel_params = panel_params[[lower_panel]]

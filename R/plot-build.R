@@ -53,7 +53,7 @@ build_ggexon <- S7::method(ggexon_build, class_ggexon) <- function(plot, ...) {
       }
     })
 
-
+    print(data)
     # Compute aesthetics to produce data with generalised variable names.
     data <- by_layer(function(l, d) l$compute_aesthetics(d, plot), layers, data, "computing aesthetics")
 

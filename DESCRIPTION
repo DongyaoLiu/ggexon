@@ -21,9 +21,13 @@ Depends:
     vctrs,
     S7
 Imports:
+    Biostrings,
+    GenomeInfoDb,
+    GenomicRanges,
     ggplot2,
 Suggests:
-    testthat
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
 License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
     license
 Encoding: UTF-8
@@ -31,6 +35,7 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
 Collate: 
     'GADclass.R'
+    'SynIndividual-class.R'
     'aes-evaluation.R'
     'ggplot-global.R'
     'all-classes-S7.R'
@@ -43,8 +48,8 @@ Collate:
     'geom-gene.R'
     'geom-genetag.R'
     'geom-motif.R'
+    'geom-nuclink.R'
     'geom_genelabel.R'
-    'geom_pair_nuc_link.R'
     'geom_ruler.R'
     'geom_tracklabel.R'
     'geom_transcriptstrack.R'
