@@ -24,8 +24,56 @@ LayerSyn <- ggproto(
 
     rownames(data_source) <- NULL
     data_source
+  },
+  setup_layer = function(self, data, plot) {
+    if (is_syn_layer_input(self, plot@data) &&
+        length(self$mapping) == 0L &&
+        length(plot@mapping) == 0L) {
+      self$mapping <- syn_identity_mapping(default_syn_aesthetics(data, self))
+    }
+
+    defaults_fn <- get("defaults", envir = asNamespace("ggplot2"))
+
+    if (isTRUE(self$inherit.aes)) {
+      self$computed_mapping <- ggplot2::class_mapping(defaults_fn(self$mapping, plot@mapping))
+      if (self$geom$rename_size && "size" %in% names(plot@mapping) &&
+          !"linewidth" %in% names(self$computed_mapping) &&
+          "linewidth" %in% self$geom$aesthetics()) {
+        self$computed_mapping$size <- plot@mapping$size
+      }
+    } else {
+      self$computed_mapping <- self$mapping
+    }
+
+    attr(data, "layout") <- self$layout
+    data
   }
 )
+
+is_syn_layer_input <- function(layer, plot_data) {
+  inherits(layer$data, "waiver") &&
+    (methods::is(plot_data, "SynSpecies") || methods::is(plot_data, "SynIndividual")) ||
+    methods::is(layer$data, "SynSpecies") ||
+    methods::is(layer$data, "SynIndividual")
+}
+
+default_syn_aesthetics <- function(data, layer) {
+  if (identical(layer$geom, GeomExon)) {
+    cols <- c("xmin", "xmax", "ymin", "transcripts", "strand", "track", "type", "group")
+    return(intersect(cols, names(data)))
+  }
+
+  character()
+}
+
+syn_identity_mapping <- function(cols) {
+  if (length(cols) == 0L) {
+    return(ggplot2::aes())
+  }
+
+  exprs <- stats::setNames(lapply(cols, rlang::sym), cols)
+  rlang::inject(ggplot2::aes(!!!exprs))
+}
 
 resolve_syn_layer_data <- function(x, layer) {
   if (identical(layer$geom, GeomExon)) {
@@ -54,6 +102,7 @@ syn_to_exon_df <- function(x,
                            subset = NULL,
                            annotation_type = "exon") {
   individual <- resolve_syn_individual(x, species = species)
+  chr <- resolve_syn_seqname(individual, chr)
 
   start <- end <- NULL
   if (!is.null(subset)) {
@@ -109,6 +158,10 @@ syn_to_exon_df <- function(x,
     transcripts = transcript_ids,
     gene_name = gene_labels,
     track = syn_id(individual),
+    fill = "black",
+    linetype = 1,
+    linewidth = 0,
+    alpha = NA_real_,
     stringsAsFactors = FALSE
   )
 
@@ -117,6 +170,41 @@ syn_to_exon_df <- function(x,
   out <- out[order(match(out$transcripts, transcript_ids), out$xmin, out$xmax), , drop = FALSE]
   rownames(out) <- NULL
   out
+}
+
+resolve_syn_seqname <- function(individual, chr = NULL) {
+  if (is.null(chr)) {
+    return(NULL)
+  }
+
+  individual <- load_annotation(individual)
+  available <- unique(as.character(GenomeInfoDb::seqnames(annotation_data(individual))))
+
+  if (chr %in% available) {
+    return(chr)
+  }
+
+  lower_available <- base::tolower(available)
+  lower_chr <- base::tolower(chr)
+  if (lower_chr %in% lower_available) {
+    return(available[match(lower_chr, lower_available)])
+  }
+
+  chr_parts <- strsplit(chr, "_", fixed = TRUE)[[1L]]
+  if (length(chr_parts) > 1L) {
+    swapped <- paste(rev(chr_parts), collapse = "_")
+    if (swapped %in% available) {
+      return(swapped)
+    }
+    swapped_lower <- base::tolower(swapped)
+    if (swapped_lower %in% lower_available) {
+      return(available[match(swapped_lower, lower_available)])
+    }
+  }
+
+  cli::cli_abort(
+    "Unknown chromosome {.val {chr}} for {.val {syn_id(individual)}}. Available seqnames include {.val {utils::head(available, 10)}}."
+  )
 }
 
 resolve_syn_individual <- function(x, species = NULL) {
