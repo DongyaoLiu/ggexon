@@ -5,6 +5,9 @@ test_that("SynSpecies stores individuals and explicit alignment relationships", 
     "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
+  paf_path <- system.file("extdata", "V_alginment.paf", package = "ggexon")
+
+  expect_true(nzchar(paf_path))
 
   x1 <- SynIndividual(
     genome_file = genome_path,
@@ -25,7 +28,7 @@ test_that("SynSpecies stores individuals and explicit alignment relationships", 
     name = "XZ1516_vs_N2",
     query_individual = "XZ1516",
     target_individual = "N2",
-    file = "xz1516_vs_n2.paf"
+    file = paf_path
   )
   multi <- SynMultiAlignment(
     name = "worm-maf",
@@ -42,7 +45,7 @@ test_that("SynSpecies stores individuals and explicit alignment relationships", 
   expect_identical(names(multiple_alignments(sp)), "worm-maf")
   expect_identical(query_individual(pair), "XZ1516")
   expect_identical(target_individual(pair), "N2")
-  expect_identical(alignment_file(pair), "xz1516_vs_n2.paf")
+  expect_identical(alignment_file(pair), paf_path)
   expect_identical(alignment_individuals(pair), c("XZ1516", "N2"))
   expect_identical(
     alignment_individuals(multi),
