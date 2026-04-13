@@ -8,7 +8,7 @@ GeomExon <- ggproto("GeomExon", Geom,
                       required_aes = c("ymin", "xmin", "xmax", "transcripts","strand", "track", "type"),
                       non_missing_aes = c("linewidth", "shape"),
                       extra_params = c("exon_height", "na.rm", "x_translation", "subset", "annotation_type",
-                                       "breakdata"),
+                                       "breakdata", "species", "chr"),
                       default_aes = aes(linewidth = 0, linejoin = "mitre", fill="black",
                         colour = NULL,
                         size = 15,
@@ -68,6 +68,17 @@ GeomExon <- ggproto("GeomExon", Geom,
                           )
                         )
                       },
+                    default_params = function() {
+                      list(
+                        exon_height = 0.8,
+                        x_translation = 0,
+                        subset = NULL,
+                        annotation_type = "exon",
+                        breakdata = NULL,
+                        species = NULL,
+                        chr = NULL
+                      )
+                    },
                     draw_key = draw_key_polygon
 )
 
@@ -79,6 +90,7 @@ geom_exon <- function(mapping = NULL, data = NULL,
                       transcripts_track_ratio = NULL, exon_height=0.8,
                       x_translation = 0, subset = NULL,
                       annotation_type ="exon",
+                      species = NULL, chr = NULL,
                       breakdata = NULL,
                       inherit.aes = TRUE) {
     layer(
@@ -89,12 +101,14 @@ geom_exon <- function(mapping = NULL, data = NULL,
       position = position,
       show.legend = show.legend,
       inherit.aes = inherit.aes,
+      layer_class = LayerSyn,
       params = list(na.rm = na.rm,
                     exon_height = exon_height,
                     x_translation = x_translation,
                     subset = subset,
                     annotation_type = annotation_type,
+                    species = species,
+                    chr = chr,
                     breakdata = breakdata))
 }
-
 
