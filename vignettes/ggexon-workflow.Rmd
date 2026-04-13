@@ -28,6 +28,7 @@ This vignette sketches the core workflow:
 4. Set human-readable labels
 5. Patch corrected gene models
 6. Translate proteins from selected genes
+7. Combine multiple individuals in a `SynSpecies` object
 
 # Create a `SynIndividual`
 
@@ -140,6 +141,42 @@ variant_layer <- get_annotation(x, "variants")
 query_variants(variant_layer, chr = "V_RagTag", start = 21574336, end = 21574400)
 ```
 
+# Group individuals in a `SynSpecies`
+
+Once you have multiple genomes or species, `SynSpecies` can hold both the
+`SynIndividual` objects and their cross-species alignments.
+
+```{r eval = FALSE}
+x2 <- SynIndividual(other_genome_file, other_annotation_file)
+
+sp <- SynSpecies(name = "Caenorhabditis")
+sp <- add_individual(sp, x)
+sp <- add_individual(sp, x2)
+
+sp <- add_pairwise_alignment(
+  sp,
+  SynPairAlignment(
+    name = "XZ1516_vs_other",
+    query_individual = "XZ1516",
+    target_individual = syn_id(x2),
+    file = "XZ1516_vs_other.paf"
+  )
+)
+```
+
+For multiple-species alignments:
+
+```{r eval = FALSE}
+sp <- add_multiple_alignment(
+  sp,
+  SynMultiAlignment(
+    name = "worm-maf",
+    individuals = c("XZ1516", "N2", "CB4856"),
+    file = "worms.maf"
+  )
+)
+```
+
 # Notes
 
 - `SynFeatureAnnotation` is the structural layer used for CDS extraction and
@@ -148,6 +185,8 @@ query_variants(variant_layer, chr = "V_RagTag", start = 21574336, end = 21574400
   region-based access.
 - `SynProteinDomainAnnotation` provides protein-space annotation tied to
   transcript or protein identifiers.
+- `SynSpecies` is the comparison container that binds individuals and
+  alignments together.
 
 # Next steps
 

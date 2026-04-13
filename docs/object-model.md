@@ -12,7 +12,21 @@ annotation, and derived sequence workflows.
 - Keep structural annotation, variant tracks, signal tracks, and protein-space
   annotation in distinct classes.
 
-## Top-level object
+## Top-level objects
+
+### `SynSpecies`
+
+`SynSpecies` is the species-comparison container.
+
+It owns:
+
+- a named list of `SynIndividual` objects
+- a named list of `SynPairAlignment` objects
+- a named list of `SynMultiAlignment` objects
+- metadata about the comparison set
+
+This is the object that ties together within-species annotation state and
+between-species alignment state.
 
 ### `SynIndividual`
 
@@ -29,6 +43,38 @@ It owns:
 
 Conceptually, one `SynIndividual` represents one line or track in a synteny
 plot.
+
+## Alignment hierarchy
+
+### `SynPairAlignment`
+
+Represents one pairwise alignment layer, currently intended for PAF-like data.
+
+Owns:
+
+- `name`
+- `query_individual`
+- `target_individual`
+- `file`
+- `format`
+- `data`
+- `metadata`
+
+The explicit query/target fields matter because pairwise alignment formats are
+directional.
+
+### `SynMultiAlignment`
+
+Represents one multiple-species alignment layer, currently intended for MAF.
+
+Owns:
+
+- `name`
+- `individuals`
+- `file`
+- `format`
+- `data`
+- `metadata`
 
 ## Annotation hierarchy
 
@@ -217,13 +263,15 @@ Usually lazily loaded or loaded once on demand:
 
 Typical user workflow:
 
-1. Create a `SynIndividual`.
-2. Load the active feature annotation.
+1. Create one or more `SynIndividual` objects.
+2. Load the active feature annotation for each individual as needed.
 3. Attach optional signal, variant, or protein-domain layers.
 4. Apply label mappings.
 5. Apply curated annotation patches if needed.
-6. Translate proteins or extract CDS from the active feature annotation.
-7. Plot with `ggexon`.
+6. Translate proteins or extract CDS from active feature annotations.
+7. Group individuals inside a `SynSpecies` object.
+8. Attach pairwise or multiple alignments to describe cross-species structure.
+9. Plot with `ggexon`.
 
 ## Near-term follow-up
 
@@ -231,3 +279,4 @@ Typical user workflow:
 - Add `SynIndividual` convenience wrappers for non-feature layer queries.
 - Tighten patch target matching for parent-child feature families.
 - Document recommended input schemas for protein-domain tables.
+- Add file-backed verbs for pairwise and multiple alignment layers.
