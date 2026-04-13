@@ -29,7 +29,7 @@ LayerSyn <- ggproto(
     if (is_syn_layer_input(self, plot@data) &&
         length(self$mapping) == 0L &&
         length(plot@mapping) == 0L) {
-      self$mapping <- syn_identity_mapping(default_syn_aesthetics(data, self))
+    self$mapping <- syn_default_mapping(data, self)
     }
 
     defaults_fn <- get("defaults", envir = asNamespace("ggplot2"))
@@ -51,12 +51,24 @@ LayerSyn <- ggproto(
 )
 
 is_syn_layer_input <- function(layer, plot_data) {
+<<<<<<< HEAD
   inherits(layer$data, "waiver") &&
     (methods::is(plot_data, "SynSpecies") || methods::is(plot_data, "SynIndividual")) ||
+=======
+  (inherits(layer$data, "waiver") &&
+     (methods::is(plot_data, "SynSpecies") || methods::is(plot_data, "SynIndividual"))) ||
+>>>>>>> SynClass
     methods::is(layer$data, "SynSpecies") ||
     methods::is(layer$data, "SynIndividual")
 }
 
+<<<<<<< HEAD
+=======
+syn_default_mapping <- function(data, layer) {
+  syn_identity_mapping(default_syn_aesthetics(data, layer))
+}
+
+>>>>>>> SynClass
 default_syn_aesthetics <- function(data, layer) {
   if (identical(layer$geom, GeomExon)) {
     cols <- c("xmin", "xmax", "ymin", "transcripts", "strand", "track", "type", "group")
@@ -90,7 +102,10 @@ resolve_syn_layer_data <- function(x, layer) {
   }
 
   geom_name <- class(layer$geom)[1] %||% ""
+<<<<<<< HEAD
 
+=======
+>>>>>>> SynClass
   cli::cli_abort(
     "Syn object input is not yet implemented for geom {.val {geom_name}}."
   )
@@ -165,9 +180,21 @@ syn_to_exon_df <- function(x,
     stringsAsFactors = FALSE
   )
 
+<<<<<<< HEAD
   out <- merge(out, order_df[, c("transcripts", "ymin", "group")],
                by = "transcripts", all.x = TRUE, sort = FALSE)
   out <- out[order(match(out$transcripts, transcript_ids), out$xmin, out$xmax), , drop = FALSE]
+=======
+  out <- merge(
+    out,
+    order_df[, c("transcripts", "ymin", "group")],
+    by = "transcripts",
+    all.x = TRUE,
+    sort = FALSE
+  )
+  out <- out[order(match(out$transcripts, transcript_ids), out$xmin, out$xmax), , drop = FALSE]
+  out$PANEL <- 1L
+>>>>>>> SynClass
   rownames(out) <- NULL
   out
 }
