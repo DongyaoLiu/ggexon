@@ -106,6 +106,23 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
     vars <- params$facets
 
     if (methods::is(params$plot_data, "SynSpecies")) {
+      if (!is.null(params$layout_override)) {
+        return(
+          .finalize_synspecies_layout_scales(
+            params$layout_override,
+            free = params$free
+          )
+        )
+      }
+      stored_layout <- species_layout(params$plot_data)
+      if (!is.null(stored_layout)) {
+        return(
+          .finalize_synspecies_layout_scales(
+            stored_layout,
+            free = params$free
+          )
+        )
+      }
       return(
         synspecies_chain_layout(
           x = params$plot_data,
@@ -321,9 +338,27 @@ synspecies_chain_layout <- function(x, vars, free) {
   }
 
   panels <- dplyr::bind_rows(panel_rows)
-  panels$SCALE_X <- if (isTRUE(free$x)) seq_len(nrow(panels)) else 1L
-  panels$SCALE_Y <- if (isTRUE(free$y)) seq_len(nrow(panels)) else 1L
-  panels
+  .finalize_synspecies_layout_scales(panels, free = free)
+}
+
+.finalize_synspecies_layout_scales <- function(layout, free) {
+  layout <- as.data.frame(layout, stringsAsFactors = FALSE)
+  layout <- layout[order(layout$PANEL), , drop = FALSE]
+  rownames(layout) <- NULL
+
+  layout$SCALE_X <- if (isTRUE(free$x)) seq_len(nrow(layout)) else 1L
+
+  if (isTRUE(free$y)) {
+    if ("panel_type" %in% colnames(layout)) {
+      layout$SCALE_Y <- ifelse(layout$panel_type == "link", 2L, 1L)
+    } else {
+      layout$SCALE_Y <- seq_len(nrow(layout))
+    }
+  } else {
+    layout$SCALE_Y <- 1L
+  }
+
+  layout
 }
 
 synspecies_chain_species_order <- function(x) {

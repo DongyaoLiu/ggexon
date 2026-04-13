@@ -97,14 +97,16 @@ setClass(
     individuals = "list",
     pairwise_alignments = "list",
     multiple_alignments = "list",
-    metadata = "list"
+    metadata = "list",
+    layout = "ANY"
   ),
   prototype = list(
     name = NA_character_,
     individuals = list(),
     pairwise_alignments = list(),
     multiple_alignments = list(),
-    metadata = list()
+    metadata = list(),
+    layout = NULL
   ),
   validity = function(object) {
     problems <- character()
@@ -127,6 +129,24 @@ setClass(
       bad_multi <- !vapply(object@multiple_alignments, methods::is, logical(1), class2 = "SynMultiAlignment")
       if (any(bad_multi)) {
         problems <- c(problems, "`multiple_alignments` must be a list of SynMultiAlignment objects.")
+      }
+    }
+    if (!is.null(object@layout)) {
+      if (!is.data.frame(object@layout)) {
+        problems <- c(problems, "`layout` must be a data.frame or NULL.")
+      } else {
+        required_layout_cols <- c("PANEL", "ROW", "COL", "track")
+        missing_layout_cols <- setdiff(required_layout_cols, colnames(object@layout))
+        if (length(missing_layout_cols) > 0L) {
+          problems <- c(
+            problems,
+            paste0(
+              "`layout` is missing required columns: ",
+              paste(missing_layout_cols, collapse = ", "),
+              "."
+            )
+          )
+        }
       }
     }
     if (length(problems) == 0L) TRUE else problems
@@ -212,6 +232,9 @@ setMethod("pairwise_alignments", "SynSpecies", function(x) x@pairwise_alignments
 setGeneric("multiple_alignments", function(x) standardGeneric("multiple_alignments"))
 setMethod("multiple_alignments", "SynSpecies", function(x) x@multiple_alignments)
 
+setGeneric("species_layout", function(x) standardGeneric("species_layout"))
+setMethod("species_layout", "SynSpecies", function(x) x@layout)
+
 setGeneric("alignment_name", function(x) standardGeneric("alignment_name"))
 setMethod("alignment_name", "SynPairAlignment", function(x) x@name)
 setMethod("alignment_name", "SynMultiAlignment", function(x) x@name)
@@ -292,6 +315,41 @@ add_multiple_alignment <- function(x, alignment) {
   entries[[alignment_name(alignment)]] <- alignment
   x@multiple_alignments <- entries
   validObject(x)
+  x
+}
+
+#' Store a ggexon panel layout on a `SynSpecies` object
+#'
+#' @param x A `SynSpecies` object.
+#' @param value A layout `data.frame` or `NULL`.
+#'
+#' @return The updated `SynSpecies` object.
+#' @export
+setGeneric("species_layout<-", function(x, value) standardGeneric("species_layout<-"))
+setReplaceMethod("species_layout", "SynSpecies", function(x, value) {
+  if (!is.null(value) && !is.data.frame(value)) {
+    stop("`species_layout<-` expects a data.frame or NULL.", call. = FALSE)
+  }
+  x@layout <- value
+  validObject(x)
+  x
+})
+
+#' Compute and store the ggexon chain layout on a `SynSpecies`
+#'
+#' @param x A `SynSpecies` object.
+#' @param vars Facet vars. Defaults to `ggplot2::vars(track)`.
+#' @param free List with logical `x` and `y` entries controlling scale grouping.
+#'
+#' @return The updated `SynSpecies` object.
+#' @export
+store_chain_layout <- function(x,
+                               vars = ggplot2::vars(track),
+                               free = list(x = FALSE, y = FALSE)) {
+  if (!methods::is(x, "SynSpecies")) {
+    stop("`store_chain_layout()` expects a SynSpecies object.", call. = FALSE)
+  }
+  species_layout(x) <- synspecies_chain_layout(x, vars = vars, free = free)
   x
 }
 

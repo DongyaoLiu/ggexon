@@ -8,14 +8,24 @@ create_layout2 <- function(facet, coord, layout = NULL) {
 Layout2 <- ggproto("Layout2", Layout,
   setup = function(self, data, plot_data = data_frame0(), plot_env = emptyenv()) {
     plot_data_raw <- plot_data
+    layout_override <- NULL
     if (methods::is(plot_data, "SynSpecies") || methods::is(plot_data, "SynIndividual")) {
       plot_data <- data_frame0()
+    }
+    for (layer_df in data) {
+      if (is.data.frame(layer_df)) {
+        layout_override <- attr(layer_df, "syn_layout_override", exact = TRUE)
+        if (!is.null(layout_override)) {
+          break
+        }
+      }
     }
     data <- c(list(plot_data), data)
 
     # Setup facets
     self$facet_params <- self$facet$setup_params(data, self$facet$params)
     self$facet_params$plot_data <- plot_data_raw
+    self$facet_params$layout_override <- layout_override
 
     # detect any link data inside the data list
     # self$facet_params <- self$facet$compute_layer_type(data, self$facet_params)

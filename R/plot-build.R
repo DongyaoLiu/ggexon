@@ -45,9 +45,12 @@ build_ggexon <- S7::method(ggexon_build, class_ggexon) <- function(plot, ...) {
 
       # only consider link layers
       if (name == "geom_nuclink"){
-        outside_mapping = unlist(layers[[i]]$computed_mapping)
-        inside_mapping = unlist(ggplot2::aes(ty = ty, qy = qy))
-        layers[[i]]$computed_mapping = ggplot2::class_mapping(c(outside_mapping, inside_mapping), env = parent.frame())
+        mapping_names <- names(layers[[i]]$computed_mapping)
+        if (!all(c("ty", "qy") %in% mapping_names)) {
+          outside_mapping = unlist(layers[[i]]$computed_mapping)
+          inside_mapping = unlist(ggplot2::aes(ty = ty, qy = qy))
+          layers[[i]]$computed_mapping = ggplot2::class_mapping(c(outside_mapping, inside_mapping), env = parent.frame())
+        }
 
         print(layers[[i]]$computed_mapping)
       }
