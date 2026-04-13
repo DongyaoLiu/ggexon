@@ -18,15 +18,13 @@
 #' @slot seqinfo Sequence-level metadata such as chromosome names and lengths
 #'   stored as a `GenomeInfoDb::Seqinfo` object.
 #' @slot feature_index Fast lookup structure for genes, transcripts, or exons.
+#' @slot annotations Named list of `SynAnnotation` objects attached to this
+#'   genome.
+#' @slot active_annotation Name of the default feature annotation layer to use.
 #' @slot metadata User or import metadata describing the individual.
 #' @slot plot_cache Derived plotting tables cached for reuse.
 #'
 #' @exportClass SynIndividual
-setClassUnion("NULLOrGRanges", c("NULL", "GRanges"))
-setClassUnion("NULLOrSeqinfo", c("NULL", "Seqinfo"))
-setClassUnion("NULLOrDNAStringSet", c("NULL", "DNAStringSet"))
-setClassUnion("NULLOrAAStringSet", c("NULL", "AAStringSet"))
-
 setClass(
   "SynIndividual",
   slots = c(
@@ -39,6 +37,8 @@ setClass(
     protein_seq = "NULLOrAAStringSet",
     seqinfo = "NULLOrSeqinfo",
     feature_index = "ANY",
+    annotations = "list",
+    active_annotation = "character",
     metadata = "list",
     plot_cache = "list"
   ),
@@ -52,6 +52,8 @@ setClass(
     protein_seq = NULL,
     seqinfo = NULL,
     feature_index = NULL,
+    annotations = list(),
+    active_annotation = "default",
     metadata = list(),
     plot_cache = list()
   ),
@@ -81,6 +83,34 @@ setClass(
         problems,
         "`annotation_format` must be one of 'auto', 'gff', or 'gtf'."
       )
+    }
+    if (length(object@active_annotation) != 1L ||
+        is.na(object@active_annotation) ||
+        !nzchar(object@active_annotation)) {
+      problems <- c(
+        problems,
+        "`active_annotation` must be a single non-empty character value."
+      )
+    }
+    if (length(object@annotations) > 0L) {
+      bad_annotations <- !vapply(
+        object@annotations,
+        methods::is,
+        logical(1),
+        class2 = "SynAnnotation"
+      )
+      if (any(bad_annotations)) {
+        problems <- c(
+          problems,
+          "`annotations` must be a list of SynAnnotation objects."
+        )
+      }
+      if (!(object@active_annotation %in% names(object@annotations))) {
+        problems <- c(
+          problems,
+          "`active_annotation` must be one of the names in `annotations`."
+        )
+      }
     }
 
     if (length(problems) == 0L) TRUE else problems
@@ -113,12 +143,20 @@ SynIndividual <- function(genome_file,
     id <- tools::file_path_sans_ext(basename(genome_file))
   }
 
+  default_annotation <- SynFeatureAnnotation(
+    name = "default",
+    annotation_file = annotation_file,
+    annotation_format = annotation_format
+  )
+
   new(
     "SynIndividual",
     id = id,
     genome_file = genome_file,
     annotation_file = annotation_file,
     annotation_format = annotation_format,
+    annotations = list(default = default_annotation),
+    active_annotation = "default",
     metadata = metadata
   )
 }
@@ -194,18 +232,44 @@ check_syn_files <- function(genome_file, annotation_file) {
 #' @return An updated `SynIndividual` object.
 #' @export
 load_annotation <- function(x) {
-  if (!methods::is(x, "SynIndividual")) {
-    stop("`load_annotation()` expects a SynIndividual object.", call. = FALSE)
-  }
-  if (!is.null(annotation_data(x))) {
+  if (methods::is(x, "SynAnnotation")) {
+    if (!methods::is(x, "SynFeatureAnnotation")) {
+      stop(
+        "`load_annotation()` currently supports SynFeatureAnnotation objects.",
+        call. = FALSE
+      )
+    }
+    if (!is.null(annotation_data(x))) {
+      return(x)
+    }
+    gr <- rtracklayer::import(annotation_file(x))
+    annotation_data(x) <- .normalize_annotation(gr)
+    x@base_annotation <- annotation_data(x)
+    x@loaded <- TRUE
     return(x)
   }
 
-  gr <- rtracklayer::import(annotation_file(x))
-  gr <- .normalize_annotation(gr)
+  if (!methods::is(x, "SynIndividual")) {
+    stop(
+      "`load_annotation()` expects a SynIndividual or SynAnnotation object.",
+      call. = FALSE
+    )
+  }
+  active_name <- active_feature_annotation(x)
+  ann <- get_annotation(x, active_name)
+  ann <- load_annotation(ann)
+  x <- add_annotation(x, ann, set_active = TRUE)
 
-  annotation_data(x) <- gr
-  seqinfo(x) <- GenomeInfoDb::seqinfo(gr)
+  ann <- get_annotation(x, active_name)
+  annotation_data(x) <- annotation_data(ann)
+  nucleotide_seq(x) <- nucleotide_seq(ann)
+  protein_seq(x) <- protein_seq(ann)
+  feature_index(x) <- feature_index(ann)
+  seqinfo(x) <- if (!is.null(annotation_data(ann))) {
+    GenomeInfoDb::seqinfo(annotation_data(ann))
+  } else {
+    NULL
+  }
   x
 }
 
@@ -230,8 +294,11 @@ query_features <- function(x,
                            end = NULL,
                            feature_type = "CDS",
                            all = FALSE) {
-  if (!methods::is(x, "SynIndividual")) {
-    stop("`query_features()` expects a SynIndividual object.", call. = FALSE)
+  if (!(methods::is(x, "SynIndividual") || methods::is(x, "SynFeatureAnnotation"))) {
+    stop(
+      "`query_features()` expects a SynIndividual or SynFeatureAnnotation object.",
+      call. = FALSE
+    )
   }
 
   x <- load_annotation(x)
@@ -376,8 +443,12 @@ extract_cds_seq <- function(x,
     return(cds_dna)
   }
 
-  existing <- nucleotide_seq(x)
-  nucleotide_seq(x) <- .merge_string_sets(existing, cds_dna, append = append)
+  active_name <- active_feature_annotation(x)
+  ann <- get_annotation(x, active_name)
+  existing <- nucleotide_seq(ann)
+  nucleotide_seq(ann) <- .merge_string_sets(existing, cds_dna, append = append)
+  x <- add_annotation(x, ann, set_active = TRUE)
+  nucleotide_seq(x) <- nucleotide_seq(ann)
   x
 }
 
@@ -438,11 +509,15 @@ translate_protein <- function(x,
     store = TRUE,
     append = append
   )
-  protein_seq(updated_x) <- .merge_string_sets(
-    protein_seq(updated_x),
+  active_name <- active_feature_annotation(updated_x)
+  ann <- get_annotation(updated_x, active_name)
+  protein_seq(ann) <- .merge_string_sets(
+    protein_seq(ann),
     aa,
     append = append
   )
+  updated_x <- add_annotation(updated_x, ann, set_active = TRUE)
+  protein_seq(updated_x) <- protein_seq(ann)
   updated_x
 }
 
@@ -702,6 +777,7 @@ setMethod("show", "SynIndividual", function(object) {
   cat("  genome_file:", object@genome_file, "\n")
   cat("  annotation_file:", object@annotation_file, "\n")
   cat("  annotation_format:", object@annotation_format, "\n")
+  cat("  active_feature_annotation:", object@active_annotation, "\n")
   cat("  loaded:", paste(names(loaded)[loaded], collapse = ", "), "\n")
 })
 
@@ -713,36 +789,175 @@ setMethod("genome_file", "SynIndividual", function(x) x@genome_file)
 
 setGeneric("annotation_file", function(x) standardGeneric("annotation_file"))
 setMethod("annotation_file", "SynIndividual", function(x) x@annotation_file)
+setMethod("annotation_file", "SynAnnotation", function(x) source_file(x))
 
 setGeneric("annotation_format", function(x) standardGeneric("annotation_format"))
 setMethod("annotation_format", "SynIndividual", function(x) x@annotation_format)
+setMethod("annotation_format", "SynFeatureAnnotation", function(x) x@annotation_format)
 
 setGeneric("annotation_data", function(x) standardGeneric("annotation_data"))
 setMethod("annotation_data", "SynIndividual", function(x) x@annotation)
+setMethod("annotation_data", "SynFeatureAnnotation", function(x) x@annotation)
 
 setGeneric("nucleotide_seq", function(x) standardGeneric("nucleotide_seq"))
 setMethod("nucleotide_seq", "SynIndividual", function(x) x@nucleotide_seq)
+setMethod("nucleotide_seq", "SynFeatureAnnotation", function(x) x@nucleotide_seq)
 
 setGeneric("protein_seq", function(x) standardGeneric("protein_seq"))
 setMethod("protein_seq", "SynIndividual", function(x) x@protein_seq)
+setMethod("protein_seq", "SynFeatureAnnotation", function(x) x@protein_seq)
 
 setGeneric("seqinfo", function(x) standardGeneric("seqinfo"))
 setMethod("seqinfo", "SynIndividual", function(x) x@seqinfo)
 
 setGeneric("feature_index", function(x) standardGeneric("feature_index"))
 setMethod("feature_index", "SynIndividual", function(x) x@feature_index)
+setMethod("feature_index", "SynFeatureAnnotation", function(x) x@feature_index)
 
 setGeneric("syn_metadata", function(x) standardGeneric("syn_metadata"))
 setMethod("syn_metadata", "SynIndividual", function(x) x@metadata)
 
 setGeneric("plot_cache", function(x) standardGeneric("plot_cache"))
 setMethod("plot_cache", "SynIndividual", function(x) x@plot_cache)
+setMethod("plot_cache", "SynAnnotation", function(x) x@plot_cache)
+
+setGeneric("annotation_names", function(x) standardGeneric("annotation_names"))
+setMethod("annotation_names", "SynIndividual", function(x) names(x@annotations))
+
+setGeneric("active_annotation", function(x) {
+  standardGeneric("active_annotation")
+})
+setMethod("active_annotation", "SynIndividual", function(x) x@active_annotation)
+
+setGeneric("active_feature_annotation", function(x) {
+  standardGeneric("active_feature_annotation")
+})
+setMethod("active_feature_annotation", "SynIndividual", function(x) {
+  x@active_annotation
+})
+
+#' Add or replace an annotation layer on a SynIndividual
+#'
+#' @param x A `SynIndividual` object.
+#' @param annotation A `SynAnnotation` object.
+#' @param set_active Logical; when `TRUE`, make this the active annotation.
+#'
+#' @return An updated `SynIndividual` object.
+#' @export
+add_annotation <- function(x, annotation, set_active = FALSE) {
+  if (!methods::is(x, "SynIndividual")) {
+    stop("`add_annotation()` expects a SynIndividual object.", call. = FALSE)
+  }
+  if (!methods::is(annotation, "SynAnnotation")) {
+    stop("`annotation` must be a SynAnnotation object.", call. = FALSE)
+  }
+
+  annotations <- x@annotations
+  annotations[[annotation_name(annotation)]] <- annotation
+  x@annotations <- annotations
+
+  if (isTRUE(set_active) && !methods::is(annotation, "SynFeatureAnnotation")) {
+    stop(
+      "`set_active = TRUE` is only supported for SynFeatureAnnotation layers.",
+      call. = FALSE
+    )
+  }
+
+  if ((isTRUE(set_active) || length(annotations) == 1L) &&
+      methods::is(annotation, "SynFeatureAnnotation")) {
+    x@active_annotation <- annotation_name(annotation)
+  }
+
+  if (identical(x@active_annotation, annotation_name(annotation)) &&
+      methods::is(annotation, "SynFeatureAnnotation")) {
+    x@annotation_file <- annotation_file(annotation)
+    x@annotation_format <- annotation_format(annotation)
+    x@annotation <- annotation_data(annotation)
+    x@nucleotide_seq <- nucleotide_seq(annotation)
+    x@protein_seq <- protein_seq(annotation)
+    x@feature_index <- feature_index(annotation)
+  }
+
+  validObject(x)
+  x
+}
+
+#' Retrieve an annotation layer from a SynIndividual
+#'
+#' @param x A `SynIndividual` object.
+#' @param name Annotation layer name. Defaults to the active annotation.
+#'
+#' @return A `SynAnnotation` object.
+#' @export
+get_annotation <- function(x, name = NULL) {
+  if (!methods::is(x, "SynIndividual")) {
+    stop("`get_annotation()` expects a SynIndividual object.", call. = FALSE)
+  }
+  if (is.null(name)) {
+    name <- active_annotation(x)
+  }
+  if (!name %in% names(x@annotations)) {
+    stop("Unknown annotation layer: ", name, call. = FALSE)
+  }
+  x@annotations[[name]]
+}
+
+#' Set the active annotation layer on a SynIndividual
+#'
+#' @param x A `SynIndividual` object.
+#' @param name Annotation layer name.
+#'
+#' @return An updated `SynIndividual` object.
+#' @export
+set_active_annotation <- function(x, name) {
+  ann <- get_annotation(x, name)
+  if (!methods::is(ann, "SynFeatureAnnotation")) {
+    stop(
+      "`set_active_annotation()` expects a SynFeatureAnnotation layer name.",
+      call. = FALSE
+    )
+  }
+  x@active_annotation <- name
+  x@annotation_file <- annotation_file(ann)
+  x@annotation_format <- annotation_format(ann)
+  x@annotation <- annotation_data(ann)
+  x@nucleotide_seq <- nucleotide_seq(ann)
+  x@protein_seq <- protein_seq(ann)
+  x@feature_index <- feature_index(ann)
+  validObject(x)
+  x
+}
+
+#' Set the active feature annotation layer on a SynIndividual
+#'
+#' @param x A `SynIndividual` object.
+#' @param name Feature annotation layer name.
+#'
+#' @return An updated `SynIndividual` object.
+#' @export
+set_active_feature_annotation <- function(x, name) {
+  set_active_annotation(x, name)
+}
 
 setReplaceMethod("annotation_data", "SynIndividual", function(x, value) {
   if (!is.null(value) && !methods::is(value, "GRanges")) {
     stop("`annotation_data<-` expects a GRanges object or NULL.", call. = FALSE)
   }
   x@annotation <- value
+  if (length(x@annotations) > 0L && active_annotation(x) %in% names(x@annotations)) {
+    ann <- x@annotations[[active_annotation(x)]]
+    ann@annotation <- value
+    x@annotations[[active_annotation(x)]] <- ann
+  }
+  validObject(x)
+  x
+})
+setReplaceMethod("annotation_data", "SynFeatureAnnotation", function(x, value) {
+  if (!is.null(value) && !methods::is(value, "GRanges")) {
+    stop("`annotation_data<-` expects a GRanges object or NULL.", call. = FALSE)
+  }
+  x@annotation <- value
+  x@loaded <- !is.null(value)
   validObject(x)
   x
 })
@@ -755,6 +970,19 @@ setReplaceMethod("nucleotide_seq", "SynIndividual", function(x, value) {
     stop("`nucleotide_seq<-` expects a DNAStringSet object or NULL.", call. = FALSE)
   }
   x@nucleotide_seq <- value
+  if (length(x@annotations) > 0L && active_annotation(x) %in% names(x@annotations)) {
+    ann <- x@annotations[[active_annotation(x)]]
+    ann@nucleotide_seq <- value
+    x@annotations[[active_annotation(x)]] <- ann
+  }
+  validObject(x)
+  x
+})
+setReplaceMethod("nucleotide_seq", "SynFeatureAnnotation", function(x, value) {
+  if (!is.null(value) && !methods::is(value, "DNAStringSet")) {
+    stop("`nucleotide_seq<-` expects a DNAStringSet object or NULL.", call. = FALSE)
+  }
+  x@nucleotide_seq <- value
   validObject(x)
   x
 })
@@ -763,6 +991,19 @@ setGeneric("protein_seq<-", function(x, value) {
   standardGeneric("protein_seq<-")
 })
 setReplaceMethod("protein_seq", "SynIndividual", function(x, value) {
+  if (!is.null(value) && !methods::is(value, "AAStringSet")) {
+    stop("`protein_seq<-` expects an AAStringSet object or NULL.", call. = FALSE)
+  }
+  x@protein_seq <- value
+  if (length(x@annotations) > 0L && active_annotation(x) %in% names(x@annotations)) {
+    ann <- x@annotations[[active_annotation(x)]]
+    ann@protein_seq <- value
+    x@annotations[[active_annotation(x)]] <- ann
+  }
+  validObject(x)
+  x
+})
+setReplaceMethod("protein_seq", "SynFeatureAnnotation", function(x, value) {
   if (!is.null(value) && !methods::is(value, "AAStringSet")) {
     stop("`protein_seq<-` expects an AAStringSet object or NULL.", call. = FALSE)
   }
@@ -786,6 +1027,16 @@ setGeneric("feature_index<-", function(x, value) {
 })
 setReplaceMethod("feature_index", "SynIndividual", function(x, value) {
   x@feature_index <- value
+  if (length(x@annotations) > 0L && active_annotation(x) %in% names(x@annotations)) {
+    ann <- x@annotations[[active_annotation(x)]]
+    ann@feature_index <- value
+    x@annotations[[active_annotation(x)]] <- ann
+  }
+  validObject(x)
+  x
+})
+setReplaceMethod("feature_index", "SynFeatureAnnotation", function(x, value) {
+  x@feature_index <- value
   validObject(x)
   x
 })
@@ -804,6 +1055,14 @@ setReplaceMethod("syn_metadata", "SynIndividual", function(x, value) {
 
 setGeneric("plot_cache<-", function(x, value) standardGeneric("plot_cache<-"))
 setReplaceMethod("plot_cache", "SynIndividual", function(x, value) {
+  if (!is.list(value)) {
+    stop("`plot_cache<-` expects a list.", call. = FALSE)
+  }
+  x@plot_cache <- value
+  validObject(x)
+  x
+})
+setReplaceMethod("plot_cache", "SynAnnotation", function(x, value) {
   if (!is.list(value)) {
     stop("`plot_cache<-` expects a list.", call. = FALSE)
   }

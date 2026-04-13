@@ -1,0 +1,158 @@
+---
+title: "ggexon Workflow"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{ggexon Workflow}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Overview
+
+`ggexon` is designed for synteny-aware genome plotting with support for
+multiple annotation layers, derived CDS and protein sequences, and patch-based
+curation workflows.
+
+This vignette sketches the core workflow:
+
+1. Create a `SynIndividual`
+2. Load a feature annotation
+3. Attach additional annotation layers
+4. Set human-readable labels
+5. Patch corrected gene models
+6. Translate proteins from selected genes
+
+# Create a `SynIndividual`
+
+```{r eval = FALSE}
+library(ggexon)
+
+x <- SynIndividual(
+  genome_file = system.file("extdata", "XZ1516.fasta", package = "ggexon"),
+  annotation_file = system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+)
+```
+
+# Load the active feature annotation
+
+```{r eval = FALSE}
+x <- load_annotation(x)
+ann <- get_annotation(x)
+```
+
+At this point the active layer is a `SynFeatureAnnotation`.
+
+# Attach additional annotation layers
+
+You can attach variant, signal, and protein-domain layers to the same
+`SynIndividual`.
+
+```{r eval = FALSE}
+x <- add_annotation(
+  x,
+  SynVCFAnnotation(
+    name = "variants",
+    vcf_file = system.file(
+      "extdata",
+      "DL238.rename.ChrV.XZ1516.vcf.gz",
+      package = "ggexon"
+    )
+  )
+)
+
+x <- add_annotation(
+  x,
+  SynProteinDomainAnnotation(
+    name = "interpro",
+    domain_file = system.file(
+      "extdata",
+      "InterProScan.tsv",
+      package = "ggexon"
+    ),
+    keytype = "protein_id",
+    source_db = "InterPro"
+  )
+)
+```
+
+# Set plot labels
+
+Stable IDs should remain unchanged. Use `set_gene_labels()` to add readable
+labels for plotting.
+
+```{r eval = FALSE}
+x <- set_gene_labels(
+  x,
+  c(
+    FUN_000001 = "unc-1",
+    FUN_000002 = "unc-2"
+  )
+)
+```
+
+The active feature annotation will then carry a `plot_label` metadata column.
+
+# Apply a corrected patch from a small GFF
+
+Small corrected GFF fragments can be imported and applied as structured
+patches.
+
+```{r eval = FALSE}
+x <- patch_annotation_from_gff(
+  x,
+  patch_file = system.file("extdata", "XZ1516.TA.gff", package = "ggexon"),
+  mode = "replace",
+  name = "ta-correction"
+)
+```
+
+This replaces matching target gene models in the active feature annotation and
+clears stale sequence caches.
+
+# Translate proteins for selected genes
+
+```{r eval = FALSE}
+x <- translate_protein(
+  x,
+  genes = c("FUN_000001", "FUN_000002")
+)
+
+protein_seq(get_annotation(x))
+```
+
+# Query attached non-feature layers
+
+Region-based layers are queried through their type-specific verbs.
+
+```{r eval = FALSE}
+variant_layer <- get_annotation(x, "variants")
+query_variants(variant_layer, chr = "V_RagTag", start = 21574336, end = 21574400)
+```
+
+# Notes
+
+- `SynFeatureAnnotation` is the structural layer used for CDS extraction and
+  protein translation.
+- `SynVCFAnnotation` and `SynBigWigAnnotation` are designed for lazy,
+  region-based access.
+- `SynProteinDomainAnnotation` provides protein-space annotation tied to
+  transcript or protein identifiers.
+
+# Next steps
+
+Suggested follow-up material for this vignette:
+
+- comparing two feature annotation layers on the same genome
+- plotting patched genes before and after correction
+- combining synteny plots with variant and signal layers
