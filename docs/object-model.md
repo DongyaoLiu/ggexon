@@ -273,6 +273,39 @@ Typical user workflow:
 8. Attach pairwise or multiple alignments to describe cross-species structure.
 9. Plot with `ggexon`.
 
+For example, the intended plotting workflow is now:
+
+```r
+sp <- SynSpecies(name = "Caenorhabditis")
+sp <- add_individual(sp, x)
+
+ggexon(sp) +
+  geom_exon(
+    chr = "RagTag_V",
+    subset = c(21550000, 21680000)
+  )
+```
+
+Here `ggexon()` keeps the `SynSpecies` object intact, while syn-aware geoms
+materialize the plotting table they need during the build step. When the
+`SynSpecies` object contains exactly one individual, `geom_exon()` and
+`geom_gene()` use it by default. If there are multiple individuals, then
+`species =` is required.
+
+For a gene-level overview of the same region:
+
+```r
+ggexon(sp) +
+  geom_gene(
+    chr = "RagTag_V",
+    subset = c(21550000, 21680000)
+  )
+```
+
+`geom_exon()` preserves exon structure, while `geom_gene()` collapses by
+`gene_id` and draws one directional span per gene. Both use absolute genomic
+coordinates.
+
 ## Near-term follow-up
 
 - Make plotting geoms prefer `plot_label` when present.
