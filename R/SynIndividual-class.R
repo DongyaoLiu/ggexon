@@ -378,7 +378,7 @@ query_features <- function(x,
       seqnames = chr,
       ranges = IRanges::IRanges(start = start, end = end)
     )
-    gr <- gr[GenomicRanges::overlapsAny(gr, region)]
+    gr <- gr[IRanges::overlapsAny(gr, region)]
   }
 
   if (!is.null(feature_type)) {

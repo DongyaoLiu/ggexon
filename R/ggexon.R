@@ -15,7 +15,9 @@ ggexon.default <- function(data = NULL, mapping = aes(), ...,
     ))
   }
 
-  data <- fortify(data, ...)
+  if (!(methods::is(data, "SynSpecies") || methods::is(data, "SynIndividual"))) {
+    data <- fortify(data, ...)
+  }
 
   p <- class_ggexon(
     data = data,
