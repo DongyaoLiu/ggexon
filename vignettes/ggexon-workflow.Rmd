@@ -29,6 +29,8 @@ This vignette sketches the core workflow:
 5. Patch corrected gene models
 6. Translate proteins from selected genes
 7. Combine multiple individuals in a `SynSpecies` object
+8. Query and filter pairwise alignments
+9. Plot directly from a `SynSpecies` container
 
 # Create a `SynIndividual`
 
@@ -176,6 +178,114 @@ sp <- add_multiple_alignment(
   )
 )
 ```
+
+# Query pairwise alignments
+
+Pairwise alignments can now be read back as PAF-like tables from either a
+`SynSpecies` object or a `SynPairAlignment` object.
+
+Use `subset =` to trim on both query and target coordinates, and use
+`filter =` to discard short fragments by `alen`.
+
+```{r eval = FALSE}
+pairwise_alignment_data(
+  sp,
+  alignment = "XZ1516_vs_other",
+  subset = c(
+    XZ1516 = "RagTag_V:21550000-21680000",
+    other = "V:20450000-20510000"
+  ),
+  filter = 200
+)
+```
+
+The helper wrappers `subset_pairwise_alignment()` and
+`filter_pairwise_alignment()` expose the same operations separately when that
+reads more clearly in user code.
+
+# Plot directly from a `SynSpecies`
+
+You can now pass a `SynSpecies` object directly to `ggexon()` and let a
+syn-aware geom resolve the plotting data lazily at build time.
+
+For example, this draws the exon models for `XZ1516` across the
+`RagTag_V:21550000-21680000` region. Because this `SynSpecies` contains only
+one individual, you do not need to specify `species =`. Internally, the
+plotting code resolves that sole individual, maps the user-facing chromosome
+label `RagTag_V` to the annotation seqname used in the GFF (`V_RagTag` in the
+bundled example), and creates the default `aes()` mapping needed by
+`geom_exon()`.
+
+```{r eval = FALSE}
+x <- SynIndividual(
+  genome_file = system.file("extdata", "XZ1516.fasta", package = "ggexon"),
+  annotation_file = system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  ),
+  id = "XZ1516"
+)
+
+sp <- SynSpecies(name = "Caenorhabditis")
+sp <- add_individual(sp, x)
+
+ggexon(sp) +
+  geom_exon(
+    chr = "RagTag_V",
+    subset = c(21550000, 21680000)
+  )
+```
+
+If a `SynSpecies` contains multiple individuals, then `species =` becomes
+required so the geom knows which one to plot.
+
+The same direct plotting workflow is also available for `geom_gene()`, which
+collapses the region to one directional span per `gene_id`.
+
+```{r eval = FALSE}
+ggexon(sp) +
+  geom_gene(
+    chr = "RagTag_V",
+    subset = c(21550000, 21680000)
+  )
+```
+
+Use the two geoms for different levels of detail:
+
+- `geom_exon()` keeps exon-level structure and is useful when transcript
+  architecture matters.
+- `geom_gene()` reduces each gene to a start-to-end span with an arrow showing
+  strand direction.
+
+Both geoms now use absolute genomic coordinates, so the x-axis stays in the
+original coordinate system of the chromosome rather than being re-based to a
+local zero point for each track.
+
+For pairwise comparison, a syn-aware geom can also resolve both annotation
+tracks plus the middle link panel from one comparative call. The reference
+species supplies the input coordinates.
+
+```{r eval = FALSE}
+ggexon(sp) +
+  geom_gene(
+    species = c("N2", "XZ1516"),
+    reference = "XZ1516",
+    chr = "RagTag_V",
+    subset = c(21574445, 21584356),
+    alignment = "XZ1516_vs_N2"
+  ) +
+  facet_genomics(ggplot2::vars(track), scales = "free_y")
+```
+
+For custom pairwise views, the PAF helper and the plotting grammar are meant
+to work together: derive or specify the windows you want, filter short PAF
+rows with `filter =`, and then draw the comparison.
+
+At the moment, this direct plotting path is implemented for `geom_exon()` and
+`geom_gene()`. The same pattern can be extended to other geoms so they can
+consume `SynSpecies` or `SynIndividual` objects without requiring a manual
+`fortify()` step.
 
 # Notes
 

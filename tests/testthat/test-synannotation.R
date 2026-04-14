@@ -144,6 +144,58 @@ test_that("type-specific annotation verbs query their data sources", {
   expect_identical(as.character(domain_hits$domain), "PF0003")
 })
 
+test_that("SynProteinDomainAnnotation reads the shipped InterProScan export", {
+  interpro_path <- system.file(
+    "extdata",
+    "InterProScan.tsv",
+    package = "ggexon"
+  )
+  expect_true(nzchar(interpro_path))
+
+  domain_layer <- SynProteinDomainAnnotation(
+    name = "interpro",
+    domain_file = interpro_path,
+    keytype = "protein_id",
+    source_db = "InterPro"
+  )
+
+  domain_hits <- query_domains(domain_layer)
+  expect_true(nrow(domain_hits) > 0L)
+  expect_true(all(c(
+    "protein_id",
+    "analysis",
+    "signature_accession",
+    "signature_description",
+    "interpro_accession",
+    "interpro_description",
+    "domain",
+    "domain_name"
+  ) %in% colnames(domain_hits)))
+
+  expect_identical(as.character(domain_hits$protein_id[[1L]]), "Sequence1")
+  expect_identical(
+    as.character(domain_hits$signature_accession[[1L]]),
+    "G3DSA:3.30.160.60"
+  )
+  expect_identical(
+    as.character(domain_hits$domain[[1L]]),
+    "G3DSA:3.30.160.60"
+  )
+  expect_identical(
+    as.character(domain_hits$domain_name[[1L]]),
+    "Classic Zinc Finger"
+  )
+
+  filtered_hits <- query_domains(
+    domain_layer,
+    ids = "Sequence1",
+    domains = "G3DSA:3.30.160.60"
+  )
+  expect_true(nrow(filtered_hits) >= 1L)
+  expect_true(all(as.character(filtered_hits$protein_id) == "Sequence1"))
+  expect_true(all(as.character(filtered_hits$domain) == "G3DSA:3.30.160.60"))
+})
+
 test_that("set_gene_labels stores plot labels without replacing stable IDs", {
   genome_path <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
   annotation_path <- system.file(

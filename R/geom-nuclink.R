@@ -17,6 +17,7 @@ geom_nuclink <- function(mapping = NULL, data = NULL,
 GeomNucLink <- ggproto("GeomPanel", Geom,
                              required_aes = c("tspecies", "tchr", "tstart", "tend", "strand",
                                               "qspecies", "qchr", "qstart", "qend"),
+                             optional_aes = c("ty", "qy"),
                              non_missing_aes = c("linetype", "linewidth", "shape"),
                              extra_params = c("na.rm"),
                              default_aes = aes(linewidth = 0,
@@ -28,6 +29,8 @@ GeomNucLink <- ggproto("GeomPanel", Geom,
                                                alpha = 0.5,
                                                stroke = 1,
                                                fill = "grey50",
+                                               ty = NA_real_,
+                                               qy = NA_real_
                              ),
                              setup_data = function(data, params) {
 
@@ -39,7 +42,7 @@ GeomNucLink <- ggproto("GeomPanel", Geom,
 
                                # each row are a group will have a same id after melting
                                data$id = 1:nrow(data)
-                               melt_data = data %>% select(,-tspecies, -qspecies, -track, -tchr, -qchr, -ty, -qy) %>%
+                               melt_data = data %>% select(-any_of(c("tspecies", "qspecies", "track", "tchr", "qchr", "ty", "qy"))) %>%
                                  melt(id = c("id", "strand", "PANEL", "group"), variable.name = "x_variable", value.name = "x") %>%
                                  mutate(y_variable = if_else(str_detect(x_variable,"^t"), "ty", "qy")) %>%
                                  left_join(link_y_out, join_by(PANEL == PANEL, group == group, y_variable == y_variable)) %>%

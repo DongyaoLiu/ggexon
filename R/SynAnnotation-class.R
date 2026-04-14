@@ -1000,17 +1000,40 @@ query_domains <- function(x, ids = NULL, domains = NULL) {
 .load_domain_table <- function(path) {
   ext <- tools::file_ext(path)
   delim <- if (base::tolower(ext) %in% c("csv")) "," else "\t"
-  tbl <- readr::read_delim(
-    file = path,
-    delim = delim,
-    show_col_types = FALSE,
-    progress = FALSE
-  )
+
+  if (.looks_like_interproscan_tsv(path, delim = delim)) {
+    tbl <- readr::read_delim(
+      file = path,
+      delim = delim,
+      col_names = FALSE,
+      show_col_types = FALSE,
+      progress = FALSE
+    )
+    tbl <- .normalize_interproscan_table(tbl)
+  } else {
+    tbl <- readr::read_delim(
+      file = path,
+      delim = delim,
+      show_col_types = FALSE,
+      progress = FALSE
+    )
+  }
+
   S4Vectors::DataFrame(tbl)
 }
 
 .pick_domain_column <- function(x) {
-  candidates <- c("domain", "domain_name", "pfam", "interpro", "name")
+  candidates <- c(
+    "domain",
+    "interpro_accession",
+    "signature_accession",
+    "domain_name",
+    "interpro_description",
+    "signature_description",
+    "pfam",
+    "interpro",
+    "name"
+  )
   hit <- candidates[candidates %in% colnames(x)]
   if (length(hit) == 0L) {
     stop(
@@ -1019,4 +1042,74 @@ query_domains <- function(x, ids = NULL, domains = NULL) {
     )
   }
   hit[[1L]]
+}
+
+.looks_like_interproscan_tsv <- function(path, delim = "\t") {
+  first_line <- .read_delimited_annotation_lines(path)[1L]
+  if (is.na(first_line) || !nzchar(first_line)) {
+    return(FALSE)
+  }
+
+  fields <- strsplit(first_line, delim, fixed = TRUE)[[1L]]
+  if (length(fields) != 15L) {
+    return(FALSE)
+  }
+
+  has_known_header <- base::tolower(fields[[1L]]) %in% c("protein_id", "sequence_id", "accession")
+  if (has_known_header) {
+    return(FALSE)
+  }
+
+  grepl("interproscan", basename(path), ignore.case = TRUE) ||
+    grepl("^[A-Za-z0-9_.:-]+$", fields[[1L]]) ||
+    grepl("^[0-9a-f]{32}$", fields[[2L]], ignore.case = TRUE)
+}
+
+.normalize_interproscan_table <- function(tbl) {
+  interpro_cols <- c(
+    "protein_id",
+    "sequence_md5",
+    "protein_length",
+    "analysis",
+    "signature_accession",
+    "signature_description",
+    "start",
+    "end",
+    "score",
+    "status",
+    "analysis_date",
+    "interpro_accession",
+    "interpro_description",
+    "go_terms",
+    "pathways"
+  )
+
+  if (ncol(tbl) < length(interpro_cols)) {
+    stop(
+      "InterProScan table must contain at least 15 columns.",
+      call. = FALSE
+    )
+  }
+
+  colnames(tbl)[seq_along(interpro_cols)] <- interpro_cols
+  tbl <- tibble::as_tibble(tbl)
+
+  blankish <- function(x) {
+    is.na(x) | x %in% c("", "-")
+  }
+
+  tbl$domain <- dplyr::if_else(
+    !blankish(tbl$interpro_accession),
+    tbl$interpro_accession,
+    tbl$signature_accession,
+    missing = tbl$signature_accession
+  )
+  tbl$domain_name <- dplyr::if_else(
+    !blankish(tbl$interpro_description),
+    tbl$interpro_description,
+    tbl$signature_description,
+    missing = tbl$signature_description
+  )
+
+  tbl
 }

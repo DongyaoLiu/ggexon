@@ -26,6 +26,8 @@ LayerSyn <- ggproto(
     data_source
   },
   setup_layer = function(self, data, plot) {
+    syn_layout_override <- attr(data, "syn_layout_override", exact = TRUE)
+
     if (is_syn_layer_input(self, plot@data) &&
         length(self$mapping) == 0L &&
         length(plot@mapping) == 0L) {
@@ -46,6 +48,9 @@ LayerSyn <- ggproto(
     }
 
     attr(data, "layout") <- self$layout
+    if (!is.null(syn_layout_override)) {
+      attr(data, "syn_layout_override") <- syn_layout_override
+    }
     data
   }
 )
@@ -74,6 +79,10 @@ default_syn_aesthetics <- function(data, layer) {
     cols <- c("xmin", "xmax", "ymin", "transcripts", "strand", "track", "type", "group")
     return(intersect(cols, names(data)))
   }
+  if (identical(layer$geom, GeomGene)) {
+    cols <- c("xmin", "xmax", "ymin", "transcripts", "strand", "track", "group")
+    return(intersect(cols, names(data)))
+  }
 
   character()
 }
@@ -88,8 +97,23 @@ syn_identity_mapping <- function(cols) {
 }
 
 resolve_syn_layer_data <- function(x, layer) {
+  params <- utils::modifyList(layer$geom$default_params(), layer$geom_params)
+
   if (identical(layer$geom, GeomExon)) {
-    params <- utils::modifyList(layer$geom$default_params(), layer$geom_params)
+    if (is_comparative_syn_request(params$species, params$reference)) {
+      return(
+        syn_to_comparative_annotation_df(
+          x = x,
+          species = params$species,
+          reference = params$reference,
+          chr = params$chr,
+          subset = params$comparative_subset %||% params$subset,
+          alignment = params$alignment,
+          geom = "exon",
+          annotation_type = params$annotation_type
+        )
+      )
+    }
     return(
       syn_to_exon_df(
         x = x,
@@ -97,6 +121,29 @@ resolve_syn_layer_data <- function(x, layer) {
         chr = params$chr,
         subset = params$subset,
         annotation_type = params$annotation_type
+      )
+    )
+  }
+  if (identical(layer$geom, GeomGene)) {
+    if (is_comparative_syn_request(params$species, params$reference)) {
+      return(
+        syn_to_comparative_annotation_df(
+          x = x,
+          species = params$species,
+          reference = params$reference,
+          chr = params$chr,
+          subset = params$comparative_subset %||% params$subset,
+          alignment = params$alignment,
+          geom = "gene"
+        )
+      )
+    }
+    return(
+      syn_to_gene_df(
+        x = x,
+        species = params$species,
+        chr = params$chr,
+        subset = params$subset
       )
     )
   }
@@ -108,6 +155,196 @@ resolve_syn_layer_data <- function(x, layer) {
 >>>>>>> SynClass
   cli::cli_abort(
     "Syn object input is not yet implemented for geom {.val {geom_name}}."
+  )
+}
+
+is_comparative_syn_request <- function(species = NULL, reference = NULL) {
+  length(species %||% character()) > 1L || !is.null(reference)
+}
+
+syn_to_comparative_annotation_df <- function(x,
+                                             species,
+                                             reference,
+                                             chr,
+                                             subset,
+                                             alignment = NULL,
+                                             geom = c("exon", "gene"),
+                                             annotation_type = "exon") {
+  geom <- match.arg(geom)
+  context <- resolve_syn_comparative_context(
+    x = x,
+    species = species,
+    reference = reference,
+    chr = chr,
+    subset = subset,
+    alignment = alignment
+  )
+
+  if (geom == "exon") {
+    out <- dplyr::bind_rows(lapply(names(context$annotations), function(species_name) {
+      syn_gr_to_exon_df(
+        feature_gr = context$annotations[[species_name]],
+        track = species_name,
+        annotation_type = annotation_type
+      )
+    }))
+  } else {
+    out <- dplyr::bind_rows(lapply(names(context$annotations), function(species_name) {
+      syn_gr_to_gene_df(
+        feature_gr = context$annotations[[species_name]],
+        track = species_name
+      )
+    }))
+  }
+
+  out <- syn_flatten_annotation_rows(out)
+
+  attr(out, "syn_layout_override") <- context$layout
+  out
+}
+
+syn_flatten_annotation_rows <- function(data, baseline = 1) {
+  if (!is.data.frame(data) || nrow(data) == 0L || !"track" %in% names(data) || !"ymin" %in% names(data)) {
+    return(data)
+  }
+
+  data$ymin <- baseline
+  data
+}
+
+syn_to_comparative_link_df <- function(x,
+                                       species,
+                                       reference,
+                                       chr,
+                                       subset,
+                                       alignment = NULL) {
+  context <- resolve_syn_comparative_context(
+    x = x,
+    species = species,
+    reference = reference,
+    chr = chr,
+    subset = subset,
+    alignment = alignment
+  )
+  context$links
+}
+
+comparative_nuclink_layer <- function(species,
+                                      reference,
+                                      chr,
+                                      subset,
+                                      alignment = NULL,
+                                      na.rm = FALSE) {
+  layer(
+    data = function(plot_data) {
+      syn_to_comparative_link_df(
+        x = plot_data,
+        species = species,
+        reference = reference,
+        chr = chr,
+        subset = subset,
+        alignment = alignment
+      )
+    },
+    mapping = ggplot2::aes(
+      tspecies = tspecies,
+      tchr = tchr,
+      tstart = tstart,
+      tend = tend,
+      strand = strand,
+      qspecies = qspecies,
+      qchr = qchr,
+      qstart = qstart,
+      qend = qend,
+      ty = ty,
+      qy = qy
+    ),
+    geom = GeomNucLink,
+    stat = "identity",
+    position = "identity",
+    show.legend = NA,
+    inherit.aes = FALSE,
+    layer_class = LayerSyn,
+    params = list(na.rm = na.rm)
+  )
+}
+
+resolve_syn_comparative_context <- function(x,
+                                            species,
+                                            reference,
+                                            chr,
+                                            subset,
+                                            alignment = NULL) {
+  if (!methods::is(x, "SynSpecies")) {
+    cli::cli_abort("Comparative plotting requires a {.cls SynSpecies} object.")
+  }
+
+  if (length(species %||% character()) != 2L) {
+    cli::cli_abort("Comparative plotting expects {.arg species} to contain exactly two individuals.")
+  }
+  species <- unique(as.character(species))
+  if (length(species) != 2L) {
+    cli::cli_abort("Comparative plotting expects two unique entries in {.arg species}.")
+  }
+  if (is.null(reference) || !reference %in% species) {
+    cli::cli_abort("{.arg reference} must be one of the requested {.arg species}.")
+  }
+  if (is.null(chr)) {
+    cli::cli_abort("Comparative plotting requires {.arg chr} on the reference species.")
+  }
+  if (!is.numeric(subset) || length(subset) != 2L) {
+    cli::cli_abort("Comparative plotting requires {.arg subset} as a numeric vector of length 2.")
+  }
+
+  out <- subset_synspecies_window(
+    x = x,
+    reference_species = reference,
+    chr = chr,
+    start = min(subset),
+    end = max(subset),
+    alignment = alignment
+  )
+
+  if (!setequal(names(out$annotations), species)) {
+    cli::cli_abort(
+      "Selected alignment returns individuals {.val {names(out$annotations)}}, which do not match requested {.arg species} {.val {species}}."
+    )
+  }
+
+  partner <- setdiff(species, reference)[1L]
+  annotations <- out$annotations[c(reference, partner)]
+  link_track <- unique(as.character(out$links$track))
+  if (length(link_track) != 1L) {
+    cli::cli_abort("Expected exactly one link track in the comparative subset.")
+  }
+
+  layout <- data.frame(
+    PANEL = c(1L, 2L, 3L),
+    ROW = c(1L, 2L, 3L),
+    COL = c(1L, 1L, 1L),
+    track = c(reference, link_track, partner),
+    panel_type = c("annotation", "link", "annotation"),
+    species = c(reference, NA_character_, partner),
+    alignment_name = c(NA_character_, sub("^link_", "", link_track), NA_character_),
+    tspecies = c(NA_character_, unique(as.character(out$links$tspecies))[1L], NA_character_),
+    qspecies = c(NA_character_, unique(as.character(out$links$qspecies))[1L], NA_character_),
+    stringsAsFactors = FALSE
+  )
+  layout <- .finalize_synspecies_layout_scales(layout, free = list(x = FALSE, y = TRUE))
+
+  top_species <- reference
+  bottom_species <- partner
+  links <- out$links
+  links$ty <- if (unique(as.character(links$tspecies))[1L] == top_species) 1 else 0
+  links$qy <- if (unique(as.character(links$qspecies))[1L] == top_species) 1 else 0
+  links$track <- link_track
+
+  list(
+    annotations = annotations,
+    links = links,
+    layout = layout,
+    top_species = top_species,
+    bottom_species = bottom_species
   )
 }
 
@@ -135,6 +372,22 @@ syn_to_exon_df <- function(x,
     end = end,
     feature_type = annotation_type
   )
+
+  if (length(feature_gr) == 0L) {
+    return(data.frame())
+  }
+
+  syn_gr_to_exon_df(
+    feature_gr = feature_gr,
+    track = syn_id(individual),
+    annotation_type = annotation_type
+  )
+}
+
+syn_gr_to_exon_df <- function(feature_gr,
+                              track,
+                              annotation_type = "exon") {
+  feature_gr <- feature_gr[as.character(S4Vectors::mcols(feature_gr)$type) == annotation_type]
 
   if (length(feature_gr) == 0L) {
     return(data.frame())
@@ -172,7 +425,7 @@ syn_to_exon_df <- function(x,
     type = as.character(meta$type),
     transcripts = transcript_ids,
     gene_name = gene_labels,
-    track = syn_id(individual),
+    track = track,
     fill = "black",
     linetype = 1,
     linewidth = 0,
@@ -197,6 +450,87 @@ syn_to_exon_df <- function(x,
 >>>>>>> SynClass
   rownames(out) <- NULL
   out
+}
+
+syn_to_gene_df <- function(x,
+                           species = NULL,
+                           chr = NULL,
+                           subset = NULL) {
+  individual <- resolve_syn_individual(x, species = species)
+  chr <- resolve_syn_seqname(individual, chr)
+
+  start <- end <- NULL
+  if (!is.null(subset)) {
+    if (!is.numeric(subset) || length(subset) != 2L) {
+      cli::cli_abort("{.arg subset} must be a numeric vector of length 2.")
+    }
+    start <- min(subset)
+    end <- max(subset)
+  }
+
+  feature_gr <- query_features(
+    individual,
+    chr = chr,
+    start = start,
+    end = end,
+    feature_type = "gene"
+  )
+
+  if (length(feature_gr) == 0L) {
+    return(data.frame())
+  }
+
+  syn_gr_to_gene_df(
+    feature_gr = feature_gr,
+    track = syn_id(individual)
+  )
+}
+
+syn_gr_to_gene_df <- function(feature_gr, track) {
+
+  meta <- S4Vectors::mcols(feature_gr)
+  gene_ids <- .coalesce_character_cols(
+    meta,
+    c("gene_id", "gene_name", "ID", "Name")
+  )
+  valid_gene <- !is.na(gene_ids) & nzchar(gene_ids)
+  feature_gr <- feature_gr[valid_gene]
+  meta <- S4Vectors::mcols(feature_gr)
+  gene_ids <- gene_ids[valid_gene]
+
+  gene_labels <- .coalesce_character_cols(
+    meta,
+    c("plot_label", "gene_name", "gene_id", "Name", "ID")
+  )
+
+  if (length(feature_gr) == 0L) {
+    return(data.frame())
+  }
+
+  gene_df <- data.frame(
+    gene_id = gene_ids,
+    seqnames = as.character(GenomeInfoDb::seqnames(feature_gr)),
+    xmin = IRanges::start(feature_gr),
+    xmax = IRanges::end(feature_gr),
+    strand = as.character(BiocGenerics::strand(feature_gr)),
+    gene_name = gene_labels,
+    stringsAsFactors = FALSE
+  )
+  gene_df$gene_name[is.na(gene_df$gene_name) | !nzchar(gene_df$gene_name)] <- gene_df$gene_id[
+    is.na(gene_df$gene_name) | !nzchar(gene_df$gene_name)
+  ]
+  gene_df <- gene_df[order(gene_df$xmin, gene_df$gene_id), , drop = FALSE]
+  gene_df$ymin <- rev(seq_len(nrow(gene_df))) * 2
+  gene_df$group <- seq_len(nrow(gene_df))
+  gene_df$transcripts <- gene_df$gene_id
+  gene_df$track <- track
+  gene_df$fill <- "black"
+  gene_df$linetype <- 1
+  gene_df$linewidth <- 0
+  gene_df$alpha <- NA_real_
+  gene_df$PANEL <- 1L
+  rownames(gene_df) <- NULL
+  gene_df
 }
 
 resolve_syn_seqname <- function(individual, chr = NULL) {

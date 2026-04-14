@@ -1,12 +1,13 @@
 #' SynIndividual class
 #'
 #' `SynIndividual` stores the per-individual data needed to build synteny plots.
-#' The constructor only requires the source genome FASTA and annotation GFF/GTF
-#' paths. Parsed annotations, nucleotide/protein sequences, and plotting caches
-#' can be attached later through accessor methods.
+#' The constructor requires an annotation GFF/GTF path and can optionally store
+#' a genome FASTA path. Parsed annotations, nucleotide/protein sequences, and
+#' plotting caches can be attached later through accessor methods.
 #'
 #' @slot id Scalar identifier for the species, genome, or plotting track.
-#' @slot genome_file Path to the genome FASTA file.
+#' @slot genome_file Path to the genome FASTA file, or `NA_character_` when the
+#'   genome was waived during construction.
 #' @slot annotation_file Path to the corresponding GFF or GTF file.
 #' @slot annotation_format One of `"gff"`, `"gtf"`, or `"auto"`.
 #' @slot annotation Parsed annotation container used for plotting as a
@@ -63,11 +64,10 @@ setClass(
     if (length(object@id) != 1L || is.na(object@id) || !nzchar(object@id)) {
       problems <- c(problems, "`id` must be a single non-empty character value.")
     }
-    if (length(object@genome_file) != 1L || is.na(object@genome_file) ||
-        !nzchar(object@genome_file)) {
+    if (length(object@genome_file) != 1L) {
       problems <- c(
         problems,
-        "`genome_file` must be a single non-empty character value."
+        "`genome_file` must be a single character value or `NA_character_`."
       )
     }
     if (length(object@annotation_file) != 1L || is.na(object@annotation_file) ||
@@ -119,28 +119,36 @@ setClass(
 
 #' Constructor for SynIndividual
 #'
-#' @param genome_file Path to the genome FASTA file.
+#' @param genome_file Path to the genome FASTA file. Use `genome_waiver()` to
+#'   initialize a `SynIndividual` without a genome FASTA.
 #' @param annotation_file Path to the corresponding GFF or GTF file.
-#' @param id Optional scalar identifier. Defaults to the FASTA stem.
+#' @param id Optional scalar identifier. Defaults to the FASTA stem, or to the
+#'   annotation-file stem when `genome_file` is waived.
 #' @param annotation_format One of `"auto"`, `"gff"`, or `"gtf"`.
 #' @param metadata Optional metadata list.
 #'
 #' @return A `SynIndividual` object with deferred slots left empty.
 #' @export
-SynIndividual <- function(genome_file,
+SynIndividual <- function(genome_file = genome_waiver(),
                           annotation_file,
                           id = NULL,
                           annotation_format = c("auto", "gff", "gtf"),
                           metadata = list()) {
   annotation_format <- match.arg(annotation_format)
+  genome_file <- .normalize_genome_file_input(genome_file)
 
-  check_syn_files(
-    genome_file = genome_file,
-    annotation_file = annotation_file
-  )
+  if (.has_genome_file(genome_file)) {
+    check_syn_files(
+      genome_file = genome_file,
+      annotation_file = annotation_file
+    )
+  } else {
+    .check_annotation_file(annotation_file)
+  }
 
   if (is.null(id)) {
-    id <- tools::file_path_sans_ext(basename(genome_file))
+    id_source <- if (.has_genome_file(genome_file)) genome_file else annotation_file
+    id <- tools::file_path_sans_ext(basename(id_source))
   }
 
   default_annotation <- SynFeatureAnnotation(
@@ -159,6 +167,19 @@ SynIndividual <- function(genome_file,
     active_annotation = "default",
     metadata = metadata
   )
+}
+
+#' Genome-file waiver for `SynIndividual()`
+#'
+#' Use this helper when you want to initialize a `SynIndividual` from
+#' annotations only, without an available genome FASTA. Sequence-dependent
+#' operations such as `extract_cds_seq()` and `translate_protein()` will then
+#' stop with a clear error message.
+#'
+#' @return A sentinel value understood by `SynIndividual()`.
+#' @export
+genome_waiver <- function() {
+  waiver()
 }
 
 #' Check whether genome and annotation files match
@@ -219,6 +240,55 @@ check_syn_files <- function(genome_file, annotation_file) {
   }
 
   invisible(TRUE)
+}
+
+.normalize_genome_file_input <- function(genome_file) {
+  if (missing(genome_file) || is.null(genome_file) || is.waive(genome_file)) {
+    return(NA_character_)
+  }
+  if (!is.character(genome_file) || length(genome_file) != 1L) {
+    stop(
+      "`genome_file` must be a single file path or `genome_waiver()`.",
+      call. = FALSE
+    )
+  }
+  if (is.na(genome_file) || !nzchar(genome_file)) {
+    return(NA_character_)
+  }
+  genome_file
+}
+
+.has_genome_file <- function(genome_file) {
+  is.character(genome_file) &&
+    length(genome_file) == 1L &&
+    !is.na(genome_file) &&
+    nzchar(genome_file)
+}
+
+.check_annotation_file <- function(annotation_file) {
+  if (!is.character(annotation_file) || length(annotation_file) != 1L ||
+      is.na(annotation_file) || !nzchar(annotation_file)) {
+    stop(
+      "`annotation_file` must be a single non-empty character value.",
+      call. = FALSE
+    )
+  }
+  if (!file.exists(annotation_file)) {
+    stop("Annotation file does not exist: ", annotation_file, call. = FALSE)
+  }
+  invisible(TRUE)
+}
+
+.require_genome_file <- function(x, call = "This operation") {
+  path <- if (methods::is(x, "SynIndividual")) genome_file(x) else x
+  if (.has_genome_file(path)) {
+    return(path)
+  }
+  stop(
+    call,
+    " requires a genome FASTA, but `genome_file` was waived when the SynIndividual was created.",
+    call. = FALSE
+  )
 }
 
 #' Load annotation into a SynIndividual object
@@ -435,7 +505,7 @@ extract_cds_seq <- function(x,
   )
 
   cds_dna <- .extract_cds_sequences_from_gr(
-    genome_file = genome_file(x),
+    genome_file = .require_genome_file(x, call = "`extract_cds_seq()`"),
     cds_gr = cds_gr
   )
 
@@ -668,6 +738,8 @@ setGeneric("annotation_data<-", function(x, value) {
     return(Biostrings::DNAStringSet())
   }
 
+  genome_file <- .require_genome_file(genome_file, call = "CDS extraction")
+
   genome <- Biostrings::readDNAStringSet(filepath = genome_file)
   names(genome) <- sub("\\s.*$", "", names(genome))
 
@@ -774,7 +846,11 @@ setMethod("show", "SynIndividual", function(object) {
 
   cat("An object of class \"SynIndividual\"\n")
   cat("  id:", object@id, "\n")
-  cat("  genome_file:", object@genome_file, "\n")
+  cat(
+    "  genome_file:",
+    if (.has_genome_file(object@genome_file)) object@genome_file else "<waived>",
+    "\n"
+  )
   cat("  annotation_file:", object@annotation_file, "\n")
   cat("  annotation_format:", object@annotation_format, "\n")
   cat("  active_feature_annotation:", object@active_annotation, "\n")

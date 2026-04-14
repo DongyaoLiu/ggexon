@@ -8,7 +8,9 @@
 GeomGene <- ggproto("GeomGene", Geom,
                     required_aes = c("ymin", "xmin", "xmax", "transcripts","strand", "track"),
                     non_missing_aes = c("linewidth", "shape"),
-                    extra_params = c("exon_height", "na.rm", "y_scale", "x_translation", "proportion_trim3"),
+                    extra_params = c("exon_height", "na.rm", "y_scale", "x_translation", "proportion_trim3",
+                                     "species", "reference", "alignment", "chr", "subset",
+                                     "comparative_subset"),
                     default_aes = aes(linewidth = 0, linejoin = "mitre", fill="black",
                                       colour = NULL,
                                       size = 15,
@@ -23,11 +25,9 @@ GeomGene <- ggproto("GeomGene", Geom,
                         data = data %>% mutate(xmin = xmin + params$x_translation, xmax =xmax + params$x_translation)
                       }
                       data = data %>% group_by(track) %>%
-                        mutate(xmin2 = min(xmin)) %>%
                         mutate(x_adjustment = 0) %>%
-                        mutate(xmin = xmin - xmin2, xmax = xmax - xmin2) %>%
                         group_by(transcripts) %>% mutate(xmin = min(xmin),
-                                                             xmax = max(xmax), transcripts_length = abs(xmax - xmin))  %>% slice(1) %>%
+                                                             xmax = max(xmax), transcripts_length = abs(xmax - xmin))  %>% dplyr::slice(1) %>%
                         mutate(Xmax = xmax,
                                Xmin = xmin,
                                xmin,xmax = if_else(strand == "+", xmax - transcripts_length * params$proportion_trim3, xmax),
@@ -56,6 +56,20 @@ GeomGene <- ggproto("GeomGene", Geom,
                       )
                       )
                     },
+                    default_params = function() {
+                      list(
+                        exon_height = 1.5,
+                        y_scale = 100,
+                        x_translation = 0,
+                        proportion_trim3 = 0.2,
+                        species = NULL,
+                        reference = NULL,
+                        alignment = NULL,
+                        chr = NULL,
+                        subset = NULL,
+                        comparative_subset = NULL
+                      )
+                    },
                     draw_key = draw_key_polygon
 )
 
@@ -64,9 +78,10 @@ geom_gene <- function(mapping = NULL, data = NULL,
                       stat = "identity", position = "identity",
                       ..., na.rm = FALSE, show.legend = NA,
                       transcripts_track_ratio = NULL, y_scale = 100, exon_height=1.5,
-                      x_translation = NULL, proportion_trim3 = 0.2,
+                      x_translation = 0, proportion_trim3 = 0.2,
+                      species = NULL, reference = NULL, alignment = NULL, chr = NULL, subset = NULL,
                       inherit.aes = TRUE) {
-  layer(
+  annotation_layer <- layer(
     data = data,
     mapping = mapping,
     geom = GeomGene,
@@ -74,10 +89,33 @@ geom_gene <- function(mapping = NULL, data = NULL,
     position = position,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
+    layer_class = LayerSyn,
     params = list(na.rm = na.rm,
                   exon_height = exon_height,
                   y_scale = y_scale,
                   x_translation = x_translation,
-                  proportion_trim3 = proportion_trim3))
-}
+                  proportion_trim3 = proportion_trim3,
+                  species = species,
+                  reference = reference,
+                  alignment = alignment,
+                  chr = chr,
+                  subset = subset,
+                  comparative_subset = subset))
 
+  if (!is_comparative_syn_request(species, reference)) {
+    return(annotation_layer)
+  }
+
+  annotation_layer$geom_params$subset <- NULL
+
+  link_layer <- comparative_nuclink_layer(
+    species = species,
+    reference = reference,
+    chr = chr,
+    subset = subset,
+    alignment = alignment,
+    na.rm = na.rm
+  )
+
+  list(annotation_layer, link_layer)
+}
