@@ -60,10 +60,13 @@ Layout2 <- ggproto("Layout2", Layout,
 
 
     # Add panel coordinates to the data for each layer
-    lapply(data[-1], self$facet$map_data,
+    mapped_data <- lapply(data[-1], self$facet$map_data,
       layout = self$layout,
       params = self$facet_params
     )
+
+    mapped_data <- add_layout_panel_metadata(mapped_data, self$layout)
+    mapped_data
 
     #final step to assign the y of target alignment and query alignment
 
@@ -102,3 +105,24 @@ Layout2 <- ggproto("Layout2", Layout,
   }
 
 )
+
+add_layout_panel_metadata <- function(data, layout) {
+  if (!is.data.frame(layout) || !"PANEL" %in% names(layout)) {
+    return(data)
+  }
+
+  metadata_cols <- intersect(c("PANEL", "t_panel", "q_panel"), names(layout))
+  if (length(metadata_cols) <= 1L) {
+    return(data)
+  }
+
+  panel_metadata <- unique(layout[, metadata_cols, drop = FALSE])
+
+  lapply(data, function(layer_data) {
+    if (!is.data.frame(layer_data) || !"PANEL" %in% names(layer_data)) {
+      return(layer_data)
+    }
+
+    dplyr::left_join(layer_data, panel_metadata, by = "PANEL")
+  })
+}
