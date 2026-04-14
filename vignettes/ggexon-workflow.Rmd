@@ -287,6 +287,26 @@ At the moment, this direct plotting path is implemented for `geom_exon()` and
 consume `SynSpecies` or `SynIndividual` objects without requiring a manual
 `fortify()` step.
 
+## Extending syn-aware geoms
+
+For package development, the direct plotting behaviour is implemented through
+the custom `LayerSyn` class in `R/syn-layer.R`. That layer does two extra jobs
+for syn objects: it resolves `SynSpecies` / `SynIndividual` inputs into regular
+data frames, and it injects a default `aes()` mapping when the geom is called
+without one.
+
+To make a new `geom_*()` syn-aware, use `layer_class = LayerSyn` in the public
+wrapper and then add two pieces in `R/syn-layer.R`:
+
+- a `default_syn_aesthetics()` branch describing which columns should be
+  auto-mapped for the geom
+- a `resolve_syn_layer_data()` branch describing how to turn a syn object into
+  the data frame expected by that geom
+
+In practice, this means the geom itself can stay focused on the usual ggplot2
+responsibilities, namely `setup_data()` and `draw_panel()`, while the syn layer
+handles object resolution and default mapping.
+
 # Notes
 
 - `SynFeatureAnnotation` is the structural layer used for CDS extraction and

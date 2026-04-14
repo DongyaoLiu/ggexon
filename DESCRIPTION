@@ -53,6 +53,7 @@ Collate:
     'geom-direction.R'
     'geom-exon.R'
     'geom-gene.R'
+    'geom-transcripts.R'
     'geom-genetag.R'
     'geom-motif.R'
     'geom-nuclink.R'

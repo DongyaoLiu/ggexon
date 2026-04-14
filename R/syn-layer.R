@@ -56,26 +56,21 @@ LayerSyn <- ggproto(
 )
 
 is_syn_layer_input <- function(layer, plot_data) {
-<<<<<<< HEAD
-  inherits(layer$data, "waiver") &&
-    (methods::is(plot_data, "SynSpecies") || methods::is(plot_data, "SynIndividual")) ||
-=======
   (inherits(layer$data, "waiver") &&
      (methods::is(plot_data, "SynSpecies") || methods::is(plot_data, "SynIndividual"))) ||
->>>>>>> SynClass
     methods::is(layer$data, "SynSpecies") ||
     methods::is(layer$data, "SynIndividual")
 }
 
-<<<<<<< HEAD
-=======
 syn_default_mapping <- function(data, layer) {
   syn_identity_mapping(default_syn_aesthetics(data, layer))
 }
-
->>>>>>> SynClass
 default_syn_aesthetics <- function(data, layer) {
   if (identical(layer$geom, GeomExon)) {
+    cols <- c("xmin", "xmax", "ymin", "transcripts", "strand", "track", "type", "group")
+    return(intersect(cols, names(data)))
+  }
+  if (identical(layer$geom, GeomTranscripts)) {
     cols <- c("xmin", "xmax", "ymin", "transcripts", "strand", "track", "type", "group")
     return(intersect(cols, names(data)))
   }
@@ -124,6 +119,19 @@ resolve_syn_layer_data <- function(x, layer) {
       )
     )
   }
+  if (identical(layer$geom, GeomTranscripts)) {
+    return(
+      syn_to_transcript_df(
+        x = x,
+        species = params$species,
+        genes = params$genes,
+        transcripts = params$transcripts,
+        chr = params$chr,
+        subset = params$subset,
+        annotation_type = params$annotation_type
+      )
+    )
+  }
   if (identical(layer$geom, GeomGene)) {
     if (is_comparative_syn_request(params$species, params$reference)) {
       return(
@@ -149,10 +157,6 @@ resolve_syn_layer_data <- function(x, layer) {
   }
 
   geom_name <- class(layer$geom)[1] %||% ""
-<<<<<<< HEAD
-
-=======
->>>>>>> SynClass
   cli::cli_abort(
     "Syn object input is not yet implemented for geom {.val {geom_name}}."
   )
@@ -432,12 +436,6 @@ syn_gr_to_exon_df <- function(feature_gr,
     alpha = NA_real_,
     stringsAsFactors = FALSE
   )
-
-<<<<<<< HEAD
-  out <- merge(out, order_df[, c("transcripts", "ymin", "group")],
-               by = "transcripts", all.x = TRUE, sort = FALSE)
-  out <- out[order(match(out$transcripts, transcript_ids), out$xmin, out$xmax), , drop = FALSE]
-=======
   out <- merge(
     out,
     order_df[, c("transcripts", "ymin", "group")],
@@ -447,8 +445,115 @@ syn_gr_to_exon_df <- function(feature_gr,
   )
   out <- out[order(match(out$transcripts, transcript_ids), out$xmin, out$xmax), , drop = FALSE]
   out$PANEL <- 1L
->>>>>>> SynClass
   rownames(out) <- NULL
+  out
+}
+
+syn_to_transcript_df <- function(x,
+                                 species = NULL,
+                                 genes = NULL,
+                                 transcripts = NULL,
+                                 chr = NULL,
+                                 subset = NULL,
+                                 annotation_type = "exon") {
+  individual <- resolve_syn_individual(x, species = species)
+  individual <- load_annotation(individual)
+  chr <- if (is.null(chr)) NULL else resolve_syn_seqname(individual, chr)
+
+  start <- end <- NULL
+  if (!is.null(subset)) {
+    if (!is.numeric(subset) || length(subset) != 2L) {
+      cli::cli_abort("{.arg subset} must be a numeric vector of length 2.")
+    }
+    start <- min(subset)
+    end <- max(subset)
+  }
+
+  if (is.null(genes) && is.null(transcripts) && is.null(chr)) {
+    cli::cli_abort(
+      "Provide at least one of {.arg genes}, {.arg transcripts}, or {.arg chr} for {.fn geom_transcripts}."
+    )
+  }
+
+  feature_gr <- annotation_data(individual)
+
+  if (!is.null(genes)) {
+    gene_match <- .match_annotation_values(
+      feature_gr,
+      c("gene_name", "gene_id", "Name", "gene", "ID"),
+      genes
+    )
+    gene_ids <- unique(.annotation_primary_ids(feature_gr[gene_match]))
+    gene_ids <- gene_ids[!is.na(gene_ids) & nzchar(gene_ids)]
+
+    gene_filter <- .match_annotation_values(
+      feature_gr,
+      c("gene_name", "gene_id", "Name", "gene", "ID"),
+      genes
+    )
+    if (length(gene_ids) > 0L) {
+      gene_filter <- gene_filter | .match_annotation_values(
+        feature_gr,
+        c("gene_id", "Parent", "ID"),
+        gene_ids
+      )
+    }
+    feature_gr <- feature_gr[gene_filter]
+  }
+
+  if (!is.null(transcripts)) {
+    transcript_filter <- .match_annotation_values(
+      feature_gr,
+      c("transcript_id", "Parent", "transcript_name", "ID"),
+      transcripts
+    )
+    feature_gr <- feature_gr[transcript_filter]
+  }
+
+  if (!is.null(chr)) {
+    region <- GenomicRanges::GRanges(
+      seqnames = chr,
+      ranges = IRanges::IRanges(start = start %||% 1L, end = end %||% max(IRanges::end(feature_gr)))
+    )
+    feature_gr <- feature_gr[IRanges::overlapsAny(feature_gr, region)]
+  } else if (!is.null(start) || !is.null(end)) {
+    cli::cli_abort("{.arg subset} requires {.arg chr} when used without {.arg genes} or {.arg transcripts}.")
+  }
+
+  if (!is.null(annotation_type)) {
+    type_filter <- .match_annotation_values(
+      feature_gr,
+      c("type"),
+      annotation_type
+    )
+    feature_gr <- feature_gr[type_filter]
+  }
+
+  if (length(feature_gr) == 0L) {
+    return(data.frame())
+  }
+
+  syn_gr_to_transcript_df(
+    feature_gr = feature_gr,
+    track = syn_id(individual),
+    annotation_type = annotation_type
+  )
+}
+
+syn_gr_to_transcript_df <- function(feature_gr,
+                                    track,
+                                    annotation_type = "exon") {
+  out <- syn_gr_to_exon_df(
+    feature_gr = feature_gr,
+    track = track,
+    annotation_type = annotation_type
+  )
+
+  if (nrow(out) == 0L) {
+    return(out)
+  }
+
+  out$label <- out$transcripts
   out
 }
 
