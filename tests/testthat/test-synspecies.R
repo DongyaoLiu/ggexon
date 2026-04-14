@@ -697,3 +697,139 @@ test_that("reference-led comparative subsetting errors when pairwise alignments 
     "chain"
   )
 })
+
+test_that("pairwise_alignment_data subsets query and target regions and filters short paf rows", {
+  xz_genome <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
+  xz_annotation <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+  n2_genome <- system.file(
+    "extdata",
+    "c_elegans.PRJNA13758.WS285.genomic.fa",
+    package = "ggexon"
+  )
+  n2_annotation <- system.file(
+    "extdata",
+    "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
+    package = "ggexon"
+  )
+  paf_path <- system.file("extdata", "V_alginment.paf", package = "ggexon")
+
+  sp <- SynSpecies(name = "Caenorhabditis")
+  sp <- add_individual(
+    sp,
+    SynIndividual(
+      genome_file = xz_genome,
+      annotation_file = xz_annotation,
+      id = "XZ1516"
+    )
+  )
+  sp <- add_individual(
+    sp,
+    SynIndividual(
+      genome_file = n2_genome,
+      annotation_file = n2_annotation,
+      id = "N2",
+      annotation_format = "gtf"
+    )
+  )
+  sp <- add_pairwise_alignment(
+    sp,
+    SynPairAlignment(
+      name = "XZ1516_vs_N2",
+      query_individual = "XZ1516",
+      target_individual = "N2",
+      file = paf_path
+    )
+  )
+
+  paf <- pairwise_alignment_data(
+    sp,
+    alignment = "XZ1516_vs_N2",
+    subset = c(
+      XZ1516 = "RagTag_V:21550000-21680000",
+      N2 = "V：19100000-20510000"
+    ),
+    filter = 200
+  )
+
+  expect_true(nrow(paf) > 0L)
+  expect_true(all(paf$alen >= 200L))
+  expect_true(all(as.character(paf$qchr) == "V_RagTag"))
+  expect_true(all(as.character(paf$tchr) == "V"))
+  expect_true(all(paf$qstart < 21680000L & paf$qend > 21550000L))
+  expect_true(all(paf$tstart < 20510000L & paf$tend > 19100000L))
+  expect_identical(unique(as.character(paf$qspecies)), "XZ1516")
+  expect_identical(unique(as.character(paf$tspecies)), "N2")
+  expect_identical(unique(as.character(paf$track)), "link_XZ1516_vs_N2")
+})
+
+test_that("subset_pairwise_alignment and filter_pairwise_alignment compose on a SynSpecies", {
+  xz_genome <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
+  xz_annotation <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+  n2_genome <- system.file(
+    "extdata",
+    "c_elegans.PRJNA13758.WS285.genomic.fa",
+    package = "ggexon"
+  )
+  n2_annotation <- system.file(
+    "extdata",
+    "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
+    package = "ggexon"
+  )
+  paf_path <- system.file("extdata", "V_alginment.paf", package = "ggexon")
+
+  sp <- SynSpecies(name = "Caenorhabditis")
+  sp <- add_individual(
+    sp,
+    SynIndividual(
+      genome_file = xz_genome,
+      annotation_file = xz_annotation,
+      id = "XZ1516"
+    )
+  )
+  sp <- add_individual(
+    sp,
+    SynIndividual(
+      genome_file = n2_genome,
+      annotation_file = n2_annotation,
+      id = "N2",
+      annotation_format = "gtf"
+    )
+  )
+  sp <- add_pairwise_alignment(
+    sp,
+    SynPairAlignment(
+      name = "XZ1516_vs_N2",
+      query_individual = "XZ1516",
+      target_individual = "N2",
+      file = paf_path
+    )
+  )
+
+  subsetted <- subset_pairwise_alignment(
+    sp,
+    alignment = "XZ1516_vs_N2",
+    subset = c(
+      XZ1516 = "RagTag_V:21574445-21584356",
+      N2 = "V:20456000-20465040"
+    )
+  )
+  filtered <- filter_pairwise_alignment(
+    sp,
+    alignment = "XZ1516_vs_N2",
+    filter = 200
+  )
+
+  expect_true(nrow(subsetted) > 0L)
+  expect_true(nrow(filtered) > 0L)
+  expect_true(all(filtered$alen >= 200L))
+  expect_true(all(subsetted$qstart < 21584356L & subsetted$qend > 21574445L))
+  expect_true(all(subsetted$tstart < 20465040L & subsetted$tend > 20456000L))
+})

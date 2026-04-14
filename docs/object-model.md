@@ -63,6 +63,12 @@ Owns:
 The explicit query/target fields matter because pairwise alignment formats are
 directional.
 
+Primary helpers:
+
+- `pairwise_alignment_data()`
+- `subset_pairwise_alignment()`
+- `filter_pairwise_alignment()`
+
 ### `SynMultiAlignment`
 
 Represents one multiple-species alignment layer, currently intended for MAF.
@@ -292,6 +298,25 @@ materialize the plotting table they need during the build step. When the
 `geom_gene()` use it by default. If there are multiple individuals, then
 `species =` is required.
 
+Pairwise alignments can also be materialized directly from `SynSpecies` or
+`SynPairAlignment` with region and fragment filtering:
+
+```r
+pairwise_alignment_data(
+  sp,
+  alignment = "XZ1516_vs_N2",
+  subset = c(
+    XZ1516 = "RagTag_V:21550000-21680000",
+    N2 = "V:20450000-20510000"
+  ),
+  filter = 200
+)
+```
+
+`subset =` trims both query and target sides using named region strings, while
+`filter =` drops rows with `alen` below the chosen cutoff. The two arguments
+are designed to compose in a single call.
+
 For a gene-level overview of the same region:
 
 ```r
@@ -306,10 +331,31 @@ ggexon(sp) +
 `gene_id` and draws one directional span per gene. Both use absolute genomic
 coordinates.
 
+For pairwise plotting, one comparative layer call can resolve the reference
+window, partner window, and middle link panel together:
+
+```r
+ggexon(sp) +
+  geom_gene(
+    species = c("N2", "XZ1516"),
+    reference = "XZ1516",
+    chr = "RagTag_V",
+    subset = c(21574445, 21584356),
+    alignment = "XZ1516_vs_N2"
+  ) +
+  facet_genomics(ggplot2::vars(track), scales = "free_y")
+```
+
+That comparative path is intended to grow into layout-aware multi-line packing
+for dense regions, with the chosen track layout stored on the `SynSpecies`
+object itself.
+
 ## Near-term follow-up
 
 - Make plotting geoms prefer `plot_label` when present.
 - Add `SynIndividual` convenience wrappers for non-feature layer queries.
 - Tighten patch target matching for parent-child feature families.
 - Document recommended input schemas for protein-domain tables.
-- Add file-backed verbs for pairwise and multiple alignment layers.
+- Extend pairwise layout storage to support 2-4 packed annotation lines in
+  crowded windows.
+- Add file-backed verbs for multiple alignment layers.

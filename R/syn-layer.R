@@ -185,8 +185,19 @@ syn_to_comparative_annotation_df <- function(x,
     }))
   }
 
+  out <- syn_flatten_annotation_rows(out)
+
   attr(out, "syn_layout_override") <- context$layout
   out
+}
+
+syn_flatten_annotation_rows <- function(data, baseline = 1) {
+  if (!is.data.frame(data) || nrow(data) == 0L || !"track" %in% names(data) || !"ymin" %in% names(data)) {
+    return(data)
+  }
+
+  data$ymin <- baseline
+  data
 }
 
 syn_to_comparative_link_df <- function(x,

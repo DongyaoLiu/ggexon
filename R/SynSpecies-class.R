@@ -255,6 +255,15 @@ setMethod("alignment_individuals", "SynPairAlignment", function(x) {
 })
 setMethod("alignment_individuals", "SynMultiAlignment", function(x) x@individuals)
 
+setGeneric("pairwise_alignment_data", function(x, ...) standardGeneric("pairwise_alignment_data"))
+setMethod("pairwise_alignment_data", "SynPairAlignment", function(x, alignment = NULL, ...) {
+  .pairwise_alignment_data_impl(x = x, species_obj = NULL, ...)
+})
+setMethod("pairwise_alignment_data", "SynSpecies", function(x, alignment = NULL, ...) {
+  pair <- .resolve_pairwise_alignment_arg(x = x, alignment = alignment)
+  .pairwise_alignment_data_impl(x = pair, species_obj = x, ...)
+})
+
 #' Add a SynIndividual to a SynSpecies object
 #'
 #' @param x A `SynSpecies` object.
@@ -351,6 +360,31 @@ store_chain_layout <- function(x,
   }
   species_layout(x) <- synspecies_chain_layout(x, vars = vars, free = free)
   x
+}
+
+#' Subset a pairwise alignment by query/target regions
+#'
+#' @param x A `SynSpecies` or `SynPairAlignment` object.
+#' @param subset Named character vector/list with one region per species, e.g.
+#'   `c(XZ1516 = "RagTag_V:21550000-21680000", N2 = "V:20450000-20451000")`.
+#' @param alignment Optional alignment name when `x` is a `SynSpecies`.
+#'
+#' @return A filtered PAF-like `data.frame`.
+#' @export
+subset_pairwise_alignment <- function(x, subset, alignment = NULL) {
+  pairwise_alignment_data(x, alignment = alignment, subset = subset)
+}
+
+#' Filter a pairwise alignment by minimum PAF alignment length
+#'
+#' @param x A `SynSpecies` or `SynPairAlignment` object.
+#' @param filter Minimum `alen` to keep.
+#' @param alignment Optional alignment name when `x` is a `SynSpecies`.
+#'
+#' @return A filtered PAF-like `data.frame`.
+#' @export
+filter_pairwise_alignment <- function(x, filter = 200, alignment = NULL) {
+  pairwise_alignment_data(x, alignment = alignment, filter = filter)
 }
 
 #' Subset a comparative window from a `SynSpecies` object
@@ -532,6 +566,34 @@ subset_synspecies_window <- function(x,
   pair_list[[alignment]]
 }
 
+.resolve_pairwise_alignment_arg <- function(x, alignment = NULL) {
+  pair_list <- pairwise_alignments(x)
+  if (length(pair_list) == 0L) {
+    stop("The SynSpecies object does not contain any pairwise alignments.", call. = FALSE)
+  }
+
+  if (is.null(alignment)) {
+    if (length(pair_list) == 1L) {
+      return(pair_list[[1L]])
+    }
+    stop(
+      "Supply `alignment` to choose one pairwise alignment from: ",
+      paste(names(pair_list), collapse = ", "),
+      call. = FALSE
+    )
+  }
+
+  if (!alignment %in% names(pair_list)) {
+    stop(
+      "Unknown pairwise alignment: ", alignment,
+      ". Available alignments: ", paste(names(pair_list), collapse = ", "),
+      call. = FALSE
+    )
+  }
+
+  pair_list[[alignment]]
+}
+
 .read_pairwise_paf <- function(path) {
   paf <- utils::read.delim(
     path,
@@ -553,6 +615,110 @@ subset_synspecies_window <- function(x,
     paf[[col]] <- as.integer(paf[[col]])
   }
   paf
+}
+
+.pairwise_alignment_data_impl <- function(x,
+                                          species_obj = NULL,
+                                          subset = NULL,
+                                          filter = NULL) {
+  paf <- .read_pairwise_paf(alignment_file(x))
+
+  if (!is.null(subset)) {
+    subset_specs <- .parse_pairwise_subset(
+      subset = subset,
+      pair = x,
+      species_obj = species_obj,
+      paf = paf
+    )
+
+    qspec <- subset_specs[[query_individual(x)]]
+    tspec <- subset_specs[[target_individual(x)]]
+
+    paf <- paf[
+      as.character(paf$qchr) == qspec$chr &
+        paf$qstart < qspec$end &
+        paf$qend > qspec$start &
+        as.character(paf$tchr) == tspec$chr &
+        paf$tstart < tspec$end &
+        paf$tend > tspec$start,
+      ,
+      drop = FALSE
+    ]
+  }
+
+  if (!is.null(filter)) {
+    if (!is.numeric(filter) || length(filter) != 1L || is.na(filter) || filter < 0) {
+      stop("`filter` must be a non-negative numeric scalar.", call. = FALSE)
+    }
+    paf <- paf[paf$alen >= as.integer(filter), , drop = FALSE]
+  }
+
+  paf$qspecies <- query_individual(x)
+  paf$tspecies <- target_individual(x)
+  paf$track <- paste0("link_", alignment_name(x))
+  rownames(paf) <- NULL
+  paf
+}
+
+.parse_pairwise_subset <- function(subset, pair, species_obj = NULL, paf) {
+  if (is.list(subset) && !is.atomic(subset)) {
+    subset <- unlist(subset, use.names = TRUE)
+  }
+  if (!is.character(subset) || length(subset) != 2L || is.null(names(subset))) {
+    stop(
+      "`subset` must be a named character vector/list with one region for query and target species.",
+      call. = FALSE
+    )
+  }
+
+  subset <- subset[alignment_individuals(pair)]
+  if (any(is.na(subset))) {
+    stop(
+      "`subset` must be named with both species in the pairwise alignment: ",
+      paste(alignment_individuals(pair), collapse = ", "),
+      call. = FALSE
+    )
+  }
+
+  out <- lapply(names(subset), function(species_name) {
+    spec <- .parse_region_string(subset[[species_name]])
+    paf_chr_col <- if (identical(species_name, query_individual(pair))) "qchr" else "tchr"
+    paf_chr <- .resolve_paf_seqname(spec$chr, unique(as.character(paf[[paf_chr_col]])))
+
+    if (!is.null(species_obj) && methods::is(species_obj, "SynSpecies")) {
+      individual <- individuals(species_obj)[[species_name]]
+      spec$chr <- resolve_syn_seqname(individual, spec$chr)
+    }
+    spec$paf_chr <- paf_chr
+    spec$chr <- paf_chr
+    spec
+  })
+  names(out) <- names(subset)
+  out
+}
+
+.parse_region_string <- function(x) {
+  if (!is.character(x) || length(x) != 1L || is.na(x)) {
+    stop("Each `subset` entry must be a single region string.", call. = FALSE)
+  }
+
+  region <- gsub("\\s+", "", x)
+  region <- chartr("\uFF1A", ":", region)
+  region <- gsub(",", "", region, fixed = TRUE)
+
+  m <- regexec("^([^:]+):(\\d+)-(\\d+)$", region)
+  hits <- regmatches(region, m)[[1L]]
+  if (length(hits) != 4L) {
+    stop("Region must look like `chr:start-end`: ", x, call. = FALSE)
+  }
+
+  start <- as.integer(hits[[3L]])
+  end <- as.integer(hits[[4L]])
+  list(
+    chr = hits[[2L]],
+    start = min(start, end),
+    end = max(start, end)
+  )
 }
 
 .resolve_paf_seqname <- function(chr, available) {
