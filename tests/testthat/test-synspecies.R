@@ -393,8 +393,10 @@ test_that("plot_build uses stored SynSpecies layout during facet setup", {
     vars = ggplot2::vars(track),
     free = list(x = FALSE, y = TRUE)
   )
-  custom_layout$ROW <- c(3L, 2L, 1L)
-  custom_layout$PANEL <- c(1L, 2L, 3L)
+  custom_layout$track <- factor(
+    custom_layout$track,
+    levels = c("N2", "link_XZ1516_vs_N2", "XZ1516")
+  )
   species_layout(sp) <- custom_layout
 
   plot_obj <- ggexon(sp) +
@@ -402,7 +404,8 @@ test_that("plot_build uses stored SynSpecies layout during facet setup", {
     facet_genomics(ggplot2::vars(track), scales = "free_y")
 
   built <- ggexon_build(plot_obj)
-  expect_identical(as.integer(built@layout$layout$ROW), c(3L, 2L, 1L))
+  expect_identical(as.character(built@layout$layout$track), c("N2", "link_XZ1516_vs_N2", "XZ1516"))
+  expect_identical(as.integer(built@layout$layout$ROW), c(1L, 2L, 3L))
   expect_identical(as.integer(built@layout$layout$SCALE_Y), c(1L, 2L, 1L))
 })
 

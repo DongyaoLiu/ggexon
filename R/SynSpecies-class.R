@@ -339,6 +339,9 @@ setReplaceMethod("species_layout", "SynSpecies", function(x, value) {
   if (!is.null(value) && !is.data.frame(value)) {
     stop("`species_layout<-` expects a data.frame or NULL.", call. = FALSE)
   }
+  if (!is.null(value)) {
+    value <- .normalize_synspecies_layout_order(value)
+  }
   x@layout <- value
   validObject(x)
   x

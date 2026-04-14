@@ -343,7 +343,7 @@ synspecies_chain_layout <- function(x, vars, free) {
 
 .finalize_synspecies_layout_scales <- function(layout, free) {
   layout <- as.data.frame(layout, stringsAsFactors = FALSE)
-  layout <- layout[order(layout$PANEL), , drop = FALSE]
+  layout <- .normalize_synspecies_layout_order(layout)
   rownames(layout) <- NULL
 
   layout$SCALE_X <- if (isTRUE(free$x)) seq_len(nrow(layout)) else 1L
@@ -358,6 +358,22 @@ synspecies_chain_layout <- function(x, vars, free) {
     layout$SCALE_Y <- 1L
   }
 
+  layout
+}
+
+.normalize_synspecies_layout_order <- function(layout) {
+  layout <- as.data.frame(layout, stringsAsFactors = FALSE)
+  if (nrow(layout) == 0L) {
+    return(layout)
+  }
+
+  if ("track" %in% names(layout) && is.factor(layout$track)) {
+    layout <- layout[order(layout$track), , drop = FALSE]
+  }
+
+  rownames(layout) <- NULL
+  layout$ROW <- seq_len(nrow(layout))
+  layout$PANEL <- seq_len(nrow(layout))
   layout
 }
 
