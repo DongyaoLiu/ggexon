@@ -358,6 +358,56 @@ synspecies_chain_layout <- function(x, vars, free) {
     layout$SCALE_Y <- 1L
   }
 
+  layout <- .annotate_synspecies_link_source_panels(layout)
+  layout
+}
+
+.annotate_synspecies_link_source_panels <- function(layout) {
+  layout <- as.data.frame(layout, stringsAsFactors = FALSE)
+
+  if (!"t_panel" %in% names(layout)) {
+    layout$t_panel <- NA_integer_
+  }
+  if (!"q_panel" %in% names(layout)) {
+    layout$q_panel <- NA_integer_
+  }
+
+  if (!"panel_type" %in% names(layout) || !"species" %in% names(layout)) {
+    return(layout)
+  }
+
+  annotation_rows <- layout[
+    layout$panel_type == "annotation" & !is.na(layout$species),
+    c("species", "PANEL"),
+    drop = FALSE
+  ]
+
+  if (nrow(annotation_rows) == 0L) {
+    return(layout)
+  }
+
+  annotation_rows <- annotation_rows[!duplicated(annotation_rows$species), , drop = FALSE]
+
+  if ("tspecies" %in% names(layout)) {
+    matched_t <- match(layout$tspecies, annotation_rows$species)
+    layout$t_panel <- ifelse(
+      !is.na(matched_t),
+      annotation_rows$PANEL[matched_t],
+      layout$t_panel
+    )
+  }
+
+  if ("qspecies" %in% names(layout)) {
+    matched_q <- match(layout$qspecies, annotation_rows$species)
+    layout$q_panel <- ifelse(
+      !is.na(matched_q),
+      annotation_rows$PANEL[matched_q],
+      layout$q_panel
+    )
+  }
+
+  layout$t_panel <- as.integer(layout$t_panel)
+  layout$q_panel <- as.integer(layout$q_panel)
   layout
 }
 

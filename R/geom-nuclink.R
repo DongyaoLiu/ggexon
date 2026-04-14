@@ -17,7 +17,7 @@ geom_nuclink <- function(mapping = NULL, data = NULL,
 GeomNucLink <- ggproto("GeomPanel", Geom,
                              required_aes = c("tspecies", "tchr", "tstart", "tend", "strand",
                                               "qspecies", "qchr", "qstart", "qend"),
-                             optional_aes = c("ty", "qy"),
+                             optional_aes = c("ty", "qy", "t_panel", "q_panel"),
                              non_missing_aes = c("linetype", "linewidth", "shape"),
                              extra_params = c("na.rm"),
                              default_aes = aes(linewidth = 0,
@@ -43,9 +43,10 @@ GeomNucLink <- ggproto("GeomPanel", Geom,
                                # each row are a group will have a same id after melting
                                data$id = 1:nrow(data)
                                melt_data = data %>% select(-any_of(c("tspecies", "qspecies", "track", "tchr", "qchr", "ty", "qy"))) %>%
-                                 melt(id = c("id", "strand", "PANEL", "group"), variable.name = "x_variable", value.name = "x") %>%
+                                 melt(id = c("id", "strand", "PANEL", "group", "t_panel", "q_panel"), variable.name = "x_variable", value.name = "x") %>%
                                  mutate(y_variable = if_else(str_detect(x_variable,"^t"), "ty", "qy")) %>%
                                  left_join(link_y_out, join_by(PANEL == PANEL, group == group, y_variable == y_variable)) %>%
+                                 mutate(source_panel = if_else(str_detect(x_variable, "^t"), t_panel, q_panel)) %>%
                                  arrange(id, x_variable) %>% rowwise() %>%
                                  mutate(draw_order =
                                           case_when(strand == "+" && x_variable == "tstart" ~ 1,
@@ -86,33 +87,12 @@ GeomNucLink <- ggproto("GeomPanel", Geom,
                        },
                        draw_panel = function(data, panel_params, coord, panel, rule = "evenodd",
                                              lineend = "butt", linejoin = "round", linemitre = 10){
-                       upper_panel = as.numeric(panel) - 1
-                       upper_panel_params = panel_params[[upper_panel]]
-
-                       lower_panel = as.numeric(panel) + 1
-                       lower_panel_params = panel_params[[lower_panel]]
-
-
-                       upper_range = upper_panel_params$x$scale$range$range
-                       lower_range = lower_panel_params$x$scale$range$range
-
-
-
                        data <- ggplot2:::fix_linewidth(data, snake_class(self))
                        n <- nrow(data)
                        if (n == 1) return(zeroGrob())
 
-                       data_split = split(data, data$y_variable)
-                       if (unique(data_split[["ty"]]$y) > unique(data_split[["qy"]]$y)) {
-
-                         munched_t <- coord$transform_x(data_split[["ty"]], upper_panel_params)
-                         munched_q <- coord$transform_x(data_split[["qy"]], lower_panel_params)
-                       }else{
-
-                         munched_t <- coord$transform_x(data_split[["ty"]], lower_panel_params)
-                         munched_q <- coord$transform_x(data_split[["qy"]], upper_panel_params)
-                       }
-                       munched = rbind(munched_t, munched_q) %>% arrange(PANEL, group, draw_order)
+                       munched <- .transform_link_x_by_source_panel(data, panel_params, coord) %>%
+                         arrange(PANEL, group, draw_order)
                        munched = coord$transform_y(munched, panel_params[[panel]])
 
                        first_idx <- !duplicated(munched$group)
@@ -136,3 +116,33 @@ GeomNucLink <- ggproto("GeomPanel", Geom,
                        )
                        }
 )
+
+.transform_link_x_by_source_panel <- function(data, panel_params, coord) {
+  if (!"source_panel" %in% names(data)) {
+    cli::cli_abort("Link data must contain a {.field source_panel} column for x transformation.")
+  }
+
+  panel_ids <- unique(stats::na.omit(as.integer(data$source_panel)))
+  if (length(panel_ids) == 0L) {
+    cli::cli_abort("Link data does not define any source x panels.")
+  }
+
+  transformed <- lapply(panel_ids, function(panel_id) {
+    panel_data <- data[as.integer(data$source_panel) == panel_id, , drop = FALSE]
+    if (nrow(panel_data) == 0L) {
+      return(NULL)
+    }
+    if (panel_id < 1L || panel_id > length(panel_params)) {
+      cli::cli_abort("Link source panel {.val {panel_id}} is out of bounds for the current layout.")
+    }
+
+    coord$transform_x(panel_data, panel_params[[panel_id]])
+  })
+
+  transformed <- Filter(Negate(is.null), transformed)
+  if (length(transformed) == 0L) {
+    return(data[0, , drop = FALSE])
+  }
+
+  dplyr::bind_rows(transformed)
+}
