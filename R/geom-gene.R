@@ -9,8 +9,7 @@ GeomGene <- ggproto("GeomGene", Geom,
                     required_aes = c("ymin", "xmin", "xmax", "transcripts","strand", "track"),
                     non_missing_aes = c("linewidth", "shape"),
                     extra_params = c("exon_height", "na.rm", "y_scale", "x_translation", "proportion_trim3",
-                                     "species", "reference", "alignment", "chr", "subset",
-                                     "comparative_subset"),
+                                     "species", "chr", "subset"),
                     default_aes = aes(linewidth = 0, linejoin = "mitre", fill="black",
                                       colour = NULL,
                                       size = 15,
@@ -63,11 +62,8 @@ GeomGene <- ggproto("GeomGene", Geom,
                         x_translation = 0,
                         proportion_trim3 = 0.2,
                         species = NULL,
-                        reference = NULL,
-                        alignment = NULL,
                         chr = NULL,
-                        subset = NULL,
-                        comparative_subset = NULL
+                        subset = NULL
                       )
                     },
                     draw_key = draw_key_polygon
@@ -79,9 +75,9 @@ geom_gene <- function(mapping = NULL, data = NULL,
                       ..., na.rm = FALSE, show.legend = NA,
                       transcripts_track_ratio = NULL, y_scale = 100, exon_height=1.5,
                       x_translation = 0, proportion_trim3 = 0.2,
-                      species = NULL, reference = NULL, alignment = NULL, chr = NULL, subset = NULL,
+                      species = NULL, chr = NULL, subset = NULL,
                       inherit.aes = TRUE) {
-  annotation_layer <- layer(
+  layer(
     data = data,
     mapping = mapping,
     geom = GeomGene,
@@ -96,26 +92,6 @@ geom_gene <- function(mapping = NULL, data = NULL,
                   x_translation = x_translation,
                   proportion_trim3 = proportion_trim3,
                   species = species,
-                  reference = reference,
-                  alignment = alignment,
                   chr = chr,
-                  subset = subset,
-                  comparative_subset = subset))
-
-  if (!is_comparative_syn_request(species, reference)) {
-    return(annotation_layer)
-  }
-
-  annotation_layer$geom_params$subset <- NULL
-
-  link_layer <- comparative_nuclink_layer(
-    species = species,
-    reference = reference,
-    chr = chr,
-    subset = subset,
-    alignment = alignment,
-    na.rm = na.rm
-  )
-
-  list(annotation_layer, link_layer)
+                  subset = subset))
 }

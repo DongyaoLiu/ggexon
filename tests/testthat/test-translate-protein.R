@@ -12,7 +12,7 @@ test_that("translate_protein translates the first three genes from extdata", {
   expect_true(nzchar(genome_path))
   expect_true(nzchar(annotation_path))
 
-  x <- SynIndividual(
+  x <- test_syn_individual(
     genome_file = genome_path,
     annotation_file = annotation_path
   ) %>%

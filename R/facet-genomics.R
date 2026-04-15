@@ -108,54 +108,47 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
     if (methods::is(params$plot_data, "SynSpecies")) {
       if (!is.null(params$layout_override)) {
         return(
-          .finalize_synspecies_layout_scales(
-            params$layout_override,
-            free = params$free
+          syn_layout_panels(
+            .finalize_synspecies_layout_scales(
+              params$layout_override,
+              free = params$free
+            )
           )
         )
       }
-      stored_layout <- species_layout(params$plot_data)
-      if (!is.null(stored_layout)) {
-        return(
-          .finalize_synspecies_layout_scales(
-            stored_layout,
-            free = params$free
+
+      if (isTRUE(params$has_link_layers)) {
+        stored_layout <- species_layout(params$plot_data)
+        if (!is.null(stored_layout)) {
+          return(
+            syn_layout_panels(
+              .finalize_synspecies_layout_scales(
+                stored_layout,
+                free = params$free
+              )
+            )
           )
-        )
+        }
       }
-      return(
-        synspecies_chain_layout(
-          x = params$plot_data,
-          vars = vars,
-          free = params$free
-        )
+
+      plot_layout <- synspecies_chain_layout(
+        x = params$plot_data,
+        vars = vars,
+        free = params$free,
+        annotation_species = .annotation_species_from_layers(data),
+        link_pairs = .link_pairs_from_layers(data)
       )
+      if (!is.null(plot_layout)) {
+        return(syn_layout_panels(plot_layout))
+      }
+
+      return(.compute_standard_genomics_layout(data, params, self))
     }
 
     if (length(vars) == 0) {
       return(layout_null())
     }
-
-    ggplot2:::check_facet_vars(names(vars), name = snake_class(self))
-
-    base <- ggplot2:::combine_vars(data, params$plot_env, vars, drop = params$drop)
-
-    id <- ggplot2:::id(base, drop = TRUE)
-    n <- attr(id, "n")
-
-
-    dims <- ggplot2:::wrap_dims(n, params$nrow, params$ncol)
-    layout <- ggplot2:::wrap_layout(id, dims, params$dir)
-
-    panels <- vec_cbind(layout, base)
-    panels <- panels[order(panels$PANEL), , drop = FALSE]
-    rownames(panels) <- NULL
-
-    # Add scale identification
-    panels$SCALE_X <- if (params$free$x) seq_len(n) else 1L
-    panels$SCALE_Y <- if (params$free$y) seq_len(n) else 1L
-
-    panels
+    .compute_standard_genomics_layout(data, params, self)
   },
 
   compute_alignment_layout = function(self, data, layout){
@@ -171,32 +164,37 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
     # PANEL ROW COL track SCALE_X SCALE_Y tspecies qspecies
     layout2 = left_join(layout, species_aln_list, join_by(track == track))
 
-    # sort the panel order.
+    # sort the order in each column so link panels sit between their species panels
     split_by_col = split(layout2, layout2$COL)
 
     split_by_col = lapply(split_by_col, function(df){
-
-    link_layout = df[str_detect(df$track, "link"), c("tspecies", "qspecies")]
-
-    for (i in 1:nrow(link_layout)){
-
-      target_row_index = rownames(df[df$track == link_layout[i,"tspecies"], ])
-      query_row_index = rownames(df[df$track == link_layout[i,"qspecies"], ])
-      annotation_index = sort(c(target_row_index, query_row_index))
-      link_index_row = rownames(link_layout[i , ])
-
-      if (link_index_row < annotation_index[1] || link_index_row > annotation_index[2]) {
-        new_row_index = c(annotation_index[1], link_index_row, annotation_index[2])
+      if (nrow(df) == 0L) {
+        return(df)
       }
-    }
 
-    # siuation 1: all species have a link panel
-    if (unique(sort(new_row_index) == rownames(df))){
-      df = df[new_row_index, ]
-    }else{
-    # siuation 2: there are some species no link table
-      df = df[c(new_row_index, setdiff(rownames(df), new_row_index)), ]
-    }
+      df$.row_id <- seq_len(nrow(df))
+      annotation_rows <- df[
+        !stringr::str_detect(df$track, "link"),
+        c("track", ".row_id"),
+        drop = FALSE
+      ]
+
+      sort_key <- df$.row_id
+      is_link_row <- stringr::str_detect(df$track, "link")
+
+      if (nrow(annotation_rows) > 0L && any(is_link_row)) {
+        upper_pos <- pmin(
+          match(df$tspecies, annotation_rows$track),
+          match(df$qspecies, annotation_rows$track),
+          na.rm = TRUE
+        )
+        valid_links <- is_link_row & is.finite(upper_pos)
+        sort_key[valid_links] <- annotation_rows$.row_id[upper_pos[valid_links]] + 0.5
+      }
+
+      df <- df[order(sort_key, df$.row_id), , drop = FALSE]
+      df$.row_id <- NULL
+      df
     })
 
     link_layout = do.call(rbind, Filter(Negate(is.null), split_by_col))
@@ -217,6 +215,8 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
       link_layout$SCALE_Y = sort(link_layout$SCALE_Y)
     }
 
+    link_layout <- .annotate_link_source_panels(link_layout)
+
     #print(link_layout)
     link_layout
 
@@ -224,28 +224,37 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
 
   map_link_direction = function(self, data, layout){
 
-    link_layout = layout[str_detect(layout$track, "link"), ]
+    link_layout = layout[stringr::str_detect(layout$track, "link"), ]
 
 
     link_y_list = list()
     for (i in 1:nrow(link_layout)) {
-      link_index = as.numeric(rownames(link_layout[i,]))
+      link_index = match(link_layout$PANEL[i], layout$PANEL)
 
 
       tspecies = link_layout[i,"tspecies"]
       qspecies = link_layout[i, "qspecies"]
-      uppper_panel_species = layout[link_index - 1, "track"]
+      uppper_panel_species = if (!is.na(link_index) && link_index > 1L) {
+        layout[link_index - 1L, "track"]
+      } else {
+        NA_character_
+      }
 
 
 
-      if (uppper_panel_species == tspecies){
+      if (!is.na(uppper_panel_species) && uppper_panel_species == tspecies){
         ty = 1
         qy = 0
       }else{
         ty = 0
         qy = 1
       }
-      link_y_list = append(link_y_list, c("link" = link_layout[i,"track"], "ty" = ty, "qy" = qy))
+      link_y_list[[length(link_y_list) + 1L]] <- data.frame(
+        link = as.character(link_layout[i, "track"]),
+        ty = ty,
+        qy = qy,
+        stringsAsFactors = FALSE
+      )
 
     }
     link_y_table = bind_rows(link_y_list)
@@ -257,6 +266,7 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
       #detect the link datatable
       if (sum(grepl("start", colnames(df), ignore.case = TRUE)) == 2){
         #print(df)
+        df$track <- as.character(df$track)
         df = left_join(df, link_y_table, join_by(track == link))
         #print(df)
         #print(df)
@@ -269,7 +279,43 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
   }
 )
 
-synspecies_chain_layout <- function(x, vars, free) {
+.compute_standard_genomics_layout <- function(data, params, facet) {
+  vars <- params$facets
+  ggplot2:::check_facet_vars(names(vars), name = snake_class(facet))
+
+  base <- ggplot2:::combine_vars(data, params$plot_env, vars, drop = params$drop)
+
+  id <- ggplot2:::id(base, drop = TRUE)
+  n <- attr(id, "n")
+
+  dims <- ggplot2:::wrap_dims(n, params$nrow, params$ncol)
+  layout <- ggplot2:::wrap_layout(id, dims, params$dir)
+
+  panels <- vec_cbind(layout, base)
+  panels <- panels[order(panels$PANEL), , drop = FALSE]
+  rownames(panels) <- NULL
+
+  panels$SCALE_X <- if (params$free$x) seq_len(n) else 1L
+  panels$SCALE_Y <- if (params$free$y) seq_len(n) else 1L
+
+  panels
+}
+
+.detect_link_layers <- function(data) {
+  any(vapply(data, function(df) {
+    if (!is.data.frame(df)) {
+      return(FALSE)
+    }
+    any(c("tspecies", "qspecies") %in% names(df)) ||
+      sum(grepl("start", colnames(df), ignore.case = TRUE)) >= 2L
+  }, logical(1)))
+}
+
+synspecies_chain_layout <- function(x,
+                                    vars,
+                                    free,
+                                    annotation_species = NULL,
+                                    link_pairs = NULL) {
   if (!methods::is(x, "SynSpecies")) {
     cli::cli_abort("Expected a {.cls SynSpecies} object.")
   }
@@ -289,6 +335,15 @@ synspecies_chain_layout <- function(x, vars, free) {
     cli::cli_abort(
       "{.cls SynSpecies} layout currently requires {.code vars(track)} in {.fn facet_genomics}."
     )
+  }
+
+  if (!is.null(annotation_species) || !is.null(link_pairs)) {
+    return(.synspecies_chain_layout_from_layers(
+      x = x,
+      annotation_species = annotation_species,
+      link_pairs = link_pairs,
+      free = free
+    ))
   }
 
   species_order <- synspecies_chain_species_order(x)
@@ -338,11 +393,102 @@ synspecies_chain_layout <- function(x, vars, free) {
   }
 
   panels <- dplyr::bind_rows(panel_rows)
-  .finalize_synspecies_layout_scales(panels, free = free)
+  .finalize_synspecies_layout_scales(
+    panels,
+    free = free,
+    layout_type = "chain"
+  )
 }
 
-.finalize_synspecies_layout_scales <- function(layout, free) {
-  layout <- as.data.frame(layout, stringsAsFactors = FALSE)
+.annotation_species_from_layers <- function(data) {
+  tracks <- unique(unlist(lapply(data, function(df) {
+    if (!is.data.frame(df) || !"track" %in% names(df)) {
+      return(character())
+    }
+    if (any(c("tspecies", "qspecies") %in% names(df))) {
+      return(character())
+    }
+    as.character(df$track)
+  })))
+  tracks <- tracks[!is.na(tracks) & nzchar(tracks)]
+  unique(tracks)
+}
+
+.link_pairs_from_layers <- function(data) {
+  pair_rows <- lapply(data, function(df) {
+    if (!is.data.frame(df) || !all(c("track", "tspecies", "qspecies") %in% names(df))) {
+      return(NULL)
+    }
+    unique(data.frame(
+      track = as.character(df$track),
+      tspecies = as.character(df$tspecies),
+      qspecies = as.character(df$qspecies),
+      stringsAsFactors = FALSE
+    ))
+  })
+
+  dplyr::bind_rows(Filter(Negate(is.null), pair_rows))
+}
+
+.synspecies_chain_layout_from_layers <- function(x,
+                                                 annotation_species,
+                                                 link_pairs,
+                                                 free) {
+  annotation_species <- unique(as.character(annotation_species %||% character()))
+  annotation_species <- annotation_species[annotation_species %in% names(individuals(x))]
+  if (length(annotation_species) != 2L) {
+    return(NULL)
+  }
+
+  if (is.null(link_pairs) || nrow(link_pairs) == 0L) {
+    return(NULL)
+  }
+
+  link_pairs <- unique(link_pairs[, c("track", "tspecies", "qspecies"), drop = FALSE])
+  pair_match <- vapply(seq_len(nrow(link_pairs)), function(i) {
+    setequal(annotation_species, c(link_pairs$tspecies[[i]], link_pairs$qspecies[[i]]))
+  }, logical(1))
+  link_pairs <- link_pairs[pair_match, , drop = FALSE]
+  if (nrow(link_pairs) != 1L) {
+    return(NULL)
+  }
+
+  pair_track <- link_pairs$track[[1L]]
+  pair_name <- sub("^link_", "", pair_track)
+  pair_obj <- pairwise_alignments(x)[[pair_name]]
+  if (is.null(pair_obj)) {
+    return(NULL)
+  }
+
+  top_species <- query_individual(pair_obj)
+  bottom_species <- target_individual(pair_obj)
+  if (!setequal(annotation_species, c(top_species, bottom_species))) {
+    return(NULL)
+  }
+
+  panels <- data.frame(
+    PANEL = c(1L, 2L, 3L),
+    ROW = c(1L, 2L, 3L),
+    COL = c(1L, 1L, 1L),
+    track = c(top_species, pair_track, bottom_species),
+    panel_type = c("annotation", "link", "annotation"),
+    species = c(top_species, NA_character_, bottom_species),
+    alignment_name = c(NA_character_, pair_name, NA_character_),
+    tspecies = c(NA_character_, target_individual(pair_obj), NA_character_),
+    qspecies = c(NA_character_, query_individual(pair_obj), NA_character_),
+    stringsAsFactors = FALSE
+  )
+
+  .finalize_synspecies_layout_scales(
+    panels,
+    free = free,
+    layout_type = "chain"
+  )
+}
+
+.finalize_synspecies_layout_scales <- function(layout, free, layout_type = NULL) {
+  layout_obj <- as_syn_layout(layout, layout_type = layout_type, free = free)
+  layout <- syn_layout_panels(layout_obj)
   layout <- .normalize_synspecies_layout_order(layout)
   rownames(layout) <- NULL
 
@@ -359,7 +505,12 @@ synspecies_chain_layout <- function(x, vars, free) {
   }
 
   layout <- .annotate_synspecies_link_source_panels(layout)
-  layout
+  SynLayout(
+    panels = layout,
+    layout_type = layout_type %||% layout_obj@layout_type,
+    free = free,
+    metadata = layout_obj@metadata
+  )
 }
 
 .annotate_synspecies_link_source_panels <- function(layout) {
@@ -405,6 +556,56 @@ synspecies_chain_layout <- function(x, vars, free) {
       layout$q_panel
     )
   }
+
+  layout$t_panel <- as.integer(layout$t_panel)
+  layout$q_panel <- as.integer(layout$q_panel)
+  layout
+}
+
+.annotate_link_source_panels <- function(layout) {
+  layout <- as.data.frame(layout, stringsAsFactors = FALSE)
+
+  if (!"t_panel" %in% names(layout)) {
+    layout$t_panel <- NA_integer_
+  }
+  if (!"q_panel" %in% names(layout)) {
+    layout$q_panel <- NA_integer_
+  }
+
+  required_cols <- c("track", "tspecies", "qspecies")
+  if (!all(required_cols %in% names(layout))) {
+    layout$t_panel <- as.integer(layout$t_panel)
+    layout$q_panel <- as.integer(layout$q_panel)
+    return(layout)
+  }
+
+  annotation_rows <- layout[
+    !is.na(layout$track) &
+      !stringr::str_detect(layout$track, "link") &
+      !duplicated(layout$track),
+    c("track", "PANEL"),
+    drop = FALSE
+  ]
+
+  if (nrow(annotation_rows) == 0L) {
+    layout$t_panel <- as.integer(layout$t_panel)
+    layout$q_panel <- as.integer(layout$q_panel)
+    return(layout)
+  }
+
+  matched_t <- match(layout$tspecies, annotation_rows$track)
+  layout$t_panel <- ifelse(
+    !is.na(matched_t),
+    annotation_rows$PANEL[matched_t],
+    layout$t_panel
+  )
+
+  matched_q <- match(layout$qspecies, annotation_rows$track)
+  layout$q_panel <- ifelse(
+    !is.na(matched_q),
+    annotation_rows$PANEL[matched_q],
+    layout$q_panel
+  )
 
   layout$t_panel <- as.integer(layout$t_panel)
   layout$q_panel <- as.integer(layout$q_panel)

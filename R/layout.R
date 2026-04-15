@@ -26,6 +26,7 @@ Layout2 <- ggproto("Layout2", Layout,
     self$facet_params <- self$facet$setup_params(data, self$facet$params)
     self$facet_params$plot_data <- plot_data_raw
     self$facet_params$layout_override <- layout_override
+    self$facet_params$has_link_layers <- .detect_link_layers(data)
 
     # detect any link data inside the data list
     # self$facet_params <- self$facet$compute_layer_type(data, self$facet_params)
@@ -42,15 +43,14 @@ Layout2 <- ggproto("Layout2", Layout,
     self$layout <- self$facet$compute_layout(data, self$facet_params)
 
     # Rearrange the panel if detect the link data.
-    if (!"panel_type" %in% colnames(self$layout) &&
-        "track" %in% colnames(self$layout) &&
-        TRUE %in% str_detect(self$layout$track, "link")) {
+    if ("track" %in% colnames(self$layout) &&
+        TRUE %in% stringr::str_detect(self$layout$track, "link")) {
+      if (!"panel_type" %in% colnames(self$layout)) {
+        self$layout <- self$facet$compute_alignment_layout(data, self$layout)
+      }
 
-    # sort the order of link panel
-    self$layout <- self$facet$compute_alignment_layout(data, self$layout)
-
-    # redirection of link position.
-    data = self$facet$map_link_direction(data, self$layout)
+      # final step to assign the y of target alignment and query alignment
+      data <- self$facet$map_link_direction(data, self$layout)
     }
 
     # PANEL ROW COL "facet variable" SCALE_X SCALE_Y COORD
@@ -67,8 +67,6 @@ Layout2 <- ggproto("Layout2", Layout,
 
     mapped_data <- add_layout_panel_metadata(mapped_data, self$layout)
     mapped_data
-
-    #final step to assign the y of target alignment and query alignment
 
   },
 
@@ -117,12 +115,23 @@ add_layout_panel_metadata <- function(data, layout) {
   }
 
   panel_metadata <- unique(layout[, metadata_cols, drop = FALSE])
+  panel_levels <- as.integer(panel_metadata$PANEL)
+  panel_metadata$PANEL <- panel_levels
 
   lapply(data, function(layer_data) {
     if (!is.data.frame(layer_data) || !"PANEL" %in% names(layer_data)) {
       return(layer_data)
     }
 
-    dplyr::left_join(layer_data, panel_metadata, by = "PANEL")
+    panel_ids <- if (is.factor(layer_data$PANEL)) {
+      as.integer(as.character(layer_data$PANEL))
+    } else {
+      as.integer(layer_data$PANEL)
+    }
+
+    layer_data$PANEL <- panel_ids
+    layer_data <- dplyr::left_join(layer_data, panel_metadata, by = "PANEL")
+    layer_data$PANEL <- factor(layer_data$PANEL, levels = panel_levels)
+    layer_data
   })
 }

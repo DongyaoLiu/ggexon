@@ -25,6 +25,13 @@ build_ggexon <- S7::method(ggexon_build, class_ggexon) <- function(plot, ...) {
     layers <- plot@layers
     data <- rep(list(NULL), length(layers))
 
+    syn_plot_context <- collect_syn_plot_context(layers, plot@data)
+    if (!is.null(syn_plot_context)) {
+      for (i in seq_along(layers)) {
+        layers[[i]]$syn_plot_context <- syn_plot_context
+      }
+    }
+
     scales <- plot@scales
 
 
@@ -41,22 +48,25 @@ build_ggexon <- S7::method(ggexon_build, class_ggexon) <- function(plot, ...) {
     # add aesthetics mapping to preserve "ty" "qy" variable. this is specialized for ggexon
 
     lapply(seq_along(layers), function(i) {
-      name <- names(layers)[i]
-
       # only consider link layers
-      if (name == "geom_nuclink"){
+      if (identical(layers[[i]]$geom, GeomNucLink)){
         mapping_names <- names(layers[[i]]$computed_mapping)
-        if (!all(c("ty", "qy") %in% mapping_names)) {
+        missing_mapping_names <- setdiff(
+          c("ty", "qy", "t_panel", "q_panel"),
+          mapping_names
+        )
+        if (length(missing_mapping_names) > 0L) {
           outside_mapping = unlist(layers[[i]]$computed_mapping)
-          inside_mapping = unlist(ggplot2::aes(ty = ty, qy = qy))
+          inside_mapping = unlist(ggplot2::aes(
+            ty = ty,
+            qy = qy,
+            t_panel = t_panel,
+            q_panel = q_panel
+          )[missing_mapping_names])
           layers[[i]]$computed_mapping = ggplot2::class_mapping(c(outside_mapping, inside_mapping), env = parent.frame())
         }
-
-        print(layers[[i]]$computed_mapping)
       }
     })
-
-    print(data)
     # Compute aesthetics to produce data with generalised variable names.
     data <- by_layer(function(l, d) l$compute_aesthetics(d, plot), layers, data, "computing aesthetics")
 
@@ -133,7 +143,6 @@ build_ggexon <- S7::method(ggexon_build, class_ggexon) <- function(plot, ...) {
 
     # Consolidate alt-text
     plot@labels$alt <- get_alt_text(plot)
-    print("This is the plot nuclink")
 
     build <- class_ggexon_built(data = data, layout = layout, plot = plot)
     class(build) = union(c("ggexon_built", "ggplot2::ggplot_built"), class(build))
@@ -159,26 +168,25 @@ ggexon_gtable <- function(data) {
 
 
 S7::method(ggexon_gtable, class_ggexon_built) <- function(data) {
-  plot <- data@plot
-  layout <- data@layout
-  data <- data@data
+  build <- data
+  plot <- build@plot
+  layout <- build@layout
+  data <- build@data
   theme <- plot@theme
   labels <- plot@labels
 
   geom_grobs <- by_layer(function(l, d) l$draw_geom(d, layout), plot@layers, data, "converting geom to grob")
 
   plot_table <- layout$render(geom_grobs, data, theme, labels)
-  print(plot_table)
   # Legends
   legend_box <- plot@guides$assemble(theme)
-  print(legend_box) # can not fix legend error. I just copy the originial code
   #plot_table <- table_add_legends(plot_table, legend_box, theme)
-  #print(plot_table)
   # whole plot annotation
   plot_table <- table_add_titles(plot_table, labels, theme)
   plot_table <- table_add_caption(plot_table, labels$caption, theme)
   plot_table <- table_add_tag(plot_table, labels$tag, theme)
   plot_table <- table_add_background(plot_table, theme)
+  plot_table <- inject_cross_panel_annotations(plot_table, build)
 
   # add alt-text as attribute
   attr(plot_table, "alt-label") <- labels$alt

@@ -9,6 +9,7 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
                            vjust = 0.5, alpha = NA, fontface = 1, lineheight = 1.2
                          ),
                          extra_params = c("exon_height", "na.rm", "x_translation",
+                            "species", "chr", "subset",
                             fontface = 1, lineheight = 1.2
                          ),
                          setup_data = function(data, params){
@@ -32,6 +33,7 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
 geom_genelabel <- function(mapping = NULL, data = NULL,
                        stat = "identity", position = "identity", x_translation = 0,
                        ..., na.rm = FALSE, show.legend = NA, exon_height = 0.4,
+                       species = NULL, chr = NULL, subset = NULL,
                        inherit.aes = TRUE) {
     layer(
       data = data,
@@ -41,10 +43,13 @@ geom_genelabel <- function(mapping = NULL, data = NULL,
       position = position,
       show.legend = show.legend,
       inherit.aes = inherit.aes,
+      layer_class = LayerSyn,
       params = list(na.rm = na.rm,
                     exon_height = exon_height,
-                    x_translation= x_translation))
+                    x_translation= x_translation,
+                    species = species,
+                    chr = chr,
+                    subset = subset))
 }
-
 
 

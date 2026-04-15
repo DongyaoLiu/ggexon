@@ -91,6 +91,48 @@ setClass(
 
 #' @exportClass SynSpecies
 setClass(
+  "SynLayout",
+  slots = c(
+    panels = "data.frame",
+    layout_type = "character",
+    free = "list",
+    metadata = "list"
+  ),
+  prototype = list(
+    panels = data.frame(),
+    layout_type = "custom",
+    free = list(x = FALSE, y = FALSE),
+    metadata = list()
+  ),
+  validity = function(object) {
+    problems <- character()
+    required_layout_cols <- c("PANEL", "ROW", "COL", "track")
+    missing_layout_cols <- setdiff(required_layout_cols, colnames(object@panels))
+    if (length(missing_layout_cols) > 0L) {
+      problems <- c(
+        problems,
+        paste0(
+          "`panels` is missing required columns: ",
+          paste(missing_layout_cols, collapse = ", "),
+          "."
+        )
+      )
+    }
+    if (length(object@layout_type) != 1L || is.na(object@layout_type) || !nzchar(object@layout_type)) {
+      problems <- c(problems, "`layout_type` must be a single non-empty character value.")
+    }
+    if (!all(c("x", "y") %in% names(object@free))) {
+      problems <- c(problems, "`free` must be a list with `x` and `y` entries.")
+    } else if (!is.logical(object@free$x) || length(object@free$x) != 1L ||
+               !is.logical(object@free$y) || length(object@free$y) != 1L) {
+      problems <- c(problems, "`free$x` and `free$y` must be single logical values.")
+    }
+    if (length(problems) == 0L) TRUE else problems
+  }
+)
+setClassUnion("NULLOrSynLayout", c("NULL", "SynLayout"))
+
+setClass(
   "SynSpecies",
   slots = c(
     name = "character",
@@ -98,7 +140,7 @@ setClass(
     pairwise_alignments = "list",
     multiple_alignments = "list",
     metadata = "list",
-    layout = "ANY"
+    layout = "NULLOrSynLayout"
   ),
   prototype = list(
     name = NA_character_,
@@ -131,27 +173,34 @@ setClass(
         problems <- c(problems, "`multiple_alignments` must be a list of SynMultiAlignment objects.")
       }
     }
-    if (!is.null(object@layout)) {
-      if (!is.data.frame(object@layout)) {
-        problems <- c(problems, "`layout` must be a data.frame or NULL.")
-      } else {
-        required_layout_cols <- c("PANEL", "ROW", "COL", "track")
-        missing_layout_cols <- setdiff(required_layout_cols, colnames(object@layout))
-        if (length(missing_layout_cols) > 0L) {
-          problems <- c(
-            problems,
-            paste0(
-              "`layout` is missing required columns: ",
-              paste(missing_layout_cols, collapse = ", "),
-              "."
-            )
-          )
-        }
-      }
+    if (!is.null(object@layout) && !methods::is(object@layout, "SynLayout")) {
+      problems <- c(problems, "`layout` must be a SynLayout object or NULL.")
     }
     if (length(problems) == 0L) TRUE else problems
   }
 )
+
+#' Constructor for SynLayout
+#'
+#' @param panels Panel layout table.
+#' @param layout_type Layout strategy label.
+#' @param free List with logical `x` and `y` entries.
+#' @param metadata Optional metadata list.
+#'
+#' @return A `SynLayout` object.
+#' @export
+SynLayout <- function(panels,
+                      layout_type = "custom",
+                      free = list(x = FALSE, y = FALSE),
+                      metadata = list()) {
+  new(
+    "SynLayout",
+    panels = panels,
+    layout_type = layout_type,
+    free = free,
+    metadata = metadata
+  )
+}
 
 #' Constructor for SynPairAlignment
 #'
@@ -219,6 +268,67 @@ setMethod("show", "SynSpecies", function(object) {
   cat("  pairwise_alignments:", length(object@pairwise_alignments), "\n")
   cat("  multiple_alignments:", length(object@multiple_alignments), "\n")
 })
+
+#' @export
+setMethod("show", "SynLayout", function(object) {
+  cat("An object of class \"SynLayout\"\n")
+  cat("  layout_type:", object@layout_type, "\n")
+  cat("  panels:", nrow(object@panels), "\n")
+  cat("  free x/y:", isTRUE(object@free$x), "/", isTRUE(object@free$y), "\n")
+})
+
+setAs("SynLayout", "data.frame", function(from) from@panels)
+setMethod("as.data.frame", "SynLayout", function(x, ...) x@panels)
+
+infer_syn_layout_type <- function(panels) {
+  if ("panel_type" %in% names(panels) && any(panels$panel_type == "link", na.rm = TRUE)) {
+    return("chain")
+  }
+  "custom"
+}
+
+infer_syn_layout_free <- function(panels) {
+  list(
+    x = "SCALE_X" %in% names(panels) && length(unique(stats::na.omit(panels$SCALE_X))) > 1L,
+    y = "SCALE_Y" %in% names(panels) && length(unique(stats::na.omit(panels$SCALE_Y))) > 1L
+  )
+}
+
+as_syn_layout <- function(x,
+                          layout_type = NULL,
+                          free = NULL,
+                          metadata = list()) {
+  if (is.null(x)) {
+    return(NULL)
+  }
+  if (methods::is(x, "SynLayout")) {
+    return(x)
+  }
+  if (!is.data.frame(x)) {
+    stop("`as_syn_layout()` expects a SynLayout, data.frame, or NULL.", call. = FALSE)
+  }
+
+  panels <- .normalize_synspecies_layout_order(x)
+  SynLayout(
+    panels = panels,
+    layout_type = layout_type %||% infer_syn_layout_type(panels),
+    free = free %||% infer_syn_layout_free(panels),
+    metadata = metadata
+  )
+}
+
+syn_layout_panels <- function(x) {
+  if (is.null(x)) {
+    return(NULL)
+  }
+  if (methods::is(x, "SynLayout")) {
+    return(x@panels)
+  }
+  if (is.data.frame(x)) {
+    return(x)
+  }
+  stop("Expected a SynLayout, data.frame, or NULL.", call. = FALSE)
+}
 
 setGeneric("species_name", function(x) standardGeneric("species_name"))
 setMethod("species_name", "SynSpecies", function(x) x@name)
@@ -330,19 +440,13 @@ add_multiple_alignment <- function(x, alignment) {
 #' Store a ggexon panel layout on a `SynSpecies` object
 #'
 #' @param x A `SynSpecies` object.
-#' @param value A layout `data.frame` or `NULL`.
+#' @param value A `SynLayout`, layout `data.frame`, or `NULL`.
 #'
 #' @return The updated `SynSpecies` object.
 #' @export
 setGeneric("species_layout<-", function(x, value) standardGeneric("species_layout<-"))
 setReplaceMethod("species_layout", "SynSpecies", function(x, value) {
-  if (!is.null(value) && !is.data.frame(value)) {
-    stop("`species_layout<-` expects a data.frame or NULL.", call. = FALSE)
-  }
-  if (!is.null(value)) {
-    value <- .normalize_synspecies_layout_order(value)
-  }
-  x@layout <- value
+  x@layout <- as_syn_layout(value)
   validObject(x)
   x
 })
