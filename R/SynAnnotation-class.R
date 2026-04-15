@@ -1,3 +1,6 @@
+#' @include SynBioc-unions.R
+NULL
+
 #' SynAnnotation class hierarchy
 #'
 #' `SynAnnotation` is the abstract base class for annotation layers attached to
@@ -5,6 +8,7 @@
 #' represented by concrete subclasses with their own payload slots and lazy-load
 #' semantics.
 #'
+#' @name SynAnnotation-class-hierarchy
 #' @section Class hierarchy:
 #' * `SynAnnotation`: abstract base class
 #' * `SynGenomeAnnotation`: abstract genome-coordinate annotation
@@ -18,6 +22,23 @@
 #' @keywords internal
 NULL
 
+#' SynAnnotation class
+#'
+#' `SynAnnotation` is the abstract base class for all annotation layers attached
+#' to a `SynIndividual`. Subclasses specialize the coordinate system and payload
+#' they carry, but all annotations share the same naming, source-file, lazy
+#' loading, metadata, and plot-cache semantics.
+#'
+#' @slot name Short unique label used to retrieve the annotation layer.
+#' @slot source_file Path to the on-disk file backing the annotation.
+#' @slot annotation_scope Scalar coordinate scope such as `"nucleotide"` or
+#'   `"protein"`.
+#' @slot lazy Logical; whether data loading should normally be deferred.
+#' @slot loaded Logical; whether the payload has been materialized in memory.
+#' @slot metadata Optional user or import metadata.
+#' @slot plot_cache List used to store derived plotting tables or other
+#'   reusable render-time state.
+#'
 #' @exportClass SynAnnotation
 setClass(
   "SynAnnotation",
@@ -73,12 +94,41 @@ setClass(
   }
 )
 
+#' SynGenomeAnnotation class
+#'
+#' `SynGenomeAnnotation` is an abstract subtype of `SynAnnotation` for
+#' annotations indexed on genomic coordinates.
+#'
 #' @exportClass SynGenomeAnnotation
 setClass("SynGenomeAnnotation", contains = "SynAnnotation")
 
+#' SynProteinAnnotation class
+#'
+#' `SynProteinAnnotation` is an abstract subtype of `SynAnnotation` for
+#' annotations indexed on protein coordinates.
+#'
 #' @exportClass SynProteinAnnotation
 setClass("SynProteinAnnotation", contains = "SynAnnotation")
 
+#' SynFeatureAnnotation class
+#'
+#' `SynFeatureAnnotation` stores structural genome annotation such as genes,
+#' transcripts, exons, CDS, and derived label or sequence caches. It is the
+#' default feature-layer type attached to `SynIndividual`.
+#'
+#' @slot annotation_format Source annotation format. One of `"auto"`, `"gff"`,
+#'   or `"gtf"`.
+#' @slot base_annotation Optional immutable base `GRanges` before any patches
+#'   are applied.
+#' @slot annotation Optional active `GRanges` after patching or label updates.
+#' @slot patches List of `SynAnnotationPatch` objects applied to this feature
+#'   layer.
+#' @slot feature_index Optional cached lookup structure for features.
+#' @slot label_map Optional cached feature-id to display-label mapping.
+#' @slot nucleotide_seq Optional cached nucleotide sequences extracted from the
+#'   annotated features.
+#' @slot protein_seq Optional cached translated protein sequences.
+#'
 #' @exportClass SynFeatureAnnotation
 setClass(
   "SynFeatureAnnotation",
@@ -114,6 +164,19 @@ setClass(
   }
 )
 
+#' SynAnnotationPatch class
+#'
+#' `SynAnnotationPatch` records a patch that replaces, adds, or drops a subset
+#' of features from a `SynFeatureAnnotation`.
+#'
+#' @slot name Patch label.
+#' @slot patch_data Optional patch payload as `GRanges`. Required for `"replace"`
+#'   and `"add"` patches.
+#' @slot target_ids Character vector of feature identifiers targeted by the
+#'   patch.
+#' @slot mode Patch mode. One of `"replace"`, `"add"`, or `"drop"`.
+#' @slot metadata Optional patch metadata.
+#'
 #' @exportClass SynAnnotationPatch
 setClass(
   "SynAnnotationPatch",
@@ -146,6 +209,17 @@ setClass(
   }
 )
 
+#' SynVCFAnnotation class
+#'
+#' `SynVCFAnnotation` stores a region-queryable variant layer backed by a VCF or
+#' BCF file.
+#'
+#' @slot data_format Variant file format label. Currently `"vcf"`.
+#' @slot variants Optional cached parsed variant data.
+#' @slot index_file Optional index file path for random access.
+#' @slot genome_build Optional genome-build label.
+#' @slot region_cache Cache of previously queried genomic windows.
+#'
 #' @exportClass SynVCFAnnotation
 setClass(
   "SynVCFAnnotation",
@@ -167,6 +241,16 @@ setClass(
   )
 )
 
+#' SynBigWigAnnotation class
+#'
+#' `SynBigWigAnnotation` stores a region-queryable signal layer backed by a
+#' BigWig file.
+#'
+#' @slot data_format Signal file format label. Currently `"bigwig"`.
+#' @slot signal Optional cached parsed signal data.
+#' @slot seqinfo Optional cached `Seqinfo` describing available sequences.
+#' @slot window_cache Cache of previously queried genomic windows.
+#'
 #' @exportClass SynBigWigAnnotation
 setClass(
   "SynBigWigAnnotation",
@@ -186,6 +270,17 @@ setClass(
   )
 )
 
+#' SynProteinDomainAnnotation class
+#'
+#' `SynProteinDomainAnnotation` stores protein-domain calls keyed by a protein-,
+#' transcript-, or gene-level identifier.
+#'
+#' @slot data_format Domain file format label. Currently `"domain"`.
+#' @slot domain_data Optional cached parsed domain table.
+#' @slot keytype Identifier type used to join domain rows to package objects.
+#' @slot source_db Optional source database label such as `"Pfam"` or
+#'   `"InterPro"`.
+#'
 #' @exportClass SynProteinDomainAnnotation
 setClass(
   "SynProteinDomainAnnotation",
@@ -213,7 +308,8 @@ setClass(
 #' @param metadata Optional metadata list.
 #' @param lazy Logical; whether downstream loading should default to lazy mode.
 #'
-#' @return A `SynFeatureAnnotation` object.
+#' @return A `SynFeatureAnnotation` object with deferred `GRanges`, patch, and
+#'   cache slots.
 #' @export
 SynFeatureAnnotation <- function(name,
                                  annotation_file,

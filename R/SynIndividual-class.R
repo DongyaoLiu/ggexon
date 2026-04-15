@@ -1,3 +1,6 @@
+#' @include SynBioc-unions.R
+NULL
+
 #' SynIndividual class
 #'
 #' `SynIndividual` stores the per-individual data needed to build synteny plots.

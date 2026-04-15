@@ -8,7 +8,7 @@ author = "LIU Dongyao"
 LabWebsite: "www.zhenglabhku.org"
 E-mail = "dongyao@connect.hku.hk"}
 \format{
-An object of class \code{GeomExon} (inherits from \code{Geom}, \code{ggproto}, \code{gg}) of length 8.
+An object of class \code{GeomExon} (inherits from \code{Geom}, \code{ggproto}, \code{gg}) of length 9.
 }
 \usage{
 GeomExon

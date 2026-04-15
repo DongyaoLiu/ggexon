@@ -1,12 +1,37 @@
-#' SynSpecies and alignment classes
+#' SynSpecies, SynLayout, and alignment classes
 #'
-#' `SynSpecies` stores a collection of `SynIndividual` objects together with
-#' pairwise and multiple-species alignment layers that describe relationships
-#' across species.
+#' These classes define the comparative object model used by `ggexon`.
+#' `SynSpecies` groups multiple `SynIndividual` objects, `SynPairAlignment` and
+#' `SynMultiAlignment` store the relationships between those individuals, and
+#' `SynLayout` stores reusable panel-layout metadata for plotting.
+#'
+#' @name SynSpecies-class-overview
+#' @section Class overview:
+#' * `SynPairAlignment`: one pairwise alignment between two individuals
+#' * `SynMultiAlignment`: one multiple alignment covering several individuals
+#' * `SynLayout`: panel layout plus shared layout-scoped plotting defaults
+#' * `SynSpecies`: top-level container that binds individuals, alignments, and
+#'   an optional stored layout
 #'
 #' @keywords internal
 NULL
 
+#' SynPairAlignment class
+#'
+#' `SynPairAlignment` stores one pairwise alignment between two
+#' `SynIndividual` objects in a `SynSpecies` collection. The object keeps the
+#' on-disk alignment file path, the query/target identifiers used to route link
+#' panels, optional cached parsed data, and arbitrary metadata.
+#'
+#' @slot name Unique alignment label used to retrieve the object from a
+#'   `SynSpecies`.
+#' @slot query_individual Query-side `SynIndividual` identifier.
+#' @slot target_individual Target-side `SynIndividual` identifier.
+#' @slot file Path to the alignment file on disk.
+#' @slot format Alignment file format. Currently `"paf"`.
+#' @slot data Optional cached parsed alignment data.
+#' @slot metadata Optional user or import metadata.
+#'
 #' @exportClass SynPairAlignment
 setClass(
   "SynPairAlignment",
@@ -51,6 +76,21 @@ setClass(
   }
 )
 
+#' SynMultiAlignment class
+#'
+#' `SynMultiAlignment` stores one multiple alignment spanning more than two
+#' individuals. Like `SynPairAlignment`, it keeps the source file path, an
+#' optional cached parsed representation, and metadata, but it records a vector
+#' of participating individual identifiers instead of query/target sides.
+#'
+#' @slot name Unique alignment label used to retrieve the object from a
+#'   `SynSpecies`.
+#' @slot individuals Character vector of included `SynIndividual` identifiers.
+#' @slot file Path to the alignment file on disk.
+#' @slot format Alignment file format. Currently `"maf"`.
+#' @slot data Optional cached parsed alignment data.
+#' @slot metadata Optional user or import metadata.
+#'
 #' @exportClass SynMultiAlignment
 setClass(
   "SynMultiAlignment",
@@ -89,7 +129,30 @@ setClass(
   }
 )
 
-#' @exportClass SynSpecies
+#' SynLayout class
+#'
+#' `SynLayout` stores panel placement information used by `facet_genomics()`
+#' together with shared plotting defaults that can be resolved by syn-aware
+#' geoms. The `panels` table describes the panel arrangement, while the numeric
+#' slots store layout-scoped defaults such as shared exon height or x-axis
+#' translation.
+#'
+#' @slot panels Layout data frame. It must contain `PANEL`, `ROW`, `COL`, and
+#'   `track`, and may also contain comparative plotting columns such as
+#'   `panel_type`, `species`, `alignment_name`, `tspecies`, `qspecies`,
+#'   `t_panel`, and `q_panel`.
+#' @slot layout_type Scalar layout strategy label such as `"custom"` or
+#'   `"chain"`.
+#' @slot free List with logical `x` and `y` entries describing whether scales
+#'   should vary across panels.
+#' @slot exon_height Shared default exon or gene block height for
+#'   layout-aware annotation geoms.
+#' @slot y_scale Shared default y scaling for layout-aware annotation geoms.
+#' @slot x_translation Shared default x-axis offset for layout-aware annotation
+#'   geoms.
+#' @slot metadata Optional layout metadata.
+#'
+#' @exportClass SynLayout
 setClass(
   "SynLayout",
   slots = c(
@@ -147,6 +210,21 @@ setClass(
 )
 setClassUnion("NULLOrSynLayout", c("NULL", "SynLayout"))
 
+#' SynSpecies class
+#'
+#' `SynSpecies` is the top-level comparative container in `ggexon`. It groups
+#' named `SynIndividual` objects together with any stored pairwise or multiple
+#' alignments, optional metadata, and an optional reusable `SynLayout`.
+#'
+#' @slot name Scalar species-collection label.
+#' @slot individuals Named list of `SynIndividual` objects.
+#' @slot pairwise_alignments Named list of `SynPairAlignment` objects.
+#' @slot multiple_alignments Named list of `SynMultiAlignment` objects.
+#' @slot metadata Optional user or import metadata.
+#' @slot layout Optional stored `SynLayout` used by `facet_genomics()` and
+#'   syn-aware plot building.
+#'
+#' @exportClass SynSpecies
 setClass(
   "SynSpecies",
   slots = c(
@@ -197,12 +275,16 @@ setClass(
 
 #' Constructor for SynLayout
 #'
-#' @param panels Panel layout table.
-#' @param layout_type Layout strategy label.
-#' @param free List with logical `x` and `y` entries.
-#' @param exon_height Default shared exon/gene/gene-label height.
+#' @param panels Panel layout table. At minimum it must contain `PANEL`, `ROW`,
+#'   `COL`, and `track`.
+#' @param layout_type Layout strategy label, such as `"custom"` or `"chain"`.
+#' @param free List with logical `x` and `y` entries controlling free-scale
+#'   behavior across panels.
+#' @param exon_height Default shared exon/gene/gene-label height resolved by
+#'   syn-aware annotation geoms.
 #' @param y_scale Default shared y-axis scaling for layout-aware geoms.
-#' @param x_translation Default shared x-axis translation applied to layout-aware geoms.
+#' @param x_translation Default shared x-axis translation applied to
+#'   layout-aware geoms.
 #' @param metadata Optional metadata list.
 #'
 #' @return A `SynLayout` object.
@@ -278,7 +360,8 @@ SynMultiAlignment <- function(name,
 #' @param name Species collection label.
 #' @param metadata Optional metadata list.
 #'
-#' @return A `SynSpecies` object.
+#' @return A `SynSpecies` object with empty individual/alignment collections and
+#'   no stored layout.
 #' @export
 SynSpecies <- function(name, metadata = list()) {
   new("SynSpecies", name = name, metadata = metadata)

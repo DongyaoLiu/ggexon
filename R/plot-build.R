@@ -171,15 +171,10 @@ ggexon_gtable <- function(data) {
   UseMethod('ggexon_gtable')
 }
 
-
-
-#' below code is from the plot-render,
-#' Insert a blank panel for drawing the link_data, this maybe not the best solution.
-#' ggplot2 4.0.0 above encapsulates the plot annotation into separate functions.
-#' @export
-
-
-
+# below code is from the plot-render.
+# It inserts a blank panel for drawing link data; this may not be the final
+# approach now that ggplot2 4.0.0 encapsulates plot annotation in separate
+# functions.
 S7::method(ggexon_gtable, class_ggexon_built) <- function(data) {
   build <- data
   plot <- build@plot
