@@ -226,6 +226,41 @@ test_that("set_gene_labels stores plot labels without replacing stable IDs", {
   expect_identical(as.character(label_map(ann2)$label), "unc-1")
 })
 
+test_that("geom_genelabel uses Syn annotation plot labels with syn-aware defaults", {
+  genome_path <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
+  annotation_path <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+
+  x <- SynIndividual(
+    genome_file = genome_path,
+    annotation_file = annotation_path
+  )
+  x <- load_annotation(x)
+
+  ann <- get_annotation(x)
+  gene_gr <- annotation_data(ann)[S4Vectors::mcols(annotation_data(ann))$type == "gene"]
+  target_gene <- as.character(S4Vectors::mcols(gene_gr)$ID[[1L]])
+  target_chr <- as.character(GenomeInfoDb::seqnames(gene_gr))[1L]
+  target_start <- IRanges::start(gene_gr)[[1L]]
+  target_end <- IRanges::end(gene_gr)[[1L]]
+
+  x <- set_gene_labels(x, c(setNames("unc-1", target_gene)))
+
+  plot_obj <- ggexon(x) +
+    geom_genelabel(
+      chr = target_chr,
+      subset = c(target_start, target_end)
+    )
+  build <- ggplot2::ggplot_build(plot_obj)
+
+  expect_true(nrow(build$data[[1L]]) >= 1L)
+  expect_true("label" %in% names(build$data[[1L]]))
+  expect_true("unc-1" %in% build$data[[1L]]$label)
+})
+
 test_that("patch_annotation replaces a gene model and clears feature caches", {
   genome_path <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
   annotation_path <- system.file(

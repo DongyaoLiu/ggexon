@@ -19,12 +19,12 @@ test_that("SynSpecies stores individuals and explicit alignment relationships", 
 
   expect_true(nzchar(paf_path))
 
-  x1 <- SynIndividual(
+  x1 <- test_syn_individual(
     genome_file = genome_path,
     annotation_file = annotation_path,
     id = "XZ1516"
   )
-  x2 <- SynIndividual(
+  x2 <- test_syn_individual(
     genome_file = n2_genome_path,
     annotation_file = n2_annotation_path,
     id = "N2",
@@ -91,7 +91,7 @@ test_that("reference-led comparative subsetting trims both annotations and the p
   sp <- SynSpecies(name = "Caenorhabditis")
   sp <- add_individual(
     sp,
-    SynIndividual(
+    test_syn_individual(
       genome_file = xz_genome,
       annotation_file = xz_annotation,
       id = "XZ1516"
@@ -99,7 +99,7 @@ test_that("reference-led comparative subsetting trims both annotations and the p
   )
   sp <- add_individual(
     sp,
-    SynIndividual(
+    test_syn_individual(
       genome_file = n2_genome,
       annotation_file = n2_annotation,
       id = "N2",
@@ -179,7 +179,7 @@ test_that("reference-led comparative subsetting errors when pairwise alignments 
   for (id in c("XZ1516", "N2", "CB4856")) {
     sp <- add_individual(
       sp,
-      SynIndividual(
+      test_syn_individual(
         genome_file = xz_genome,
         annotation_file = xz_annotation,
         id = id
@@ -239,7 +239,7 @@ test_that("pairwise_alignment_data subsets query and target regions and filters 
   sp <- SynSpecies(name = "Caenorhabditis")
   sp <- add_individual(
     sp,
-    SynIndividual(
+    test_syn_individual(
       genome_file = xz_genome,
       annotation_file = xz_annotation,
       id = "XZ1516"
@@ -247,7 +247,7 @@ test_that("pairwise_alignment_data subsets query and target regions and filters 
   )
   sp <- add_individual(
     sp,
-    SynIndividual(
+    test_syn_individual(
       genome_file = n2_genome,
       annotation_file = n2_annotation,
       id = "N2",
@@ -307,7 +307,7 @@ test_that("subset_pairwise_alignment and filter_pairwise_alignment compose on a 
   sp <- SynSpecies(name = "Caenorhabditis")
   sp <- add_individual(
     sp,
-    SynIndividual(
+    test_syn_individual(
       genome_file = xz_genome,
       annotation_file = xz_annotation,
       id = "XZ1516"
@@ -315,7 +315,7 @@ test_that("subset_pairwise_alignment and filter_pairwise_alignment compose on a 
   )
   sp <- add_individual(
     sp,
-    SynIndividual(
+    test_syn_individual(
       genome_file = n2_genome,
       annotation_file = n2_annotation,
       id = "N2",

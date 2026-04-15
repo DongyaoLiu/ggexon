@@ -25,6 +25,13 @@ build_ggexon <- S7::method(ggexon_build, class_ggexon) <- function(plot, ...) {
     layers <- plot@layers
     data <- rep(list(NULL), length(layers))
 
+    syn_plot_context <- collect_syn_plot_context(layers, plot@data)
+    if (!is.null(syn_plot_context)) {
+      lapply(seq_along(layers), function(i) {
+        layers[[i]]$syn_plot_context <- syn_plot_context
+      })
+    }
+
     scales <- plot@scales
 
 
@@ -41,22 +48,25 @@ build_ggexon <- S7::method(ggexon_build, class_ggexon) <- function(plot, ...) {
     # add aesthetics mapping to preserve "ty" "qy" variable. this is specialized for ggexon
 
     lapply(seq_along(layers), function(i) {
-      name <- names(layers)[i]
-
       # only consider link layers
-      if (name == "geom_nuclink"){
+      if (identical(layers[[i]]$geom, GeomNucLink)){
         mapping_names <- names(layers[[i]]$computed_mapping)
-        if (!all(c("ty", "qy") %in% mapping_names)) {
+        missing_mapping_names <- setdiff(
+          c("ty", "qy", "t_panel", "q_panel"),
+          mapping_names
+        )
+        if (length(missing_mapping_names) > 0L) {
           outside_mapping = unlist(layers[[i]]$computed_mapping)
-          inside_mapping = unlist(ggplot2::aes(ty = ty, qy = qy))
+          inside_mapping = unlist(ggplot2::aes(
+            ty = ty,
+            qy = qy,
+            t_panel = t_panel,
+            q_panel = q_panel
+          )[missing_mapping_names])
           layers[[i]]$computed_mapping = ggplot2::class_mapping(c(outside_mapping, inside_mapping), env = parent.frame())
         }
-
-        print(layers[[i]]$computed_mapping)
       }
     })
-
-    print(data)
     # Compute aesthetics to produce data with generalised variable names.
     data <- by_layer(function(l, d) l$compute_aesthetics(d, plot), layers, data, "computing aesthetics")
 
@@ -133,7 +143,6 @@ build_ggexon <- S7::method(ggexon_build, class_ggexon) <- function(plot, ...) {
 
     # Consolidate alt-text
     plot@labels$alt <- get_alt_text(plot)
-    print("This is the plot nuclink")
 
     build <- class_ggexon_built(data = data, layout = layout, plot = plot)
     class(build) = union(c("ggexon_built", "ggplot2::ggplot_built"), class(build))

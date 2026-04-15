@@ -1,6 +1,10 @@
 
 # Extra checks in addition to the ones in import-standalone-types-check.R
 
+# Keep ggexon aligned with ggplot2's current scalar whole-number validator
+# without sprinkling `ggplot2:::` calls at use sites.
+check_number_whole <- get("check_number_whole", envir = asNamespace("ggplot2"))
+
 # Usage:
 # check_object(x, is.data.frame, "a data.frame)
 check_object <- function(x,

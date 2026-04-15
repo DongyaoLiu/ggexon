@@ -8,8 +8,7 @@ GeomExon <- ggproto("GeomExon", Geom,
                       required_aes = c("ymin", "xmin", "xmax", "transcripts","strand", "track", "type"),
                       non_missing_aes = c("linewidth", "shape"),
                       extra_params = c("exon_height", "na.rm", "x_translation", "subset", "annotation_type",
-                                       "breakdata", "species", "reference", "alignment", "chr",
-                                       "comparative_subset"),
+                                       "breakdata", "species", "chr"),
                       default_aes = aes(linewidth = 0, linejoin = "mitre", fill="black",
                         colour = NULL,
                         size = 15,
@@ -77,10 +76,7 @@ GeomExon <- ggproto("GeomExon", Geom,
                         annotation_type = "exon",
                         breakdata = NULL,
                         species = NULL,
-                        reference = NULL,
-                        alignment = NULL,
-                        chr = NULL,
-                        comparative_subset = NULL
+                        chr = NULL
                       )
                     },
                     draw_key = draw_key_polygon
@@ -94,10 +90,10 @@ geom_exon <- function(mapping = NULL, data = NULL,
                       transcripts_track_ratio = NULL, exon_height=0.8,
                       x_translation = 0, subset = NULL,
                       annotation_type ="exon",
-                      species = NULL, reference = NULL, alignment = NULL, chr = NULL,
+                      species = NULL, chr = NULL,
                       breakdata = NULL,
                       inherit.aes = TRUE) {
-    annotation_layer <- layer(
+    layer(
       data = data,
       mapping = mapping,
       geom = GeomExon,
@@ -112,25 +108,6 @@ geom_exon <- function(mapping = NULL, data = NULL,
                     subset = subset,
                     annotation_type = annotation_type,
                     species = species,
-                    reference = reference,
-                    alignment = alignment,
                     chr = chr,
-                    comparative_subset = subset,
                     breakdata = breakdata))
-
-    if (!is_comparative_syn_request(species, reference)) {
-      return(annotation_layer)
-    }
-
-    annotation_layer$geom_params$subset <- NULL
-
-    link_layer <- comparative_nuclink_layer(
-      species = species,
-      reference = reference,
-      chr = chr,
-      subset = subset,
-      alignment = alignment
-    )
-
-    list(annotation_layer, link_layer)
 }

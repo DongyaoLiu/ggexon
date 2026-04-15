@@ -56,24 +56,15 @@ LayerSyn <- ggproto(
 )
 
 is_syn_layer_input <- function(layer, plot_data) {
-<<<<<<< HEAD
-  inherits(layer$data, "waiver") &&
-    (methods::is(plot_data, "SynSpecies") || methods::is(plot_data, "SynIndividual")) ||
-=======
   (inherits(layer$data, "waiver") &&
      (methods::is(plot_data, "SynSpecies") || methods::is(plot_data, "SynIndividual"))) ||
->>>>>>> SynClass
     methods::is(layer$data, "SynSpecies") ||
     methods::is(layer$data, "SynIndividual")
 }
 
-<<<<<<< HEAD
-=======
 syn_default_mapping <- function(data, layer) {
   syn_identity_mapping(default_syn_aesthetics(data, layer))
 }
-
->>>>>>> SynClass
 default_syn_aesthetics <- function(data, layer) {
   if (identical(layer$geom, GeomExon)) {
     cols <- c("xmin", "xmax", "ymin", "transcripts", "strand", "track", "type", "group")
@@ -81,6 +72,17 @@ default_syn_aesthetics <- function(data, layer) {
   }
   if (identical(layer$geom, GeomGene)) {
     cols <- c("xmin", "xmax", "ymin", "transcripts", "strand", "track", "group")
+    return(intersect(cols, names(data)))
+  }
+  if (identical(layer$geom, GeomGeneLabel)) {
+    cols <- c("xmin", "xmax", "ymin", "transcripts", "strand", "track", "label", "group")
+    return(intersect(cols, names(data)))
+  }
+  if (identical(layer$geom, GeomNucLink)) {
+    cols <- c(
+      "tspecies", "tchr", "tstart", "tend", "strand",
+      "qspecies", "qchr", "qstart", "qend", "group", "track", "ty", "qy"
+    )
     return(intersect(cols, names(data)))
   }
 
@@ -96,63 +98,351 @@ syn_identity_mapping <- function(cols) {
   rlang::inject(ggplot2::aes(!!!exprs))
 }
 
-resolve_syn_layer_data <- function(x, layer) {
-  params <- utils::modifyList(layer$geom$default_params(), layer$geom_params)
+collect_syn_plot_context <- function(layers, plot_data) {
+  syn_data <- find_syn_plot_data(layers, plot_data)
+  if (is.null(syn_data)) {
+    return(NULL)
+  }
 
-  if (identical(layer$geom, GeomExon)) {
-    if (is_comparative_syn_request(params$species, params$reference)) {
-      return(
-        syn_to_comparative_annotation_df(
-          x = x,
-          species = params$species,
-          reference = params$reference,
-          chr = params$chr,
-          subset = params$comparative_subset %||% params$subset,
-          alignment = params$alignment,
-          geom = "exon",
-          annotation_type = params$annotation_type
+  annotation_requests <- unlist(lapply(layers, function(layer) {
+    collect_syn_annotation_requests(layer, syn_data, plot_data)
+  }), recursive = FALSE)
+  link_requests <- unlist(lapply(layers, function(layer) {
+    collect_syn_link_requests(layer, syn_data, plot_data)
+  }), recursive = FALSE)
+
+  windows <- collect_explicit_annotation_windows(annotation_requests, syn_data)
+  windows <- derive_syn_plot_windows(syn_data, windows, link_requests)
+
+  list(
+    syn_data = syn_data,
+    annotation_requests = annotation_requests,
+    link_requests = link_requests,
+    windows = windows
+  )
+}
+
+find_syn_plot_data <- function(layers, plot_data) {
+  if (methods::is(plot_data, "SynSpecies") || methods::is(plot_data, "SynIndividual")) {
+    return(plot_data)
+  }
+
+  for (layer in layers) {
+    if (methods::is(layer$data, "SynSpecies") || methods::is(layer$data, "SynIndividual")) {
+      return(layer$data)
+    }
+  }
+
+  NULL
+}
+
+collect_syn_annotation_requests <- function(layer, syn_data, plot_data) {
+  if (!(identical(layer$geom, GeomExon) ||
+        identical(layer$geom, GeomGene) ||
+        identical(layer$geom, GeomGeneLabel))) {
+    return(list())
+  }
+  if (!is_syn_layer_input(layer, plot_data)) {
+    return(list())
+  }
+
+  params <- syn_layer_params(layer)
+  species <- resolve_plot_species_params(syn_data, params$species)
+  if (length(species) == 0L) {
+    return(list())
+  }
+
+  lapply(species, function(species_name) {
+    list(
+      geom = class(layer$geom)[1L],
+      species = species_name,
+      chr = params$chr,
+      subset = params$subset
+    )
+  })
+}
+
+collect_syn_link_requests <- function(layer, syn_data, plot_data) {
+  if (!identical(layer$geom, GeomNucLink)) {
+    return(list())
+  }
+  if (!is_syn_layer_input(layer, plot_data)) {
+    return(list())
+  }
+
+  params <- syn_layer_params(layer)
+  alignment <- resolve_plot_alignment_name(syn_data, params$alignment)
+  pair <- tryCatch(
+    resolve_plot_pairwise_alignment(syn_data, alignment),
+    error = function(...) NULL
+  )
+
+  list(list(
+    alignment = alignment,
+    pair = pair,
+    reference = params$reference,
+    chr = params$chr,
+    subset = params$subset
+  ))
+}
+
+syn_layer_params <- function(layer) {
+  geom_defaults <- if (is.function(layer$geom$default_params)) {
+    layer$geom$default_params()
+  } else {
+    list()
+  }
+  utils::modifyList(geom_defaults, layer$geom_params)
+}
+
+resolve_plot_species_params <- function(x, species = NULL) {
+  if (methods::is(x, "SynIndividual")) {
+    return(syn_id(x))
+  }
+
+  if (!methods::is(x, "SynSpecies")) {
+    return(species %||% character())
+  }
+
+  if (is.null(species)) {
+    if (length(individuals(x)) == 1L) {
+      return(names(individuals(x)))
+    }
+    return(character())
+  }
+
+  unique(as.character(species))
+}
+
+resolve_plot_alignment_name <- function(x, alignment = NULL) {
+  if (!methods::is(x, "SynSpecies")) {
+    return(alignment)
+  }
+
+  if (!is.null(alignment)) {
+    return(alignment)
+  }
+
+  pair_list <- pairwise_alignments(x)
+  if (length(pair_list) == 1L) {
+    return(names(pair_list)[[1L]])
+  }
+
+  alignment
+}
+
+resolve_plot_pairwise_alignment <- function(x, alignment = NULL) {
+  if (!methods::is(x, "SynSpecies")) {
+    cli::cli_abort("Plot-derived link windows require a {.cls SynSpecies} object.")
+  }
+
+  pair_list <- pairwise_alignments(x)
+  if (length(pair_list) == 0L) {
+    cli::cli_abort("The {.cls SynSpecies} object does not contain any pairwise alignments.")
+  }
+
+  if (is.null(alignment)) {
+    if (length(pair_list) == 1L) {
+      return(pair_list[[1L]])
+    }
+    cli::cli_abort("Supply {.arg alignment} when multiple pairwise alignments are available.")
+  }
+
+  if (!alignment %in% names(pair_list)) {
+    cli::cli_abort(
+      "Unknown alignment {.val {alignment}}. Available pairwise alignments: {.val {names(pair_list)}}."
+    )
+  }
+
+  pair_list[[alignment]]
+}
+
+collect_explicit_annotation_windows <- function(annotation_requests, syn_data) {
+  windows <- list()
+
+  for (request in annotation_requests) {
+    if (is.null(request$subset)) {
+      next
+    }
+
+    windows[[request$species]] <- normalize_syn_window_request(
+      x = syn_data,
+      species = request$species,
+      chr = request$chr,
+      subset = request$subset,
+      allow_missing_subset = FALSE,
+      context = NULL
+    )
+  }
+
+  windows
+}
+
+derive_syn_plot_windows <- function(x, windows, link_requests) {
+  if (!methods::is(x, "SynSpecies") || length(link_requests) == 0L) {
+    return(windows)
+  }
+
+  for (request in link_requests) {
+    pair <- request$pair
+    if (is.null(pair)) {
+      next
+    }
+
+    pair_species <- alignment_individuals(pair)
+    if (all(pair_species %in% names(windows))) {
+      next
+    }
+
+    if (!is.null(request$reference) || !is.null(request$chr) || !is.null(request$subset)) {
+      if (is.null(request$reference) || is.null(request$chr) || is.null(request$subset)) {
+        cli::cli_abort(
+          "Provide {.arg reference}, {.arg chr}, and {.arg subset} together when subsetting {.fn geom_nuclink}."
         )
+      }
+      if (!is.numeric(request$subset) || length(request$subset) != 2L) {
+        cli::cli_abort("{.arg subset} must be a numeric vector of length 2 for {.fn geom_nuclink}.")
+      }
+
+      out <- subset_synspecies_window(
+        x = x,
+        reference_species = request$reference,
+        chr = request$chr,
+        start = min(request$subset),
+        end = max(request$subset),
+        alignment = request$alignment
+      )
+      windows <- utils::modifyList(windows, out$windows)
+      next
+    }
+
+    available <- intersect(pair_species, names(windows))
+    if (length(available) != 1L) {
+      next
+    }
+
+    reference_window <- windows[[available[[1L]]]]
+    out <- subset_synspecies_window(
+      x = x,
+      reference_species = available[[1L]],
+      chr = reference_window$chr,
+      start = reference_window$start,
+      end = reference_window$end,
+      alignment = alignment_name(pair)
+    )
+    windows <- utils::modifyList(windows, out$windows)
+  }
+
+  windows
+}
+
+normalize_syn_window_request <- function(x,
+                                         species,
+                                         chr = NULL,
+                                         subset = NULL,
+                                         allow_missing_subset = TRUE,
+                                         context = NULL,
+                                         geom = "annotation") {
+  individual <- resolve_syn_individual(x, species = species)
+
+  if (!is.null(subset)) {
+    if (is.null(chr)) {
+      cli::cli_abort(
+        "{.arg chr} must be supplied when {.arg subset} is used for {.val {geom}}."
       )
     }
+    if (!is.numeric(subset) || length(subset) != 2L) {
+      cli::cli_abort("{.arg subset} must be a numeric vector of length 2.")
+    }
+
+    return(list(
+      chr = resolve_syn_seqname(individual, chr),
+      start = min(subset),
+      end = max(subset)
+    ))
+  }
+
+  derived_window <- context$windows[[species]] %||% NULL
+  if (!is.null(derived_window)) {
+    if (!is.null(chr)) {
+      requested_chr <- resolve_syn_seqname(individual, chr)
+      if (!identical(requested_chr, derived_window$chr)) {
+        cli::cli_abort(
+          "Derived window for {.val {species}} is on {.val {derived_window$chr}}, not {.val {requested_chr}}."
+        )
+      }
+    }
+    return(derived_window)
+  }
+
+  if (allow_missing_subset) {
+    return(list(chr = resolve_syn_seqname(individual, chr), start = NULL, end = NULL))
+  }
+
+  cli::cli_abort(
+    c(
+      "{.arg subset} is required for Syn annotation layers.",
+      "i" = "You can omit it only when the species window can be derived from {.fn geom_nuclink} and another annotation layer with defined coordinates."
+    )
+  )
+}
+
+window_to_region_string <- function(window) {
+  paste0(window$chr, ":", window$start, "-", window$end)
+}
+
+resolve_syn_layer_data <- function(x, layer) {
+  params <- syn_layer_params(layer)
+  context <- layer$syn_plot_context %||% NULL
+
+  if (identical(layer$geom, GeomExon)) {
     return(
       syn_to_exon_df(
         x = x,
         species = params$species,
         chr = params$chr,
         subset = params$subset,
-        annotation_type = params$annotation_type
+        annotation_type = params$annotation_type,
+        context = context
       )
     )
   }
   if (identical(layer$geom, GeomGene)) {
-    if (is_comparative_syn_request(params$species, params$reference)) {
-      return(
-        syn_to_comparative_annotation_df(
-          x = x,
-          species = params$species,
-          reference = params$reference,
-          chr = params$chr,
-          subset = params$comparative_subset %||% params$subset,
-          alignment = params$alignment,
-          geom = "gene"
-        )
-      )
-    }
     return(
       syn_to_gene_df(
         x = x,
         species = params$species,
         chr = params$chr,
-        subset = params$subset
+        subset = params$subset,
+        context = context
+      )
+    )
+  }
+  if (identical(layer$geom, GeomGeneLabel)) {
+    return(
+      syn_to_gene_df(
+        x = x,
+        species = params$species,
+        chr = params$chr,
+        subset = params$subset,
+        context = context
+      )
+    )
+  }
+  if (identical(layer$geom, GeomNucLink)) {
+    return(
+      syn_to_nuclink_df(
+        x = x,
+        alignment = params$alignment,
+        reference = params$reference,
+        chr = params$chr,
+        subset = params$subset,
+        context = context
       )
     )
   }
 
   geom_name <- class(layer$geom)[1] %||% ""
-<<<<<<< HEAD
-
-=======
->>>>>>> SynClass
   cli::cli_abort(
     "Syn object input is not yet implemented for geom {.val {geom_name}}."
   )
@@ -352,24 +642,38 @@ syn_to_exon_df <- function(x,
                            species = NULL,
                            chr = NULL,
                            subset = NULL,
-                           annotation_type = "exon") {
-  individual <- resolve_syn_individual(x, species = species)
-  chr <- resolve_syn_seqname(individual, chr)
-
-  start <- end <- NULL
-  if (!is.null(subset)) {
-    if (!is.numeric(subset) || length(subset) != 2L) {
-      cli::cli_abort("{.arg subset} must be a numeric vector of length 2.")
-    }
-    start <- min(subset)
-    end <- max(subset)
+                           annotation_type = "exon",
+                           context = NULL) {
+  if (methods::is(x, "SynSpecies") && length(species %||% character()) > 1L) {
+    species <- unique(as.character(species))
+    return(dplyr::bind_rows(lapply(species, function(species_name) {
+      syn_to_exon_df(
+        x = x,
+        species = species_name,
+        chr = chr,
+        subset = subset,
+        annotation_type = annotation_type,
+        context = context
+      )
+    })))
   }
+
+  individual <- resolve_syn_individual(x, species = species)
+  window <- normalize_syn_window_request(
+    x = x,
+    species = syn_id(individual),
+    chr = chr,
+    subset = subset,
+    allow_missing_subset = FALSE,
+    context = context,
+    geom = "geom_exon"
+  )
 
   feature_gr <- query_features(
     individual,
-    chr = chr,
-    start = start,
-    end = end,
+    chr = window$chr,
+    start = window$start,
+    end = window$end,
     feature_type = annotation_type
   )
 
@@ -433,11 +737,6 @@ syn_gr_to_exon_df <- function(feature_gr,
     stringsAsFactors = FALSE
   )
 
-<<<<<<< HEAD
-  out <- merge(out, order_df[, c("transcripts", "ymin", "group")],
-               by = "transcripts", all.x = TRUE, sort = FALSE)
-  out <- out[order(match(out$transcripts, transcript_ids), out$xmin, out$xmax), , drop = FALSE]
-=======
   out <- merge(
     out,
     order_df[, c("transcripts", "ymin", "group")],
@@ -447,7 +746,6 @@ syn_gr_to_exon_df <- function(feature_gr,
   )
   out <- out[order(match(out$transcripts, transcript_ids), out$xmin, out$xmax), , drop = FALSE]
   out$PANEL <- 1L
->>>>>>> SynClass
   rownames(out) <- NULL
   out
 }
@@ -455,24 +753,37 @@ syn_gr_to_exon_df <- function(feature_gr,
 syn_to_gene_df <- function(x,
                            species = NULL,
                            chr = NULL,
-                           subset = NULL) {
-  individual <- resolve_syn_individual(x, species = species)
-  chr <- resolve_syn_seqname(individual, chr)
-
-  start <- end <- NULL
-  if (!is.null(subset)) {
-    if (!is.numeric(subset) || length(subset) != 2L) {
-      cli::cli_abort("{.arg subset} must be a numeric vector of length 2.")
-    }
-    start <- min(subset)
-    end <- max(subset)
+                           subset = NULL,
+                           context = NULL) {
+  if (methods::is(x, "SynSpecies") && length(species %||% character()) > 1L) {
+    species <- unique(as.character(species))
+    return(dplyr::bind_rows(lapply(species, function(species_name) {
+      syn_to_gene_df(
+        x = x,
+        species = species_name,
+        chr = chr,
+        subset = subset,
+        context = context
+      )
+    })))
   }
+
+  individual <- resolve_syn_individual(x, species = species)
+  window <- normalize_syn_window_request(
+    x = x,
+    species = syn_id(individual),
+    chr = chr,
+    subset = subset,
+    allow_missing_subset = FALSE,
+    context = context,
+    geom = "geom_gene"
+  )
 
   feature_gr <- query_features(
     individual,
-    chr = chr,
-    start = start,
-    end = end,
+    chr = window$chr,
+    start = window$start,
+    end = window$end,
     feature_type = "gene"
   )
 
@@ -519,6 +830,7 @@ syn_gr_to_gene_df <- function(feature_gr, track) {
   gene_df$gene_name[is.na(gene_df$gene_name) | !nzchar(gene_df$gene_name)] <- gene_df$gene_id[
     is.na(gene_df$gene_name) | !nzchar(gene_df$gene_name)
   ]
+  gene_df$label <- gene_df$gene_name
   gene_df <- gene_df[order(gene_df$xmin, gene_df$gene_id), , drop = FALSE]
   gene_df$ymin <- rev(seq_len(nrow(gene_df))) * 2
   gene_df$group <- seq_len(nrow(gene_df))
@@ -531,6 +843,54 @@ syn_gr_to_gene_df <- function(feature_gr, track) {
   gene_df$PANEL <- 1L
   rownames(gene_df) <- NULL
   gene_df
+}
+
+syn_to_nuclink_df <- function(x,
+                              alignment = NULL,
+                              reference = NULL,
+                              chr = NULL,
+                              subset = NULL,
+                              context = NULL) {
+  if (!methods::is(x, "SynSpecies")) {
+    cli::cli_abort("{.fn geom_nuclink} with implicit Syn data requires a {.cls SynSpecies} object.")
+  }
+
+  if (!is.null(reference) || !is.null(chr) || !is.null(subset)) {
+    if (is.null(reference) || is.null(chr) || is.null(subset)) {
+      cli::cli_abort("Provide {.arg reference}, {.arg chr}, and {.arg subset} together when subsetting {.fn geom_nuclink}.")
+    }
+    if (!is.numeric(subset) || length(subset) != 2L) {
+      cli::cli_abort("{.arg subset} must be a numeric vector of length 2 for {.fn geom_nuclink}.")
+    }
+
+    out <- subset_synspecies_window(
+      x = x,
+      reference_species = reference,
+      chr = chr,
+      start = min(subset),
+      end = max(subset),
+      alignment = alignment
+    )
+
+    return(out$links)
+  }
+
+  pair <- resolve_plot_pairwise_alignment(x, alignment)
+  pair_species <- alignment_individuals(pair)
+  pair_windows <- if (!is.null(context)) context$windows[pair_species] else list()
+  if (length(pair_windows) == length(pair_species) &&
+      all(!vapply(pair_windows, is.null, logical(1)))) {
+    subset_regions <- vapply(pair_windows, window_to_region_string, character(1))
+    return(
+      pairwise_alignment_data(
+        x,
+        alignment = alignment_name(pair),
+        subset = subset_regions
+      )
+    )
+  }
+
+  pairwise_alignment_data(x, alignment = alignment_name(pair))
 }
 
 resolve_syn_seqname <- function(individual, chr = NULL) {
