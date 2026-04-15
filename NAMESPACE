@@ -2,6 +2,7 @@
 
 S3method(drawDetails,zeroGrob)
 S3method(ggexon,default)
+S3method(ggplot_build,ggexon)
 S3method(grobHeight,zeroGrob)
 S3method(grobWidth,zeroGrob)
 S3method(heightDetails,zeroGrob)

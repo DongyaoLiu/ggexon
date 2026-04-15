@@ -81,7 +81,7 @@ default_syn_aesthetics <- function(data, layer) {
   if (identical(layer$geom, GeomNucLink)) {
     cols <- c(
       "tspecies", "tchr", "tstart", "tend", "strand",
-      "qspecies", "qchr", "qstart", "qend", "group", "track", "ty", "qy"
+      "qspecies", "qchr", "qstart", "qend", "group", "track", "target_anchor_y", "query_anchor_y"
     )
     return(intersect(cols, names(data)))
   }
@@ -192,7 +192,32 @@ syn_layer_params <- function(layer) {
   } else {
     list()
   }
-  utils::modifyList(geom_defaults, layer$geom_params)
+  layout_params <- syn_layout_layer_params(layer)
+  params <- utils::modifyList(geom_defaults, layout_params)
+  utils::modifyList(params, layer$geom_params)
+}
+
+syn_layout_layer_params <- function(layer) {
+  syn_data <- layer$syn_plot_context$syn_data %||% NULL
+  if (is.null(syn_data) && methods::is(layer$data, "SynSpecies")) {
+    syn_data <- layer$data
+  }
+
+  if (!methods::is(syn_data, "SynSpecies")) {
+    return(list())
+  }
+
+  layout <- species_layout(syn_data)
+  if (is.null(layout)) {
+    return(list())
+  }
+
+  out <- list(
+    exon_height = layout@exon_height,
+    y_scale = layout@y_scale,
+    x_translation = layout@x_translation
+  )
+  out[vapply(out, function(x) is.numeric(x) && length(x) == 1L && !is.na(x), logical(1))]
 }
 
 resolve_plot_species_params <- function(x, species = NULL) {
@@ -566,8 +591,8 @@ comparative_nuclink_layer <- function(species,
       qchr = qchr,
       qstart = qstart,
       qend = qend,
-      ty = ty,
-      qy = qy
+      target_anchor_y = target_anchor_y,
+      query_anchor_y = query_anchor_y
     ),
     geom = GeomNucLink,
     stat = "identity",
@@ -645,8 +670,8 @@ resolve_syn_comparative_context <- function(x,
   top_species <- reference
   bottom_species <- partner
   links <- out$links
-  links$ty <- if (unique(as.character(links$tspecies))[1L] == top_species) 1 else 0
-  links$qy <- if (unique(as.character(links$qspecies))[1L] == top_species) 1 else 0
+  links$target_anchor_y <- if (unique(as.character(links$tspecies))[1L] == top_species) 1 else 0
+  links$query_anchor_y <- if (unique(as.character(links$qspecies))[1L] == top_species) 1 else 0
   links$track <- link_track
 
   list(

@@ -28,7 +28,7 @@ geom_nuclink <- function(mapping = NULL, data = NULL,
 GeomNucLink <- ggproto("GeomPanel", Geom,
                              required_aes = c("tspecies", "tchr", "tstart", "tend", "strand",
                                               "qspecies", "qchr", "qstart", "qend"),
-                             optional_aes = c("ty", "qy", "t_panel", "q_panel"),
+                             optional_aes = c("target_anchor_y", "query_anchor_y", "t_panel", "q_panel"),
                              non_missing_aes = c("linetype", "linewidth", "shape"),
                              extra_params = c("na.rm", "alignment", "reference", "chr", "subset"),
                              default_aes = aes(linewidth = 0,
@@ -40,22 +40,22 @@ GeomNucLink <- ggproto("GeomPanel", Geom,
                                                alpha = 0.5,
                                                stroke = 1,
                                                fill = "grey50",
-                                               ty = NA_real_,
-                                               qy = NA_real_
+                                               target_anchor_y = NA_real_,
+                                               query_anchor_y = NA_real_
                              ),
                              setup_data = function(data, params) {
 
                                # extract the y layout information
-                               link_y_out = data %>% select(PANEL, group, ty, qy) %>% unique() %>%
+                               link_y_out = data %>% select(PANEL, group, target_anchor_y, query_anchor_y) %>% unique() %>%
                                  melt(id = c("PANEL", "group"), variable.name = "y_variable", value.name = "y") %>%
                                  mutate(y = as.numeric(y))
 
 
                                # each row are a group will have a same id after melting
                                data$id = 1:nrow(data)
-                               melt_data = data %>% select(-any_of(c("tspecies", "qspecies", "track", "tchr", "qchr", "ty", "qy"))) %>%
+                               melt_data = data %>% select(-any_of(c("tspecies", "qspecies", "track", "tchr", "qchr", "target_anchor_y", "query_anchor_y"))) %>%
                                  melt(id = c("id", "strand", "PANEL", "group", "t_panel", "q_panel"), variable.name = "x_variable", value.name = "x") %>%
-                                 mutate(y_variable = if_else(stringr::str_detect(x_variable,"^t"), "ty", "qy")) %>%
+                                 mutate(y_variable = if_else(stringr::str_detect(x_variable,"^t"), "target_anchor_y", "query_anchor_y")) %>%
                                  left_join(link_y_out, join_by(PANEL == PANEL, group == group, y_variable == y_variable)) %>%
                                  mutate(source_panel = if_else(stringr::str_detect(x_variable, "^t"), t_panel, q_panel)) %>%
                                  arrange(id, x_variable) %>% rowwise() %>%

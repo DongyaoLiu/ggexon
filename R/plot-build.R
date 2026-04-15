@@ -15,6 +15,19 @@ S7::method(ggexon_build, class_ggexon_built) <- function(plot, ...) {
   plot # This is a no-op
 }
 
+as_standard_ggplot_built <- function(build) {
+  ggplot2::class_ggplot_built(
+    data = build@data,
+    layout = build@layout,
+    plot = build@plot
+  )
+}
+
+#' @export
+ggplot_build.ggexon <- function(plot, ...) {
+  as_standard_ggplot_built(ggexon_build(plot, ...))
+}
+
 
 build_ggexon <- S7::method(ggexon_build, class_ggexon) <- function(plot, ...) {
     plot <- plot_clone(plot)
@@ -45,21 +58,21 @@ build_ggexon <- S7::method(ggexon_build, class_ggexon) <- function(plot, ...) {
     layout <- create_layout2(plot@facet, plot@coordinates, plot@layout)
     data <- layout$setup(data, plot@data, plot@plot_env)
 
-    # add aesthetics mapping to preserve "ty" "qy" variable. this is specialized for ggexon
+    # add aesthetics mapping to preserve link-anchor metadata. this is specialized for ggexon
 
     lapply(seq_along(layers), function(i) {
       # only consider link layers
       if (identical(layers[[i]]$geom, GeomNucLink)){
         mapping_names <- names(layers[[i]]$computed_mapping)
         missing_mapping_names <- setdiff(
-          c("ty", "qy", "t_panel", "q_panel"),
+          c("target_anchor_y", "query_anchor_y", "t_panel", "q_panel"),
           mapping_names
         )
         if (length(missing_mapping_names) > 0L) {
           outside_mapping = unlist(layers[[i]]$computed_mapping)
           inside_mapping = unlist(ggplot2::aes(
-            ty = ty,
-            qy = qy,
+            target_anchor_y = target_anchor_y,
+            query_anchor_y = query_anchor_y,
             t_panel = t_panel,
             q_panel = q_panel
           )[missing_mapping_names])

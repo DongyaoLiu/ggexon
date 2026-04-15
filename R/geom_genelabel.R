@@ -8,10 +8,20 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
                            angle = 0, hjust = 0,
                            vjust = 0.5, alpha = NA, fontface = 1, lineheight = 1.2
                          ),
-                         extra_params = c("exon_height", "na.rm", "x_translation",
+                         extra_params = c("exon_height", "na.rm", "y_scale", "x_translation",
                             "species", "chr", "subset",
                             fontface = 1, lineheight = 1.2
                          ),
+                         default_params = function() {
+                           list(
+                             exon_height = 0.4,
+                             y_scale = 100,
+                             x_translation = 0,
+                             species = NULL,
+                             chr = NULL,
+                             subset = NULL
+                           )
+                         },
                          setup_data = function(data, params){
                            GeomExon$setup_data(data, params)
                          },
@@ -31,10 +41,20 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
 )
 
 geom_genelabel <- function(mapping = NULL, data = NULL,
-                       stat = "identity", position = "identity", x_translation = 0,
-                       ..., na.rm = FALSE, show.legend = NA, exon_height = 0.4,
+                       stat = "identity", position = "identity", x_translation = NULL,
+                       ..., na.rm = FALSE, show.legend = NA, exon_height = NULL,
+                       y_scale = NULL,
                        species = NULL, chr = NULL, subset = NULL,
                        inherit.aes = TRUE) {
+    params <- Filter(Negate(is.null), list(
+      na.rm = na.rm,
+      exon_height = exon_height,
+      y_scale = y_scale,
+      x_translation = x_translation,
+      species = species,
+      chr = chr,
+      subset = subset
+    ))
     layer(
       data = data,
       mapping = mapping,
@@ -44,12 +64,5 @@ geom_genelabel <- function(mapping = NULL, data = NULL,
       show.legend = show.legend,
       inherit.aes = inherit.aes,
       layer_class = LayerSyn,
-      params = list(na.rm = na.rm,
-                    exon_height = exon_height,
-                    x_translation= x_translation,
-                    species = species,
-                    chr = chr,
-                    subset = subset))
+      params = params)
 }
-
-

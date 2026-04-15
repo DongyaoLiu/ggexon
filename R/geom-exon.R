@@ -7,7 +7,7 @@
 GeomExon <- ggproto("GeomExon", Geom,
                       required_aes = c("ymin", "xmin", "xmax", "transcripts","strand", "track", "type"),
                       non_missing_aes = c("linewidth", "shape"),
-                      extra_params = c("exon_height", "na.rm", "x_translation", "subset", "annotation_type",
+                      extra_params = c("exon_height", "na.rm", "y_scale", "x_translation", "subset", "annotation_type",
                                        "breakdata", "species", "chr"),
                       default_aes = aes(linewidth = 0, linejoin = "mitre", fill="black",
                         colour = NULL,
@@ -19,6 +19,10 @@ GeomExon <- ggproto("GeomExon", Geom,
                       ),
 
                     setup_data = function(data, params){
+                      x_translation <- if (is.null(params$x_translation)) 0 else params$x_translation
+                      exon_height <- if (is.null(params$exon_height)) 0.8 else params$exon_height
+                      y_scale <- if (is.null(params$y_scale)) 100 else params$y_scale
+
                       if (!is.null(params$annotation_type)){
                         data = data %>% filter(type == params$annotation_type)
                       }
@@ -37,16 +41,16 @@ GeomExon <- ggproto("GeomExon", Geom,
 
 
 
-                      if (params$x_translation!=0){
-                        data = data %>% mutate(xmin = xmin + params$x_translation, xmax =xmax + params$x_translation)
+                      if (x_translation != 0){
+                        data = data %>% mutate(xmin = xmin + x_translation, xmax =xmax + x_translation)
                       }
 
                       rec_data = seq_add_y(data = data,
                                            track_proportion = params$transcripts_track_ratio,
-                                           y_scale = params$y_scale,
+                                           y_scale = y_scale,
                                            exon_proportion = 0.8, blank_proportion = 0.2,
                                            sandwich_ratio = params$sandwich_ratio,
-                                           exon_height = params$exon_height)
+                                           exon_height = exon_height)
 
 
                     },
@@ -71,6 +75,7 @@ GeomExon <- ggproto("GeomExon", Geom,
                     default_params = function() {
                       list(
                         exon_height = 0.8,
+                        y_scale = 100,
                         x_translation = 0,
                         subset = NULL,
                         annotation_type = "exon",
@@ -87,12 +92,23 @@ GeomExon <- ggproto("GeomExon", Geom,
 geom_exon <- function(mapping = NULL, data = NULL,
                       stat = "identity", position = "identity",
                       ..., na.rm = FALSE, show.legend = NA,
-                      transcripts_track_ratio = NULL, exon_height=0.8,
-                      x_translation = 0, subset = NULL,
+                      transcripts_track_ratio = NULL, y_scale = NULL, exon_height = NULL,
+                      x_translation = NULL, subset = NULL,
                       annotation_type ="exon",
                       species = NULL, chr = NULL,
                       breakdata = NULL,
                       inherit.aes = TRUE) {
+    params <- Filter(Negate(is.null), list(
+      na.rm = na.rm,
+      exon_height = exon_height,
+      y_scale = y_scale,
+      x_translation = x_translation,
+      subset = subset,
+      annotation_type = annotation_type,
+      species = species,
+      chr = chr,
+      breakdata = breakdata
+    ))
     layer(
       data = data,
       mapping = mapping,
@@ -102,12 +118,5 @@ geom_exon <- function(mapping = NULL, data = NULL,
       show.legend = show.legend,
       inherit.aes = inherit.aes,
       layer_class = LayerSyn,
-      params = list(na.rm = na.rm,
-                    exon_height = exon_height,
-                    x_translation = x_translation,
-                    subset = subset,
-                    annotation_type = annotation_type,
-                    species = species,
-                    chr = chr,
-                    breakdata = breakdata))
+      params = params)
 }

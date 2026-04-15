@@ -20,8 +20,12 @@ GeomGene <- ggproto("GeomGene", Geom,
                     ),
 
                     setup_data = function(data, params){
-                      if (params$x_translation!=0){
-                        data = data %>% mutate(xmin = xmin + params$x_translation, xmax =xmax + params$x_translation)
+                      x_translation <- if (is.null(params$x_translation)) 0 else params$x_translation
+                      exon_height <- if (is.null(params$exon_height)) 1.5 else params$exon_height
+                      y_scale <- if (is.null(params$y_scale)) 100 else params$y_scale
+
+                      if (x_translation != 0){
+                        data = data %>% mutate(xmin = xmin + x_translation, xmax =xmax + x_translation)
                       }
                       data = data %>% group_by(track) %>%
                         mutate(x_adjustment = 0) %>%
@@ -33,10 +37,10 @@ GeomGene <- ggproto("GeomGene", Geom,
                                xmin = if_else(strand == "-", xmin + transcripts_length * params$proportion_trim3, xmin))
                       rec_data = seq_add_y(data = data,
                                            track_proportion = params$transcripts_track_ratio,
-                                           y_scale = params$y_scale,
+                                           y_scale = y_scale,
                                            exon_proportion = 0.8, blank_proportion = 0.2,
                                            sandwich_ratio = params$sandwich_ratio,
-                                           exon_height = params$exon_height)
+                                           exon_height = exon_height)
                     },
 
                     draw_panel = function(data, panel_params, coord, flipped_aes = FALSE){
@@ -73,10 +77,20 @@ GeomGene <- ggproto("GeomGene", Geom,
 geom_gene <- function(mapping = NULL, data = NULL,
                       stat = "identity", position = "identity",
                       ..., na.rm = FALSE, show.legend = NA,
-                      transcripts_track_ratio = NULL, y_scale = 100, exon_height=1.5,
-                      x_translation = 0, proportion_trim3 = 0.2,
+                      transcripts_track_ratio = NULL, y_scale = NULL, exon_height = NULL,
+                      x_translation = NULL, proportion_trim3 = 0.2,
                       species = NULL, chr = NULL, subset = NULL,
                       inherit.aes = TRUE) {
+  params <- Filter(Negate(is.null), list(
+    na.rm = na.rm,
+    exon_height = exon_height,
+    y_scale = y_scale,
+    x_translation = x_translation,
+    proportion_trim3 = proportion_trim3,
+    species = species,
+    chr = chr,
+    subset = subset
+  ))
   layer(
     data = data,
     mapping = mapping,
@@ -86,12 +100,5 @@ geom_gene <- function(mapping = NULL, data = NULL,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
     layer_class = LayerSyn,
-    params = list(na.rm = na.rm,
-                  exon_height = exon_height,
-                  y_scale = y_scale,
-                  x_translation = x_translation,
-                  proportion_trim3 = proportion_trim3,
-                  species = species,
-                  chr = chr,
-                  subset = subset))
+    params = params)
 }

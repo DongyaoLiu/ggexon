@@ -96,12 +96,18 @@ setClass(
     panels = "data.frame",
     layout_type = "character",
     free = "list",
+    exon_height = "numeric",
+    y_scale = "numeric",
+    x_translation = "numeric",
     metadata = "list"
   ),
   prototype = list(
     panels = data.frame(),
     layout_type = "custom",
     free = list(x = FALSE, y = FALSE),
+    exon_height = NA_real_,
+    y_scale = NA_real_,
+    x_translation = NA_real_,
     metadata = list()
   ),
   validity = function(object) {
@@ -126,6 +132,15 @@ setClass(
     } else if (!is.logical(object@free$x) || length(object@free$x) != 1L ||
                !is.logical(object@free$y) || length(object@free$y) != 1L) {
       problems <- c(problems, "`free$x` and `free$y` must be single logical values.")
+    }
+    if (!is.numeric(object@exon_height) || length(object@exon_height) != 1L) {
+      problems <- c(problems, "`exon_height` must be a single numeric value.")
+    }
+    if (!is.numeric(object@y_scale) || length(object@y_scale) != 1L) {
+      problems <- c(problems, "`y_scale` must be a single numeric value.")
+    }
+    if (!is.numeric(object@x_translation) || length(object@x_translation) != 1L) {
+      problems <- c(problems, "`x_translation` must be a single numeric value.")
     }
     if (length(problems) == 0L) TRUE else problems
   }
@@ -185,6 +200,9 @@ setClass(
 #' @param panels Panel layout table.
 #' @param layout_type Layout strategy label.
 #' @param free List with logical `x` and `y` entries.
+#' @param exon_height Default shared exon/gene/gene-label height.
+#' @param y_scale Default shared y-axis scaling for layout-aware geoms.
+#' @param x_translation Default shared x-axis translation applied to layout-aware geoms.
 #' @param metadata Optional metadata list.
 #'
 #' @return A `SynLayout` object.
@@ -192,12 +210,18 @@ setClass(
 SynLayout <- function(panels,
                       layout_type = "custom",
                       free = list(x = FALSE, y = FALSE),
+                      exon_height = NA_real_,
+                      y_scale = NA_real_,
+                      x_translation = NA_real_,
                       metadata = list()) {
   new(
     "SynLayout",
     panels = panels,
     layout_type = layout_type,
     free = free,
+    exon_height = exon_height,
+    y_scale = y_scale,
+    x_translation = x_translation,
     metadata = metadata
   )
 }
@@ -275,6 +299,9 @@ setMethod("show", "SynLayout", function(object) {
   cat("  layout_type:", object@layout_type, "\n")
   cat("  panels:", nrow(object@panels), "\n")
   cat("  free x/y:", isTRUE(object@free$x), "/", isTRUE(object@free$y), "\n")
+  cat("  exon_height:", object@exon_height, "\n")
+  cat("  y_scale:", object@y_scale, "\n")
+  cat("  x_translation:", object@x_translation, "\n")
 })
 
 setAs("SynLayout", "data.frame", function(from) from@panels)
@@ -297,6 +324,9 @@ infer_syn_layout_free <- function(panels) {
 as_syn_layout <- function(x,
                           layout_type = NULL,
                           free = NULL,
+                          exon_height = NA_real_,
+                          y_scale = NA_real_,
+                          x_translation = NA_real_,
                           metadata = list()) {
   if (is.null(x)) {
     return(NULL)
@@ -313,6 +343,9 @@ as_syn_layout <- function(x,
     panels = panels,
     layout_type = layout_type %||% infer_syn_layout_type(panels),
     free = free %||% infer_syn_layout_free(panels),
+    exon_height = exon_height,
+    y_scale = y_scale,
+    x_translation = x_translation,
     metadata = metadata
   )
 }

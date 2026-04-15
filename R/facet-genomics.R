@@ -243,16 +243,16 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
 
 
       if (!is.na(uppper_panel_species) && uppper_panel_species == tspecies){
-        ty = 1
-        qy = 0
+        target_anchor_y = 1
+        query_anchor_y = 0
       }else{
-        ty = 0
-        qy = 1
+        target_anchor_y = 0
+        query_anchor_y = 1
       }
       link_y_list[[length(link_y_list) + 1L]] <- data.frame(
         link = as.character(link_layout[i, "track"]),
-        ty = ty,
-        qy = qy,
+        target_anchor_y = target_anchor_y,
+        query_anchor_y = query_anchor_y,
         stringsAsFactors = FALSE
       )
 
@@ -509,6 +509,9 @@ synspecies_chain_layout <- function(x,
     panels = layout,
     layout_type = layout_type %||% layout_obj@layout_type,
     free = free,
+    exon_height = layout_obj@exon_height,
+    y_scale = layout_obj@y_scale,
+    x_translation = layout_obj@x_translation,
     metadata = layout_obj@metadata
   )
 }

@@ -64,6 +64,68 @@ test_that("SynSpecies stores individuals and explicit alignment relationships", 
   )
 })
 
+test_that("SynLayout shared geom parameters are resolved before layer overrides", {
+  genome_path <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
+  annotation_path <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+
+  sp <- SynSpecies(name = "Caenorhabditis")
+  sp <- add_individual(
+    sp,
+    test_syn_individual(
+      genome_file = genome_path,
+      annotation_file = annotation_path,
+      id = "XZ1516"
+    )
+  )
+  species_layout(sp) <- SynLayout(
+    panels = data.frame(
+      PANEL = 1L,
+      ROW = 1L,
+      COL = 1L,
+      track = "XZ1516",
+      stringsAsFactors = FALSE
+    ),
+    exon_height = 2.2,
+    y_scale = 77,
+    x_translation = 15
+  )
+
+  plot_obj <- ggexon(sp) +
+    geom_gene(
+      chr = "RagTag_V",
+      subset = c(21550000, 21680000)
+    )
+  ctx <- ggexon:::collect_syn_plot_context(plot_obj@layers, plot_obj@data)
+  layer <- plot_obj@layers[[1L]]
+  layer$syn_plot_context <- ctx
+  params <- ggexon:::syn_layer_params(layer)
+
+  expect_identical(params$exon_height, 2.2)
+  expect_identical(params$y_scale, 77)
+  expect_identical(params$x_translation, 15)
+
+  override_plot <- ggexon(sp) +
+    geom_gene(
+      chr = "RagTag_V",
+      subset = c(21550000, 21680000),
+      exon_height = 1.1,
+      y_scale = 55,
+      x_translation = 3
+    )
+  override_ctx <- ggexon:::collect_syn_plot_context(override_plot@layers, override_plot@data)
+  override_layer <- override_plot@layers[[1L]]
+  override_layer$syn_plot_context <- override_ctx
+  override_params <- ggexon:::syn_layer_params(override_layer)
+
+  expect_identical(override_params$exon_height, 1.1)
+  expect_identical(override_params$y_scale, 55)
+  expect_identical(override_params$x_translation, 3)
+})
+
 test_that("reference-led comparative subsetting trims both annotations and the paf window", {
   skip_if_not(
     exists("subset_synspecies_window", mode = "function"),
