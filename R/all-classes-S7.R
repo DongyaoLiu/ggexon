@@ -377,6 +377,7 @@ class_ggexon <- S7::new_class(
   properties = list(
     data    = S7::class_any,
     layers  = S7::class_list,
+    cross_panel_annotations = S7::class_list,
     scales  = class_scales_list,
     guides  = class_guides,
     mapping = ggplot2::class_mapping,
@@ -391,6 +392,7 @@ class_ggexon <- S7::new_class(
     data = waiver(),
     ...,
     layers = list(),
+    cross_panel_annotations = list(),
     scales = NULL,
     guides = NULL,
     mapping = aes(),
@@ -406,6 +408,7 @@ class_ggexon <- S7::new_class(
       S7::S7_object(),
       data        = data,
       layers      = layers,
+      cross_panel_annotations = cross_panel_annotations,
       scales      = scales %||% ggplot2:::scales_list(),
       guides      = guides %||% ggplot2:::guides_list(),
       mapping     = mapping,
@@ -488,5 +491,4 @@ local({
   S7::method(convert, list(from = S7::class_list, to = list_classes)) <-
     function(from, to, ...) to(from)
 })
-
 

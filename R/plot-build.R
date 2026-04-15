@@ -168,26 +168,25 @@ ggexon_gtable <- function(data) {
 
 
 S7::method(ggexon_gtable, class_ggexon_built) <- function(data) {
-  plot <- data@plot
-  layout <- data@layout
-  data <- data@data
+  build <- data
+  plot <- build@plot
+  layout <- build@layout
+  data <- build@data
   theme <- plot@theme
   labels <- plot@labels
 
   geom_grobs <- by_layer(function(l, d) l$draw_geom(d, layout), plot@layers, data, "converting geom to grob")
 
   plot_table <- layout$render(geom_grobs, data, theme, labels)
-  print(plot_table)
   # Legends
   legend_box <- plot@guides$assemble(theme)
-  print(legend_box) # can not fix legend error. I just copy the originial code
   #plot_table <- table_add_legends(plot_table, legend_box, theme)
-  #print(plot_table)
   # whole plot annotation
   plot_table <- table_add_titles(plot_table, labels, theme)
   plot_table <- table_add_caption(plot_table, labels$caption, theme)
   plot_table <- table_add_tag(plot_table, labels$tag, theme)
   plot_table <- table_add_background(plot_table, theme)
+  plot_table <- inject_cross_panel_annotations(plot_table, build)
 
   # add alt-text as attribute
   attr(plot_table, "alt-label") <- labels$alt
