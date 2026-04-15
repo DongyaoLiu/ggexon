@@ -51,7 +51,7 @@ local({
       print("using ggexon build")
       data <- ggexon_build(x)
 
-      gtable <- ggplot2::ggplot_gtable(data)
+      gtable <- ggexon_gtable(data)
       if (is.null(vp)) {
         grid.draw(gtable)
       } else {

@@ -47,6 +47,7 @@ Collate:
     'all-classes-S7.R'
     'axis-secondary.R'
     'coord.R'
+    'cross-panel-annotations.R'
     'facet-genomics.R'
     'geom-coverage.R'
     'geom-coverageMUT.R'
