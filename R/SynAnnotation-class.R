@@ -191,9 +191,13 @@ setClass(
 #' SynAnnotationPatch class
 #'
 #' `SynAnnotationPatch` records a patch that replaces, adds, or drops a subset
-#' of features from a `SynFeatureAnnotation`.
+#' of features from a `SynFeatureAnnotation`. As a genome-coordinate annotation,
+#' it inherits the shared `SynGenomeAnnotation` metadata used across
+#' nucleotide-level annotation layers.
 #'
 #' @slot name Patch label.
+#' @slot source_file Optional source identifier describing where the patch came
+#'   from. In-memory patches default to `"<patch>"`.
 #' @slot patch_data Optional patch payload as `GRanges`. Required for `"replace"`
 #'   and `"add"` patches.
 #' @slot target_ids Character vector of feature identifiers targeted by the
@@ -204,25 +208,23 @@ setClass(
 #' @exportClass SynAnnotationPatch
 setClass(
   "SynAnnotationPatch",
+  contains = "SynGenomeAnnotation",
   slots = c(
-    name = "character",
     patch_data = "NULLOrGRanges",
     target_ids = "character",
-    mode = "character",
-    metadata = "list"
+    mode = "character"
   ),
   prototype = list(
-    name = NA_character_,
+    source_file = "<patch>",
+    annotation_scope = "nucleotide",
+    lazy = FALSE,
+    loaded = TRUE,
     patch_data = NULL,
     target_ids = character(),
-    mode = "replace",
-    metadata = list()
+    mode = "replace"
   ),
   validity = function(object) {
     problems <- character()
-    if (length(object@name) != 1L || is.na(object@name) || !nzchar(object@name)) {
-      problems <- c(problems, "`name` must be a single non-empty character value.")
-    }
     if (length(object@mode) != 1L || !(object@mode %in% c("replace", "add", "drop"))) {
       problems <- c(problems, "`mode` must be one of 'replace', 'add', or 'drop'.")
     }
@@ -358,6 +360,8 @@ SynFeatureAnnotation <- function(name,
 #' @param patch_data Optional patched gene model as `GRanges`.
 #' @param target_ids Target gene IDs to replace, add, or drop.
 #' @param mode One of `"replace"`, `"add"`, or `"drop"`.
+#' @param source_file Optional source identifier for the patch. Defaults to
+#'   `"<patch>"` for in-memory patch objects.
 #' @param metadata Optional metadata list.
 #'
 #' @return A `SynAnnotationPatch` object.
@@ -366,11 +370,13 @@ SynAnnotationPatch <- function(name,
                                patch_data = NULL,
                                target_ids = character(),
                                mode = c("replace", "add", "drop"),
+                               source_file = "<patch>",
                                metadata = list()) {
   mode <- match.arg(mode)
   new(
     "SynAnnotationPatch",
     name = name,
+    source_file = source_file,
     patch_data = patch_data,
     target_ids = as.character(target_ids),
     mode = mode,

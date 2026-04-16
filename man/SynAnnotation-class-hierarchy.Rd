@@ -19,7 +19,7 @@ individual-level branch.
 \item \code{SynGenomeAnnotation}: abstract genome-coordinate individual annotation
 \item \code{SynProteinAnnotation}: abstract protein-coordinate individual annotation
 \item \code{SynFeatureAnnotation}: GFF/GTF structural annotation
-\item \code{SynAnnotationPatch}: gene-model patch record
+\item \code{SynAnnotationPatch}: genome-coordinate gene-model patch record
 \item \code{SynVCFAnnotation}: VCF/BCF variant annotation
 \item \code{SynBigWigAnnotation}: BigWig signal annotation
 \item \code{SynProteinDomainAnnotation}: protein-domain annotation

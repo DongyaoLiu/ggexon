@@ -61,6 +61,7 @@ test_that("SynAnnotation subclasses can be attached to SynIndividual", {
   expect_false(is_loaded(vcf_layer))
   expect_identical(annotation_scope(vcf_layer), "nucleotide")
   expect_s4_class(bw_layer, "SynGenomeAnnotation")
+  expect_s4_class(bw_layer, "SynIndAnnotation")
   expect_identical(annotation_kind(bw_layer), "SynBigWigAnnotation")
   expect_s4_class(domain_layer, "SynProteinAnnotation")
   expect_s4_class(domain_layer, "SynIndAnnotation")
@@ -145,6 +146,29 @@ test_that("type-specific annotation verbs query their data sources", {
   domain_hits <- query_domains(domain_layer, ids = "protA", domains = "PF0003")
   expect_identical(as.character(domain_hits$protein_id), "protA")
   expect_identical(as.character(domain_hits$domain), "PF0003")
+})
+
+test_that("SynAnnotationPatch now participates in the genome annotation hierarchy", {
+  patch_gr <- GenomicRanges::GRanges(
+    seqnames = "chr1",
+    ranges = IRanges::IRanges(start = 1L, end = 10L)
+  )
+
+  patch_obj <- SynAnnotationPatch(
+    name = "patch-1",
+    patch_data = patch_gr,
+    target_ids = "gene1",
+    mode = "replace"
+  )
+
+  expect_s4_class(patch_obj, "SynAnnotationPatch")
+  expect_s4_class(patch_obj, "SynGenomeAnnotation")
+  expect_s4_class(patch_obj, "SynIndAnnotation")
+  expect_s4_class(patch_obj, "SynAnnotation")
+  expect_identical(source_file(patch_obj), "<patch>")
+  expect_identical(annotation_scope(patch_obj), "nucleotide")
+  expect_false(is_lazy(patch_obj))
+  expect_true(is_loaded(patch_obj))
 })
 
 test_that("SynProteinDomainAnnotation reads the shipped InterProScan export", {

@@ -9,6 +9,7 @@ SynAnnotationPatch(
   patch_data = NULL,
   target_ids = character(),
   mode = c("replace", "add", "drop"),
+  source_file = "<patch>",
   metadata = list()
 )
 }
@@ -20,6 +21,9 @@ SynAnnotationPatch(
 \item{target_ids}{Target gene IDs to replace, add, or drop.}
 
 \item{mode}{One of \code{"replace"}, \code{"add"}, or \code{"drop"}.}
+
+\item{source_file}{Optional source identifier for the patch. Defaults to
+\code{"<patch>"} for in-memory patch objects.}
 
 \item{metadata}{Optional metadata list.}
 }

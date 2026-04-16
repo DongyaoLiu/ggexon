@@ -6,12 +6,17 @@
 \title{SynAnnotationPatch class}
 \description{
 \code{SynAnnotationPatch} records a patch that replaces, adds, or drops a subset
-of features from a \code{SynFeatureAnnotation}.
+of features from a \code{SynFeatureAnnotation}. As a genome-coordinate annotation,
+it inherits the shared \code{SynGenomeAnnotation} metadata used across
+nucleotide-level annotation layers.
 }
 \section{Slots}{
 
 \describe{
 \item{\code{name}}{Patch label.}
+
+\item{\code{source_file}}{Optional source identifier describing where the patch came
+from. In-memory patches default to \code{"<patch>"}.}
 
 \item{\code{patch_data}}{Optional patch payload as \code{GRanges}. Required for \code{"replace"}
 and \code{"add"} patches.}
@@ -23,4 +28,3 @@ patch.}
 
 \item{\code{metadata}}{Optional patch metadata.}
 }}
-
