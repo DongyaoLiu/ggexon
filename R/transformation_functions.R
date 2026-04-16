@@ -112,7 +112,8 @@ add_transcripts_seq_line = function(data, transcripts_stop_proportion = NULL, tr
   data2 = data %>% group_by(transcripts) %>%
     dplyr::summarize(x = min(xmin), max_xmax = max(xmax), y_middle = dplyr::first(y_middle),
      PANEL = dplyr::first(PANEL), group = dplyr::first(group), colour = dplyr::first(fill), strand = dplyr::first(strand),
-      linewidth = dplyr::first(linewidth), alpha = dplyr::first(alpha), y_range = dplyr::first(y_range)) %>%
+      linewidth = dplyr::first(linewidth), linetype = dplyr::first(linetype),
+      fill = dplyr::first(fill), alpha = dplyr::first(alpha), y_range = dplyr::first(y_range)) %>%
     mutate(transcripts_length = abs(max_xmax - x))
 
   if (is.null(transcripts_stop_length)){
@@ -138,6 +139,15 @@ add_transcripts_direction = function(data, ratio = 0.25, angle = pi/3, lengthABS
   #' potencial para r1 and r2.
 
   data = data %>% arrange(transcripts)
+  if (!"colour" %in% names(data)) {
+    data$colour <- "black"
+  }
+  if (!"fill" %in% names(data)) {
+    data$fill <- data$colour
+  }
+  if (!"linewidth" %in% names(data)) {
+    data$linewidth <- 0
+  }
   #data_xy = data %>% select(transcripts, xend, yend, y_range, strand, transcripts_length)
   data_triangle = data %>% mutate(base_length = y_range * ratio) %>%
     mutate(b1_x = xend , b1_y = yend + base_length/2) %>%
@@ -248,7 +258,6 @@ Splines_link_generate = function(data, detail = 100){
     }
   )
 }
-
 
 
 

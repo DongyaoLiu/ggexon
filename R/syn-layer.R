@@ -719,7 +719,7 @@ syn_to_exon_df <- function(x,
     chr = window$chr,
     start = window$start,
     end = window$end,
-    feature_type = annotation_type
+    feature_type = if (identical(annotation_type, "exon")) NULL else annotation_type
   )
 
   if (length(feature_gr) == 0L) {
@@ -736,17 +736,42 @@ syn_to_exon_df <- function(x,
 syn_gr_to_exon_df <- function(feature_gr,
                               track,
                               annotation_type = "exon") {
-  feature_gr <- feature_gr[as.character(S4Vectors::mcols(feature_gr)$type) == annotation_type]
+  meta <- S4Vectors::mcols(feature_gr)
+  types <- as.character(meta$type)
+  transcript_ids <- .coalesce_character_cols(
+    meta,
+    c("transcript_id", "Parent", "ID", "gene_id", "gene_name")
+  )
+
+  if (identical(annotation_type, "exon")) {
+    transcripts_with_exons <- unique(transcript_ids[types == "exon" & !is.na(transcript_ids)])
+    keep_rows <- types == "exon" |
+      (types == "CDS" &
+         !is.na(transcript_ids) &
+         nzchar(transcript_ids) &
+         !(transcript_ids %in% transcripts_with_exons))
+    feature_gr <- feature_gr[keep_rows]
+    meta <- S4Vectors::mcols(feature_gr)
+    types <- as.character(meta$type)
+    transcript_ids <- .coalesce_character_cols(
+      meta,
+      c("transcript_id", "Parent", "ID", "gene_id", "gene_name")
+    )
+    types[types == "CDS"] <- "exon"
+  } else {
+    feature_gr <- feature_gr[types == annotation_type]
+    meta <- S4Vectors::mcols(feature_gr)
+    types <- as.character(meta$type)
+    transcript_ids <- .coalesce_character_cols(
+      meta,
+      c("transcript_id", "Parent", "ID", "gene_id", "gene_name")
+    )
+  }
 
   if (length(feature_gr) == 0L) {
     return(data.frame())
   }
 
-  meta <- S4Vectors::mcols(feature_gr)
-  transcript_ids <- .coalesce_character_cols(
-    meta,
-    c("transcript_id", "Parent", "ID", "gene_id", "gene_name")
-  )
   transcript_ids[is.na(transcript_ids) | !nzchar(transcript_ids)] <- paste0(
     "feature_", seq_along(transcript_ids)
   )
@@ -771,7 +796,7 @@ syn_gr_to_exon_df <- function(feature_gr,
     xmin = IRanges::start(feature_gr),
     xmax = IRanges::end(feature_gr),
     strand = as.character(BiocGenerics::strand(feature_gr)),
-    type = as.character(meta$type),
+    type = types,
     transcripts = transcript_ids,
     gene_name = gene_labels,
     track = track,

@@ -106,6 +106,22 @@ GeomNucLink <- ggproto("GeomPanel", Geom,
                          arrange(PANEL, group, draw_order)
                        munched = coord$transform_y(munched, panel_params[[panel]])
 
+                       if (!"fill" %in% names(munched)) {
+                         munched$fill <- "grey50"
+                       }
+                       if (!"linetype" %in% names(munched)) {
+                         munched$linetype <- 1
+                       }
+                       if (!"linewidth" %in% names(munched)) {
+                         munched$linewidth <- 0
+                       }
+                       if (!"alpha" %in% names(munched)) {
+                         munched$alpha <- 0.5
+                       }
+                       if (!"colour" %in% names(munched)) {
+                         munched$colour <- "black"
+                       }
+
                        first_idx <- !duplicated(munched$group)
                        first_rows <- munched[first_idx, ]
 

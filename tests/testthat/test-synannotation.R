@@ -223,6 +223,32 @@ test_that("SynProteinDomainAnnotation reads the shipped InterProScan export", {
   expect_true(all(as.character(filtered_hits$domain) == "G3DSA:3.30.160.60"))
 })
 
+test_that("add_interproscan_annotation attaches the shipped InterProScan layer", {
+  genome_path <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
+  annotation_path <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+
+  x <- SynIndividual(
+    genome_file = genome_path,
+    annotation_file = annotation_path
+  )
+  x <- add_interproscan_annotation(x)
+
+  expect_true("interpro" %in% annotation_names(x))
+
+  interpro_ann <- get_annotation(x, "interpro")
+  expect_s4_class(interpro_ann, "SynProteinDomainAnnotation")
+  expect_identical(annotation_scope(interpro_ann), "protein")
+  expect_identical(annotation_metadata(interpro_ann), list())
+
+  domain_hits <- query_domains(interpro_ann)
+  expect_true(nrow(domain_hits) > 0L)
+  expect_identical(as.character(domain_hits$protein_id[[1L]]), "Sequence1")
+})
+
 test_that("set_gene_labels stores plot labels without replacing stable IDs", {
   genome_path <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
   annotation_path <- system.file(
@@ -383,4 +409,40 @@ test_that("read_patch_gff and patch_annotation_from_gff use the real patch file"
   expect_true(all(patch_gene_ids %in% patched_genes))
   expect_identical(names(list_patches(x2)), "ta-correction")
   expect_identical(patch_mode(list_patches(x2)[[1L]]), "replace")
+})
+
+test_that("geom_exon falls back to CDS when patched transcripts have no exon rows", {
+  genome_path <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
+  annotation_path <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+  patch_path <- system.file("extdata", "XZ1516.TA.gff", package = "ggexon")
+
+  x <- SynIndividual(
+    genome_file = genome_path,
+    annotation_file = annotation_path
+  ) |>
+    load_annotation()
+
+  x <- patch_annotation_from_gff(
+    x,
+    patch_file = patch_path,
+    mode = "replace",
+    name = "ta-correction"
+  )
+
+  plot_obj <- ggexon(x) +
+    geom_exon(
+      chr = "V_RagTag",
+      subset = c(21574000, 21583000)
+    )
+  build <- ggplot2::ggplot_build(plot_obj)
+  exon_layer <- build$data[[1L]]
+  zina_rows <- grepl("zina-1", as.character(exon_layer$transcripts), fixed = TRUE)
+
+  expect_true(any(zina_rows))
+  expect_true(all(as.character(exon_layer$type[zina_rows]) == "exon"))
+  expect_equal(sum(zina_rows), 15L)
 })

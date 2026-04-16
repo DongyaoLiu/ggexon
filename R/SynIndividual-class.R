@@ -961,6 +961,59 @@ add_annotation <- function(x, annotation, set_active = FALSE) {
   x
 }
 
+#' Attach an InterProScan protein-domain layer to a SynIndividual
+#'
+#' @param x A `SynIndividual` object.
+#' @param domain_file Path to an InterProScan TSV export. Defaults to the
+#'   bundled `InterProScan.tsv` example when available.
+#' @param name Annotation-layer name used to store the imported domains.
+#' @param keytype Identifier column used to match domain rows to proteins or
+#'   transcripts.
+#' @param source_db Domain database label recorded in the annotation metadata.
+#'
+#' @return An updated `SynIndividual` object with a
+#'   `SynProteinDomainAnnotation` layer attached.
+#' @export
+add_interproscan_annotation <- function(x,
+                                        domain_file = system.file(
+                                          "extdata",
+                                          "InterProScan.tsv",
+                                          package = "ggexon"
+                                        ),
+                                        name = "interpro",
+                                        keytype = c("protein_id", "transcript_id", "gene_id"),
+                                        source_db = "InterPro") {
+  if (!methods::is(x, "SynIndividual")) {
+    stop(
+      "`add_interproscan_annotation()` expects a SynIndividual object.",
+      call. = FALSE
+    )
+  }
+
+  keytype <- match.arg(keytype)
+
+  if (!is.character(domain_file) || length(domain_file) != 1L ||
+      is.na(domain_file) || !nzchar(domain_file)) {
+    stop(
+      "`domain_file` must be a single non-empty character value.",
+      call. = FALSE
+    )
+  }
+  if (!file.exists(domain_file)) {
+    stop("InterProScan file does not exist: ", domain_file, call. = FALSE)
+  }
+
+  add_annotation(
+    x,
+    SynProteinDomainAnnotation(
+      name = name,
+      domain_file = domain_file,
+      keytype = keytype,
+      source_db = source_db
+    )
+  )
+}
+
 #' Retrieve an annotation layer from a SynIndividual
 #'
 #' @param x A `SynIndividual` object.

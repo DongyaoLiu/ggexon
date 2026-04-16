@@ -1,0 +1,33 @@
+% Please edit documentation in R/SynIndividual-class.R
+\name{add_interproscan_annotation}
+\alias{add_interproscan_annotation}
+\title{Attach an InterProScan protein-domain layer to a SynIndividual}
+\usage{
+add_interproscan_annotation(
+  x,
+  domain_file = system.file("extdata", "InterProScan.tsv", package = "ggexon"),
+  name = "interpro",
+  keytype = c("protein_id", "transcript_id", "gene_id"),
+  source_db = "InterPro"
+)
+}
+\arguments{
+\item{x}{A \code{SynIndividual} object.}
+
+\item{domain_file}{Path to an InterProScan TSV export. Defaults to the bundled
+\code{InterProScan.tsv} example when available.}
+
+\item{name}{Annotation-layer name used to store the imported domains.}
+
+\item{keytype}{Identifier column used to match domain rows to proteins or
+transcripts.}
+
+\item{source_db}{Domain database label recorded in the annotation metadata.}
+}
+\value{
+An updated \code{SynIndividual} object with a
+\code{SynProteinDomainAnnotation} layer attached.
+}
+\description{
+Attach an InterProScan protein-domain layer to a \code{SynIndividual}.
+}

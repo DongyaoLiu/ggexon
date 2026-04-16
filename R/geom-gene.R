@@ -49,7 +49,10 @@ GeomGene <- ggproto("GeomGene", Geom,
                                                    a_x = if_else(strand == "+", Xmax, Xmin),
                                                    a_y = y_middle,
                                                    yend = y_middle,
-                                                   linewidth = 0)
+                                                   linewidth = 0,
+                                                   linetype = if ("linetype" %in% names(data)) linetype else 1,
+                                                   fill = if ("fill" %in% names(data)) fill else "black",
+                                                   colour = if ("colour" %in% names(data) && !all(is.na(colour))) colour else fill)
                       tri_data = add_transcripts_direction(track_data, ratio = 1, angle = pi/3, lengthABS = NULL, lengthPRO = NULL)
                       transcripts_tri_Grob = GeomPolygon$draw_panel(tri_data, panel_params, coord)
                       ggname("geom_exon", gTree(children = gList(
