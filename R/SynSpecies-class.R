@@ -2,8 +2,9 @@
 #'
 #' These classes define the comparative object model used by `ggexon`.
 #' `SynSpecies` groups multiple `SynIndividual` objects, `SynPairAlignment` and
-#' `SynMultiAlignment` store the relationships between those individuals, and
-#' `SynLayout` stores reusable panel-layout metadata for plotting.
+#' `SynMultiAlignment` store the relationships between those individuals as
+#' species-level annotations, and `SynLayout` stores reusable panel-layout
+#' metadata for plotting.
 #'
 #' @name SynSpecies-class-overview
 #' @section Class overview:
@@ -19,15 +20,16 @@ NULL
 #' SynPairAlignment class
 #'
 #' `SynPairAlignment` stores one pairwise alignment between two
-#' `SynIndividual` objects in a `SynSpecies` collection. The object keeps the
-#' on-disk alignment file path, the query/target identifiers used to route link
-#' panels, optional cached parsed data, and arbitrary metadata.
+#' `SynIndividual` objects in a `SynSpecies` collection. As a concrete
+#' `SynSpeAnnotation`, the object keeps the shared annotation metadata together
+#' with the query/target identifiers used to route link panels and optional
+#' cached parsed alignment data.
 #'
 #' @slot name Unique alignment label used to retrieve the object from a
 #'   `SynSpecies`.
 #' @slot query_individual Query-side `SynIndividual` identifier.
 #' @slot target_individual Target-side `SynIndividual` identifier.
-#' @slot file Path to the alignment file on disk.
+#' @slot source_file Path to the alignment file on disk.
 #' @slot format Alignment file format. Currently `"paf"`.
 #' @slot data Optional cached parsed alignment data.
 #' @slot metadata Optional user or import metadata.
@@ -35,29 +37,24 @@ NULL
 #' @exportClass SynPairAlignment
 setClass(
   "SynPairAlignment",
+  contains = "SynSpeAnnotation",
   slots = c(
-    name = "character",
     query_individual = "character",
     target_individual = "character",
-    file = "character",
     format = "character",
-    data = "ANY",
-    metadata = "list"
+    data = "ANY"
   ),
   prototype = list(
-    name = NA_character_,
+    annotation_scope = "species",
+    lazy = TRUE,
+    loaded = FALSE,
     query_individual = NA_character_,
     target_individual = NA_character_,
-    file = NA_character_,
     format = "paf",
-    data = NULL,
-    metadata = list()
+    data = NULL
   ),
   validity = function(object) {
     problems <- character()
-    if (length(object@name) != 1L || is.na(object@name) || !nzchar(object@name)) {
-      problems <- c(problems, "`name` must be a single non-empty character value.")
-    }
     if (length(object@query_individual) != 1L || is.na(object@query_individual) ||
         !nzchar(object@query_individual)) {
       problems <- c(problems, "`query_individual` must be a single non-empty character value.")
@@ -66,8 +63,8 @@ setClass(
         !nzchar(object@target_individual)) {
       problems <- c(problems, "`target_individual` must be a single non-empty character value.")
     }
-    if (length(object@file) != 1L || is.na(object@file) || !nzchar(object@file)) {
-      problems <- c(problems, "`file` must be a single non-empty character value.")
+    if (identical(object@query_individual, object@target_individual)) {
+      problems <- c(problems, "`query_individual` and `target_individual` must differ.")
     }
     if (length(object@format) != 1L || !(object@format %in% c("paf"))) {
       problems <- c(problems, "`format` must currently be 'paf'.")
@@ -79,14 +76,15 @@ setClass(
 #' SynMultiAlignment class
 #'
 #' `SynMultiAlignment` stores one multiple alignment spanning more than two
-#' individuals. Like `SynPairAlignment`, it keeps the source file path, an
-#' optional cached parsed representation, and metadata, but it records a vector
-#' of participating individual identifiers instead of query/target sides.
+#' individuals. Like `SynPairAlignment`, it is a concrete `SynSpeAnnotation`
+#' with a source file, optional cached parsed representation, and metadata, but
+#' it records a vector of participating individual identifiers instead of
+#' query/target sides.
 #'
 #' @slot name Unique alignment label used to retrieve the object from a
 #'   `SynSpecies`.
 #' @slot individuals Character vector of included `SynIndividual` identifiers.
-#' @slot file Path to the alignment file on disk.
+#' @slot source_file Path to the alignment file on disk.
 #' @slot format Alignment file format. Currently `"maf"`.
 #' @slot data Optional cached parsed alignment data.
 #' @slot metadata Optional user or import metadata.
@@ -94,33 +92,28 @@ setClass(
 #' @exportClass SynMultiAlignment
 setClass(
   "SynMultiAlignment",
+  contains = "SynSpeAnnotation",
   slots = c(
-    name = "character",
     individuals = "character",
-    file = "character",
     format = "character",
-    data = "ANY",
-    metadata = "list"
+    data = "ANY"
   ),
   prototype = list(
-    name = NA_character_,
+    annotation_scope = "species",
+    lazy = TRUE,
+    loaded = FALSE,
     individuals = character(),
-    file = NA_character_,
     format = "maf",
-    data = NULL,
-    metadata = list()
+    data = NULL
   ),
   validity = function(object) {
     problems <- character()
-    if (length(object@name) != 1L || is.na(object@name) || !nzchar(object@name)) {
-      problems <- c(problems, "`name` must be a single non-empty character value.")
-    }
     if (length(object@individuals) < 2L || any(is.na(object@individuals)) ||
         any(!nzchar(object@individuals))) {
       problems <- c(problems, "`individuals` must contain at least two non-empty names.")
     }
-    if (length(object@file) != 1L || is.na(object@file) || !nzchar(object@file)) {
-      problems <- c(problems, "`file` must be a single non-empty character value.")
+    if (length(unique(object@individuals)) != length(object@individuals)) {
+      problems <- c(problems, "`individuals` must not contain duplicates.")
     }
     if (length(object@format) != 1L || !(object@format %in% c("maf"))) {
       problems <- c(problems, "`format` must currently be 'maf'.")
@@ -326,9 +319,9 @@ SynPairAlignment <- function(name,
   new(
     "SynPairAlignment",
     name = name,
+    source_file = file,
     query_individual = query_individual,
     target_individual = target_individual,
-    file = file,
     metadata = metadata
   )
 }
@@ -349,8 +342,8 @@ SynMultiAlignment <- function(name,
   new(
     "SynMultiAlignment",
     name = name,
+    source_file = file,
     individuals = individuals,
-    file = file,
     metadata = metadata
   )
 }
@@ -462,12 +455,12 @@ setGeneric("species_layout", function(x) standardGeneric("species_layout"))
 setMethod("species_layout", "SynSpecies", function(x) x@layout)
 
 setGeneric("alignment_name", function(x) standardGeneric("alignment_name"))
-setMethod("alignment_name", "SynPairAlignment", function(x) x@name)
-setMethod("alignment_name", "SynMultiAlignment", function(x) x@name)
+setMethod("alignment_name", "SynPairAlignment", function(x) annotation_name(x))
+setMethod("alignment_name", "SynMultiAlignment", function(x) annotation_name(x))
 
 setGeneric("alignment_file", function(x) standardGeneric("alignment_file"))
-setMethod("alignment_file", "SynPairAlignment", function(x) x@file)
-setMethod("alignment_file", "SynMultiAlignment", function(x) x@file)
+setMethod("alignment_file", "SynPairAlignment", function(x) source_file(x))
+setMethod("alignment_file", "SynMultiAlignment", function(x) source_file(x))
 
 setGeneric("query_individual", function(x) standardGeneric("query_individual"))
 setMethod("query_individual", "SynPairAlignment", function(x) x@query_individual)

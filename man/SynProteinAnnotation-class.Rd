@@ -5,6 +5,6 @@
 \alias{SynProteinAnnotation-class}
 \title{SynProteinAnnotation class}
 \description{
-\code{SynProteinAnnotation} is an abstract subtype of \code{SynAnnotation} for
+\code{SynProteinAnnotation} is an abstract subtype of \code{SynIndAnnotation} for
 annotations indexed on protein coordinates.
 }

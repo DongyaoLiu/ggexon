@@ -6,8 +6,9 @@
 \description{
 These classes define the comparative object model used by \code{ggexon}.
 \code{SynSpecies} groups multiple \code{SynIndividual} objects, \code{SynPairAlignment} and
-\code{SynMultiAlignment} store the relationships between those individuals, and
-\code{SynLayout} stores reusable panel-layout metadata for plotting.
+\code{SynMultiAlignment} store the relationships between those individuals as
+species-level annotations, and \code{SynLayout} stores reusable panel-layout
+metadata for plotting.
 }
 \section{Class overview}{
 

@@ -54,14 +54,22 @@ test_that("SynSpecies stores individuals and explicit alignment relationships", 
   expect_setequal(names(individuals(sp)), c("XZ1516", "N2"))
   expect_identical(names(pairwise_alignments(sp)), "XZ1516_vs_N2")
   expect_identical(names(multiple_alignments(sp)), "worm-maf")
+  expect_s4_class(pair, "SynSpeAnnotation")
+  expect_s4_class(pair, "SynAnnotation")
+  expect_s4_class(multi, "SynSpeAnnotation")
+  expect_s4_class(multi, "SynAnnotation")
   expect_identical(query_individual(pair), "XZ1516")
   expect_identical(target_individual(pair), "N2")
   expect_identical(alignment_file(pair), paf_path)
+  expect_identical(source_file(pair), paf_path)
+  expect_identical(annotation_scope(pair), "species")
   expect_identical(alignment_individuals(pair), c("XZ1516", "N2"))
   expect_identical(
     alignment_individuals(multi),
     c("XZ1516", "N2", "CB4856")
   )
+  expect_identical(source_file(multi), "worms.maf")
+  expect_identical(annotation_scope(multi), "species")
 })
 
 test_that("SynLayout shared geom parameters are resolved before layer overrides", {

@@ -6,9 +6,10 @@
 \title{SynAnnotation class}
 \description{
 \code{SynAnnotation} is the abstract base class for all annotation layers attached
-to a \code{SynIndividual}. Subclasses specialize the coordinate system and payload
-they carry, but all annotations share the same naming, source-file, lazy
-loading, metadata, and plot-cache semantics.
+to \code{SynIndividual} or \code{SynSpecies} objects. Subclasses specialize the owner
+level, coordinate system, and payload they carry, but all annotations share
+the same naming, source-file, lazy loading, metadata, and plot-cache
+semantics.
 }
 \section{Slots}{
 

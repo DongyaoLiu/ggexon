@@ -5,6 +5,6 @@
 \alias{SynGenomeAnnotation-class}
 \title{SynGenomeAnnotation class}
 \description{
-\code{SynGenomeAnnotation} is an abstract subtype of \code{SynAnnotation} for
+\code{SynGenomeAnnotation} is an abstract subtype of \code{SynIndAnnotation} for
 annotations indexed on genomic coordinates.
 }

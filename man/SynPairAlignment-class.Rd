@@ -6,9 +6,10 @@
 \title{SynPairAlignment class}
 \description{
 \code{SynPairAlignment} stores one pairwise alignment between two
-\code{SynIndividual} objects in a \code{SynSpecies} collection. The object keeps the
-on-disk alignment file path, the query/target identifiers used to route link
-panels, optional cached parsed data, and arbitrary metadata.
+\code{SynIndividual} objects in a \code{SynSpecies} collection. As a concrete
+\code{SynSpeAnnotation}, the object keeps the shared annotation metadata together
+with the query/target identifiers used to route link panels and optional
+cached parsed alignment data.
 }
 \section{Slots}{
 
@@ -20,7 +21,7 @@ panels, optional cached parsed data, and arbitrary metadata.
 
 \item{\code{target_individual}}{Target-side \code{SynIndividual} identifier.}
 
-\item{\code{file}}{Path to the alignment file on disk.}
+\item{\code{source_file}}{Path to the alignment file on disk.}
 
 \item{\code{format}}{Alignment file format. Currently \code{"paf"}.}
 

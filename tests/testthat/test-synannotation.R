@@ -15,6 +15,7 @@ test_that("SynAnnotation subclasses can be attached to SynIndividual", {
   )
 
   expect_s4_class(get_annotation(x), "SynFeatureAnnotation")
+  expect_s4_class(get_annotation(x), "SynIndAnnotation")
   expect_s4_class(get_annotation(x), "SynAnnotation")
   expect_identical(annotation_names(x), "default")
   expect_identical(active_feature_annotation(x), "default")
@@ -55,12 +56,14 @@ test_that("SynAnnotation subclasses can be attached to SynIndividual", {
   )
 
   expect_s4_class(vcf_layer, "SynGenomeAnnotation")
+  expect_s4_class(vcf_layer, "SynIndAnnotation")
   expect_true(is_lazy(vcf_layer))
   expect_false(is_loaded(vcf_layer))
   expect_identical(annotation_scope(vcf_layer), "nucleotide")
   expect_s4_class(bw_layer, "SynGenomeAnnotation")
   expect_identical(annotation_kind(bw_layer), "SynBigWigAnnotation")
   expect_s4_class(domain_layer, "SynProteinAnnotation")
+  expect_s4_class(domain_layer, "SynIndAnnotation")
   expect_identical(annotation_scope(domain_layer), "protein")
 
   x <- add_annotation(x, vcf_layer)

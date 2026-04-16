@@ -6,9 +6,10 @@
 \title{SynMultiAlignment class}
 \description{
 \code{SynMultiAlignment} stores one multiple alignment spanning more than two
-individuals. Like \code{SynPairAlignment}, it keeps the source file path, an
-optional cached parsed representation, and metadata, but it records a vector
-of participating individual identifiers instead of query/target sides.
+individuals. Like \code{SynPairAlignment}, it is a concrete \code{SynSpeAnnotation}
+with a source file, optional cached parsed representation, and metadata, but
+it records a vector of participating individual identifiers instead of
+query/target sides.
 }
 \section{Slots}{
 
@@ -18,7 +19,7 @@ of participating individual identifiers instead of query/target sides.
 
 \item{\code{individuals}}{Character vector of included \code{SynIndividual} identifiers.}
 
-\item{\code{file}}{Path to the alignment file on disk.}
+\item{\code{source_file}}{Path to the alignment file on disk.}
 
 \item{\code{format}}{Alignment file format. Currently \code{"maf"}.}
 

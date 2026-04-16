@@ -5,16 +5,19 @@
 \title{SynAnnotation class hierarchy}
 \description{
 \code{SynAnnotation} is the abstract base class for annotation layers attached to
-a \code{SynIndividual}. Genome-coordinate and protein-coordinate annotations are
-represented by concrete subclasses with their own payload slots and lazy-load
-semantics.
+\code{SynIndividual} or \code{SynSpecies} objects. Individual-level and species-level
+annotations are represented by dedicated abstract subclasses, with
+genome-coordinate and protein-coordinate annotations further specializing the
+individual-level branch.
 }
 \section{Class hierarchy}{
 
 \itemize{
 \item \code{SynAnnotation}: abstract base class
-\item \code{SynGenomeAnnotation}: abstract genome-coordinate annotation
-\item \code{SynProteinAnnotation}: abstract protein-coordinate annotation
+\item \code{SynIndAnnotation}: abstract individual-level annotation
+\item \code{SynSpeAnnotation}: abstract species-level annotation
+\item \code{SynGenomeAnnotation}: abstract genome-coordinate individual annotation
+\item \code{SynProteinAnnotation}: abstract protein-coordinate individual annotation
 \item \code{SynFeatureAnnotation}: GFF/GTF structural annotation
 \item \code{SynAnnotationPatch}: gene-model patch record
 \item \code{SynVCFAnnotation}: VCF/BCF variant annotation

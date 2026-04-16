@@ -4,15 +4,18 @@ NULL
 #' SynAnnotation class hierarchy
 #'
 #' `SynAnnotation` is the abstract base class for annotation layers attached to
-#' a `SynIndividual`. Genome-coordinate and protein-coordinate annotations are
-#' represented by concrete subclasses with their own payload slots and lazy-load
-#' semantics.
+#' `SynIndividual` or `SynSpecies` objects. Individual-level and species-level
+#' annotations are represented by dedicated abstract subclasses, with
+#' genome-coordinate and protein-coordinate annotations further specializing the
+#' individual-level branch.
 #'
 #' @name SynAnnotation-class-hierarchy
 #' @section Class hierarchy:
 #' * `SynAnnotation`: abstract base class
-#' * `SynGenomeAnnotation`: abstract genome-coordinate annotation
-#' * `SynProteinAnnotation`: abstract protein-coordinate annotation
+#' * `SynIndAnnotation`: abstract individual-level annotation
+#' * `SynSpeAnnotation`: abstract species-level annotation
+#' * `SynGenomeAnnotation`: abstract genome-coordinate individual annotation
+#' * `SynProteinAnnotation`: abstract protein-coordinate individual annotation
 #' * `SynFeatureAnnotation`: GFF/GTF structural annotation
 #' * `SynAnnotationPatch`: gene-model patch record
 #' * `SynVCFAnnotation`: VCF/BCF variant annotation
@@ -25,9 +28,10 @@ NULL
 #' SynAnnotation class
 #'
 #' `SynAnnotation` is the abstract base class for all annotation layers attached
-#' to a `SynIndividual`. Subclasses specialize the coordinate system and payload
-#' they carry, but all annotations share the same naming, source-file, lazy
-#' loading, metadata, and plot-cache semantics.
+#' to `SynIndividual` or `SynSpecies` objects. Subclasses specialize the owner
+#' level, coordinate system, and payload they carry, but all annotations share
+#' the same naming, source-file, lazy loading, metadata, and plot-cache
+#' semantics.
 #'
 #' @slot name Short unique label used to retrieve the annotation layer.
 #' @slot source_file Path to the on-disk file backing the annotation.
@@ -94,21 +98,41 @@ setClass(
   }
 )
 
+#' SynIndAnnotation class
+#'
+#' `SynIndAnnotation` is an abstract subtype of `SynAnnotation` for annotation
+#' layers attached to a `SynIndividual`.
+#'
+#' @exportClass SynIndAnnotation
+setClass("SynIndAnnotation", contains = "SynAnnotation")
+
+#' SynSpeAnnotation class
+#'
+#' `SynSpeAnnotation` is an abstract subtype of `SynAnnotation` for annotation
+#' layers attached to a `SynSpecies`.
+#'
+#' @exportClass SynSpeAnnotation
+setClass(
+  "SynSpeAnnotation",
+  contains = "SynAnnotation",
+  prototype = list(annotation_scope = "species")
+)
+
 #' SynGenomeAnnotation class
 #'
-#' `SynGenomeAnnotation` is an abstract subtype of `SynAnnotation` for
+#' `SynGenomeAnnotation` is an abstract subtype of `SynIndAnnotation` for
 #' annotations indexed on genomic coordinates.
 #'
 #' @exportClass SynGenomeAnnotation
-setClass("SynGenomeAnnotation", contains = "SynAnnotation")
+setClass("SynGenomeAnnotation", contains = "SynIndAnnotation")
 
 #' SynProteinAnnotation class
 #'
-#' `SynProteinAnnotation` is an abstract subtype of `SynAnnotation` for
+#' `SynProteinAnnotation` is an abstract subtype of `SynIndAnnotation` for
 #' annotations indexed on protein coordinates.
 #'
 #' @exportClass SynProteinAnnotation
-setClass("SynProteinAnnotation", contains = "SynAnnotation")
+setClass("SynProteinAnnotation", contains = "SynIndAnnotation")
 
 #' SynFeatureAnnotation class
 #'
