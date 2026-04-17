@@ -3,24 +3,14 @@
 \docType{data}
 \name{GeomExon}
 \alias{GeomExon}
-\title{v=1.0
-author = "LIU Dongyao"
-LabWebsite: "www.zhenglabhku.org"
-E-mail = "dongyao@connect.hku.hk"}
+\title{Geom implementation for exon features}
 \format{
 An object of class \code{GeomExon} (inherits from \code{Geom}, \code{ggproto}, \code{gg}) of length 9.
 }
 \usage{
 GeomExon
 }
-\arguments{
-\item{break_list}{named list, used for the specify the break region.
-filter base on the subset region.}
-}
 \description{
-v=1.0
-author = "LIU Dongyao"
-LabWebsite: "www.zhenglabhku.org"
-E-mail = "dongyao@connect.hku.hk"
+Internal ggproto used by \code{\link[=geom_exon]{geom_exon()}}.
 }
 \keyword{datasets}

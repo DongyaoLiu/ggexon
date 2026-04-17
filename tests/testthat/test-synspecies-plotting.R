@@ -525,6 +525,146 @@ test_that("geom_genelabel inherits species windows from explicit exon layers", {
   expect_true("label" %in% names(label_layer))
 })
 
+test_that("syn-aware geoms preserve mapped and fixed aesthetics via standard aes semantics", {
+  xz_genome <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
+  xz_annotation <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+  n2_genome <- system.file(
+    "extdata",
+    "c_elegans.PRJNA13758.WS285.genomic.fa",
+    package = "ggexon"
+  )
+  n2_annotation <- system.file(
+    "extdata",
+    "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
+    package = "ggexon"
+  )
+  paf_path <- system.file("extdata", "V_alginment.paf", package = "ggexon")
+
+  sp <- SynSpecies(name = "Caenorhabditis")
+  sp <- add_individual(
+    sp,
+    test_syn_individual(
+      genome_file = xz_genome,
+      annotation_file = xz_annotation,
+      id = "XZ1516"
+    )
+  )
+  sp <- add_individual(
+    sp,
+    test_syn_individual(
+      genome_file = n2_genome,
+      annotation_file = n2_annotation,
+      id = "N2",
+      annotation_format = "gtf"
+    )
+  )
+  sp <- add_pairwise_alignment(
+    sp,
+    SynPairAlignment(
+      name = "XZ1516_vs_N2",
+      query_individual = "XZ1516",
+      target_individual = "N2",
+      file = paf_path
+    )
+  )
+
+  exon_build <- ggexon_build(
+    ggexon(sp) +
+      geom_exon(
+        ggplot2::aes(fill = strand, colour = strand, alpha = strand),
+        species = "XZ1516",
+        chr = "RagTag_V",
+        subset = c(21574445, 21584356)
+      )
+  )
+  exon_data <- exon_build@data[[1L]]
+  expect_true(all(c("fill", "colour", "alpha") %in% names(exon_data)))
+  expect_true(length(unique(exon_data$fill)) >= 1L)
+  expect_true(length(unique(exon_data$colour)) >= 1L)
+  expect_true(all(!is.na(exon_data$alpha)))
+
+  exon_gene_build <- ggexon_build(
+    ggexon(sp) +
+      geom_exon(
+        ggplot2::aes(fill = gene_id),
+        species = "XZ1516",
+        chr = "RagTag_V",
+        subset = c(21574445, 21584356)
+      )
+  )
+  exon_gene_data <- exon_gene_build@data[[1L]]
+  expect_true(nrow(exon_gene_data) > 0L)
+  expect_true(length(unique(exon_gene_data$fill)) >= 1L)
+
+  exon_transcript_build <- ggexon_build(
+    ggexon(sp) +
+      geom_exon(
+        ggplot2::aes(fill = transcript_id),
+        species = "XZ1516",
+        chr = "RagTag_V",
+        subset = c(21574445, 21584356)
+      )
+  )
+  exon_transcript_data <- exon_transcript_build@data[[1L]]
+  expect_true(nrow(exon_transcript_data) > 0L)
+  expect_true(length(unique(exon_transcript_data$fill)) >= 1L)
+
+  gene_build <- ggexon_build(
+    ggexon(sp) +
+      geom_gene(
+        ggplot2::aes(fill = strand, colour = strand, alpha = strand),
+        species = "XZ1516",
+        chr = "RagTag_V",
+        subset = c(21574445, 21584356)
+      )
+  )
+  gene_data <- gene_build@data[[1L]]
+  expect_true(all(c("fill", "colour", "alpha") %in% names(gene_data)))
+  expect_true(all(!is.na(gene_data$alpha)))
+
+  label_build <- ggexon_build(
+    ggexon(sp) +
+      geom_exon(
+        species = "XZ1516",
+        chr = "RagTag_V",
+        subset = c(21558028, 21620381)
+      ) +
+      geom_exon(
+        species = "N2",
+        chr = "V",
+        subset = c(20454111, 20491853)
+      ) +
+      geom_genelabel(
+        ggplot2::aes(colour = strand, alpha = strand)
+      ) +
+      facet_genomics(ggplot2::vars(track), scales = "free")
+  )
+  label_data <- label_build@data[[3L]]
+  expect_true(all(c("colour", "alpha") %in% names(label_data)))
+  expect_true(all(!is.na(label_data$alpha)))
+
+  fixed_exon_build <- ggexon_build(
+    ggexon(sp) +
+      geom_exon(
+        species = "XZ1516",
+        chr = "RagTag_V",
+        subset = c(21574445, 21584356),
+        fill = "steelblue",
+        colour = "goldenrod",
+        alpha = 0.4
+      )
+  )
+  fixed_exon_data <- fixed_exon_build@data[[1L]]
+  expect_true(all(fixed_exon_data$fill == "steelblue"))
+  expect_true(all(fixed_exon_data$colour == "goldenrod"))
+  expect_true(all(fixed_exon_data$alpha == 0.4))
+
+})
+
 test_that("geom_gene comparative grammar supports reference-led subsetting with free_x", {
   xz_genome <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
   xz_annotation <- system.file(

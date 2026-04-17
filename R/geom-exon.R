@@ -1,9 +1,6 @@
-#' v=1.0
-#' author = "LIU Dongyao"
-#' LabWebsite: "www.zhenglabhku.org"
-#' E-mail = "dongyao@connect.hku.hk"
-#' @param break_list named list, used for the specify the break region.
-
+#' Geom implementation for exon features
+#'
+#' Internal ggproto used by [`geom_exon()`].
 GeomExon <- ggproto("GeomExon", Geom,
                       required_aes = c("ymin", "xmin", "xmax", "transcripts","strand", "track", "type"),
                       non_missing_aes = c("linewidth", "shape"),
@@ -27,7 +24,7 @@ GeomExon <- ggproto("GeomExon", Geom,
                         data = data %>% filter(type == params$annotation_type)
                       }
                       if (!is.null(params$subset)) {
-                        #' filter base on the subset region.
+                        # Filter based on the requested subset region.
                         start1 = int(params$subset[1])
                         end1 = int(params$subset[2])
                         data = data %>% filter(xmin >= start1, xmax <= end1)
@@ -88,7 +85,45 @@ GeomExon <- ggproto("GeomExon", Geom,
 )
 
 
-
+#' Draw exon-style genomic features
+#'
+#' `geom_exon()` draws exon-like genomic intervals as filled rectangles with a
+#' transcript backbone and direction indicator. It supports ordinary ggplot2
+#' aesthetic mappings and can resolve `SynSpecies` / `SynIndividual` inputs
+#' lazily during plot build.
+#'
+#' For Syn-backed layers, ggexon adds canonical identifier columns to the
+#' resolved exon table so users can map aesthetics with expressions such as
+#' `aes(fill = gene_id)`, `aes(fill = gene_name)`, or
+#' `aes(fill = transcript_id)`.
+#'
+#' @param mapping Set of aesthetic mappings created by [`ggplot2::aes()`].
+#'   In addition to the required positional aesthetics, Syn-backed exon layers
+#'   expose canonical identifier columns `transcript_id`, `gene_id`, and
+#'   `gene_name` for use in aesthetic mappings.
+#' @param data A data frame, `SynSpecies`, or `SynIndividual` object.
+#' @param stat,position Standard ggplot2 layer arguments.
+#' @param ... Additional parameters passed on to the layer, including fixed
+#'   aesthetics such as `fill`, `colour`, and `alpha`.
+#' @param na.rm If `FALSE`, the default, missing values are removed with a
+#'   warning. If `TRUE`, missing values are removed silently.
+#' @param show.legend Logical. Should this layer be included in the legend?
+#' @param transcripts_track_ratio Optional transcript track ratio used by the
+#'   ggexon layout helpers.
+#' @param y_scale Optional y scaling factor for the track layout.
+#' @param exon_height Optional exon rectangle height.
+#' @param x_translation Optional x offset applied before drawing.
+#' @param subset Optional numeric length-2 genomic window to keep.
+#' @param annotation_type Feature type to keep, defaults to `"exon"`.
+#' @param species Optional species / individual identifier when `data` is a
+#'   `SynSpecies`.
+#' @param chr Optional chromosome / seqname restriction when `data` is Syn-backed.
+#' @param breakdata Optional break specification passed to `addbreak()`.
+#' @param inherit.aes If `FALSE`, overrides the default aesthetics rather than
+#'   combining with them.
+#'
+#' @return A ggplot2 layer using [`GeomExon`].
+#' @export
 geom_exon <- function(mapping = NULL, data = NULL,
                       stat = "identity", position = "identity",
                       ..., na.rm = FALSE, show.legend = NA,
@@ -98,7 +133,8 @@ geom_exon <- function(mapping = NULL, data = NULL,
                       species = NULL, chr = NULL,
                       breakdata = NULL,
                       inherit.aes = TRUE) {
-    params <- Filter(Negate(is.null), list(
+    params <- Filter(Negate(is.null), c(list(
+      ...,
       na.rm = na.rm,
       exon_height = exon_height,
       y_scale = y_scale,
@@ -108,7 +144,7 @@ geom_exon <- function(mapping = NULL, data = NULL,
       species = species,
       chr = chr,
       breakdata = breakdata
-    ))
+    )))
     layer(
       data = data,
       mapping = mapping,

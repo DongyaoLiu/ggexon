@@ -46,7 +46,8 @@ geom_genelabel <- function(mapping = NULL, data = NULL,
                        y_scale = NULL,
                        species = NULL, chr = NULL, subset = NULL,
                        inherit.aes = TRUE) {
-    params <- Filter(Negate(is.null), list(
+    params <- Filter(Negate(is.null), c(list(
+      ...,
       na.rm = na.rm,
       exon_height = exon_height,
       y_scale = y_scale,
@@ -54,7 +55,7 @@ geom_genelabel <- function(mapping = NULL, data = NULL,
       species = species,
       chr = chr,
       subset = subset
-    ))
+    )))
     layer(
       data = data,
       mapping = mapping,

@@ -1,5 +1,6 @@
 geom_nuclink <- function(mapping = NULL, data = NULL,
                                 stat = "identity", position = "identity",
+                                ...,
                                 na.rm = FALSE, show.legend = NA,
                                 alignment = NULL,
                                 reference = NULL,
@@ -15,13 +16,14 @@ geom_nuclink <- function(mapping = NULL, data = NULL,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
     layer_class = LayerSyn,
-    params = list(
+    params = c(list(
+      ...,
       na.rm = na.rm,
       alignment = alignment,
       reference = reference,
       chr = chr,
       subset = subset
-    )
+    ))
   )
 }
 

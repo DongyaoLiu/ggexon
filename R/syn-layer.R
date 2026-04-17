@@ -28,10 +28,11 @@ LayerSyn <- ggproto(
   setup_layer = function(self, data, plot) {
     syn_layout_override <- attr(data, "syn_layout_override", exact = TRUE)
 
-    if (is_syn_layer_input(self, plot@data) &&
-        length(self$mapping) == 0L &&
-        length(plot@mapping) == 0L) {
-    self$mapping <- syn_default_mapping(data, self)
+    if (is_syn_layer_input(self, plot@data)) {
+      defaults_fn <- get("defaults", envir = asNamespace("ggplot2"))
+      self$mapping <- ggplot2::class_mapping(
+        defaults_fn(self$mapping, syn_default_mapping(data, self))
+      )
     }
 
     defaults_fn <- get("defaults", envir = asNamespace("ggplot2"))
@@ -1333,6 +1334,29 @@ syn_to_exon_df <- function(x,
   )
 }
 
+#' Convert genomic features to a `geom_exon()` data frame
+#'
+#' Turns a `GRanges` annotation subset into the rectangular feature table used by
+#' [`geom_exon()`]. The returned data always includes a canonical identifier set
+#' for aesthetic mappings:
+#'
+#' - `transcript_id`: normalized transcript-level identifier
+#' - `gene_id`: normalized gene-level identifier
+#' - `gene_name`: display-friendly gene label
+#'
+#' The existing `transcripts` column is retained because ggexon uses it
+#' internally for grouping and track layout.
+#'
+#' @param feature_gr A `GRanges` object containing exon-like annotation features.
+#' @param track Track label written into the output table.
+#' @param annotation_type Feature type to keep. Defaults to `"exon"`. When
+#'   `"exon"`, CDS rows are used only as a fallback for transcripts that do not
+#'   already have explicit exon records.
+#'
+#' @return A `data.frame` ready for [`geom_exon()`] with positional columns plus
+#'   canonical identifier columns such as `transcript_id`, `gene_id`, and
+#'   `gene_name`.
+#' @keywords internal
 syn_gr_to_exon_df <- function(feature_gr,
                               track,
                               annotation_type = "exon") {
@@ -1380,6 +1404,10 @@ syn_gr_to_exon_df <- function(feature_gr,
     meta,
     c("plot_label", "gene_name", "gene_id", "Name", "ID")
   )
+  gene_ids <- .coalesce_character_cols(
+    meta,
+    c("gene_id", "gene_name", "Name", "ID", "Parent")
+  )
 
   order_df <- data.frame(
     transcripts = transcript_ids,
@@ -1397,7 +1425,9 @@ syn_gr_to_exon_df <- function(feature_gr,
     xmax = IRanges::end(feature_gr),
     strand = as.character(BiocGenerics::strand(feature_gr)),
     type = types,
+    transcript_id = transcript_ids,
     transcripts = transcript_ids,
+    gene_id = gene_ids,
     gene_name = gene_labels,
     track = track,
     fill = "black",
