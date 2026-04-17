@@ -1,0 +1,38 @@
+% Please edit documentation in R/SynAnnotation-class.R
+\name{rename_domain_annotation_ids}
+\alias{rename_domain_annotation_ids}
+\title{Rename protein-domain identifiers using an explicit mapping}
+\usage{
+rename_domain_annotation_ids(
+  x,
+  mapping,
+  annotation = NULL,
+  from = NULL,
+  to = "transcript_id",
+  drop_unmapped = FALSE
+)
+}
+\arguments{
+\item{x}{A \code{SynProteinDomainAnnotation} or \code{SynIndividual} object.}
+
+\item{mapping}{Either a named character vector (\code{old_id -> new_id}) or a
+two-column data frame with source and target identifier columns.}
+
+\item{annotation}{Optional annotation-layer name when \code{x} is a
+\code{SynIndividual}.}
+
+\item{from}{Source identifier column. Defaults to the domain annotation
+\code{keytype}.}
+
+\item{to}{Target identifier column to populate. Defaults to
+\code{"transcript_id"}.}
+
+\item{drop_unmapped}{Logical; when \code{TRUE}, drop domain rows that do not map
+to a target identifier.}
+}
+\value{
+The updated object.
+}
+\description{
+Rename protein-domain identifiers using an explicit mapping.
+}

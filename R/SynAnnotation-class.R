@@ -887,12 +887,19 @@ patch_annotation_from_gff <- function(x,
     targets <- unique(as.character(patch_target_ids(patch)))
     targets <- targets[!is.na(targets) & nzchar(targets)]
     patch_mode_value <- patch_mode(patch)
+    patch_gr <- patch_data(patch)
 
-    if (patch_mode_value %in% c("replace", "drop") && length(targets) > 0L) {
-      out <- out[!.match_gene_targets(out, targets)]
+    if (patch_mode_value %in% c("replace", "drop")) {
+      drop_idx <- rep(FALSE, length(out))
+      if (length(targets) > 0L) {
+        drop_idx <- drop_idx | .match_gene_targets(out, targets)
+      }
+      if (patch_mode_value == "replace" && !is.null(patch_gr) && length(patch_gr) > 0L) {
+        drop_idx <- drop_idx | .match_patch_overlaps(out, patch_gr)
+      }
+      out <- out[!drop_idx]
     }
     if (patch_mode_value %in% c("replace", "add")) {
-      patch_gr <- patch_data(patch)
       if (!is.null(patch_gr) && length(patch_gr) > 0L) {
         out <- c(out, patch_gr)
       }
@@ -909,6 +916,26 @@ patch_annotation_from_gff <- function(x,
     values <- as.character(meta[[col]])
     hit <- hit | (!is.na(values) & values %in% target_ids)
   }
+  hit
+}
+
+.match_patch_overlaps <- function(gr, patch_gr) {
+  if (length(gr) == 0L || is.null(patch_gr) || length(patch_gr) == 0L) {
+    return(rep(FALSE, length(gr)))
+  }
+  query_seqnames <- as.character(GenomeInfoDb::seqnames(gr))
+  subject_seqnames <- unique(as.character(GenomeInfoDb::seqnames(patch_gr)))
+  same_seqname <- query_seqnames %in% subject_seqnames
+  hit <- rep(FALSE, length(gr))
+  if (!any(same_seqname)) {
+    return(hit)
+  }
+
+  hit[same_seqname] <- IRanges::overlapsAny(
+    gr[same_seqname],
+    patch_gr,
+    ignore.strand = TRUE
+  )
   hit
 }
 
@@ -1078,6 +1105,147 @@ query_domains <- function(x, ids = NULL, domains = NULL) {
   }
 
   out
+}
+
+#' Rename protein-domain identifiers using an explicit mapping
+#'
+#' @param x A `SynProteinDomainAnnotation` or `SynIndividual` object.
+#' @param mapping Either a named character vector (`old_id -> new_id`) or a
+#'   two-column data frame with source and target identifier columns.
+#' @param annotation Optional annotation-layer name when `x` is a
+#'   `SynIndividual`.
+#' @param from Source identifier column. Defaults to the domain annotation
+#'   `keytype`.
+#' @param to Target identifier column to populate. Defaults to
+#'   `"transcript_id"`.
+#' @param drop_unmapped Logical; when `TRUE`, drop domain rows that do not map
+#'   to a target identifier.
+#'
+#' @return The updated object.
+#' @export
+rename_domain_annotation_ids <- function(x,
+                                         mapping,
+                                         annotation = NULL,
+                                         from = NULL,
+                                         to = "transcript_id",
+                                         drop_unmapped = FALSE) {
+  if (methods::is(x, "SynIndividual")) {
+    ann_name <- annotation %||% NULL
+    ann <- if (is.null(ann_name)) {
+      ann_names <- annotation_names(x)
+      hit <- ann_names[vapply(ann_names, function(name) {
+        methods::is(get_annotation(x, name), "SynProteinDomainAnnotation")
+      }, logical(1))]
+      if (length(hit) == 0L) {
+        stop(
+          "No SynProteinDomainAnnotation layer is attached to this SynIndividual.",
+          call. = FALSE
+        )
+      }
+      hit[[1L]]
+    } else {
+      ann_name
+    }
+
+    updated_ann <- rename_domain_annotation_ids(
+      get_annotation(x, ann),
+      mapping = mapping,
+      from = from,
+      to = to,
+      drop_unmapped = drop_unmapped
+    )
+    return(add_annotation(x, updated_ann))
+  }
+
+  if (!methods::is(x, "SynProteinDomainAnnotation")) {
+    stop(
+      "`rename_domain_annotation_ids()` expects a SynProteinDomainAnnotation or SynIndividual object.",
+      call. = FALSE
+    )
+  }
+
+  map_df <- .normalize_domain_id_mapping(mapping)
+  from <- from %||% x@keytype
+
+  if (!is.character(from) || length(from) != 1L || is.na(from) || !nzchar(from)) {
+    stop("`from` must be a single non-empty character value.", call. = FALSE)
+  }
+  if (!is.character(to) || length(to) != 1L || is.na(to) || !nzchar(to)) {
+    stop("`to` must be a single non-empty character value.", call. = FALSE)
+  }
+
+  domain_df <- query_domains(x)
+  if (!from %in% colnames(domain_df)) {
+    stop(
+      "The domain table does not contain the source column: ",
+      from,
+      call. = FALSE
+    )
+  }
+
+  source_vals <- as.character(domain_df[[from]])
+  mapped_vals <- map_df$target_id[match(source_vals, map_df$source_id)]
+
+  if (identical(from, to)) {
+    domain_df[[to]] <- ifelse(
+      !is.na(mapped_vals) & nzchar(mapped_vals),
+      mapped_vals,
+      source_vals
+    )
+  } else {
+    domain_df[[to]] <- ifelse(
+      !is.na(mapped_vals) & nzchar(mapped_vals),
+      mapped_vals,
+      NA_character_
+    )
+  }
+
+  if (isTRUE(drop_unmapped)) {
+    keep <- !is.na(domain_df[[to]]) & nzchar(as.character(domain_df[[to]]))
+    domain_df <- domain_df[keep, , drop = FALSE]
+  }
+
+  x@domain_data <- domain_df
+  x@keytype <- to
+  x@loaded <- TRUE
+  x@metadata$domain_id_mapping <- list(
+    from = from,
+    to = to,
+    n_mapping = nrow(map_df),
+    drop_unmapped = isTRUE(drop_unmapped)
+  )
+
+  validObject(x)
+  x
+}
+
+.normalize_domain_id_mapping <- function(mapping) {
+  if (is.character(mapping) && !is.null(names(mapping))) {
+    return(
+      S4Vectors::DataFrame(
+        source_id = names(mapping),
+        target_id = unname(as.character(mapping))
+      )
+    )
+  }
+
+  if (is.data.frame(mapping) || methods::is(mapping, "DataFrame")) {
+    mapping <- as.data.frame(mapping, stringsAsFactors = FALSE)
+    if (ncol(mapping) < 2L) {
+      stop("Mapping data frame must have at least two columns.", call. = FALSE)
+    }
+    return(
+      S4Vectors::DataFrame(
+        source_id = as.character(mapping[[1L]]),
+        target_id = as.character(mapping[[2L]])
+      )
+    )
+  }
+
+  stop(
+    "`mapping` must be a named character vector or a two-column data frame.",
+    call. = FALSE
+  )
 }
 
 .read_delimited_annotation_lines <- function(path, skip_pattern = NULL) {

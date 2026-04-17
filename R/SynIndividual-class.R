@@ -27,6 +27,8 @@ NULL
 #' @slot active_annotation Name of the default feature annotation layer to use.
 #' @slot metadata User or import metadata describing the individual.
 #' @slot plot_cache Derived plotting tables cached for reuse.
+#' @slot projected_domains Named list of projected protein-domain tables stored
+#'   for inspection.
 #'
 #' @exportClass SynIndividual
 setClass(
@@ -44,7 +46,8 @@ setClass(
     annotations = "list",
     active_annotation = "character",
     metadata = "list",
-    plot_cache = "list"
+    plot_cache = "list",
+    projected_domains = "list"
   ),
   prototype = list(
     id = NA_character_,
@@ -59,7 +62,8 @@ setClass(
     annotations = list(),
     active_annotation = "default",
     metadata = list(),
-    plot_cache = list()
+    plot_cache = list(),
+    projected_domains = list()
   ),
   validity = function(object) {
     problems <- character()
@@ -112,6 +116,19 @@ setClass(
         problems <- c(
           problems,
           "`active_annotation` must be one of the names in `annotations`."
+        )
+      }
+    }
+    if (length(object@projected_domains) > 0L) {
+      bad_projected <- !vapply(
+        object@projected_domains,
+        function(x) is.data.frame(x) || methods::is(x, "DataFrame"),
+        logical(1)
+      )
+      if (any(bad_projected)) {
+        problems <- c(
+          problems,
+          "`projected_domains` must be a list of data.frame-like tables."
         )
       }
     }
@@ -857,6 +874,7 @@ setMethod("show", "SynIndividual", function(object) {
   cat("  annotation_file:", object@annotation_file, "\n")
   cat("  annotation_format:", object@annotation_format, "\n")
   cat("  active_feature_annotation:", object@active_annotation, "\n")
+  cat("  projected_domains:", length(object@projected_domains), "\n")
   cat("  loaded:", paste(names(loaded)[loaded], collapse = ", "), "\n")
 })
 
@@ -899,6 +917,9 @@ setMethod("syn_metadata", "SynIndividual", function(x) x@metadata)
 setGeneric("plot_cache", function(x) standardGeneric("plot_cache"))
 setMethod("plot_cache", "SynIndividual", function(x) x@plot_cache)
 setMethod("plot_cache", "SynAnnotation", function(x) x@plot_cache)
+
+setGeneric("projected_domains", function(x) standardGeneric("projected_domains"))
+setMethod("projected_domains", "SynIndividual", function(x) x@projected_domains)
 
 setGeneric("annotation_names", function(x) standardGeneric("annotation_names"))
 setMethod("annotation_names", "SynIndividual", function(x) names(x@annotations))
@@ -1202,3 +1223,54 @@ setReplaceMethod("plot_cache", "SynAnnotation", function(x, value) {
   validObject(x)
   x
 })
+
+setGeneric("projected_domains<-", function(x, value) {
+  standardGeneric("projected_domains<-")
+})
+setReplaceMethod("projected_domains", "SynIndividual", function(x, value) {
+  if (!is.list(value)) {
+    stop("`projected_domains<-` expects a list.", call. = FALSE)
+  }
+  bad_entries <- !vapply(
+    value,
+    function(tbl) is.data.frame(tbl) || methods::is(tbl, "DataFrame"),
+    logical(1)
+  )
+  if (any(bad_entries)) {
+    stop(
+      "`projected_domains<-` expects a list of data.frame-like tables.",
+      call. = FALSE
+    )
+  }
+  x@projected_domains <- lapply(value, as.data.frame)
+  validObject(x)
+  x
+})
+
+#' Store a projected protein-domain table on a SynIndividual
+#'
+#' @param x A `SynIndividual` object.
+#' @param projected A data frame returned by `project_domains_to_genome()`.
+#' @param name Name used to store the projected table.
+#'
+#' @return An updated `SynIndividual` object.
+#' @export
+store_projected_domains <- function(x, projected, name = "last_projection") {
+  if (!methods::is(x, "SynIndividual")) {
+    stop("`store_projected_domains()` expects a SynIndividual object.", call. = FALSE)
+  }
+  if (!(is.data.frame(projected) || methods::is(projected, "DataFrame"))) {
+    stop(
+      "`projected` must be a data.frame-like object.",
+      call. = FALSE
+    )
+  }
+  if (!is.character(name) || length(name) != 1L || is.na(name) || !nzchar(name)) {
+    stop("`name` must be a single non-empty character value.", call. = FALSE)
+  }
+
+  stored <- projected_domains(x)
+  stored[[name]] <- as.data.frame(projected)
+  projected_domains(x) <- stored
+  x
+}

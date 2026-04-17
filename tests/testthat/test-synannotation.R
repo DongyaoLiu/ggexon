@@ -249,6 +249,189 @@ test_that("add_interproscan_annotation attaches the shipped InterProScan layer",
   expect_identical(as.character(domain_hits$protein_id[[1L]]), "Sequence1")
 })
 
+test_that("rename_domain_annotation_ids rewrites the domain key column", {
+  domain_path <- tempfile(fileext = ".tsv")
+  writeLines(
+    c(
+      "protein_id\tdomain\tstart\tend",
+      "Sequence1\tPF0001\t1\t20",
+      "Sequence2\tPF0002\t5\t10"
+    ),
+    domain_path
+  )
+
+  ann <- SynProteinDomainAnnotation(
+    name = "interpro",
+    domain_file = domain_path,
+    keytype = "protein_id",
+    source_db = "InterPro"
+  )
+  ann <- rename_domain_annotation_ids(
+    ann,
+    mapping = c(Sequence1 = "txA"),
+    to = "transcript_id"
+  )
+
+  domain_hits <- query_domains(ann)
+  expect_identical(ann@keytype, "transcript_id")
+  expect_identical(as.character(domain_hits$transcript_id[[1L]]), "txA")
+  expect_true(is.na(domain_hits$transcript_id[[2L]]))
+})
+
+test_that("geom_motif projects renamed domain coordinates onto genomic tracks", {
+  genome_path <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
+  annotation_path <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+  patch_path <- system.file("extdata", "XZ1516.TA.gff", package = "ggexon")
+  interpro_path <- system.file("extdata", "InterProScan.tsv", package = "ggexon")
+
+  x <- SynIndividual(
+    genome_file = genome_path,
+    annotation_file = annotation_path
+  ) |>
+    load_annotation()
+  x <- patch_annotation_from_gff(
+    x,
+    patch_file = patch_path,
+    mode = "replace",
+    name = "ta-correction"
+  )
+  x <- add_interproscan_annotation(
+    x,
+    domain_file = interpro_path,
+    name = "interpro"
+  )
+  x <- rename_domain_annotation_ids(
+    x,
+    annotation = "interpro",
+    mapping = c(Sequence1 = "mRNAXZ1516_zina-1"),
+    from = "protein_id",
+    to = "transcript_id",
+    drop_unmapped = TRUE
+  )
+
+  motif_df <- syn_to_motif_df(
+    x,
+    annotation = "interpro",
+    chr = "V_RagTag",
+    subset = c(21574000, 21583000),
+    model = c("SMART", "PANTHER"),
+    y_offset = -1
+  )
+
+  expect_true(nrow(motif_df) > 0L)
+  expect_true(all(as.character(motif_df$transcripts) == "mRNAXZ1516_zina-1"))
+  expect_true("text" %in% names(motif_df))
+  expect_setequal(unique(as.character(motif_df$model)), c("SMART", "PANTHER"))
+  expect_identical(unique(as.character(motif_df$track)), syn_id(x))
+  expect_gte(min(motif_df$xmin), 21575003)
+  expect_lte(max(motif_df$xmax), 21582693)
+  model_y <- tapply(motif_df$ymin, motif_df$model, function(x) unique(x)[1L])
+  expect_gt(model_y[["SMART"]], model_y[["PANTHER"]])
+
+  plot_obj <- ggexon(x) +
+    geom_motif(
+      annotation = "interpro",
+      chr = "V_RagTag",
+      subset = c(21574000, 21583000),
+      model = c("SMART", "PANTHER"),
+      y_offset = -1
+    )
+  build <- ggplot2::ggplot_build(plot_obj)
+  motif_layer <- build$data[[1L]]
+
+  expect_true(nrow(motif_layer) > 0L)
+  expect_identical(unique(as.character(motif_layer$track)), syn_id(x))
+})
+
+test_that("project_domains_to_genome filters InterProScan models and motifs", {
+  genome_path <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
+  annotation_path <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+  patch_path <- system.file("extdata", "XZ1516.TA.gff", package = "ggexon")
+  interpro_path <- system.file("extdata", "InterProScan.tsv", package = "ggexon")
+
+  x <- SynIndividual(
+    genome_file = genome_path,
+    annotation_file = annotation_path
+  ) |>
+    load_annotation()
+  x <- patch_annotation_from_gff(
+    x,
+    patch_file = patch_path,
+    mode = "replace",
+    name = "ta-correction"
+  )
+  x <- add_interproscan_annotation(
+    x,
+    domain_file = interpro_path,
+    name = "interpro"
+  )
+  x <- rename_domain_annotation_ids(
+    x,
+    annotation = "interpro",
+    mapping = c(Sequence1 = "mRNAXZ1516_zina-1"),
+    from = "protein_id",
+    to = "transcript_id",
+    drop_unmapped = TRUE
+  )
+
+  projected <- project_domains_to_genome(
+    x,
+    annotation = "interpro",
+    model = "Gene3D",
+    motif = "Classic Zinc Finger",
+    chr = "V_RagTag",
+    start = 21574000,
+    end = 21583000
+  )
+
+  expect_true(nrow(projected) > 0L)
+  expect_true(all(as.character(projected$model) == "Gene3D"))
+  expect_true(all(as.character(projected$motif) == "Classic Zinc Finger"))
+})
+
+test_that("store_projected_domains keeps projected tables on SynIndividual", {
+  genome_path <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
+  annotation_path <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+
+  x <- SynIndividual(
+    genome_file = genome_path,
+    annotation_file = annotation_path
+  )
+
+  projected_tbl <- data.frame(
+    seqnames = "chr1",
+    xmin = 1L,
+    xmax = 10L,
+    strand = "+",
+    transcripts = "tx1",
+    model = "SMART",
+    motif = "mock motif",
+    domain_id = "IPR000001",
+    text = "mock motif",
+    stringsAsFactors = FALSE
+  )
+
+  x <- store_projected_domains(x, projected_tbl, name = "mock_projection")
+
+  expect_true("mock_projection" %in% names(projected_domains(x)))
+  expect_identical(
+    as.character(projected_domains(x)[["mock_projection"]]$motif[[1L]]),
+    "mock motif"
+  )
+})
+
 test_that("set_gene_labels stores plot labels without replacing stable IDs", {
   genome_path <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
   annotation_path <- system.file(
@@ -368,6 +551,51 @@ test_that("patch_annotation replaces a gene model and clears feature caches", {
   expect_length(list_patches(x3), 0L)
   expect_null(nucleotide_seq(get_annotation(x3)))
   expect_null(protein_seq(get_annotation(x3)))
+})
+
+test_that("replace-mode patches remove all old features overlapping the patch range", {
+  base_gr <- GenomicRanges::GRanges(
+    seqnames = c("chr1", "chr1", "chr1"),
+    ranges = IRanges::IRanges(start = c(100L, 120L, 180L), end = c(160L, 140L, 260L)),
+    strand = c("+", "+", "-")
+  )
+  S4Vectors::mcols(base_gr) <- S4Vectors::DataFrame(
+    type = c("gene", "exon", "gene"),
+    ID = c("old_gene", "old_exon", "old_other"),
+    Parent = c(NA_character_, "old_gene", NA_character_),
+    gene_id = c("old_gene", "old_gene", "old_other"),
+    gene_name = c("old_gene", "old_gene", "old_other")
+  )
+
+  ann <- SynFeatureAnnotation(name = "mock", annotation_file = "mock.gff")
+  annotation_data(ann) <- base_gr
+
+  patch_gr <- GenomicRanges::GRanges(
+    seqnames = "chr1",
+    ranges = IRanges::IRanges(start = 150L, end = 220L),
+    strand = "+"
+  )
+  S4Vectors::mcols(patch_gr) <- S4Vectors::DataFrame(
+    type = "gene",
+    ID = "patched_gene",
+    Parent = NA_character_,
+    gene_id = "patched_gene",
+    gene_name = "patched_gene"
+  )
+
+  patched <- patch_annotation(
+    ann,
+    patch = patch_gr,
+    target_ids = "old_gene",
+    mode = "replace",
+    name = "overlap-replace"
+  )
+  patched_ids <- as.character(S4Vectors::mcols(annotation_data(patched))$ID)
+
+  expect_false("old_gene" %in% patched_ids)
+  expect_false("old_exon" %in% patched_ids)
+  expect_false("old_other" %in% patched_ids)
+  expect_true("patched_gene" %in% patched_ids)
 })
 
 test_that("read_patch_gff and patch_annotation_from_gff use the real patch file", {

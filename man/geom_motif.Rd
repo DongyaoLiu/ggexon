@@ -1,0 +1,71 @@
+% Please edit documentation in R/geom-motif.R
+\name{geom_motif}
+\alias{geom_motif}
+\title{Plot protein-domain motifs}
+\usage{
+geom_motif(
+  mapping = NULL,
+  data = NULL,
+  stat = "identity",
+  position = "identity",
+  ...,
+  na.rm = FALSE,
+  show.legend = NA,
+  exon_height = NULL,
+  y_scale = NULL,
+  x_translation = NULL,
+  species = NULL,
+  chr = NULL,
+  subset = NULL,
+  annotation = NULL,
+  ids = NULL,
+  domains = NULL,
+  model = "all",
+  motif = NULL,
+  y_offset = NULL,
+  inherit.aes = TRUE
+)
+}
+\arguments{
+\item{mapping, data, stat, position, ..., na.rm, show.legend, inherit.aes}{Standard
+ggplot2 layer arguments.}
+
+\item{exon_height}{Height of the motif blocks.}
+
+\item{y_scale}{Vertical spacing between protein tracks.}
+
+\item{x_translation}{Optional x-axis offset.}
+
+\item{species}{Optional species/individual selector when plotting from a
+\code{SynSpecies} object.}
+
+\item{chr}{Optional chromosome name used to define the genomic projection
+window.}
+
+\item{subset}{Optional genomic window used to limit the projected motifs.}
+
+\item{annotation}{Optional annotation-layer name. Defaults to the first
+attached \code{SynProteinDomainAnnotation}.}
+
+\item{ids}{Optional identifiers to match against the protein-domain annotation
+key column.}
+
+\item{domains}{Optional domain names/accessions to filter.}
+
+\item{model}{InterProScan analysis model(s) to display. Accepts a single
+string, a character vector, or \code{"all"}. When multiple models are supplied,
+their order is used from top to bottom.}
+
+\item{motif}{Optional motif name(s) used to filter the InterProScan table.}
+
+\item{y_offset}{Vertical offset applied to the motif band so protein domains
+can be separated from exon rectangles on the same genomic track.}
+}
+\value{
+A ggplot layer.
+}
+\description{
+When the plot data is a \code{SynIndividual} or \code{SynSpecies}, this layer resolves
+an attached \code{SynProteinDomainAnnotation} and draws domain intervals as motif
+blocks along protein-coordinate tracks.
+}

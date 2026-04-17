@@ -44,5 +44,7 @@ genome.}
 \item{\code{metadata}}{User or import metadata describing the individual.}
 
 \item{\code{plot_cache}}{Derived plotting tables cached for reuse.}
-}}
 
+\item{\code{projected_domains}}{Named list of projected protein-domain tables
+stored for inspection.}
+}}

@@ -78,6 +78,10 @@ default_syn_aesthetics <- function(data, layer) {
     cols <- c("xmin", "xmax", "ymin", "transcripts", "strand", "track", "label", "group")
     return(intersect(cols, names(data)))
   }
+  if (identical(layer$geom, GeomMotif)) {
+    cols <- c("xmin", "xmax", "ymin", "transcripts", "strand", "track", "text", "group")
+    return(intersect(cols, names(data)))
+  }
   if (identical(layer$geom, GeomNucLink)) {
     cols <- c(
       "tspecies", "tchr", "tstart", "tend", "strand",
@@ -139,7 +143,8 @@ find_syn_plot_data <- function(layers, plot_data) {
 collect_syn_annotation_requests <- function(layer, syn_data, plot_data) {
   if (!(identical(layer$geom, GeomExon) ||
         identical(layer$geom, GeomGene) ||
-        identical(layer$geom, GeomGeneLabel))) {
+        identical(layer$geom, GeomGeneLabel) ||
+        identical(layer$geom, GeomMotif))) {
     return(list())
   }
   if (!is_syn_layer_input(layer, plot_data)) {
@@ -474,6 +479,23 @@ resolve_syn_layer_data <- function(x, layer) {
       )
     )
   }
+  if (identical(layer$geom, GeomMotif)) {
+    return(
+      syn_to_motif_df(
+        x = x,
+        species = params$species,
+        chr = params$chr,
+        subset = params$subset,
+        annotation = params$annotation,
+        ids = params$ids,
+        domains = params$domains,
+        model = params$model %||% "all",
+        motif = params$motif,
+        y_offset = params$y_offset %||% 0,
+        context = context
+      )
+    )
+  }
   if (identical(layer$geom, GeomNucLink)) {
     return(
       syn_to_nuclink_df(
@@ -491,6 +513,584 @@ resolve_syn_layer_data <- function(x, layer) {
   cli::cli_abort(
     "Syn object input is not yet implemented for geom {.val {geom_name}}."
   )
+}
+
+resolve_syn_domain_annotation <- function(x, annotation = NULL, allow_missing = FALSE) {
+  if (!methods::is(x, "SynIndividual")) {
+    cli::cli_abort("Protein motif plotting requires a {.cls SynIndividual} object.")
+  }
+
+  if (!is.null(annotation)) {
+    ann_names <- annotation_names(x)
+    if (!annotation %in% ann_names) {
+      if (allow_missing) {
+        return(NULL)
+      }
+      cli::cli_abort("Unknown annotation layer {.val {annotation}}.")
+    }
+    ann <- get_annotation(x, annotation)
+    if (!methods::is(ann, "SynProteinDomainAnnotation")) {
+      if (allow_missing) {
+        return(NULL)
+      }
+      cli::cli_abort(
+        "Annotation layer {.val {annotation}} is not a {.cls SynProteinDomainAnnotation}."
+      )
+    }
+    return(ann)
+  }
+
+  ann_names <- annotation_names(x)
+  for (ann_name in ann_names) {
+    ann <- get_annotation(x, ann_name)
+    if (methods::is(ann, "SynProteinDomainAnnotation")) {
+      return(ann)
+    }
+  }
+
+  if (allow_missing) {
+    return(NULL)
+  }
+
+  cli::cli_abort(
+    "No {.cls SynProteinDomainAnnotation} layer is attached to this {.cls SynIndividual}."
+  )
+}
+
+syn_to_motif_df <- function(x,
+                            species = NULL,
+                            chr = NULL,
+                            subset = NULL,
+                            annotation = NULL,
+                            ids = NULL,
+                            domains = NULL,
+                            model = "all",
+                            motif = NULL,
+                            y_offset = 0,
+                            context = NULL) {
+  species <- resolve_context_species_params(x, species, context)
+
+  if (methods::is(x, "SynSpecies") && length(species %||% character()) > 1L) {
+    species <- unique(as.character(species))
+    return(dplyr::bind_rows(lapply(species, function(species_name) {
+      syn_to_motif_df(
+        x = x,
+        species = species_name,
+        chr = chr,
+        subset = subset,
+        annotation = annotation,
+        ids = ids,
+        domains = domains,
+        model = model,
+        motif = motif,
+        y_offset = y_offset,
+        context = context
+      )
+    })))
+  }
+
+  individual <- resolve_syn_individual(x, species = species)
+  ann <- resolve_syn_domain_annotation(
+    individual,
+    annotation = annotation,
+    allow_missing = TRUE
+  )
+  if (is.null(ann)) {
+    return(data.frame())
+  }
+
+  window <- normalize_syn_window_request(
+    x = x,
+    species = syn_id(individual),
+    chr = chr,
+    subset = subset,
+    allow_missing_subset = is.null(ids),
+    context = context,
+    geom = "geom_motif"
+  )
+
+  projected_df <- project_domains_to_genome(
+    x = individual,
+    annotation = annotation_name(ann),
+    ids = ids,
+    domains = domains,
+    model = model,
+    motif = motif,
+    chr = window$chr,
+    start = window$start,
+    end = window$end
+  )
+
+  if (nrow(projected_df) == 0L) {
+    return(data.frame())
+  }
+
+  model_levels <- .resolve_projected_model_levels(projected_df$model, model = model)
+
+  order_df <- data.frame(
+    transcripts = projected_df$transcripts,
+    model = projected_df$model,
+    xmin = projected_df$xmin,
+    stringsAsFactors = FALSE
+  )
+  order_df <- stats::aggregate(xmin ~ transcripts + model, data = order_df, FUN = min)
+  transcript_order <- stats::aggregate(xmin ~ transcripts, data = order_df, FUN = min)
+  transcript_order <- transcript_order[
+    order(transcript_order$xmin, transcript_order$transcripts),
+    ,
+    drop = FALSE
+  ]
+  transcript_order$transcript_rank <- seq_len(nrow(transcript_order))
+  order_df <- merge(
+    order_df,
+    transcript_order[, c("transcripts", "transcript_rank")],
+    by = "transcripts",
+    all.x = TRUE,
+    sort = FALSE
+  )
+  order_df$model_rank <- match(order_df$model, model_levels)
+  order_df$stack_id <- paste(order_df$transcripts, order_df$model, sep = "::")
+  order_df <- order_df[
+    order(order_df$transcript_rank, order_df$model_rank, order_df$model, order_df$xmin),
+    ,
+    drop = FALSE
+  ]
+  order_df$ymin <- rev(seq_len(nrow(order_df))) * 2 + y_offset
+  order_df$group <- seq_len(nrow(order_df))
+
+  out <- data.frame(
+    xmin = projected_df$xmin,
+    xmax = projected_df$xmax,
+    strand = projected_df$strand,
+    transcripts = projected_df$transcripts,
+    track = syn_id(individual),
+    model = projected_df$model,
+    motif = projected_df$motif,
+    domain_id = projected_df$domain_id,
+    text = projected_df$text,
+    stack_id = paste(projected_df$transcripts, projected_df$model, sep = "::"),
+    stringsAsFactors = FALSE
+  )
+
+  out <- merge(
+    out,
+    order_df[, c("stack_id", "ymin", "group")],
+    by = "stack_id",
+    all.x = TRUE,
+    sort = FALSE
+  )
+  out <- out[order(match(out$stack_id, order_df$stack_id), out$xmin, out$xmax), , drop = FALSE]
+  out$transcripts <- as.character(out$transcripts)
+  out$PANEL <- 1L
+  out$stack_id <- NULL
+  rownames(out) <- NULL
+  out
+}
+
+#' Project protein-domain coordinates onto genomic coordinates
+#'
+#' Uses transcript CDS structure from a `SynIndividual` to convert
+#' protein-domain intervals into one or more genomic intervals.
+#'
+#' @param x A `SynIndividual` object.
+#' @param annotation Optional name of an attached `SynProteinDomainAnnotation`
+#'   layer. Defaults to the first available protein-domain annotation.
+#' @param ids Optional explicit identifier vector matched against the domain
+#'   annotation key column.
+#' @param domains Optional domain names/accessions to filter.
+#' @param model InterProScan analysis model(s) to keep. Accepts a single
+#'   string, a character vector, or `"all"`.
+#' @param motif Optional motif name(s) used to filter the InterProScan table.
+#' @param genes Optional gene identifiers used to limit the projected proteins.
+#' @param transcripts Optional transcript identifiers used to limit the
+#'   projected proteins.
+#' @param chr Optional chromosome name used to define the genomic window.
+#' @param start,end Optional genomic window bounds.
+#'
+#' @return A data frame with projected genomic motif segments.
+#' @export
+project_domains_to_genome <- function(x,
+                                      annotation = NULL,
+                                      ids = NULL,
+                                      domains = NULL,
+                                      model = "all",
+                                      motif = NULL,
+                                      genes = NULL,
+                                      transcripts = NULL,
+                                      chr = NULL,
+                                      start = NULL,
+                                      end = NULL) {
+  if (!methods::is(x, "SynIndividual")) {
+    stop("`project_domains_to_genome()` expects a SynIndividual object.", call. = FALSE)
+  }
+
+  if (!is.null(chr)) {
+    chr <- resolve_syn_seqname(x, chr)
+  }
+
+  ann <- resolve_syn_domain_annotation(x, annotation = annotation)
+  
+
+  domain_df <- query_domains(ann, ids = ids, domains = domains)
+
+  domain_df <- .filter_projectable_domains(domain_df, model = model, motif = motif)
+  if (nrow(domain_df) == 0L) {
+    return(data.frame())
+  }
+
+  key_col <- ann@keytype
+  if (!key_col %in% colnames(domain_df)) {
+    stop(
+      "The protein-domain table does not contain the key column: ",
+      key_col,
+      call. = FALSE
+    )
+  }
+  if (!all(c("start", "end") %in% colnames(domain_df))) {
+    stop(
+      "Protein-domain projection requires `start` and `end` columns.",
+      call. = FALSE
+    )
+  }
+
+  # if without specify which [id], guess it from the table 
+  if (is.null(ids)) {
+    seed_gr <- query_features(
+      x,
+      genes = genes,
+      transcripts = transcripts,
+      chr = chr,
+      start = start,
+      end = end,
+      feature_type = NULL,
+      all = FALSE
+    )
+    if (length(seed_gr) == 0L) {
+      return(data.frame())
+    }
+    candidate_df <- .domain_projection_candidates(seed_gr)
+    key_values <- unique(candidate_df$match_key)
+    key_values <- key_values[!is.na(key_values) & nzchar(key_values)]
+    domain_df <- domain_df[
+      as.character(domain_df[[key_col]]) %in% key_values,
+      ,
+      drop = FALSE
+    ]
+    if (nrow(domain_df) == 0L) {
+      return(data.frame())
+    }
+  }
+
+  if (!is.null(ids)) {
+    target_cds <- query_features(
+      x,
+      genes = genes,
+      transcripts = transcripts %||% ids,
+      chr = chr,
+      start = start,
+      end = end,
+      feature_type = "CDS",
+      all = is.null(genes) && is.null(transcripts) && is.null(chr)
+    )
+  } else {
+    seed_gr <- query_features(
+      x,
+      genes = genes,
+      transcripts = transcripts,
+      chr = chr,
+      start = start,
+      end = end,
+      feature_type = NULL,
+      all = FALSE
+    )
+    transcript_ids <- unique(.annotation_transcript_ids(seed_gr))
+    transcript_ids <- transcript_ids[!is.na(transcript_ids) & nzchar(transcript_ids)]
+    if (length(transcript_ids) == 0L) {
+      return(data.frame())
+    }
+    target_cds <- query_features(
+      x,
+      transcripts = transcript_ids,
+      feature_type = "CDS"
+    )
+  }
+
+  if (length(target_cds) == 0L) {
+    return(data.frame())
+  }
+
+  text_col <- if ("domain_name" %in% colnames(domain_df)) {
+    "domain_name"
+  } else {
+    .pick_domain_column(domain_df)
+  }
+
+  transcript_meta <- .domain_projection_transcript_meta(target_cds)
+  print(transcript_meta)
+  out <- lapply(seq_len(nrow(domain_df)), function(i) {
+    .project_one_domain_row(
+      domain_row = domain_df[i, , drop = FALSE],
+      key_col = key_col,
+      text_col = text_col,
+      transcript_meta = transcript_meta,
+      cds_gr = target_cds
+    )
+  })
+  out <- dplyr::bind_rows(out)
+
+  if (!is.null(chr)) {
+    chr <- resolve_syn_seqname(x, chr)
+    out <- out[out$seqnames == chr, , drop = FALSE]
+  }
+  if (!is.null(start)) {
+    out <- out[out$xmax >= start, , drop = FALSE]
+  }
+  if (!is.null(end)) {
+    out <- out[out$xmin <= end, , drop = FALSE]
+  }
+
+  rownames(out) <- NULL
+  out
+}
+
+.filter_projectable_domains <- function(domain_df,
+                                        model = "all",
+                                        motif = NULL) {
+  if (!(is.data.frame(domain_df) || methods::is(domain_df, "DataFrame")) ||
+      nrow(domain_df) == 0L) {
+    return(domain_df)
+  }
+
+  model_filter <- .normalize_character_filter(model, arg = "model", allow_all = TRUE)
+  if (!is.null(model_filter)) {
+    if (!"analysis" %in% colnames(domain_df)) {
+      stop("The domain table does not contain an `analysis` column.", call. = FALSE)
+    }
+    available_models <- unique(as.character(domain_df$analysis))
+    missing_models <- setdiff(model_filter, available_models)
+    if (length(missing_models) > 0L) {
+      stop(
+        "Unknown InterProScan model(s): ",
+        paste(missing_models, collapse = ", "),
+        call. = FALSE
+      )
+    }
+    domain_df <- domain_df[
+      as.character(domain_df$analysis) %in% model_filter,
+      ,
+      drop = FALSE
+    ]
+  }
+
+  motif_filter <- .normalize_character_filter(motif, arg = "motif", allow_all = FALSE)
+  if (is.null(motif_filter)) {
+    return(domain_df)
+  }
+
+  candidate_cols <- intersect(
+    c(
+      "domain_name",
+      "domain",
+      "interpro_description",
+      "signature_description",
+      "interpro_accession",
+      "signature_accession"
+    ),
+    colnames(domain_df)
+  )
+  if (length(candidate_cols) == 0L) {
+    stop("The domain table does not contain motif-identifying columns.", call. = FALSE)
+  }
+
+  motif_filter_lower <- to_lower_ascii(motif_filter)
+  keep <- Reduce(`|`, lapply(candidate_cols, function(col) {
+    values <- to_lower_ascii(as.character(domain_df[[col]]))
+    values %in% motif_filter_lower
+  }))
+  domain_df[keep, , drop = FALSE]
+}
+
+.normalize_character_filter <- function(x, arg, allow_all = FALSE) {
+  if (is.null(x)) {
+    return(NULL)
+  }
+  if (is.list(x)) {
+    x <- unlist(x, recursive = TRUE, use.names = FALSE)
+  }
+  x <- as.character(x)
+  x <- x[!is.na(x) & nzchar(x)]
+  if (length(x) == 0L) {
+    return(NULL)
+  }
+  if (allow_all && length(x) == 1L && identical(to_lower_ascii(x), "all")) {
+    return(NULL)
+  }
+  if (allow_all && any(to_lower_ascii(x) == "all")) {
+    stop(
+      sprintf("`%s` cannot mix \"all\" with explicit values.", arg),
+      call. = FALSE
+    )
+  }
+  unique(x)
+}
+
+.resolve_projected_model_levels <- function(model_values, model = "all") {
+  explicit_models <- .normalize_character_filter(model, arg = "model", allow_all = TRUE)
+  if (!is.null(explicit_models)) {
+    return(explicit_models)
+  }
+  unique(as.character(model_values))
+}
+
+.domain_projection_candidates <- function(gr) {
+  meta <- S4Vectors::mcols(gr)
+  data.frame(
+    transcript_id = .coalesce_character_cols(meta, c("transcript_id", "ID", "Parent")),
+    gene_id = .coalesce_character_cols(meta, c("gene_id", "ID", "Name")),
+    gene_name = .coalesce_character_cols(meta, c("plot_label", "gene_name", "Name", "gene_id")),
+    stringsAsFactors = FALSE
+  ) |>
+    tidyr::pivot_longer(
+      cols = c("transcript_id", "gene_id", "gene_name"),
+      names_to = "match_type",
+      values_to = "match_key"
+    ) |>
+    dplyr::filter(!is.na(.data$match_key) & nzchar(.data$match_key)) |>
+    dplyr::distinct()
+}
+
+.domain_projection_transcript_meta <- function(cds_gr) {
+  meta <- S4Vectors::mcols(cds_gr)
+  data.frame(
+    transcript_id = .coalesce_character_cols(meta, c("transcript_id", "Parent", "ID")),
+    gene_id = .coalesce_character_cols(meta, c("gene_id", "ID")),
+    gene_name = .coalesce_character_cols(meta, c("plot_label", "gene_name", "Name", "gene_id")),
+    stringsAsFactors = FALSE
+  ) |>
+    dplyr::filter(!is.na(.data$transcript_id) & nzchar(.data$transcript_id)) |>
+    dplyr::distinct()
+}
+
+.project_one_domain_row <- function(domain_row,
+                                    key_col,
+                                    text_col,
+                                    transcript_meta,
+                                    cds_gr) {
+  key_value <- as.character(domain_row[[key_col]][[1L]])
+  if (is.na(key_value) || !nzchar(key_value)) {
+    return(data.frame())
+  }
+
+  tx_hits <- transcript_meta$transcript_id[
+    transcript_meta$transcript_id == key_value |
+      transcript_meta$gene_id == key_value |
+      transcript_meta$gene_name == key_value
+  ]
+  tx_hits <- unique(tx_hits[!is.na(tx_hits) & nzchar(tx_hits)])
+  if (length(tx_hits) == 0L) {
+    return(data.frame())
+  }
+
+  aa_start <- as.integer(domain_row$start[[1L]])
+  aa_end <- as.integer(domain_row$end[[1L]])
+  if (is.na(aa_start) || is.na(aa_end) || aa_start > aa_end) {
+    return(data.frame())
+  }
+
+  domain_label <- as.character(domain_row[[text_col]][[1L]])
+  domain_id <- if ("domain" %in% colnames(domain_row)) {
+    as.character(domain_row$domain[[1L]])
+  } else {
+    domain_label
+  }
+  model_name <- if ("analysis" %in% colnames(domain_row)) {
+    as.character(domain_row$analysis[[1L]])
+  } else {
+    "unknown"
+  }
+
+  dplyr::bind_rows(lapply(tx_hits, function(tx_id) {
+    tx_gr <- cds_gr[.coalesce_character_cols(
+      S4Vectors::mcols(cds_gr),
+      c("transcript_id", "Parent", "ID")
+    ) == tx_id]
+    .project_domain_to_transcript(
+      tx_gr = tx_gr,
+      aa_start = aa_start,
+      aa_end = aa_end,
+      transcript_id = tx_id,
+      text = domain_label %||% domain_id,
+      motif = domain_label %||% domain_id,
+      domain_id = domain_id,
+      model = model_name
+    )
+  }))
+}
+
+.project_domain_to_transcript <- function(tx_gr,
+                                          aa_start,
+                                          aa_end,
+                                          transcript_id,
+                                          text,
+                                          motif,
+                                          domain_id,
+                                          model) {
+  if (length(tx_gr) == 0L) {
+    return(data.frame())
+  }
+
+  strand_value <- unique(as.character(BiocGenerics::strand(tx_gr)))
+  strand_value <- strand_value[!is.na(strand_value)]
+  if (length(strand_value) != 1L) {
+    return(data.frame())
+  }
+  strand_value <- strand_value[[1L]]
+
+  if (strand_value == "-") {
+    order_idx <- order(IRanges::start(tx_gr), decreasing = TRUE)
+  } else {
+    order_idx <- order(IRanges::start(tx_gr))
+  }
+  tx_gr <- tx_gr[order_idx]
+
+  seg_width <- IRanges::width(tx_gr)
+  tx_nt_start <- cumsum(c(1L, head(seg_width, -1L)))
+  tx_nt_end <- cumsum(seg_width)
+  domain_nt_start <- (aa_start - 1L) * 3L + 1L
+  domain_nt_end <- aa_end * 3L
+
+  overlaps <- pmax(tx_nt_start, domain_nt_start) <= pmin(tx_nt_end, domain_nt_end)
+  if (!any(overlaps)) {
+    return(data.frame())
+  }
+
+  out <- lapply(which(overlaps), function(i) {
+    overlap_start <- max(tx_nt_start[[i]], domain_nt_start)
+    overlap_end <- min(tx_nt_end[[i]], domain_nt_end)
+
+    if (strand_value == "-") {
+      genome_start <- IRanges::end(tx_gr)[[i]] - (overlap_end - tx_nt_start[[i]])
+      genome_end <- IRanges::end(tx_gr)[[i]] - (overlap_start - tx_nt_start[[i]])
+    } else {
+      genome_start <- IRanges::start(tx_gr)[[i]] + (overlap_start - tx_nt_start[[i]])
+      genome_end <- IRanges::start(tx_gr)[[i]] + (overlap_end - tx_nt_start[[i]])
+    }
+
+    data.frame(
+      seqnames = as.character(GenomeInfoDb::seqnames(tx_gr))[i],
+      xmin = min(genome_start, genome_end),
+      xmax = max(genome_start, genome_end),
+      strand = strand_value,
+      transcripts = transcript_id,
+      model = model,
+      motif = motif,
+      domain_id = domain_id,
+      text = text,
+      stringsAsFactors = FALSE
+    )
+  })
+
+  dplyr::bind_rows(out)
 }
 
 is_comparative_syn_request <- function(species = NULL, reference = NULL) {
