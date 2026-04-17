@@ -28,3 +28,4 @@ patch.}
 
 \item{\code{metadata}}{Optional patch metadata.}
 }}
+
