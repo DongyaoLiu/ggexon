@@ -1,3 +1,51 @@
+#' Facet genomic tracks and link panels
+#'
+#' `facet_genomics()` is ggexon's Syn-aware faceting interface. It behaves like
+#' a wrap-style facet for ordinary data, but it can also arrange comparative
+#' genomic panels for `SynSpecies` plots, including annotation panels and
+#' intermediate link panels used by `geom_nuclink()`.
+#'
+#' For `SynSpecies` inputs, the facet chooses among three layout sources:
+#'
+#' - an explicit layout override attached during build
+#' - a stored [`SynLayout`] on the `SynSpecies` object
+#' - a newly derived chain layout computed from the annotation and link layers
+#'
+#' When link panels are present, `facet_genomics()` also annotates the final
+#' panel table with source-panel metadata (`t_panel`, `q_panel`) and vertical
+#' link anchors so that `geom_nuclink()` can borrow x ranges from the correct
+#' annotation panels while drawing inside the link panel.
+#'
+#' @param facets Faceting variables, usually `ggplot2::vars(track)` for Syn
+#'   layouts.
+#' @param nrow,ncol Number of rows and columns in the wrapped layout.
+#' @param scales One of `"fixed"`, `"free_x"`, `"free_y"`, or `"free"`.
+#' @param shrink Passed through to the facet.
+#' @param labeller A labeller specification.
+#' @param as.table Logical; whether panels are laid out like a table.
+#' @param switch Deprecated ggplot2 argument.
+#' @param drop Logical; drop unused facet levels?
+#' @param dir Wrapping direction. Single-letter values are normalized using
+#'   `as.table`.
+#' @param strip.position Position of facet strips.
+#' @param axes Which axes to draw.
+#' @param axis.labels Which axis labels to draw.
+#'
+#' @return A `FacetGenomics` ggproto object.
+#'
+#' @section SynSpecies behavior:
+#' In Syn-aware builds, `facet_genomics()` is responsible for deciding the panel
+#' structure used by `Layout2`. The returned panel table may include:
+#'
+#' - annotation panels for each species track
+#' - link panels inserted between paired species tracks
+#' - `panel_type`, `tspecies`, `qspecies`, `t_panel`, and `q_panel` metadata
+#'   used later by `geom_nuclink()`
+#'
+#' If no Syn-specific layout is available, the facet falls back to ordinary
+#' wrap-style panel generation.
+#'
+#' @seealso [SynLayout]
 #' @export
 facet_genomics <- function(facets, nrow = NULL, ncol = NULL, scales = "fixed",
                        shrink = TRUE, labeller = "label_value", as.table = TRUE,
@@ -71,10 +119,41 @@ facet_genomics <- function(facets, nrow = NULL, ncol = NULL, scales = "fixed",
   )
 }
 
+#' ggproto backend for `facet_genomics()`
+#'
+#' `FacetGenomics` extends ggplot2's `FacetWrap` with Syn-aware layout logic.
+#' The main custom responsibilities are:
+#'
+#' - deciding whether to use a stored `SynLayout`, derive a new comparative
+#'   chain layout, or fall back to standard wrap-style faceting
+#' - reordering link panels so they sit between the relevant annotation panels
+#' - annotating link panels with source panel ids (`t_panel`, `q_panel`)
+#' - assigning vertical anchor directions (`target_anchor_y`,
+#'   `query_anchor_y`) for link layers
+#'
+#' These panel-level decisions are consumed later by `Layout2` and
+#' `geom_nuclink()`.
+#'
+#' @section Key methods:
+#' \describe{
+#'   \item{`compute_layout()`}{Chooses the panel table. For `SynSpecies`
+#'   data it prefers an explicit layout override, then a stored `SynLayout`
+#'   when link layers are present, then a derived chain layout, and finally a
+#'   standard wrap layout.}
+#'   \item{`compute_alignment_layout()`}{Reorders link panels relative to their
+#'   neighboring annotation panels and annotates the resulting layout with
+#'   source panel ids.}
+#'   \item{`map_link_direction()`}{Adds vertical link anchor metadata to link
+#'   layer data based on whether the target species sits above or below the link
+#'   panel in the resolved layout.}
+#' }
+#'
+#' @seealso [SynLayout]
 #' @export
 FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
 
-
+  # Custom helper used by ggexon to classify layers as annotation vs link-like
+  # from their columns before a Syn-aware panel layout is assembled.
     compute_layer_type = function(data, params) {
     layer_type <- list(lapply(data, function(df) {
 
@@ -102,11 +181,15 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
 
 
 
+  # Override the standard facet layout selection so SynSpecies plots can reuse
+  # a stored SynLayout or derive a comparative chain layout with link panels.
   compute_layout = function(self, data, params) {
     vars <- params$facets
 
     if (methods::is(params$plot_data, "SynSpecies")) {
       if (!is.null(params$layout_override)) {
+        # Highest priority: use an explicit layout override attached during
+        # build, e.g. from species_layout(sp) or a layer-provided override.
         return(
           syn_layout_panels(
             .finalize_synspecies_layout_scales(
@@ -118,6 +201,8 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
       }
 
       if (isTRUE(params$has_link_layers)) {
+        # If link layers are present, prefer the stored Syn layout so
+        # annotation panels and link panels stay in the intended chain order.
         stored_layout <- species_layout(params$plot_data)
         if (!is.null(stored_layout)) {
           return(
@@ -131,6 +216,8 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
         }
       }
 
+      # Otherwise derive a SynSpecies layout from the layers participating in
+      # this plot (annotation species and requested link pairs).
       plot_layout <- synspecies_chain_layout(
         x = params$plot_data,
         vars = vars,
@@ -151,6 +238,9 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
     .compute_standard_genomics_layout(data, params, self)
   },
 
+  # ggexon-specific post-processing step: reorder link panels so they sit
+  # between the relevant annotation panels and annotate each link row with the
+  # source annotation panels it should borrow x ranges from.
   compute_alignment_layout = function(self, data, layout){
 
     # compuate link data panel number
@@ -164,7 +254,8 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
     # PANEL ROW COL track SCALE_X SCALE_Y tspecies qspecies
     layout2 = left_join(layout, species_aln_list, join_by(track == track))
 
-    # sort the order in each column so link panels sit between their species panels
+    # Sort each column so link panels sit between the annotation panels they
+    # connect, rather than where wrap-layout ordering happened to place them.
     split_by_col = split(layout2, layout2$COL)
 
     split_by_col = lapply(split_by_col, function(df){
@@ -222,6 +313,9 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
 
   },
 
+  # Assign top/bottom anchors inside each link panel based on the resolved
+  # panel order, so geom_nuclink() knows which species should attach to the
+  # upper vs lower edge of the link panel.
   map_link_direction = function(self, data, layout){
 
     link_layout = layout[stringr::str_detect(layout$track, "link"), ]

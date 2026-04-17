@@ -1,15 +1,78 @@
+#' Create the ggexon layout runtime
+#'
+#' `create_layout2()` builds the `Layout2` ggproto object used by
+#' `ggexon_build()`. This runtime object sits between layers, facets, and
+#' coordinates during plot build and is responsible for turning the facet's
+#' panel table into panel-aware layer data.
+#'
+#' In ggexon, `Layout2` extends the standard ggplot2 layout pipeline with Syn-
+#' specific behavior:
+#'
+#' - `SynSpecies` / `SynIndividual` plot data can be carried into facet setup
+#'   without being treated as an ordinary data frame.
+#' - a stored `SynLayout` can be supplied as an override and reused during build.
+#' - link layers can trigger genomic panel reordering and panel metadata such as
+#'   `t_panel` / `q_panel`.
+#' - panel metadata is joined back onto layer data so geoms such as
+#'   `geom_nuclink()` can transform each side of a link against the correct
+#'   annotation panel.
+#'
+#' @param facet A facet ggproto object, usually `FacetGenomics` or a standard
+#'   ggplot2 facet.
+#' @param coord A coordinate ggproto object.
+#' @param layout Optional layout ggproto subclass. Defaults to `Layout2`.
+#'
+#' @return A ggproto layout object used internally by `ggexon_build()`.
+#' @keywords internal
 create_layout2 <- function(facet, coord, layout = NULL) {
    layout <- layout %||% Layout2
    ggplot2:::check_inherits(layout, "Layout2")
    ggproto(NULL, layout, facet = facet, coord = coord)
 }
 
+#' ggexon layout runtime with Syn-aware panel setup
+#'
+#' `Layout2` is ggexon's custom layout ggproto. It inherits from ggplot2's
+#' `Layout` and overrides the parts of the build pipeline where Syn-aware panel
+#' structure and link metadata need to be introduced.
+#'
+#' Compared with the upstream layout, `Layout2` adds two main responsibilities:
+#'
+#' 1. `setup()` carries Syn plot data and optional stored `SynLayout` metadata
+#'    into facet setup, lets `facet_genomics()` generate or reuse genomic
+#'    panel layouts, and joins panel-level metadata such as `t_panel` and
+#'    `q_panel` back onto layer data.
+#' 2. `map_position()` maps x/y aesthetics panel-by-panel using the trained
+#'    scales from the resolved layout while preserving the extra panel metadata
+#'    introduced during setup.
+#'
+#' This class is what makes stored `SynLayout` objects, link panels, and
+#' cross-panel coordinate borrowing work inside the normal ggplot2 build flow.
+#'
+#' @section Build flow:
+#' The high-level flow is:
+#'
+#' - `ggexon_build()` creates `Layout2` with `create_layout2()`.
+#' - `Layout2$setup()` asks the active facet for the panel table.
+#' - `facet_genomics()` may return a stored `SynLayout`, derive a new
+#'   chain layout, or fall back to a standard faceting layout.
+#' - if link panels are present, link-direction metadata is added and source
+#'   panel ids are propagated to layer data.
+#' - `Layout2$map_position()` maps each layer's x/y aesthetics against the
+#'   `SCALE_X` / `SCALE_Y` assignments in the final panel table.
+#'
+#' @seealso [SynLayout]
 #' @export
 Layout2 <- ggproto("Layout2", Layout,
+  # Override ggplot2's Layout$setup() to carry Syn plot objects, stored
+  # SynLayout overrides, and link-panel metadata through the facet pipeline.
   setup = function(self, data, plot_data = data_frame0(), plot_env = emptyenv()) {
     plot_data_raw <- plot_data
     layout_override <- NULL
     if (methods::is(plot_data, "SynSpecies") || methods::is(plot_data, "SynIndividual")) {
+      # The original Syn object is still passed to the facet via
+      # facet_params$plot_data, but the standard ggplot2 setup path expects a
+      # data frame here.
       plot_data <- data_frame0()
     }
     for (layer_df in data) {
@@ -42,14 +105,15 @@ Layout2 <- ggproto("Layout2", Layout,
     # PANEL ROW COL "facet variable" SCALE_X SCALE_Y
     self$layout <- self$facet$compute_layout(data, self$facet_params)
 
-    # Rearrange the panel if detect the link data.
+    # This is ggexon-specific: if link panels are present, let the facet
+    # reorder panels and annotate the layout with source-panel metadata.
     if ("track" %in% colnames(self$layout) &&
         TRUE %in% stringr::str_detect(self$layout$track, "link")) {
       if (!"panel_type" %in% colnames(self$layout)) {
         self$layout <- self$facet$compute_alignment_layout(data, self$layout)
       }
 
-      # final step to assign the y of target alignment and query alignment
+      # Assign upper/lower link anchors from the resolved panel ordering.
       data <- self$facet$map_link_direction(data, self$layout)
     }
 
@@ -70,6 +134,8 @@ Layout2 <- ggproto("Layout2", Layout,
 
   },
 
+  # Override ggplot2's Layout$map_position() so we map positions after ggexon
+  # has attached extra panel metadata such as t_panel and q_panel.
   map_position = function(self, data) {
     layout <- self$layout
 
@@ -129,6 +195,9 @@ add_layout_panel_metadata <- function(data, layout) {
       as.integer(layer_data$PANEL)
     }
 
+    # Join source-panel metadata back onto layer data so geoms such as
+    # geom_nuclink() can later transform each half-link against the correct
+    # annotation panel range.
     layer_data$PANEL <- panel_ids
     layer_data <- dplyr::left_join(layer_data, panel_metadata, by = "PANEL")
     layer_data$PANEL <- factor(layer_data$PANEL, levels = panel_levels)
