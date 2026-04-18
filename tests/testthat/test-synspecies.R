@@ -72,6 +72,86 @@ test_that("SynSpecies stores individuals and explicit alignment relationships", 
   expect_identical(annotation_scope(multi), "species")
 })
 
+test_that("add_individuals_from_folder imports supported annotation files with filename ids", {
+  xz_annotation <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+  n2_annotation <- system.file(
+    "extdata",
+    "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
+    package = "ggexon"
+  )
+
+  tmp_dir <- tempfile("ggexon-annotations-")
+  dir.create(tmp_dir)
+
+  xz_copy <- file.path(tmp_dir, "XZ1516_custom.gff3")
+  n2_copy <- file.path(tmp_dir, "N2_custom.gtf")
+  txt_copy <- file.path(tmp_dir, "README.txt")
+
+  file.copy(xz_annotation, xz_copy)
+  file.copy(n2_annotation, n2_copy)
+  writeLines("not an annotation file", txt_copy)
+
+  sp <- SynSpecies(name = "Caenorhabditis")
+  sp <- add_individuals_from_folder(sp, tmp_dir)
+
+  expect_setequal(names(individuals(sp)), c("XZ1516_custom", "N2_custom"))
+  expect_identical(annotation_format(individuals(sp)[["XZ1516_custom"]]), "gff")
+  expect_identical(annotation_format(individuals(sp)[["N2_custom"]]), "gtf")
+  expect_identical(
+    basename(annotation_file(individuals(sp)[["XZ1516_custom"]])),
+    "XZ1516_custom.gff3"
+  )
+  expect_identical(
+    basename(annotation_file(individuals(sp)[["N2_custom"]])),
+    "N2_custom.gtf"
+  )
+})
+
+test_that("SynSpecies can initialize individuals directly from an annotation folder", {
+  xz_annotation <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+  n2_annotation <- system.file(
+    "extdata",
+    "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
+    package = "ggexon"
+  )
+
+  tmp_dir <- tempfile("ggexon-constructor-")
+  dir.create(tmp_dir)
+
+  xz_copy <- file.path(tmp_dir, "XZ1516.gff3")
+  n2_copy <- file.path(tmp_dir, "N2.gtf")
+  file.copy(xz_annotation, xz_copy)
+  file.copy(n2_annotation, n2_copy)
+
+  sp <- SynSpecies(annotation_folder = tmp_dir)
+
+  expect_identical(species_name(sp), basename(tmp_dir))
+  expect_setequal(names(individuals(sp)), c("XZ1516", "N2"))
+
+  named_sp <- SynSpecies(name = "Caenorhabditis", annotation_folder = tmp_dir)
+  expect_identical(species_name(named_sp), "Caenorhabditis")
+  expect_setequal(names(individuals(named_sp)), c("XZ1516", "N2"))
+})
+
+test_that("add_individuals_from_folder errors when no supported annotation files are found", {
+  tmp_dir <- tempfile("ggexon-empty-")
+  dir.create(tmp_dir)
+  writeLines("notes", file.path(tmp_dir, "notes.txt"))
+
+  expect_error(
+    add_individuals_from_folder(SynSpecies(name = "Caenorhabditis"), tmp_dir),
+    "No annotation files with supported extensions"
+  )
+})
+
 test_that("SynLayout shared geom parameters are resolved before layer overrides", {
   genome_path <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
   annotation_path <- system.file(

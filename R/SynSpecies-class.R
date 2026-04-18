@@ -350,14 +350,50 @@ SynMultiAlignment <- function(name,
 
 #' Constructor for SynSpecies
 #'
-#' @param name Species collection label.
+#' @param name Species collection label. If omitted and `annotation_folder` is
+#'   supplied, the folder basename is used.
+#' @param annotation_folder Optional directory containing `.gff`, `.gff3`, or
+#'   `.gtf` files to import immediately as annotation-only `SynIndividual`
+#'   objects.
+#' @param annotation_format One of `"auto"`, `"gff"`, or `"gtf"`. Used only
+#'   when `annotation_folder` is supplied.
+#' @param recursive Logical; should annotation discovery recurse into
+#'   subfolders? Used only when `annotation_folder` is supplied.
 #' @param metadata Optional metadata list.
 #'
-#' @return A `SynSpecies` object with empty individual/alignment collections and
-#'   no stored layout.
+#' @return A `SynSpecies` object. When `annotation_folder` is provided, the
+#'   object is initialized with one annotation-only `SynIndividual` per
+#'   supported annotation file found in that folder.
 #' @export
-SynSpecies <- function(name, metadata = list()) {
-  new("SynSpecies", name = name, metadata = metadata)
+SynSpecies <- function(name = NULL,
+                       annotation_folder = NULL,
+                       annotation_format = c("auto", "gff", "gtf"),
+                       recursive = FALSE,
+                       metadata = list()) {
+  annotation_format <- match.arg(annotation_format)
+
+  if (is.null(name)) {
+    if (is.null(annotation_folder)) {
+      stop(
+        "`name` must be supplied when `annotation_folder` is not provided.",
+        call. = FALSE
+      )
+    }
+    name <- .synspecies_name_from_folder(annotation_folder)
+  }
+
+  x <- new("SynSpecies", name = name, metadata = metadata)
+
+  if (!is.null(annotation_folder)) {
+    x <- add_individuals_from_folder(
+      x,
+      folder = annotation_folder,
+      annotation_format = annotation_format,
+      recursive = recursive
+    )
+  }
+
+  x
 }
 
 #' @export
@@ -483,6 +519,48 @@ setMethod("pairwise_alignment_data", "SynSpecies", function(x, alignment = NULL,
   .pairwise_alignment_data_impl(x = pair, species_obj = x, ...)
 })
 
+.annotation_folder_pattern <- function(annotation_format = c("auto", "gff", "gtf")) {
+  annotation_format <- match.arg(annotation_format)
+  switch(
+    annotation_format,
+    auto = "\\.(gff3?|gtf)(\\.gz)?$",
+    gff = "\\.(gff3?)(\\.gz)?$",
+    gtf = "\\.gtf(\\.gz)?$"
+  )
+}
+
+.annotation_id_from_path <- function(path) {
+  file_name <- basename(path)
+  if (grepl("\\.gz$", file_name, ignore.case = TRUE)) {
+    file_name <- tools::file_path_sans_ext(file_name)
+  }
+  tools::file_path_sans_ext(file_name)
+}
+
+.synspecies_name_from_folder <- function(folder) {
+  folder_name <- basename(normalizePath(folder, winslash = "/", mustWork = FALSE))
+  if (is.na(folder_name) || !nzchar(folder_name) || identical(folder_name, ".")) {
+    return("SynSpecies")
+  }
+  folder_name
+}
+
+.annotation_format_from_path <- function(path) {
+  file_name <- basename(path)
+  if (grepl("\\.gz$", file_name, ignore.case = TRUE)) {
+    file_name <- tools::file_path_sans_ext(file_name)
+  }
+
+  ext <- base::tolower(tools::file_ext(file_name))
+  switch(
+    ext,
+    gff = "gff",
+    gff3 = "gff",
+    gtf = "gtf",
+    stop("Unsupported annotation file extension: ", path, call. = FALSE)
+  )
+}
+
 #' Add a SynIndividual to a SynSpecies object
 #'
 #' @param x A `SynSpecies` object.
@@ -501,6 +579,101 @@ add_individual <- function(x, individual) {
   entries[[syn_id(individual)]] <- individual
   x@individuals <- entries
   validObject(x)
+  x
+}
+
+#' Add many annotation files from a folder as SynIndividuals
+#'
+#' Discovers supported annotation files in a folder and adds one
+#' [`SynIndividual`] per file to a [`SynSpecies`] object. Supported extensions
+#' are `.gff`, `.gff3`, and `.gtf` (optionally with a trailing `.gz`). When
+#' `annotation_format = "auto"`, the format is inferred from the file
+#' extension.
+#'
+#' Individual ids default to the filename stem with the annotation extension
+#' removed, so a file such as `N2.gff3` becomes a `SynIndividual` with id
+#' `"N2"`.
+#'
+#' Genome files are waived by default for this convenience import. That makes
+#' the helper suitable for annotation-only workflows, while genome-dependent
+#' operations can still be added later by replacing or rebuilding the
+#' `SynIndividual` objects with FASTA paths.
+#'
+#' @param x A [`SynSpecies`] object.
+#' @param folder Path to a directory containing annotation files.
+#' @param annotation_format One of `"auto"`, `"gff"`, or `"gtf"`. When `"auto"`,
+#'   files with supported extensions are discovered and each file's format is
+#'   inferred from its extension. When `"gff"` or `"gtf"`, only files with
+#'   matching extensions are imported.
+#' @param recursive Logical; should files be discovered recursively?
+#'
+#' @return An updated [`SynSpecies`] object.
+#' @export
+add_individuals_from_folder <- function(x,
+                                        folder,
+                                        annotation_format = c("auto", "gff", "gtf"),
+                                        recursive = FALSE) {
+  if (!methods::is(x, "SynSpecies")) {
+    stop("`add_individuals_from_folder()` expects a SynSpecies object.", call. = FALSE)
+  }
+
+  annotation_format <- match.arg(annotation_format)
+
+  if (!is.character(folder) || length(folder) != 1L || is.na(folder) || !nzchar(folder)) {
+    stop("`folder` must be a single non-empty character value.", call. = FALSE)
+  }
+  if (!dir.exists(folder)) {
+    stop("Folder does not exist: ", folder, call. = FALSE)
+  }
+  if (!is.logical(recursive) || length(recursive) != 1L || is.na(recursive)) {
+    stop("`recursive` must be a single TRUE/FALSE value.", call. = FALSE)
+  }
+
+  annotation_files <- list.files(
+    path = folder,
+    pattern = .annotation_folder_pattern(annotation_format),
+    full.names = TRUE,
+    recursive = recursive,
+    ignore.case = TRUE
+  )
+  annotation_files <- sort(annotation_files)
+
+  if (length(annotation_files) == 0L) {
+    stop(
+      "No annotation files with supported extensions were found in: ",
+      folder,
+      call. = FALSE
+    )
+  }
+
+  ids <- vapply(annotation_files, .annotation_id_from_path, character(1))
+  if (anyDuplicated(ids)) {
+    duplicated_ids <- unique(ids[duplicated(ids)])
+    stop(
+      "Annotation filenames resolve to duplicate individual ids: ",
+      paste(duplicated_ids, collapse = ", "),
+      call. = FALSE
+    )
+  }
+
+  for (i in seq_along(annotation_files)) {
+    file_format <- if (identical(annotation_format, "auto")) {
+      .annotation_format_from_path(annotation_files[[i]])
+    } else {
+      annotation_format
+    }
+
+    x <- add_individual(
+      x,
+      SynIndividual(
+        genome_file = genome_waiver(),
+        annotation_file = annotation_files[[i]],
+        id = ids[[i]],
+        annotation_format = file_format
+      )
+    )
+  }
+
   x
 }
 

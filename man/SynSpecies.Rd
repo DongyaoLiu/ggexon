@@ -4,16 +4,34 @@
 \alias{SynSpecies}
 \title{Constructor for SynSpecies}
 \usage{
-SynSpecies(name, metadata = list())
+SynSpecies(
+  name = NULL,
+  annotation_folder = NULL,
+  annotation_format = c("auto", "gff", "gtf"),
+  recursive = FALSE,
+  metadata = list()
+)
 }
 \arguments{
-\item{name}{Species collection label.}
+\item{name}{Species collection label. If omitted and \code{annotation_folder} is
+supplied, the folder basename is used.}
+
+\item{annotation_folder}{Optional directory containing \code{.gff}, \code{.gff3}, or
+\code{.gtf} files to import immediately as annotation-only \code{SynIndividual}
+objects.}
+
+\item{annotation_format}{One of \code{"auto"}, \code{"gff"}, or \code{"gtf"}. Used only
+when \code{annotation_folder} is supplied.}
+
+\item{recursive}{Logical; should annotation discovery recurse into
+subfolders? Used only when \code{annotation_folder} is supplied.}
 
 \item{metadata}{Optional metadata list.}
 }
 \value{
-A \code{SynSpecies} object with empty individual/alignment collections and
-no stored layout.
+A \code{SynSpecies} object. When \code{annotation_folder} is provided, the
+object is initialized with one annotation-only \code{SynIndividual} per
+supported annotation file found in that folder.
 }
 \description{
 Constructor for SynSpecies
