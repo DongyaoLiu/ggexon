@@ -1,3 +1,14 @@
+write_indexed_annotation_fixture <- function(lines, ext = ".gff3") {
+  src <- tempfile(fileext = ext)
+  gz <- paste0(src, ".gz")
+
+  writeLines(lines, src)
+  Rsamtools::bgzip(src, dest = gz, overwrite = TRUE)
+  Rsamtools::indexTabix(gz, format = "gff")
+
+  gz
+}
+
 test_that("SynIndividual validates and stores the test genome inputs", {
   genome_path <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
   annotation_path <- system.file(
@@ -103,6 +114,83 @@ test_that("query_features returns the same window on unloaded and loaded annotat
     as.data.frame(region_loaded)
   )
   expect_identical(resolve_syn_seqname(unloaded, target_chr), target_chr)
+})
+
+test_that("query_features uses indexed gff3.gz windows without full loading", {
+  skip_if_not_installed("Rsamtools")
+
+  annotation_path <- write_indexed_annotation_fixture(
+    c(
+      "##gff-version 3",
+      "chrI\ttest\tgene\t10\t100\t.\t+\t.\tID=geneA;Name=geneA",
+      "chrI\ttest\tmRNA\t10\t100\t.\t+\t.\tID=txA;Parent=geneA;Name=txA",
+      "chrI\ttest\texon\t10\t40\t.\t+\t.\tID=exonA1;Parent=txA",
+      "chrI\ttest\texon\t60\t100\t.\t+\t.\tID=exonA2;Parent=txA",
+      "chrII\ttest\tgene\t200\t260\t.\t-\t.\tID=geneB;Name=geneB"
+    ),
+    ext = ".gff3"
+  )
+
+  x <- SynIndividual(
+    annotation_file = annotation_path,
+    genome_file = genome_waiver()
+  )
+
+  expect_identical(
+    syn_id(x),
+    tools::file_path_sans_ext(sub("\\.gz$", "", basename(annotation_path)))
+  )
+  expect_null(annotation_data(x))
+
+  region_gr <- query_features(
+    x,
+    chr = "chrI",
+    start = 15,
+    end = 80,
+    feature_type = "exon"
+  )
+
+  expect_null(annotation_data(x))
+  expect_identical(as.character(unique(GenomeInfoDb::seqnames(region_gr))), "chrI")
+  expect_identical(as.character(unique(S4Vectors::mcols(region_gr)$type)), "exon")
+  expect_identical(length(region_gr), 2L)
+
+  loaded <- load_annotation(x)
+  expect_s4_class(annotation_data(loaded), "GRanges")
+  expect_true(length(annotation_data(loaded)) >= 5L)
+})
+
+test_that("query_features uses indexed gtf.gz windows", {
+  skip_if_not_installed("Rsamtools")
+
+  annotation_path <- write_indexed_annotation_fixture(
+    c(
+      "chrI\ttest\tgene\t10\t100\t.\t+\t.\tgene_id \"geneA\"; gene_name \"geneA\";",
+      "chrI\ttest\ttranscript\t10\t100\t.\t+\t.\tgene_id \"geneA\"; transcript_id \"txA\"; gene_name \"geneA\";",
+      "chrI\ttest\texon\t10\t40\t.\t+\t.\tgene_id \"geneA\"; transcript_id \"txA\"; exon_number \"1\";",
+      "chrI\ttest\texon\t60\t100\t.\t+\t.\tgene_id \"geneA\"; transcript_id \"txA\"; exon_number \"2\";",
+      "chrII\ttest\tgene\t200\t260\t.\t-\t.\tgene_id \"geneB\"; gene_name \"geneB\";"
+    ),
+    ext = ".gtf"
+  )
+
+  x <- SynIndividual(
+    annotation_file = annotation_path,
+    genome_file = genome_waiver()
+  )
+
+  region_gr <- query_features(
+    x,
+    chr = "chrI",
+    start = 15,
+    end = 80,
+    feature_type = "exon"
+  )
+
+  expect_null(annotation_data(x))
+  expect_identical(as.character(unique(GenomeInfoDb::seqnames(region_gr))), "chrI")
+  expect_identical(as.character(unique(S4Vectors::mcols(region_gr)$type)), "exon")
+  expect_identical(length(region_gr), 2L)
 })
 
 test_that("build_feature_index stores reusable lookups for loaded individuals", {

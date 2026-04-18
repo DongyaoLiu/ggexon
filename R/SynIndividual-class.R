@@ -168,7 +168,7 @@ SynIndividual <- function(genome_file = genome_waiver(),
 
   if (is.null(id)) {
     id_source <- if (.has_genome_file(genome_file)) genome_file else annotation_file
-    id <- tools::file_path_sans_ext(basename(id_source))
+    id <- .path_stem(id_source)
   }
 
   default_annotation <- SynFeatureAnnotation(
@@ -187,6 +187,12 @@ SynIndividual <- function(genome_file = genome_waiver(),
     active_annotation = "default",
     metadata = metadata
   )
+}
+
+.path_stem <- function(path) {
+  stem <- basename(path)
+  stem <- sub("\\.gz$", "", stem, ignore.case = TRUE)
+  tools::file_path_sans_ext(stem)
 }
 
 #' Genome-file waiver for `SynIndividual()`
@@ -332,7 +338,10 @@ load_annotation <- function(x) {
     if (!is.null(annotation_data(x))) {
       return(x)
     }
-    gr <- rtracklayer::import(annotation_file(x))
+    gr <- rtracklayer::import(
+      annotation_file(x),
+      format = .annotation_import_format(x)
+    )
     annotation_data(x) <- .normalize_annotation(gr)
     x@base_annotation <- annotation_data(x)
     x@loaded <- TRUE
@@ -456,12 +465,34 @@ load_annotation <- function(x) {
     ranges = IRanges::IRanges(start = window_start, end = window_end)
   )
 
-  gr <- rtracklayer::import(
-    rtracklayer::GFFFile(annotation_file(x)),
-    which = which,
-    feature.type = feature_types,
-    colnames = if (is.null(colnames)) NULL else unique(colnames)
-  )
+  import_colnames <- if (is.null(colnames)) NULL else unique(colnames)
+  annotation_path <- annotation_file(x)
+
+  if (.is_indexed_annotation_file(annotation_path)) {
+    tabix <- Rsamtools::TabixFile(
+      annotation_path,
+      index = .annotation_index_path(annotation_path)
+    )
+    open(tabix)
+    on.exit(try(close(tabix), silent = TRUE), add = TRUE)
+
+    gr <- .quiet_indexed_annotation_import(
+      rtracklayer::import(
+        tabix,
+        format = .annotation_import_format(x),
+        which = which,
+        feature.type = feature_types,
+        colnames = import_colnames
+      )
+    )
+  } else {
+    gr <- rtracklayer::import(
+      rtracklayer::GFFFile(annotation_path),
+      which = which,
+      feature.type = feature_types,
+      colnames = import_colnames
+    )
+  }
 
   list(
     gr = .normalize_annotation(gr),
@@ -1175,6 +1206,60 @@ setGeneric("annotation_data<-", function(x, value) {
   }
 }
 
+.quiet_indexed_annotation_import <- function(expr) {
+  withCallingHandlers(
+    expr,
+    warning = function(w) {
+      message <- conditionMessage(w)
+      if (identical(message, "Use BiocIO::FileForFormat") ||
+          grepl("connection is not positioned at the start of the file, rewinding it", message, fixed = TRUE)) {
+        invokeRestart("muffleWarning")
+      }
+    }
+  )
+}
+
+.annotation_index_path <- function(path) {
+  candidates <- c(paste0(path, ".tbi"), paste0(path, ".csi"))
+  existing <- candidates[file.exists(candidates)]
+  if (length(existing) == 0L) {
+    return(NULL)
+  }
+  existing[[1L]]
+}
+
+.is_indexed_annotation_file <- function(path) {
+  grepl("\\.(gff3?|gtf)\\.gz$", path, ignore.case = TRUE) &&
+    !is.null(.annotation_index_path(path))
+}
+
+.annotation_import_format <- function(x) {
+  declared_format <- if (methods::is(x, "SynIndividual") || methods::is(x, "SynFeatureAnnotation")) {
+    annotation_format(x)
+  } else {
+    "auto"
+  }
+
+  if (!identical(declared_format, "auto")) {
+    return(declared_format)
+  }
+
+  path <- if (methods::is(x, "SynIndividual") || methods::is(x, "SynFeatureAnnotation")) {
+    annotation_file(x)
+  } else {
+    x
+  }
+  ext <- base::tolower(tools::file_ext(sub("\\.gz$", "", path, ignore.case = TRUE)))
+
+  switch(
+    ext,
+    gff = "gff",
+    gff3 = "gff",
+    gtf = "gtf",
+    stop("Unsupported annotation file format: ", path, call. = FALSE)
+  )
+}
+
 .read_fasta_headers <- function(path) {
   con <- .open_text_connection(path)
   on.exit(close(con), add = TRUE)
@@ -1189,6 +1274,16 @@ setGeneric("annotation_data<-", function(x, value) {
 }
 
 .read_annotation_seqnames <- function(path) {
+  if (.is_indexed_annotation_file(path)) {
+    tabix <- Rsamtools::TabixFile(path, index = .annotation_index_path(path))
+    open(tabix)
+    on.exit(try(close(tabix), silent = TRUE), add = TRUE)
+
+    seqnames <- as.character(Rsamtools::seqnamesTabix(tabix))
+    seqnames <- trimws(seqnames)
+    return(unique(seqnames[nzchar(seqnames)]))
+  }
+
   con <- .open_text_connection(path)
   on.exit(close(con), add = TRUE)
 
