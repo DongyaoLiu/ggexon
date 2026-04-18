@@ -16,7 +16,7 @@ query_features(
 )
 }
 \arguments{
-\item{x}{A \code{SynIndividual} object.}
+\item{x}{A \code{SynIndividual} or \code{SynFeatureAnnotation} object.}
 
 \item{genes}{Optional character vector of gene names or gene identifiers.}
 
@@ -42,4 +42,8 @@ Query annotation features from a SynIndividual object
 When \code{chr} is supplied and the annotation has not yet been fully loaded,
 \code{query_features()} attempts a region-restricted import first. This is
 especially helpful for large indexed \code{.gff3.gz} or \code{.gtf.gz} files.
+
+If a reusable lookup index has been created with \code{\link[=build_feature_index]{build_feature_index()}},
+\code{query_features()} uses it to accelerate repeated gene-, transcript-,
+seqname-, and type-based filtering on fully loaded annotations.
 }

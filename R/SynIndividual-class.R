@@ -317,7 +317,7 @@ check_syn_files <- function(genome_file, annotation_file) {
 #' `annotation` slot. The imported ranges are lightly normalized so downstream
 #' query and translation methods can use consistent metadata columns.
 #'
-#' @param x A `SynIndividual` object.
+#' @param x A `SynIndividual` or `SynFeatureAnnotation` object.
 #'
 #' @return An updated `SynIndividual` object.
 #' @export
@@ -483,9 +483,112 @@ load_annotation <- function(x) {
   unique(as.character(feature_type))
 }
 
+.build_row_lookup_index <- function(keys, rows = seq_along(keys)) {
+  valid <- !is.na(keys) & nzchar(keys)
+  if (!any(valid)) {
+    return(list())
+  }
+
+  split_rows <- split(as.integer(rows[valid]), keys[valid])
+  lapply(split_rows, function(x) sort(unique(as.integer(x))))
+}
+
+.build_meta_lookup_index <- function(meta, columns) {
+  columns <- intersect(columns, colnames(meta))
+  if (length(columns) == 0L) {
+    return(list())
+  }
+
+  row_ids <- seq_len(nrow(meta))
+  key_rows <- lapply(columns, function(col) {
+    values <- as.character(meta[[col]])
+    valid <- !is.na(values) & nzchar(values)
+    if (!any(valid)) {
+      return(NULL)
+    }
+    data.frame(
+      key = values[valid],
+      row = row_ids[valid],
+      stringsAsFactors = FALSE
+    )
+  })
+  key_rows <- Filter(Negate(is.null), key_rows)
+  if (length(key_rows) == 0L) {
+    return(list())
+  }
+
+  key_rows <- do.call(rbind, key_rows)
+  split_rows <- split(key_rows$row, key_rows$key)
+  lapply(split_rows, function(x) sort(unique(as.integer(x))))
+}
+
+.build_annotation_feature_index <- function(gr) {
+  meta <- S4Vectors::mcols(gr)
+  list(
+    seqname = .build_row_lookup_index(as.character(GenomeInfoDb::seqnames(gr))),
+    type = .build_row_lookup_index(base::tolower(as.character(meta$type))),
+    gene = .build_meta_lookup_index(
+      meta,
+      c("gene_name", "gene_id", "Name", "gene", "ID")
+    ),
+    transcript = .build_meta_lookup_index(
+      meta,
+      c("transcript_id", "Parent", "transcript_name", "ID")
+    ),
+    parent = .build_meta_lookup_index(meta, c("Parent"))
+  )
+}
+
+.lookup_feature_index_rows <- function(index, slot, keys) {
+  keys <- unique(as.character(keys))
+  keys <- keys[!is.na(keys) & nzchar(keys)]
+  if (length(keys) == 0L) {
+    return(integer())
+  }
+
+  lookup <- index[[slot]]
+  if (is.null(lookup) || length(lookup) == 0L) {
+    return(integer())
+  }
+
+  matched_keys <- intersect(keys, names(lookup))
+  if (length(matched_keys) == 0L) {
+    return(integer())
+  }
+
+  sort(unique(as.integer(unlist(lookup[matched_keys], use.names = FALSE))))
+}
+
+#' Build a reusable feature lookup index
+#'
+#' Builds and stores a lookup index over a loaded feature annotation so repeated
+#' calls to [query_features()] can resolve seqname, feature-type, gene, and
+#' transcript filters without rescanning the full `GRanges` each time.
+#'
+#' @param x A `SynIndividual` or `SynFeatureAnnotation` object.
+#'
+#' @return The updated object.
+#' @export
+build_feature_index <- function(x) {
+  if (!(methods::is(x, "SynIndividual") || methods::is(x, "SynFeatureAnnotation"))) {
+    stop(
+      "`build_feature_index()` expects a SynIndividual or SynFeatureAnnotation object.",
+      call. = FALSE
+    )
+  }
+
+  x <- load_annotation(x)
+  if (!is.null(feature_index(x))) {
+    return(x)
+  }
+
+  feature_index(x) <- .build_annotation_feature_index(annotation_data(x))
+  x
+}
+
 #' Query annotation features from a SynIndividual object
 #'
-#' @param x A `SynIndividual` object.
+#' @param x A `SynIndividual` or `SynFeatureAnnotation` object.
 #' @param genes Optional character vector of gene names or gene identifiers.
 #' @param transcripts Optional character vector of transcript identifiers.
 #' @param chr Optional chromosome name.
@@ -498,6 +601,10 @@ load_annotation <- function(x) {
 #' When `chr` is supplied and the annotation has not yet been fully loaded,
 #' `query_features()` attempts a region-restricted import first. This is
 #' especially helpful for large indexed `.gff3.gz` or `.gtf.gz` files.
+#'
+#' If a reusable lookup index has been created with [build_feature_index()],
+#' `query_features()` uses it to accelerate repeated gene-, transcript-,
+#' seqname-, and type-based filtering on fully loaded annotations.
 #'
 #' @return A `GRanges` object containing the requested features.
 #' @export
@@ -538,6 +645,7 @@ query_features <- function(x,
       chr <- .resolve_annotation_seqname(x, chr)
     }
   }
+  index <- if (use_region_import) NULL else feature_index(x)
   gr <- all_gr
 
   has_selector <- !is.null(genes) || !is.null(transcripts) || !is.null(chr) || all
@@ -548,51 +656,102 @@ query_features <- function(x,
     )
   }
 
-  if (!is.null(genes)) {
-    genes <- unique(as.character(genes))
-    gene_match <- .match_annotation_values(
-      all_gr,
-      c("gene_name", "gene_id", "Name", "gene", "ID"),
-      genes
-    )
-    gene_ids <- unique(.annotation_primary_ids(all_gr[gene_match]))
+  type_filtered <- FALSE
+  if (!is.null(index)) {
+    keep_rows <- seq_along(all_gr)
 
-    transcript_ids <- unique(c(
-      .annotation_transcript_ids(all_gr[gene_match]),
-      .annotation_transcript_ids(
-        all_gr[
-          .match_annotation_values(
-            all_gr,
-            c("Parent"),
-            gene_ids
-          )
-        ]
-      )
-    ))
+    if (!is.null(genes)) {
+      genes <- unique(as.character(genes))
+      gene_rows <- .lookup_feature_index_rows(index, "gene", genes)
+      gene_ids <- unique(.annotation_primary_ids(all_gr[gene_rows]))
+      transcript_ids <- unique(c(
+        .annotation_transcript_ids(all_gr[gene_rows]),
+        .annotation_transcript_ids(
+          all_gr[.lookup_feature_index_rows(index, "parent", gene_ids)]
+        )
+      ))
 
-    gene_filter <- .match_annotation_values(
-      gr,
-      c("gene_name", "gene_id", "Name", "gene", "ID"),
-      genes
-    )
-    if (length(transcript_ids) > 0L) {
-      gene_filter <- gene_filter | .match_annotation_values(
-        gr,
-        c("transcript_id", "Parent"),
-        transcript_ids
+      keep_gene_rows <- gene_rows
+      if (length(transcript_ids) > 0L) {
+        keep_gene_rows <- union(
+          keep_gene_rows,
+          .lookup_feature_index_rows(index, "transcript", transcript_ids)
+        )
+      }
+      keep_rows <- intersect(keep_rows, keep_gene_rows)
+    }
+
+    if (!is.null(transcripts)) {
+      transcripts <- unique(as.character(transcripts))
+      keep_rows <- intersect(
+        keep_rows,
+        .lookup_feature_index_rows(index, "transcript", transcripts)
       )
     }
-    gr <- gr[gene_filter]
-  }
 
-  if (!is.null(transcripts)) {
-    transcripts <- unique(as.character(transcripts))
-    transcript_match <- .match_annotation_values(
-      gr,
-      c("transcript_id", "Parent", "transcript_name", "ID"),
-      transcripts
-    )
-    gr <- gr[transcript_match]
+    if (!is.null(chr)) {
+      keep_rows <- intersect(
+        keep_rows,
+        .lookup_feature_index_rows(index, "seqname", chr)
+      )
+    }
+
+    if (!is.null(feature_type)) {
+      keep_rows <- intersect(
+        keep_rows,
+        .lookup_feature_index_rows(index, "type", base::tolower(feature_type))
+      )
+      type_filtered <- TRUE
+    }
+
+    gr <- all_gr[keep_rows]
+  } else {
+    if (!is.null(genes)) {
+      genes <- unique(as.character(genes))
+      gene_match <- .match_annotation_values(
+        all_gr,
+        c("gene_name", "gene_id", "Name", "gene", "ID"),
+        genes
+      )
+      gene_ids <- unique(.annotation_primary_ids(all_gr[gene_match]))
+
+      transcript_ids <- unique(c(
+        .annotation_transcript_ids(all_gr[gene_match]),
+        .annotation_transcript_ids(
+          all_gr[
+            .match_annotation_values(
+              all_gr,
+              c("Parent"),
+              gene_ids
+            )
+          ]
+        )
+      ))
+
+      gene_filter <- .match_annotation_values(
+        gr,
+        c("gene_name", "gene_id", "Name", "gene", "ID"),
+        genes
+      )
+      if (length(transcript_ids) > 0L) {
+        gene_filter <- gene_filter | .match_annotation_values(
+          gr,
+          c("transcript_id", "Parent"),
+          transcript_ids
+        )
+      }
+      gr <- gr[gene_filter]
+    }
+
+    if (!is.null(transcripts)) {
+      transcripts <- unique(as.character(transcripts))
+      transcript_match <- .match_annotation_values(
+        gr,
+        c("transcript_id", "Parent", "transcript_name", "ID"),
+        transcripts
+      )
+      gr <- gr[transcript_match]
+    }
   }
 
   if (!is.null(chr)) {
@@ -616,7 +775,7 @@ query_features <- function(x,
     gr <- gr[IRanges::overlapsAny(gr, region)]
   }
 
-  if (!is.null(feature_type)) {
+  if (!is.null(feature_type) && !isTRUE(type_filtered)) {
     types <- as.character(S4Vectors::mcols(gr)$type)
     gr <- gr[
       !is.na(types) &

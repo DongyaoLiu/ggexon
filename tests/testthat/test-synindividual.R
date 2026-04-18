@@ -105,6 +105,38 @@ test_that("query_features returns the same window on unloaded and loaded annotat
   expect_identical(resolve_syn_seqname(unloaded, target_chr), target_chr)
 })
 
+test_that("build_feature_index stores reusable lookups for loaded individuals", {
+  annotation_path <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+
+  x <- SynIndividual(
+    annotation_file = annotation_path,
+    genome_file = genome_waiver()
+  )
+  x <- load_annotation(x)
+  expect_null(feature_index(x))
+
+  meta <- S4Vectors::mcols(annotation_data(x))
+  gene_keys <- as.character(meta$gene_id)
+  gene_key <- gene_keys[!is.na(gene_keys) & nzchar(gene_keys)][1L]
+  expect_true(nzchar(gene_key))
+
+  indexed <- build_feature_index(x)
+  idx <- feature_index(indexed)
+
+  expect_true(is.list(idx))
+  expect_true(all(c("seqname", "type", "gene", "transcript", "parent") %in% names(idx)))
+  expect_true(length(idx$gene) > 0L)
+
+  expect_identical(
+    as.data.frame(query_features(x, genes = gene_key, feature_type = NULL)),
+    as.data.frame(query_features(indexed, genes = gene_key, feature_type = NULL))
+  )
+})
+
 test_that("subset_individual trims all feature annotation layers by default", {
   genome_path <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
   annotation_path <- system.file(

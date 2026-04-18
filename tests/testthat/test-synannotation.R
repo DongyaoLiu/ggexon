@@ -305,6 +305,25 @@ test_that("subset_feature_annotation returns a clean windowed snapshot", {
   expect_identical(plot_cache(subset_ann), list())
 })
 
+test_that("build_feature_index also supports SynFeatureAnnotation objects", {
+  annotation_path <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+  expect_true(nzchar(annotation_path))
+
+  ann <- SynFeatureAnnotation(
+    name = "default",
+    annotation_file = annotation_path
+  )
+  ann <- build_feature_index(ann)
+
+  expect_true(is.list(feature_index(ann)))
+  expect_true(length(feature_index(ann)$seqname) > 0L)
+  expect_true(length(feature_index(ann)$type) > 0L)
+})
+
 test_that("rename_domain_annotation_ids rewrites the domain key column", {
   domain_path <- tempfile(fileext = ".tsv")
   writeLines(

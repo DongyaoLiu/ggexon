@@ -7,7 +7,7 @@
 load_annotation(x)
 }
 \arguments{
-\item{x}{A \code{SynIndividual} object.}
+\item{x}{A \code{SynIndividual} or \code{SynFeatureAnnotation} object.}
 }
 \value{
 An updated \code{SynIndividual} object.
