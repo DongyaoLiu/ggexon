@@ -249,6 +249,62 @@ test_that("add_interproscan_annotation attaches the shipped InterProScan layer",
   expect_identical(as.character(domain_hits$protein_id[[1L]]), "Sequence1")
 })
 
+test_that("subset_feature_annotation returns a clean windowed snapshot", {
+  annotation_path <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+  expect_true(nzchar(annotation_path))
+
+  ann <- SynFeatureAnnotation(
+    name = "default",
+    annotation_file = annotation_path
+  )
+  ann <- load_annotation(ann)
+
+  gr <- annotation_data(ann)
+  target_chr <- as.character(GenomeInfoDb::seqnames(gr))[[1L]]
+  target_start <- IRanges::start(gr)[[1L]]
+  target_end <- IRanges::end(gr)[[1L]]
+
+  feature_index(ann) <- list(example = 1L)
+  nucleotide_seq(ann) <- Biostrings::DNAStringSet(c(example = "ATG"))
+  protein_seq(ann) <- Biostrings::AAStringSet(c(example = "M"))
+  plot_cache(ann) <- list(example = data.frame(x = 1L))
+  ann@patches <- list(
+    window = SynAnnotationPatch(
+      name = "window",
+      patch_data = gr[1L],
+      target_ids = "gene-1",
+      mode = "replace"
+    )
+  )
+
+  subset_ann <- subset_feature_annotation(
+    ann,
+    chr = target_chr,
+    start = target_start,
+    end = target_end
+  )
+
+  expect_s4_class(subset_ann, "SynFeatureAnnotation")
+  expect_true(length(annotation_data(subset_ann)) >= 1L)
+  expect_true(all(
+    as.character(GenomeInfoDb::seqnames(annotation_data(subset_ann))) == target_chr
+  ))
+  expect_true(all(
+    IRanges::start(annotation_data(subset_ann)) <= target_end &
+      IRanges::end(annotation_data(subset_ann)) >= target_start
+  ))
+  expect_s4_class(base_annotation(subset_ann), "GRanges")
+  expect_length(patches(subset_ann), 0L)
+  expect_null(feature_index(subset_ann))
+  expect_null(nucleotide_seq(subset_ann))
+  expect_null(protein_seq(subset_ann))
+  expect_identical(plot_cache(subset_ann), list())
+})
+
 test_that("rename_domain_annotation_ids rewrites the domain key column", {
   domain_path <- tempfile(fileext = ".tsv")
   writeLines(

@@ -1600,33 +1600,11 @@ resolve_syn_seqname <- function(individual, chr = NULL) {
     return(NULL)
   }
 
-  individual <- load_annotation(individual)
-  available <- unique(as.character(GenomeInfoDb::seqnames(annotation_data(individual))))
-
-  if (chr %in% available) {
-    return(chr)
-  }
-
-  lower_available <- base::tolower(available)
-  lower_chr <- base::tolower(chr)
-  if (lower_chr %in% lower_available) {
-    return(available[match(lower_chr, lower_available)])
-  }
-
-  chr_parts <- strsplit(chr, "_", fixed = TRUE)[[1L]]
-  if (length(chr_parts) > 1L) {
-    swapped <- paste(rev(chr_parts), collapse = "_")
-    if (swapped %in% available) {
-      return(swapped)
+  tryCatch(
+    .resolve_annotation_seqname(individual, chr = chr),
+    error = function(cnd) {
+      cli::cli_abort(conditionMessage(cnd))
     }
-    swapped_lower <- base::tolower(swapped)
-    if (swapped_lower %in% lower_available) {
-      return(available[match(swapped_lower, lower_available)])
-    }
-  }
-
-  cli::cli_abort(
-    "Unknown chromosome {.val {chr}} for {.val {syn_id(individual)}}. Available seqnames include {.val {utils::head(available, 10)}}."
   )
 }
 

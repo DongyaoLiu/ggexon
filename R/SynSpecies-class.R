@@ -1204,11 +1204,11 @@ subset_synspecies_window <- function(x,
 }
 
 .subset_annotation_window <- function(individual, chr, start, end) {
-  individual <- load_annotation(individual)
-  gr <- annotation_data(individual)
-  window_gr <- GenomicRanges::GRanges(
-    seqnames = chr,
-    ranges = IRanges::IRanges(start = start, end = end)
+  query_features(
+    individual,
+    chr = chr,
+    start = start,
+    end = end,
+    feature_type = NULL
   )
-  gr[IRanges::overlapsAny(gr, window_gr)]
 }

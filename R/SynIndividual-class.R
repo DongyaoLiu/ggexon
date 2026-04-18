@@ -363,6 +363,126 @@ load_annotation <- function(x) {
   x
 }
 
+.resolve_seqname_value <- function(chr, available, label = "annotation") {
+  if (is.null(chr)) {
+    return(NULL)
+  }
+  if (!is.character(chr) || length(chr) != 1L || is.na(chr) || !nzchar(chr)) {
+    stop("`chr` must be a single non-empty character value.", call. = FALSE)
+  }
+
+  available <- unique(as.character(available))
+  available <- available[!is.na(available) & nzchar(available)]
+  if (length(available) == 0L) {
+    stop("The ", label, " does not contain any sequence names.", call. = FALSE)
+  }
+
+  if (chr %in% available) {
+    return(chr)
+  }
+
+  lower_available <- base::tolower(available)
+  lower_chr <- base::tolower(chr)
+  if (lower_chr %in% lower_available) {
+    return(available[match(lower_chr, lower_available)])
+  }
+
+  chr_parts <- strsplit(chr, "_", fixed = TRUE)[[1L]]
+  if (length(chr_parts) > 1L) {
+    swapped <- paste(rev(chr_parts), collapse = "_")
+    if (swapped %in% available) {
+      return(swapped)
+    }
+    swapped_lower <- base::tolower(swapped)
+    if (swapped_lower %in% lower_available) {
+      return(available[match(swapped_lower, lower_available)])
+    }
+  }
+
+  stop(
+    "Unknown chromosome ", chr, " for ", label,
+    ". Available seqnames include: ",
+    paste(utils::head(available, 10L), collapse = ", "),
+    call. = FALSE
+  )
+}
+
+.resolve_annotation_seqname <- function(x, chr) {
+  if (is.null(chr)) {
+    return(NULL)
+  }
+
+  label <- if (methods::is(x, "SynIndividual")) {
+    syn_id(x)
+  } else if (methods::is(x, "SynAnnotation")) {
+    annotation_name(x)
+  } else {
+    "annotation"
+  }
+
+  available <- if (!is.null(annotation_data(x))) {
+    unique(as.character(GenomeInfoDb::seqnames(annotation_data(x))))
+  } else {
+    .read_annotation_seqnames(annotation_file(x))
+  }
+
+  .resolve_seqname_value(chr = chr, available = available, label = label)
+}
+
+.import_annotation_window <- function(x,
+                                      chr,
+                                      start = NULL,
+                                      end = NULL,
+                                      feature_types = NULL,
+                                      colnames = NULL) {
+  resolved_chr <- .resolve_annotation_seqname(x, chr)
+  if (is.null(start)) {
+    start <- 1L
+  }
+  if (is.null(end)) {
+    end <- .Machine$integer.max
+  }
+  if (!is.numeric(start) || length(start) != 1L || is.na(start)) {
+    stop("`start` must be a single numeric value or NULL.", call. = FALSE)
+  }
+  if (!is.numeric(end) || length(end) != 1L || is.na(end)) {
+    stop("`end` must be a single numeric value or NULL.", call. = FALSE)
+  }
+
+  window_start <- as.integer(min(start, end))
+  window_end <- as.integer(max(start, end))
+  which <- GenomicRanges::GRanges(
+    seqnames = resolved_chr,
+    ranges = IRanges::IRanges(start = window_start, end = window_end)
+  )
+
+  gr <- rtracklayer::import(
+    rtracklayer::GFFFile(annotation_file(x)),
+    which = which,
+    feature.type = feature_types,
+    colnames = if (is.null(colnames)) NULL else unique(colnames)
+  )
+
+  list(
+    gr = .normalize_annotation(gr),
+    chr = resolved_chr,
+    start = window_start,
+    end = window_end
+  )
+}
+
+.query_import_feature_types <- function(feature_type = "CDS",
+                                        genes = NULL,
+                                        transcripts = NULL) {
+  if (!is.null(genes)) {
+    return(NULL)
+  }
+  if (is.null(feature_type)) {
+    return(NULL)
+  }
+  unique(as.character(feature_type))
+}
+
 #' Query annotation features from a SynIndividual object
 #'
 #' @param x A `SynIndividual` object.
@@ -373,6 +493,11 @@ load_annotation <- function(x) {
 #' @param end Optional end coordinate.
 #' @param feature_type Feature type to return. Defaults to `"CDS"`.
 #' @param all Logical; when `TRUE`, return all matching `feature_type` records.
+#'
+#' @details
+#' When `chr` is supplied and the annotation has not yet been fully loaded,
+#' `query_features()` attempts a region-restricted import first. This is
+#' especially helpful for large indexed `.gff3.gz` or `.gtf.gz` files.
 #'
 #' @return A `GRanges` object containing the requested features.
 #' @export
@@ -391,8 +516,28 @@ query_features <- function(x,
     )
   }
 
-  x <- load_annotation(x)
-  all_gr <- annotation_data(x)
+  use_region_import <- is.null(annotation_data(x)) && !is.null(chr)
+  if (use_region_import) {
+    imported <- .import_annotation_window(
+      x,
+      chr = chr,
+      start = start,
+      end = end,
+      feature_types = .query_import_feature_types(
+        feature_type = feature_type,
+        genes = genes,
+        transcripts = transcripts
+      )
+    )
+    all_gr <- imported$gr
+    chr <- imported$chr
+  } else {
+    x <- load_annotation(x)
+    all_gr <- annotation_data(x)
+    if (!is.null(chr)) {
+      chr <- .resolve_annotation_seqname(x, chr)
+    }
+  }
   gr <- all_gr
 
   has_selector <- !is.null(genes) || !is.null(transcripts) || !is.null(chr) || all
@@ -480,6 +625,247 @@ query_features <- function(x,
   }
 
   gr
+}
+
+.resolve_annotation_window_seqname <- function(gr, chr, label = "annotation") {
+  if (!is.character(chr) || length(chr) != 1L || is.na(chr) || !nzchar(chr)) {
+    stop("`chr` must be a single non-empty character value.", call. = FALSE)
+  }
+
+  available <- unique(as.character(GenomeInfoDb::seqnames(gr)))
+  if (length(available) == 0L) {
+    stop("The ", label, " does not contain any sequence names.", call. = FALSE)
+  }
+
+  if (chr %in% available) {
+    return(chr)
+  }
+
+  lower_available <- base::tolower(available)
+  lower_chr <- base::tolower(chr)
+  if (lower_chr %in% lower_available) {
+    return(available[match(lower_chr, lower_available)])
+  }
+
+  chr_parts <- strsplit(chr, "_", fixed = TRUE)[[1L]]
+  if (length(chr_parts) > 1L) {
+    swapped <- paste(rev(chr_parts), collapse = "_")
+    if (swapped %in% available) {
+      return(swapped)
+    }
+    swapped_lower <- base::tolower(swapped)
+    if (swapped_lower %in% lower_available) {
+      return(available[match(swapped_lower, lower_available)])
+    }
+  }
+
+  stop(
+    "Unknown chromosome ", chr, " for ", label,
+    ". Available seqnames include: ",
+    paste(utils::head(available, 10L), collapse = ", "),
+    call. = FALSE
+  )
+}
+
+.normalize_annotation_window <- function(gr,
+                                         chr,
+                                         start = NULL,
+                                         end = NULL,
+                                         label = "annotation",
+                                         resolve_seqname = TRUE) {
+  target_chr <- if (isTRUE(resolve_seqname)) {
+    .resolve_annotation_window_seqname(gr, chr = chr, label = label)
+  } else {
+    chr
+  }
+
+  if (!is.null(start) &&
+      (!is.numeric(start) || length(start) != 1L || is.na(start))) {
+    stop("`start` must be a single numeric value or NULL.", call. = FALSE)
+  }
+  if (!is.null(end) &&
+      (!is.numeric(end) || length(end) != 1L || is.na(end))) {
+    stop("`end` must be a single numeric value or NULL.", call. = FALSE)
+  }
+
+  chr_rows <- as.character(GenomeInfoDb::seqnames(gr)) == target_chr
+  chr_gr <- gr[chr_rows]
+  if (length(chr_gr) == 0L) {
+    stop("No annotation rows were found on chromosome ", target_chr, ".", call. = FALSE)
+  }
+
+  window_start <- if (is.null(start)) 1L else as.integer(start)
+  window_end <- if (is.null(end)) max(IRanges::end(chr_gr)) else as.integer(end)
+
+  list(
+    chr = target_chr,
+    start = min(window_start, window_end),
+    end = max(window_start, window_end)
+  )
+}
+
+.subset_granges_window <- function(gr,
+                                   chr,
+                                   start = NULL,
+                                   end = NULL,
+                                   label = "annotation",
+                                   resolve_seqname = TRUE) {
+  window <- .normalize_annotation_window(
+    gr = gr,
+    chr = chr,
+    start = start,
+    end = end,
+    label = label,
+    resolve_seqname = resolve_seqname
+  )
+
+  region <- GenomicRanges::GRanges(
+    seqnames = window$chr,
+    ranges = IRanges::IRanges(start = window$start, end = window$end)
+  )
+  gr[IRanges::overlapsAny(gr, region)]
+}
+
+#' Subset a feature annotation layer by genomic window
+#'
+#' Returns a windowed snapshot of a [`SynFeatureAnnotation`]. The current
+#' active annotation and its base annotation are trimmed to the requested
+#' genomic interval. Patch history and derived caches are cleared so the
+#' returned object behaves as a self-contained view of the selected region.
+#'
+#' @param x A `SynFeatureAnnotation` object.
+#' @param chr Chromosome or sequence name to keep.
+#' @param start,end Optional numeric window bounds. If one bound is omitted,
+#'   the helper expands to the start or end of the selected sequence present in
+#'   the annotation.
+#'
+#' @return A `SynFeatureAnnotation` object.
+#' @export
+subset_feature_annotation <- function(x,
+                                      chr,
+                                      start = NULL,
+                                      end = NULL) {
+  if (!methods::is(x, "SynFeatureAnnotation")) {
+    stop(
+      "`subset_feature_annotation()` expects a SynFeatureAnnotation object.",
+      call. = FALSE
+    )
+  }
+
+  x <- load_annotation(x)
+  active_gr <- annotation_data(x)
+  base_gr <- base_annotation(x)
+  if (is.null(base_gr)) {
+    base_gr <- active_gr
+  }
+
+  window <- .normalize_annotation_window(
+    gr = active_gr,
+    chr = chr,
+    start = start,
+    end = end,
+    label = paste0("annotation layer ", annotation_name(x))
+  )
+
+  x@annotation <- .subset_granges_window(
+    gr = active_gr,
+    chr = window$chr,
+    start = window$start,
+    end = window$end,
+    resolve_seqname = FALSE
+  )
+  x@base_annotation <- .subset_granges_window(
+    gr = base_gr,
+    chr = window$chr,
+    start = window$start,
+    end = window$end,
+    resolve_seqname = FALSE
+  )
+  x@patches <- list()
+  x@feature_index <- NULL
+  x@nucleotide_seq <- NULL
+  x@protein_seq <- NULL
+  x@plot_cache <- list()
+  x@loaded <- TRUE
+  validObject(x)
+  x
+}
+
+#' Subset a SynIndividual by genomic window
+#'
+#' Returns a new [`SynIndividual`] whose feature annotation layers are trimmed
+#' to the requested genomic window. By default all attached
+#' [`SynFeatureAnnotation`] layers are subsetted, while non-feature annotation
+#' layers remain attached unchanged. Object-level derived caches are cleared so
+#' the result is ready to use as a clean windowed view.
+#'
+#' @param x A `SynIndividual` object.
+#' @param chr Chromosome or sequence name to keep.
+#' @param start,end Optional numeric window bounds. If one bound is omitted,
+#'   the helper expands to the start or end of the selected sequence present in
+#'   the active feature annotation.
+#' @param annotations One of `"all_feature"` or `"active"`. Controls whether
+#'   all feature annotation layers are trimmed, or only the active one.
+#'
+#' @return A `SynIndividual` object.
+#' @export
+subset_individual <- function(x,
+                              chr,
+                              start = NULL,
+                              end = NULL,
+                              annotations = c("all_feature", "active")) {
+  if (!methods::is(x, "SynIndividual")) {
+    stop("`subset_individual()` expects a SynIndividual object.", call. = FALSE)
+  }
+
+  annotations <- match.arg(annotations)
+  feature_names <- names(x@annotations)[vapply(
+    x@annotations,
+    methods::is,
+    logical(1),
+    class2 = "SynFeatureAnnotation"
+  )]
+
+  if (length(feature_names) == 0L) {
+    stop("The SynIndividual does not contain any SynFeatureAnnotation layers.", call. = FALSE)
+  }
+
+  target_names <- if (identical(annotations, "active")) {
+    active_feature_annotation(x)
+  } else {
+    feature_names
+  }
+
+  out <- x
+  out@plot_cache <- list()
+  out@projected_domains <- list()
+
+  for (name in target_names) {
+    ann <- get_annotation(out, name)
+    ann <- subset_feature_annotation(
+      ann,
+      chr = chr,
+      start = start,
+      end = end
+    )
+    out <- add_annotation(out, ann, set_active = FALSE)
+  }
+
+  active_ann <- get_annotation(out, active_feature_annotation(out))
+  out@annotation_file <- annotation_file(active_ann)
+  out@annotation_format <- annotation_format(active_ann)
+  out@annotation <- annotation_data(active_ann)
+  out@nucleotide_seq <- NULL
+  out@protein_seq <- NULL
+  out@feature_index <- NULL
+  out@seqinfo <- if (!is.null(annotation_data(active_ann))) {
+    GenomeInfoDb::seqinfo(annotation_data(active_ann))
+  } else {
+    NULL
+  }
+
+  validObject(out)
+  out
 }
 
 #' Extract CDS nucleotide sequences

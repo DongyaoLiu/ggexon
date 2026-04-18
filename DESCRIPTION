@@ -62,6 +62,7 @@ Collate:
     'grob-null.R'
     'layout.R'
     'plot-build.R'
+    'subsetting-overview.R'
     'syn-layer.R'
     'transformation_functions.R'
     'utilities-checks.R'

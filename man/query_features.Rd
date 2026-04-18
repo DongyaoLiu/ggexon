@@ -38,3 +38,8 @@ A \code{GRanges} object containing the requested features.
 \description{
 Query annotation features from a SynIndividual object
 }
+\details{
+When \code{chr} is supplied and the annotation has not yet been fully loaded,
+\code{query_features()} attempts a region-restricted import first. This is
+especially helpful for large indexed \code{.gff3.gz} or \code{.gtf.gz} files.
+}
