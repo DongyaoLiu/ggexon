@@ -4,7 +4,13 @@
 \alias{subset_feature_annotation}
 \title{Subset a feature annotation layer by genomic window}
 \usage{
-subset_feature_annotation(x, chr, start = NULL, end = NULL)
+subset_feature_annotation(
+  x,
+  chr = NULL,
+  start = NULL,
+  end = NULL,
+  coords = NULL
+)
 }
 \arguments{
 \item{x}{A \code{SynFeatureAnnotation} object.}
@@ -14,6 +20,9 @@ subset_feature_annotation(x, chr, start = NULL, end = NULL)
 \item{start, end}{Optional numeric window bounds. If one bound is omitted,
 the helper expands to the start or end of the selected sequence present in
 the annotation.}
+
+\item{coords}{Optional coordinate string in the form
+\code{"V_RagTag:21559983-21620009"}. Use either \code{coords} or \code{chr}/\code{start}/\code{end}.}
 }
 \value{
 A \code{SynFeatureAnnotation} object.

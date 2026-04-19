@@ -329,3 +329,40 @@ test_that("subset_individual can limit trimming to the active feature layer", {
     length(default_before)
   )
 })
+
+test_that("subset_individual accepts coords strings", {
+  annotation_path <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+
+  x <- SynIndividual(
+    annotation_file = annotation_path,
+    genome_file = genome_waiver()
+  )
+  x <- load_annotation(x)
+
+  gr <- annotation_data(x)
+  target_chr <- as.character(GenomeInfoDb::seqnames(gr))[[1L]]
+  target_start <- IRanges::start(gr)[[1L]]
+  target_end <- IRanges::end(gr)[[1L]]
+  coords <- paste0(target_chr, ":", target_start, "-", target_end)
+
+  subset_by_coords <- subset_individual(x, coords = coords)
+  subset_by_args <- subset_individual(
+    x,
+    chr = target_chr,
+    start = target_start,
+    end = target_end
+  )
+
+  expect_identical(
+    as.data.frame(annotation_data(subset_by_coords)),
+    as.data.frame(annotation_data(subset_by_args))
+  )
+  expect_error(
+    subset_individual(x, chr = target_chr, coords = coords),
+    "Provide either `coords` or `chr`/`start`/`end`"
+  )
+})

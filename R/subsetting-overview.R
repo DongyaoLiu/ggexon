@@ -48,13 +48,31 @@
 #'
 #' \preformatted{
 #' ind <- individuals(sp)[["XZ1516"]]
+#' ann <- get_annotation(ind, "default")
+#'
+#' small_ann <- subset_feature_annotation(
+#'   ann,
+#'   coords = "RagTag_V:21558028-21620381"
+#' )
+#'
+#' ind <- individuals(sp)[["XZ1516"]]
 #' small_ind <- subset_individual(
 #'   ind,
-#'   chr = "RagTag_V",
-#'   start = 21558028,
-#'   end = 21620381
+#'   coords = "RagTag_V:21558028-21620381"
+#' )
+#'
+#' small_sp <- subset_species(
+#'   sp,
+#'   coords = c(
+#'     "XZ1516#RagTag_V:21558028-21620381",
+#'     "N2#V:20454111-20491853"
+#'   )
 #' )
 #' }
+#'
+#' `subset_species()` is useful when you already know the species-specific
+#' windows you want to keep and would like a reusable trimmed `SynSpecies`
+#' object rather than a comparative window query result.
 #'
 #' \strong{4. Comparative window subsetting}
 #'
@@ -101,6 +119,8 @@
 #' - Use [query_features()] when you want a subsetted annotation `GRanges`.
 #' - Use [subset_feature_annotation()] or [subset_individual()] when you want a
 #'   reusable windowed object.
+#' - Use [subset_species()] when you want to trim one or more individuals inside
+#'   a `SynSpecies` with explicit species-tagged coordinate strings.
 #' - Use [subset_synspecies_window()] when you want linked windows across
 #'   species together with the retained annotation and link data.
 #' - Use `pairwise_alignment_data()` or [subset_pairwise_alignment()] when you
@@ -108,6 +128,6 @@
 #'
 #' @name subsetting_operations
 #' @seealso [query_features()], [subset_synspecies_window()],
-#'   [subset_feature_annotation()], [subset_individual()],
+#'   [subset_feature_annotation()], [subset_individual()], [subset_species()],
 #'   [subset_pairwise_alignment()], [add_individuals_from_folder()]
 NULL

@@ -6,9 +6,10 @@
 \usage{
 subset_individual(
   x,
-  chr,
+  chr = NULL,
   start = NULL,
   end = NULL,
+  coords = NULL,
   annotations = c("all_feature", "active")
 )
 }
@@ -20,6 +21,9 @@ subset_individual(
 \item{start, end}{Optional numeric window bounds. If one bound is omitted,
 the helper expands to the start or end of the selected sequence present in
 the active feature annotation.}
+
+\item{coords}{Optional coordinate string in the form
+\code{"V_RagTag:21559983-21620009"}. Use either \code{coords} or \code{chr}/\code{start}/\code{end}.}
 
 \item{annotations}{One of \code{"all_feature"} or \code{"active"}. Controls whether
 all feature annotation layers are trimmed, or only the active one.}

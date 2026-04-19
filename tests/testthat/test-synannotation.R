@@ -171,6 +171,43 @@ test_that("SynAnnotationPatch now participates in the genome annotation hierarch
   expect_true(is_loaded(patch_obj))
 })
 
+test_that("subset_feature_annotation accepts coords strings", {
+  annotation_path <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+
+  ann <- SynFeatureAnnotation(
+    name = "default",
+    annotation_file = annotation_path
+  )
+  ann <- load_annotation(ann)
+
+  full_gr <- annotation_data(ann)
+  target_chr <- as.character(GenomeInfoDb::seqnames(full_gr))[[1L]]
+  target_start <- IRanges::start(full_gr)[[1L]]
+  target_end <- IRanges::end(full_gr)[[1L]]
+  coords <- paste0(target_chr, ":", target_start, "-", target_end)
+
+  subset_by_coords <- subset_feature_annotation(ann, coords = coords)
+  subset_by_args <- subset_feature_annotation(
+    ann,
+    chr = target_chr,
+    start = target_start,
+    end = target_end
+  )
+
+  expect_identical(
+    as.data.frame(annotation_data(subset_by_coords)),
+    as.data.frame(annotation_data(subset_by_args))
+  )
+  expect_error(
+    subset_feature_annotation(ann, chr = target_chr, coords = coords),
+    "Provide either `coords` or `chr`/`start`/`end`"
+  )
+})
+
 test_that("SynProteinDomainAnnotation reads the shipped InterProScan export", {
   interpro_path <- system.file(
     "extdata",

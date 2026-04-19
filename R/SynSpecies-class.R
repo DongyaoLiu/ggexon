@@ -751,6 +751,60 @@ store_chain_layout <- function(x,
   x
 }
 
+#' Subset one or more individuals in a `SynSpecies` by coordinate string
+#'
+#' Returns a new [`SynSpecies`] in which selected individuals have their
+#' feature annotation layers trimmed according to coordinate strings such as
+#' `"XZ1516#V_RagTag:21559983-21620009"`. Individuals not listed in `coords`
+#' are left unchanged. Any stored [`SynLayout`] is cleared because the panel
+#' metadata may no longer match the new subsetted windows.
+#'
+#' @param x A `SynSpecies` object.
+#' @param coords One or more coordinate strings in the form
+#'   `"species#seqname:start-end"`. This can be a single string, a character
+#'   vector, or a list of strings.
+#' @param annotations One of `"all_feature"` or `"active"`. Passed through to
+#'   [subset_individual()].
+#'
+#' @return A `SynSpecies` object.
+#' @export
+subset_species <- function(x,
+                           coords,
+                           annotations = c("all_feature", "active")) {
+  if (!methods::is(x, "SynSpecies")) {
+    stop("`subset_species()` expects a SynSpecies object.", call. = FALSE)
+  }
+
+  annotations <- match.arg(annotations)
+  windows <- .parse_species_window_coords(coords)
+  missing_species <- setdiff(names(windows), names(individuals(x)))
+  if (length(missing_species) > 0L) {
+    stop(
+      "`coords` references species not present in the SynSpecies object: ",
+      paste(missing_species, collapse = ", "),
+      call. = FALSE
+    )
+  }
+
+  out <- x
+  subsetted_individuals <- individuals(out)
+  for (species_name in names(windows)) {
+    window <- windows[[species_name]]
+    subsetted_individuals[[species_name]] <- subset_individual(
+      subsetted_individuals[[species_name]],
+      chr = window$chr,
+      start = window$start,
+      end = window$end,
+      annotations = annotations
+    )
+  }
+
+  out@individuals <- subsetted_individuals
+  out@layout <- NULL
+  validObject(out)
+  out
+}
+
 #' Subset a pairwise alignment by query/target regions
 #'
 #' @param x A `SynSpecies` or `SynPairAlignment` object.

@@ -152,6 +152,77 @@ test_that("add_individuals_from_folder errors when no supported annotation files
   )
 })
 
+test_that("subset_species trims selected individuals from species-tagged coords", {
+  xz_annotation <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+  n2_annotation <- system.file(
+    "extdata",
+    "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
+    package = "ggexon"
+  )
+
+  xz <- SynIndividual(
+    annotation_file = xz_annotation,
+    genome_file = genome_waiver(),
+    id = "XZ1516"
+  )
+  n2 <- SynIndividual(
+    annotation_file = n2_annotation,
+    genome_file = genome_waiver(),
+    id = "N2",
+    annotation_format = "gtf"
+  )
+
+  xz <- load_annotation(xz)
+  n2 <- load_annotation(n2)
+
+  xz_gr <- annotation_data(xz)
+  n2_gr <- annotation_data(n2)
+  xz_coords <- paste0(
+    "XZ1516#",
+    as.character(GenomeInfoDb::seqnames(xz_gr))[[1L]],
+    ":",
+    IRanges::start(xz_gr)[[1L]],
+    "-",
+    IRanges::end(xz_gr)[[1L]]
+  )
+  n2_coords <- paste0(
+    "N2#",
+    as.character(GenomeInfoDb::seqnames(n2_gr))[[1L]],
+    ":",
+    IRanges::start(n2_gr)[[1L]],
+    "-",
+    IRanges::end(n2_gr)[[1L]]
+  )
+
+  sp <- SynSpecies(name = "Caenorhabditis")
+  sp <- add_individual(sp, xz)
+  sp <- add_individual(sp, n2)
+  species_layout(sp) <- SynLayout(
+    panels = data.frame(
+      PANEL = c(1L, 2L),
+      ROW = c(1L, 2L),
+      COL = c(1L, 1L),
+      track = c("XZ1516", "N2"),
+      stringsAsFactors = FALSE
+    )
+  )
+
+  subset_sp <- subset_species(sp, coords = list(xz_coords, n2_coords))
+
+  expect_setequal(names(individuals(subset_sp)), c("XZ1516", "N2"))
+  expect_null(species_layout(subset_sp))
+  expect_true(length(annotation_data(individuals(subset_sp)[["XZ1516"]])) >= 1L)
+  expect_true(length(annotation_data(individuals(subset_sp)[["N2"]])) >= 1L)
+  expect_error(
+    subset_species(sp, coords = c(xz_coords, xz_coords)),
+    "duplicate species tags"
+  )
+})
+
 test_that("SynLayout shared geom parameters are resolved before layer overrides", {
   genome_path <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
   annotation_path <- system.file(

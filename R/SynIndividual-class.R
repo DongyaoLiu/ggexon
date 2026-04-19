@@ -857,6 +857,124 @@ query_features <- function(x,
   )
 }
 
+.normalize_coords_input <- function(coords, arg = "`coords`") {
+  if (is.null(coords)) {
+    return(NULL)
+  }
+
+  if (is.list(coords)) {
+    coords <- unlist(coords, use.names = FALSE)
+  }
+
+  if (!is.character(coords) || length(coords) == 0L) {
+    stop(
+      arg,
+      " must be a character string or a list/vector of character strings.",
+      call. = FALSE
+    )
+  }
+
+  coords <- trimws(as.character(coords))
+  if (any(is.na(coords)) || any(!nzchar(coords))) {
+    stop(arg, " cannot contain missing or empty strings.", call. = FALSE)
+  }
+
+  coords
+}
+
+.parse_window_coords <- function(coords, arg = "`coords`") {
+  coords <- .normalize_coords_input(coords, arg = arg)
+  if (length(coords) != 1L) {
+    stop(arg, " must contain exactly one coordinate string.", call. = FALSE)
+  }
+
+  match <- regmatches(
+    coords[[1L]],
+    regexec("^([^:]+):(\\d+)-(\\d+)$", coords[[1L]])
+  )[[1L]]
+  if (length(match) != 4L) {
+    stop(
+      arg,
+      " must have the format 'seqname:start-end', for example 'V_RagTag:21559983-21620009'.",
+      call. = FALSE
+    )
+  }
+
+  chr <- trimws(match[[2L]])
+  start <- as.integer(match[[3L]])
+  end <- as.integer(match[[4L]])
+
+  list(
+    chr = chr,
+    start = min(start, end),
+    end = max(start, end)
+  )
+}
+
+.parse_species_window_coords <- function(coords, arg = "`coords`") {
+  coords <- .normalize_coords_input(coords, arg = arg)
+
+  out <- lapply(coords, function(entry) {
+    match <- regmatches(
+      entry,
+      regexec("^([^#]+)#(.+)$", entry)
+    )[[1L]]
+    if (length(match) != 3L) {
+      stop(
+        arg,
+        " entries must have the format 'species#seqname:start-end', for example 'XZ1516#V_RagTag:21559983-21620009'.",
+        call. = FALSE
+      )
+    }
+
+    species <- trimws(match[[2L]])
+    if (!nzchar(species)) {
+      stop(arg, " entries must include a non-empty species tag.", call. = FALSE)
+    }
+
+    window <- .parse_window_coords(match[[3L]], arg = arg)
+    c(list(species = species), window)
+  })
+
+  species <- vapply(out, `[[`, character(1), "species")
+  if (anyDuplicated(species)) {
+    duplicated_species <- unique(species[duplicated(species)])
+    stop(
+      arg,
+      " contains duplicate species tags: ",
+      paste(duplicated_species, collapse = ", "),
+      call. = FALSE
+    )
+  }
+
+  names(out) <- species
+  out
+}
+
+.resolve_subset_window_args <- function(chr = NULL,
+                                        start = NULL,
+                                        end = NULL,
+                                        coords = NULL,
+                                        arg = "`coords`") {
+  if (!is.null(coords)) {
+    if (!is.null(chr) || !is.null(start) || !is.null(end)) {
+      stop(
+        "Provide either ",
+        arg,
+        " or `chr`/`start`/`end`, not both.",
+        call. = FALSE
+      )
+    }
+    return(.parse_window_coords(coords, arg = arg))
+  }
+
+  if (is.null(chr)) {
+    stop("Provide either `coords` or `chr`.", call. = FALSE)
+  }
+
+  list(chr = chr, start = start, end = end)
+}
+
 .normalize_annotation_window <- function(gr,
                                          chr,
                                          start = NULL,
@@ -928,19 +1046,29 @@ query_features <- function(x,
 #' @param start,end Optional numeric window bounds. If one bound is omitted,
 #'   the helper expands to the start or end of the selected sequence present in
 #'   the annotation.
+#' @param coords Optional coordinate string in the form
+#'   `"V_RagTag:21559983-21620009"`. Use either `coords` or `chr`/`start`/`end`.
 #'
 #' @return A `SynFeatureAnnotation` object.
 #' @export
 subset_feature_annotation <- function(x,
-                                      chr,
+                                      chr = NULL,
                                       start = NULL,
-                                      end = NULL) {
+                                      end = NULL,
+                                      coords = NULL) {
   if (!methods::is(x, "SynFeatureAnnotation")) {
     stop(
       "`subset_feature_annotation()` expects a SynFeatureAnnotation object.",
       call. = FALSE
     )
   }
+
+  args <- .resolve_subset_window_args(
+    chr = chr,
+    start = start,
+    end = end,
+    coords = coords
+  )
 
   x <- load_annotation(x)
   active_gr <- annotation_data(x)
@@ -951,9 +1079,9 @@ subset_feature_annotation <- function(x,
 
   window <- .normalize_annotation_window(
     gr = active_gr,
-    chr = chr,
-    start = start,
-    end = end,
+    chr = args$chr,
+    start = args$start,
+    end = args$end,
     label = paste0("annotation layer ", annotation_name(x))
   )
 
@@ -994,20 +1122,29 @@ subset_feature_annotation <- function(x,
 #' @param start,end Optional numeric window bounds. If one bound is omitted,
 #'   the helper expands to the start or end of the selected sequence present in
 #'   the active feature annotation.
+#' @param coords Optional coordinate string in the form
+#'   `"V_RagTag:21559983-21620009"`. Use either `coords` or `chr`/`start`/`end`.
 #' @param annotations One of `"all_feature"` or `"active"`. Controls whether
 #'   all feature annotation layers are trimmed, or only the active one.
 #'
 #' @return A `SynIndividual` object.
 #' @export
 subset_individual <- function(x,
-                              chr,
+                              chr = NULL,
                               start = NULL,
                               end = NULL,
+                              coords = NULL,
                               annotations = c("all_feature", "active")) {
   if (!methods::is(x, "SynIndividual")) {
     stop("`subset_individual()` expects a SynIndividual object.", call. = FALSE)
   }
 
+  args <- .resolve_subset_window_args(
+    chr = chr,
+    start = start,
+    end = end,
+    coords = coords
+  )
   annotations <- match.arg(annotations)
   feature_names <- names(x@annotations)[vapply(
     x@annotations,
@@ -1034,9 +1171,9 @@ subset_individual <- function(x,
     ann <- get_annotation(out, name)
     ann <- subset_feature_annotation(
       ann,
-      chr = chr,
-      start = start,
-      end = end
+      chr = args$chr,
+      start = args$start,
+      end = args$end
     )
     out <- add_annotation(out, ann, set_active = FALSE)
   }

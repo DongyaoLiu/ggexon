@@ -53,13 +53,31 @@ or to inspect directly.
 
 \preformatted{
 ind <- individuals(sp)[["XZ1516"]]
+ann <- get_annotation(ind, "default")
+
+small_ann <- subset_feature_annotation(
+  ann,
+  coords = "RagTag_V:21558028-21620381"
+)
+
+ind <- individuals(sp)[["XZ1516"]]
 small_ind <- subset_individual(
   ind,
-  chr = "RagTag_V",
-  start = 21558028,
-  end = 21620381
+  coords = "RagTag_V:21558028-21620381"
+)
+
+small_sp <- subset_species(
+  sp,
+  coords = c(
+    "XZ1516#RagTag_V:21558028-21620381",
+    "N2#V:20454111-20491853"
+  )
 )
 }
+
+\code{subset_species()} is useful when you already know the species-specific
+windows you want to keep and would like a reusable trimmed \code{SynSpecies}
+object rather than a comparative window query result.
 
 \strong{4. Comparative window subsetting}
 
@@ -109,6 +127,8 @@ paf <- pairwise_alignment_data(
 \item Use \code{\link[=query_features]{query_features()}} when you want a subsetted annotation \code{GRanges}.
 \item Use \code{\link[=subset_feature_annotation]{subset_feature_annotation()}} or \code{\link[=subset_individual]{subset_individual()}} when you want a
 reusable windowed object.
+\item Use \code{\link[=subset_species]{subset_species()}} when you want to trim one or more individuals inside
+a \code{SynSpecies} with explicit species-tagged coordinate strings.
 \item Use \code{\link[=subset_synspecies_window]{subset_synspecies_window()}} when you want linked windows across
 species together with the retained annotation and link data.
 \item Use \code{pairwise_alignment_data()} or \code{\link[=subset_pairwise_alignment]{subset_pairwise_alignment()}} when you
@@ -118,6 +138,6 @@ only need the alignment rows.
 
 \seealso{
 \code{\link[=query_features]{query_features()}}, \code{\link[=subset_synspecies_window]{subset_synspecies_window()}},
-\code{\link[=subset_feature_annotation]{subset_feature_annotation()}}, \code{\link[=subset_individual]{subset_individual()}},
+\code{\link[=subset_feature_annotation]{subset_feature_annotation()}}, \code{\link[=subset_individual]{subset_individual()}}, \code{\link[=subset_species]{subset_species()}},
 \code{\link[=subset_pairwise_alignment]{subset_pairwise_alignment()}}, \code{\link[=add_individuals_from_folder]{add_individuals_from_folder()}}
 }
