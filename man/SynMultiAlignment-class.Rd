@@ -21,7 +21,7 @@ query/target sides.
 
 \item{\code{source_file}}{Path to the alignment file on disk.}
 
-\item{\code{format}}{Alignment file format. Currently \code{"maf"}.}
+\item{\code{format}}{Alignment file format. Currently \code{"maf"} or \code{"odgi"}.}
 
 \item{\code{data}}{Optional cached parsed alignment data.}
 

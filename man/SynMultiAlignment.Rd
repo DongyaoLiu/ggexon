@@ -4,14 +4,26 @@
 \alias{SynMultiAlignment}
 \title{Constructor for SynMultiAlignment}
 \usage{
-SynMultiAlignment(name, individuals, file, metadata = list())
+SynMultiAlignment(
+  name,
+  individuals,
+  file,
+  format = c("maf", "odgi"),
+  data = NULL,
+  metadata = list()
+)
 }
 \arguments{
 \item{name}{Alignment label.}
 
 \item{individuals}{Character vector of included individuals.}
 
-\item{file}{Path to the MAF file.}
+\item{file}{Path to the alignment file.}
+
+\item{format}{Alignment format. Currently \code{"maf"} and \code{"odgi"} are
+supported.}
+
+\item{data}{Optional cached parsed alignment representation.}
 
 \item{metadata}{Optional metadata list.}
 }

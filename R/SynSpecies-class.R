@@ -85,7 +85,7 @@ setClass(
 #'   `SynSpecies`.
 #' @slot individuals Character vector of included `SynIndividual` identifiers.
 #' @slot source_file Path to the alignment file on disk.
-#' @slot format Alignment file format. Currently `"maf"`.
+#' @slot format Alignment file format. Currently `"maf"` or `"odgi"`.
 #' @slot data Optional cached parsed alignment data.
 #' @slot metadata Optional user or import metadata.
 #'
@@ -115,8 +115,8 @@ setClass(
     if (length(unique(object@individuals)) != length(object@individuals)) {
       problems <- c(problems, "`individuals` must not contain duplicates.")
     }
-    if (length(object@format) != 1L || !(object@format %in% c("maf"))) {
-      problems <- c(problems, "`format` must currently be 'maf'.")
+    if (length(object@format) != 1L || !(object@format %in% c("maf", "odgi"))) {
+      problems <- c(problems, "`format` must currently be 'maf' or 'odgi'.")
     }
     if (length(problems) == 0L) TRUE else problems
   }
@@ -330,7 +330,10 @@ SynPairAlignment <- function(name,
 #'
 #' @param name Alignment label.
 #' @param individuals Character vector of included individuals.
-#' @param file Path to the MAF file.
+#' @param file Path to the alignment file.
+#' @param format Alignment format. Currently `"maf"` and `"odgi"` are
+#'   supported.
+#' @param data Optional cached parsed alignment representation.
 #' @param metadata Optional metadata list.
 #'
 #' @return A `SynMultiAlignment` object.
@@ -338,12 +341,19 @@ SynPairAlignment <- function(name,
 SynMultiAlignment <- function(name,
                               individuals,
                               file,
+                              format = c("maf", "odgi"),
+                              data = NULL,
                               metadata = list()) {
+  format <- match.arg(format)
   new(
     "SynMultiAlignment",
     name = name,
     source_file = file,
     individuals = individuals,
+    format = format,
+    data = data,
+    lazy = is.null(data),
+    loaded = !is.null(data),
     metadata = metadata
   )
 }
@@ -497,6 +507,10 @@ setMethod("alignment_name", "SynMultiAlignment", function(x) annotation_name(x))
 setGeneric("alignment_file", function(x) standardGeneric("alignment_file"))
 setMethod("alignment_file", "SynPairAlignment", function(x) source_file(x))
 setMethod("alignment_file", "SynMultiAlignment", function(x) source_file(x))
+
+setGeneric("alignment_format", function(x) standardGeneric("alignment_format"))
+setMethod("alignment_format", "SynPairAlignment", function(x) x@format)
+setMethod("alignment_format", "SynMultiAlignment", function(x) x@format)
 
 setGeneric("query_individual", function(x) standardGeneric("query_individual"))
 setMethod("query_individual", "SynPairAlignment", function(x) x@query_individual)

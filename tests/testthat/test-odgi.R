@@ -1,3 +1,20 @@
+test_odgi_node_table <- function() {
+  data.frame(
+    node_id = c(1L, 2L),
+    sequence = c("AC", "G"),
+    XZ1516_chromosome = c("V_RagTag", "V_RagTag"),
+    XZ1516_strand = c("+", "-"),
+    XZ1516_absolute_start = c(100L, 102L),
+    XZ1516_absolute_end = c(101L, 102L),
+    N2_chromosome = c("V", "V"),
+    N2_strand = c("+", "+"),
+    N2_absolute_start = c(200L, 202L),
+    N2_absolute_end = c(201L, 202L),
+    check.names = FALSE,
+    stringsAsFactors = FALSE
+  )
+}
+
 test_that("odgi_node_table exposes the bundled script path", {
   script <- odgi_node_table_script()
 
@@ -60,4 +77,66 @@ test_that("odgi_node_table builds a node table via the bundled Python script", {
   expect_identical(tbl$XZ1516_strand, c("+", "-"))
   expect_identical(tbl$XZ1516_absolute_start, c(100L, 102L))
   expect_identical(tbl$XZ1516_absolute_end, c(101L, 102L))
+})
+
+test_that("odgi_multi_alignment parses an ODGI node table into SynMultiAlignment", {
+  tbl <- test_odgi_node_table()
+
+  msa <- odgi_multi_alignment(tbl, name = "worm-graph")
+
+  expect_s4_class(msa, "SynMultiAlignment")
+  expect_identical(annotation_name(msa), "worm-graph")
+  expect_identical(msa@format, "odgi")
+  expect_identical(msa@individuals, c("XZ1516", "N2"))
+  expect_identical(msa@source_file, "<odgi-node-table>")
+  expect_identical(msa@metadata$odgi_labels, c(XZ1516 = "XZ1516", N2 = "N2"))
+  expect_identical(multiple_alignment_data(msa), tbl)
+})
+
+test_that("odgi_multi_alignment supports file-backed tables and SynSpecies lookup", {
+  tbl <- test_odgi_node_table()
+  tsv <- tempfile(fileext = ".tsv")
+  utils::write.table(tbl, file = tsv, sep = "\t", quote = FALSE, row.names = FALSE)
+
+  msa <- odgi_multi_alignment(
+    tsv,
+    name = "worm-graph",
+    individuals = c(XZ1516 = "caenorhabditis_XZ1516", N2 = "caenorhabditis_N2")
+  )
+
+  expect_identical(msa@individuals, c("caenorhabditis_XZ1516", "caenorhabditis_N2"))
+  expect_identical(
+    msa@metadata$odgi_labels,
+    c(caenorhabditis_XZ1516 = "XZ1516", caenorhabditis_N2 = "N2")
+  )
+
+  lazy_msa <- SynMultiAlignment(
+    name = "worm-graph-lazy",
+    individuals = c("caenorhabditis_XZ1516", "caenorhabditis_N2"),
+    file = tsv,
+    format = "odgi"
+  )
+  expect_identical(multiple_alignment_data(lazy_msa), tbl)
+
+  sp <- SynSpecies(name = "worms")
+  sp <- add_multiple_alignment(sp, msa)
+  expect_identical(multiple_alignment_data(sp, alignment = "worm-graph"), tbl)
+})
+
+test_that("odgi_multi_alignment validates path label groups", {
+  bad_tbl <- data.frame(
+    node_id = 1L,
+    sequence = "AC",
+    XZ1516_chromosome = "V_RagTag",
+    XZ1516_strand = "+",
+    XZ1516_absolute_start = 100L,
+    XZ1516_absolute_end = 101L,
+    check.names = FALSE,
+    stringsAsFactors = FALSE
+  )
+
+  expect_error(
+    odgi_multi_alignment(bad_tbl),
+    "at least two path label groups"
+  )
 })
