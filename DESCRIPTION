@@ -5,6 +5,7 @@ Authors@R:
     person("Dongyao", "LIU", , "dongyao@connect.hku.hk", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-8066-1487"))
 Description: visulize genomic tracks with associate meta information.
+SystemRequirements: Python (>= 3.8), odgi
 Depends:
     methods,
     gtable,
@@ -62,6 +63,7 @@ Collate:
     'ggplot-functions.R'
     'grob-null.R'
     'layout.R'
+    'odgi.R'
     'plot-build.R'
     'subsetting-overview.R'
     'syn-layer.R'
