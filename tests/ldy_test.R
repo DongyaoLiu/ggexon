@@ -34,93 +34,11 @@ n2_annotation <- system.file(
 )
 
 paf_path <- system.file("extdata", "V_alginment.paf", package = "ggexon")
-indexed_gff_dir <- file.path(repo_root, "inst", "extdata", "gff")
 
 xz_window_chr <- "RagTag_V"
 xz_window <- c(21558028, 21620381)
 n2_window_chr <- "V"
 n2_window <- c(20454111, 20491853)
-
-# Indexed folder speed test -------------------------------------------------
-
-indexed_gff_files <- sort(list.files(
-  indexed_gff_dir,
-  pattern = "\\.gff3\\.gz$",
-  full.names = TRUE
-))
-stopifnot(length(indexed_gff_files) > 0L)
-
-indexed_only_dir <- file.path(tempdir(), "ggexon-indexed-gff")
-unlink(indexed_only_dir, recursive = TRUE, force = TRUE)
-dir.create(indexed_only_dir, recursive = TRUE, showWarnings = FALSE)
-
-for (annotation_path in indexed_gff_files) {
-  file.symlink(
-    annotation_path,
-    file.path(indexed_only_dir, basename(annotation_path))
-  )
-  file.symlink(
-    paste0(annotation_path, ".tbi"),
-    file.path(indexed_only_dir, paste0(basename(annotation_path), ".tbi"))
-  )
-}
-
-indexed_synspecies_time <- system.time({
-  indexed_folder_sp <- SynSpecies(
-    name = "CaenorhabditisIndexed",
-    annotation_folder = indexed_only_dir
-  )
-})
-
-indexed_query_time <- system.time({
-  indexed_window_gr <- query_features(
-    individuals(indexed_folder_sp)[["caenorhabditis_XZ1516"]],
-    chr = xz_window_chr,
-    start = xz_window[1],
-    end = xz_window[2],
-    feature_type = NULL
-  )
-})
-
-indexed_full_load_time <- system.time({
-  indexed_loaded_individuals <- lapply(individuals(indexed_folder_sp), load_annotation)
-})
-
-indexed_row_counts <- vapply(
-  indexed_loaded_individuals,
-  function(ind) length(annotation_data(ind)),
-  integer(1)
-)
-
-cat("Indexed GFF folder:", indexed_gff_dir, "\n")
-cat("Indexed GFF files discovered:", length(indexed_gff_files), "\n")
-cat(
-  "SynSpecies(annotation_folder = indexed_only_dir) elapsed:",
-  indexed_synspecies_time[["elapsed"]],
-  "seconds\n"
-)
-cat(
-  "Indexed XZ1516 window query rows:",
-  length(indexed_window_gr),
-  "elapsed:",
-  indexed_query_time[["elapsed"]],
-  "seconds\n"
-)
-cat(
-  "Full indexed annotation materialization elapsed:",
-  indexed_full_load_time[["elapsed"]],
-  "seconds\n"
-)
-cat("Loaded annotation row counts (first five):\n")
-print(utils::head(indexed_row_counts, n = 5L))
-
-
-
-
-
-
-
-
 
 # XZ1516 setup --------------------------------------------------------------
 
@@ -230,7 +148,7 @@ species_layout(sp) <- SynLayout(
 # Plot ----------------------------------------------------------------------
 
 plot_obj <- ggexon(sp) +
-  geom_exon(aes(fill = gene_id),
+  geom_exon(aes(fill = transcript_id),
     species = "XZ1516",
     chr = xz_window_chr,
     subset = xz_window
@@ -263,62 +181,3 @@ if (!interactive()) {
 }
 
 print(plot_obj)
-
-
-# ODGI multiple-alignment test ---------------------------------------------
-
-odgi_graph <- system.file(
-  "extdata",
-  "XZ1516_chrV_21560000_21620000.og",
-  package = "ggexon"
-)
-odgi_bin <- Sys.getenv("ODGI_BIN", unset = Sys.which("odgi"))
-
-if (!nzchar(odgi_bin)) {
-  cat(
-    "ODGI binary not found; skipping graph-backed ODGI test. ",
-    "Set ODGI_BIN or add odgi to PATH to run it.\n",
-    sep = ""
-  )
-} else {
-  odgi_table_time <- system.time({
-    odgi_tsv <- odgi_node_table(
-      og_file = odgi_graph,
-      output = tempfile(pattern = "ggexon-odgi-", fileext = ".tsv"),
-      odgi = odgi_bin,
-      read = FALSE
-    )
-  })
-
-  odgi_parse_time <- system.time({
-    odgi_multi <- odgi_multi_alignment(
-      odgi_tsv,
-      name = "XZ1516_chrV_21560000_21620000"
-    )
-  })
-
-  odgi_holder <- SynSpecies(name = "ODGIHolder")
-  odgi_holder <- add_multiple_alignment(odgi_holder, odgi_multi)
-  odgi_multi_data <- multiple_alignment_data(
-    odgi_holder,
-    alignment = "XZ1516_chrV_21560000_21620000"
-  )
-
-  cat("ODGI graph file:", odgi_graph, "\n")
-  cat("ODGI node table file:", odgi_tsv, "\n")
-  cat("ODGI node-table build elapsed:", odgi_table_time[["elapsed"]], "seconds\n")
-  cat("ODGI parse elapsed:", odgi_parse_time[["elapsed"]], "seconds\n")
-  cat(
-    "Stored multiple alignments:",
-    paste(names(multiple_alignments(odgi_holder)), collapse = ", "),
-    "\n"
-  )
-  cat("ODGI alignment format:", alignment_format(odgi_multi), "\n")
-  cat(
-    "ODGI alignment individuals:",
-    paste(alignment_individuals(odgi_multi), collapse = ", "),
-    "\n"
-  )
-  cat("ODGI alignment rows:", nrow(odgi_multi_data), "\n")
-  print(utils::head(odgi_multi_data, n = 10L))
-}
