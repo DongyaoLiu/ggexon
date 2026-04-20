@@ -963,7 +963,13 @@ filter_pairwise_alignment <- function(x, filter = 200, alignment = NULL) {
 #'   pairwise alignments exist and you want to choose a specific pair.
 #' @param selected_species Optional character vector giving the plotted species
 #'   order to retain when `alignment` points to an ODGI multiple alignment.
-#'   Adjacent species in this order are linked pairwise.
+#'   When `reference_species` is supplied for an ODGI multiple alignment,
+#'   ggexon reorders this set greedily from the reference by choosing the next
+#'   species with the largest shared-node count against the most recently chosen
+#'   species. Adjacent species in the resulting order are linked pairwise.
+#' @param filter_by_len Optional ODGI node-length filter such as `"> 10"` or
+#'   `"<= 3"`. Applied only when `alignment` resolves to an ODGI multiple
+#'   alignment.
 #' @param max_target_gap Optional maximum gap used when chaining nearby PAF hits
 #'   on the partner genome. Defaults to `max(50000, 2 * window_width)`.
 #'
@@ -976,6 +982,7 @@ subset_synspecies_window <- function(x,
                                      end,
                                      alignment = NULL,
                                      selected_species = NULL,
+                                     filter_by_len = NULL,
                                      max_target_gap = NULL) {
   if (!methods::is(x, "SynSpecies")) {
     stop("`subset_synspecies_window()` expects a SynSpecies object.", call. = FALSE)
@@ -1009,7 +1016,8 @@ subset_synspecies_window <- function(x,
         chr = chr,
         start = ref_start,
         end = ref_end,
-        selected_species = selected_species
+        selected_species = selected_species,
+        filter_by_len = filter_by_len
       )
     )
   }
@@ -1124,14 +1132,16 @@ subset_synspecies_window <- function(x,
                                           chr,
                                           start,
                                           end,
-                                          selected_species = NULL) {
+                                          selected_species = NULL,
+                                          filter_by_len = NULL) {
   odgi_subset <- .odgi_alignment_windows_from_reference(
     msa = multi,
     reference_species = reference_species,
     chr = chr,
     start = start,
     end = end,
-    selected_species = selected_species
+    selected_species = selected_species,
+    filter_by_len = filter_by_len
   )
 
   species_order <- odgi_subset$species_order
@@ -1157,7 +1167,9 @@ subset_synspecies_window <- function(x,
 
   pair_list <- .odgi_pairwise_alignments_from_multi(
     msa = multi,
-    species_order = species_order
+    species_order = species_order,
+    reference_species = reference_species,
+    filter_by_len = filter_by_len
   )
   links <- lapply(pair_list, function(pair) {
     pair_species <- alignment_individuals(pair)

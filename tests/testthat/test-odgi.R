@@ -15,6 +15,31 @@ test_odgi_node_table <- function() {
   )
 }
 
+test_odgi_chain_table <- function() {
+  data.frame(
+    node_id = 1:5,
+    sequence = rep("A", 5),
+    REF_chromosome = rep("chrR", 5),
+    REF_strand = c("+", "+", "+", "NA", "NA"),
+    REF_absolute_start = c(100L, 101L, 102L, "NA", "NA"),
+    REF_absolute_end = c(100L, 101L, 102L, "NA", "NA"),
+    ALPHA_chromosome = rep("chrA", 5),
+    ALPHA_strand = c("+", "+", "+", "NA", "+"),
+    ALPHA_absolute_start = c(200L, 201L, 202L, "NA", 204L),
+    ALPHA_absolute_end = c(200L, 201L, 202L, "NA", 204L),
+    BETA_chromosome = rep("chrB", 5),
+    BETA_strand = c("NA", "+", "+", "NA", "+"),
+    BETA_absolute_start = c("NA", 301L, 302L, "NA", 304L),
+    BETA_absolute_end = c("NA", 301L, 302L, "NA", 304L),
+    GAMMA_chromosome = rep("chrG", 5),
+    GAMMA_strand = c("NA", "NA", "NA", "NA", "+"),
+    GAMMA_absolute_start = c("NA", "NA", "NA", "NA", 404L),
+    GAMMA_absolute_end = c("NA", "NA", "NA", "NA", 404L),
+    check.names = FALSE,
+    stringsAsFactors = FALSE
+  )
+}
+
 test_that("odgi_node_table exposes the bundled script path", {
   script <- odgi_node_table_script()
 
@@ -151,6 +176,32 @@ test_that("load_alignment infers ODGI label mappings for manual SynMultiAlignmen
   expect_identical(nrow(paf_like), 2L)
   expect_identical(paf_like$tchr, c("V", "V"))
   expect_identical(paf_like$tstart, c(200L, 202L))
+})
+
+test_that("filter_odgi_nodes auto-loads lazy ODGI alignments and filters by sequence length", {
+  tbl <- test_odgi_node_table()
+  tsv <- tempfile(fileext = ".tsv")
+  utils::write.table(tbl, file = tsv, sep = "\t", quote = FALSE, row.names = FALSE)
+
+  lazy_msa <- SynMultiAlignment(
+    name = "worm-graph-filter",
+    individuals = c("XZ1516", "N2"),
+    file = tsv,
+    format = "odgi"
+  )
+
+  filtered <- filter_odgi_nodes(lazy_msa, "> 1")
+
+  expect_true(isTRUE(filtered@loaded))
+  expect_false(isTRUE(filtered@lazy))
+  expect_identical(filtered@metadata$filter_by_len, "> 1")
+  expect_identical(filtered@data$node_id, 1L)
+  expect_identical(nrow(filtered@data), 1L)
+
+  expect_error(
+    filter_odgi_nodes(lazy_msa, "!= 2"),
+    "must look like"
+  )
 })
 
 test_that("odgi alignments can load directly from .og graph files", {
@@ -291,4 +342,32 @@ test_that("odgi parser ignores path chromosome labels for nodes absent from that
   expect_identical(nrow(paf_like), 1L)
   expect_identical(paf_like$qstart, 102L)
   expect_identical(paf_like$tstart, 300L)
+})
+
+test_that("odgi_species_order walks greedily from the reference species", {
+  tbl <- test_odgi_chain_table()
+
+  msa <- odgi_multi_alignment(
+    tbl,
+    name = "worm-chain",
+    individuals = c(
+      REF = "reference",
+      ALPHA = "alpha",
+      BETA = "beta",
+      GAMMA = "gamma"
+    )
+  )
+
+  expect_identical(
+    odgi_species_order(msa, reference_species = "reference"),
+    c("reference", "alpha", "beta", "gamma")
+  )
+  expect_identical(
+    odgi_species_order(
+      msa,
+      reference_species = "reference",
+      selected_species = c("gamma", "beta", "reference")
+    ),
+    c("reference", "beta", "gamma")
+  )
 })

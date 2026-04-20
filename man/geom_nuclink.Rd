@@ -16,6 +16,7 @@ geom_nuclink(
   reference = NULL,
   chr = NULL,
   subset = NULL,
+  filter_by_len = NULL,
   inherit.aes = TRUE
 )
 }
@@ -40,7 +41,10 @@ This can refer to a stored \code{SynPairAlignment} or an ODGI
 \code{SynMultiAlignment}.}
 
 \item{reference}{Optional reference species used when deriving a comparative
-window from \code{chr} + \code{subset}.}
+window from \code{chr} + \code{subset}. For ODGI multiple alignments, this also seeds
+the greedy comparison-panel order: starting from \code{reference}, ggexon
+repeatedly picks the remaining species that shares the most ODGI nodes with
+the most recently placed species.}
 
 \item{chr}{Optional reference chromosome / seqname when subsetting Syn-backed
 links.}
@@ -49,6 +53,10 @@ links.}
 together with \code{reference} and \code{chr}, only links overlapping the derived
 comparative region are drawn. When omitted, \code{geom_nuclink()} uses the
 current annotation windows when available, otherwise the full alignment.}
+
+\item{filter_by_len}{Optional ODGI node-length filter such as \code{"> 10"},
+\code{"= 3"}, or \code{"<= 2"}. Applied only when link rows are being derived from an
+ODGI multiple alignment.}
 
 \item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics rather than
 combining with them.}

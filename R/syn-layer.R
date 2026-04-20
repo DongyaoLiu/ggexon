@@ -120,6 +120,11 @@ collect_syn_plot_context <- function(layers, plot_data) {
   link_requests <- unlist(lapply(layers, function(layer) {
     collect_syn_link_requests(layer, syn_data, plot_data)
   }), recursive = FALSE)
+  annotation_species_order <- resolve_syn_plot_species_order(
+    syn_data,
+    annotation_species_order = annotation_species_order,
+    link_requests = link_requests
+  )
 
   windows <- collect_explicit_annotation_windows(annotation_requests, syn_data)
   windows <- derive_syn_plot_windows(
@@ -199,7 +204,8 @@ collect_syn_link_requests <- function(layer, syn_data, plot_data) {
     alignment_obj = alignment_obj,
     reference = params$reference,
     chr = params$chr,
-    subset = params$subset
+    subset = params$subset,
+    filter_by_len = params$filter_by_len
   ))
 }
 
@@ -253,6 +259,50 @@ resolve_plot_species_params <- function(x, species = NULL) {
   unique(as.character(species))
 }
 
+resolve_syn_plot_species_order <- function(x,
+                                           annotation_species_order = NULL,
+                                           link_requests = NULL) {
+  if (!methods::is(x, "SynSpecies")) {
+    return(annotation_species_order %||% character())
+  }
+
+  selected_species <- unique(as.character(annotation_species_order %||% names(individuals(x))))
+  selected_species <- selected_species[selected_species %in% names(individuals(x))]
+  if (length(selected_species) == 0L) {
+    selected_species <- names(individuals(x))
+  }
+
+  if (length(link_requests) == 0L) {
+    return(selected_species)
+  }
+
+  for (request in link_requests) {
+    alignment_obj <- request$alignment_obj %||% NULL
+    reference <- request$reference %||% NULL
+    if (is.null(reference) ||
+        is.null(alignment_obj) ||
+        !methods::is(alignment_obj, "SynMultiAlignment") ||
+        !identical(alignment_format(alignment_obj), "odgi")) {
+      next
+    }
+
+    aligned_species <- selected_species[selected_species %in% alignment_individuals(alignment_obj)]
+    if (!reference %in% alignment_individuals(alignment_obj) || length(aligned_species) < 2L) {
+      next
+    }
+
+    ordered_species <- odgi_species_order(
+      alignment_obj,
+      reference_species = reference,
+      selected_species = aligned_species,
+      filter_by_len = request$filter_by_len
+    )
+    return(c(ordered_species, setdiff(selected_species, ordered_species)))
+  }
+
+  selected_species
+}
+
 resolve_context_species_params <- function(x, species = NULL, context = NULL) {
   if (!is.null(species)) {
     explicit_species <- resolve_plot_species_params(x, species)
@@ -265,6 +315,13 @@ resolve_context_species_params <- function(x, species = NULL, context = NULL) {
 
   if (!methods::is(x, "SynSpecies")) {
     return(character())
+  }
+
+  annotation_species <- context$annotation_species_order %||% character()
+  annotation_species <- annotation_species[annotation_species %in% names(individuals(x))]
+  annotation_species <- unique(annotation_species)
+  if (length(annotation_species) > 0L) {
+    return(annotation_species)
   }
 
   context_windows <- context$windows %||% list()
@@ -300,7 +357,11 @@ resolve_plot_alignment_name <- function(x, alignment = NULL) {
   alignment
 }
 
-infer_nuclink_species_order <- function(x, context = NULL) {
+infer_nuclink_species_order <- function(x,
+                                        context = NULL,
+                                        reference_species = NULL,
+                                        alignment = NULL,
+                                        filter_by_len = NULL) {
   if (!methods::is(x, "SynSpecies")) {
     return(NULL)
   }
@@ -318,6 +379,23 @@ infer_nuclink_species_order <- function(x, context = NULL) {
   context_species <- unique(context_species)
   if (length(context_species) > 0L) {
     return(context_species)
+  }
+
+  if (!is.null(reference_species)) {
+    alignment_obj <- tryCatch(
+      resolve_plot_alignment_object(x, resolve_plot_alignment_name(x, alignment)),
+      error = function(...) NULL
+    )
+    if (!is.null(alignment_obj) &&
+        methods::is(alignment_obj, "SynMultiAlignment") &&
+        identical(alignment_format(alignment_obj), "odgi")) {
+      return(odgi_species_order(
+        alignment_obj,
+        reference_species = reference_species,
+        selected_species = names(individuals(x)),
+        filter_by_len = filter_by_len
+      ))
+    }
   }
 
   names(individuals(x))
@@ -347,7 +425,11 @@ resolve_plot_alignment_object <- function(x, alignment = NULL) {
   NULL
 }
 
-resolve_plot_link_alignments <- function(x, alignment = NULL, species_order = NULL) {
+resolve_plot_link_alignments <- function(x,
+                                         alignment = NULL,
+                                         species_order = NULL,
+                                         reference_species = NULL,
+                                         filter_by_len = NULL) {
   if (!methods::is(x, "SynSpecies")) {
     cli::cli_abort("Plot-derived link windows require a {.cls SynSpecies} object.")
   }
@@ -411,7 +493,9 @@ resolve_plot_link_alignments <- function(x, alignment = NULL, species_order = NU
 
     out <- .odgi_pairwise_alignments_from_multi(
       msa = multi,
-      species_order = species_order
+      species_order = species_order,
+      reference_species = reference_species,
+      filter_by_len = filter_by_len
     )
     if (length(out) == 0L) {
       cli::cli_abort("No adjacent ODGI pairwise links could be derived for the plotted species order.")
@@ -432,8 +516,16 @@ resolve_plot_link_alignments <- function(x, alignment = NULL, species_order = NU
   )
 }
 
-resolve_plot_pairwise_alignment <- function(x, alignment = NULL, pair_species = NULL) {
-  out <- resolve_plot_link_alignments(x, alignment = alignment, species_order = pair_species)
+resolve_plot_pairwise_alignment <- function(x,
+                                            alignment = NULL,
+                                            pair_species = NULL,
+                                            reference_species = NULL) {
+  out <- resolve_plot_link_alignments(
+    x,
+    alignment = alignment,
+    species_order = pair_species,
+    reference_species = reference_species
+  )
   if (length(out) != 1L) {
     cli::cli_abort("Need exactly one pairwise alignment in this plotting context.")
   }
@@ -482,7 +574,7 @@ derive_syn_plot_windows <- function(x, windows, link_requests, annotation_specie
       next
     }
 
-    if (!is.null(request$reference) || !is.null(request$chr) || !is.null(request$subset)) {
+    if (!is.null(request$chr) || !is.null(request$subset)) {
       if (is.null(request$reference) || is.null(request$chr) || is.null(request$subset)) {
         cli::cli_abort(
           "Provide {.arg reference}, {.arg chr}, and {.arg subset} together when subsetting {.fn geom_nuclink}."
@@ -499,7 +591,8 @@ derive_syn_plot_windows <- function(x, windows, link_requests, annotation_specie
         start = min(request$subset),
         end = max(request$subset),
         alignment = request$alignment,
-        selected_species = selected_species
+        selected_species = selected_species,
+        filter_by_len = request$filter_by_len
       )
       windows <- utils::modifyList(windows, out$windows)
       next
@@ -518,7 +611,8 @@ derive_syn_plot_windows <- function(x, windows, link_requests, annotation_specie
       start = reference_window$start,
       end = reference_window$end,
       alignment = request$alignment,
-      selected_species = selected_species
+      selected_species = selected_species,
+      filter_by_len = request$filter_by_len
     )
     windows <- utils::modifyList(windows, out$windows)
   }
@@ -648,6 +742,7 @@ resolve_syn_layer_data <- function(x, layer) {
         reference = params$reference,
         chr = params$chr,
         subset = params$subset,
+        filter_by_len = params$filter_by_len,
         context = context
       )
     )
@@ -1699,14 +1794,21 @@ syn_to_nuclink_df <- function(x,
                               reference = NULL,
                               chr = NULL,
                               subset = NULL,
+                              filter_by_len = NULL,
                               context = NULL) {
   if (!methods::is(x, "SynSpecies")) {
     cli::cli_abort("{.fn geom_nuclink} with implicit Syn data requires a {.cls SynSpecies} object.")
   }
 
-  species_order <- infer_nuclink_species_order(x, context)
+  species_order <- infer_nuclink_species_order(
+    x,
+    context,
+    reference_species = reference,
+    alignment = alignment,
+    filter_by_len = filter_by_len
+  )
 
-  if (!is.null(reference) || !is.null(chr) || !is.null(subset)) {
+  if (!is.null(chr) || !is.null(subset)) {
     if (is.null(reference) || is.null(chr) || is.null(subset)) {
       cli::cli_abort("Provide {.arg reference}, {.arg chr}, and {.arg subset} together when subsetting {.fn geom_nuclink}.")
     }
@@ -1721,7 +1823,8 @@ syn_to_nuclink_df <- function(x,
       start = min(subset),
       end = max(subset),
       alignment = alignment,
-      selected_species = species_order
+      selected_species = species_order,
+      filter_by_len = filter_by_len
     )
 
     return(out$links)
@@ -1730,7 +1833,9 @@ syn_to_nuclink_df <- function(x,
   pairs <- resolve_plot_link_alignments(
     x,
     alignment,
-    species_order = species_order
+    species_order = species_order,
+    reference_species = reference,
+    filter_by_len = filter_by_len
   )
   link_data <- lapply(pairs, function(pair) {
     pair_species <- alignment_individuals(pair)

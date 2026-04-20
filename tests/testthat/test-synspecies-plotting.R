@@ -62,6 +62,134 @@ test_that("syn-aware annotation geoms can default to all individuals and full an
   expect_setequal(unique(exon_build$data[[1L]]$track), c("XZ1516", "CB4856"))
 })
 
+test_that("geom_nuclink(reference = ...) reorders ODGI comparison panels greedily", {
+  annotation_path <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+
+  odgi_tbl <- data.frame(
+    node_id = 1:5,
+    sequence = rep("A", 5),
+    REF_chromosome = rep("chrR", 5),
+    REF_strand = c("+", "+", "+", "NA", "NA"),
+    REF_absolute_start = c(100L, 101L, 102L, "NA", "NA"),
+    REF_absolute_end = c(100L, 101L, 102L, "NA", "NA"),
+    ALPHA_chromosome = rep("chrA", 5),
+    ALPHA_strand = c("+", "+", "+", "NA", "+"),
+    ALPHA_absolute_start = c(200L, 201L, 202L, "NA", 204L),
+    ALPHA_absolute_end = c(200L, 201L, 202L, "NA", 204L),
+    BETA_chromosome = rep("chrB", 5),
+    BETA_strand = c("NA", "+", "+", "NA", "+"),
+    BETA_absolute_start = c("NA", 301L, 302L, "NA", 304L),
+    BETA_absolute_end = c("NA", 301L, 302L, "NA", 304L),
+    GAMMA_chromosome = rep("chrG", 5),
+    GAMMA_strand = c("NA", "NA", "NA", "NA", "+"),
+    GAMMA_absolute_start = c("NA", "NA", "NA", "NA", 404L),
+    GAMMA_absolute_end = c("NA", "NA", "NA", "NA", 404L),
+    check.names = FALSE,
+    stringsAsFactors = FALSE
+  )
+
+  sp <- SynSpecies(name = "ODGIChain")
+  for (id in c("gamma", "beta", "alpha", "reference")) {
+    sp <- add_individual(
+      sp,
+      test_syn_individual(
+        annotation_file = annotation_path,
+        id = id
+      )
+    )
+  }
+  sp <- add_multiple_alignment(
+    sp,
+    odgi_multi_alignment(
+      odgi_tbl,
+      name = "odgi_chain",
+      individuals = c(
+        REF = "reference",
+        ALPHA = "alpha",
+        BETA = "beta",
+        GAMMA = "gamma"
+      )
+    )
+  )
+
+  built <- ggexon_build(
+    ggexon(sp) +
+      geom_exon() +
+      geom_nuclink(reference = "reference", alignment = "odgi_chain") +
+      facet_genomics(ggplot2::vars(track), scales = "free_y")
+  )
+
+  expect_identical(
+    as.character(built@layout$layout$track),
+    c(
+      "reference",
+      "link_odgi_chain__reference__alpha",
+      "alpha",
+      "link_odgi_chain__alpha__beta",
+      "beta",
+      "link_odgi_chain__beta__gamma",
+      "gamma"
+    )
+  )
+})
+
+test_that("geom_nuclink(filter_by_len = ...) filters ODGI-derived link nodes by sequence length", {
+  annotation_path <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+
+  odgi_tbl <- data.frame(
+    node_id = c(1L, 2L),
+    sequence = c("AC", "G"),
+    XZ1516_chromosome = c("V_RagTag", "V_RagTag"),
+    XZ1516_strand = c("+", "-"),
+    XZ1516_absolute_start = c(100L, 102L),
+    XZ1516_absolute_end = c(101L, 102L),
+    N2_chromosome = c("V", "V"),
+    N2_strand = c("+", "+"),
+    N2_absolute_start = c(200L, 202L),
+    N2_absolute_end = c(201L, 202L),
+    check.names = FALSE,
+    stringsAsFactors = FALSE
+  )
+
+  sp <- SynSpecies(name = "ODGIFilter")
+  for (id in c("XZ1516", "N2")) {
+    sp <- add_individual(
+      sp,
+      test_syn_individual(
+        annotation_file = annotation_path,
+        id = id
+      )
+    )
+  }
+  sp <- add_multiple_alignment(
+    sp,
+    odgi_multi_alignment(
+      odgi_tbl,
+      name = "odgi_pair",
+      individuals = c(XZ1516 = "XZ1516", N2 = "N2")
+    )
+  )
+
+  built <- ggexon_build(
+    ggexon(sp) +
+      geom_exon() +
+      geom_nuclink(alignment = "odgi_pair", filter_by_len = "> 1") +
+      facet_genomics(ggplot2::vars(track), scales = "free_y")
+  )
+
+  link_data <- built@data[[2L]]
+  expect_identical(length(unique(link_data$group)), 1L)
+  expect_identical(nrow(link_data), 4L)
+})
+
 test_that("SynSpecies chain layout reserves one link panel per pairwise alignment", {
   genome_path <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
   annotation_path <- system.file(

@@ -30,13 +30,19 @@
 #'   This can refer to a stored `SynPairAlignment` or an ODGI
 #'   `SynMultiAlignment`.
 #' @param reference Optional reference species used when deriving a comparative
-#'   window from `chr` + `subset`.
+#'   window from `chr` + `subset`. For ODGI multiple alignments, this also seeds
+#'   the greedy comparison-panel order: starting from `reference`, ggexon
+#'   repeatedly picks the remaining species that shares the most ODGI nodes with
+#'   the most recently placed species.
 #' @param chr Optional reference chromosome / seqname when subsetting Syn-backed
 #'   links.
 #' @param subset Optional numeric length-2 reference window. When supplied
 #'   together with `reference` and `chr`, only links overlapping the derived
 #'   comparative region are drawn. When omitted, `geom_nuclink()` uses the
 #'   current annotation windows when available, otherwise the full alignment.
+#' @param filter_by_len Optional ODGI node-length filter such as `"> 10"`,
+#'   `"= 3"`, or `"<= 2"`. Applied only when link rows are being derived from an
+#'   ODGI multiple alignment.
 #' @param inherit.aes If `FALSE`, overrides the default aesthetics rather than
 #'   combining with them.
 #'
@@ -50,6 +56,7 @@ geom_nuclink <- function(mapping = NULL, data = NULL,
                                 reference = NULL,
                                 chr = NULL,
                                 subset = NULL,
+                                filter_by_len = NULL,
                                 inherit.aes = TRUE) {
   layer(
     data = data,
@@ -66,7 +73,8 @@ geom_nuclink <- function(mapping = NULL, data = NULL,
       alignment = alignment,
       reference = reference,
       chr = chr,
-      subset = subset
+      subset = subset,
+      filter_by_len = filter_by_len
     ))
   )
 }
@@ -76,7 +84,7 @@ GeomNucLink <- ggproto("GeomPanel", Geom,
                                               "qspecies", "qchr", "qstart", "qend"),
                              optional_aes = c("target_anchor_y", "query_anchor_y", "t_panel", "q_panel"),
                              non_missing_aes = c("linetype", "linewidth", "shape"),
-                             extra_params = c("na.rm", "alignment", "reference", "chr", "subset"),
+                             extra_params = c("na.rm", "alignment", "reference", "chr", "subset", "filter_by_len"),
                              default_aes = aes(linewidth = 0,
                                                linejoin = "mitre",
                                                colour = "black",

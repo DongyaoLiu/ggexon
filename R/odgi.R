@@ -353,9 +353,83 @@ odgi_node_table <- function(og_file,
   labels
 }
 
+.odgi_species_node_sets <- function(msa,
+                                    selected_species = NULL,
+                                    filter_by_len = NULL) {
+  msa <- .prepare_odgi_multi_alignment(msa, filter_by_len = filter_by_len)
+  tbl <- multiple_alignment_data(msa)
+  labels <- .odgi_pairwise_label_lookup(msa, tbl = tbl)
+
+  species_order <- if (is.null(selected_species)) {
+    alignment_individuals(msa)
+  } else {
+    unique(as.character(selected_species))
+  }
+  species_order <- species_order[species_order %in% alignment_individuals(msa)]
+
+  out <- lapply(species_order, function(species_name) {
+    label <- unname(labels[[species_name]])
+    unique(.odgi_label_occurrences(tbl, label)$node_id)
+  })
+  stats::setNames(out, species_order)
+}
+
+.odgi_greedy_species_order <- function(msa,
+                                      reference_species,
+                                      selected_species = NULL,
+                                      filter_by_len = NULL) {
+  if (!methods::is(msa, "SynMultiAlignment")) {
+    stop("`msa` must be a SynMultiAlignment object.", call. = FALSE)
+  }
+  if (!identical(alignment_format(msa), "odgi")) {
+    stop("`msa` must have `format = \"odgi\"`.", call. = FALSE)
+  }
+  if (!reference_species %in% alignment_individuals(msa)) {
+    stop("Unknown ODGI reference species: ", reference_species, call. = FALSE)
+  }
+
+  species_order <- if (is.null(selected_species)) {
+    alignment_individuals(msa)
+  } else {
+    unique(as.character(selected_species))
+  }
+  species_order <- species_order[species_order %in% alignment_individuals(msa)]
+  if (!reference_species %in% species_order) {
+    species_order <- c(reference_species, species_order)
+  }
+  species_order <- unique(species_order)
+
+  if (length(species_order) < 2L) {
+    return(species_order)
+  }
+
+  node_sets <- .odgi_species_node_sets(
+    msa,
+    selected_species = species_order,
+    filter_by_len = filter_by_len
+  )
+  ordered <- reference_species
+  remaining <- setdiff(species_order, reference_species)
+  current <- reference_species
+
+  while (length(remaining) > 0L) {
+    scores <- vapply(remaining, function(candidate) {
+      length(intersect(node_sets[[current]], node_sets[[candidate]]))
+    }, integer(1))
+    next_species <- remaining[[which.max(scores)]]
+    ordered <- c(ordered, next_species)
+    remaining <- setdiff(remaining, next_species)
+    current <- next_species
+  }
+
+  ordered
+}
+
 .resolve_odgi_species_order <- function(msa,
                                         selected_species = NULL,
-                                        reference_species = NULL) {
+                                        reference_species = NULL,
+                                        greedy_reference = FALSE,
+                                        filter_by_len = NULL) {
   species_order <- if (is.null(selected_species)) {
     alignment_individuals(msa)
   } else {
@@ -364,6 +438,14 @@ odgi_node_table <- function(og_file,
   species_order <- species_order[species_order %in% alignment_individuals(msa)]
 
   if (!is.null(reference_species) && reference_species %in% alignment_individuals(msa)) {
+    if (isTRUE(greedy_reference)) {
+      return(.odgi_greedy_species_order(
+        msa,
+        reference_species = reference_species,
+        selected_species = species_order,
+        filter_by_len = filter_by_len
+      ))
+    }
     species_order <- c(reference_species, setdiff(species_order, reference_species))
   }
 
@@ -443,7 +525,9 @@ odgi_node_table <- function(og_file,
 }
 
 .odgi_pairwise_alignments_from_multi <- function(msa,
-                                                 species_order = NULL) {
+                                                 species_order = NULL,
+                                                 reference_species = NULL,
+                                                 filter_by_len = NULL) {
   if (!methods::is(msa, "SynMultiAlignment")) {
     stop("`msa` must be a SynMultiAlignment object.", call. = FALSE)
   }
@@ -451,7 +535,14 @@ odgi_node_table <- function(og_file,
     stop("`msa` must have `format = \"odgi\"`.", call. = FALSE)
   }
 
-  species_order <- .resolve_odgi_species_order(msa, selected_species = species_order)
+  msa <- .prepare_odgi_multi_alignment(msa, filter_by_len = filter_by_len)
+  species_order <- .resolve_odgi_species_order(
+    msa,
+    selected_species = species_order,
+    reference_species = reference_species,
+    greedy_reference = !is.null(reference_species),
+    filter_by_len = filter_by_len
+  )
   if (length(species_order) < 2L) {
     return(list())
   }
@@ -490,7 +581,8 @@ odgi_node_table <- function(og_file,
                                                    chr,
                                                    start,
                                                    end,
-                                                   selected_species = NULL) {
+                                                   selected_species = NULL,
+                                                   filter_by_len = NULL) {
   if (!methods::is(msa, "SynMultiAlignment")) {
     stop("`msa` must be a SynMultiAlignment object.", call. = FALSE)
   }
@@ -501,12 +593,15 @@ odgi_node_table <- function(og_file,
     stop("Unknown ODGI reference species: ", reference_species, call. = FALSE)
   }
 
+  msa <- .prepare_odgi_multi_alignment(msa, filter_by_len = filter_by_len)
   tbl <- multiple_alignment_data(msa)
   labels <- .odgi_pairwise_label_lookup(msa, tbl = tbl)
   species_order <- .resolve_odgi_species_order(
     msa,
     selected_species = selected_species,
-    reference_species = reference_species
+    reference_species = reference_species,
+    greedy_reference = TRUE,
+    filter_by_len = filter_by_len
   )
   if (length(species_order) == 0L) {
     stop("No selected species are present in the ODGI alignment.", call. = FALSE)
@@ -560,6 +655,89 @@ odgi_node_table <- function(og_file,
     windows = windows,
     species_order = species_order[species_order %in% names(windows)],
     node_ids = node_ids
+  )
+}
+
+#' Derive a greedy species order from an ODGI multiple alignment
+#'
+#' Builds a comparison-chain order for an ODGI multiple alignment by starting at
+#' one reference species and repeatedly choosing the remaining species that
+#' shares the most ODGI nodes with the most recently chosen species. This is the
+#' same heuristic used by `geom_nuclink(reference = ...)` to arrange ODGI-backed
+#' comparison panels when multiple species are plotted together.
+#'
+#' @param x A [`SynMultiAlignment`] with `format = "odgi"`, a [`SynSpecies`]
+#'   object containing an ODGI multiple alignment, an ODGI node-table data
+#'   frame, a path to an ODGI node-table TSV, or a raw `.og` graph path.
+#' @param reference_species Reference species that seeds the greedy walk.
+#' @param selected_species Optional subset of species to include. Species not
+#'   present in the ODGI alignment are ignored.
+#' @param alignment Optional alignment name when `x` is a [`SynSpecies`] with
+#'   multiple stored multiple-alignments.
+#' @param filter_by_len Optional ODGI node-length filter such as `"> 10"` or
+#'   `"<= 3"`. When supplied, the greedy ordering is computed on the filtered
+#'   node set.
+#' @param individuals Optional individual mapping used when `x` is a data frame
+#'   or file path rather than a prebuilt [`SynMultiAlignment`].
+#' @param odgi Optional path to the `odgi` executable. Used when `x` is a raw
+#'   `.og` graph path.
+#' @param python Optional path to the Python interpreter. Used when `x` is a raw
+#'   `.og` graph path.
+#'
+#' @return A character vector of species identifiers in greedy comparison order.
+#' @export
+#'
+#' @examples
+#' tbl <- data.frame(
+#'   node_id = 1:3,
+#'   sequence = c("A", "C", "G"),
+#'   XZ1516_chromosome = "V_RagTag",
+#'   XZ1516_strand = c("+", "+", "+"),
+#'   XZ1516_absolute_start = c(100L, 101L, 102L),
+#'   XZ1516_absolute_end = c(100L, 101L, 102L),
+#'   N2_chromosome = "V",
+#'   N2_strand = c("+", "+", "NA"),
+#'   N2_absolute_start = c(200L, 201L, "NA"),
+#'   N2_absolute_end = c(200L, 201L, "NA"),
+#'   CB4856_chromosome = "V",
+#'   CB4856_strand = c("+", "NA", "NA"),
+#'   CB4856_absolute_start = c(300L, "NA", "NA"),
+#'   CB4856_absolute_end = c(300L, "NA", "NA"),
+#'   check.names = FALSE,
+#'   stringsAsFactors = FALSE
+#' )
+#'
+#' odgi_species_order(tbl, reference_species = "XZ1516")
+odgi_species_order <- function(x,
+                               reference_species,
+                               selected_species = NULL,
+                               alignment = NULL,
+                               filter_by_len = NULL,
+                               individuals = NULL,
+                               odgi = NULL,
+                               python = NULL) {
+  msa <- if (methods::is(x, "SynSpecies")) {
+    .resolve_multiple_alignment_arg(x = x, alignment = alignment)
+  } else if (methods::is(x, "SynMultiAlignment")) {
+    x
+  } else {
+    odgi_multi_alignment(
+      x,
+      individuals = individuals,
+      odgi = odgi,
+      python = python
+    )
+  }
+
+  if (!identical(alignment_format(msa), "odgi")) {
+    stop("`odgi_species_order()` currently supports only ODGI multiple alignments.", call. = FALSE)
+  }
+
+  .odgi_greedy_species_order(
+    msa = msa,
+    reference_species = reference_species,
+    selected_species = selected_species,
+    filter_by_len = filter_by_len
   )
 }
 
@@ -684,6 +862,160 @@ odgi_node_table <- function(og_file,
   }
 
   default
+}
+
+.parse_odgi_node_length_filter <- function(filter_by_len) {
+  if (is.null(filter_by_len)) {
+    return(NULL)
+  }
+  if (!is.character(filter_by_len) || length(filter_by_len) != 1L ||
+      is.na(filter_by_len) || !nzchar(trimws(filter_by_len))) {
+    stop(
+      "`filter_by_len` must be NULL or a single comparison string such as \"> 10\" or \"<= 5\".",
+      call. = FALSE
+    )
+  }
+
+  filter_chr <- trimws(filter_by_len)
+  matches <- regexec("^([><]=?|=)\\s*([0-9]+)$", filter_chr)
+  parts <- regmatches(filter_chr, matches)[[1L]]
+  if (length(parts) != 3L) {
+    stop(
+      "`filter_by_len` must look like one of: \"> 10\", \"= 3\", \"< 5\", \">= 8\", \"<= 2\".",
+      call. = FALSE
+    )
+  }
+
+  list(op = parts[[2L]], value = as.integer(parts[[3L]]))
+}
+
+.format_odgi_node_length_filter <- function(filter) {
+  if (is.null(filter)) {
+    return(NULL)
+  }
+  paste(filter$op, filter$value)
+}
+
+.filter_odgi_node_table_by_length <- function(tbl, filter_by_len = NULL) {
+  filter <- if (is.list(filter_by_len)) filter_by_len else .parse_odgi_node_length_filter(filter_by_len)
+  if (is.null(filter)) {
+    return(tbl)
+  }
+  if (!is.data.frame(tbl) || !"sequence" %in% names(tbl)) {
+    stop("ODGI node filtering requires a node-table data frame with a `sequence` column.", call. = FALSE)
+  }
+
+  seq_len <- nchar(as.character(tbl$sequence))
+  keep <- switch(
+    filter$op,
+    ">" = seq_len > filter$value,
+    "<" = seq_len < filter$value,
+    "=" = seq_len == filter$value,
+    ">=" = seq_len >= filter$value,
+    "<=" = seq_len <= filter$value,
+    stop("Unsupported `filter_by_len` operator: ", filter$op, call. = FALSE)
+  )
+
+  out <- tbl[!is.na(keep) & keep, , drop = FALSE]
+  rownames(out) <- NULL
+  out
+}
+
+.prepare_odgi_multi_alignment <- function(msa,
+                                          filter_by_len = NULL,
+                                          odgi = NULL,
+                                          python = NULL) {
+  if (!methods::is(msa, "SynMultiAlignment")) {
+    stop("`msa` must be a SynMultiAlignment object.", call. = FALSE)
+  }
+  if (!identical(alignment_format(msa), "odgi")) {
+    stop("Node-length filtering currently supports only `format = \"odgi\"` alignments.", call. = FALSE)
+  }
+
+  msa <- load_alignment(msa, odgi = odgi, python = python)
+  filter <- .parse_odgi_node_length_filter(filter_by_len)
+  if (!is.null(filter)) {
+    msa@data <- .filter_odgi_node_table_by_length(msa@data, filter)
+    msa@metadata$filter_by_len <- .format_odgi_node_length_filter(filter)
+  }
+  msa
+}
+
+#' Filter ODGI nodes by sequence length
+#'
+#' Loads an ODGI-backed [`SynMultiAlignment`] if needed, then keeps only nodes
+#' whose sequence length satisfies a comparison such as `"> 10"` or "`<= 3`".
+#' The returned object keeps the same alignment metadata and ODGI label mapping
+#' but caches the filtered node table in memory.
+#'
+#' When called on a [`SynSpecies`] object, `alignment` selects which stored
+#' multiple alignment to update. The returned `SynSpecies` contains the filtered
+#' `SynMultiAlignment` in place.
+#'
+#' @param x A [`SynMultiAlignment`] with `format = "odgi"` or a [`SynSpecies`]
+#'   object containing one or more ODGI multiple alignments.
+#' @param filter_by_len A single comparison string such as `"> 10"`, `"= 3"`,
+#'   `"< 5"`, `">= 8"`, or `"<= 2"`.
+#' @param alignment Optional multiple-alignment name when `x` is a
+#'   [`SynSpecies`]. If omitted and exactly one multiple alignment is stored,
+#'   that alignment is used.
+#' @param odgi Optional path to the `odgi` executable. Used when an ODGI
+#'   alignment is backed by a raw `.og` graph and must be loaded first.
+#' @param python Optional path to the Python interpreter. Used when an ODGI
+#'   alignment is backed by a raw `.og` graph and must be loaded first.
+#'
+#' @return An updated object of the same class as `x`.
+#' @export
+#'
+#' @examples
+#' tbl <- data.frame(
+#'   node_id = 1:2,
+#'   sequence = c("AC", "G"),
+#'   XZ1516_chromosome = c("V_RagTag", "V_RagTag"),
+#'   XZ1516_strand = c("+", "-"),
+#'   XZ1516_absolute_start = c(100L, 102L),
+#'   XZ1516_absolute_end = c(101L, 102L),
+#'   N2_chromosome = c("V", "V"),
+#'   N2_strand = c("+", "+"),
+#'   N2_absolute_start = c(200L, 202L),
+#'   N2_absolute_end = c(201L, 202L),
+#'   check.names = FALSE,
+#'   stringsAsFactors = FALSE
+#' )
+#'
+#' msa <- odgi_multi_alignment(tbl, name = "worm-graph")
+#' filter_odgi_nodes(msa, "> 1")
+filter_odgi_nodes <- function(x,
+                              filter_by_len,
+                              alignment = NULL,
+                              odgi = NULL,
+                              python = NULL) {
+  if (methods::is(x, "SynMultiAlignment")) {
+    return(.prepare_odgi_multi_alignment(
+      x,
+      filter_by_len = filter_by_len,
+      odgi = odgi,
+      python = python
+    ))
+  }
+
+  if (methods::is(x, "SynSpecies")) {
+    multi <- .resolve_multiple_alignment_arg(x = x, alignment = alignment)
+    filtered_multi <- .prepare_odgi_multi_alignment(
+      multi,
+      filter_by_len = filter_by_len,
+      odgi = odgi,
+      python = python
+    )
+    x@multiple_alignments[[alignment_name(filtered_multi)]] <- filtered_multi
+    validObject(x)
+    return(x)
+  }
+
+  stop(
+    "`filter_odgi_nodes()` expects a SynMultiAlignment or SynSpecies object.",
+    call. = FALSE
+  )
 }
 
 #' Convert an ODGI node table into a `SynMultiAlignment`
