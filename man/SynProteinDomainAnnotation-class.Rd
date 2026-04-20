@@ -8,6 +8,11 @@
 \code{SynProteinDomainAnnotation} stores protein-domain calls keyed by a protein-,
 transcript-, or gene-level identifier.
 }
+\details{
+In addition to the slots listed below, the class inherits \code{name},
+\code{source_file}, \code{annotation_scope}, \code{lazy}, \code{loaded}, \code{metadata}, and
+\code{plot_cache} from \code{SynAnnotation}.
+}
 \section{Slots}{
 
 \describe{
@@ -20,4 +25,21 @@ transcript-, or gene-level identifier.
 \item{\code{source_db}}{Optional source database label such as \code{"Pfam"} or
 \code{"InterPro"}.}
 }}
+
+\section{Prototype defaults}{
+
+\itemize{
+\item \code{data_format = "domain"}
+\item \code{annotation_scope = "protein"}
+\item \code{domain_data = NULL}
+\item \code{keytype = "protein_id"}
+\item \code{source_db = NA_character_}
+}
+}
+
+\section{Validity rules}{
+
+No additional custom validity checks are defined beyond the inherited slot
+classes and parent-class rules.
+}
 

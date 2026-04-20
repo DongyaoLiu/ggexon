@@ -10,6 +10,11 @@ of features from a \code{SynFeatureAnnotation}. As a genome-coordinate annotatio
 it inherits the shared \code{SynGenomeAnnotation} metadata used across
 nucleotide-level annotation layers.
 }
+\details{
+In addition to the slots listed below, the class inherits \code{name},
+\code{source_file}, \code{annotation_scope}, \code{lazy}, \code{loaded}, \code{metadata}, and
+\code{plot_cache} from \code{SynAnnotation}.
+}
 \section{Slots}{
 
 \describe{
@@ -28,4 +33,25 @@ patch.}
 
 \item{\code{metadata}}{Optional patch metadata.}
 }}
+
+\section{Prototype defaults}{
+
+\itemize{
+\item \code{source_file = "<patch>"}
+\item \code{annotation_scope = "nucleotide"}
+\item \code{lazy = FALSE}
+\item \code{loaded = TRUE}
+\item \code{patch_data = NULL}
+\item \code{target_ids = character()}
+\item \code{mode = "replace"}
+}
+}
+
+\section{Validity rules}{
+
+\itemize{
+\item \code{mode} must be one of \code{"replace"}, \code{"add"}, or \code{"drop"}.
+\item \code{patch_data} is required when \code{mode} is \code{"replace"} or \code{"add"}.
+}
+}
 

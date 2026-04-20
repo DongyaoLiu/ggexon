@@ -31,3 +31,23 @@ semantics.
 reusable render-time state.}
 }}
 
+\section{Prototype defaults}{
+
+\itemize{
+\item \code{annotation_scope = "unknown"}
+\item \code{lazy = TRUE}
+\item \code{loaded = FALSE}
+\item \code{metadata = list()}
+\item \code{plot_cache = list()}
+}
+}
+
+\section{Validity rules}{
+
+\itemize{
+\item \code{name}, \code{source_file}, and \code{annotation_scope} must each be one non-empty
+character value.
+\item \code{lazy} and \code{loaded} must each be scalar logical values.
+}
+}
+

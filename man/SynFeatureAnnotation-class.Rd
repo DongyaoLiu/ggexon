@@ -9,6 +9,11 @@
 transcripts, exons, CDS, and derived label or sequence caches. It is the
 default feature-layer type attached to \code{SynIndividual}.
 }
+\details{
+In addition to the slots listed below, the class inherits \code{name},
+\code{source_file}, \code{annotation_scope}, \code{lazy}, \code{loaded}, \code{metadata}, and
+\code{plot_cache} from \code{SynAnnotation}.
+}
 \section{Slots}{
 
 \describe{
@@ -32,4 +37,26 @@ annotated features.}
 
 \item{\code{protein_seq}}{Optional cached translated protein sequences.}
 }}
+
+\section{Prototype defaults}{
+
+\itemize{
+\item \code{annotation_format = "auto"}
+\item \code{annotation_scope = "nucleotide"}
+\item \code{base_annotation = NULL}
+\item \code{annotation = NULL}
+\item \code{patches = list()}
+\item \code{feature_index = NULL}
+\item \code{label_map = NULL}
+\item \code{nucleotide_seq = NULL}
+\item \code{protein_seq = NULL}
+}
+}
+
+\section{Validity rules}{
+
+\itemize{
+\item \code{annotation_format} must be one of \code{"auto"}, \code{"gff"}, or \code{"gtf"}.
+}
+}
 

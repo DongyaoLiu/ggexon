@@ -49,3 +49,37 @@ genome.}
 for inspection.}
 }}
 
+\section{Prototype defaults}{
+
+\itemize{
+\item \code{annotation_format = "auto"}
+\item \code{annotation = NULL}
+\item \code{nucleotide_seq = NULL}
+\item \code{protein_seq = NULL}
+\item \code{seqinfo = NULL}
+\item \code{feature_index = NULL}
+\item \code{annotations = list()}
+\item \code{active_annotation = "default"}
+\item \code{metadata = list()}
+\item \code{plot_cache = list()}
+\item \code{projected_domains = list()}
+}
+
+The raw class prototype leaves \code{annotations} empty. The high-level
+\code{\link[=SynIndividual]{SynIndividual()}} constructor usually populates that slot with a \code{"default"}
+\code{\link[=SynFeatureAnnotation]{SynFeatureAnnotation()}} immediately.
+}
+
+\section{Validity rules}{
+
+\itemize{
+\item \code{id}, \code{annotation_file}, and \code{active_annotation} must be scalar non-empty
+character values.
+\item \code{genome_file} must be a length-one character vector or \code{NA_character_}.
+\item \code{annotation_format} must be one of \code{"auto"}, \code{"gff"}, or \code{"gtf"}.
+\item When \code{annotations} is non-empty, every entry must inherit from
+\code{SynAnnotation} and \code{active_annotation} must name one of them.
+\item \code{projected_domains} must be a list of data-frame-like objects.
+}
+}
+

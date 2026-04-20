@@ -30,3 +30,24 @@ cached parsed alignment data.
 \item{\code{metadata}}{Optional user or import metadata.}
 }}
 
+\section{Prototype defaults}{
+
+\itemize{
+\item \code{annotation_scope = "species"}
+\item \code{lazy = TRUE}
+\item \code{loaded = FALSE}
+\item \code{format = "paf"}
+\item \code{data = NULL}
+}
+}
+
+\section{Validity rules}{
+
+\itemize{
+\item \code{query_individual} and \code{target_individual} must each be one non-empty
+character value.
+\item \code{query_individual} and \code{target_individual} must differ.
+\item \code{format} must currently be \code{"paf"}.
+}
+}
+

@@ -28,3 +28,24 @@ query/target sides.
 \item{\code{metadata}}{Optional user or import metadata.}
 }}
 
+\section{Prototype defaults}{
+
+\itemize{
+\item \code{annotation_scope = "species"}
+\item \code{lazy = TRUE}
+\item \code{loaded = FALSE}
+\item \code{individuals = character()}
+\item \code{format = "maf"}
+\item \code{data = NULL}
+}
+}
+
+\section{Validity rules}{
+
+\itemize{
+\item \code{individuals} must contain at least two non-empty character values.
+\item \code{individuals} must not contain duplicates.
+\item \code{format} must currently be \code{"maf"} or \code{"odgi"}.
+}
+}
+

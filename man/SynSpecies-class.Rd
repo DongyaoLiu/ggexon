@@ -26,3 +26,25 @@ alignments, optional metadata, and an optional reusable \code{SynLayout}.
 syn-aware plot building.}
 }}
 
+\section{Prototype defaults}{
+
+\itemize{
+\item \code{individuals = list()}
+\item \code{pairwise_alignments = list()}
+\item \code{multiple_alignments = list()}
+\item \code{metadata = list()}
+\item \code{layout = NULL}
+}
+}
+
+\section{Validity rules}{
+
+\itemize{
+\item \code{name} must be one non-empty character value.
+\item \code{individuals} must contain only \code{SynIndividual} objects.
+\item \code{pairwise_alignments} must contain only \code{SynPairAlignment} objects.
+\item \code{multiple_alignments} must contain only \code{SynMultiAlignment} objects.
+\item \code{layout} must be either \code{NULL} or a \code{SynLayout}.
+}
+}
+

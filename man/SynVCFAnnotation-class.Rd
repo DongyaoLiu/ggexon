@@ -8,6 +8,11 @@
 \code{SynVCFAnnotation} stores a region-queryable variant layer backed by a VCF or
 BCF file.
 }
+\details{
+In addition to the slots listed below, the class inherits \code{name},
+\code{source_file}, \code{annotation_scope}, \code{lazy}, \code{loaded}, \code{metadata}, and
+\code{plot_cache} from \code{SynAnnotation}.
+}
 \section{Slots}{
 
 \describe{
@@ -21,4 +26,22 @@ BCF file.
 
 \item{\code{region_cache}}{Cache of previously queried genomic windows.}
 }}
+
+\section{Prototype defaults}{
+
+\itemize{
+\item \code{data_format = "vcf"}
+\item \code{annotation_scope = "nucleotide"}
+\item \code{variants = NULL}
+\item \code{index_file = NA_character_}
+\item \code{genome_build = NA_character_}
+\item \code{region_cache = list()}
+}
+}
+
+\section{Validity rules}{
+
+No additional custom validity checks are defined beyond the inherited slot
+classes and parent-class rules.
+}
 

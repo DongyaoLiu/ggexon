@@ -30,6 +30,32 @@ NULL
 #' @slot projected_domains Named list of projected protein-domain tables stored
 #'   for inspection.
 #'
+#' @section Prototype defaults:
+#' * `annotation_format = "auto"`
+#' * `annotation = NULL`
+#' * `nucleotide_seq = NULL`
+#' * `protein_seq = NULL`
+#' * `seqinfo = NULL`
+#' * `feature_index = NULL`
+#' * `annotations = list()`
+#' * `active_annotation = "default"`
+#' * `metadata = list()`
+#' * `plot_cache = list()`
+#' * `projected_domains = list()`
+#'
+#' The raw class prototype leaves `annotations` empty. The high-level
+#' [SynIndividual()] constructor usually populates that slot with a `"default"`
+#' [SynFeatureAnnotation()] immediately.
+#'
+#' @section Validity rules:
+#' * `id`, `annotation_file`, and `active_annotation` must be scalar non-empty
+#'   character values.
+#' * `genome_file` must be a length-one character vector or `NA_character_`.
+#' * `annotation_format` must be one of `"auto"`, `"gff"`, or `"gtf"`.
+#' * When `annotations` is non-empty, every entry must inherit from
+#'   `SynAnnotation` and `active_annotation` must name one of them.
+#' * `projected_domains` must be a list of data-frame-like objects.
+#'
 #' @exportClass SynIndividual
 setClass(
   "SynIndividual",

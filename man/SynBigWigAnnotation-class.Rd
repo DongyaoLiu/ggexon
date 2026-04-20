@@ -8,6 +8,11 @@
 \code{SynBigWigAnnotation} stores a region-queryable signal layer backed by a
 BigWig file.
 }
+\details{
+In addition to the slots listed below, the class inherits \code{name},
+\code{source_file}, \code{annotation_scope}, \code{lazy}, \code{loaded}, \code{metadata}, and
+\code{plot_cache} from \code{SynAnnotation}.
+}
 \section{Slots}{
 
 \describe{
@@ -19,4 +24,21 @@ BigWig file.
 
 \item{\code{window_cache}}{Cache of previously queried genomic windows.}
 }}
+
+\section{Prototype defaults}{
+
+\itemize{
+\item \code{data_format = "bigwig"}
+\item \code{annotation_scope = "nucleotide"}
+\item \code{signal = NULL}
+\item \code{seqinfo = NULL}
+\item \code{window_cache = list()}
+}
+}
+
+\section{Validity rules}{
+
+No additional custom validity checks are defined beyond the inherited slot
+classes and parent-class rules.
+}
 

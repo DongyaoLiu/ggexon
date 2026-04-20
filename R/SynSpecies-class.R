@@ -34,6 +34,19 @@ NULL
 #' @slot data Optional cached parsed alignment data.
 #' @slot metadata Optional user or import metadata.
 #'
+#' @section Prototype defaults:
+#' * `annotation_scope = "species"`
+#' * `lazy = TRUE`
+#' * `loaded = FALSE`
+#' * `format = "paf"`
+#' * `data = NULL`
+#'
+#' @section Validity rules:
+#' * `query_individual` and `target_individual` must each be one non-empty
+#'   character value.
+#' * `query_individual` and `target_individual` must differ.
+#' * `format` must currently be `"paf"`.
+#'
 #' @exportClass SynPairAlignment
 setClass(
   "SynPairAlignment",
@@ -88,6 +101,19 @@ setClass(
 #' @slot format Alignment file format. Currently `"maf"` or `"odgi"`.
 #' @slot data Optional cached parsed alignment data.
 #' @slot metadata Optional user or import metadata.
+#'
+#' @section Prototype defaults:
+#' * `annotation_scope = "species"`
+#' * `lazy = TRUE`
+#' * `loaded = FALSE`
+#' * `individuals = character()`
+#' * `format = "maf"`
+#' * `data = NULL`
+#'
+#' @section Validity rules:
+#' * `individuals` must contain at least two non-empty character values.
+#' * `individuals` must not contain duplicates.
+#' * `format` must currently be `"maf"` or `"odgi"`.
 #'
 #' @exportClass SynMultiAlignment
 setClass(
@@ -144,6 +170,23 @@ setClass(
 #' @slot x_translation Shared default x-axis offset for layout-aware annotation
 #'   geoms.
 #' @slot metadata Optional layout metadata.
+#'
+#' @section Prototype defaults:
+#' * `panels = data.frame()`
+#' * `layout_type = "custom"`
+#' * `free = list(x = FALSE, y = FALSE)`
+#' * `exon_height = NA_real_`
+#' * `y_scale = NA_real_`
+#' * `x_translation = NA_real_`
+#' * `metadata = list()`
+#'
+#' @section Validity rules:
+#' * `panels` must contain at least the columns `PANEL`, `ROW`, `COL`, and
+#'   `track`.
+#' * `layout_type` must be one non-empty character value.
+#' * `free` must be a list with scalar logical `x` and `y` entries.
+#' * `exon_height`, `y_scale`, and `x_translation` must each be scalar numeric
+#'   values.
 #'
 #' @exportClass SynLayout
 setClass(
@@ -216,6 +259,20 @@ setClassUnion("NULLOrSynLayout", c("NULL", "SynLayout"))
 #' @slot metadata Optional user or import metadata.
 #' @slot layout Optional stored `SynLayout` used by `facet_genomics()` and
 #'   syn-aware plot building.
+#'
+#' @section Prototype defaults:
+#' * `individuals = list()`
+#' * `pairwise_alignments = list()`
+#' * `multiple_alignments = list()`
+#' * `metadata = list()`
+#' * `layout = NULL`
+#'
+#' @section Validity rules:
+#' * `name` must be one non-empty character value.
+#' * `individuals` must contain only `SynIndividual` objects.
+#' * `pairwise_alignments` must contain only `SynPairAlignment` objects.
+#' * `multiple_alignments` must contain only `SynMultiAlignment` objects.
+#' * `layout` must be either `NULL` or a `SynLayout`.
 #'
 #' @exportClass SynSpecies
 setClass(

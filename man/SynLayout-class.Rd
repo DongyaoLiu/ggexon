@@ -36,3 +36,28 @@ geoms.}
 \item{\code{metadata}}{Optional layout metadata.}
 }}
 
+\section{Prototype defaults}{
+
+\itemize{
+\item \code{panels = data.frame()}
+\item \code{layout_type = "custom"}
+\item \code{free = list(x = FALSE, y = FALSE)}
+\item \code{exon_height = NA_real_}
+\item \code{y_scale = NA_real_}
+\item \code{x_translation = NA_real_}
+\item \code{metadata = list()}
+}
+}
+
+\section{Validity rules}{
+
+\itemize{
+\item \code{panels} must contain at least the columns \code{PANEL}, \code{ROW}, \code{COL}, and
+\code{track}.
+\item \code{layout_type} must be one non-empty character value.
+\item \code{free} must be a list with scalar logical \code{x} and \code{y} entries.
+\item \code{exon_height}, \code{y_scale}, and \code{x_translation} must each be scalar numeric
+values.
+}
+}
+

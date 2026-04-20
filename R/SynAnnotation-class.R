@@ -43,6 +43,18 @@ NULL
 #' @slot plot_cache List used to store derived plotting tables or other
 #'   reusable render-time state.
 #'
+#' @section Prototype defaults:
+#' * `annotation_scope = "unknown"`
+#' * `lazy = TRUE`
+#' * `loaded = FALSE`
+#' * `metadata = list()`
+#' * `plot_cache = list()`
+#'
+#' @section Validity rules:
+#' * `name`, `source_file`, and `annotation_scope` must each be one non-empty
+#'   character value.
+#' * `lazy` and `loaded` must each be scalar logical values.
+#'
 #' @exportClass SynAnnotation
 setClass(
   "SynAnnotation",
@@ -140,6 +152,10 @@ setClass("SynProteinAnnotation", contains = "SynIndAnnotation")
 #' transcripts, exons, CDS, and derived label or sequence caches. It is the
 #' default feature-layer type attached to `SynIndividual`.
 #'
+#' In addition to the slots listed below, the class inherits `name`,
+#' `source_file`, `annotation_scope`, `lazy`, `loaded`, `metadata`, and
+#' `plot_cache` from `SynAnnotation`.
+#'
 #' @slot annotation_format Source annotation format. One of `"auto"`, `"gff"`,
 #'   or `"gtf"`.
 #' @slot base_annotation Optional immutable base `GRanges` before any patches
@@ -152,6 +168,20 @@ setClass("SynProteinAnnotation", contains = "SynIndAnnotation")
 #' @slot nucleotide_seq Optional cached nucleotide sequences extracted from the
 #'   annotated features.
 #' @slot protein_seq Optional cached translated protein sequences.
+#'
+#' @section Prototype defaults:
+#' * `annotation_format = "auto"`
+#' * `annotation_scope = "nucleotide"`
+#' * `base_annotation = NULL`
+#' * `annotation = NULL`
+#' * `patches = list()`
+#' * `feature_index = NULL`
+#' * `label_map = NULL`
+#' * `nucleotide_seq = NULL`
+#' * `protein_seq = NULL`
+#'
+#' @section Validity rules:
+#' * `annotation_format` must be one of `"auto"`, `"gff"`, or `"gtf"`.
 #'
 #' @exportClass SynFeatureAnnotation
 setClass(
@@ -195,6 +225,10 @@ setClass(
 #' it inherits the shared `SynGenomeAnnotation` metadata used across
 #' nucleotide-level annotation layers.
 #'
+#' In addition to the slots listed below, the class inherits `name`,
+#' `source_file`, `annotation_scope`, `lazy`, `loaded`, `metadata`, and
+#' `plot_cache` from `SynAnnotation`.
+#'
 #' @slot name Patch label.
 #' @slot source_file Optional source identifier describing where the patch came
 #'   from. In-memory patches default to `"<patch>"`.
@@ -204,6 +238,19 @@ setClass(
 #'   patch.
 #' @slot mode Patch mode. One of `"replace"`, `"add"`, or `"drop"`.
 #' @slot metadata Optional patch metadata.
+#'
+#' @section Prototype defaults:
+#' * `source_file = "<patch>"`
+#' * `annotation_scope = "nucleotide"`
+#' * `lazy = FALSE`
+#' * `loaded = TRUE`
+#' * `patch_data = NULL`
+#' * `target_ids = character()`
+#' * `mode = "replace"`
+#'
+#' @section Validity rules:
+#' * `mode` must be one of `"replace"`, `"add"`, or `"drop"`.
+#' * `patch_data` is required when `mode` is `"replace"` or `"add"`.
 #'
 #' @exportClass SynAnnotationPatch
 setClass(
@@ -240,11 +287,27 @@ setClass(
 #' `SynVCFAnnotation` stores a region-queryable variant layer backed by a VCF or
 #' BCF file.
 #'
+#' In addition to the slots listed below, the class inherits `name`,
+#' `source_file`, `annotation_scope`, `lazy`, `loaded`, `metadata`, and
+#' `plot_cache` from `SynAnnotation`.
+#'
 #' @slot data_format Variant file format label. Currently `"vcf"`.
 #' @slot variants Optional cached parsed variant data.
 #' @slot index_file Optional index file path for random access.
 #' @slot genome_build Optional genome-build label.
 #' @slot region_cache Cache of previously queried genomic windows.
+#'
+#' @section Prototype defaults:
+#' * `data_format = "vcf"`
+#' * `annotation_scope = "nucleotide"`
+#' * `variants = NULL`
+#' * `index_file = NA_character_`
+#' * `genome_build = NA_character_`
+#' * `region_cache = list()`
+#'
+#' @section Validity rules:
+#' No additional custom validity checks are defined beyond the inherited slot
+#' classes and parent-class rules.
 #'
 #' @exportClass SynVCFAnnotation
 setClass(
@@ -272,10 +335,25 @@ setClass(
 #' `SynBigWigAnnotation` stores a region-queryable signal layer backed by a
 #' BigWig file.
 #'
+#' In addition to the slots listed below, the class inherits `name`,
+#' `source_file`, `annotation_scope`, `lazy`, `loaded`, `metadata`, and
+#' `plot_cache` from `SynAnnotation`.
+#'
 #' @slot data_format Signal file format label. Currently `"bigwig"`.
 #' @slot signal Optional cached parsed signal data.
 #' @slot seqinfo Optional cached `Seqinfo` describing available sequences.
 #' @slot window_cache Cache of previously queried genomic windows.
+#'
+#' @section Prototype defaults:
+#' * `data_format = "bigwig"`
+#' * `annotation_scope = "nucleotide"`
+#' * `signal = NULL`
+#' * `seqinfo = NULL`
+#' * `window_cache = list()`
+#'
+#' @section Validity rules:
+#' No additional custom validity checks are defined beyond the inherited slot
+#' classes and parent-class rules.
 #'
 #' @exportClass SynBigWigAnnotation
 setClass(
@@ -301,11 +379,26 @@ setClass(
 #' `SynProteinDomainAnnotation` stores protein-domain calls keyed by a protein-,
 #' transcript-, or gene-level identifier.
 #'
+#' In addition to the slots listed below, the class inherits `name`,
+#' `source_file`, `annotation_scope`, `lazy`, `loaded`, `metadata`, and
+#' `plot_cache` from `SynAnnotation`.
+#'
 #' @slot data_format Domain file format label. Currently `"domain"`.
 #' @slot domain_data Optional cached parsed domain table.
 #' @slot keytype Identifier type used to join domain rows to package objects.
 #' @slot source_db Optional source database label such as `"Pfam"` or
 #'   `"InterPro"`.
+#'
+#' @section Prototype defaults:
+#' * `data_format = "domain"`
+#' * `annotation_scope = "protein"`
+#' * `domain_data = NULL`
+#' * `keytype = "protein_id"`
+#' * `source_db = NA_character_`
+#'
+#' @section Validity rules:
+#' No additional custom validity checks are defined beyond the inherited slot
+#' classes and parent-class rules.
 #'
 #' @exportClass SynProteinDomainAnnotation
 setClass(
