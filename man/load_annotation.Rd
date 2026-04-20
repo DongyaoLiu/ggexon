@@ -2,18 +2,25 @@
 % Please edit documentation in R/SynIndividual-class.R
 \name{load_annotation}
 \alias{load_annotation}
-\title{Load annotation into a SynIndividual object}
+\title{Load annotations into Syn-aware objects}
 \usage{
 load_annotation(x)
 }
 \arguments{
-\item{x}{A \code{SynIndividual} or \code{SynFeatureAnnotation} object.}
+\item{x}{A \code{SynIndividual}, \code{SynFeatureAnnotation}, or \code{SynSpecies} object.}
 }
 \value{
-An updated \code{SynIndividual} object.
+An updated object of the same class as \code{x}.
 }
 \description{
 Imports the annotation file as a \code{GRanges} object and stores it in the
-\code{annotation} slot. The imported ranges are lightly normalized so downstream
-query and translation methods can use consistent metadata columns.
+active feature-annotation slots. The imported ranges are lightly normalized
+so downstream query and translation methods can use consistent metadata
+columns.
+}
+\details{
+When \code{x} is a \code{\link{SynSpecies}}, the helper loads the active feature annotation
+for every stored \code{\link{SynIndividual}} and returns an updated \code{SynSpecies}
+object. Pairwise alignments, multiple alignments, metadata, and layout are
+left unchanged.
 }

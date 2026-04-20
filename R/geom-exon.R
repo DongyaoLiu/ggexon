@@ -97,6 +97,10 @@ GeomExon <- ggproto("GeomExon", Geom,
 #' `aes(fill = gene_id)`, `aes(fill = gene_name)`, or
 #' `aes(fill = transcript_id)`.
 #'
+#' When `data` is a `SynSpecies`, omitting `species` uses all stored
+#' individuals. Omitting `subset` keeps the full annotation table, while
+#' supplying `chr` without `subset` limits the layer to that seqname.
+#'
 #' @param mapping Set of aesthetic mappings created by [`ggplot2::aes()`].
 #'   In addition to the required positional aesthetics, Syn-backed exon layers
 #'   expose canonical identifier columns `transcript_id`, `gene_id`, and
@@ -113,10 +117,12 @@ GeomExon <- ggproto("GeomExon", Geom,
 #' @param y_scale Optional y scaling factor for the track layout.
 #' @param exon_height Optional exon rectangle height.
 #' @param x_translation Optional x offset applied before drawing.
-#' @param subset Optional numeric length-2 genomic window to keep.
+#' @param subset Optional numeric length-2 genomic window to keep. When omitted
+#'   for Syn-backed data, the full annotation range is used.
 #' @param annotation_type Feature type to keep, defaults to `"exon"`.
 #' @param species Optional species / individual identifier when `data` is a
-#'   `SynSpecies`.
+#'   `SynSpecies`. When omitted, ggexon resolves exon data for all stored
+#'   individuals.
 #' @param chr Optional chromosome / seqname restriction when `data` is Syn-backed.
 #' @param breakdata Optional break specification passed to `addbreak()`.
 #' @param inherit.aes If `FALSE`, overrides the default aesthetics rather than

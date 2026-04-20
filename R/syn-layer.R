@@ -236,33 +236,35 @@ resolve_plot_species_params <- function(x, species = NULL) {
   }
 
   if (is.null(species)) {
-    if (length(individuals(x)) == 1L) {
-      return(names(individuals(x)))
-    }
-    return(character())
+    return(names(individuals(x)))
   }
 
   unique(as.character(species))
 }
 
 resolve_context_species_params <- function(x, species = NULL, context = NULL) {
-  explicit_species <- resolve_plot_species_params(x, species)
-  if (length(explicit_species) > 0L) {
+  if (!is.null(species)) {
+    explicit_species <- resolve_plot_species_params(x, species)
     return(explicit_species)
   }
 
+  if (methods::is(x, "SynIndividual")) {
+    return(syn_id(x))
+  }
+
   if (!methods::is(x, "SynSpecies")) {
-    return(explicit_species)
+    return(character())
   }
 
   context_windows <- context$windows %||% list()
   context_species <- names(context_windows)
   context_species <- context_species[!is.na(context_species) & nzchar(context_species)]
   context_species <- unique(context_species)
-  if (length(context_species) == 0L) {
-    return(NULL)
+  if (length(context_species) > 0L) {
+    return(context_species)
   }
-  context_species
+
+  names(individuals(x))
 }
 
 resolve_plot_alignment_name <- function(x, alignment = NULL) {
@@ -440,6 +442,10 @@ normalize_syn_window_request <- function(x,
 
 window_to_region_string <- function(window) {
   paste0(window$chr, ":", window$start, "-", window$end)
+}
+
+is_unrestricted_syn_window <- function(window) {
+  is.null(window$chr) && is.null(window$start) && is.null(window$end)
 }
 
 resolve_syn_layer_data <- function(x, layer) {
@@ -1290,6 +1296,8 @@ syn_to_exon_df <- function(x,
                            subset = NULL,
                            annotation_type = "exon",
                            context = NULL) {
+  species <- resolve_context_species_params(x, species, context)
+
   if (methods::is(x, "SynSpecies") && length(species %||% character()) > 1L) {
     species <- unique(as.character(species))
     return(dplyr::bind_rows(lapply(species, function(species_name) {
@@ -1310,7 +1318,7 @@ syn_to_exon_df <- function(x,
     species = syn_id(individual),
     chr = chr,
     subset = subset,
-    allow_missing_subset = FALSE,
+    allow_missing_subset = TRUE,
     context = context,
     geom = "geom_exon"
   )
@@ -1320,7 +1328,8 @@ syn_to_exon_df <- function(x,
     chr = window$chr,
     start = window$start,
     end = window$end,
-    feature_type = if (identical(annotation_type, "exon")) NULL else annotation_type
+    feature_type = if (identical(annotation_type, "exon")) NULL else annotation_type,
+    all = is_unrestricted_syn_window(window)
   )
 
   if (length(feature_gr) == 0L) {
@@ -1476,7 +1485,7 @@ syn_to_gene_df <- function(x,
     species = syn_id(individual),
     chr = chr,
     subset = subset,
-    allow_missing_subset = FALSE,
+    allow_missing_subset = TRUE,
     context = context,
     geom = "geom_gene"
   )
@@ -1486,7 +1495,8 @@ syn_to_gene_df <- function(x,
     chr = window$chr,
     start = window$start,
     end = window$end,
-    feature_type = "gene"
+    feature_type = "gene",
+    all = is_unrestricted_syn_window(window)
   )
 
   if (length(feature_gr) == 0L) {
@@ -1608,6 +1618,49 @@ resolve_syn_seqname <- function(individual, chr = NULL) {
   )
 }
 
+#' Resolve one individual from Syn-backed plot input
+#'
+#' Normalizes Syn plotting inputs so downstream layer helpers can work with a
+#' single [`SynIndividual`] object. When `x` is already a `SynIndividual`, the
+#' function returns it unchanged after optionally checking that `species`
+#' matches its identifier. When `x` is a [`SynSpecies`] collection, the helper
+#' selects one stored individual by name.
+#'
+#' This function is mainly used inside Syn-aware geoms and query helpers that
+#' allow users to supply either a whole `SynSpecies` object or an already
+#' selected `SynIndividual`.
+#'
+#' @param x A [`SynSpecies`] or [`SynIndividual`] object.
+#' @param species Optional individual identifier. When `x` is a `SynSpecies`
+#'   with more than one stored individual, this argument is required.
+#'
+#' @return A single [`SynIndividual`] object.
+#'
+#' @details
+#' The helper throws an error when:
+#'
+#' - `x` is neither a `SynSpecies` nor a `SynIndividual`
+#' - the supplied `SynSpecies` has no individuals
+#' - `species` is omitted for a `SynSpecies` that stores multiple individuals
+#' - `species` does not match any stored individual
+#' - `species` is supplied for a `SynIndividual` but does not match
+#'
+#' @examples
+#' ann_path <- system.file(
+#'   "extdata",
+#'   "gff",
+#'   "caenorhabditis_XZ1516.gff3",
+#'   package = "ggexon"
+#' )
+#'
+#' ind <- SynIndividual(id = "XZ1516", annotation = ann_path)
+#' resolve_syn_individual(ind)
+#' resolve_syn_individual(ind, species = "XZ1516")
+#'
+#' sp <- SynSpecies(name = "worms")
+#' sp <- add_individual(sp, ind)
+#' resolve_syn_individual(sp, species = "XZ1516")
+#' @keywords internal
 resolve_syn_individual <- function(x, species = NULL) {
   if (methods::is(x, "SynIndividual")) {
     if (!is.null(species) && !identical(syn_id(x), species)) {

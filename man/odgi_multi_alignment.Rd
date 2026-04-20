@@ -8,12 +8,14 @@ odgi_multi_alignment(
   x,
   name = NULL,
   individuals = NULL,
+  odgi = NULL,
+  python = NULL,
   file = NULL,
   metadata = list()
 )
 }
 \arguments{
-\item{x}{A data frame or a TSV path produced by \code{\link[=odgi_node_table]{odgi_node_table()}}.}
+\item{x}{A data frame, an ODGI node-table TSV path, or an \code{.og} graph path.}
 
 \item{name}{Optional alignment label. Defaults to the file stem when \code{x} is a
 path, otherwise \code{"odgi-alignment"}.}
@@ -21,6 +23,12 @@ path, otherwise \code{"odgi-alignment"}.}
 \item{individuals}{Optional character vector/list describing which
 \code{SynIndividual} identifiers correspond to the ODGI path labels. If named,
 the names must match the path labels in the table.}
+
+\item{odgi}{Optional path to the \code{odgi} executable. Used when \code{x} is an
+\code{.og} graph file.}
+
+\item{python}{Optional path to the Python interpreter. Used when \code{x} is an
+\code{.og} graph file.}
 
 \item{file}{Optional source file to store on the returned object. Defaults to
 \code{x} when \code{x} is a path, otherwise \code{"<odgi-node-table>"}.}
@@ -32,10 +40,10 @@ A \code{SynMultiAlignment} object with \code{format = "odgi"} and the parsed
 table cached in its \code{data} slot.
 }
 \description{
-Accepts either an in-memory node table returned by \code{\link[=odgi_node_table]{odgi_node_table()}} or a
-path to a TSV written by the bundled helper, validates the path-specific
-column groups, and stores the parsed table on a \code{SynMultiAlignment} with
-\code{format = "odgi"}.
+Accepts either an in-memory node table returned by \code{\link[=odgi_node_table]{odgi_node_table()}}, a
+path to a TSV written by the bundled helper, or a raw \code{.og} ODGI graph
+path. File-backed inputs are converted to the node-table representation,
+validated, and stored on a \code{SynMultiAlignment} with \code{format = "odgi"}.
 }
 \examples{
 \dontrun{

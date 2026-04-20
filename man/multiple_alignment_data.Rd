@@ -15,6 +15,12 @@ more multiple alignments.}
 \item{alignment}{Optional multiple-alignment name when \code{x} is a
 \code{\link{SynSpecies}}. If omitted and exactly one multiple alignment is stored,
 that alignment is used.}
+
+\item{odgi}{Optional path to the \code{odgi} executable. Used when an ODGI
+alignment is backed by a raw \code{.og} graph.}
+
+\item{python}{Optional path to the Python interpreter. Used when an ODGI
+alignment is backed by a raw \code{.og} graph.}
 }
 \value{
 A data frame containing the parsed multiple-alignment data.
@@ -22,6 +28,7 @@ A data frame containing the parsed multiple-alignment data.
 \description{
 Returns the cached parsed representation stored on a \code{\link{SynMultiAlignment}}.
 For alignments with \code{format = "odgi"}, the data can also be loaded lazily
-from the tab-delimited ODGI node-table file on disk. When called on a
-\code{\link{SynSpecies}}, \code{alignment} selects which stored multiple alignment to read.
+from either a tab-delimited ODGI node-table file or a raw \code{.og} graph on
+disk. When called on a \code{\link{SynSpecies}}, \code{alignment} selects which stored
+multiple alignment to read.
 }

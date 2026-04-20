@@ -548,6 +548,32 @@ setMethod("species_name", "SynSpecies", function(x) x@name)
 setGeneric("individuals", function(x) standardGeneric("individuals"))
 setMethod("individuals", "SynSpecies", function(x) x@individuals)
 
+#' Return the individual identifiers stored on a `SynSpecies`
+#'
+#' Returns the names used to index the `SynIndividual` objects attached to a
+#' [`SynSpecies`]. These usually match `names(individuals(x))`. If unnamed
+#' entries are present, the accessor falls back to `syn_id()` for those
+#' objects.
+#'
+#' @param x A `SynSpecies` object.
+#'
+#' @return A character vector of individual identifiers in stored order.
+#' @export
+setGeneric("individual_names", function(x) standardGeneric("individual_names"))
+setMethod("individual_names", "SynSpecies", function(x) {
+  out <- names(x@individuals)
+  if (is.null(out)) {
+    out <- rep("", length(x@individuals))
+  }
+
+  needs_fallback <- is.na(out) | !nzchar(out)
+  if (any(needs_fallback)) {
+    out[needs_fallback] <- vapply(x@individuals[needs_fallback], syn_id, character(1))
+  }
+
+  out
+})
+
 setGeneric("pairwise_alignments", function(x) standardGeneric("pairwise_alignments"))
 setMethod("pairwise_alignments", "SynSpecies", function(x) x@pairwise_alignments)
 
@@ -1131,11 +1157,28 @@ subset_synspecies_window <- function(x,
   paf
 }
 
+.pairwise_alignment_table <- function(x) {
+  paf <- if (!is.null(x@data)) x@data else .read_pairwise_paf(alignment_file(x))
+
+  if (!"qspecies" %in% names(paf)) {
+    paf$qspecies <- query_individual(x)
+  }
+  if (!"tspecies" %in% names(paf)) {
+    paf$tspecies <- target_individual(x)
+  }
+  if (!"track" %in% names(paf)) {
+    paf$track <- paste0("link_", alignment_name(x))
+  }
+
+  rownames(paf) <- NULL
+  paf
+}
+
 .pairwise_alignment_data_impl <- function(x,
                                           species_obj = NULL,
                                           subset = NULL,
                                           filter = NULL) {
-  paf <- .read_pairwise_paf(alignment_file(x))
+  paf <- .pairwise_alignment_table(x)
 
   if (!is.null(subset)) {
     subset_specs <- .parse_pairwise_subset(
@@ -1167,11 +1210,75 @@ subset_synspecies_window <- function(x,
     paf <- paf[paf$alen >= as.integer(filter), , drop = FALSE]
   }
 
-  paf$qspecies <- query_individual(x)
-  paf$tspecies <- target_individual(x)
-  paf$track <- paste0("link_", alignment_name(x))
   rownames(paf) <- NULL
   paf
+}
+
+#' Load alignment data into Syn-aware alignment objects
+#'
+#' Parses supported alignment files and caches the parsed data on alignment
+#' objects. Pairwise alignments are currently loaded from PAF files, and
+#' multiple alignments can be loaded when `format = "odgi"` points to an ODGI
+#' node-table TSV. When `x` is a [`SynSpecies`], every stored pairwise and
+#' multiple alignment is loaded and the updated `SynSpecies` object is
+#' returned.
+#'
+#' Unloaded `SynMultiAlignment` objects with `format = "maf"` are not yet
+#' supported because the package does not currently provide a MAF parser.
+#'
+#' @param x A [`SynPairAlignment`], [`SynMultiAlignment`], or [`SynSpecies`]
+#'   object.
+#' @param odgi Optional path to the `odgi` executable. Used when loading ODGI
+#'   multiple alignments from raw `.og` graph files.
+#' @param python Optional path to the Python interpreter. Used when loading
+#'   ODGI multiple alignments from raw `.og` graph files.
+#'
+#' @return An updated object of the same class as `x`.
+#' @export
+load_alignment <- function(x, odgi = NULL, python = NULL) {
+  if (methods::is(x, "SynPairAlignment")) {
+    if (is.null(x@data)) {
+      x@data <- .pairwise_alignment_table(x)
+    }
+    x@loaded <- TRUE
+    x@lazy <- FALSE
+    return(x)
+  }
+
+  if (methods::is(x, "SynMultiAlignment")) {
+    if (is.null(x@data)) {
+      if (!identical(alignment_format(x), "odgi")) {
+        stop(
+          "`load_alignment()` currently supports unloaded SynMultiAlignment objects only when `format = 'odgi'`.",
+          call. = FALSE
+        )
+      }
+      x@data <- multiple_alignment_data(x, odgi = odgi, python = python)
+    }
+    x@loaded <- TRUE
+    x@lazy <- FALSE
+    return(x)
+  }
+
+  if (methods::is(x, "SynSpecies")) {
+    pairs <- pairwise_alignments(x)
+    if (length(pairs) > 0L) {
+      x@pairwise_alignments <- lapply(pairs, load_alignment, odgi = odgi, python = python)
+    }
+
+    multis <- multiple_alignments(x)
+    if (length(multis) > 0L) {
+      x@multiple_alignments <- lapply(multis, load_alignment, odgi = odgi, python = python)
+    }
+
+    validObject(x)
+    return(x)
+  }
+
+  stop(
+    "`load_alignment()` expects a SynPairAlignment, SynMultiAlignment, or SynSpecies object.",
+    call. = FALSE
+  )
 }
 
 .parse_pairwise_subset <- function(subset, pair, species_obj = NULL, paf) {

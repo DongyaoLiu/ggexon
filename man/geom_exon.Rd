@@ -51,12 +51,14 @@ ggexon layout helpers.}
 
 \item{x_translation}{Optional x offset applied before drawing.}
 
-\item{subset}{Optional numeric length-2 genomic window to keep.}
+\item{subset}{Optional numeric length-2 genomic window to keep. When omitted
+for Syn-backed data, the full annotation range is used.}
 
 \item{annotation_type}{Feature type to keep, defaults to \code{"exon"}.}
 
 \item{species}{Optional species / individual identifier when \code{data} is a
-\code{SynSpecies}.}
+\code{SynSpecies}. When omitted, ggexon resolves exon data for all stored
+individuals.}
 
 \item{chr}{Optional chromosome / seqname restriction when \code{data} is Syn-backed.}
 
@@ -79,4 +81,8 @@ For Syn-backed layers, ggexon adds canonical identifier columns to the
 resolved exon table so users can map aesthetics with expressions such as
 \code{aes(fill = gene_id)}, \code{aes(fill = gene_name)}, or
 \code{aes(fill = transcript_id)}.
+
+When \code{data} is a \code{SynSpecies}, omitting \code{species} uses all stored
+individuals. Omitting \code{subset} keeps the full annotation table, while
+supplying \code{chr} without \code{subset} limits the layer to that seqname.
 }

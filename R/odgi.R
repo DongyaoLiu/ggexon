@@ -144,6 +144,21 @@ odgi_node_table <- function(og_file,
   )
 }
 
+.is_odgi_graph_file <- function(path) {
+  is.character(path) &&
+    length(path) == 1L &&
+    !is.na(path) &&
+    nzchar(path) &&
+    grepl("\\.og$", path, ignore.case = TRUE)
+}
+
+.read_odgi_alignment_file <- function(x, odgi = NULL, python = NULL) {
+  if (.is_odgi_graph_file(x)) {
+    return(odgi_node_table(og_file = x, odgi = odgi, python = python, read = TRUE))
+  }
+  .read_odgi_node_table(x)
+}
+
 .odgi_alignment_labels <- function(tbl) {
   if (!is.data.frame(tbl)) {
     stop("`x` must be a data.frame or a path to an ODGI node-table TSV.", call. = FALSE)
@@ -246,17 +261,21 @@ odgi_node_table <- function(og_file,
 
 #' Convert an ODGI node table into a `SynMultiAlignment`
 #'
-#' Accepts either an in-memory node table returned by [odgi_node_table()] or a
-#' path to a TSV written by the bundled helper, validates the path-specific
-#' column groups, and stores the parsed table on a `SynMultiAlignment` with
-#' `format = "odgi"`.
+#' Accepts either an in-memory node table returned by [odgi_node_table()], a
+#' path to a TSV written by the bundled helper, or a raw `.og` ODGI graph
+#' path. File-backed inputs are converted to the node-table representation,
+#' validated, and stored on a `SynMultiAlignment` with `format = "odgi"`.
 #'
-#' @param x A data frame or a TSV path produced by [odgi_node_table()].
+#' @param x A data frame, an ODGI node-table TSV path, or an `.og` graph path.
 #' @param name Optional alignment label. Defaults to the file stem when `x` is a
 #'   path, otherwise `"odgi-alignment"`.
 #' @param individuals Optional character vector/list describing which
 #'   `SynIndividual` identifiers correspond to the ODGI path labels. If named,
 #'   the names must match the path labels in the table.
+#' @param odgi Optional path to the `odgi` executable. Used when `x` is an
+#'   `.og` graph file.
+#' @param python Optional path to the Python interpreter. Used when `x` is an
+#'   `.og` graph file.
 #' @param file Optional source file to store on the returned object. Defaults to
 #'   `x` when `x` is a path, otherwise `"<odgi-node-table>"`.
 #' @param metadata Optional metadata list.
@@ -278,6 +297,8 @@ odgi_node_table <- function(og_file,
 odgi_multi_alignment <- function(x,
                                  name = NULL,
                                  individuals = NULL,
+                                 odgi = NULL,
+                                 python = NULL,
                                  file = NULL,
                                  metadata = list()) {
   if (!is.null(file) &&
@@ -292,11 +313,11 @@ odgi_multi_alignment <- function(x,
     if (!file.exists(x)) {
       stop("ODGI node table not found: ", x, call. = FALSE)
     }
-    .read_odgi_node_table(x)
+    .read_odgi_alignment_file(x, odgi = odgi, python = python)
   } else if (is.data.frame(x)) {
     x
   } else {
-    stop("`x` must be a data.frame or a path to an ODGI node-table TSV.", call. = FALSE)
+    stop("`x` must be a data.frame, an ODGI node-table TSV path, or an `.og` graph path.", call. = FALSE)
   }
 
   labels <- .odgi_alignment_labels(tbl)
@@ -325,14 +346,19 @@ odgi_multi_alignment <- function(x,
 #'
 #' Returns the cached parsed representation stored on a [`SynMultiAlignment`].
 #' For alignments with `format = "odgi"`, the data can also be loaded lazily
-#' from the tab-delimited ODGI node-table file on disk. When called on a
-#' [`SynSpecies`], `alignment` selects which stored multiple alignment to read.
+#' from either a tab-delimited ODGI node-table file or a raw `.og` graph on
+#' disk. When called on a [`SynSpecies`], `alignment` selects which stored
+#' multiple alignment to read.
 #'
 #' @param x A [`SynMultiAlignment`] object or a [`SynSpecies`] containing one or
 #'   more multiple alignments.
 #' @param alignment Optional multiple-alignment name when `x` is a
 #'   [`SynSpecies`]. If omitted and exactly one multiple alignment is stored,
 #'   that alignment is used.
+#' @param odgi Optional path to the `odgi` executable. Used when an ODGI
+#'   alignment is backed by a raw `.og` graph.
+#' @param python Optional path to the Python interpreter. Used when an ODGI
+#'   alignment is backed by a raw `.og` graph.
 #' @param ... Reserved for future extensions.
 #'
 #' @return A data frame containing the parsed multiple-alignment data.
@@ -367,7 +393,7 @@ setGeneric("multiple_alignment_data", function(x, ...) standardGeneric("multiple
   multi_list[[alignment]]
 }
 
-setMethod("multiple_alignment_data", "SynMultiAlignment", function(x, ...) {
+setMethod("multiple_alignment_data", "SynMultiAlignment", function(x, ..., odgi = NULL, python = NULL) {
   if (!is.null(x@data)) {
     return(x@data)
   }
@@ -382,10 +408,10 @@ setMethod("multiple_alignment_data", "SynMultiAlignment", function(x, ...) {
     stop("ODGI node-table file not found: ", alignment_file(x), call. = FALSE)
   }
 
-  .read_odgi_node_table(alignment_file(x))
+  .read_odgi_alignment_file(alignment_file(x), odgi = odgi, python = python)
 })
 
-setMethod("multiple_alignment_data", "SynSpecies", function(x, alignment = NULL, ...) {
+setMethod("multiple_alignment_data", "SynSpecies", function(x, alignment = NULL, ..., odgi = NULL, python = NULL) {
   multi <- .resolve_multiple_alignment_arg(x = x, alignment = alignment)
-  multiple_alignment_data(multi, ...)
+  multiple_alignment_data(multi, ..., odgi = odgi, python = python)
 })

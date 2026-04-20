@@ -343,15 +343,21 @@ check_syn_files <- function(genome_file, annotation_file) {
   )
 }
 
-#' Load annotation into a SynIndividual object
+#' Load annotations into Syn-aware objects
 #'
 #' Imports the annotation file as a `GRanges` object and stores it in the
-#' `annotation` slot. The imported ranges are lightly normalized so downstream
-#' query and translation methods can use consistent metadata columns.
+#' active feature-annotation slots. The imported ranges are lightly normalized
+#' so downstream query and translation methods can use consistent metadata
+#' columns.
 #'
-#' @param x A `SynIndividual` or `SynFeatureAnnotation` object.
+#' When `x` is a [`SynSpecies`], the helper loads the active feature annotation
+#' for every stored [`SynIndividual`] and returns an updated `SynSpecies`
+#' object. Pairwise alignments, multiple alignments, metadata, and layout are
+#' left unchanged.
 #'
-#' @return An updated `SynIndividual` object.
+#' @param x A `SynIndividual`, `SynFeatureAnnotation`, or `SynSpecies` object.
+#'
+#' @return An updated object of the same class as `x`.
 #' @export
 load_annotation <- function(x) {
   if (methods::is(x, "SynAnnotation")) {
@@ -374,9 +380,21 @@ load_annotation <- function(x) {
     return(x)
   }
 
+  if (methods::is(x, "SynSpecies")) {
+    inds <- individuals(x)
+    if (length(inds) == 0L) {
+      return(x)
+    }
+
+    inds <- lapply(inds, load_annotation)
+    x@individuals <- inds
+    validObject(x)
+    return(x)
+  }
+
   if (!methods::is(x, "SynIndividual")) {
     stop(
-      "`load_annotation()` expects a SynIndividual or SynAnnotation object.",
+      "`load_annotation()` expects a SynIndividual, SynFeatureAnnotation, or SynSpecies object.",
       call. = FALSE
     )
   }

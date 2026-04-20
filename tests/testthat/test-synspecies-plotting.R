@@ -37,6 +37,31 @@ test_that("syn-aware geoms default to the only individual in a SynSpecies", {
   expect_identical(unique(gene_build$data[[1L]]$track), "XZ1516")
 })
 
+test_that("syn-aware annotation geoms can default to all individuals and full annotations", {
+  annotation_path <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+
+  sp <- SynSpecies(name = "Caenorhabditis")
+  for (id in c("XZ1516", "CB4856")) {
+    sp <- add_individual(
+      sp,
+      test_syn_individual(
+        annotation_file = annotation_path,
+        id = id
+      )
+    )
+  }
+
+  exon_plot <- ggexon(sp) + geom_exon()
+  exon_build <- ggplot2::ggplot_build(exon_plot)
+
+  expect_true(nrow(exon_build$data[[1L]]) > 0L)
+  expect_setequal(unique(exon_build$data[[1L]]$track), c("XZ1516", "CB4856"))
+})
+
 test_that("SynSpecies chain layout reserves one link panel per pairwise alignment", {
   genome_path <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
   annotation_path <- system.file(

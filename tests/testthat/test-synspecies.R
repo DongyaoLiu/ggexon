@@ -51,6 +51,7 @@ test_that("SynSpecies stores individuals and explicit alignment relationships", 
   sp <- add_multiple_alignment(sp, multi)
 
   expect_identical(species_name(sp), "Caenorhabditis")
+  expect_identical(individual_names(sp), c("XZ1516", "N2"))
   expect_setequal(names(individuals(sp)), c("XZ1516", "N2"))
   expect_identical(names(pairwise_alignments(sp)), "XZ1516_vs_N2")
   expect_identical(names(multiple_alignments(sp)), "worm-maf")
@@ -70,6 +71,162 @@ test_that("SynSpecies stores individuals and explicit alignment relationships", 
   )
   expect_identical(source_file(multi), "worms.maf")
   expect_identical(annotation_scope(multi), "species")
+
+  unnamed_sp <- sp
+  unnamed_sp@individuals <- unname(individuals(unnamed_sp))
+  validObject(unnamed_sp)
+  expect_identical(individual_names(unnamed_sp), c("XZ1516", "N2"))
+})
+
+test_that("load_annotation loads all stored individuals in a SynSpecies", {
+  genome_path <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
+  annotation_path <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+  n2_genome_path <- system.file(
+    "extdata",
+    "c_elegans.PRJNA13758.WS285.genomic.fa",
+    package = "ggexon"
+  )
+  n2_annotation_path <- system.file(
+    "extdata",
+    "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
+    package = "ggexon"
+  )
+  paf_path <- system.file("extdata", "V_alginment.paf", package = "ggexon")
+
+  sp <- SynSpecies(name = "Caenorhabditis")
+  sp <- add_individual(
+    sp,
+    test_syn_individual(
+      genome_file = genome_path,
+      annotation_file = annotation_path,
+      id = "XZ1516"
+    )
+  )
+  sp <- add_individual(
+    sp,
+    test_syn_individual(
+      genome_file = n2_genome_path,
+      annotation_file = n2_annotation_path,
+      id = "N2",
+      annotation_format = "gtf"
+    )
+  )
+  sp <- add_pairwise_alignment(
+    sp,
+    SynPairAlignment(
+      name = "XZ1516_vs_N2",
+      query_individual = "XZ1516",
+      target_individual = "N2",
+      file = paf_path
+    )
+  )
+
+  expect_true(all(vapply(individuals(sp), function(ind) is.null(annotation_data(ind)), logical(1))))
+
+  loaded_sp <- load_annotation(sp)
+
+  expect_s4_class(loaded_sp, "SynSpecies")
+  expect_identical(species_name(loaded_sp), "Caenorhabditis")
+  expect_identical(names(pairwise_alignments(loaded_sp)), "XZ1516_vs_N2")
+  expect_true(all(vapply(individuals(loaded_sp), function(ind) methods::is(annotation_data(ind), "GRanges"), logical(1))))
+  expect_true(all(vapply(individuals(loaded_sp), function(ind) methods::is(seqinfo(ind), "Seqinfo"), logical(1))))
+})
+
+test_that("load_alignment loads all stored alignments in a SynSpecies", {
+  genome_path <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
+  annotation_path <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+  n2_genome_path <- system.file(
+    "extdata",
+    "c_elegans.PRJNA13758.WS285.genomic.fa",
+    package = "ggexon"
+  )
+  n2_annotation_path <- system.file(
+    "extdata",
+    "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
+    package = "ggexon"
+  )
+  paf_path <- system.file("extdata", "V_alginment.paf", package = "ggexon")
+
+  odgi_tbl <- data.frame(
+    node_id = c(1L, 2L),
+    sequence = c("AC", "G"),
+    XZ1516_chromosome = c("RagTag_V", "RagTag_V"),
+    XZ1516_strand = c("+", "-"),
+    XZ1516_absolute_start = c(21559983L, 21559985L),
+    XZ1516_absolute_end = c(21559984L, 21559985L),
+    N2_chromosome = c("V", "V"),
+    N2_strand = c("+", "+"),
+    N2_absolute_start = c(20454111L, 20454113L),
+    N2_absolute_end = c(20454112L, 20454113L),
+    check.names = FALSE,
+    stringsAsFactors = FALSE
+  )
+  odgi_tsv <- tempfile(fileext = ".tsv")
+  utils::write.table(odgi_tbl, file = odgi_tsv, sep = "\t", quote = FALSE, row.names = FALSE)
+
+  sp <- SynSpecies(name = "Caenorhabditis")
+  sp <- add_individual(
+    sp,
+    test_syn_individual(
+      genome_file = genome_path,
+      annotation_file = annotation_path,
+      id = "XZ1516"
+    )
+  )
+  sp <- add_individual(
+    sp,
+    test_syn_individual(
+      genome_file = n2_genome_path,
+      annotation_file = n2_annotation_path,
+      id = "N2",
+      annotation_format = "gtf"
+    )
+  )
+  sp <- add_pairwise_alignment(
+    sp,
+    SynPairAlignment(
+      name = "XZ1516_vs_N2",
+      query_individual = "XZ1516",
+      target_individual = "N2",
+      file = paf_path
+    )
+  )
+  sp <- add_multiple_alignment(
+    sp,
+    SynMultiAlignment(
+      name = "XZ1516_N2_odgi",
+      individuals = c("XZ1516", "N2"),
+      file = odgi_tsv,
+      format = "odgi"
+    )
+  )
+
+  expect_null(pairwise_alignments(sp)[["XZ1516_vs_N2"]]@data)
+  expect_null(multiple_alignments(sp)[["XZ1516_N2_odgi"]]@data)
+
+  loaded_sp <- load_alignment(sp)
+  loaded_pair <- pairwise_alignments(loaded_sp)[["XZ1516_vs_N2"]]
+  loaded_multi <- multiple_alignments(loaded_sp)[["XZ1516_N2_odgi"]]
+
+  expect_true(is.data.frame(loaded_pair@data))
+  expect_true(is.data.frame(loaded_multi@data))
+  expect_true(isTRUE(loaded_pair@loaded))
+  expect_true(isTRUE(loaded_multi@loaded))
+  expect_false(isTRUE(loaded_pair@lazy))
+  expect_false(isTRUE(loaded_multi@lazy))
+  expect_true(all(c("qspecies", "tspecies", "track") %in% names(loaded_pair@data)))
+  expect_identical(
+    multiple_alignment_data(loaded_sp, alignment = "XZ1516_N2_odgi"),
+    odgi_tbl
+  )
 })
 
 test_that("add_individuals_from_folder imports supported annotation files with filename ids", {

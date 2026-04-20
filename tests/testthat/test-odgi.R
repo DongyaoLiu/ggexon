@@ -123,6 +123,64 @@ test_that("odgi_multi_alignment supports file-backed tables and SynSpecies looku
   expect_identical(multiple_alignment_data(sp, alignment = "worm-graph"), tbl)
 })
 
+test_that("odgi alignments can load directly from .og graph files", {
+  skip_if(.Platform$OS.type == "windows")
+
+  python <- Sys.which("python3")
+  if (!nzchar(python)) {
+    python <- Sys.which("python")
+  }
+  skip_if(!nzchar(python), "Python is required for ODGI graph loading.")
+
+  og_file <- tempfile(fileext = ".og")
+  writeLines("fake graph", og_file)
+
+  fake_odgi <- tempfile(fileext = ".py")
+  writeLines(
+    c(
+      "#!/usr/bin/env python3",
+      "import sys",
+      "",
+      "cmd = sys.argv[1]",
+      "if cmd == 'view':",
+      "    sys.stdout.write('S\\t1\\tAC\\nS\\t2\\tG\\nP\\tXZ1516#V_RagTag:100-102\\t1+,2-\\nP\\tN2#V:200-202\\t1+,2+\\n')",
+      "elif cmd == 'paths':",
+      "    sys.stdout.write('XZ1516#V_RagTag:100-102\\nN2#V:200-202\\n')",
+      "elif cmd == 'position':",
+      "    sys.stdout.write('path\\tnode_id\\tposition\\nXZ1516#V_RagTag:100-102\\t1\\t0\\nXZ1516#V_RagTag:100-102\\t2\\t2\\nN2#V:200-202\\t1\\t0\\nN2#V:200-202\\t2\\t2\\n')",
+      "else:",
+      "    raise SystemExit(f'Unexpected command: {cmd}')"
+    ),
+    fake_odgi
+  )
+  Sys.chmod(fake_odgi, mode = "0755")
+
+  old_odgi <- Sys.getenv("ODGI_BIN", unset = NA_character_)
+  on.exit({
+    if (is.na(old_odgi)) Sys.unsetenv("ODGI_BIN") else Sys.setenv(ODGI_BIN = old_odgi)
+  }, add = TRUE)
+  Sys.setenv(ODGI_BIN = fake_odgi)
+
+  msa <- SynMultiAlignment(
+    name = "worm-graph-og",
+    individuals = c("XZ1516", "N2"),
+    file = og_file,
+    format = "odgi"
+  )
+
+  loaded <- load_alignment(msa)
+
+  expect_true(is.data.frame(loaded@data))
+  expect_true(isTRUE(loaded@loaded))
+  expect_false(isTRUE(loaded@lazy))
+  expect_identical(loaded@data$node_id, c(1L, 2L))
+  expect_identical(loaded@data$XZ1516_chromosome, c("V_RagTag", "V_RagTag"))
+  expect_identical(loaded@data$N2_chromosome, c("V", "V"))
+
+  loaded_explicit <- load_alignment(msa, odgi = fake_odgi, python = python)
+  expect_identical(loaded_explicit@data$node_id, c(1L, 2L))
+})
+
 test_that("odgi_multi_alignment validates path label groups", {
   bad_tbl <- data.frame(
     node_id = 1L,
