@@ -198,3 +198,33 @@ test_that("odgi_multi_alignment validates path label groups", {
     "at least two path label groups"
   )
 })
+
+test_that("odgi_pairwise_alignment derives a PAF-like pairwise table", {
+  tbl <- test_odgi_node_table()
+
+  pair <- odgi_pairwise_alignment(
+    tbl,
+    query_individual = "XZ1516",
+    target_individual = "N2",
+    name = "XZ1516_vs_N2_odgi"
+  )
+
+  expect_s4_class(pair, "SynPairAlignment")
+  expect_identical(alignment_name(pair), "XZ1516_vs_N2_odgi")
+  expect_identical(alignment_format(pair), "odgi")
+  expect_identical(query_individual(pair), "XZ1516")
+  expect_identical(target_individual(pair), "N2")
+
+  paf_like <- pairwise_alignment_data(pair)
+  expect_true(is.data.frame(paf_like))
+  expect_identical(names(paf_like)[seq_len(12L)], c(
+    "qchr", "qlen", "qstart", "qend", "strand",
+    "tchr", "tlen", "tstart", "tend", "nmatch", "alen", "mapq"
+  ))
+  expect_identical(paf_like$qchr, c("V_RagTag", "V_RagTag"))
+  expect_identical(paf_like$tchr, c("V", "V"))
+  expect_identical(paf_like$strand, c("+", "-"))
+  expect_identical(paf_like$qstart, c(100L, 102L))
+  expect_identical(paf_like$tstart, c(200L, 202L))
+  expect_identical(paf_like$alen, c(2L, 1L))
+})

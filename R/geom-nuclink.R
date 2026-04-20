@@ -1,3 +1,46 @@
+#' Draw cross-panel nucleotide links
+#'
+#' `geom_nuclink()` draws filled polygons that connect one interval on a query
+#' genome to one interval on a target genome. It can be used with an ordinary
+#' data frame containing explicit query/target columns, or with a `SynSpecies`
+#' object where link rows are resolved lazily from stored alignments.
+#'
+#' For ordinary data, the layer expects columns or mappings for:
+#'
+#' - `tspecies`, `tchr`, `tstart`, `tend`
+#' - `qspecies`, `qchr`, `qstart`, `qend`
+#' - `strand`
+#'
+#' For Syn-backed plots, `alignment` can point to either a stored
+#' `SynPairAlignment` or an ODGI-backed `SynMultiAlignment`. When an ODGI
+#' multiple alignment is selected, ggexon derives the relevant pairwise link
+#' table for the two species currently plotted around the middle link panel.
+#'
+#' @param mapping Set of aesthetic mappings created by [`ggplot2::aes()`].
+#'   `colour`, `fill`, and `alpha` can be mapped in the standard ggplot2 way.
+#' @param data A data frame or a `SynSpecies` object.
+#' @param stat,position Standard ggplot2 layer arguments.
+#' @param ... Additional parameters passed to the layer, including fixed
+#'   aesthetics such as `fill`, `colour`, and `alpha`.
+#' @param na.rm If `FALSE`, the default, missing values are removed with a
+#'   warning. If `TRUE`, missing values are removed silently.
+#' @param show.legend Logical. Should this layer be included in the legend?
+#' @param alignment Optional alignment name when `data` is a `SynSpecies`.
+#'   This can refer to a stored `SynPairAlignment` or an ODGI
+#'   `SynMultiAlignment`.
+#' @param reference Optional reference species used when deriving a comparative
+#'   window from `chr` + `subset`.
+#' @param chr Optional reference chromosome / seqname when subsetting Syn-backed
+#'   links.
+#' @param subset Optional numeric length-2 reference window. When supplied
+#'   together with `reference` and `chr`, only links overlapping the derived
+#'   comparative region are drawn. When omitted, `geom_nuclink()` uses the
+#'   current annotation windows when available, otherwise the full alignment.
+#' @param inherit.aes If `FALSE`, overrides the default aesthetics rather than
+#'   combining with them.
+#'
+#' @return A ggplot2 layer using `GeomNucLink`.
+#' @export
 geom_nuclink <- function(mapping = NULL, data = NULL,
                                 stat = "identity", position = "identity",
                                 ...,

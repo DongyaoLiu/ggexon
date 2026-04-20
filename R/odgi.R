@@ -159,6 +159,203 @@ odgi_node_table <- function(og_file,
   .read_odgi_node_table(x)
 }
 
+.odgi_split_occurrence_field <- function(x) {
+  if (length(x) == 0L || is.na(x) || !nzchar(trimws(as.character(x)))) {
+    return(character())
+  }
+
+  values <- strsplit(as.character(x), ",", fixed = TRUE)[[1L]]
+  values <- trimws(values)
+  values[nzchar(values)]
+}
+
+.recycle_odgi_occurrence_field <- function(values, n, field, label) {
+  if (length(values) == n) {
+    return(values)
+  }
+  if (length(values) == 1L && n > 1L) {
+    return(rep(values, n))
+  }
+
+  stop(
+    "ODGI node table has inconsistent occurrence counts for label '",
+    label,
+    "' column ",
+    field,
+    ".",
+    call. = FALSE
+  )
+}
+
+.odgi_label_occurrences <- function(tbl, label) {
+  if (!is.data.frame(tbl)) {
+    stop("`tbl` must be a data.frame.", call. = FALSE)
+  }
+
+  chromosome_col <- paste0(label, "_chromosome")
+  strand_col <- paste0(label, "_strand")
+  start_col <- paste0(label, "_absolute_start")
+  end_col <- paste0(label, "_absolute_end")
+  required_cols <- c(chromosome_col, strand_col, start_col, end_col)
+  missing_cols <- required_cols[!required_cols %in% names(tbl)]
+  if (length(missing_cols) > 0L) {
+    stop(
+      "ODGI node table is missing columns for label '",
+      label,
+      "': ",
+      paste(missing_cols, collapse = ", "),
+      call. = FALSE
+    )
+  }
+
+  out <- lapply(seq_len(nrow(tbl)), function(i) {
+    chrom <- .odgi_split_occurrence_field(tbl[[chromosome_col]][[i]])
+    strand <- .odgi_split_occurrence_field(tbl[[strand_col]][[i]])
+    start <- .odgi_split_occurrence_field(tbl[[start_col]][[i]])
+    end <- .odgi_split_occurrence_field(tbl[[end_col]][[i]])
+
+    n_occ <- max(length(chrom), length(strand), length(start), length(end))
+    if (n_occ == 0L) {
+      return(NULL)
+    }
+
+    chrom <- .recycle_odgi_occurrence_field(chrom, n_occ, chromosome_col, label)
+    strand <- .recycle_odgi_occurrence_field(strand, n_occ, strand_col, label)
+    start <- as.integer(.recycle_odgi_occurrence_field(start, n_occ, start_col, label))
+    end <- as.integer(.recycle_odgi_occurrence_field(end, n_occ, end_col, label))
+
+    data.frame(
+      node_id = tbl$node_id[[i]],
+      occurrence_id = seq_len(n_occ),
+      chr = chrom,
+      strand = strand,
+      start = pmin(start, end),
+      end = pmax(start, end),
+      stringsAsFactors = FALSE
+    )
+  })
+
+  dplyr::bind_rows(out)
+}
+
+.odgi_label_chr_lengths <- function(tbl, label) {
+  occ <- .odgi_label_occurrences(tbl, label)
+  if (nrow(occ) == 0L) {
+    return(setNames(integer(), character()))
+  }
+
+  out <- stats::aggregate(end ~ chr, data = occ, FUN = max)
+  stats::setNames(as.integer(out$end), out$chr)
+}
+
+.odgi_pairwise_name <- function(base_name, query_individual, target_individual) {
+  paste(base_name, query_individual, target_individual, sep = "__")
+}
+
+.odgi_pairwise_label_lookup <- function(msa) {
+  labels <- msa@metadata$odgi_labels %||% NULL
+  if (is.null(labels)) {
+    stats::setNames(msa@individuals, msa@individuals)
+  } else {
+    labels
+  }
+}
+
+.odgi_pairwise_table_from_multi <- function(msa,
+                                            query_individual,
+                                            target_individual) {
+  if (!methods::is(msa, "SynMultiAlignment")) {
+    stop("`msa` must be a SynMultiAlignment object.", call. = FALSE)
+  }
+  if (!identical(alignment_format(msa), "odgi")) {
+    stop("`msa` must have `format = \"odgi\"`.", call. = FALSE)
+  }
+  if (!query_individual %in% msa@individuals) {
+    stop("Unknown ODGI query individual: ", query_individual, call. = FALSE)
+  }
+  if (!target_individual %in% msa@individuals) {
+    stop("Unknown ODGI target individual: ", target_individual, call. = FALSE)
+  }
+  if (identical(query_individual, target_individual)) {
+    stop("`query_individual` and `target_individual` must differ.", call. = FALSE)
+  }
+
+  tbl <- multiple_alignment_data(msa)
+  labels <- .odgi_pairwise_label_lookup(msa)
+  query_label <- unname(labels[[query_individual]])
+  target_label <- unname(labels[[target_individual]])
+  if (is.null(query_label) || is.null(target_label)) {
+    stop(
+      "ODGI alignment metadata does not define label mappings for both requested individuals.",
+      call. = FALSE
+    )
+  }
+
+  query_occ <- .odgi_label_occurrences(tbl, query_label)
+  target_occ <- .odgi_label_occurrences(tbl, target_label)
+  if (nrow(query_occ) == 0L || nrow(target_occ) == 0L) {
+    return(data.frame())
+  }
+
+  query_occ <- query_occ[, c("node_id", "occurrence_id", "chr", "strand", "start", "end")]
+  names(query_occ) <- c("node_id", "q_occurrence_id", "qchr", "qstrand", "qstart", "qend")
+  target_occ <- target_occ[, c("node_id", "occurrence_id", "chr", "strand", "start", "end")]
+  names(target_occ) <- c("node_id", "t_occurrence_id", "tchr", "tstrand", "tstart", "tend")
+
+  pair_df <- merge(query_occ, target_occ, by = "node_id", all = FALSE, sort = FALSE)
+  if (nrow(pair_df) == 0L) {
+    return(data.frame())
+  }
+
+  seq_width <- nchar(as.character(tbl$sequence[match(pair_df$node_id, tbl$node_id)]))
+  qlen_map <- .odgi_label_chr_lengths(tbl, query_label)
+  tlen_map <- .odgi_label_chr_lengths(tbl, target_label)
+
+  pair_df$qlen <- as.integer(qlen_map[pair_df$qchr])
+  pair_df$tlen <- as.integer(tlen_map[pair_df$tchr])
+  pair_df$strand <- ifelse(pair_df$qstrand == pair_df$tstrand, "+", "-")
+  pair_df$nmatch <- as.integer(seq_width)
+  pair_df$alen <- as.integer(seq_width)
+  pair_df$mapq <- NA_integer_
+  pair_df$qspecies <- query_individual
+  pair_df$tspecies <- target_individual
+  pair_df$track <- paste0(
+    "link_",
+    .odgi_pairwise_name(alignment_name(msa), query_individual, target_individual)
+  )
+
+  pair_df <- pair_df[, c(
+    "qchr", "qlen", "qstart", "qend", "strand",
+    "tchr", "tlen", "tstart", "tend", "nmatch", "alen", "mapq",
+    "qspecies", "tspecies", "track"
+  )]
+  rownames(pair_df) <- NULL
+  pair_df
+}
+
+.read_odgi_pairwise_alignment <- function(x, odgi = NULL, python = NULL) {
+  labels <- x@metadata$odgi_labels %||% stats::setNames(
+    c(query_individual(x), target_individual(x)),
+    c(query_individual(x), target_individual(x))
+  )
+  multi <- SynMultiAlignment(
+    name = x@metadata$odgi_alignment %||% alignment_name(x),
+    individuals = unique(c(query_individual(x), target_individual(x))),
+    file = alignment_file(x),
+    format = "odgi",
+    data = if (!is.null(x@metadata$odgi_table)) x@metadata$odgi_table else NULL,
+    metadata = list(odgi_labels = labels)
+  )
+  if (is.null(multi@data)) {
+    multi@data <- multiple_alignment_data(multi, odgi = odgi, python = python)
+  }
+  .odgi_pairwise_table_from_multi(
+    multi,
+    query_individual = query_individual(x),
+    target_individual = target_individual(x)
+  )
+}
+
 .odgi_alignment_labels <- function(tbl) {
   if (!is.data.frame(tbl)) {
     stop("`x` must be a data.frame or a path to an ODGI node-table TSV.", call. = FALSE)
@@ -338,6 +535,94 @@ odgi_multi_alignment <- function(x,
     file = source_file,
     format = "odgi",
     data = tbl,
+    metadata = metadata
+  )
+}
+
+#' Convert an ODGI multiple alignment into a pairwise alignment
+#'
+#' Builds a PAF-like pairwise link table for one selected pair of individuals
+#' from an ODGI node table, raw `.og` graph, or [`SynMultiAlignment`] with
+#' `format = "odgi"`. The returned object is a [`SynPairAlignment`] with
+#' `format = "odgi"`, so it can be added directly to a [`SynSpecies`] object
+#' and consumed by `geom_nuclink()`.
+#'
+#' @param x A [`SynMultiAlignment`] with `format = "odgi"`, an ODGI node-table
+#'   `data.frame`, a path to an ODGI node-table TSV, or a raw `.og` graph path.
+#' @param query_individual Query-side individual identifier.
+#' @param target_individual Target-side individual identifier.
+#' @param name Optional pairwise alignment label. Defaults to
+#'   `"<alignment>__<query>__<target>"`.
+#' @param individuals Optional individual mapping used when `x` is not already a
+#'   `SynMultiAlignment`. If named, the names must match ODGI path labels.
+#' @param odgi Optional path to the `odgi` executable. Used when `x` is an
+#'   `.og` graph file.
+#' @param python Optional path to the Python interpreter. Used when `x` is an
+#'   `.og` graph file.
+#' @param file Optional source file to store on the returned object.
+#' @param metadata Optional metadata list.
+#'
+#' @return A [`SynPairAlignment`] object with `format = "odgi"` and a cached
+#'   PAF-like pairwise table in its `data` slot.
+#' @export
+odgi_pairwise_alignment <- function(x,
+                                    query_individual,
+                                    target_individual,
+                                    name = NULL,
+                                    individuals = NULL,
+                                    odgi = NULL,
+                                    python = NULL,
+                                    file = NULL,
+                                    metadata = list()) {
+  if (!is.list(metadata)) {
+    stop("`metadata` must be a list.", call. = FALSE)
+  }
+
+  msa <- if (methods::is(x, "SynMultiAlignment")) {
+    if (!identical(alignment_format(x), "odgi")) {
+      stop("`x` must have `format = \"odgi\"`.", call. = FALSE)
+    }
+    if (is.null(x@data)) {
+      x@data <- multiple_alignment_data(x, odgi = odgi, python = python)
+    }
+    x
+  } else {
+    odgi_multi_alignment(
+      x = x,
+      name = name %||% NULL,
+      individuals = individuals,
+      odgi = odgi,
+      python = python,
+      file = file,
+      metadata = metadata
+    )
+  }
+
+  pair_name <- name %||% .odgi_pairwise_name(
+    alignment_name(msa),
+    query_individual,
+    target_individual
+  )
+  metadata <- utils::modifyList(
+    metadata,
+    list(
+      odgi_alignment = alignment_name(msa),
+      odgi_labels = .odgi_pairwise_label_lookup(msa),
+      odgi_table = msa@data
+    )
+  )
+
+  SynPairAlignment(
+    name = pair_name,
+    query_individual = query_individual,
+    target_individual = target_individual,
+    file = file %||% alignment_file(msa),
+    format = "odgi",
+    data = .odgi_pairwise_table_from_multi(
+      msa,
+      query_individual = query_individual,
+      target_individual = target_individual
+    ),
     metadata = metadata
   )
 }

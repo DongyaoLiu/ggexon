@@ -9,6 +9,8 @@ SynPairAlignment(
   query_individual,
   target_individual,
   file,
+  format = c("paf", "odgi"),
+  data = NULL,
   metadata = list()
 )
 }
@@ -19,7 +21,11 @@ SynPairAlignment(
 
 \item{target_individual}{Target-side individual name.}
 
-\item{file}{Path to the PAF file.}
+\item{file}{Path to the alignment file.}
+
+\item{format}{Alignment format. Currently \code{"paf"} or \code{"odgi"}.}
+
+\item{data}{Optional cached parsed alignment representation.}
 
 \item{metadata}{Optional metadata list.}
 }

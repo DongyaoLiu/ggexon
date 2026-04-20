@@ -551,11 +551,12 @@ synspecies_chain_layout <- function(x,
   pair_name <- sub("^link_", "", pair_track)
   pair_obj <- pairwise_alignments(x)[[pair_name]]
   if (is.null(pair_obj)) {
-    return(NULL)
+    top_species <- link_pairs$qspecies[[1L]]
+    bottom_species <- link_pairs$tspecies[[1L]]
+  } else {
+    top_species <- query_individual(pair_obj)
+    bottom_species <- target_individual(pair_obj)
   }
-
-  top_species <- query_individual(pair_obj)
-  bottom_species <- target_individual(pair_obj)
   if (!setequal(annotation_species, c(top_species, bottom_species))) {
     return(NULL)
   }
@@ -568,8 +569,16 @@ synspecies_chain_layout <- function(x,
     panel_type = c("annotation", "link", "annotation"),
     species = c(top_species, NA_character_, bottom_species),
     alignment_name = c(NA_character_, pair_name, NA_character_),
-    tspecies = c(NA_character_, target_individual(pair_obj), NA_character_),
-    qspecies = c(NA_character_, query_individual(pair_obj), NA_character_),
+    tspecies = c(
+      NA_character_,
+      if (is.null(pair_obj)) link_pairs$tspecies[[1L]] else target_individual(pair_obj),
+      NA_character_
+    ),
+    qspecies = c(
+      NA_character_,
+      if (is.null(pair_obj)) link_pairs$qspecies[[1L]] else query_individual(pair_obj),
+      NA_character_
+    ),
     stringsAsFactors = FALSE
   )
 

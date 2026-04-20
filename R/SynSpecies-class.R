@@ -30,7 +30,7 @@ NULL
 #' @slot query_individual Query-side `SynIndividual` identifier.
 #' @slot target_individual Target-side `SynIndividual` identifier.
 #' @slot source_file Path to the alignment file on disk.
-#' @slot format Alignment file format. Currently `"paf"`.
+#' @slot format Alignment file format. Currently `"paf"` or `"odgi"`.
 #' @slot data Optional cached parsed alignment data.
 #' @slot metadata Optional user or import metadata.
 #'
@@ -45,7 +45,7 @@ NULL
 #' * `query_individual` and `target_individual` must each be one non-empty
 #'   character value.
 #' * `query_individual` and `target_individual` must differ.
-#' * `format` must currently be `"paf"`.
+#' * `format` must currently be `"paf"` or `"odgi"`.
 #'
 #' @exportClass SynPairAlignment
 setClass(
@@ -79,8 +79,8 @@ setClass(
     if (identical(object@query_individual, object@target_individual)) {
       problems <- c(problems, "`query_individual` and `target_individual` must differ.")
     }
-    if (length(object@format) != 1L || !(object@format %in% c("paf"))) {
-      problems <- c(problems, "`format` must currently be 'paf'.")
+    if (length(object@format) != 1L || !(object@format %in% c("paf", "odgi"))) {
+      problems <- c(problems, "`format` must currently be 'paf' or 'odgi'.")
     }
     if (length(problems) == 0L) TRUE else problems
   }
@@ -363,7 +363,9 @@ SynLayout <- function(panels,
 #' @param name Alignment label.
 #' @param query_individual Query-side individual name.
 #' @param target_individual Target-side individual name.
-#' @param file Path to the PAF file.
+#' @param file Path to the alignment file.
+#' @param format Alignment format. Currently `"paf"` or `"odgi"`.
+#' @param data Optional cached parsed alignment representation.
 #' @param metadata Optional metadata list.
 #'
 #' @return A `SynPairAlignment` object.
@@ -372,13 +374,18 @@ SynPairAlignment <- function(name,
                              query_individual,
                              target_individual,
                              file,
+                             format = c("paf", "odgi"),
+                             data = NULL,
                              metadata = list()) {
+  format <- match.arg(format)
   new(
     "SynPairAlignment",
     name = name,
     source_file = file,
     query_individual = query_individual,
     target_individual = target_individual,
+    format = format,
+    data = data,
     metadata = metadata
   )
 }
@@ -608,12 +615,24 @@ setMethod("alignment_individuals", "SynPairAlignment", function(x) {
 setMethod("alignment_individuals", "SynMultiAlignment", function(x) x@individuals)
 
 setGeneric("pairwise_alignment_data", function(x, ...) standardGeneric("pairwise_alignment_data"))
-setMethod("pairwise_alignment_data", "SynPairAlignment", function(x, alignment = NULL, ...) {
-  .pairwise_alignment_data_impl(x = x, species_obj = NULL, ...)
+setMethod("pairwise_alignment_data", "SynPairAlignment", function(x, alignment = NULL, ..., odgi = NULL, python = NULL) {
+  .pairwise_alignment_data_impl(
+    x = x,
+    species_obj = NULL,
+    odgi = odgi,
+    python = python,
+    ...
+  )
 })
-setMethod("pairwise_alignment_data", "SynSpecies", function(x, alignment = NULL, ...) {
+setMethod("pairwise_alignment_data", "SynSpecies", function(x, alignment = NULL, ..., odgi = NULL, python = NULL) {
   pair <- .resolve_pairwise_alignment_arg(x = x, alignment = alignment)
-  .pairwise_alignment_data_impl(x = pair, species_obj = x, ...)
+  .pairwise_alignment_data_impl(
+    x = pair,
+    species_obj = x,
+    odgi = odgi,
+    python = python,
+    ...
+  )
 })
 
 .annotation_folder_pattern <- function(annotation_format = c("auto", "gff", "gtf")) {
@@ -1157,8 +1176,24 @@ subset_synspecies_window <- function(x,
   paf
 }
 
-.pairwise_alignment_table <- function(x) {
-  paf <- if (!is.null(x@data)) x@data else .read_pairwise_paf(alignment_file(x))
+.pairwise_alignment_table <- function(x, odgi = NULL, python = NULL) {
+  paf <- if (!is.null(x@data)) {
+    x@data
+  } else if (identical(alignment_format(x), "paf")) {
+    .read_pairwise_paf(alignment_file(x))
+  } else if (identical(alignment_format(x), "odgi")) {
+    .read_odgi_pairwise_alignment(
+      x,
+      odgi = odgi,
+      python = python
+    )
+  } else {
+    stop(
+      "Unsupported pairwise alignment format: ",
+      alignment_format(x),
+      call. = FALSE
+    )
+  }
 
   if (!"qspecies" %in% names(paf)) {
     paf$qspecies <- query_individual(x)
@@ -1177,8 +1212,10 @@ subset_synspecies_window <- function(x,
 .pairwise_alignment_data_impl <- function(x,
                                           species_obj = NULL,
                                           subset = NULL,
-                                          filter = NULL) {
-  paf <- .pairwise_alignment_table(x)
+                                          filter = NULL,
+                                          odgi = NULL,
+                                          python = NULL) {
+  paf <- .pairwise_alignment_table(x, odgi = odgi, python = python)
 
   if (!is.null(subset)) {
     subset_specs <- .parse_pairwise_subset(
@@ -1238,7 +1275,7 @@ subset_synspecies_window <- function(x,
 load_alignment <- function(x, odgi = NULL, python = NULL) {
   if (methods::is(x, "SynPairAlignment")) {
     if (is.null(x@data)) {
-      x@data <- .pairwise_alignment_table(x)
+      x@data <- .pairwise_alignment_table(x, odgi = odgi, python = python)
     }
     x@loaded <- TRUE
     x@lazy <- FALSE

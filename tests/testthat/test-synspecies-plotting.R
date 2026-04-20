@@ -403,6 +403,81 @@ test_that("geom_exon comparative grammar builds paired annotation and link panel
   expect_true(all(unique(as.integer(built@data[[3]]$PANEL)) == 2L))
 })
 
+test_that("geom_nuclink can dispatch an ODGI multiple alignment to the middle panel", {
+  xz_annotation <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+  n2_annotation <- system.file(
+    "extdata",
+    "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
+    package = "ggexon"
+  )
+
+  odgi_tbl <- data.frame(
+    node_id = c(1L, 2L),
+    sequence = c("AC", "G"),
+    XZ1516_chromosome = c("V_RagTag", "V_RagTag"),
+    XZ1516_strand = c("+", "-"),
+    XZ1516_absolute_start = c(21574445L, 21574447L),
+    XZ1516_absolute_end = c(21574446L, 21574447L),
+    N2_chromosome = c("V", "V"),
+    N2_strand = c("+", "+"),
+    N2_absolute_start = c(20456948L, 20456950L),
+    N2_absolute_end = c(20456949L, 20456950L),
+    check.names = FALSE,
+    stringsAsFactors = FALSE
+  )
+
+  sp <- SynSpecies(name = "Caenorhabditis")
+  sp <- add_individual(
+    sp,
+    test_syn_individual(
+      annotation_file = xz_annotation,
+      id = "XZ1516"
+    )
+  )
+  sp <- add_individual(
+    sp,
+    test_syn_individual(
+      annotation_file = n2_annotation,
+      id = "N2",
+      annotation_format = "gtf"
+    )
+  )
+  sp <- add_multiple_alignment(
+    sp,
+    odgi_multi_alignment(odgi_tbl, name = "worm-graph")
+  )
+
+  plot_obj <- ggexon(sp) +
+    geom_exon(
+      species = "XZ1516",
+      chr = "V_RagTag",
+      subset = c(21574445, 21584356)
+    ) +
+    geom_exon(
+      species = "N2",
+      chr = "V",
+      subset = c(20456948, 20465040)
+    ) +
+    geom_nuclink(
+      alignment = "worm-graph"
+    ) +
+    facet_genomics(ggplot2::vars(track), scales = "free_y")
+
+  built <- ggexon_build(plot_obj)
+
+  expect_identical(
+    as.character(built@layout$layout$track),
+    c("XZ1516", "link_worm-graph__XZ1516__N2", "N2")
+  )
+  expect_identical(as.integer(built@layout$layout$SCALE_Y), c(1L, 2L, 1L))
+  expect_true(all(unique(as.integer(built@data[[3]]$PANEL)) == 2L))
+  expect_true(all(c("x_variable", "y_variable", "x", "y", "group") %in% names(built@data[[3]])))
+})
+
 test_that("geom_gene comparative grammar builds paired annotation and link panels", {
   xz_genome <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
   xz_annotation <- system.file(
@@ -1043,7 +1118,7 @@ test_that("annotation subset can be derived from a linked species window", {
   expect_identical(as.character(unique(built@data[[2L]]$track)), "N2")
 })
 
-test_that("annotation subset is required without a derivation path", {
+test_that("annotation layers can use the full annotation range without a subset", {
   xz_genome <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
   xz_annotation <- system.file(
     "extdata",
@@ -1062,11 +1137,10 @@ test_that("annotation subset is required without a derivation path", {
   )
 
   plot_obj <- ggexon(sp) + geom_exon()
+  built <- ggexon_build(plot_obj)
 
-  expect_error(
-    ggexon_build(plot_obj),
-    "`subset` is required for Syn annotation layers"
-  )
+  expect_true(nrow(built@data[[1L]]) > 0L)
+  expect_identical(unique(as.character(built@data[[1L]]$track)), "XZ1516")
 })
 
 test_that("facet_genomics behaves like standard faceting for multi-species annotation layers without links", {

@@ -281,33 +281,92 @@ resolve_plot_alignment_name <- function(x, alignment = NULL) {
     return(names(pair_list)[[1L]])
   }
 
+  multi_list <- multiple_alignments(x)
+  if (length(pair_list) == 0L && length(multi_list) == 1L) {
+    return(names(multi_list)[[1L]])
+  }
+
   alignment
 }
 
-resolve_plot_pairwise_alignment <- function(x, alignment = NULL) {
+infer_nuclink_pair_species <- function(x, context = NULL) {
+  if (!methods::is(x, "SynSpecies")) {
+    return(NULL)
+  }
+
+  context_windows <- context$windows %||% list()
+  context_species <- names(context_windows)
+  context_species <- context_species[context_species %in% names(individuals(x))]
+  context_species <- unique(context_species)
+  if (length(context_species) == 2L) {
+    return(context_species)
+  }
+
+  NULL
+}
+
+resolve_plot_pairwise_alignment <- function(x, alignment = NULL, pair_species = NULL) {
   if (!methods::is(x, "SynSpecies")) {
     cli::cli_abort("Plot-derived link windows require a {.cls SynSpecies} object.")
   }
 
   pair_list <- pairwise_alignments(x)
+  if (!is.null(alignment) && alignment %in% names(pair_list)) {
+    return(pair_list[[alignment]])
+  }
+  if (is.null(alignment) && length(pair_list) == 1L) {
+    return(pair_list[[1L]])
+  }
+
+  multi_list <- multiple_alignments(x)
+  if (!is.null(alignment) && alignment %in% names(multi_list)) {
+    multi <- multi_list[[alignment]]
+  } else if (is.null(alignment) && length(pair_list) == 0L && length(multi_list) == 1L) {
+    multi <- multi_list[[1L]]
+  } else {
+    multi <- NULL
+  }
+
+  if (!is.null(multi)) {
+    if (!identical(alignment_format(multi), "odgi")) {
+      cli::cli_abort(
+        "Only ODGI multiple alignments can be dispatched as pairwise link panels right now."
+      )
+    }
+    pair_species <- unique(as.character(pair_species %||% character()))
+    pair_species <- pair_species[pair_species %in% alignment_individuals(multi)]
+    if (length(pair_species) == 0L && length(alignment_individuals(multi)) == 2L) {
+      pair_species <- alignment_individuals(multi)
+    }
+    if (length(pair_species) != 2L) {
+      cli::cli_abort(
+        c(
+          "Need exactly two plotted species to dispatch ODGI alignment {.val {alignment_name(multi)}} to a middle link panel.",
+          "i" = "Use annotation layers that resolve two species, or add an explicit pairwise alignment."
+        )
+      )
+    }
+
+    return(
+      odgi_pairwise_alignment(
+        x = multi,
+        query_individual = pair_species[[1L]],
+        target_individual = pair_species[[2L]]
+      )
+    )
+  }
+
   if (length(pair_list) == 0L) {
     cli::cli_abort("The {.cls SynSpecies} object does not contain any pairwise alignments.")
   }
 
   if (is.null(alignment)) {
-    if (length(pair_list) == 1L) {
-      return(pair_list[[1L]])
-    }
     cli::cli_abort("Supply {.arg alignment} when multiple pairwise alignments are available.")
   }
 
-  if (!alignment %in% names(pair_list)) {
-    cli::cli_abort(
-      "Unknown alignment {.val {alignment}}. Available pairwise alignments: {.val {names(pair_list)}}."
-    )
-  }
-
-  pair_list[[alignment]]
+  cli::cli_abort(
+    "Unknown alignment {.val {alignment}}. Available pairwise alignments: {.val {names(pair_list)}}."
+  )
 }
 
 collect_explicit_annotation_windows <- function(annotation_requests, syn_data) {
@@ -1587,22 +1646,22 @@ syn_to_nuclink_df <- function(x,
     return(out$links)
   }
 
-  pair <- resolve_plot_pairwise_alignment(x, alignment)
+  pair <- resolve_plot_pairwise_alignment(
+    x,
+    alignment,
+    pair_species = infer_nuclink_pair_species(x, context)
+  )
   pair_species <- alignment_individuals(pair)
   pair_windows <- if (!is.null(context)) context$windows[pair_species] else list()
   if (length(pair_windows) == length(pair_species) &&
       all(!vapply(pair_windows, is.null, logical(1)))) {
     subset_regions <- vapply(pair_windows, window_to_region_string, character(1))
     return(
-      pairwise_alignment_data(
-        x,
-        alignment = alignment_name(pair),
-        subset = subset_regions
-      )
+      pairwise_alignment_data(pair, subset = subset_regions)
     )
   }
 
-  pairwise_alignment_data(x, alignment = alignment_name(pair))
+  pairwise_alignment_data(pair)
 }
 
 resolve_syn_seqname <- function(individual, chr = NULL) {
