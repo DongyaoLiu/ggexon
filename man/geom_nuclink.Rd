@@ -72,6 +72,7 @@ For ordinary data, the layer expects columns or mappings for:
 
 For Syn-backed plots, \code{alignment} can point to either a stored
 \code{SynPairAlignment} or an ODGI-backed \code{SynMultiAlignment}. When an ODGI
-multiple alignment is selected, ggexon derives the relevant pairwise link
-table for the two species currently plotted around the middle link panel.
+multiple alignment is selected, ggexon derives adjacent pairwise link tables
+for the plotted species order and dispatches them to the corresponding
+middle link panels.
 }

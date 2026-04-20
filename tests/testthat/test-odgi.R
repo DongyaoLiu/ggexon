@@ -123,6 +123,36 @@ test_that("odgi_multi_alignment supports file-backed tables and SynSpecies looku
   expect_identical(multiple_alignment_data(sp, alignment = "worm-graph"), tbl)
 })
 
+test_that("load_alignment infers ODGI label mappings for manual SynMultiAlignment objects", {
+  tbl <- test_odgi_node_table()
+  tsv <- tempfile(fileext = ".tsv")
+  utils::write.table(tbl, file = tsv, sep = "\t", quote = FALSE, row.names = FALSE)
+
+  msa <- SynMultiAlignment(
+    name = "worm-graph-manual",
+    individuals = c("XZ1516", "N2.w285"),
+    file = tsv,
+    format = "odgi"
+  ) |>
+    load_alignment()
+
+  expect_identical(
+    msa@metadata$odgi_labels,
+    c(XZ1516 = "XZ1516", N2.w285 = "N2")
+  )
+
+  pair <- odgi_pairwise_alignment(
+    msa,
+    query_individual = "XZ1516",
+    target_individual = "N2.w285"
+  )
+
+  paf_like <- pairwise_alignment_data(pair)
+  expect_identical(nrow(paf_like), 2L)
+  expect_identical(paf_like$tchr, c("V", "V"))
+  expect_identical(paf_like$tstart, c(200L, 202L))
+})
+
 test_that("odgi alignments can load directly from .og graph files", {
   skip_if(.Platform$OS.type == "windows")
 
@@ -227,4 +257,38 @@ test_that("odgi_pairwise_alignment derives a PAF-like pairwise table", {
   expect_identical(paf_like$qstart, c(100L, 102L))
   expect_identical(paf_like$tstart, c(200L, 202L))
   expect_identical(paf_like$alen, c(2L, 1L))
+})
+
+test_that("odgi parser ignores path chromosome labels for nodes absent from that path", {
+  tbl <- data.frame(
+    node_id = c(1L, 2L),
+    sequence = c("AC", "G"),
+    XZ1516_chromosome = c("V_RagTag", "V_RagTag"),
+    XZ1516_strand = c("+", "-"),
+    XZ1516_absolute_start = c(100L, 102L),
+    XZ1516_absolute_end = c(101L, 102L),
+    CB4856_chromosome = c("CP084673.1", "CP084673.1"),
+    CB4856_strand = c("NA", "+"),
+    CB4856_absolute_start = c("NA", "300"),
+    CB4856_absolute_end = c("NA", "300"),
+    check.names = FALSE,
+    stringsAsFactors = FALSE
+  )
+
+  msa <- odgi_multi_alignment(
+    tbl,
+    name = "worm-graph-partial",
+    individuals = c(XZ1516 = "XZ1516", CB4856 = "CB4856")
+  )
+
+  pair <- odgi_pairwise_alignment(
+    msa,
+    query_individual = "XZ1516",
+    target_individual = "CB4856"
+  )
+
+  paf_like <- pairwise_alignment_data(pair)
+  expect_identical(nrow(paf_like), 1L)
+  expect_identical(paf_like$qstart, 102L)
+  expect_identical(paf_like$tstart, 300L)
 })

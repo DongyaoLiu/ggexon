@@ -595,6 +595,69 @@ test_that("reference-led comparative subsetting errors when pairwise alignments 
   )
 })
 
+test_that("subset_synspecies_window can derive multiple species windows from an ODGI alignment", {
+  annotation_path <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+
+  odgi_tbl <- data.frame(
+    node_id = c(1L, 2L, 3L),
+    sequence = c("AC", "G", "TT"),
+    XZ1516_chromosome = c("RagTag_V", "RagTag_V", "RagTag_V"),
+    XZ1516_strand = c("+", "-", "+"),
+    XZ1516_absolute_start = c(21574445L, 21574447L, 21580000L),
+    XZ1516_absolute_end = c(21574446L, 21574447L, 21580001L),
+    N2_chromosome = c("RagTag_V", "RagTag_V", "RagTag_V"),
+    N2_strand = c("+", "+", "-"),
+    N2_absolute_start = c(21574460L, 21574462L, 21580020L),
+    N2_absolute_end = c(21574461L, 21574462L, 21580021L),
+    CB4856_chromosome = c("RagTag_V", "RagTag_V", "RagTag_V"),
+    CB4856_strand = c("+", "-", "+"),
+    CB4856_absolute_start = c(21574480L, 21574482L, 21580040L),
+    CB4856_absolute_end = c(21574481L, 21574482L, 21580041L),
+    check.names = FALSE,
+    stringsAsFactors = FALSE
+  )
+
+  sp <- SynSpecies(name = "Caenorhabditis")
+  for (id in c("XZ1516", "N2", "CB4856")) {
+    sp <- add_individual(
+      sp,
+      test_syn_individual(
+        annotation_file = annotation_path,
+        id = id
+      )
+    )
+  }
+  sp <- add_multiple_alignment(
+    sp,
+    odgi_multi_alignment(odgi_tbl, name = "worm-graph-3")
+  )
+
+  out <- subset_synspecies_window(
+    sp,
+    reference_species = "XZ1516",
+    chr = "RagTag_V",
+    start = 21574445,
+    end = 21584356,
+    alignment = "worm-graph-3",
+    selected_species = c("XZ1516", "N2", "CB4856")
+  )
+
+  expect_true(all(c("windows", "annotations", "links") %in% names(out)))
+  expect_identical(names(out$windows), c("XZ1516", "N2", "CB4856"))
+  expect_identical(names(out$annotations), c("XZ1516", "N2", "CB4856"))
+  expect_s4_class(out$annotations$XZ1516, "GRanges")
+  expect_s4_class(out$annotations$N2, "GRanges")
+  expect_s4_class(out$annotations$CB4856, "GRanges")
+  expect_setequal(
+    unique(as.character(out$links$track)),
+    c("link_worm-graph-3__XZ1516__N2", "link_worm-graph-3__N2__CB4856")
+  )
+})
+
 test_that("pairwise_alignment_data subsets query and target regions and filters short paf rows", {
   xz_genome <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
   xz_annotation <- system.file(

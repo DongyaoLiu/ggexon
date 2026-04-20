@@ -11,6 +11,7 @@ subset_synspecies_window(
   start,
   end,
   alignment = NULL,
+  selected_species = NULL,
   max_target_gap = NULL
 )
 }
@@ -28,6 +29,10 @@ system.}
 
 \item{alignment}{Optional pairwise alignment name. Required when multiple
 pairwise alignments exist and you want to choose a specific pair.}
+
+\item{selected_species}{Optional character vector giving the plotted species
+order to retain when \code{alignment} points to an ODGI multiple alignment.
+Adjacent species in this order are linked pairwise.}
 
 \item{max_target_gap}{Optional maximum gap used when chaining nearby PAF hits
 on the partner genome. Defaults to \code{max(50000, 2 * window_width)}.}

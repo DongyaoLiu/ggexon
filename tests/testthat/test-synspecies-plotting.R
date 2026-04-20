@@ -478,6 +478,76 @@ test_that("geom_nuclink can dispatch an ODGI multiple alignment to the middle pa
   expect_true(all(c("x_variable", "y_variable", "x", "y", "group") %in% names(built@data[[3]])))
 })
 
+test_that("geom_nuclink can derive multiple middle panels from an ODGI alignment and reference window", {
+  annotation_path <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+
+  odgi_tbl <- data.frame(
+    node_id = c(1L, 2L, 3L),
+    sequence = c("AC", "G", "TT"),
+    XZ1516_chromosome = c("RagTag_V", "RagTag_V", "RagTag_V"),
+    XZ1516_strand = c("+", "-", "+"),
+    XZ1516_absolute_start = c(21574445L, 21574447L, 21580000L),
+    XZ1516_absolute_end = c(21574446L, 21574447L, 21580001L),
+    N2_chromosome = c("RagTag_V", "RagTag_V", "RagTag_V"),
+    N2_strand = c("+", "+", "-"),
+    N2_absolute_start = c(21574460L, 21574462L, 21580020L),
+    N2_absolute_end = c(21574461L, 21574462L, 21580021L),
+    CB4856_chromosome = c("RagTag_V", "RagTag_V", "RagTag_V"),
+    CB4856_strand = c("+", "-", "+"),
+    CB4856_absolute_start = c(21574480L, 21574482L, 21580040L),
+    CB4856_absolute_end = c(21574481L, 21574482L, 21580041L),
+    check.names = FALSE,
+    stringsAsFactors = FALSE
+  )
+
+  sp <- SynSpecies(name = "Caenorhabditis")
+  for (id in c("XZ1516", "N2", "CB4856")) {
+    sp <- add_individual(
+      sp,
+      test_syn_individual(
+        annotation_file = annotation_path,
+        id = id
+      )
+    )
+  }
+  sp <- add_multiple_alignment(
+    sp,
+    odgi_multi_alignment(odgi_tbl, name = "worm-graph-3")
+  )
+
+  plot_obj <- ggexon(sp) +
+    geom_exon(species = "XZ1516") +
+    geom_exon(species = "N2") +
+    geom_exon(species = "CB4856") +
+    geom_nuclink(
+      alignment = "worm-graph-3",
+      reference = "XZ1516",
+      chr = "RagTag_V",
+      subset = c(21574445, 21584356)
+    ) +
+    facet_genomics(ggplot2::vars(track), scales = "free_y")
+
+  built <- ggexon_build(plot_obj)
+
+  expect_identical(
+    as.character(built@layout$layout$track),
+    c(
+      "XZ1516",
+      "link_worm-graph-3__XZ1516__N2",
+      "N2",
+      "link_worm-graph-3__N2__CB4856",
+      "CB4856"
+    )
+  )
+  expect_identical(as.integer(built@layout$layout$SCALE_Y), c(1L, 2L, 1L, 2L, 1L))
+  expect_length(built@data, 4L)
+  expect_true(all(unique(as.integer(built@data[[4]]$PANEL)) %in% c(2L, 4L)))
+})
+
 test_that("geom_gene comparative grammar builds paired annotation and link panels", {
   xz_genome <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
   xz_annotation <- system.file(

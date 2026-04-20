@@ -961,6 +961,9 @@ filter_pairwise_alignment <- function(x, filter = 200, alignment = NULL) {
 #' @param end End coordinate on the reference species.
 #' @param alignment Optional pairwise alignment name. Required when multiple
 #'   pairwise alignments exist and you want to choose a specific pair.
+#' @param selected_species Optional character vector giving the plotted species
+#'   order to retain when `alignment` points to an ODGI multiple alignment.
+#'   Adjacent species in this order are linked pairwise.
 #' @param max_target_gap Optional maximum gap used when chaining nearby PAF hits
 #'   on the partner genome. Defaults to `max(50000, 2 * window_width)`.
 #'
@@ -972,6 +975,7 @@ subset_synspecies_window <- function(x,
                                      start,
                                      end,
                                      alignment = NULL,
+                                     selected_species = NULL,
                                      max_target_gap = NULL) {
   if (!methods::is(x, "SynSpecies")) {
     stop("`subset_synspecies_window()` expects a SynSpecies object.", call. = FALSE)
@@ -989,11 +993,28 @@ subset_synspecies_window <- function(x,
 
   ref_start <- as.integer(min(start, end))
   ref_end <- as.integer(max(start, end))
-  pair <- .resolve_subset_pairwise_alignment(
+  alignment_obj <- .resolve_subset_alignment_arg(
     x = x,
     reference_species = reference_species,
-    alignment = alignment
+    alignment = alignment,
+    selected_species = selected_species
   )
+
+  if (methods::is(alignment_obj, "SynMultiAlignment")) {
+    return(
+      .subset_odgi_synspecies_window(
+        x = x,
+        multi = alignment_obj,
+        reference_species = reference_species,
+        chr = chr,
+        start = ref_start,
+        end = ref_end,
+        selected_species = selected_species
+      )
+    )
+  }
+
+  pair <- alignment_obj
 
   query_species <- query_individual(pair)
   target_species <- target_individual(pair)
@@ -1097,16 +1118,118 @@ subset_synspecies_window <- function(x,
   )
 }
 
-.resolve_subset_pairwise_alignment <- function(x, reference_species, alignment = NULL) {
+.subset_odgi_synspecies_window <- function(x,
+                                          multi,
+                                          reference_species,
+                                          chr,
+                                          start,
+                                          end,
+                                          selected_species = NULL) {
+  odgi_subset <- .odgi_alignment_windows_from_reference(
+    msa = multi,
+    reference_species = reference_species,
+    chr = chr,
+    start = start,
+    end = end,
+    selected_species = selected_species
+  )
+
+  species_order <- odgi_subset$species_order
+  if (length(species_order) < 2L) {
+    stop(
+      "The selected ODGI alignment window does not overlap at least two plotted species.",
+      call. = FALSE
+    )
+  }
+
+  windows <- odgi_subset$windows
+  annotations <- lapply(names(windows), function(species_name) {
+    individual <- individuals(x)[[species_name]]
+    window <- windows[[species_name]]
+    .subset_annotation_window(
+      individual,
+      chr = window$chr[[1L]],
+      start = window$start[[1L]],
+      end = window$end[[1L]]
+    )
+  })
+  names(annotations) <- names(windows)
+
+  pair_list <- .odgi_pairwise_alignments_from_multi(
+    msa = multi,
+    species_order = species_order
+  )
+  links <- lapply(pair_list, function(pair) {
+    pair_species <- alignment_individuals(pair)
+    subset_regions <- vapply(pair_species, function(species_name) {
+      window_to_region_string(windows[[species_name]])
+    }, character(1))
+    pairwise_alignment_data(pair, subset = subset_regions)
+  })
+  links <- dplyr::bind_rows(links)
+  rownames(links) <- NULL
+
+  list(
+    windows = windows,
+    annotations = annotations,
+    links = links
+  )
+}
+
+.resolve_subset_alignment_arg <- function(x,
+                                          reference_species,
+                                          alignment = NULL,
+                                          selected_species = NULL) {
   pair_list <- pairwise_alignments(x)
+  if (!is.null(alignment) && alignment %in% names(pair_list)) {
+    return(pair_list[[alignment]])
+  }
+
+  if (is.null(alignment) && length(pair_list) == 1L) {
+    return(pair_list[[1L]])
+  }
+
+  multi_list <- multiple_alignments(x)
+  if (!is.null(alignment) && alignment %in% names(multi_list)) {
+    multi <- multi_list[[alignment]]
+  } else if (is.null(alignment) && length(pair_list) == 0L && length(multi_list) == 1L) {
+    multi <- multi_list[[1L]]
+  } else {
+    multi <- NULL
+  }
+
+  if (!is.null(multi)) {
+    if (!identical(alignment_format(multi), "odgi")) {
+      stop(
+        "Only ODGI multiple alignments currently support reference-led comparative window dispatch.",
+        call. = FALSE
+      )
+    }
+    selected_species <- unique(as.character(selected_species %||% character()))
+    selected_species <- selected_species[selected_species %in% alignment_individuals(multi)]
+    if (length(selected_species) == 0L) {
+      selected_species <- alignment_individuals(multi)
+    }
+    if (!reference_species %in% selected_species) {
+      selected_species <- c(reference_species, selected_species)
+    }
+    if (length(selected_species) < 2L) {
+      stop(
+        "Need at least two selected species to derive ODGI comparative windows.",
+        call. = FALSE
+      )
+    }
+    return(multi)
+  }
+
   if (length(pair_list) == 0L) {
-    stop("The SynSpecies object does not contain any pairwise alignments.", call. = FALSE)
+    stop(
+      "The SynSpecies object does not contain any pairwise alignments or ODGI multiple alignments.",
+      call. = FALSE
+    )
   }
 
   if (is.null(alignment)) {
-    if (length(pair_list) == 1L) {
-      return(pair_list[[1L]])
-    }
     synspecies_chain_species_order(x)
     stop(
       "For SynSpecies chains with multiple pairwise alignments, supply `alignment` to choose the pair for subsetting.",
@@ -1114,15 +1237,11 @@ subset_synspecies_window <- function(x,
     )
   }
 
-  if (!alignment %in% names(pair_list)) {
-    stop(
-      "Unknown pairwise alignment: ", alignment,
-      ". Available alignments: ", paste(names(pair_list), collapse = ", "),
-      call. = FALSE
-    )
-  }
-
-  pair_list[[alignment]]
+  stop(
+    "Unknown alignment: ", alignment,
+    ". Available pairwise alignments: ", paste(names(pair_list), collapse = ", "),
+    call. = FALSE
+  )
 }
 
 .resolve_pairwise_alignment_arg <- function(x, alignment = NULL) {
@@ -1291,6 +1410,12 @@ load_alignment <- function(x, odgi = NULL, python = NULL) {
         )
       }
       x@data <- multiple_alignment_data(x, odgi = odgi, python = python)
+    }
+    if (identical(alignment_format(x), "odgi") && is.null(x@metadata$odgi_labels)) {
+      x@metadata$odgi_labels <- .infer_odgi_label_mapping(
+        tbl = x@data,
+        individuals = x@individuals
+      )
     }
     x@loaded <- TRUE
     x@lazy <- FALSE

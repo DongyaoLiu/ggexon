@@ -166,7 +166,8 @@ odgi_node_table <- function(og_file,
 
   values <- strsplit(as.character(x), ",", fixed = TRUE)[[1L]]
   values <- trimws(values)
-  values[nzchar(values)]
+  values <- values[nzchar(values)]
+  values[!to_upper_ascii(values) %in% "NA"]
 }
 
 .recycle_odgi_occurrence_field <- function(values, n, field, label) {
@@ -214,7 +215,10 @@ odgi_node_table <- function(og_file,
     start <- .odgi_split_occurrence_field(tbl[[start_col]][[i]])
     end <- .odgi_split_occurrence_field(tbl[[end_col]][[i]])
 
-    n_occ <- max(length(chrom), length(strand), length(start), length(end))
+    # The chromosome column is path-level metadata written on every row, even
+    # when this node is absent from that path. Actual node occurrences are
+    # defined by strand/start/end, not by the chromosome label alone.
+    n_occ <- max(length(strand), length(start), length(end))
     if (n_occ == 0L) {
       return(NULL)
     }
@@ -252,13 +256,118 @@ odgi_node_table <- function(og_file,
   paste(base_name, query_individual, target_individual, sep = "__")
 }
 
-.odgi_pairwise_label_lookup <- function(msa) {
+.odgi_label_match_key <- function(x) {
+  x <- as.character(x)
+  x <- sub("[._-].*$", "", x)
+  x <- gsub("[^A-Za-z0-9]", "", x)
+  to_upper_ascii(x)
+}
+
+.infer_odgi_label_mapping <- function(tbl, individuals = NULL) {
+  labels <- .odgi_alignment_labels(tbl)
+  if (is.null(individuals)) {
+    return(stats::setNames(labels, labels))
+  }
+
+  if (is.list(individuals)) {
+    individuals <- unlist(individuals, use.names = TRUE)
+  }
+
+  if (!is.character(individuals) || length(individuals) != length(labels)) {
+    stop(
+      "`individuals` must be NULL or a character vector/list with one entry per ODGI path label.",
+      call. = FALSE
+    )
+  }
+
+  if (!is.null(names(individuals)) && any(nzchar(names(individuals)))) {
+    if (!setequal(names(individuals), labels)) {
+      stop(
+        "Named `individuals` must use the ODGI path labels as names: ",
+        paste(labels, collapse = ", "),
+        call. = FALSE
+      )
+    }
+    resolved <- trimws(as.character(unname(individuals[labels])))
+    if (any(is.na(resolved)) || any(!nzchar(resolved))) {
+      stop("`individuals` cannot contain missing or empty names.", call. = FALSE)
+    }
+    if (anyDuplicated(resolved)) {
+      stop("`individuals` must not contain duplicates.", call. = FALSE)
+    }
+    return(stats::setNames(labels, resolved))
+  }
+
+  individuals <- trimws(as.character(individuals))
+  if (any(is.na(individuals)) || any(!nzchar(individuals))) {
+    stop("`individuals` cannot contain missing or empty names.", call. = FALSE)
+  }
+  if (anyDuplicated(individuals)) {
+    stop("`individuals` must not contain duplicates.", call. = FALSE)
+  }
+
+  mapping <- stats::setNames(rep(NA_character_, length(individuals)), individuals)
+
+  exact <- intersect(individuals, labels)
+  if (length(exact) > 0L) {
+    mapping[exact] <- exact
+  }
+
+  remaining_inds <- names(mapping)[is.na(mapping)]
+  remaining_labels <- setdiff(labels, unname(stats::na.omit(mapping)))
+
+  if (length(remaining_inds) > 0L) {
+    ind_keys <- .odgi_label_match_key(remaining_inds)
+    label_keys <- .odgi_label_match_key(remaining_labels)
+
+    for (i in seq_along(remaining_inds)) {
+      label_hits <- remaining_labels[label_keys == ind_keys[[i]]]
+      ind_hits <- remaining_inds[ind_keys == ind_keys[[i]]]
+      if (length(label_hits) == 1L && length(ind_hits) == 1L) {
+        mapping[[remaining_inds[[i]]]] <- label_hits[[1L]]
+      }
+    }
+  }
+
+  if (anyNA(mapping)) {
+    unresolved <- names(mapping)[is.na(mapping)]
+    stop(
+      "Could not infer ODGI path-label mappings for: ",
+      paste(unresolved, collapse = ", "),
+      ". Supply explicit label mappings, for example `individuals = c(label = individual)`.",
+      call. = FALSE
+    )
+  }
+
+  mapping
+}
+
+.odgi_pairwise_label_lookup <- function(msa, tbl = NULL) {
   labels <- msa@metadata$odgi_labels %||% NULL
   if (is.null(labels)) {
-    stats::setNames(msa@individuals, msa@individuals)
-  } else {
-    labels
+    if (!is.null(tbl)) {
+      return(.infer_odgi_label_mapping(tbl, individuals = msa@individuals))
+    }
+    return(stats::setNames(msa@individuals, msa@individuals))
   }
+  labels
+}
+
+.resolve_odgi_species_order <- function(msa,
+                                        selected_species = NULL,
+                                        reference_species = NULL) {
+  species_order <- if (is.null(selected_species)) {
+    alignment_individuals(msa)
+  } else {
+    unique(as.character(selected_species))
+  }
+  species_order <- species_order[species_order %in% alignment_individuals(msa)]
+
+  if (!is.null(reference_species) && reference_species %in% alignment_individuals(msa)) {
+    species_order <- c(reference_species, setdiff(species_order, reference_species))
+  }
+
+  unique(species_order)
 }
 
 .odgi_pairwise_table_from_multi <- function(msa,
@@ -281,7 +390,7 @@ odgi_node_table <- function(og_file,
   }
 
   tbl <- multiple_alignment_data(msa)
-  labels <- .odgi_pairwise_label_lookup(msa)
+  labels <- .odgi_pairwise_label_lookup(msa, tbl = tbl)
   query_label <- unname(labels[[query_individual]])
   target_label <- unname(labels[[target_individual]])
   if (is.null(query_label) || is.null(target_label)) {
@@ -331,6 +440,127 @@ odgi_node_table <- function(og_file,
   )]
   rownames(pair_df) <- NULL
   pair_df
+}
+
+.odgi_pairwise_alignments_from_multi <- function(msa,
+                                                 species_order = NULL) {
+  if (!methods::is(msa, "SynMultiAlignment")) {
+    stop("`msa` must be a SynMultiAlignment object.", call. = FALSE)
+  }
+  if (!identical(alignment_format(msa), "odgi")) {
+    stop("`msa` must have `format = \"odgi\"`.", call. = FALSE)
+  }
+
+  species_order <- .resolve_odgi_species_order(msa, selected_species = species_order)
+  if (length(species_order) < 2L) {
+    return(list())
+  }
+
+  out <- lapply(seq_len(length(species_order) - 1L), function(i) {
+    odgi_pairwise_alignment(
+      x = msa,
+      query_individual = species_order[[i]],
+      target_individual = species_order[[i + 1L]]
+    )
+  })
+  stats::setNames(out, vapply(out, alignment_name, character(1)))
+}
+
+.odgi_species_window_from_nodes <- function(tbl, label, node_ids) {
+  occ <- .odgi_label_occurrences(tbl, label)
+  occ <- occ[occ$node_id %in% node_ids, , drop = FALSE]
+  if (nrow(occ) == 0L) {
+    return(NULL)
+  }
+
+  occ$width <- occ$end - occ$start + 1L
+  chr_summary <- stats::aggregate(width ~ chr, data = occ, FUN = sum)
+  best_chr <- chr_summary$chr[[which.max(chr_summary$width)]]
+  chr_occ <- occ[occ$chr == best_chr, , drop = FALSE]
+
+  list(
+    chr = best_chr,
+    start = as.integer(min(chr_occ$start)),
+    end = as.integer(max(chr_occ$end))
+  )
+}
+
+.odgi_alignment_windows_from_reference <- function(msa,
+                                                   reference_species,
+                                                   chr,
+                                                   start,
+                                                   end,
+                                                   selected_species = NULL) {
+  if (!methods::is(msa, "SynMultiAlignment")) {
+    stop("`msa` must be a SynMultiAlignment object.", call. = FALSE)
+  }
+  if (!identical(alignment_format(msa), "odgi")) {
+    stop("`msa` must have `format = \"odgi\"`.", call. = FALSE)
+  }
+  if (!reference_species %in% alignment_individuals(msa)) {
+    stop("Unknown ODGI reference species: ", reference_species, call. = FALSE)
+  }
+
+  tbl <- multiple_alignment_data(msa)
+  labels <- .odgi_pairwise_label_lookup(msa, tbl = tbl)
+  species_order <- .resolve_odgi_species_order(
+    msa,
+    selected_species = selected_species,
+    reference_species = reference_species
+  )
+  if (length(species_order) == 0L) {
+    stop("No selected species are present in the ODGI alignment.", call. = FALSE)
+  }
+
+  ref_label <- unname(labels[[reference_species]])
+  ref_occ <- .odgi_label_occurrences(tbl, ref_label)
+  ref_chr <- .resolve_paf_seqname(chr, unique(as.character(ref_occ$chr)))
+  ref_hits <- ref_occ[
+    ref_occ$chr == ref_chr &
+      ref_occ$start < max(start, end) &
+      ref_occ$end > min(start, end),
+    ,
+    drop = FALSE
+  ]
+  if (nrow(ref_hits) == 0L) {
+    stop(
+      "No ODGI nodes overlap ", reference_species, ":", ref_chr, ":",
+      min(start, end), "-", max(start, end), ".",
+      call. = FALSE
+    )
+  }
+
+  node_ids <- unique(ref_hits$node_id)
+  windows <- list()
+  windows[[reference_species]] <- data.frame(
+    chr = ref_chr,
+    start = as.integer(min(start, end)),
+    end = as.integer(max(start, end)),
+    stringsAsFactors = FALSE
+  )
+
+  for (species_name in setdiff(species_order, reference_species)) {
+    species_window <- .odgi_species_window_from_nodes(
+      tbl = tbl,
+      label = unname(labels[[species_name]]),
+      node_ids = node_ids
+    )
+    if (is.null(species_window)) {
+      next
+    }
+    windows[[species_name]] <- data.frame(
+      chr = species_window$chr,
+      start = species_window$start,
+      end = species_window$end,
+      stringsAsFactors = FALSE
+    )
+  }
+
+  list(
+    windows = windows,
+    species_order = species_order[species_order %in% names(windows)],
+    node_ids = node_ids
+  )
 }
 
 .read_odgi_pairwise_alignment <- function(x, odgi = NULL, python = NULL) {
@@ -517,8 +747,8 @@ odgi_multi_alignment <- function(x,
     stop("`x` must be a data.frame, an ODGI node-table TSV path, or an `.og` graph path.", call. = FALSE)
   }
 
-  labels <- .odgi_alignment_labels(tbl)
-  alignment_inds <- .normalize_odgi_alignment_individuals(labels, individuals = individuals)
+  label_mapping <- .infer_odgi_label_mapping(tbl, individuals = individuals)
+  alignment_inds <- names(label_mapping)
   source_file <- if (!is.null(file)) {
     file
   } else if (is.character(x) && length(x) == 1L && !is.na(x) && nzchar(x)) {
@@ -527,7 +757,7 @@ odgi_multi_alignment <- function(x,
     "<odgi-node-table>"
   }
 
-  metadata$odgi_labels <- stats::setNames(labels, alignment_inds)
+  metadata$odgi_labels <- label_mapping
 
   SynMultiAlignment(
     name = .resolve_odgi_alignment_name(name = name, file = source_file),

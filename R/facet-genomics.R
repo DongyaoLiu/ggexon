@@ -530,7 +530,7 @@ synspecies_chain_layout <- function(x,
                                                  free) {
   annotation_species <- unique(as.character(annotation_species %||% character()))
   annotation_species <- annotation_species[annotation_species %in% names(individuals(x))]
-  if (length(annotation_species) != 2L) {
+  if (length(annotation_species) < 2L) {
     return(NULL)
   }
 
@@ -539,48 +539,56 @@ synspecies_chain_layout <- function(x,
   }
 
   link_pairs <- unique(link_pairs[, c("track", "tspecies", "qspecies"), drop = FALSE])
-  pair_match <- vapply(seq_len(nrow(link_pairs)), function(i) {
-    setequal(annotation_species, c(link_pairs$tspecies[[i]], link_pairs$qspecies[[i]]))
-  }, logical(1))
-  link_pairs <- link_pairs[pair_match, , drop = FALSE]
-  if (nrow(link_pairs) != 1L) {
-    return(NULL)
+  panel_rows <- vector("list", length(annotation_species) + nrow(link_pairs))
+  panel_index <- 1L
+
+  for (i in seq_along(annotation_species)) {
+    species_name <- annotation_species[[i]]
+    panel_rows[[panel_index]] <- data.frame(
+      PANEL = panel_index,
+      ROW = panel_index,
+      COL = 1L,
+      track = species_name,
+      panel_type = "annotation",
+      species = species_name,
+      alignment_name = NA_character_,
+      tspecies = NA_character_,
+      qspecies = NA_character_,
+      stringsAsFactors = FALSE
+    )
+    panel_index <- panel_index + 1L
+
+    if (i < length(annotation_species)) {
+      species_pair <- c(annotation_species[[i]], annotation_species[[i + 1L]])
+      pair_match <- vapply(seq_len(nrow(link_pairs)), function(j) {
+        setequal(species_pair, c(link_pairs$tspecies[[j]], link_pairs$qspecies[[j]]))
+      }, logical(1))
+      matched_pairs <- link_pairs[pair_match, , drop = FALSE]
+      if (nrow(matched_pairs) > 1L) {
+        return(NULL)
+      }
+      if (nrow(matched_pairs) == 1L) {
+        pair_track <- matched_pairs$track[[1L]]
+        pair_name <- sub("^link_", "", pair_track)
+        pair_obj <- pairwise_alignments(x)[[pair_name]]
+        panel_rows[[panel_index]] <- data.frame(
+          PANEL = panel_index,
+          ROW = panel_index,
+          COL = 1L,
+          track = pair_track,
+          panel_type = "link",
+          species = NA_character_,
+          alignment_name = pair_name,
+          tspecies = if (is.null(pair_obj)) matched_pairs$tspecies[[1L]] else target_individual(pair_obj),
+          qspecies = if (is.null(pair_obj)) matched_pairs$qspecies[[1L]] else query_individual(pair_obj),
+          stringsAsFactors = FALSE
+        )
+        panel_index <- panel_index + 1L
+      }
+    }
   }
 
-  pair_track <- link_pairs$track[[1L]]
-  pair_name <- sub("^link_", "", pair_track)
-  pair_obj <- pairwise_alignments(x)[[pair_name]]
-  if (is.null(pair_obj)) {
-    top_species <- link_pairs$qspecies[[1L]]
-    bottom_species <- link_pairs$tspecies[[1L]]
-  } else {
-    top_species <- query_individual(pair_obj)
-    bottom_species <- target_individual(pair_obj)
-  }
-  if (!setequal(annotation_species, c(top_species, bottom_species))) {
-    return(NULL)
-  }
-
-  panels <- data.frame(
-    PANEL = c(1L, 2L, 3L),
-    ROW = c(1L, 2L, 3L),
-    COL = c(1L, 1L, 1L),
-    track = c(top_species, pair_track, bottom_species),
-    panel_type = c("annotation", "link", "annotation"),
-    species = c(top_species, NA_character_, bottom_species),
-    alignment_name = c(NA_character_, pair_name, NA_character_),
-    tspecies = c(
-      NA_character_,
-      if (is.null(pair_obj)) link_pairs$tspecies[[1L]] else target_individual(pair_obj),
-      NA_character_
-    ),
-    qspecies = c(
-      NA_character_,
-      if (is.null(pair_obj)) link_pairs$qspecies[[1L]] else query_individual(pair_obj),
-      NA_character_
-    ),
-    stringsAsFactors = FALSE
-  )
+  panels <- dplyr::bind_rows(panel_rows[seq_len(panel_index - 1L)])
 
   .finalize_synspecies_layout_scales(
     panels,
