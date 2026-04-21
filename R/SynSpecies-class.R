@@ -30,7 +30,7 @@ NULL
 #' @slot query_individual Query-side `SynIndividual` identifier.
 #' @slot target_individual Target-side `SynIndividual` identifier.
 #' @slot source_file Path to the alignment file on disk.
-#' @slot format Alignment file format. Currently `"paf"` or `"odgi"`.
+#' @slot format Alignment file format. Currently `"paf"`, `"psl"`, or `"odgi"`.
 #' @slot data Optional cached parsed alignment data.
 #' @slot metadata Optional user or import metadata.
 #'
@@ -45,7 +45,7 @@ NULL
 #' * `query_individual` and `target_individual` must each be one non-empty
 #'   character value.
 #' * `query_individual` and `target_individual` must differ.
-#' * `format` must currently be `"paf"` or `"odgi"`.
+#' * `format` must currently be `"paf"`, `"psl"`, or `"odgi"`.
 #'
 #' @exportClass SynPairAlignment
 setClass(
@@ -79,8 +79,8 @@ setClass(
     if (identical(object@query_individual, object@target_individual)) {
       problems <- c(problems, "`query_individual` and `target_individual` must differ.")
     }
-    if (length(object@format) != 1L || !(object@format %in% c("paf", "odgi"))) {
-      problems <- c(problems, "`format` must currently be 'paf' or 'odgi'.")
+    if (length(object@format) != 1L || !(object@format %in% c("paf", "psl", "odgi"))) {
+      problems <- c(problems, "`format` must currently be 'paf', 'psl', or 'odgi'.")
     }
     if (length(problems) == 0L) TRUE else problems
   }
@@ -364,7 +364,7 @@ SynLayout <- function(panels,
 #' @param query_individual Query-side individual name.
 #' @param target_individual Target-side individual name.
 #' @param file Path to the alignment file.
-#' @param format Alignment format. Currently `"paf"` or `"odgi"`.
+#' @param format Alignment format. Currently `"paf"`, `"psl"`, or `"odgi"`.
 #' @param data Optional cached parsed alignment representation.
 #' @param metadata Optional metadata list.
 #'
@@ -374,7 +374,7 @@ SynPairAlignment <- function(name,
                              query_individual,
                              target_individual,
                              file,
-                             format = c("paf", "odgi"),
+                             format = c("paf", "psl", "odgi"),
                              data = NULL,
                              metadata = list()) {
   format <- match.arg(format)
@@ -807,6 +807,16 @@ add_pairwise_alignment <- function(x, alignment) {
   if (!methods::is(alignment, "SynPairAlignment")) {
     stop("`alignment` must be a SynPairAlignment object.", call. = FALSE)
   }
+
+  missing_species <- setdiff(alignment_individuals(alignment), names(individuals(x)))
+  if (length(missing_species) > 0L) {
+    cli::cli_warn(c(
+      "Pairwise alignment {.val {alignment_name(alignment)}} references individuals not attached to this {.cls SynSpecies}.",
+      "i" = "Missing individuals: {.val {missing_species}}.",
+      "i" = "ggexon will keep blank annotation panels for them when possible."
+    ))
+  }
+
   entries <- x@pairwise_alignments
   entries[[alignment_name(alignment)]] <- alignment
   x@pairwise_alignments <- entries
@@ -1039,7 +1049,7 @@ subset_synspecies_window <- function(x,
   partner_individual <- individuals(x)[[partner_species]]
 
   ref_chr <- resolve_syn_seqname(reference_individual, chr)
-  paf <- .read_pairwise_paf(alignment_file(pair))
+  paf <- .pairwise_alignment_table(pair)
 
   reference_on_query <- identical(reference_species, query_species)
   ref_cols <- if (reference_on_query) c(chr = "qchr", start = "qstart", end = "qend") else c(chr = "tchr", start = "tstart", end = "tend")
@@ -1056,7 +1066,7 @@ subset_synspecies_window <- function(x,
 
   if (nrow(hits) == 0L) {
     stop(
-      "No PAF records overlap ", reference_species, ":", ref_chr, ":",
+      "No pairwise alignment records overlap ", reference_species, ":", ref_chr, ":",
       ref_start, "-", ref_end, ".",
       call. = FALSE
     )
@@ -1074,9 +1084,13 @@ subset_synspecies_window <- function(x,
 
   partner_chr <- unique(as.character(cluster_hits[[partner_cols[["chr"]]]]))
   if (length(partner_chr) != 1L) {
-    stop("Selected PAF cluster maps to multiple partner chromosomes.", call. = FALSE)
+    stop("Selected pairwise alignment cluster maps to multiple partner chromosomes.", call. = FALSE)
   }
-  partner_chr <- resolve_syn_seqname(partner_individual, partner_chr[[1L]])
+  partner_chr <- if (methods::is(partner_individual, "SynIndividual")) {
+    resolve_syn_seqname(partner_individual, partner_chr[[1L]])
+  } else {
+    partner_chr[[1L]]
+  }
   partner_start <- min(cluster_hits[[partner_cols[["start"]]]])
   partner_end <- max(cluster_hits[[partner_cols[["end"]]]])
 
@@ -1307,11 +1321,251 @@ subset_synspecies_window <- function(x,
   paf
 }
 
+.empty_pairwise_alignment_table <- function() {
+  out <- data.frame(
+    qchr = character(),
+    qlen = integer(),
+    qstart = integer(),
+    qend = integer(),
+    strand = character(),
+    tchr = character(),
+    tlen = integer(),
+    tstart = integer(),
+    tend = integer(),
+    nmatch = integer(),
+    alen = integer(),
+    mapq = integer(),
+    stringsAsFactors = FALSE
+  )
+  rownames(out) <- NULL
+  out
+}
+
+.psl_is_integer_field <- function(x) {
+  length(x) == 1L &&
+    !is.na(x) &&
+    grepl("^[+-]?[0-9]+$", trimws(as.character(x)))
+}
+
+.psl_seqname_from_field <- function(x, species = NULL) {
+  if (length(x) != 1L || is.na(x) || !nzchar(x)) {
+    return(NA_character_)
+  }
+
+  value <- as.character(x)
+  if (!is.null(species) && nzchar(species)) {
+    prefix <- paste0(species, "_")
+    if (startsWith(value, prefix)) {
+      value <- substring(value, nchar(prefix) + 1L)
+    }
+  }
+
+  value <- sub("_(\\d+)_(\\d+)$", "", value, perl = TRUE)
+  value
+}
+
+.psl_relative_strand <- function(strand) {
+  strand <- as.character(strand)
+  ifelse(
+    nchar(strand) <= 1L,
+    strand,
+    ifelse(
+      substring(strand, 1L, 1L) == substring(strand, nchar(strand), nchar(strand)),
+      "+",
+      "-"
+    )
+  )
+}
+
+.parse_psl_block_sizes <- function(x) {
+  if (is.na(x) || !nzchar(as.character(x))) {
+    return(integer())
+  }
+  values <- strsplit(as.character(x), ",", fixed = TRUE)[[1L]]
+  values <- trimws(values)
+  values <- values[nzchar(values)]
+  as.integer(values)
+}
+
+.normalize_psl_fields <- function(fields) {
+  fields <- trimws(as.character(fields))
+
+  if (length(fields) >= 22L &&
+      !.psl_is_integer_field(fields[[1L]]) &&
+      .psl_is_integer_field(fields[[2L]])) {
+    out <- list(
+      matches = fields[[2L]],
+      misMatches = fields[[3L]],
+      repMatches = fields[[4L]],
+      nCount = fields[[5L]],
+      qNumInsert = fields[[6L]],
+      qBaseInsert = fields[[7L]],
+      tNumInsert = fields[[8L]],
+      tBaseInsert = fields[[9L]],
+      strand_raw = fields[[10L]],
+      qName = fields[[1L]],
+      qChrom = fields[[11L]],
+      qSize = fields[[12L]],
+      qStart = fields[[13L]],
+      qEnd = fields[[14L]],
+      tName = fields[[15L]],
+      tSize = fields[[16L]],
+      tStart = fields[[17L]],
+      tEnd = fields[[18L]],
+      blockCount = fields[[19L]],
+      blockSizes = fields[[20L]],
+      qStarts = fields[[21L]],
+      tStarts = fields[[22L]]
+    )
+  } else if (length(fields) >= 21L && .psl_is_integer_field(fields[[1L]])) {
+    out <- list(
+      matches = fields[[1L]],
+      misMatches = fields[[2L]],
+      repMatches = fields[[3L]],
+      nCount = fields[[4L]],
+      qNumInsert = fields[[5L]],
+      qBaseInsert = fields[[6L]],
+      tNumInsert = fields[[7L]],
+      tBaseInsert = fields[[8L]],
+      strand_raw = fields[[9L]],
+      qName = fields[[10L]],
+      qChrom = fields[[10L]],
+      qSize = fields[[11L]],
+      qStart = fields[[12L]],
+      qEnd = fields[[13L]],
+      tName = fields[[14L]],
+      tSize = fields[[15L]],
+      tStart = fields[[16L]],
+      tEnd = fields[[17L]],
+      blockCount = fields[[18L]],
+      blockSizes = fields[[19L]],
+      qStarts = fields[[20L]],
+      tStarts = fields[[21L]]
+    )
+  } else {
+    return(NULL)
+  }
+
+  required_numeric <- c(
+    "matches", "misMatches", "repMatches", "nCount",
+    "qNumInsert", "qBaseInsert", "tNumInsert", "tBaseInsert",
+    "qSize", "qStart", "qEnd", "tSize", "tStart", "tEnd", "blockCount"
+  )
+  numeric_values <- suppressWarnings(as.integer(unlist(out[required_numeric], use.names = FALSE)))
+  if (anyNA(numeric_values)) {
+    return(NULL)
+  }
+
+  out
+}
+
+#' Read a PSL pairwise alignment into ggexon's internal link table
+#'
+#' Parses a UCSC PSL file and returns the PAF-like table used internally by
+#' `ggexon` for pairwise link dispatch. The parser keeps one row per PSL record
+#' and normalizes the output columns to `qchr`, `qstart`, `qend`, `tchr`,
+#' `tstart`, `tend`, `strand`, `nmatch`, `alen`, and related fields expected by
+#' [`pairwise_alignment_data()`] and [`geom_nuclink()`].
+#'
+#' @param path Path to a PSL file.
+#' @param query_individual Optional query-side individual identifier used to
+#'   strip a species prefix from `qName` when inferring `qchr`.
+#' @param target_individual Optional target-side individual identifier used to
+#'   strip a species prefix from `tName` when inferring `tchr`.
+#'
+#' @return A PAF-like `data.frame`.
+#' @export
+read_pairwise_psl <- function(path,
+                              query_individual = NULL,
+                              target_individual = NULL) {
+  if (!is.character(path) || length(path) != 1L || is.na(path) || !nzchar(path)) {
+    stop("`path` must be a single non-empty character value.", call. = FALSE)
+  }
+  if (!file.exists(path)) {
+    stop("PSL file not found: ", path, call. = FALSE)
+  }
+
+  lines <- readLines(path, warn = FALSE)
+  lines <- trimws(lines)
+  lines <- lines[nzchar(lines)]
+  if (length(lines) == 0L) {
+    return(.empty_pairwise_alignment_table())
+  }
+
+  fields <- lapply(strsplit(lines, "\t", fixed = TRUE), .normalize_psl_fields)
+  fields <- Filter(Negate(is.null), fields)
+  if (length(fields) == 0L) {
+    return(.empty_pairwise_alignment_table())
+  }
+
+  chr_field <- function(name) {
+    vapply(fields, function(x) x[[name]], character(1), USE.NAMES = FALSE)
+  }
+  int_field <- function(name) {
+    suppressWarnings(as.integer(chr_field(name)))
+  }
+
+  psl <- data.frame(
+    matches = int_field("matches"),
+    misMatches = int_field("misMatches"),
+    repMatches = int_field("repMatches"),
+    nCount = int_field("nCount"),
+    qNumInsert = int_field("qNumInsert"),
+    qBaseInsert = int_field("qBaseInsert"),
+    tNumInsert = int_field("tNumInsert"),
+    tBaseInsert = int_field("tBaseInsert"),
+    strand_raw = chr_field("strand_raw"),
+    qName = chr_field("qName"),
+    qChrom = chr_field("qChrom"),
+    qSize = int_field("qSize"),
+    qStart = int_field("qStart"),
+    qEnd = int_field("qEnd"),
+    tName = chr_field("tName"),
+    tSize = int_field("tSize"),
+    tStart = int_field("tStart"),
+    tEnd = int_field("tEnd"),
+    blockCount = int_field("blockCount"),
+    blockSizes = chr_field("blockSizes"),
+    qStarts = chr_field("qStarts"),
+    tStarts = chr_field("tStarts"),
+    stringsAsFactors = FALSE
+  )
+
+  block_totals <- vapply(psl$blockSizes, function(x) {
+    sum(.parse_psl_block_sizes(x), na.rm = TRUE)
+  }, integer(1))
+
+  out <- data.frame(
+    qchr = vapply(psl$qChrom, .psl_seqname_from_field, character(1), species = query_individual),
+    qlen = as.integer(psl$qSize),
+    qstart = as.integer(psl$qStart),
+    qend = as.integer(psl$qEnd),
+    strand = .psl_relative_strand(psl$strand_raw),
+    tchr = vapply(psl$tName, .psl_seqname_from_field, character(1), species = target_individual),
+    tlen = as.integer(psl$tSize),
+    tstart = as.integer(psl$tStart),
+    tend = as.integer(psl$tEnd),
+    nmatch = as.integer(psl$matches + psl$repMatches),
+    alen = as.integer(block_totals),
+    mapq = NA_integer_,
+    stringsAsFactors = FALSE
+  )
+
+  rownames(out) <- NULL
+  out
+}
+
 .pairwise_alignment_table <- function(x, odgi = NULL, python = NULL) {
   paf <- if (!is.null(x@data)) {
     x@data
   } else if (identical(alignment_format(x), "paf")) {
     .read_pairwise_paf(alignment_file(x))
+  } else if (identical(alignment_format(x), "psl")) {
+    read_pairwise_psl(
+      alignment_file(x),
+      query_individual = query_individual(x),
+      target_individual = target_individual(x)
+    )
   } else if (identical(alignment_format(x), "odgi")) {
     .read_odgi_pairwise_alignment(
       x,
@@ -1482,7 +1736,9 @@ load_alignment <- function(x, odgi = NULL, python = NULL) {
 
     if (!is.null(species_obj) && methods::is(species_obj, "SynSpecies")) {
       individual <- individuals(species_obj)[[species_name]]
-      spec$chr <- resolve_syn_seqname(individual, spec$chr)
+      if (methods::is(individual, "SynIndividual")) {
+        spec$chr <- resolve_syn_seqname(individual, spec$chr)
+      }
     }
     spec$paf_chr <- paf_chr
     spec$chr <- paf_chr
@@ -1610,6 +1866,10 @@ load_alignment <- function(x, odgi = NULL, python = NULL) {
 }
 
 .subset_annotation_window <- function(individual, chr, start, end) {
+  if (!methods::is(individual, "SynIndividual")) {
+    return(GenomicRanges::GRanges())
+  }
+
   query_features(
     individual,
     chr = chr,

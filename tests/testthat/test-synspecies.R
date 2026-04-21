@@ -78,6 +78,39 @@ test_that("SynSpecies stores individuals and explicit alignment relationships", 
   expect_identical(individual_names(unnamed_sp), c("XZ1516", "N2"))
 })
 
+test_that("add_pairwise_alignment warns when alignment individuals are missing from SynSpecies", {
+  genome_path <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
+  annotation_path <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+  paf_path <- system.file("extdata", "V_alginment.paf", package = "ggexon")
+
+  sp <- SynSpecies(name = "Caenorhabditis")
+  sp <- add_individual(
+    sp,
+    test_syn_individual(
+      genome_file = genome_path,
+      annotation_file = annotation_path,
+      id = "XZ1516"
+    )
+  )
+
+  expect_warning(
+    add_pairwise_alignment(
+      sp,
+      SynPairAlignment(
+        name = "XZ1516_vs_N2",
+        query_individual = "XZ1516",
+        target_individual = "N2",
+        file = paf_path
+      )
+    ),
+    "references individuals not attached"
+  )
+})
+
 test_that("load_annotation loads all stored individuals in a SynSpecies", {
   genome_path <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
   annotation_path <- system.file(
@@ -724,6 +757,80 @@ test_that("pairwise_alignment_data subsets query and target regions and filters 
   expect_identical(unique(as.character(paf$qspecies)), "XZ1516")
   expect_identical(unique(as.character(paf$tspecies)), "N2")
   expect_identical(unique(as.character(paf$track)), "link_XZ1516_vs_N2")
+})
+
+test_that("subset_synspecies_window works with PSL-backed pairwise alignments", {
+  n2_genome <- system.file(
+    "extdata",
+    "c_elegans.PRJNA13758.WS285.genomic.fa",
+    package = "ggexon"
+  )
+  n2_annotation <- system.file(
+    "extdata",
+    "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
+    package = "ggexon"
+  )
+
+  psl_path <- tempfile(fileext = ".psl")
+  writeLines(
+    paste(
+      c(
+        "N2_V_20450000_20490000",
+        100, 5, 0, 0, 0, 0, 0, 0,
+        "++",
+        "V", 20924180, 20467551, 20467656,
+        "V", 20924180, 20467600, 20467705,
+        1, "105,", "20467551,", "20467600,"
+      ),
+      collapse = "\t"
+    ),
+    psl_path
+  )
+
+  sp <- SynSpecies(name = "Caenorhabditis")
+  sp <- add_individual(
+    sp,
+    test_syn_individual(
+      genome_file = n2_genome,
+      annotation_file = n2_annotation,
+      id = "N2",
+      annotation_format = "gtf"
+    )
+  )
+  sp <- add_individual(
+    sp,
+    test_syn_individual(
+      genome_file = n2_genome,
+      annotation_file = n2_annotation,
+      id = "AFRA",
+      annotation_format = "gtf"
+    )
+  )
+  sp <- add_pairwise_alignment(
+    sp,
+    SynPairAlignment(
+      name = "N2_vs_AFRA",
+      query_individual = "N2",
+      target_individual = "AFRA",
+      file = psl_path,
+      format = "psl"
+    )
+  )
+
+  out <- subset_synspecies_window(
+    sp,
+    reference_species = "N2",
+    chr = "V",
+    start = 20467560,
+    end = 20467620,
+    alignment = "N2_vs_AFRA"
+  )
+
+  expect_true(all(c("windows", "annotations", "links") %in% names(out)))
+  expect_identical(names(out$windows), c("N2", "AFRA"))
+  expect_true(nrow(out$links) >= 1L)
+  expect_identical(unique(as.character(out$links$qchr)), "V")
+  expect_identical(unique(as.character(out$links$tchr)), "V")
 })
 
 test_that("subset_pairwise_alignment and filter_pairwise_alignment compose on a SynSpecies", {

@@ -64,8 +64,12 @@ build_ggexon <- S7::method(ggexon_build, class_ggexon) <- function(plot, ...) {
       # only consider link layers
       if (identical(layers[[i]]$geom, GeomNucLink)){
         mapping_names <- names(layers[[i]]$computed_mapping)
-        missing_mapping_names <- setdiff(
+        available_metadata <- intersect(
           c("target_anchor_y", "query_anchor_y", "t_panel", "q_panel"),
+          names(data[[i]])
+        )
+        missing_mapping_names <- setdiff(
+          available_metadata,
           mapping_names
         )
         if (length(missing_mapping_names) > 0L) {

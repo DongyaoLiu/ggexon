@@ -15,7 +15,9 @@
 #' `SynPairAlignment` or an ODGI-backed `SynMultiAlignment`. When an ODGI
 #' multiple alignment is selected, ggexon derives adjacent pairwise link tables
 #' for the plotted species order and dispatches them to the corresponding
-#' middle link panels.
+#' middle link panels. In practice this layer is intended to be used together
+#' with [facet_genomics()], which creates the annotation panels and middle link
+#' panels that `geom_nuclink()` needs.
 #'
 #' @param mapping Set of aesthetic mappings created by [`ggplot2::aes()`].
 #'   `colour`, `fill`, and `alpha` can be mapped in the standard ggplot2 way.
@@ -98,6 +100,17 @@ GeomNucLink <- ggproto("GeomPanel", Geom,
                                                query_anchor_y = NA_real_
                              ),
                              setup_data = function(data, params) {
+                               required_layout_cols <- c(
+                                 "target_anchor_y", "query_anchor_y", "t_panel", "q_panel"
+                               )
+                               missing_layout_cols <- setdiff(required_layout_cols, names(data))
+                               if (length(missing_layout_cols) > 0L) {
+                                 cli::cli_abort(c(
+                                   "{.fn geom_nuclink} requires link-panel layout metadata before drawing.",
+                                   "i" = "Add {.fn facet_genomics} so ggexon can create annotation and middle link panels.",
+                                   "i" = "Missing columns: {.val {missing_layout_cols}}."
+                                 ))
+                               }
 
                                # extract the y layout information
                                link_y_out = data %>% select(PANEL, group, target_anchor_y, query_anchor_y) %>% unique() %>%

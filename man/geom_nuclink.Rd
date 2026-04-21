@@ -82,5 +82,7 @@ For Syn-backed plots, \code{alignment} can point to either a stored
 \code{SynPairAlignment} or an ODGI-backed \code{SynMultiAlignment}. When an ODGI
 multiple alignment is selected, ggexon derives adjacent pairwise link tables
 for the plotted species order and dispatches them to the corresponding
-middle link panels.
+middle link panels. In practice this layer is intended to be used together
+with \code{\link[=facet_genomics]{facet_genomics()}}, which creates the annotation panels and middle link
+panels that \code{geom_nuclink()} needs.
 }

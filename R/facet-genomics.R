@@ -529,7 +529,14 @@ synspecies_chain_layout <- function(x,
                                                  link_pairs,
                                                  free) {
   annotation_species <- unique(as.character(annotation_species %||% character()))
-  annotation_species <- annotation_species[annotation_species %in% names(individuals(x))]
+  if (!is.null(link_pairs) && nrow(link_pairs) > 0L) {
+    annotation_species <- unique(c(
+      annotation_species,
+      as.character(link_pairs$tspecies),
+      as.character(link_pairs$qspecies)
+    ))
+  }
+  annotation_species <- annotation_species[!is.na(annotation_species) & nzchar(annotation_species)]
   if (length(annotation_species) < 2L) {
     return(NULL)
   }

@@ -19,6 +19,9 @@ GeomExon <- ggproto("GeomExon", Geom,
                       x_translation <- if (is.null(params$x_translation)) 0 else params$x_translation
                       exon_height <- if (is.null(params$exon_height)) 0.8 else params$exon_height
                       y_scale <- if (is.null(params$y_scale)) 100 else params$y_scale
+                      if (!"blank_panel" %in% names(data)) {
+                        data$blank_panel <- FALSE
+                      }
 
                       if (!is.null(params$annotation_type)){
                         data = data %>% filter(type == params$annotation_type)
@@ -53,14 +56,23 @@ GeomExon <- ggproto("GeomExon", Geom,
                     },
 
                       draw_panel = function(data, panel_params, coord, flipped_aes = FALSE){
-                        track_data = add_transcripts_seq_line(data)
+                        blank_flags <- if ("blank_panel" %in% names(data)) {
+                          isTRUE(data$blank_panel) | (data$blank_panel %in% TRUE)
+                        } else {
+                          rep(FALSE, nrow(data))
+                        }
+                        visible_data <- data[!blank_flags, , drop = FALSE]
+                        if (nrow(visible_data) == 0L) {
+                          return(zeroGrob())
+                        }
+                        track_data = add_transcripts_seq_line(visible_data)
                         track_data$linewidth = 1
                         transcripts_line_Grob = GeomSegment$draw_panel(track_data, panel_params, coord)
                         tri_data = add_transcripts_direction(track_data)
                         tri_data$linewidth = 0
                         transcripts_tri_Grob = GeomPolygon$draw_panel(tri_data, panel_params, coord)
                         #print(getAnywhere("GeomRect"))
-                        exon_Grob = ggplot2::GeomRect$draw_panel(data, panel_params, coord)
+                        exon_Grob = ggplot2::GeomRect$draw_panel(visible_data, panel_params, coord)
                         ggname("geom_exon", gTree(children = gList(
                           transcripts_line_Grob,
                           exon_Grob,

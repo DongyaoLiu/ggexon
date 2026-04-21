@@ -1176,6 +1176,130 @@ test_that("geom_nuclink comparative plots assemble gtables without panel-list er
   expect_no_error(ggplot2::ggplot_gtable(ggexon_build(plot_obj)))
 })
 
+test_that("geom_nuclink without facet_genomics() errors clearly", {
+  xz_genome <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
+  xz_annotation <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+  n2_genome <- system.file(
+    "extdata",
+    "c_elegans.PRJNA13758.WS285.genomic.fa",
+    package = "ggexon"
+  )
+  n2_annotation <- system.file(
+    "extdata",
+    "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
+    package = "ggexon"
+  )
+  paf_path <- system.file("extdata", "V_alginment.paf", package = "ggexon")
+
+  sp <- SynSpecies(name = "Caenorhabditis")
+  sp <- add_individual(
+    sp,
+    test_syn_individual(
+      genome_file = xz_genome,
+      annotation_file = xz_annotation,
+      id = "XZ1516"
+    )
+  )
+  sp <- add_individual(
+    sp,
+    test_syn_individual(
+      genome_file = n2_genome,
+      annotation_file = n2_annotation,
+      id = "N2",
+      annotation_format = "gtf"
+    )
+  )
+  sp <- add_pairwise_alignment(
+    sp,
+    SynPairAlignment(
+      name = "XZ1516_vs_N2",
+      query_individual = "XZ1516",
+      target_individual = "N2",
+      file = paf_path
+    )
+  )
+
+  plot_obj <- ggexon(sp) +
+    geom_exon(species = "XZ1516", chr = "RagTag_V", subset = c(21574445, 21584356)) +
+    geom_exon(species = "N2", chr = "V", subset = c(20456948, 20465040)) +
+    geom_nuclink(alignment = "XZ1516_vs_N2")
+
+  expect_error(
+    ggexon_build(plot_obj),
+    "facet_genomics"
+  )
+})
+
+test_that("geom_exon keeps a blank annotation panel for pairwise species without a SynIndividual", {
+  n2_genome <- system.file(
+    "extdata",
+    "c_elegans.PRJNA13758.WS285.genomic.fa",
+    package = "ggexon"
+  )
+  n2_annotation <- system.file(
+    "extdata",
+    "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
+    package = "ggexon"
+  )
+
+  psl_path <- tempfile(fileext = ".psl")
+  writeLines(
+    paste(
+      c(
+        "N2_V_20450000_20490000",
+        100, 5, 0, 0, 0, 0, 0, 0,
+        "++",
+        "V", 20924180, 20467551, 20467656,
+        "V", 12207686, 10256132, 10256237,
+        1, "105,", "20467551,", "10256132,"
+      ),
+      collapse = "\t"
+    ),
+    psl_path
+  )
+
+  sp <- SynSpecies(name = "PairwiseBlank")
+  sp <- add_individual(
+    sp,
+    test_syn_individual(
+      genome_file = n2_genome,
+      annotation_file = n2_annotation,
+      id = "N2",
+      annotation_format = "gtf"
+    )
+  )
+  expect_warning({
+    sp <- add_pairwise_alignment(
+      sp,
+      SynPairAlignment(
+        name = "N2_vs_AFRA",
+        query_individual = "N2",
+        target_individual = "AFRA",
+        file = psl_path,
+        format = "psl"
+      )
+    )
+  }, "references individuals not attached")
+
+  built <- ggexon_build(
+    ggexon(sp) +
+      geom_exon() +
+      geom_nuclink(alignment = "N2_vs_AFRA") +
+      facet_genomics(ggplot2::vars(track), scales = "free")
+  )
+
+  expect_identical(
+    as.character(built@layout$layout$track),
+    c("N2", "link_N2_vs_AFRA", "AFRA")
+  )
+  expect_true(any(as.character(built@data[[2L]]$tspecies) == "AFRA"))
+  expect_true(any(as.character(built@data[[2L]]$qspecies) == "N2"))
+})
+
 test_that("geom_nuclink uses target and query source panels in the correct direction", {
   xz_genome <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
   xz_annotation <- system.file(

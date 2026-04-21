@@ -9,7 +9,7 @@ SynPairAlignment(
   query_individual,
   target_individual,
   file,
-  format = c("paf", "odgi"),
+  format = c("paf", "psl", "odgi"),
   data = NULL,
   metadata = list()
 )
@@ -23,7 +23,7 @@ SynPairAlignment(
 
 \item{file}{Path to the alignment file.}
 
-\item{format}{Alignment format. Currently \code{"paf"} or \code{"odgi"}.}
+\item{format}{Alignment format. Currently \code{"paf"}, \code{"psl"}, or \code{"odgi"}.}
 
 \item{data}{Optional cached parsed alignment representation.}
 

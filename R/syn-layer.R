@@ -600,6 +600,9 @@ derive_syn_plot_windows <- function(x, windows, link_requests, annotation_specie
 
     available <- intersect(selected_species, names(windows))
     if (length(available) != 1L) {
+      if (methods::is(alignment_obj, "SynPairAlignment")) {
+        windows <- utils::modifyList(windows, infer_pairwise_alignment_windows(x, alignment_obj))
+      }
       next
     }
 
@@ -618,6 +621,55 @@ derive_syn_plot_windows <- function(x, windows, link_requests, annotation_specie
   }
 
   windows
+}
+
+infer_pairwise_alignment_windows <- function(x, pair) {
+  if (!methods::is(pair, "SynPairAlignment")) {
+    return(list())
+  }
+
+  paf <- pairwise_alignment_data(pair)
+  if (!is.data.frame(paf) || nrow(paf) == 0L) {
+    return(list())
+  }
+
+  out <- list()
+  query_species <- query_individual(pair)
+  target_species <- target_individual(pair)
+
+  query_chr <- unique(as.character(paf$qchr))
+  query_chr <- query_chr[!is.na(query_chr) & nzchar(query_chr)]
+  if (length(query_chr) == 1L) {
+    query_individual_obj <- if (methods::is(x, "SynSpecies")) individuals(x)[[query_species]] else NULL
+    out[[query_species]] <- data.frame(
+      chr = if (methods::is(query_individual_obj, "SynIndividual")) {
+        resolve_syn_seqname(query_individual_obj, query_chr[[1L]])
+      } else {
+        query_chr[[1L]]
+      },
+      start = min(paf$qstart, na.rm = TRUE),
+      end = max(paf$qend, na.rm = TRUE),
+      stringsAsFactors = FALSE
+    )
+  }
+
+  target_chr <- unique(as.character(paf$tchr))
+  target_chr <- target_chr[!is.na(target_chr) & nzchar(target_chr)]
+  if (length(target_chr) == 1L) {
+    target_individual_obj <- if (methods::is(x, "SynSpecies")) individuals(x)[[target_species]] else NULL
+    out[[target_species]] <- data.frame(
+      chr = if (methods::is(target_individual_obj, "SynIndividual")) {
+        resolve_syn_seqname(target_individual_obj, target_chr[[1L]])
+      } else {
+        target_chr[[1L]]
+      },
+      start = min(paf$tstart, na.rm = TRUE),
+      end = max(paf$tend, na.rm = TRUE),
+      stringsAsFactors = FALSE
+    )
+  }
+
+  out
 }
 
 normalize_syn_window_request <- function(x,
@@ -1528,7 +1580,15 @@ syn_to_exon_df <- function(x,
                            subset = NULL,
                            annotation_type = "exon",
                            context = NULL) {
+  requested_species <- species
   species <- resolve_context_species_params(x, species, context)
+  if (is.null(requested_species) && methods::is(x, "SynSpecies")) {
+    context_species <- names(context$windows %||% list())
+    context_species <- context_species[!is.na(context_species) & nzchar(context_species)]
+    if (length(context_species) > 0L) {
+      species <- unique(c(species, context_species))
+    }
+  }
 
   if (methods::is(x, "SynSpecies") && length(species %||% character()) > 1L) {
     species <- unique(as.character(species))
@@ -1544,7 +1604,17 @@ syn_to_exon_df <- function(x,
     })))
   }
 
-  individual <- resolve_syn_individual(x, species = species)
+  individual <- if (methods::is(x, "SynSpecies") && !species %in% names(individuals(x))) {
+    NULL
+  } else {
+    resolve_syn_individual(x, species = species)
+  }
+
+  if (is.null(individual)) {
+    blank_window <- context$windows[[species]] %||% NULL
+    return(blank_syn_exon_df(track = species, window = blank_window, annotation_type = annotation_type))
+  }
+
   window <- normalize_syn_window_request(
     x = x,
     species = syn_id(individual),
@@ -1572,6 +1642,35 @@ syn_to_exon_df <- function(x,
     feature_gr = feature_gr,
     track = syn_id(individual),
     annotation_type = annotation_type
+  )
+}
+
+blank_syn_exon_df <- function(track, window = NULL, annotation_type = "exon") {
+  if (is.null(window) || is.null(window$start) || is.null(window$end)) {
+    return(data.frame())
+  }
+
+  placeholder_id <- paste0("__blank__", track)
+  data.frame(
+    seqnames = window$chr[[1L]] %||% NA_character_,
+    xmin = as.integer(window$start[[1L]]),
+    xmax = as.integer(window$end[[1L]]),
+    strand = "+",
+    type = annotation_type,
+    transcript_id = placeholder_id,
+    transcripts = placeholder_id,
+    gene_id = NA_character_,
+    gene_name = NA_character_,
+    track = track,
+    fill = NA_character_,
+    linetype = 0,
+    linewidth = 0,
+    alpha = 0,
+    ymin = 2,
+    group = 1L,
+    PANEL = 1L,
+    blank_panel = TRUE,
+    stringsAsFactors = FALSE
   )
 }
 

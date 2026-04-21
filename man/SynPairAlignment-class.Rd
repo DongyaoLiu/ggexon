@@ -23,7 +23,7 @@ cached parsed alignment data.
 
 \item{\code{source_file}}{Path to the alignment file on disk.}
 
-\item{\code{format}}{Alignment file format. Currently \code{"paf"} or \code{"odgi"}.}
+\item{\code{format}}{Alignment file format. Currently \code{"paf"}, \code{"psl"}, or \code{"odgi"}.}
 
 \item{\code{data}}{Optional cached parsed alignment data.}
 
@@ -47,7 +47,7 @@ cached parsed alignment data.
 \item \code{query_individual} and \code{target_individual} must each be one non-empty
 character value.
 \item \code{query_individual} and \code{target_individual} must differ.
-\item \code{format} must currently be \code{"paf"} or \code{"odgi"}.
+\item \code{format} must currently be \code{"paf"}, \code{"psl"}, or \code{"odgi"}.
 }
 }
 
