@@ -190,6 +190,76 @@ test_that("geom_nuclink(filter_by_len = ...) filters ODGI-derived link nodes by 
   expect_identical(nrow(link_data), 4L)
 })
 
+test_that("implicit geom_exon species narrow to an explicit pairwise alignment", {
+  xz_genome <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
+  xz_annotation <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+  n2_genome <- system.file(
+    "extdata",
+    "c_elegans.PRJNA13758.WS285.genomic.fa",
+    package = "ggexon"
+  )
+  n2_annotation <- system.file(
+    "extdata",
+    "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
+    package = "ggexon"
+  )
+  paf_path <- system.file("extdata", "V_alginment.paf", package = "ggexon")
+
+  sp <- SynSpecies(name = "Caenorhabditis")
+  sp <- add_individual(
+    sp,
+    test_syn_individual(
+      genome_file = xz_genome,
+      annotation_file = xz_annotation,
+      id = "XZ1516"
+    )
+  )
+  sp <- add_individual(
+    sp,
+    test_syn_individual(
+      genome_file = n2_genome,
+      annotation_file = n2_annotation,
+      id = "N2",
+      annotation_format = "gtf"
+    )
+  )
+  sp <- add_individual(
+    sp,
+    test_syn_individual(
+      genome_file = n2_genome,
+      annotation_file = n2_annotation,
+      id = "CB4856",
+      annotation_format = "gtf"
+    )
+  )
+  sp <- add_pairwise_alignment(
+    sp,
+    SynPairAlignment(
+      name = "XZ1516_vs_N2",
+      query_individual = "XZ1516",
+      target_individual = "N2",
+      file = paf_path
+    )
+  )
+
+  built <- ggexon_build(
+    ggexon(sp) +
+      geom_exon() +
+      geom_nuclink(alignment = "XZ1516_vs_N2") +
+      facet_genomics(ggplot2::vars(track), scales = "free")
+  )
+
+  expect_identical(
+    as.character(built@layout$layout$track),
+    c("XZ1516", "link_XZ1516_vs_N2", "N2")
+  )
+  expect_true(all(c("target_anchor_y", "query_anchor_y") %in% names(built@data[[2L]])))
+})
+
 test_that("SynSpecies chain layout reserves one link panel per pairwise alignment", {
   genome_path <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
   annotation_path <- system.file(

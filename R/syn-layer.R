@@ -112,17 +112,12 @@ collect_syn_plot_context <- function(layers, plot_data) {
   annotation_requests <- unlist(lapply(layers, function(layer) {
     collect_syn_annotation_requests(layer, syn_data, plot_data)
   }), recursive = FALSE)
-  annotation_species_order <- unique(vapply(
-    annotation_requests,
-    function(request) request$species,
-    character(1)
-  ))
   link_requests <- unlist(lapply(layers, function(layer) {
     collect_syn_link_requests(layer, syn_data, plot_data)
   }), recursive = FALSE)
   annotation_species_order <- resolve_syn_plot_species_order(
     syn_data,
-    annotation_species_order = annotation_species_order,
+    annotation_requests = annotation_requests,
     link_requests = link_requests
   )
 
@@ -178,6 +173,7 @@ collect_syn_annotation_requests <- function(layer, syn_data, plot_data) {
     list(
       geom = class(layer$geom)[1L],
       species = species_name,
+      explicit_species = !is.null(params$species),
       chr = params$chr,
       subset = params$subset
     )
@@ -260,16 +256,36 @@ resolve_plot_species_params <- function(x, species = NULL) {
 }
 
 resolve_syn_plot_species_order <- function(x,
-                                           annotation_species_order = NULL,
+                                           annotation_requests = NULL,
                                            link_requests = NULL) {
   if (!methods::is(x, "SynSpecies")) {
-    return(annotation_species_order %||% character())
+    return(unique(vapply(annotation_requests %||% list(), function(request) {
+      request$species
+    }, character(1))))
   }
 
-  selected_species <- unique(as.character(annotation_species_order %||% names(individuals(x))))
-  selected_species <- selected_species[selected_species %in% names(individuals(x))]
-  if (length(selected_species) == 0L) {
+  annotation_requests <- annotation_requests %||% list()
+  explicit_requests <- Filter(function(request) isTRUE(request$explicit_species), annotation_requests)
+  explicit_species <- unique(vapply(explicit_requests, function(request) {
+    request$species
+  }, character(1)))
+
+  if (length(explicit_species) > 0L) {
+    selected_species <- explicit_species[explicit_species %in% names(individuals(x))]
+  } else {
     selected_species <- names(individuals(x))
+
+    pairwise_species <- unique(unlist(lapply(link_requests %||% list(), function(request) {
+      alignment_obj <- request$alignment_obj %||% NULL
+      if (methods::is(alignment_obj, "SynPairAlignment")) {
+        return(alignment_individuals(alignment_obj))
+      }
+      character()
+    }), use.names = FALSE))
+    pairwise_species <- pairwise_species[pairwise_species %in% names(individuals(x))]
+    if (length(pairwise_species) >= 2L) {
+      selected_species <- pairwise_species
+    }
   }
 
   if (length(link_requests) == 0L) {
