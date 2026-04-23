@@ -9,7 +9,9 @@
 \code{SynIndividual} objects in a \code{SynSpecies} collection. As a concrete
 \code{SynSpeAnnotation}, the object keeps the shared annotation metadata together
 with the query/target identifiers used to route link panels and optional
-cached parsed alignment data.
+cached parsed alignment data. For PSL-backed alignments, the cached table can
+be stored either at the original one-row-per-record level or at a detailed
+one-row-per-ungapped-block level when loaded with \code{load_alignment(more = TRUE)}.
 }
 \section{Slots}{
 
@@ -25,9 +27,12 @@ cached parsed alignment data.
 
 \item{\code{format}}{Alignment file format. Currently \code{"paf"}, \code{"psl"}, or \code{"odgi"}.}
 
-\item{\code{data}}{Optional cached parsed alignment data.}
+\item{\code{data}}{Optional cached parsed alignment data. For PSL files this can be
+either one row per PSL record or one row per ungapped block, depending on
+how the object was loaded.}
 
-\item{\code{metadata}}{Optional user or import metadata.}
+\item{\code{metadata}}{Optional user or import metadata. Loader state such as the
+cached PSL detail mode may also be stored here.}
 }}
 
 \section{Prototype defaults}{
@@ -48,6 +53,15 @@ cached parsed alignment data.
 character value.
 \item \code{query_individual} and \code{target_individual} must differ.
 \item \code{format} must currently be \code{"paf"}, \code{"psl"}, or \code{"odgi"}.
+}
+}
+
+\section{Cached PSL detail modes}{
+
+\itemize{
+\item \code{load_alignment(more = FALSE)} keeps one cached row per PSL record.
+\item \code{load_alignment(more = TRUE)} expands each PSL record into one cached row
+per ungapped block and records that detail level in \code{metadata$psl_more}.
 }
 }
 

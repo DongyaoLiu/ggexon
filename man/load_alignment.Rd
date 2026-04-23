@@ -4,7 +4,7 @@
 \alias{load_alignment}
 \title{Load alignment data into Syn-aware alignment objects}
 \usage{
-load_alignment(x, odgi = NULL, python = NULL)
+load_alignment(x, odgi = NULL, python = NULL, more = NULL)
 }
 \arguments{
 \item{x}{A \code{\link{SynPairAlignment}}, \code{\link{SynMultiAlignment}}, or \code{\link{SynSpecies}}
@@ -15,19 +15,29 @@ multiple alignments from raw \code{.og} graph files.}
 
 \item{python}{Optional path to the Python interpreter. Used when loading
 ODGI multiple alignments from raw \code{.og} graph files.}
+
+\item{more}{Logical or \code{NULL}; when \code{TRUE} and \code{x} is a PSL-backed
+\code{\link{SynPairAlignment}}, expand each PSL record into one row per ungapped
+block before caching the parsed data. When \code{NULL}, preserve any existing
+cached PSL detail level and default unloaded PSL alignments to the coarse
+one-row-per-record representation.}
 }
 \value{
 An updated object of the same class as \code{x}.
 }
 \description{
 Parses supported alignment files and caches the parsed data on alignment
-objects. Pairwise alignments are currently loaded from PAF files, and
-multiple alignments can be loaded when \code{format = "odgi"} points to an ODGI
-node-table TSV. When \code{x} is a \code{\link{SynSpecies}}, every stored pairwise and
-multiple alignment is loaded and the updated \code{SynSpecies} object is
-returned.
+objects. Pairwise alignments can currently be loaded from PAF, PSL, and ODGI
+sources, and multiple alignments can be loaded when \code{format = "odgi"} points
+to an ODGI node-table TSV or raw \code{.og} graph file. When \code{x} is a
+\code{\link{SynSpecies}}, every stored pairwise and multiple alignment is loaded and
+the updated \code{SynSpecies} object is returned.
 }
 \details{
 Unloaded \code{SynMultiAlignment} objects with \code{format = "maf"} are not yet
-supported because the package does not currently provide a MAF parser.
+supported because the package does not currently provide a MAF parser. For
+PSL-backed \code{\link{SynPairAlignment}} objects, repeated calls to
+\code{load_alignment()} with different explicit \code{more} values will replace the
+cached data so the in-memory representation matches the requested detail
+level, while \code{more = NULL} preserves any existing cached PSL mode.
 }

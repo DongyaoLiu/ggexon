@@ -1370,6 +1370,67 @@ test_that("geom_exon keeps a blank annotation panel for pairwise species without
   expect_true(any(as.character(built@data[[2L]]$qspecies) == "N2"))
 })
 
+test_that("geom_nuclink preserves anchor metadata for detailed PSL alignments", {
+  n2_genome <- system.file(
+    "extdata",
+    "c_elegans.PRJNA13758.WS285.genomic.fa",
+    package = "ggexon"
+  )
+  n2_annotation <- system.file(
+    "extdata",
+    "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
+    package = "ggexon"
+  )
+
+  psl_path <- tempfile(fileext = ".psl")
+  writeLines(
+    paste(
+      c(
+        10, 0, 0, 0, 0, 0, 0, 0, "+-",
+        "N2_V_100_200", 1000, 100, 120,
+        "V", 2000, 1490, 1500,
+        2, "10,3,", "100,117,", "500,517,"
+      ),
+      collapse = "\t"
+    ),
+    psl_path
+  )
+
+  detailed_pair <- SynPairAlignment(
+    name = "N2_vs_AFRA_detailed",
+    query_individual = "N2",
+    target_individual = "AFRA",
+    file = psl_path,
+    format = "psl"
+  ) |>
+    load_alignment(more = TRUE)
+
+  sp <- SynSpecies(name = "PairwiseDetailed")
+  sp <- add_individual(
+    sp,
+    test_syn_individual(
+      genome_file = n2_genome,
+      annotation_file = n2_annotation,
+      id = "N2",
+      annotation_format = "gtf"
+    )
+  )
+  expect_warning({
+    sp <- add_pairwise_alignment(sp, detailed_pair)
+  }, "references individuals not attached")
+
+  built <- ggexon_build(
+    ggexon(sp) +
+      geom_exon() +
+      geom_nuclink(alignment = "N2_vs_AFRA_detailed") +
+      facet_genomics(ggplot2::vars(track), scales = "free")
+  )
+
+  expect_true(all(c("target_anchor_y", "query_anchor_y", "t_panel", "q_panel") %in% names(built@data[[2L]])))
+  expect_true(nrow(built@data[[2L]]) > 0L)
+  expect_true(isTRUE(pairwise_alignments(sp)[["N2_vs_AFRA_detailed"]]@metadata$psl_more))
+})
+
 test_that("geom_nuclink uses target and query source panels in the correct direction", {
   xz_genome <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
   xz_annotation <- system.file(

@@ -42,6 +42,39 @@ test_that("read_pairwise_psl parses PSL rows into the internal pairwise table", 
   expect_identical(psl$alen, c(13L, 5L))
 })
 
+test_that("read_pairwise_psl expands ungapped blocks when more = TRUE", {
+  psl_path <- tempfile(fileext = ".psl")
+  writeLines(
+    paste(
+      c(
+        10, 0, 0, 0, 0, 0, 0, 0, "+-",
+        "N2_V_100_200", 1000, 100, 120,
+        "chrV", 2000, 1490, 1500,
+        2, "10,3,", "100,117,", "500,517,"
+      ),
+      collapse = "\t"
+    ),
+    psl_path
+  )
+
+  psl <- read_pairwise_psl(
+    psl_path,
+    query_individual = "N2",
+    target_individual = "Caenorhabditis_afra",
+    more = TRUE
+  )
+
+  expect_identical(nrow(psl), 2L)
+  expect_true(all(c("psl_row", "block_index", "block_size", "qstrand", "tstrand") %in% names(psl)))
+  expect_identical(psl$qstart, c(100L, 117L))
+  expect_identical(psl$qend, c(110L, 120L))
+  expect_identical(psl$tstart, c(1490L, 1480L))
+  expect_identical(psl$tend, c(1500L, 1483L))
+  expect_identical(psl$block_size, c(10L, 3L))
+  expect_identical(psl$qstrand, c("+", "+"))
+  expect_identical(psl$tstrand, c("-", "-"))
+})
+
 test_that("SynPairAlignment with format = 'psl' is parsed through pairwise_alignment_data", {
   psl_path <- tempfile(fileext = ".psl")
   writeLines(
@@ -73,6 +106,70 @@ test_that("SynPairAlignment with format = 'psl' is parsed through pairwise_align
   expect_identical(paf_like$track, "link_N2_vs_afra_psl")
   expect_identical(paf_like$qchr, "V")
   expect_identical(paf_like$tchr, "chrV")
+})
+
+test_that("load_alignment(more = TRUE) caches PSL ungapped blocks", {
+  psl_path <- tempfile(fileext = ".psl")
+  writeLines(
+    paste(
+      c(
+        10, 0, 0, 0, 0, 0, 0, 0, "+-",
+        "N2_V_100_200", 1000, 100, 120,
+        "chrV", 2000, 1490, 1500,
+        2, "10,3,", "100,117,", "500,517,"
+      ),
+      collapse = "\t"
+    ),
+    psl_path
+  )
+
+  pair <- SynPairAlignment(
+    name = "N2_vs_afra_psl",
+    query_individual = "N2",
+    target_individual = "Caenorhabditis_afra",
+    file = psl_path,
+    format = "psl"
+  )
+
+  loaded <- load_alignment(pair, more = TRUE)
+
+  expect_true(isTRUE(loaded@metadata$psl_more))
+  expect_identical(nrow(pairwise_alignment_data(loaded)), 2L)
+  expect_identical(pairwise_alignment_data(loaded)$block_index, c(1L, 2L))
+})
+
+test_that("load_alignment on SynSpecies preserves cached detailed PSL alignments by default", {
+  psl_path <- tempfile(fileext = ".psl")
+  writeLines(
+    paste(
+      c(
+        10, 0, 0, 0, 0, 0, 0, 0, "+-",
+        "N2_V_100_200", 1000, 100, 120,
+        "chrV", 2000, 1490, 1500,
+        2, "10,3,", "100,117,", "500,517,"
+      ),
+      collapse = "\t"
+    ),
+    psl_path
+  )
+
+  pair <- SynPairAlignment(
+    name = "N2_vs_afra_psl",
+    query_individual = "N2",
+    target_individual = "Caenorhabditis_afra",
+    file = psl_path,
+    format = "psl"
+  ) |>
+    load_alignment(more = TRUE)
+
+  sp <- SynSpecies(name = "worms")
+  sp <- suppressWarnings(add_pairwise_alignment(sp, pair))
+  reloaded <- load_alignment(sp)
+
+  stored_pair <- pairwise_alignments(reloaded)[["N2_vs_afra_psl"]]
+  expect_true(isTRUE(stored_pair@metadata$psl_more))
+  expect_identical(nrow(stored_pair@data), 2L)
+  expect_identical(stored_pair@data$block_index, c(1L, 2L))
 })
 
 test_that("read_pairwise_psl parses the 22-column liftover PSL shape", {

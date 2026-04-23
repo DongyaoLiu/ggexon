@@ -25,13 +25,21 @@ SynPairAlignment(
 
 \item{format}{Alignment format. Currently \code{"paf"}, \code{"psl"}, or \code{"odgi"}.}
 
-\item{data}{Optional cached parsed alignment representation.}
+\item{data}{Optional cached parsed alignment representation. For PSL files
+this can be either one row per PSL record or one row per ungapped block.}
 
-\item{metadata}{Optional metadata list.}
+\item{metadata}{Optional metadata list. This may include loader state such as
+\code{psl_more}, although that value is normally managed by
+\code{\link[=load_alignment]{load_alignment()}}.}
 }
 \value{
 A \code{SynPairAlignment} object.
 }
 \description{
 Constructor for SynPairAlignment
+}
+\details{
+For PSL-backed alignments, use \code{\link[=load_alignment]{load_alignment()}} with
+\code{more = TRUE} when you want the cached alignment table expanded to one row
+per ungapped block instead of one row per PSL record.
 }

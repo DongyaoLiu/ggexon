@@ -159,18 +159,12 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
 
     if (is_waiver(df)){ return(NA) }
 
-    # Count occurrences of "start" in column names
-    start_count <- sum(grepl("start", colnames(df), ignore.case = TRUE))
-
-    # Determine output based on count of start
-    # one start is obvious annotation file
-    # two starts (e.g. qstart, tstart) should be the link file.
-    if (start_count == 1) {
-    return("annotation")
-    } else if (start_count == 2) {
+    if (.is_link_like_df(df)) {
     return("link")
+    } else if (.is_annotation_like_df(df)) {
+    return("annotation")
     } else {
-    cli::cli_abort(c("can not detect start(case ignore) in the dataframe colnames"))
+    cli::cli_abort(c("Can not detect whether the layer data is annotation-like or link-like."))
     return(NA)
     }
     }))
@@ -356,9 +350,7 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
     data = lapply(data, function(df){
       if (is_waiver(df)){ df }
 
-      #print(colnames(df))
-      #detect the link datatable
-      if (sum(grepl("start", colnames(df), ignore.case = TRUE)) == 2){
+      if (.is_link_like_df(df)){
         #print(df)
         df$track <- as.character(df$track)
         df = left_join(df, link_y_table, join_by(track == link))
@@ -632,6 +624,18 @@ synspecies_chain_layout <- function(x,
     x_translation = layout_obj@x_translation,
     metadata = layout_obj@metadata
   )
+}
+
+.is_link_like_df <- function(df) {
+  is.data.frame(df) &&
+    all(c("track", "tspecies", "qspecies", "tstart", "qstart") %in% names(df))
+}
+
+.is_annotation_like_df <- function(df) {
+  is.data.frame(df) &&
+    "track" %in% names(df) &&
+    !.is_link_like_df(df) &&
+    any(c("start", "xmin", "xstart") %in% names(df))
 }
 
 .annotate_synspecies_link_source_panels <- function(layout) {

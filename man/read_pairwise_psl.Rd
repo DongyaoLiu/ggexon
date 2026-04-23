@@ -4,7 +4,12 @@
 \alias{read_pairwise_psl}
 \title{Read a PSL pairwise alignment into ggexon's internal link table}
 \usage{
-read_pairwise_psl(path, query_individual = NULL, target_individual = NULL)
+read_pairwise_psl(
+  path,
+  query_individual = NULL,
+  target_individual = NULL,
+  more = FALSE
+)
 }
 \arguments{
 \item{path}{Path to a PSL file.}
@@ -14,14 +19,22 @@ strip a species prefix from \code{qName} when inferring \code{qchr}.}
 
 \item{target_individual}{Optional target-side individual identifier used to
 strip a species prefix from \code{tName} when inferring \code{tchr}.}
+
+\item{more}{Logical; when \code{TRUE}, expand each PSL record into one row per
+ungapped alignment block using \code{blockSizes}, \code{qStarts}, \code{tStarts}, the
+query/target sequence lengths, and the PSL strand field to compute
+detailed block coordinates.}
 }
 \value{
-A PAF-like \code{data.frame}.
+A PAF-like \code{data.frame}. When \code{more = TRUE}, the returned table
+includes additional block-level columns such as \code{psl_row}, \code{block_index},
+\code{block_size}, \code{qstrand}, \code{tstrand}, and raw block starts.
 }
 \description{
 Parses a UCSC PSL file and returns the PAF-like table used internally by
-\code{ggexon} for pairwise link dispatch. The parser keeps one row per PSL record
-and normalizes the output columns to \code{qchr}, \code{qstart}, \code{qend}, \code{tchr},
-\code{tstart}, \code{tend}, \code{strand}, \code{nmatch}, \code{alen}, and related fields expected by
-\code{\link[=pairwise_alignment_data]{pairwise_alignment_data()}} and \code{\link[=geom_nuclink]{geom_nuclink()}}.
+\code{ggexon} for pairwise link dispatch. By default the parser keeps one row per
+PSL record and normalizes the output columns to \code{qchr}, \code{qstart}, \code{qend},
+\code{tchr}, \code{tstart}, \code{tend}, \code{strand}, \code{nmatch}, \code{alen}, and related fields
+expected by \code{\link[=pairwise_alignment_data]{pairwise_alignment_data()}} and \code{\link[=geom_nuclink]{geom_nuclink()}}. When
+\code{more = TRUE}, each PSL record is expanded into one row per ungapped block.
 }

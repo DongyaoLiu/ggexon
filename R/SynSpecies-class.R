@@ -23,7 +23,10 @@ NULL
 #' `SynIndividual` objects in a `SynSpecies` collection. As a concrete
 #' `SynSpeAnnotation`, the object keeps the shared annotation metadata together
 #' with the query/target identifiers used to route link panels and optional
-#' cached parsed alignment data.
+#' cached parsed alignment data. For PSL-backed alignments, the cached table can
+#' be stored either at the original one-row-per-record level or at a detailed
+#' one-row-per-ungapped-block level when loaded with `load_alignment(more =
+#' TRUE)`.
 #'
 #' @slot name Unique alignment label used to retrieve the object from a
 #'   `SynSpecies`.
@@ -31,8 +34,11 @@ NULL
 #' @slot target_individual Target-side `SynIndividual` identifier.
 #' @slot source_file Path to the alignment file on disk.
 #' @slot format Alignment file format. Currently `"paf"`, `"psl"`, or `"odgi"`.
-#' @slot data Optional cached parsed alignment data.
-#' @slot metadata Optional user or import metadata.
+#' @slot data Optional cached parsed alignment data. For PSL files this can be
+#'   either one row per PSL record or one row per ungapped block, depending on
+#'   how the object was loaded.
+#' @slot metadata Optional user or import metadata. Loader state such as the
+#'   cached PSL detail mode may also be stored here.
 #'
 #' @section Prototype defaults:
 #' * `annotation_scope = "species"`
@@ -46,6 +52,11 @@ NULL
 #'   character value.
 #' * `query_individual` and `target_individual` must differ.
 #' * `format` must currently be `"paf"`, `"psl"`, or `"odgi"`.
+#'
+#' @section Cached PSL detail modes:
+#' * `load_alignment(more = FALSE)` keeps one cached row per PSL record.
+#' * `load_alignment(more = TRUE)` expands each PSL record into one cached row
+#'   per ungapped block and records that detail level in `metadata$psl_more`.
 #'
 #' @exportClass SynPairAlignment
 setClass(
@@ -365,8 +376,15 @@ SynLayout <- function(panels,
 #' @param target_individual Target-side individual name.
 #' @param file Path to the alignment file.
 #' @param format Alignment format. Currently `"paf"`, `"psl"`, or `"odgi"`.
-#' @param data Optional cached parsed alignment representation.
-#' @param metadata Optional metadata list.
+#' @param data Optional cached parsed alignment representation. For PSL files
+#'   this can be either one row per PSL record or one row per ungapped block.
+#' @param metadata Optional metadata list. This may include loader state such as
+#'   `psl_more`, although that value is normally managed by
+#'   [load_alignment()].
+#'
+#' @details For PSL-backed alignments, use [load_alignment()] with
+#'   `more = TRUE` when you want the cached alignment table expanded to one row
+#'   per ungapped block instead of one row per PSL record.
 #'
 #' @return A `SynPairAlignment` object.
 #' @export
@@ -1387,6 +1405,104 @@ subset_synspecies_window <- function(x,
   as.integer(values)
 }
 
+.parse_psl_block_starts <- function(x) {
+  .parse_psl_block_sizes(x)
+}
+
+.psl_query_strand <- function(strand) {
+  strand <- as.character(strand)
+  out <- ifelse(nchar(strand) >= 1L, substring(strand, 1L, 1L), "+")
+  out[is.na(out) | !out %in% c("+", "-")] <- "+"
+  out
+}
+
+.psl_target_strand <- function(strand) {
+  strand <- as.character(strand)
+  out <- ifelse(nchar(strand) >= 2L, substring(strand, nchar(strand), nchar(strand)), "+")
+  out[is.na(out) | !out %in% c("+", "-")] <- "+"
+  out
+}
+
+.psl_oriented_interval <- function(start, width, seq_length, strand = "+") {
+  start <- as.integer(start)
+  width <- as.integer(width)
+  seq_length <- as.integer(seq_length)
+
+  if (anyNA(c(start, width, seq_length))) {
+    return(c(NA_integer_, NA_integer_))
+  }
+
+  if (identical(strand, "-")) {
+    return(c(seq_length - (start + width), seq_length - start))
+  }
+
+  c(start, start + width)
+}
+
+.expand_psl_blocks <- function(psl,
+                               query_individual = NULL,
+                               target_individual = NULL) {
+  block_rows <- vector("list", nrow(psl))
+
+  for (i in seq_len(nrow(psl))) {
+    block_sizes <- .parse_psl_block_sizes(psl$blockSizes[[i]])
+    q_starts <- .parse_psl_block_starts(psl$qStarts[[i]])
+    t_starts <- .parse_psl_block_starts(psl$tStarts[[i]])
+    block_n <- min(length(block_sizes), length(q_starts), length(t_starts))
+
+    if (block_n == 0L) {
+      next
+    }
+
+    block_sizes <- as.integer(block_sizes[seq_len(block_n)])
+    q_starts <- as.integer(q_starts[seq_len(block_n)])
+    t_starts <- as.integer(t_starts[seq_len(block_n)])
+    q_intervals <- t(vapply(
+      seq_len(block_n),
+      function(j) .psl_oriented_interval(q_starts[[j]], block_sizes[[j]], psl$qSize[[i]], .psl_query_strand(psl$strand_raw[[i]])),
+      integer(2)
+    ))
+    t_intervals <- t(vapply(
+      seq_len(block_n),
+      function(j) .psl_oriented_interval(t_starts[[j]], block_sizes[[j]], psl$tSize[[i]], .psl_target_strand(psl$strand_raw[[i]])),
+      integer(2)
+    ))
+
+    block_rows[[i]] <- data.frame(
+      qchr = rep(.psl_seqname_from_field(psl$qChrom[[i]], species = query_individual), block_n),
+      qlen = rep(as.integer(psl$qSize[[i]]), block_n),
+      qstart = as.integer(q_intervals[, 1L]),
+      qend = as.integer(q_intervals[, 2L]),
+      strand = rep(.psl_relative_strand(psl$strand_raw[[i]]), block_n),
+      tchr = rep(.psl_seqname_from_field(psl$tName[[i]], species = target_individual), block_n),
+      tlen = rep(as.integer(psl$tSize[[i]]), block_n),
+      tstart = as.integer(t_intervals[, 1L]),
+      tend = as.integer(t_intervals[, 2L]),
+      nmatch = block_sizes,
+      alen = block_sizes,
+      mapq = rep(NA_integer_, block_n),
+      psl_row = rep(as.integer(i), block_n),
+      block_index = seq_len(block_n),
+      block_size = block_sizes,
+      qstrand = rep(.psl_query_strand(psl$strand_raw[[i]]), block_n),
+      tstrand = rep(.psl_target_strand(psl$strand_raw[[i]]), block_n),
+      qstart_raw = q_starts,
+      qend_raw = q_starts + block_sizes,
+      tstart_raw = t_starts,
+      tend_raw = t_starts + block_sizes,
+      stringsAsFactors = FALSE
+    )
+  }
+
+  out <- dplyr::bind_rows(Filter(Negate(is.null), block_rows))
+  if (nrow(out) == 0L) {
+    return(.empty_pairwise_alignment_table())
+  }
+
+  rownames(out) <- NULL
+  out
+}
+
 .normalize_psl_fields <- function(fields) {
   fields <- trimws(as.character(fields))
 
@@ -1462,22 +1578,30 @@ subset_synspecies_window <- function(x,
 #' Read a PSL pairwise alignment into ggexon's internal link table
 #'
 #' Parses a UCSC PSL file and returns the PAF-like table used internally by
-#' `ggexon` for pairwise link dispatch. The parser keeps one row per PSL record
-#' and normalizes the output columns to `qchr`, `qstart`, `qend`, `tchr`,
-#' `tstart`, `tend`, `strand`, `nmatch`, `alen`, and related fields expected by
-#' [`pairwise_alignment_data()`] and [`geom_nuclink()`].
+#' `ggexon` for pairwise link dispatch. By default the parser keeps one row per
+#' PSL record and normalizes the output columns to `qchr`, `qstart`, `qend`,
+#' `tchr`, `tstart`, `tend`, `strand`, `nmatch`, `alen`, and related fields
+#' expected by [`pairwise_alignment_data()`] and [`geom_nuclink()`]. When
+#' `more = TRUE`, each PSL record is expanded into one row per ungapped block.
 #'
 #' @param path Path to a PSL file.
 #' @param query_individual Optional query-side individual identifier used to
 #'   strip a species prefix from `qName` when inferring `qchr`.
 #' @param target_individual Optional target-side individual identifier used to
 #'   strip a species prefix from `tName` when inferring `tchr`.
+#' @param more Logical; when `TRUE`, expand each PSL record into one row per
+#'   ungapped alignment block using `blockSizes`, `qStarts`, `tStarts`, the
+#'   query/target sequence lengths, and the PSL strand field to compute
+#'   detailed block coordinates.
 #'
-#' @return A PAF-like `data.frame`.
+#' @return A PAF-like `data.frame`. When `more = TRUE`, the returned table
+#'   includes additional block-level columns such as `psl_row`, `block_index`,
+#'   `block_size`, `qstrand`, `tstrand`, and raw block starts.
 #' @export
 read_pairwise_psl <- function(path,
                               query_individual = NULL,
-                              target_individual = NULL) {
+                              target_individual = NULL,
+                              more = FALSE) {
   if (!is.character(path) || length(path) != 1L || is.na(path) || !nzchar(path)) {
     stop("`path` must be a single non-empty character value.", call. = FALSE)
   }
@@ -1535,6 +1659,16 @@ read_pairwise_psl <- function(path,
     sum(.parse_psl_block_sizes(x), na.rm = TRUE)
   }, integer(1))
 
+  if (isTRUE(more)) {
+    out <- .expand_psl_blocks(
+      psl,
+      query_individual = query_individual,
+      target_individual = target_individual
+    )
+    rownames(out) <- NULL
+    return(out)
+  }
+
   out <- data.frame(
     qchr = vapply(psl$qChrom, .psl_seqname_from_field, character(1), species = query_individual),
     qlen = as.integer(psl$qSize),
@@ -1555,8 +1689,14 @@ read_pairwise_psl <- function(path,
   out
 }
 
-.pairwise_alignment_table <- function(x, odgi = NULL, python = NULL) {
-  paf <- if (!is.null(x@data)) {
+.pairwise_alignment_table <- function(x, odgi = NULL, python = NULL, more = NULL) {
+  use_more <- if (is.null(more)) FALSE else isTRUE(more)
+  use_cached <- !is.null(x@data)
+  if (use_cached && identical(alignment_format(x), "psl") && !is.null(more)) {
+    use_cached <- identical(isTRUE(x@metadata$psl_more), use_more)
+  }
+
+  paf <- if (use_cached) {
     x@data
   } else if (identical(alignment_format(x), "paf")) {
     .read_pairwise_paf(alignment_file(x))
@@ -1564,7 +1704,8 @@ read_pairwise_psl <- function(path,
     read_pairwise_psl(
       alignment_file(x),
       query_individual = query_individual(x),
-      target_individual = target_individual(x)
+      target_individual = target_individual(x),
+      more = use_more
     )
   } else if (identical(alignment_format(x), "odgi")) {
     .read_odgi_pairwise_alignment(
@@ -1599,8 +1740,9 @@ read_pairwise_psl <- function(path,
                                           subset = NULL,
                                           filter = NULL,
                                           odgi = NULL,
-                                          python = NULL) {
-  paf <- .pairwise_alignment_table(x, odgi = odgi, python = python)
+                                          python = NULL,
+                                          more = NULL) {
+  paf <- .pairwise_alignment_table(x, odgi = odgi, python = python, more = more)
 
   if (!is.null(subset)) {
     subset_specs <- .parse_pairwise_subset(
@@ -1639,14 +1781,18 @@ read_pairwise_psl <- function(path,
 #' Load alignment data into Syn-aware alignment objects
 #'
 #' Parses supported alignment files and caches the parsed data on alignment
-#' objects. Pairwise alignments are currently loaded from PAF files, and
-#' multiple alignments can be loaded when `format = "odgi"` points to an ODGI
-#' node-table TSV. When `x` is a [`SynSpecies`], every stored pairwise and
-#' multiple alignment is loaded and the updated `SynSpecies` object is
-#' returned.
+#' objects. Pairwise alignments can currently be loaded from PAF, PSL, and ODGI
+#' sources, and multiple alignments can be loaded when `format = "odgi"` points
+#' to an ODGI node-table TSV or raw `.og` graph file. When `x` is a
+#' [`SynSpecies`], every stored pairwise and multiple alignment is loaded and
+#' the updated `SynSpecies` object is returned.
 #'
 #' Unloaded `SynMultiAlignment` objects with `format = "maf"` are not yet
-#' supported because the package does not currently provide a MAF parser.
+#' supported because the package does not currently provide a MAF parser. For
+#' PSL-backed [`SynPairAlignment`] objects, repeated calls to
+#' `load_alignment()` with different explicit `more` values will replace the
+#' cached data so the in-memory representation matches the requested detail
+#' level, while `more = NULL` preserves any existing cached PSL mode.
 #'
 #' @param x A [`SynPairAlignment`], [`SynMultiAlignment`], or [`SynSpecies`]
 #'   object.
@@ -1654,13 +1800,33 @@ read_pairwise_psl <- function(path,
 #'   multiple alignments from raw `.og` graph files.
 #' @param python Optional path to the Python interpreter. Used when loading
 #'   ODGI multiple alignments from raw `.og` graph files.
+#' @param more Logical or `NULL`; when `TRUE` and `x` is a PSL-backed
+#'   [`SynPairAlignment`], expand each PSL record into one row per ungapped
+#'   block before caching the parsed data. When `NULL`, preserve any existing
+#'   cached PSL detail level and default unloaded PSL alignments to the coarse
+#'   one-row-per-record representation.
 #'
 #' @return An updated object of the same class as `x`.
 #' @export
-load_alignment <- function(x, odgi = NULL, python = NULL) {
+load_alignment <- function(x, odgi = NULL, python = NULL, more = NULL) {
   if (methods::is(x, "SynPairAlignment")) {
-    if (is.null(x@data)) {
-      x@data <- .pairwise_alignment_table(x, odgi = odgi, python = python)
+    if (identical(alignment_format(x), "psl")) {
+      psl_more <- more
+      if (is.null(psl_more)) {
+        psl_more <- if (is.null(x@data)) FALSE else isTRUE(x@metadata$psl_more)
+      }
+      reload_psl <- is.null(x@data) ||
+        !identical(isTRUE(x@metadata$psl_more), isTRUE(psl_more))
+    } else {
+      psl_more <- more
+      reload_psl <- FALSE
+    }
+
+    if (is.null(x@data) || reload_psl) {
+      x@data <- .pairwise_alignment_table(x, odgi = odgi, python = python, more = psl_more)
+      if (identical(alignment_format(x), "psl")) {
+        x@metadata$psl_more <- isTRUE(psl_more)
+      }
     }
     x@loaded <- TRUE
     x@lazy <- FALSE
@@ -1691,7 +1857,7 @@ load_alignment <- function(x, odgi = NULL, python = NULL) {
   if (methods::is(x, "SynSpecies")) {
     pairs <- pairwise_alignments(x)
     if (length(pairs) > 0L) {
-      x@pairwise_alignments <- lapply(pairs, load_alignment, odgi = odgi, python = python)
+      x@pairwise_alignments <- lapply(pairs, load_alignment, odgi = odgi, python = python, more = more)
     }
 
     multis <- multiple_alignments(x)
