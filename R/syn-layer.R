@@ -67,7 +67,7 @@ syn_default_mapping <- function(data, layer) {
   syn_identity_mapping(default_syn_aesthetics(data, layer))
 }
 default_syn_aesthetics <- function(data, layer) {
-  if (identical(layer$geom, GeomExon)) {
+  if (identical(layer$geom, GeomExon) || identical(layer$geom, GeomExon2)) {
     cols <- c("xmin", "xmax", "ymin", "transcripts", "strand", "track", "type", "group")
     return(intersect(cols, names(data)))
   }
@@ -154,6 +154,7 @@ find_syn_plot_data <- function(layers, plot_data) {
 
 collect_syn_annotation_requests <- function(layer, syn_data, plot_data) {
   if (!(identical(layer$geom, GeomExon) ||
+        identical(layer$geom, GeomExon2) ||
         identical(layer$geom, GeomGene) ||
         identical(layer$geom, GeomGeneLabel) ||
         identical(layer$geom, GeomMotif))) {
@@ -751,7 +752,7 @@ resolve_syn_layer_data <- function(x, layer) {
   params <- syn_layer_params(layer)
   context <- layer$syn_plot_context %||% NULL
 
-  if (identical(layer$geom, GeomExon)) {
+  if (identical(layer$geom, GeomExon) || identical(layer$geom, GeomExon2)) {
     return(
       syn_to_exon_df(
         x = x,
@@ -1641,12 +1642,20 @@ syn_to_exon_df <- function(x,
     geom = "geom_exon"
   )
 
+  feature_type <- if (is.null(annotation_type) ||
+                      identical(annotation_type, "exon") ||
+                      identical(annotation_type, "all")) {
+    NULL
+  } else {
+    annotation_type
+  }
+
   feature_gr <- query_features(
     individual,
     chr = window$chr,
     start = window$start,
     end = window$end,
-    feature_type = if (identical(annotation_type, "exon")) NULL else annotation_type,
+    feature_type = feature_type,
     all = is_unrestricted_syn_window(window)
   )
 
@@ -1723,7 +1732,20 @@ syn_gr_to_exon_df <- function(feature_gr,
     c("transcript_id", "Parent", "ID", "gene_id", "gene_name")
   )
 
-  if (identical(annotation_type, "exon")) {
+  if (is.null(annotation_type) || identical(annotation_type, "all")) {
+    keep_rows <- types %in% c(
+      "exon", "CDS", "five_prime_UTR", "three_prime_UTR",
+      "5UTR", "3UTR", "five_prime_utr", "three_prime_utr",
+      "UTR", "utr"
+    )
+    feature_gr <- feature_gr[keep_rows]
+    meta <- S4Vectors::mcols(feature_gr)
+    types <- as.character(meta$type)
+    transcript_ids <- .coalesce_character_cols(
+      meta,
+      c("transcript_id", "Parent", "ID", "gene_id", "gene_name")
+    )
+  } else if (identical(annotation_type, "exon")) {
     transcripts_with_exons <- unique(transcript_ids[types == "exon" & !is.na(transcript_ids)])
     keep_rows <- types == "exon" |
       (types == "CDS" &

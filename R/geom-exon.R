@@ -174,3 +174,389 @@ geom_exon <- function(mapping = NULL, data = NULL,
       layer_class = LayerSyn,
       params = params)
 }
+
+GeomExon2 <- ggproto("GeomExon2", GeomExon,
+  extra_params = c(
+    "exon_height", "na.rm", "y_scale", "x_translation", "subset",
+    "annotation_type", "breakdata", "species", "chr", "compress_introns",
+    "intron_width", "intron_shape", "utr_height", "cds_height",
+    "intron_peak", "chevron_direction", "arrow_width"
+  ),
+  default_aes = aes(
+    linewidth = 0.4,
+    linejoin = "mitre",
+    fill = "black",
+    colour = "black",
+    size = 15,
+    linetype = 1,
+    shape = 19,
+    alpha = NA,
+    stroke = 1
+  ),
+  setup_data = function(data, params) {
+    params$annotation_type <- params$annotation_type %||% "exon"
+    if (identical(params$annotation_type, "all")) {
+      params$annotation_type <- NULL
+    }
+    data <- GeomExon$setup_data(data, params)
+    if (nrow(data) == 0L) {
+      return(data)
+    }
+
+    .prepare_exon2_data(
+      data,
+      compress_introns = params$compress_introns %||% TRUE,
+      intron_width = params$intron_width %||% NULL,
+      intron_shape = params$intron_shape %||% "chevron",
+      chevron_direction = params$chevron_direction %||% "up",
+      utr_height = params$utr_height %||% 0.45,
+      cds_height = params$cds_height %||% 1,
+      intron_peak = params$intron_peak %||% 0.35,
+      arrow_width = params$arrow_width %||% NULL
+    )
+  },
+  draw_panel = function(data, panel_params, coord, flipped_aes = FALSE) {
+    blank_flags <- if ("blank_panel" %in% names(data)) {
+      isTRUE(data$blank_panel) | (data$blank_panel %in% TRUE)
+    } else {
+      rep(FALSE, nrow(data))
+    }
+    visible_data <- data[!blank_flags, , drop = FALSE]
+    if (nrow(visible_data) == 0L) {
+      return(zeroGrob())
+    }
+
+    intron_data <- .exon2_intron_data(
+      visible_data,
+      shape = unique(data$intron_shape %||% "chevron")[1L],
+      direction = unique(data$chevron_direction %||% "up")[1L],
+      peak = unique(data$intron_peak %||% 0.35)[1L]
+    )
+    arrow_data <- .exon2_arrow_data(visible_data)
+    exon_data <- .exon2_trim_terminal_rects(visible_data)
+    exon_grob <- ggplot2::GeomRect$draw_panel(exon_data, panel_params, coord)
+    intron_grob <- if (nrow(intron_data) > 0L) {
+      ggplot2::GeomPath$draw_panel(intron_data, panel_params, coord)
+    } else {
+      zeroGrob()
+    }
+    arrow_grob <- if (nrow(arrow_data) > 0L) {
+      ggplot2::GeomPolygon$draw_panel(arrow_data, panel_params, coord)
+    } else {
+      zeroGrob()
+    }
+
+    ggname("geom_exon2", gTree(children = gList(
+      intron_grob,
+      exon_grob,
+      arrow_grob
+    )))
+  },
+  default_params = function() {
+    list(
+      exon_height = 0.8,
+      y_scale = 100,
+      x_translation = 0,
+      subset = NULL,
+      annotation_type = "exon",
+      breakdata = NULL,
+      species = NULL,
+      chr = NULL,
+      compress_introns = TRUE,
+      intron_width = NULL,
+      intron_shape = "chevron",
+      chevron_direction = "up",
+      utr_height = 0.45,
+      cds_height = 1,
+      intron_peak = 0.35,
+      arrow_width = NULL
+    )
+  },
+  draw_key = draw_key_polygon
+)
+
+#' Draw WormWeb-style exon-intron schematics
+#'
+#' `geom_exon2()` draws a publication-style transcript schematic inspired by
+#' WormWeb exon/intron cartoons. Compared with [geom_exon()], it draws introns
+#' explicitly between neighbouring feature blocks, can compress long introns,
+#' and uses thinner boxes for UTR features when UTR/CDS rows are available.
+#'
+#' The layer keeps the same Syn-aware grammar as [geom_exon()]: it can consume a
+#' data frame directly, or lazily resolve `SynIndividual` / `SynSpecies` inputs
+#' during plot build.
+#'
+#' @param mapping Set of aesthetic mappings created by [`ggplot2::aes()`].
+#' @param data A data frame, `SynSpecies`, or `SynIndividual` object.
+#' @param stat,position Standard ggplot2 layer arguments.
+#' @param ... Additional parameters passed on to the layer.
+#' @param na.rm If `FALSE`, missing values are removed with a warning.
+#' @param show.legend Logical. Should this layer be included in the legend?
+#' @param transcripts_track_ratio Optional transcript track ratio used by the
+#'   ggexon layout helpers.
+#' @param y_scale Optional y scaling factor for the track layout.
+#' @param exon_height Optional maximum exon rectangle height.
+#' @param x_translation Optional x offset applied before drawing.
+#' @param subset Optional numeric length-2 genomic window to keep.
+#' @param annotation_type Feature type to keep. The default `"exon"` matches
+#'   [geom_exon()]. Use `"all"` to keep exon, CDS, and UTR-like rows so UTR/CDS
+#'   heights can differ.
+#' @param species Optional species / individual identifier when `data` is a
+#'   `SynSpecies`.
+#' @param chr Optional chromosome / seqname restriction when `data` is Syn-backed.
+#' @param breakdata Optional break specification passed to `addbreak()`.
+#' @param compress_introns Logical. If `TRUE`, gaps between neighbouring feature
+#'   blocks are replaced by schematic intron gaps.
+#' @param intron_width Width used for compressed introns. When `NULL`, ggexon
+#'   derives a width from the median feature width.
+#' @param intron_shape `"chevron"` for angled WormWeb-like connectors or
+#'   `"flat"` for straight intron lines.
+#' @param chevron_direction Direction for chevron introns, either `"up"` or
+#'   `"down"`.
+#' @param utr_height Relative height for UTR-like rows.
+#' @param cds_height Relative height for CDS rows. Exon rows also use this
+#'   height when no explicit UTR/CDS distinction is present.
+#' @param intron_peak Relative height of the chevron peak.
+#' @param arrow_width Width of the terminal strand-direction triangle. When
+#'   `NULL`, ggexon derives a width from the terminal exon block.
+#' @param inherit.aes If `FALSE`, overrides inherited aesthetics.
+#'
+#' @return A ggplot2 layer using `GeomExon2`.
+#' @export
+geom_exon2 <- function(mapping = NULL, data = NULL,
+                       stat = "identity", position = "identity",
+                       ..., na.rm = FALSE, show.legend = NA,
+                       transcripts_track_ratio = NULL, y_scale = NULL,
+                       exon_height = NULL, x_translation = NULL,
+                       subset = NULL, annotation_type = "exon",
+                       species = NULL, chr = NULL, breakdata = NULL,
+                       compress_introns = TRUE, intron_width = NULL,
+                       intron_shape = c("chevron", "flat"),
+                       chevron_direction = c("up", "down"),
+                       utr_height = 0.45, cds_height = 1,
+                       intron_peak = 0.35, arrow_width = NULL,
+                       inherit.aes = TRUE) {
+  intron_shape <- match.arg(intron_shape)
+  chevron_direction <- match.arg(chevron_direction)
+  params <- Filter(Negate(is.null), c(list(
+    ...,
+    na.rm = na.rm,
+    exon_height = exon_height,
+    y_scale = y_scale,
+    x_translation = x_translation,
+    subset = subset,
+    annotation_type = annotation_type,
+    species = species,
+    chr = chr,
+    breakdata = breakdata,
+    compress_introns = compress_introns,
+    intron_width = intron_width,
+    intron_shape = intron_shape,
+    chevron_direction = chevron_direction,
+    utr_height = utr_height,
+    cds_height = cds_height,
+    intron_peak = intron_peak,
+    arrow_width = arrow_width
+  )))
+  layer(
+    data = data,
+    mapping = mapping,
+    geom = GeomExon2,
+    stat = stat,
+    position = position,
+    show.legend = show.legend,
+    inherit.aes = inherit.aes,
+    layer_class = LayerSyn,
+    params = params
+  )
+}
+
+.prepare_exon2_data <- function(data,
+                                compress_introns = TRUE,
+                                intron_width = NULL,
+                                intron_shape = "chevron",
+                                chevron_direction = "up",
+                                utr_height = 0.45,
+                                cds_height = 1,
+                                intron_peak = 0.35,
+                                arrow_width = NULL) {
+  data$genomic_xmin <- data$xmin
+  data$genomic_xmax <- data$xmax
+
+  data <- data[order(data$track, data$transcripts, data$xmin, data$xmax), , drop = FALSE]
+  data <- dplyr::group_by(data, .data$track, .data$transcripts)
+  data <- dplyr::group_modify(data, function(.x, .y) {
+    .x <- .x[order(.x$xmin, .x$xmax), , drop = FALSE]
+    widths <- pmax(.x$xmax - .x$xmin, 1)
+    gaps <- pmax(.x$xmin[-1L] - .x$xmax[-nrow(.x)], 0)
+    gap_width <- intron_width %||% max(20, stats::median(widths, na.rm = TRUE) * 0.75)
+    drawn_gaps <- if (isTRUE(compress_introns)) {
+      rep(gap_width, length(gaps))
+    } else {
+      gaps
+    }
+    starts <- c(.x$xmin[1L], .x$xmin[1L] + cumsum(widths[-length(widths)] + drawn_gaps))
+    .x$xmin <- starts
+    .x$xmax <- starts + widths
+    .x
+  })
+  data <- dplyr::ungroup(data)
+
+  rel_height <- .exon2_relative_height(data$type, utr_height = utr_height, cds_height = cds_height)
+  data$y_middle <- (data$ymin + data$ymax) / 2
+  data$y_range <- data$y_range * rel_height
+  data$ymin <- data$y_middle - data$y_range / 2
+  data$ymax <- data$y_middle + data$y_range / 2
+  data$intron_shape <- intron_shape
+  data$chevron_direction <- chevron_direction
+  data$intron_peak <- intron_peak
+  data$arrow_width <- arrow_width %||% NA_real_
+  data
+}
+
+.exon2_relative_height <- function(type, utr_height = 0.45, cds_height = 1) {
+  type <- base::tolower(as.character(type))
+  ifelse(
+    grepl("utr|untranslated", type),
+    utr_height,
+    ifelse(type %in% c("cds", "coding"), cds_height, cds_height)
+  )
+}
+
+.exon2_intron_data <- function(data, shape = "chevron", direction = "up", peak = 0.35) {
+  if (nrow(data) == 0L) {
+    return(data.frame())
+  }
+
+  pieces <- list()
+  split_data <- split(data, interaction(data$PANEL, data$track, data$transcripts, drop = TRUE))
+  id <- 1L
+  for (one in split_data) {
+    one <- one[order(one$xmin, one$xmax), , drop = FALSE]
+    if (nrow(one) < 2L) {
+      next
+    }
+    for (i in seq_len(nrow(one) - 1L)) {
+      left <- one[i, , drop = FALSE]
+      right <- one[i + 1L, , drop = FALSE]
+      x1 <- left$xmax
+      x2 <- right$xmin
+      if (!is.finite(x1) || !is.finite(x2) || x2 <= x1) {
+        next
+      }
+      y <- left$y_middle
+      peak_sign <- if (identical(direction, "down")) -1 else 1
+      y_peak <- if (identical(shape, "chevron")) y + peak_sign * left$y_range * peak else y
+      pieces[[length(pieces) + 1L]] <- data.frame(
+        x = c(x1, (x1 + x2) / 2, x2),
+        y = c(y, y_peak, y),
+        group = id,
+        PANEL = left$PANEL,
+        colour = left$colour %||% "black",
+        linewidth = left$linewidth %||% 0.4,
+        linetype = left$linetype %||% 1,
+        alpha = left$alpha %||% NA_real_,
+        stringsAsFactors = FALSE
+      )
+      id <- id + 1L
+    }
+  }
+
+  if (length(pieces) == 0L) {
+    return(data.frame())
+  }
+  dplyr::bind_rows(pieces)
+}
+
+.exon2_arrow_data <- function(data) {
+  if (nrow(data) == 0L) {
+    return(data.frame())
+  }
+
+  pieces <- list()
+  split_data <- split(data, interaction(data$PANEL, data$track, data$transcripts, drop = TRUE))
+  id <- 1L
+  for (one in split_data) {
+    one <- one[order(one$xmin, one$xmax), , drop = FALSE]
+    if (nrow(one) == 0L) {
+      next
+    }
+
+    strand <- unique(as.character(one$strand))[1L]
+    if (is.na(strand) || !strand %in% c("+", "-")) {
+      next
+    }
+
+    terminal <- if (identical(strand, "-")) one[1L, , drop = FALSE] else one[nrow(one), , drop = FALSE]
+    width <- .exon2_arrow_width(terminal)
+
+    if (identical(strand, "-")) {
+      x <- c(terminal$xmin, terminal$xmin + width, terminal$xmin + width)
+    } else {
+      x <- c(terminal$xmax, terminal$xmax - width, terminal$xmax - width)
+    }
+    y <- c(terminal$y_middle, terminal$ymax, terminal$ymin)
+
+    pieces[[length(pieces) + 1L]] <- data.frame(
+      x = x,
+      y = y,
+      group = id,
+      PANEL = terminal$PANEL,
+      transcripts = terminal$transcripts,
+      colour = terminal$colour %||% terminal$fill %||% "black",
+      fill = terminal$fill %||% terminal$colour %||% "black",
+      linewidth = terminal$linewidth %||% 0,
+      linetype = terminal$linetype %||% 1,
+      alpha = terminal$alpha %||% NA_real_,
+      stringsAsFactors = FALSE
+    )
+    id <- id + 1L
+  }
+
+  if (length(pieces) == 0L) {
+    return(data.frame())
+  }
+  dplyr::bind_rows(pieces)
+}
+
+.exon2_trim_terminal_rects <- function(data) {
+  if (nrow(data) == 0L) {
+    return(data)
+  }
+
+  out <- data
+  split_indices <- split(seq_len(nrow(out)), interaction(out$PANEL, out$track, out$transcripts, drop = TRUE))
+  for (idx in split_indices) {
+    ordered_idx <- idx[order(out$xmin[idx], out$xmax[idx])]
+    one <- out[ordered_idx, , drop = FALSE]
+    strand <- unique(as.character(one$strand))[1L]
+    if (is.na(strand) || !strand %in% c("+", "-")) {
+      next
+    }
+
+    terminal_row <- if (identical(strand, "-")) {
+      ordered_idx[1L]
+    } else {
+      ordered_idx[length(ordered_idx)]
+    }
+    terminal <- out[terminal_row, , drop = FALSE]
+    width <- .exon2_arrow_width(terminal)
+
+    if (identical(strand, "-")) {
+      out$xmin[terminal_row] <- min(out$xmax[terminal_row], out$xmin[terminal_row] + width)
+    } else {
+      out$xmax[terminal_row] <- max(out$xmin[terminal_row], out$xmax[terminal_row] - width)
+    }
+  }
+
+  out
+}
+
+.exon2_arrow_width <- function(terminal) {
+  width <- terminal$arrow_width
+  block_width <- max(terminal$xmax - terminal$xmin, 1)
+  if (!is.finite(width) || width <= 0) {
+    return(block_width * 0.35)
+  }
+  min(width, block_width)
+}
