@@ -699,10 +699,29 @@ syn_layout_panels <- function(x) {
   hit
 }
 
-.infer_panel_xlim_chr <- function(x, panels, hit) {
+.resolve_panel_xlim_chr <- function(x, panels, hit, xlim_chr = NULL) {
   panel_rows <- panels[hit, , drop = FALSE]
   if (nrow(panel_rows) != 1L) {
     stop("Expected exactly one panel row.", call. = FALSE)
+  }
+
+  if (!is.null(xlim_chr)) {
+    if (!is.character(xlim_chr) || length(xlim_chr) != 1L || is.na(xlim_chr) || !nzchar(xlim_chr)) {
+      stop("`xlim_chr` must be one non-empty character value.", call. = FALSE)
+    }
+    if (methods::is(x, "SynSpecies")) {
+      species_name <- .layout_panel_species_name(panel_rows)
+      if (!species_name %in% names(individuals(x))) {
+        stop(
+          "Cannot resolve `xlim_chr` because panel species ", species_name,
+          " is not attached to this SynSpecies object.",
+          call. = FALSE
+        )
+      }
+      individual <- individuals(x)[[species_name]]
+      return(resolve_syn_seqname(individual, xlim_chr))
+    }
+    return(xlim_chr)
   }
 
   existing_chr <- panel_rows$xlim_chr[[1L]] %||% NA_character_
@@ -751,10 +770,13 @@ syn_layout_panels <- function(x) {
 #' @param x A [`SynSpecies`] or [`SynLayout`] object.
 #' @param individual Annotation-panel individual name from the layout table.
 #' @param xlim Numeric length-2 vector giving panel x limits.
+#' @param xlim_chr Optional chromosome / seqname for the panel window. Use this
+#'   when the individual spans multiple seqnames and chromosome inference would
+#'   otherwise be ambiguous.
 #'
 #' @return An updated object of the same class as `x`.
 #' @export
-set_panel_xlim <- function(x, individual, xlim) {
+set_panel_xlim <- function(x, individual, xlim, xlim_chr = NULL) {
   if (!(methods::is(x, "SynSpecies") || methods::is(x, "SynLayout"))) {
     stop("`set_panel_xlim()` expects a SynSpecies or SynLayout object.", call. = FALSE)
   }
@@ -769,7 +791,7 @@ set_panel_xlim <- function(x, individual, xlim) {
 
   panels <- .ensure_syn_layout_xlim_cols(syn_layout_panels(layout))
   hit <- .resolve_layout_individual_panel(panels, individual)
-  inferred_chr <- .infer_panel_xlim_chr(x, panels, hit)
+  inferred_chr <- .resolve_panel_xlim_chr(x, panels, hit, xlim_chr = xlim_chr)
   panels$xlim_chr[[hit]] <- inferred_chr
   panels$xlim_min[[hit]] <- min(xlim)
   panels$xlim_max[[hit]] <- max(xlim)

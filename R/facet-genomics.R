@@ -199,6 +199,11 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
         # annotation panels and link panels stay in the intended chain order.
         stored_layout <- species_layout(params$plot_data)
         if (!is.null(stored_layout)) {
+          stored_layout <- .filter_stored_syn_layout(
+            stored_layout,
+            annotation_species = .annotation_species_from_layers(data),
+            link_pairs = .link_pairs_from_layers(data)
+          )
           return(
             syn_layout_panels(
               .finalize_synspecies_layout_scales(
@@ -514,6 +519,76 @@ synspecies_chain_layout <- function(x,
   })
 
   dplyr::bind_rows(Filter(Negate(is.null), pair_rows))
+}
+
+.filter_stored_syn_layout <- function(layout,
+                                      annotation_species = NULL,
+                                      link_pairs = NULL) {
+  layout_obj <- as_syn_layout(layout)
+  panels <- syn_layout_panels(layout_obj)
+  if (!is.data.frame(panels) || nrow(panels) == 0L) {
+    return(layout_obj)
+  }
+
+  annotation_species <- unique(as.character(annotation_species %||% character()))
+  annotation_species <- annotation_species[!is.na(annotation_species) & nzchar(annotation_species)]
+
+  link_pairs <- link_pairs %||% data.frame()
+  selected_species <- unique(c(
+    annotation_species,
+    as.character(link_pairs$tspecies %||% character()),
+    as.character(link_pairs$qspecies %||% character())
+  ))
+  selected_species <- selected_species[!is.na(selected_species) & nzchar(selected_species)]
+
+  if (length(selected_species) == 0L) {
+    return(layout_obj)
+  }
+
+  panel_species <- if ("species" %in% names(panels)) {
+    as.character(panels$species)
+  } else {
+    as.character(panels$track)
+  }
+  panel_type <- if ("panel_type" %in% names(panels)) {
+    as.character(panels$panel_type)
+  } else {
+    rep("annotation", nrow(panels))
+  }
+
+  keep_annotation <- panel_type != "link" &
+    !is.na(panel_species) &
+    panel_species %in% selected_species
+
+  link_tracks <- unique(as.character(link_pairs$track %||% character()))
+  link_tracks <- link_tracks[!is.na(link_tracks) & nzchar(link_tracks)]
+  keep_link <- panel_type == "link" &
+    (
+      (("track" %in% names(panels)) & (as.character(panels$track) %in% link_tracks)) |
+      (
+        ("tspecies" %in% names(panels)) &
+        ("qspecies" %in% names(panels)) &
+        as.character(panels$tspecies) %in% selected_species &
+        as.character(panels$qspecies) %in% selected_species
+      )
+    )
+
+  keep <- keep_annotation | keep_link
+  filtered <- panels[keep, , drop = FALSE]
+  if (nrow(filtered) == 0L) {
+    return(layout_obj)
+  }
+
+  rownames(filtered) <- NULL
+  SynLayout(
+    panels = filtered,
+    layout_type = layout_obj@layout_type,
+    free = layout_obj@free,
+    exon_height = layout_obj@exon_height,
+    y_scale = layout_obj@y_scale,
+    x_translation = layout_obj@x_translation,
+    metadata = layout_obj@metadata
+  )
 }
 
 .synspecies_chain_layout_from_layers <- function(x,

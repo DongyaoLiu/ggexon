@@ -64,6 +64,7 @@ Collate:
     'grob-null.R'
     'layout.R'
     'odgi.R'
+    'panel-windows.R'
     'plot-build.R'
     'subsetting-overview.R'
     'syn-layer.R'

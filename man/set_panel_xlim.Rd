@@ -4,7 +4,7 @@
 \alias{set_panel_xlim}
 \title{Set a panel-specific x window on a stored Syn layout}
 \usage{
-set_panel_xlim(x, individual, xlim)
+set_panel_xlim(x, individual, xlim, xlim_chr = NULL)
 }
 \arguments{
 \item{x}{A \code{\link{SynSpecies}} or \code{\link{SynLayout}} object.}
@@ -12,6 +12,10 @@ set_panel_xlim(x, individual, xlim)
 \item{individual}{Annotation-panel individual name from the layout table.}
 
 \item{xlim}{Numeric length-2 vector giving panel x limits.}
+
+\item{xlim_chr}{Optional chromosome / seqname for the panel window. Use this
+when the individual spans multiple seqnames and chromosome inference would
+otherwise be ambiguous.}
 }
 \value{
 An updated object of the same class as \code{x}.

@@ -28,6 +28,39 @@ as_standard_ggplot_built <- function(build) {
   )
 }
 
+apply_panel_xlim_to_trained_scales <- function(layout) {
+  layout_df <- layout$layout %||% NULL
+  panel_scales_x <- layout$panel_scales_x %||% NULL
+  if (!is.data.frame(layout_df) || is.null(panel_scales_x) || length(panel_scales_x) == 0L) {
+    return(layout)
+  }
+  required_cols <- c("panel_type", "SCALE_X", "xlim_min", "xlim_max")
+  if (!all(required_cols %in% names(layout_df))) {
+    return(layout)
+  }
+
+  annotation_rows <- layout_df$panel_type == "annotation" &
+    !is.na(layout_df$xlim_min) &
+    !is.na(layout_df$xlim_max)
+  if (!any(annotation_rows)) {
+    return(layout)
+  }
+
+  for (i in which(annotation_rows)) {
+    scale_id <- as.integer(layout_df$SCALE_X[[i]])
+    if (is.na(scale_id) || scale_id < 1L || scale_id > length(panel_scales_x)) {
+      next
+    }
+    panel_scales_x[[scale_id]]$range$range <- c(
+      as.numeric(layout_df$xlim_min[[i]]),
+      as.numeric(layout_df$xlim_max[[i]])
+    )
+  }
+
+  layout$panel_scales_x <- panel_scales_x
+  layout
+}
+
 #' @export
 ggplot_build.ggexon <- function(plot, ...) {
   as_standard_ggplot_built(ggexon_build(plot, ...))
@@ -107,6 +140,7 @@ build_ggexon <- S7::method(ggexon_build, class_ggexon) <- function(plot, ...) {
     # init ScaleContinuousPosition for each panel and train position and stored
     # in the range property of ScaleContinuousPosition
     layout$train_position(data, scale_x(), scale_y())
+    layout <- apply_panel_xlim_to_trained_scales(layout)
     data <- layout$map_position(data)
     data <- .expose_data(data)
 
@@ -131,6 +165,7 @@ build_ggexon <- S7::method(ggexon_build, class_ggexon) <- function(plot, ...) {
     data <- .ignore_data(data)
     layout$reset_scales()
     layout$train_position(data, scale_x(), scale_y())
+    layout <- apply_panel_xlim_to_trained_scales(layout)
     layout$setup_panel_params()
     data <- layout$map_position(data)
 
