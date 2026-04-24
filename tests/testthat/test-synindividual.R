@@ -116,6 +116,33 @@ test_that("SynIndividual accepts multiple annotation files and merges them on lo
   expect_true(all(c("geneA", "geneB") %in% as.character(S4Vectors::mcols(gr)$gene_name)))
 })
 
+test_that("load_annotation can target a stored annotation layer through SynIndividual", {
+  annotation_path <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+
+  x <- SynIndividual(
+    annotation_file = annotation_path,
+    genome_file = genome_waiver(),
+    id = "XZ1516"
+  )
+  alt_annotation <- SynFeatureAnnotation(
+    name = "alt",
+    annotation_file = annotation_path
+  )
+  x <- add_annotation(x, alt_annotation, set_active = FALSE)
+
+  expect_null(annotation_data(get_annotation(x, "alt")))
+
+  loaded <- load_annotation(x, annotation = "alt")
+
+  expect_s4_class(loaded, "SynIndividual")
+  expect_s4_class(annotation_data(get_annotation(loaded, "alt")), "GRanges")
+  expect_identical(active_feature_annotation(loaded), "default")
+})
+
 test_that("query_features combines indexed windows across multiple annotation files", {
   skip_if_not_installed("Rsamtools")
 

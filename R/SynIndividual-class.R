@@ -395,62 +395,78 @@ check_syn_files <- function(genome_file, annotation_file) {
 #' left unchanged.
 #'
 #' @param x A `SynIndividual`, `SynFeatureAnnotation`, or `SynSpecies` object.
+#' @param annotation Optional annotation-layer name when `x` is a
+#'   `SynIndividual` or `SynSpecies`. Defaults to the active feature annotation
+#'   for the selected individual.
+#' @param individual Optional individual name when `x` is a `SynSpecies`. When
+#'   omitted, all stored individuals are updated.
+#'
+#' @details
+#' This is an S4 generic that dispatches on the class of `x`.
 #'
 #' @return An updated object of the same class as `x`.
+#'
+#' @examples
+#' ann_path <- system.file(
+#'   "extdata",
+#'   "caenorhabditis_XZ1516.gff3",
+#'   package = "ggexon"
+#' )
+#'
+#' ann <- SynFeatureAnnotation(name = "default", annotation_file = ann_path)
+#' ann <- load_annotation(ann)
+#'
+#' ind <- SynIndividual(
+#'   annotation_file = ann_path,
+#'   genome_file = genome_waiver(),
+#'   id = "XZ1516"
+#' )
+#' ind <- load_annotation(ind)
+#'
+#' sp <- SynSpecies(name = "worms") |> add_individual(ind)
+#' sp <- load_annotation(sp)
+#'
 #' @export
-load_annotation <- function(x) {
-  if (methods::is(x, "SynAnnotation")) {
-    if (!methods::is(x, "SynFeatureAnnotation")) {
-      stop(
-        "`load_annotation()` currently supports SynFeatureAnnotation objects.",
-        call. = FALSE
-      )
-    }
-    if (!is.null(annotation_data(x))) {
-      return(x)
-    }
-    gr <- .import_all_annotation_files(x)
-    annotation_data(x) <- .normalize_annotation(gr)
-    x@base_annotation <- annotation_data(x)
-    x@loaded <- TRUE
+setGeneric("load_annotation", function(x, annotation = NULL, individual = NULL) {
+  standardGeneric("load_annotation")
+})
+
+setMethod("load_annotation", "SynFeatureAnnotation", function(x, annotation = NULL, individual = NULL) {
+  if (!is.null(annotation_data(x))) {
     return(x)
   }
+  gr <- .import_all_annotation_files(x)
+  annotation_data(x) <- .normalize_annotation(gr)
+  x@base_annotation <- annotation_data(x)
+  x@loaded <- TRUE
+  x
+})
 
-  if (methods::is(x, "SynSpecies")) {
-    inds <- individuals(x)
-    if (length(inds) == 0L) {
-      return(x)
-    }
+setMethod("load_annotation", "SynAnnotation", function(x, annotation = NULL, individual = NULL) {
+  stop(
+    "`load_annotation()` currently supports SynFeatureAnnotation objects.",
+    call. = FALSE
+  )
+})
 
-    inds <- lapply(inds, load_annotation)
-    x@individuals <- inds
-    validObject(x)
-    return(x)
-  }
-
-  if (!methods::is(x, "SynIndividual")) {
-    stop(
-      "`load_annotation()` expects a SynIndividual, SynFeatureAnnotation, or SynSpecies object.",
-      call. = FALSE
-    )
-  }
-  active_name <- active_feature_annotation(x)
-  ann <- get_annotation(x, active_name)
+setMethod("load_annotation", "SynIndividual", function(x, annotation = NULL, individual = NULL) {
+  ann_name <- annotation %||% active_feature_annotation(x)
+  ann <- get_annotation(x, ann_name)
   ann <- load_annotation(ann)
-  x <- add_annotation(x, ann, set_active = TRUE)
+  x <- add_annotation(x, ann, set_active = identical(ann_name, active_feature_annotation(x)))
 
-  ann <- get_annotation(x, active_name)
-  annotation_data(x) <- annotation_data(ann)
-  nucleotide_seq(x) <- nucleotide_seq(ann)
-  protein_seq(x) <- protein_seq(ann)
-  feature_index(x) <- feature_index(ann)
-  seqinfo(x) <- if (!is.null(annotation_data(ann))) {
-    GenomeInfoDb::seqinfo(annotation_data(ann))
+  active_ann <- get_annotation(x, active_feature_annotation(x))
+  annotation_data(x) <- annotation_data(active_ann)
+  nucleotide_seq(x) <- nucleotide_seq(active_ann)
+  protein_seq(x) <- protein_seq(active_ann)
+  feature_index(x) <- feature_index(active_ann)
+  seqinfo(x) <- if (!is.null(annotation_data(active_ann))) {
+    GenomeInfoDb::seqinfo(annotation_data(active_ann))
   } else {
     NULL
   }
   x
-}
+})
 
 .resolve_seqname_value <- function(chr, available, label = "annotation") {
   if (is.null(chr)) {
@@ -1139,17 +1155,57 @@ query_features <- function(x,
 #' @param coords Optional coordinate string in the form
 #'   `"V_RagTag:21559983-21620009"`. Use either `coords` or `chr`/`start`/`end`.
 #'
+#' @details
+#' This is an S4 generic that dispatches on the class of `x`.
+#'
 #' @return
 #' Returns an object of the same top-level class supplied to `x`: a
 #' `SynFeatureAnnotation`, updated `SynIndividual`, or updated `SynSpecies`.
+#'
+#' @examples
+#' ann_path <- system.file(
+#'   "extdata",
+#'   "caenorhabditis_XZ1516.gff3",
+#'   package = "ggexon"
+#' )
+#' ind <- SynIndividual(
+#'   annotation_file = ann_path,
+#'   genome_file = genome_waiver(),
+#'   id = "XZ1516"
+#' ) |>
+#'   load_annotation()
+#'
+#' gr <- annotation_data(ind)
+#' chr <- as.character(GenomeInfoDb::seqnames(gr))[[1L]]
+#' start <- IRanges::start(gr)[[1L]]
+#' end <- IRanges::end(gr)[[1L]]
+#'
+#' ann_view <- subset_feature_annotation(
+#'   get_annotation(ind, "default"),
+#'   chr = chr,
+#'   start = start,
+#'   end = end
+#' )
+#' ind_view <- subset_feature_annotation(ind, chr = chr, start = start, end = end)
+#'
 #' @export
-subset_feature_annotation <- function(x,
-                                      annotation = NULL,
-                                      individual = NULL,
-                                      chr = NULL,
-                                      start = NULL,
-                                      end = NULL,
-                                      coords = NULL) {
+setGeneric("subset_feature_annotation", function(x,
+                                                 annotation = NULL,
+                                                 individual = NULL,
+                                                 chr = NULL,
+                                                 start = NULL,
+                                                 end = NULL,
+                                                 coords = NULL) {
+  standardGeneric("subset_feature_annotation")
+})
+
+.subset_feature_annotation_impl <- function(x,
+                                           annotation = NULL,
+                                           individual = NULL,
+                                           chr = NULL,
+                                           start = NULL,
+                                           end = NULL,
+                                           coords = NULL) {
   owner <- .resolve_subset_feature_annotation_input(
     x = x,
     annotation = annotation,
@@ -1225,6 +1281,26 @@ subset_feature_annotation <- function(x,
   ann
 }
 
+setMethod("subset_feature_annotation", "SynFeatureAnnotation", function(x,
+                                                                        annotation = NULL,
+                                                                        individual = NULL,
+                                                                        chr = NULL,
+                                                                        start = NULL,
+                                                                        end = NULL,
+                                                                        coords = NULL) {
+  .subset_feature_annotation_impl(x, annotation, individual, chr, start, end, coords)
+})
+
+setMethod("subset_feature_annotation", "SynIndividual", function(x,
+                                                                 annotation = NULL,
+                                                                 individual = NULL,
+                                                                 chr = NULL,
+                                                                 start = NULL,
+                                                                 end = NULL,
+                                                                 coords = NULL) {
+  .subset_feature_annotation_impl(x, annotation, individual, chr, start, end, coords)
+})
+
 .resolve_subset_feature_annotation_input <- function(x,
                                                      annotation = NULL,
                                                      individual = NULL) {
@@ -1287,20 +1363,51 @@ subset_feature_annotation <- function(x,
 #' @param annotations One of `"all_feature"` or `"active"`. Controls whether
 #'   all feature annotation layers are trimmed, or only the active one.
 #'
+#' @details
+#' This is an S4 generic that dispatches on the class of `x`.
+#'
 #' @return A `SynIndividual` object.
+#'
+#' @examples
+#' ann_path <- system.file(
+#'   "extdata",
+#'   "caenorhabditis_XZ1516.gff3",
+#'   package = "ggexon"
+#' )
+#' ind <- SynIndividual(
+#'   annotation_file = ann_path,
+#'   genome_file = genome_waiver(),
+#'   id = "XZ1516"
+#' ) |>
+#'   load_annotation()
+#'
+#' gr <- annotation_data(ind)
+#' chr <- as.character(GenomeInfoDb::seqnames(gr))[[1L]]
+#' start <- IRanges::start(gr)[[1L]]
+#' end <- IRanges::end(gr)[[1L]]
+#'
+#' ind_window <- subset_individual(ind, chr = chr, start = start, end = end)
+#'
 #' @export
-subset_individual <- function(x,
-                              individual = NULL,
-                              chr = NULL,
-                              start = NULL,
-                              end = NULL,
-                              coords = NULL,
-                              annotations = c("all_feature", "active")) {
+setGeneric("subset_individual", function(x,
+                                         individual = NULL,
+                                         chr = NULL,
+                                         start = NULL,
+                                         end = NULL,
+                                         coords = NULL,
+                                         annotations = c("all_feature", "active")) {
+  standardGeneric("subset_individual")
+})
+
+.subset_individual_impl <- function(x,
+                                    individual = NULL,
+                                    chr = NULL,
+                                    start = NULL,
+                                    end = NULL,
+                                    coords = NULL,
+                                    annotations = c("all_feature", "active")) {
   if (methods::is(x, "SynSpecies")) {
     x <- resolve_syn_individual(x, species = individual)
-  }
-  if (!methods::is(x, "SynIndividual")) {
-    stop("`subset_individual()` expects a SynIndividual or SynSpecies object.", call. = FALSE)
   }
 
   args <- .resolve_subset_window_args(
@@ -1358,6 +1465,17 @@ subset_individual <- function(x,
   validObject(out)
   out
 }
+
+setMethod("subset_individual", "SynIndividual", function(x,
+                                                         individual = NULL,
+                                                         chr = NULL,
+                                                         start = NULL,
+                                                         end = NULL,
+                                                         coords = NULL,
+                                                         annotations = c("all_feature", "active")) {
+  .subset_individual_impl(x, individual, chr, start, end, coords, annotations)
+})
+
 
 #' Extract CDS nucleotide sequences
 #'

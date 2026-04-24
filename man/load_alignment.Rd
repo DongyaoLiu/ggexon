@@ -4,7 +4,7 @@
 \alias{load_alignment}
 \title{Load alignment data into Syn-aware alignment objects}
 \usage{
-load_alignment(x, odgi = NULL, python = NULL, more = NULL)
+load_alignment(x, odgi = NULL, python = NULL, more = NULL, alignment = NULL)
 }
 \arguments{
 \item{x}{A \code{\link{SynPairAlignment}}, \code{\link{SynMultiAlignment}}, or \code{\link{SynSpecies}}
@@ -21,6 +21,9 @@ ODGI multiple alignments from raw \code{.og} graph files.}
 block before caching the parsed data. When \code{NULL}, preserve any existing
 cached PSL detail level and default unloaded PSL alignments to the coarse
 one-row-per-record representation.}
+
+\item{alignment}{Optional stored alignment name when \code{x} is a \code{SynSpecies}.
+When omitted, all stored pairwise and multiple alignments are loaded.}
 }
 \value{
 An updated object of the same class as \code{x}.
@@ -40,4 +43,16 @@ PSL-backed \code{\link{SynPairAlignment}} objects, repeated calls to
 \code{load_alignment()} with different explicit \code{more} values will replace the
 cached data so the in-memory representation matches the requested detail
 level, while \code{more = NULL} preserves any existing cached PSL mode.
+
+This is an S4 generic that dispatches on the class of \code{x}.
+}
+\examples{
+paf_path <- system.file("extdata", "V_alginment.paf", package = "ggexon")
+pair <- SynPairAlignment(
+  name = "XZ1516_vs_N2",
+  query_individual = "XZ1516",
+  target_individual = "N2",
+  file = paf_path
+)
+pair <- load_alignment(pair)
 }

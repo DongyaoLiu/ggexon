@@ -41,3 +41,26 @@ to the requested genomic window. By default all attached
 layers remain attached unchanged. Object-level derived caches are cleared so
 the result is ready to use as a clean windowed view.
 }
+\details{
+This is an S4 generic that dispatches on the class of \code{x}.
+}
+\examples{
+ann_path <- system.file(
+  "extdata",
+  "caenorhabditis_XZ1516.gff3",
+  package = "ggexon"
+)
+ind <- SynIndividual(
+  annotation_file = ann_path,
+  genome_file = genome_waiver(),
+  id = "XZ1516"
+) |>
+  load_annotation()
+
+gr <- annotation_data(ind)
+chr <- as.character(GenomeInfoDb::seqnames(gr))[[1L]]
+start <- IRanges::start(gr)[[1L]]
+end <- IRanges::end(gr)[[1L]]
+
+ind_window <- subset_individual(ind, chr = chr, start = start, end = end)
+}

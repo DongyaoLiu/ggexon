@@ -10,6 +10,211 @@ comparative and track-level data. It was developed while visualizing the
 The goal is simple: if you already think in `ggplot2`, you should not need to
 learn a completely new plotting language just because your x-axis is a genome.
 
+## S4 Verb Families
+
+`ggexon` is not only a collection of plotting geoms. It is also an S4 object
+system with verb families that follow one shared rule: the same high-level verb
+should work on the layer object itself and on larger containers that hold that
+layer.
+
+Two families matter most:
+
+- `load_*()` materializes data into a Syn object while preserving the top-level
+  class of the input.
+- `subset_*()` trims a Syn object to a genomic or alignment window and, in most
+  cases, also preserves the top-level class of the input.
+
+This means you can think in terms of biological intent rather than class
+plumbing. If you want to load an annotation layer, you can call
+`load_annotation()` on a `SynFeatureAnnotation`, a `SynIndividual`, or a
+`SynSpecies`. If you want to subset a feature annotation, you can call
+`subset_feature_annotation()` on the annotation itself, on the individual that
+contains it, or on the species-level container that contains that individual.
+
+The complementary rule is that extractor helpers such as
+`pairwise_alignment_data()` still return tabular data, while object verbs such
+as `subset_pairwise_alignment()` now return updated Syn objects. In other
+words:
+
+- `*_data()` answers "give me the rows"
+- `load_*()` answers "load this into the object"
+- `subset_*()` answers "keep this window inside the object"
+
+This separation is important because it lets README examples, interactive
+analysis, and plotting code all use the same grammar without repeatedly
+unpacking and repacking intermediate objects.
+
+## Generic Tutorial
+
+Below are the most important generic-dispatch patterns.
+
+### 1. `load_annotation()` works at three levels
+
+```r
+ann <- SynFeatureAnnotation(
+  name = "default",
+  annotation_file = "XZ1516.gff3"
+)
+ann <- load_annotation(ann)
+
+ind <- SynIndividual(
+  annotation_file = "XZ1516.gff3",
+  genome_file = genome_waiver(),
+  id = "XZ1516"
+)
+ind <- load_annotation(ind)
+
+sp <- SynSpecies(name = "worms") |>
+  add_individual(ind)
+sp <- load_annotation(sp)
+```
+
+Use `annotation =` and `individual =` when you want to target a contained
+object through its parent container:
+
+```r
+sp <- load_annotation(
+  sp,
+  individual = "XZ1516",
+  annotation = "default"
+)
+```
+
+### 2. `subset_feature_annotation()` keeps the same outer shape
+
+```r
+ann_small <- subset_feature_annotation(
+  ann,
+  chr = "V_RagTag",
+  start = 21574445,
+  end = 21584356
+)
+```
+
+The same verb can be applied to a `SynIndividual`:
+
+```r
+ind_small <- subset_feature_annotation(
+  ind,
+  chr = "V_RagTag",
+  start = 21574445,
+  end = 21584356
+)
+```
+
+Or to a `SynSpecies` when you also specify which individual to traverse:
+
+```r
+sp_small <- subset_feature_annotation(
+  sp,
+  individual = "XZ1516",
+  chr = "V_RagTag",
+  start = 21574445,
+  end = 21584356
+)
+```
+
+The return type matches the input:
+
+- `SynFeatureAnnotation` in, `SynFeatureAnnotation` out
+- `SynIndividual` in, `SynIndividual` out
+- `SynSpecies` in, `SynSpecies` out
+
+### 3. `subset_individual()` and `subset_species()` are container verbs
+
+If you already know you want an individual back, use `subset_individual()`:
+
+```r
+ind_window <- subset_individual(
+  ind,
+  chr = "V_RagTag",
+  start = 21574445,
+  end = 21584356
+)
+```
+
+If the input is a `SynSpecies`, the same generic can resolve the contained
+individual first:
+
+```r
+ind_window <- subset_individual(
+  sp,
+  individual = "XZ1516",
+  chr = "V_RagTag",
+  start = 21574445,
+  end = 21584356
+)
+```
+
+If you want to keep the whole species object and trim one or more individuals
+inside it, use `subset_species()`:
+
+```r
+sp_window <- subset_species(
+  sp,
+  coords = c("XZ1516#V_RagTag:21574445-21584356")
+)
+```
+
+### 4. Pairwise alignments now follow the same object grammar
+
+Use `pairwise_alignment_data()` when you want extracted link rows:
+
+```r
+paf <- pairwise_alignment_data(
+  sp,
+  alignment = "XZ1516_vs_N2",
+  subset = c(
+    XZ1516 = "RagTag_V:21574445-21584356",
+    N2 = "V:20456000-20465040"
+  )
+)
+```
+
+Use `subset_pairwise_alignment()` when you want to update the object itself:
+
+```r
+pair <- subset_pairwise_alignment(
+  pair,
+  subset = c(XZ1516 = "RagTag_V")
+)
+```
+
+Or update the stored alignment inside a `SynSpecies`:
+
+```r
+sp <- subset_pairwise_alignment(
+  sp,
+  alignment = "XZ1516_vs_N2",
+  subset = c(
+    XZ1516 = "RagTag_V:21574445-21584356",
+    N2 = "V:20456000-20465040"
+  )
+)
+```
+
+The same idea applies to filtering:
+
+```r
+sp <- filter_pairwise_alignment(
+  sp,
+  alignment = "XZ1516_vs_N2",
+  filter = 200
+)
+```
+
+### 5. A practical rule of thumb
+
+When deciding which helper to call:
+
+- use `load_*()` when the object knows where the file is, but has not yet
+  materialized the data
+- use `subset_*()` when you want a reusable windowed Syn object
+- use `*_data()` or `query_*()` when you only want extracted tables or ranges
+
+After those object verbs prepare the data, the plotting side still looks like
+ordinary `ggplot2` code:
+
 ```r
 library(ggexon)
 

@@ -1,4 +1,30 @@
 test_that("SynSpecies stores individuals and explicit alignment relationships", {
+  expect_true(methods::isGeneric("load_annotation"))
+  expect_true(methods::isGeneric("load_alignment"))
+  expect_true(methods::isGeneric("subset_feature_annotation"))
+  expect_true(methods::isGeneric("subset_individual"))
+  expect_true(methods::isGeneric("subset_species"))
+  expect_true(methods::isGeneric("subset_pairwise_alignment"))
+  expect_true(methods::isGeneric("filter_pairwise_alignment"))
+  expect_true(methods::isGeneric("subset_synspecies_window"))
+  expect_true(methods::hasMethod("load_annotation", "SynFeatureAnnotation"))
+  expect_true(methods::hasMethod("load_annotation", "SynIndividual"))
+  expect_true(methods::hasMethod("load_annotation", "SynSpecies"))
+  expect_true(methods::hasMethod("load_alignment", "SynPairAlignment"))
+  expect_true(methods::hasMethod("load_alignment", "SynMultiAlignment"))
+  expect_true(methods::hasMethod("load_alignment", "SynSpecies"))
+  expect_true(methods::hasMethod("subset_feature_annotation", "SynFeatureAnnotation"))
+  expect_true(methods::hasMethod("subset_feature_annotation", "SynIndividual"))
+  expect_true(methods::hasMethod("subset_feature_annotation", "SynSpecies"))
+  expect_true(methods::hasMethod("subset_individual", "SynIndividual"))
+  expect_true(methods::hasMethod("subset_individual", "SynSpecies"))
+  expect_true(methods::hasMethod("subset_species", "SynSpecies"))
+  expect_true(methods::hasMethod("subset_pairwise_alignment", "SynPairAlignment"))
+  expect_true(methods::hasMethod("subset_pairwise_alignment", "SynSpecies"))
+  expect_true(methods::hasMethod("filter_pairwise_alignment", "SynPairAlignment"))
+  expect_true(methods::hasMethod("filter_pairwise_alignment", "SynSpecies"))
+  expect_true(methods::hasMethod("subset_synspecies_window", "SynSpecies"))
+
   genome_path <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
   annotation_path <- system.file(
     "extdata",
@@ -201,6 +227,35 @@ test_that("load_annotation loads all stored individuals in a SynSpecies", {
   expect_true(all(vapply(individuals(loaded_sp), function(ind) methods::is(seqinfo(ind), "Seqinfo"), logical(1))))
 })
 
+test_that("load_annotation can target one annotation layer through SynSpecies", {
+  annotation_path <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+
+  x <- SynIndividual(
+    annotation_file = annotation_path,
+    genome_file = genome_waiver(),
+    id = "XZ1516"
+  )
+  x <- add_annotation(
+    x,
+    SynFeatureAnnotation(name = "alt", annotation_file = annotation_path),
+    set_active = FALSE
+  )
+
+  sp <- SynSpecies(name = "Caenorhabditis")
+  sp <- add_individual(sp, x)
+
+  loaded_sp <- load_annotation(sp, individual = "XZ1516", annotation = "alt")
+  loaded_ind <- individuals(loaded_sp)[["XZ1516"]]
+
+  expect_s4_class(loaded_sp, "SynSpecies")
+  expect_null(annotation_data(loaded_ind))
+  expect_s4_class(annotation_data(get_annotation(loaded_ind, "alt")), "GRanges")
+})
+
 test_that("load_alignment loads all stored alignments in a SynSpecies", {
   genome_path <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
   annotation_path <- system.file(
@@ -292,6 +347,86 @@ test_that("load_alignment loads all stored alignments in a SynSpecies", {
     multiple_alignment_data(loaded_sp, alignment = "XZ1516_N2_odgi"),
     odgi_tbl
   )
+})
+
+test_that("load_alignment can target one stored alignment through SynSpecies", {
+  genome_path <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
+  annotation_path <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+  n2_genome_path <- system.file(
+    "extdata",
+    "c_elegans.PRJNA13758.WS285.genomic.fa",
+    package = "ggexon"
+  )
+  n2_annotation_path <- system.file(
+    "extdata",
+    "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
+    package = "ggexon"
+  )
+  paf_path <- system.file("extdata", "V_alginment.paf", package = "ggexon")
+
+  odgi_tbl <- data.frame(
+    node_id = c(1L, 2L),
+    sequence = c("AC", "G"),
+    XZ1516_chromosome = c("RagTag_V", "RagTag_V"),
+    XZ1516_strand = c("+", "-"),
+    XZ1516_absolute_start = c(21559983L, 21559985L),
+    XZ1516_absolute_end = c(21559984L, 21559985L),
+    N2_chromosome = c("V", "V"),
+    N2_strand = c("+", "+"),
+    N2_absolute_start = c(20454111L, 20454113L),
+    N2_absolute_end = c(20454112L, 20454113L),
+    check.names = FALSE,
+    stringsAsFactors = FALSE
+  )
+  odgi_tsv <- tempfile(fileext = ".tsv")
+  utils::write.table(odgi_tbl, file = odgi_tsv, sep = "\t", quote = FALSE, row.names = FALSE)
+
+  sp <- SynSpecies(name = "Caenorhabditis")
+  sp <- add_individual(
+    sp,
+    test_syn_individual(
+      genome_file = genome_path,
+      annotation_file = annotation_path,
+      id = "XZ1516"
+    )
+  )
+  sp <- add_individual(
+    sp,
+    test_syn_individual(
+      genome_file = n2_genome_path,
+      annotation_file = n2_annotation_path,
+      id = "N2",
+      annotation_format = "gtf"
+    )
+  )
+  sp <- add_pairwise_alignment(
+    sp,
+    SynPairAlignment(
+      name = "XZ1516_vs_N2",
+      query_individual = "XZ1516",
+      target_individual = "N2",
+      file = paf_path
+    )
+  )
+  sp <- add_multiple_alignment(
+    sp,
+    SynMultiAlignment(
+      name = "XZ1516_N2_odgi",
+      individuals = c("XZ1516", "N2"),
+      file = odgi_tsv,
+      format = "odgi"
+    )
+  )
+
+  loaded_sp <- load_alignment(sp, alignment = "XZ1516_vs_N2")
+
+  expect_s4_class(loaded_sp, "SynSpecies")
+  expect_true(is.data.frame(pairwise_alignments(loaded_sp)[["XZ1516_vs_N2"]]@data))
+  expect_null(multiple_alignments(loaded_sp)[["XZ1516_N2_odgi"]]@data)
 })
 
 test_that("add_individuals_from_folder imports supported annotation files with filename ids", {
@@ -960,11 +1095,16 @@ test_that("subset_pairwise_alignment and filter_pairwise_alignment compose on a 
     filter = 200
   )
 
-  expect_true(nrow(subsetted) > 0L)
-  expect_true(nrow(filtered) > 0L)
-  expect_true(all(filtered$alen >= 200L))
-  expect_true(all(subsetted$qstart < 21584356L & subsetted$qend > 21574445L))
-  expect_true(all(subsetted$tstart < 20465040L & subsetted$tend > 20456000L))
+  subsetted_rows <- pairwise_alignments(subsetted)[["XZ1516_vs_N2"]]@data
+  filtered_rows <- pairwise_alignments(filtered)[["XZ1516_vs_N2"]]@data
+
+  expect_s4_class(subsetted, "SynSpecies")
+  expect_s4_class(filtered, "SynSpecies")
+  expect_true(nrow(subsetted_rows) > 0L)
+  expect_true(nrow(filtered_rows) > 0L)
+  expect_true(all(filtered_rows$alen >= 200L))
+  expect_true(all(subsetted_rows$qstart < 21584356L & subsetted_rows$qend > 21574445L))
+  expect_true(all(subsetted_rows$tstart < 20465040L & subsetted_rows$tend > 20456000L))
 })
 
 test_that("subset_pairwise_alignment accepts one-sided subsets", {
@@ -1020,9 +1160,12 @@ test_that("subset_pairwise_alignment accepts one-sided subsets", {
     subset = c(XZ1516 = "RagTag_V:21574445-21584356")
   )
 
-  expect_true(nrow(subsetted) > 0L)
-  expect_true(all(subsetted$qstart < 21584356L & subsetted$qend > 21574445L))
-  expect_identical(unique(as.character(subsetted$qchr)), "V_RagTag")
+  subsetted_rows <- pairwise_alignments(subsetted)[["XZ1516_vs_N2"]]@data
+
+  expect_s4_class(subsetted, "SynSpecies")
+  expect_true(nrow(subsetted_rows) > 0L)
+  expect_true(all(subsetted_rows$qstart < 21584356L & subsetted_rows$qend > 21574445L))
+  expect_identical(unique(as.character(subsetted_rows$qchr)), "V_RagTag")
 })
 
 test_that("subset_pairwise_alignment accepts chromosome-only subset strings", {
@@ -1078,8 +1221,10 @@ test_that("subset_pairwise_alignment accepts chromosome-only subset strings", {
     subset = c(XZ1516 = "RagTag_V")
   )
   all_rows <- pairwise_alignment_data(sp, alignment = "XZ1516_vs_N2")
+  subsetted_rows <- pairwise_alignments(subsetted)[["XZ1516_vs_N2"]]@data
 
-  expect_true(nrow(subsetted) > 0L)
-  expect_identical(nrow(subsetted), sum(as.character(all_rows$qchr) == "V_RagTag"))
-  expect_true(all(as.character(subsetted$qchr) == "V_RagTag"))
+  expect_s4_class(subsetted, "SynSpecies")
+  expect_true(nrow(subsetted_rows) > 0L)
+  expect_identical(nrow(subsetted_rows), sum(as.character(all_rows$qchr) == "V_RagTag"))
+  expect_true(all(as.character(subsetted_rows$qchr) == "V_RagTag"))
 })

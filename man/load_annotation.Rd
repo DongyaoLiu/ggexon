@@ -4,10 +4,17 @@
 \alias{load_annotation}
 \title{Load annotations into Syn-aware objects}
 \usage{
-load_annotation(x)
+load_annotation(x, annotation = NULL, individual = NULL)
 }
 \arguments{
 \item{x}{A \code{SynIndividual}, \code{SynFeatureAnnotation}, or \code{SynSpecies} object.}
+
+\item{annotation}{Optional annotation-layer name when \code{x} is a
+\code{SynIndividual} or \code{SynSpecies}. Defaults to the active feature annotation
+for the selected individual.}
+
+\item{individual}{Optional individual name when \code{x} is a \code{SynSpecies}. When
+omitted, all stored individuals are updated.}
 }
 \value{
 An updated object of the same class as \code{x}.
@@ -23,4 +30,26 @@ When \code{x} is a \code{\link{SynSpecies}}, the helper loads the active feature
 for every stored \code{\link{SynIndividual}} and returns an updated \code{SynSpecies}
 object. Pairwise alignments, multiple alignments, metadata, and layout are
 left unchanged.
+
+This is an S4 generic that dispatches on the class of \code{x}.
+}
+\examples{
+ann_path <- system.file(
+  "extdata",
+  "caenorhabditis_XZ1516.gff3",
+  package = "ggexon"
+)
+
+ann <- SynFeatureAnnotation(name = "default", annotation_file = ann_path)
+ann <- load_annotation(ann)
+
+ind <- SynIndividual(
+  annotation_file = ann_path,
+  genome_file = genome_waiver(),
+  id = "XZ1516"
+)
+ind <- load_annotation(ind)
+
+sp <- SynSpecies(name = "worms") |> add_individual(ind)
+sp <- load_annotation(sp)
 }

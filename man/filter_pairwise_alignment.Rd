@@ -14,8 +14,21 @@ filter_pairwise_alignment(x, filter = 200, alignment = NULL)
 \item{alignment}{Optional alignment name when \code{x} is a \code{SynSpecies}.}
 }
 \value{
-A filtered PAF-like \code{data.frame}.
+An updated \code{SynPairAlignment} or \code{SynSpecies} object.
 }
 \description{
 Filter a pairwise alignment by minimum PAF alignment length
+}
+\details{
+This is an S4 generic that dispatches on the class of \code{x}.
+}
+\examples{
+paf_path <- system.file("extdata", "V_alginment.paf", package = "ggexon")
+pair <- SynPairAlignment(
+  name = "XZ1516_vs_N2",
+  query_individual = "XZ1516",
+  target_individual = "N2",
+  file = paf_path
+)
+pair <- filter_pairwise_alignment(pair, filter = 200)
 }

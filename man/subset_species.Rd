@@ -26,3 +26,31 @@ feature annotation layers trimmed according to coordinate strings such as
 are left unchanged. Any stored \code{\link{SynLayout}} is cleared because the panel
 metadata may no longer match the new subsetted windows.
 }
+\details{
+This is an S4 generic that dispatches on the class of \code{x}.
+}
+\examples{
+ann_path <- system.file(
+  "extdata",
+  "caenorhabditis_XZ1516.gff3",
+  package = "ggexon"
+)
+ind <- SynIndividual(
+  annotation_file = ann_path,
+  genome_file = genome_waiver(),
+  id = "XZ1516"
+) |>
+  load_annotation()
+gr <- annotation_data(ind)
+coords <- paste0(
+  "XZ1516#",
+  as.character(GenomeInfoDb::seqnames(gr))[[1L]],
+  ":",
+  IRanges::start(gr)[[1L]],
+  "-",
+  IRanges::end(gr)[[1L]]
+)
+
+sp <- SynSpecies(name = "worms") |> add_individual(ind)
+sp_window <- subset_species(sp, coords = coords)
+}

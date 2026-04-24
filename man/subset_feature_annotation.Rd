@@ -41,3 +41,32 @@ active annotation and its base annotation are trimmed to the requested
 genomic interval. Patch history and derived caches are cleared so the
 returned object behaves as a self-contained view of the selected region.
 }
+\details{
+This is an S4 generic that dispatches on the class of \code{x}.
+}
+\examples{
+ann_path <- system.file(
+  "extdata",
+  "caenorhabditis_XZ1516.gff3",
+  package = "ggexon"
+)
+ind <- SynIndividual(
+  annotation_file = ann_path,
+  genome_file = genome_waiver(),
+  id = "XZ1516"
+) |>
+  load_annotation()
+
+gr <- annotation_data(ind)
+chr <- as.character(GenomeInfoDb::seqnames(gr))[[1L]]
+start <- IRanges::start(gr)[[1L]]
+end <- IRanges::end(gr)[[1L]]
+
+ann_view <- subset_feature_annotation(
+  get_annotation(ind, "default"),
+  chr = chr,
+  start = start,
+  end = end
+)
+ind_view <- subset_feature_annotation(ind, chr = chr, start = start, end = end)
+}

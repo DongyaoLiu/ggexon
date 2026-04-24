@@ -889,6 +889,46 @@ setReplaceMethod("species_layout", "SynSpecies", function(x, value) {
   x
 })
 
+setMethod("load_annotation", "SynSpecies", function(x, annotation = NULL, individual = NULL) {
+  if (!is.null(individual)) {
+    individual_obj <- resolve_syn_individual(x, species = individual)
+    updated <- load_annotation(individual_obj, annotation = annotation)
+    x@individuals[[syn_id(updated)]] <- updated
+    validObject(x)
+    return(x)
+  }
+
+  inds <- individuals(x)
+  if (length(inds) == 0L) {
+    return(x)
+  }
+
+  inds <- lapply(inds, load_annotation, annotation = annotation)
+  x@individuals <- inds
+  validObject(x)
+  x
+})
+
+setMethod("subset_feature_annotation", "SynSpecies", function(x,
+                                                              annotation = NULL,
+                                                              individual = NULL,
+                                                              chr = NULL,
+                                                              start = NULL,
+                                                              end = NULL,
+                                                              coords = NULL) {
+  .subset_feature_annotation_impl(x, annotation, individual, chr, start, end, coords)
+})
+
+setMethod("subset_individual", "SynSpecies", function(x,
+                                                      individual = NULL,
+                                                      chr = NULL,
+                                                      start = NULL,
+                                                      end = NULL,
+                                                      coords = NULL,
+                                                      annotations = c("all_feature", "active")) {
+  .subset_individual_impl(x, individual, chr, start, end, coords, annotations)
+})
+
 #' Compute and store the ggexon chain layout on a `SynSpecies`
 #'
 #' @param x A `SynSpecies` object.
@@ -922,15 +962,46 @@ store_chain_layout <- function(x,
 #' @param annotations One of `"all_feature"` or `"active"`. Passed through to
 #'   [subset_individual()].
 #'
+#' @details
+#' This is an S4 generic that dispatches on the class of `x`.
+#'
 #' @return A `SynSpecies` object.
+#'
+#' @examples
+#' ann_path <- system.file(
+#'   "extdata",
+#'   "caenorhabditis_XZ1516.gff3",
+#'   package = "ggexon"
+#' )
+#' ind <- SynIndividual(
+#'   annotation_file = ann_path,
+#'   genome_file = genome_waiver(),
+#'   id = "XZ1516"
+#' ) |>
+#'   load_annotation()
+#' gr <- annotation_data(ind)
+#' coords <- paste0(
+#'   "XZ1516#",
+#'   as.character(GenomeInfoDb::seqnames(gr))[[1L]],
+#'   ":",
+#'   IRanges::start(gr)[[1L]],
+#'   "-",
+#'   IRanges::end(gr)[[1L]]
+#' )
+#'
+#' sp <- SynSpecies(name = "worms") |> add_individual(ind)
+#' sp_window <- subset_species(sp, coords = coords)
+#'
 #' @export
-subset_species <- function(x,
-                           coords,
-                           annotations = c("all_feature", "active")) {
-  if (!methods::is(x, "SynSpecies")) {
-    stop("`subset_species()` expects a SynSpecies object.", call. = FALSE)
-  }
+setGeneric("subset_species", function(x,
+                                      coords,
+                                      annotations = c("all_feature", "active")) {
+  standardGeneric("subset_species")
+})
 
+setMethod("subset_species", "SynSpecies", function(x,
+                                                   coords,
+                                                   annotations = c("all_feature", "active")) {
   annotations <- match.arg(annotations)
   windows <- .parse_species_window_coords(coords)
   missing_species <- setdiff(names(windows), names(individuals(x)))
@@ -959,7 +1030,7 @@ subset_species <- function(x,
   out@layout <- NULL
   validObject(out)
   out
-}
+})
 
 #' Subset a pairwise alignment by query/target regions
 #'
@@ -971,11 +1042,40 @@ subset_species <- function(x,
 #'   `c(XZ1516 = "RagTag_V")`.
 #' @param alignment Optional alignment name when `x` is a `SynSpecies`.
 #'
-#' @return A filtered PAF-like `data.frame`.
+#' @details
+#' This is an S4 generic that dispatches on the class of `x`.
+#'
+#' @return An updated `SynPairAlignment` or `SynSpecies` object.
+#'
+#' @examples
+#' paf_path <- system.file("extdata", "V_alginment.paf", package = "ggexon")
+#' pair <- SynPairAlignment(
+#'   name = "XZ1516_vs_N2",
+#'   query_individual = "XZ1516",
+#'   target_individual = "N2",
+#'   file = paf_path
+#' )
+#' pair <- subset_pairwise_alignment(pair, subset = c(XZ1516 = "RagTag_V"))
+#'
 #' @export
-subset_pairwise_alignment <- function(x, subset, alignment = NULL) {
-  pairwise_alignment_data(x, alignment = alignment, subset = subset)
-}
+setGeneric("subset_pairwise_alignment", function(x, subset, alignment = NULL) {
+  standardGeneric("subset_pairwise_alignment")
+})
+
+setMethod("subset_pairwise_alignment", "SynPairAlignment", function(x, subset, alignment = NULL) {
+  x@data <- pairwise_alignment_data(x, subset = subset)
+  x@loaded <- TRUE
+  x@lazy <- FALSE
+  x
+})
+
+setMethod("subset_pairwise_alignment", "SynSpecies", function(x, subset, alignment = NULL) {
+  pair <- .resolve_pairwise_alignment_arg(x = x, alignment = alignment)
+  updated <- subset_pairwise_alignment(pair, subset = subset)
+  x@pairwise_alignments[[alignment_name(updated)]] <- updated
+  validObject(x)
+  x
+})
 
 #' Filter a pairwise alignment by minimum PAF alignment length
 #'
@@ -983,11 +1083,40 @@ subset_pairwise_alignment <- function(x, subset, alignment = NULL) {
 #' @param filter Minimum `alen` to keep.
 #' @param alignment Optional alignment name when `x` is a `SynSpecies`.
 #'
-#' @return A filtered PAF-like `data.frame`.
+#' @details
+#' This is an S4 generic that dispatches on the class of `x`.
+#'
+#' @return An updated `SynPairAlignment` or `SynSpecies` object.
+#'
+#' @examples
+#' paf_path <- system.file("extdata", "V_alginment.paf", package = "ggexon")
+#' pair <- SynPairAlignment(
+#'   name = "XZ1516_vs_N2",
+#'   query_individual = "XZ1516",
+#'   target_individual = "N2",
+#'   file = paf_path
+#' )
+#' pair <- filter_pairwise_alignment(pair, filter = 200)
+#'
 #' @export
-filter_pairwise_alignment <- function(x, filter = 200, alignment = NULL) {
-  pairwise_alignment_data(x, alignment = alignment, filter = filter)
-}
+setGeneric("filter_pairwise_alignment", function(x, filter = 200, alignment = NULL) {
+  standardGeneric("filter_pairwise_alignment")
+})
+
+setMethod("filter_pairwise_alignment", "SynPairAlignment", function(x, filter = 200, alignment = NULL) {
+  x@data <- pairwise_alignment_data(x, filter = filter)
+  x@loaded <- TRUE
+  x@lazy <- FALSE
+  x
+})
+
+setMethod("filter_pairwise_alignment", "SynSpecies", function(x, filter = 200, alignment = NULL) {
+  pair <- .resolve_pairwise_alignment_arg(x = x, alignment = alignment)
+  updated <- filter_pairwise_alignment(pair, filter = filter)
+  x@pairwise_alignments[[alignment_name(updated)]] <- updated
+  validObject(x)
+  x
+})
 
 #' Subset a comparative window from a `SynSpecies` object
 #'
@@ -1018,18 +1147,27 @@ filter_pairwise_alignment <- function(x, filter = 200, alignment = NULL) {
 #'
 #' @return A list with `windows`, `annotations`, and `links`.
 #' @export
-subset_synspecies_window <- function(x,
-                                     reference_species,
-                                     chr,
-                                     start,
-                                     end,
-                                     alignment = NULL,
-                                     selected_species = NULL,
-                                     filter_by_len = NULL,
-                                     max_target_gap = NULL) {
-  if (!methods::is(x, "SynSpecies")) {
-    stop("`subset_synspecies_window()` expects a SynSpecies object.", call. = FALSE)
-  }
+setGeneric("subset_synspecies_window", function(x,
+                                                reference_species,
+                                                chr,
+                                                start,
+                                                end,
+                                                alignment = NULL,
+                                                selected_species = NULL,
+                                                filter_by_len = NULL,
+                                                max_target_gap = NULL) {
+  standardGeneric("subset_synspecies_window")
+})
+
+setMethod("subset_synspecies_window", "SynSpecies", function(x,
+                                                             reference_species,
+                                                             chr,
+                                                             start,
+                                                             end,
+                                                             alignment = NULL,
+                                                             selected_species = NULL,
+                                                             filter_by_len = NULL,
+                                                             max_target_gap = NULL) {
   if (!reference_species %in% names(individuals(x))) {
     stop(
       "`reference_species` must be one of: ",
@@ -1171,7 +1309,7 @@ subset_synspecies_window <- function(x,
     annotations = annotations,
     links = cluster_hits
   )
-}
+})
 
 .subset_odgi_synspecies_window <- function(x,
                                           multi,
@@ -1825,72 +1963,130 @@ read_pairwise_psl <- function(path,
 #'   block before caching the parsed data. When `NULL`, preserve any existing
 #'   cached PSL detail level and default unloaded PSL alignments to the coarse
 #'   one-row-per-record representation.
+#' @param alignment Optional stored alignment name when `x` is a `SynSpecies`.
+#'   When omitted, all stored pairwise and multiple alignments are loaded.
+#'
+#' @details
+#' This is an S4 generic that dispatches on the class of `x`.
 #'
 #' @return An updated object of the same class as `x`.
+#'
+#' @examples
+#' paf_path <- system.file("extdata", "V_alginment.paf", package = "ggexon")
+#' pair <- SynPairAlignment(
+#'   name = "XZ1516_vs_N2",
+#'   query_individual = "XZ1516",
+#'   target_individual = "N2",
+#'   file = paf_path
+#' )
+#' pair <- load_alignment(pair)
+#'
 #' @export
-load_alignment <- function(x, odgi = NULL, python = NULL, more = NULL) {
-  if (methods::is(x, "SynPairAlignment")) {
-    if (identical(alignment_format(x), "psl")) {
-      psl_more <- more
-      if (is.null(psl_more)) {
-        psl_more <- if (is.null(x@data)) FALSE else isTRUE(x@metadata$psl_more)
-      }
-      reload_psl <- is.null(x@data) ||
-        !identical(isTRUE(x@metadata$psl_more), isTRUE(psl_more))
-    } else {
-      psl_more <- more
-      reload_psl <- FALSE
-    }
+setGeneric("load_alignment", function(x, odgi = NULL, python = NULL, more = NULL, alignment = NULL) {
+  standardGeneric("load_alignment")
+})
 
-    if (is.null(x@data) || reload_psl) {
-      x@data <- .pairwise_alignment_table(x, odgi = odgi, python = python, more = psl_more)
-      if (identical(alignment_format(x), "psl")) {
-        x@metadata$psl_more <- isTRUE(psl_more)
-      }
+setMethod("load_alignment", "SynPairAlignment", function(x, odgi = NULL, python = NULL, more = NULL, alignment = NULL) {
+  if (identical(alignment_format(x), "psl")) {
+    psl_more <- more
+    if (is.null(psl_more)) {
+      psl_more <- if (is.null(x@data)) FALSE else isTRUE(x@metadata$psl_more)
     }
-    x@loaded <- TRUE
-    x@lazy <- FALSE
-    return(x)
+    reload_psl <- is.null(x@data) ||
+      !identical(isTRUE(x@metadata$psl_more), isTRUE(psl_more))
+  } else {
+    psl_more <- more
+    reload_psl <- FALSE
   }
 
-  if (methods::is(x, "SynMultiAlignment")) {
-    if (is.null(x@data)) {
-      if (!identical(alignment_format(x), "odgi")) {
-        stop(
-          "`load_alignment()` currently supports unloaded SynMultiAlignment objects only when `format = 'odgi'`.",
-          call. = FALSE
-        )
-      }
-      x@data <- multiple_alignment_data(x, odgi = odgi, python = python)
+  if (is.null(x@data) || reload_psl) {
+    x@data <- .pairwise_alignment_table(x, odgi = odgi, python = python, more = psl_more)
+    if (identical(alignment_format(x), "psl")) {
+      x@metadata$psl_more <- isTRUE(psl_more)
     }
-    if (identical(alignment_format(x), "odgi") && is.null(x@metadata$odgi_labels)) {
-      x@metadata$odgi_labels <- .infer_odgi_label_mapping(
-        tbl = x@data,
-        individuals = x@individuals
+  }
+  x@loaded <- TRUE
+  x@lazy <- FALSE
+  x
+})
+
+setMethod("load_alignment", "SynMultiAlignment", function(x, odgi = NULL, python = NULL, more = NULL, alignment = NULL) {
+  if (is.null(x@data)) {
+    if (!identical(alignment_format(x), "odgi")) {
+      stop(
+        "`load_alignment()` currently supports unloaded SynMultiAlignment objects only when `format = 'odgi'`.",
+        call. = FALSE
       )
     }
-    x@loaded <- TRUE
-    x@lazy <- FALSE
-    return(x)
+    x@data <- multiple_alignment_data(x, odgi = odgi, python = python)
   }
+  if (identical(alignment_format(x), "odgi") && is.null(x@metadata$odgi_labels)) {
+    x@metadata$odgi_labels <- .infer_odgi_label_mapping(
+      tbl = x@data,
+      individuals = x@individuals
+    )
+  }
+  x@loaded <- TRUE
+  x@lazy <- FALSE
+  x
+})
 
-  if (methods::is(x, "SynSpecies")) {
-    pairs <- pairwise_alignments(x)
-    if (length(pairs) > 0L) {
-      x@pairwise_alignments <- lapply(pairs, load_alignment, odgi = odgi, python = python, more = more)
+setMethod("load_alignment", "SynSpecies", function(x, odgi = NULL, python = NULL, more = NULL, alignment = NULL) {
+  if (!is.null(alignment)) {
+    resolved <- .resolve_stored_alignment_arg(x, alignment = alignment)
+    if (identical(resolved$type, "pairwise")) {
+      x@pairwise_alignments[[alignment]] <- load_alignment(
+        resolved$object,
+        odgi = odgi,
+        python = python,
+        more = more
+      )
+    } else {
+      x@multiple_alignments[[alignment]] <- load_alignment(
+        resolved$object,
+        odgi = odgi,
+        python = python
+      )
     }
-
-    multis <- multiple_alignments(x)
-    if (length(multis) > 0L) {
-      x@multiple_alignments <- lapply(multis, load_alignment, odgi = odgi, python = python)
-    }
-
     validObject(x)
     return(x)
   }
 
+  pairs <- pairwise_alignments(x)
+  if (length(pairs) > 0L) {
+    x@pairwise_alignments <- lapply(pairs, load_alignment, odgi = odgi, python = python, more = more)
+  }
+
+  multis <- multiple_alignments(x)
+  if (length(multis) > 0L) {
+    x@multiple_alignments <- lapply(multis, load_alignment, odgi = odgi, python = python)
+  }
+
+  validObject(x)
+  x
+})
+
+.resolve_stored_alignment_arg <- function(x, alignment) {
+  if (!methods::is(x, "SynSpecies")) {
+    stop("`.resolve_stored_alignment_arg()` expects a SynSpecies object.", call. = FALSE)
+  }
+  if (!is.character(alignment) || length(alignment) != 1L || is.na(alignment) || !nzchar(alignment)) {
+    stop("`alignment` must be a single non-empty character value.", call. = FALSE)
+  }
+
+  pair_list <- pairwise_alignments(x)
+  if (alignment %in% names(pair_list)) {
+    return(list(type = "pairwise", object = pair_list[[alignment]]))
+  }
+
+  multi_list <- multiple_alignments(x)
+  if (alignment %in% names(multi_list)) {
+    return(list(type = "multiple", object = multi_list[[alignment]]))
+  }
+
   stop(
-    "`load_alignment()` expects a SynPairAlignment, SynMultiAlignment, or SynSpecies object.",
+    "`alignment` must match a stored pairwise or multiple alignment: ",
+    alignment,
     call. = FALSE
   )
 }

@@ -106,8 +106,9 @@ The return value is a list with:
 \strong{5. Alignment-only subsetting}
 
 If you only want the pairwise alignment rows and not the annotation ranges,
-use \code{pairwise_alignment_data()} with \verb{subset =} or the wrapper
-\code{\link[=subset_pairwise_alignment]{subset_pairwise_alignment()}}.
+use \code{pairwise_alignment_data()} with \verb{subset =}. Use
+\code{\link[=subset_pairwise_alignment]{subset_pairwise_alignment()}} when you want an updated alignment object or
+updated \code{SynSpecies}.
 
 \preformatted{
 paf <- pairwise_alignment_data(
@@ -137,8 +138,9 @@ reusable windowed object.
 a \code{SynSpecies} with explicit species-tagged coordinate strings.
 \item Use \code{\link[=subset_synspecies_window]{subset_synspecies_window()}} when you want linked windows across
 species together with the retained annotation and link data.
-\item Use \code{pairwise_alignment_data()} or \code{\link[=subset_pairwise_alignment]{subset_pairwise_alignment()}} when you
-only need the alignment rows.
+\item Use \code{pairwise_alignment_data()} when you only need the alignment rows.
+\item Use \code{\link[=subset_pairwise_alignment]{subset_pairwise_alignment()}} when you want to keep the subsetted
+pairwise alignment inside a Syn-aware object.
 }
 }
 

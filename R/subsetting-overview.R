@@ -100,8 +100,9 @@
 #' \strong{5. Alignment-only subsetting}
 #'
 #' If you only want the pairwise alignment rows and not the annotation ranges,
-#' use `pairwise_alignment_data()` with `subset =` or the wrapper
-#' [subset_pairwise_alignment()].
+#' use `pairwise_alignment_data()` with `subset =`. Use
+#' [subset_pairwise_alignment()] when you want an updated alignment object or
+#' updated `SynSpecies`.
 #'
 #' \preformatted{
 #' paf <- pairwise_alignment_data(
@@ -129,8 +130,9 @@
 #'   a `SynSpecies` with explicit species-tagged coordinate strings.
 #' - Use [subset_synspecies_window()] when you want linked windows across
 #'   species together with the retained annotation and link data.
-#' - Use `pairwise_alignment_data()` or [subset_pairwise_alignment()] when you
-#'   only need the alignment rows.
+#' - Use `pairwise_alignment_data()` when you only need the alignment rows.
+#' - Use [subset_pairwise_alignment()] when you want to keep the subsetted
+#'   pairwise alignment inside a Syn-aware object.
 #'
 #' @name subsetting_operations
 #' @seealso [query_features()], [subset_synspecies_window()],
