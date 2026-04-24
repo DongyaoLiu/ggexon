@@ -2,18 +2,20 @@
 % Please edit documentation in R/SynSpecies-class.R
 \name{add_individual}
 \alias{add_individual}
-\title{Add a SynIndividual to a SynSpecies object}
+\title{Add SynIndividual objects to a SynSpecies object}
 \usage{
-add_individual(x, individual)
+add_individual(x, individual, ...)
 }
 \arguments{
 \item{x}{A \code{SynSpecies} object.}
 
 \item{individual}{A \code{SynIndividual} object.}
+
+\item{...}{Additional \code{SynIndividual} objects to add.}
 }
 \value{
 An updated \code{SynSpecies} object.
 }
 \description{
-Add a SynIndividual to a SynSpecies object
+Add SynIndividual objects to a SynSpecies object
 }

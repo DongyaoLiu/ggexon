@@ -78,6 +78,38 @@ test_that("SynSpecies stores individuals and explicit alignment relationships", 
   expect_identical(individual_names(unnamed_sp), c("XZ1516", "N2"))
 })
 
+test_that("add_individual accepts multiple SynIndividuals", {
+  annotation_path <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+
+  x1 <- test_syn_individual(annotation_file = annotation_path, id = "ECA2968")
+  x2 <- test_syn_individual(annotation_file = annotation_path, id = "N2")
+  x3 <- test_syn_individual(annotation_file = annotation_path, id = "XZ1516")
+
+  sp <- SynSpecies(name = "elegans") |>
+    add_individual(x1, x2, x3)
+
+  expect_identical(individual_names(sp), c("ECA2968", "N2", "XZ1516"))
+})
+
+test_that("add_individual requires every added object to be a SynIndividual", {
+  annotation_path <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+
+  x1 <- test_syn_individual(annotation_file = annotation_path, id = "ECA2968")
+
+  expect_error(
+    add_individual(SynSpecies(name = "elegans"), x1, "N2"),
+    "All inputs after `x` must be SynIndividual objects"
+  )
+})
+
 test_that("add_pairwise_alignment warns when alignment individuals are missing from SynSpecies", {
   genome_path <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
   annotation_path <- system.file(

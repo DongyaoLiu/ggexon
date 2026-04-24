@@ -695,22 +695,34 @@ setMethod("pairwise_alignment_data", "SynSpecies", function(x, alignment = NULL,
   )
 }
 
-#' Add a SynIndividual to a SynSpecies object
+#' Add SynIndividual objects to a SynSpecies object
 #'
 #' @param x A `SynSpecies` object.
 #' @param individual A `SynIndividual` object.
+#' @param ... Additional `SynIndividual` objects to add.
 #'
 #' @return An updated `SynSpecies` object.
 #' @export
-add_individual <- function(x, individual) {
+add_individual <- function(x, individual, ...) {
   if (!methods::is(x, "SynSpecies")) {
     stop("`add_individual()` expects a SynSpecies object.", call. = FALSE)
   }
-  if (!methods::is(individual, "SynIndividual")) {
-    stop("`individual` must be a SynIndividual object.", call. = FALSE)
+
+  new_individuals <- c(list(individual), list(...))
+  bad_individuals <- !vapply(
+    new_individuals,
+    methods::is,
+    logical(1),
+    class2 = "SynIndividual"
+  )
+  if (any(bad_individuals)) {
+    stop("All inputs after `x` must be SynIndividual objects.", call. = FALSE)
   }
+
   entries <- x@individuals
-  entries[[syn_id(individual)]] <- individual
+  for (individual in new_individuals) {
+    entries[[syn_id(individual)]] <- individual
+  }
   x@individuals <- entries
   validObject(x)
   x
