@@ -35,4 +35,5 @@ pair <- SynPairAlignment(
   file = paf_path
 )
 pair <- subset_pairwise_alignment(pair, subset = c(XZ1516 = "RagTag_V"))
+
 }

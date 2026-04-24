@@ -148,7 +148,7 @@ derive <- function() {
 is.derived <- function(x) {
   inherits(x, "derived")
 }
-#' @rdname ggplot2-ggproto
+#' @rdname sec_axis
 #' @format NULL
 #' @usage NULL
 #' @export

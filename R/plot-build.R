@@ -1,7 +1,12 @@
+#' Build a ggexon plot
+#'
+#' `ggexon_build()` is ggexon's plot-build generic. It mirrors ggplot2's build
+#' pipeline while returning ggexon-specific built objects internally and plain
+#' ggplot2 built objects through `ggplot_build.ggexon()`.
+#'
+#' @param plot A ggexon plot object.
+#' @param ... Passed through to methods.
 #' @export
-#' ggplot2 4.0.0 above is using S7 OOP system
-
-
 ggexon_build <- function(plot, ...) {
   # TODO: Swap to S7 generic once S7/#543 is resolved
   env <- ggplot2:::try_prop(plot, "plot_env")
@@ -521,8 +526,13 @@ plot_extent <- function(table) {
   )
 }
 
+#' Extract a built grob for a layer
+#'
+#' `layer_grob` is an alias of `get_layer_grob()`.
+#'
+#' @param plot A built ggplot or ggexon object.
+#' @param i Layer index.
 #' @export
-#' @rdname ggplot_build
 layer_grob <- get_layer_grob
 
 # Apply function to layer and matching data

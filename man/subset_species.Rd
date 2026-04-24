@@ -53,4 +53,5 @@ coords <- paste0(
 
 sp <- SynSpecies(name = "worms") |> add_individual(ind)
 sp_window <- subset_species(sp, coords = coords)
+
 }

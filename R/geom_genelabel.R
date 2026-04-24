@@ -40,6 +40,7 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
                          }
 )
 
+#' @export
 geom_genelabel <- function(mapping = NULL, data = NULL,
                        stat = "identity", position = "identity", x_translation = NULL,
                        ..., na.rm = FALSE, show.legend = NA, exon_height = NULL,

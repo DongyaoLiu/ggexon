@@ -1,7 +1,11 @@
-#' designed for plot coverage data.
-#' detect there is imcompbility with scale_x_reverse
-
-
+#' Coverage-by-mutation geom ggproto
+#'
+#' `GeomCoverageMUT` draws coverage rectangles derived from BigWig signal and
+#' optionally rescales them by mutation frequencies supplied in a VCF summary
+#' table.
+#'
+#' @format NULL
+#' @usage NULL
 GeomCoverageMUT <- ggproto("GeomCoverageMUT", GeomRect,
                     required_aes = c("ymin", "xmin", "xmax","transcripts","strand", "track", "type"),
                     non_missing_aes = c("ymax", "linewidth", "shape"),

@@ -17,7 +17,8 @@ translation.
 \item{\code{panels}}{Layout data frame. It must contain \code{PANEL}, \code{ROW}, \code{COL}, and
 \code{track}, and may also contain comparative plotting columns such as
 \code{panel_type}, \code{species}, \code{alignment_name}, \code{tspecies}, \code{qspecies},
-\code{t_panel}, and \code{q_panel}.}
+\code{t_panel}, \code{q_panel}, and optional panel-specific x-window columns
+\code{xlim_chr}, \code{xlim_min}, and \code{xlim_max}.}
 
 \item{\code{layout_type}}{Scalar layout strategy label such as \code{"custom"} or
 \code{"chain"}.}
@@ -54,6 +55,12 @@ geoms.}
 \itemize{
 \item \code{panels} must contain at least the columns \code{PANEL}, \code{ROW}, \code{COL}, and
 \code{track}.
+\item when \code{panels} contains any of \code{xlim_chr}, \code{xlim_min}, or \code{xlim_max}, it
+must contain all three columns.
+\item annotation panels with panel-specific x limits must provide complete
+\code{xlim_chr}, \code{xlim_min}, and \code{xlim_max} values.
+\item when multiple annotation panels define different x windows,
+\code{free$x} must be \code{TRUE}.
 \item \code{layout_type} must be one non-empty character value.
 \item \code{free} must be a list with scalar logical \code{x} and \code{y} entries.
 \item \code{exon_height}, \code{y_scale}, and \code{x_translation} must each be scalar numeric

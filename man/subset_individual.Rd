@@ -63,4 +63,5 @@ start <- IRanges::start(gr)[[1L]]
 end <- IRanges::end(gr)[[1L]]
 
 ind_window <- subset_individual(ind, chr = chr, start = start, end = end)
+
 }

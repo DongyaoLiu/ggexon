@@ -31,4 +31,5 @@ pair <- SynPairAlignment(
   file = paf_path
 )
 pair <- filter_pairwise_alignment(pair, filter = 200)
+
 }

@@ -1,8 +1,21 @@
-#' @export
-grid::unit
+#' Objects imported from other packages
+#'
+#' These helpers are re-exported so ggexon users can access them without
+#' attaching the upstream package explicitly.
+#'
+#' @name reexports
+#' @keywords internal
+NULL
 
+#' @rdname reexports
+#' @importFrom grid unit
 #' @export
-grid::arrow
+unit <- grid::unit
+
+#' @rdname reexports
+#' @importFrom grid arrow
+#' @export
+arrow <- grid::arrow
 
 # Name ggplot grid object
 # Convenience function to name grid objects

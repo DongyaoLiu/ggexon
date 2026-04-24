@@ -11,6 +11,7 @@ warn_dots_empty <- function(env = caller_env(), call = caller_env()) {
 
 
 
+#' @rdname reexports
 #' @export
 #' @examples
 #' ggplot(mpg, aes(displ, hwy)) +
@@ -18,7 +19,8 @@ warn_dots_empty <- function(env = caller_env(), call = caller_env()) {
 #'
 #' ggplot(mpg, aes(displ, hwy)) +
 #'   geom_point(colour = alpha("blue", 0.5))
-scales::alpha
+#' @importFrom scales alpha
+alpha <- scales::alpha
 
 "%||%" <- function(a, b) {
   if (!is.null(a)) a else b

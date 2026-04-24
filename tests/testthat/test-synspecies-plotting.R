@@ -524,6 +524,82 @@ test_that("plot_build uses stored SynSpecies layout during facet setup", {
   expect_identical(as.integer(built@layout$layout$SCALE_Y), c(1L, 2L, 1L))
 })
 
+test_that("stored SynLayout panel x windows seed annotation and link windows", {
+  xz_genome <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
+  xz_annotation <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+  n2_genome <- system.file(
+    "extdata",
+    "c_elegans.PRJNA13758.WS285.genomic.fa",
+    package = "ggexon"
+  )
+  n2_annotation <- system.file(
+    "extdata",
+    "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
+    package = "ggexon"
+  )
+  paf_path <- system.file("extdata", "V_alginment.paf", package = "ggexon")
+
+  sp <- SynSpecies(name = "Caenorhabditis")
+  sp <- add_individual(
+    sp,
+    test_syn_individual(
+      genome_file = xz_genome,
+      annotation_file = xz_annotation,
+      id = "XZ1516"
+    )
+  )
+  sp <- add_individual(
+    sp,
+    test_syn_individual(
+      genome_file = n2_genome,
+      annotation_file = n2_annotation,
+      id = "N2",
+      annotation_format = "gtf"
+    )
+  )
+  sp <- add_pairwise_alignment(
+    sp,
+    SynPairAlignment(
+      name = "XZ1516_vs_N2",
+      query_individual = "XZ1516",
+      target_individual = "N2",
+      file = paf_path
+    )
+  )
+
+  custom_layout <- synspecies_chain_layout(
+    sp,
+    vars = ggplot2::vars(track),
+    free = list(x = TRUE, y = TRUE)
+  )
+  custom_layout_df <- syn_layout_panels(custom_layout)
+  custom_layout_df$xlim_chr <- c("RagTag_V", NA, "V")
+  custom_layout_df$xlim_min <- c(21574445, NA, 20456948)
+  custom_layout_df$xlim_max <- c(21584356, NA, 20465040)
+  species_layout(sp) <- custom_layout_df
+
+  plot_obj <- ggexon(sp) +
+    geom_gene(species = "XZ1516") +
+    geom_gene(species = "N2") +
+    geom_nuclink(alignment = "XZ1516_vs_N2") +
+    facet_genomics(ggplot2::vars(track), scales = "free")
+
+  built <- ggexon_build(plot_obj)
+
+  xz_layer <- built@data[[1L]]
+  n2_layer <- built@data[[2L]]
+  link_layer <- built@data[[3L]]
+
+  expect_true(all(xz_layer$xmin >= 21574445 & xz_layer$xmax <= 21584356))
+  expect_true(all(n2_layer$xmin >= 20456948 & n2_layer$xmax <= 20465040))
+  expect_true(all(link_layer$tstart < 21584356 & link_layer$tend > 21574445))
+  expect_true(all(link_layer$qstart < 20465040 & link_layer$qend > 20456948))
+})
+
 test_that("geom_exon comparative grammar builds paired annotation and link panels", {
   xz_genome <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
   xz_annotation <- system.file(

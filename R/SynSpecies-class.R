@@ -170,7 +170,8 @@ setClass(
 #' @slot panels Layout data frame. It must contain `PANEL`, `ROW`, `COL`, and
 #'   `track`, and may also contain comparative plotting columns such as
 #'   `panel_type`, `species`, `alignment_name`, `tspecies`, `qspecies`,
-#'   `t_panel`, and `q_panel`.
+#'   `t_panel`, `q_panel`, and optional panel-specific x-window columns
+#'   `xlim_chr`, `xlim_min`, and `xlim_max`.
 #' @slot layout_type Scalar layout strategy label such as `"custom"` or
 #'   `"chain"`.
 #' @slot free List with logical `x` and `y` entries describing whether scales
@@ -194,6 +195,12 @@ setClass(
 #' @section Validity rules:
 #' * `panels` must contain at least the columns `PANEL`, `ROW`, `COL`, and
 #'   `track`.
+#' * when `panels` contains any of `xlim_chr`, `xlim_min`, or `xlim_max`, it
+#'   must contain all three columns.
+#' * annotation panels with panel-specific x limits must provide complete
+#'   `xlim_chr`, `xlim_min`, and `xlim_max` values.
+#' * when multiple annotation panels define different x windows,
+#'   `free$x` must be `TRUE`.
 #' * `layout_type` must be one non-empty character value.
 #' * `free` must be a list with scalar logical `x` and `y` entries.
 #' * `exon_height`, `y_scale`, and `x_translation` must each be scalar numeric
@@ -242,6 +249,58 @@ setClass(
     } else if (!is.logical(object@free$x) || length(object@free$x) != 1L ||
                !is.logical(object@free$y) || length(object@free$y) != 1L) {
       problems <- c(problems, "`free$x` and `free$y` must be single logical values.")
+    }
+    xlim_cols <- c("xlim_chr", "xlim_min", "xlim_max")
+    present_xlim_cols <- intersect(xlim_cols, colnames(object@panels))
+    if (length(present_xlim_cols) > 0L && length(present_xlim_cols) != length(xlim_cols)) {
+      problems <- c(
+        problems,
+        "`panels` must contain all of `xlim_chr`, `xlim_min`, and `xlim_max` when panel-specific x limits are used."
+      )
+    }
+    if (length(present_xlim_cols) == length(xlim_cols)) {
+      panels <- object@panels
+      annotation_rows <- if ("panel_type" %in% colnames(panels)) {
+        is.na(panels$panel_type) | panels$panel_type == "annotation"
+      } else {
+        rep(TRUE, nrow(panels))
+      }
+      has_any_xlim <- annotation_rows & (
+        !is.na(panels$xlim_chr) | !is.na(panels$xlim_min) | !is.na(panels$xlim_max)
+      )
+      incomplete_xlim <- has_any_xlim & (
+        is.na(panels$xlim_chr) | is.na(panels$xlim_min) | is.na(panels$xlim_max)
+      )
+      if (any(incomplete_xlim)) {
+        bad_tracks <- unique(as.character(panels$track[incomplete_xlim]))
+        problems <- c(
+          problems,
+          paste0(
+            "Annotation panels with panel-specific x limits must provide `xlim_chr`, `xlim_min`, and `xlim_max`. Problem tracks: ",
+            paste(bad_tracks, collapse = ", "),
+            "."
+          )
+        )
+      }
+      complete_xlim <- has_any_xlim & !incomplete_xlim
+      if (any(complete_xlim)) {
+        xlim_df <- unique(data.frame(
+          xlim_chr = as.character(panels$xlim_chr[complete_xlim]),
+          xlim_min = as.numeric(panels$xlim_min[complete_xlim]),
+          xlim_max = as.numeric(panels$xlim_max[complete_xlim]),
+          stringsAsFactors = FALSE
+        ))
+        bad_order <- xlim_df$xlim_min > xlim_df$xlim_max
+        if (any(bad_order)) {
+          problems <- c(problems, "`xlim_min` must be less than or equal to `xlim_max` for panel-specific x limits.")
+        }
+        if (nrow(xlim_df) > 1L && !isTRUE(object@free$x)) {
+          problems <- c(
+            problems,
+            "Set `free$x = TRUE` when multiple annotation panels define different panel-specific x limits."
+          )
+        }
+      }
     }
     if (!is.numeric(object@exon_height) || length(object@exon_height) != 1L) {
       problems <- c(problems, "`exon_height` must be a single numeric value.")
@@ -519,8 +578,29 @@ infer_syn_layout_type <- function(panels) {
 }
 
 infer_syn_layout_free <- function(panels) {
+  panel_x_windows <- FALSE
+  if (all(c("xlim_chr", "xlim_min", "xlim_max") %in% names(panels))) {
+    annotation_rows <- if ("panel_type" %in% names(panels)) {
+      is.na(panels$panel_type) | panels$panel_type == "annotation"
+    } else {
+      rep(TRUE, nrow(panels))
+    }
+    complete_rows <- annotation_rows &
+      !is.na(panels$xlim_chr) &
+      !is.na(panels$xlim_min) &
+      !is.na(panels$xlim_max)
+    if (any(complete_rows)) {
+      panel_x_windows <- nrow(unique(data.frame(
+        xlim_chr = as.character(panels$xlim_chr[complete_rows]),
+        xlim_min = as.numeric(panels$xlim_min[complete_rows]),
+        xlim_max = as.numeric(panels$xlim_max[complete_rows]),
+        stringsAsFactors = FALSE
+      ))) > 1L
+    }
+  }
+
   list(
-    x = "SCALE_X" %in% names(panels) && length(unique(stats::na.omit(panels$SCALE_X))) > 1L,
+    x = ("SCALE_X" %in% names(panels) && length(unique(stats::na.omit(panels$SCALE_X))) > 1L) || panel_x_windows,
     y = "SCALE_Y" %in% names(panels) && length(unique(stats::na.omit(panels$SCALE_Y))) > 1L
   )
 }
@@ -565,6 +645,193 @@ syn_layout_panels <- function(x) {
     return(x)
   }
   stop("Expected a SynLayout, data.frame, or NULL.", call. = FALSE)
+}
+
+.ensure_syn_layout_xlim_cols <- function(panels) {
+  if (!"xlim_chr" %in% names(panels)) {
+    panels$xlim_chr <- NA_character_
+  }
+  if (!"xlim_min" %in% names(panels)) {
+    panels$xlim_min <- NA_real_
+  }
+  if (!"xlim_max" %in% names(panels)) {
+    panels$xlim_max <- NA_real_
+  }
+  panels
+}
+
+.layout_panel_species_name <- function(panel_rows) {
+  if (nrow(panel_rows) != 1L) {
+    stop("Expected exactly one panel row.", call. = FALSE)
+  }
+  if ("species" %in% names(panel_rows) &&
+      !is.na(panel_rows$species[[1L]]) &&
+      nzchar(panel_rows$species[[1L]])) {
+    return(as.character(panel_rows$species[[1L]]))
+  }
+  as.character(panel_rows$track[[1L]])
+}
+
+.resolve_layout_individual_panel <- function(panels, individual) {
+  if (!is.character(individual) || length(individual) != 1L || is.na(individual) || !nzchar(individual)) {
+    stop("`individual` must be one non-empty character value.", call. = FALSE)
+  }
+
+  annotation_rows <- if ("panel_type" %in% names(panels)) {
+    is.na(panels$panel_type) | panels$panel_type == "annotation"
+  } else {
+    rep(TRUE, nrow(panels))
+  }
+  species_col <- if ("species" %in% names(panels)) {
+    as.character(panels$species)
+  } else {
+    as.character(panels$track)
+  }
+
+  hit <- which(annotation_rows & !is.na(species_col) & species_col == individual)
+  if (length(hit) != 1L) {
+    stop(
+      "`individual` must match exactly one annotation panel in the layout.",
+      call. = FALSE
+    )
+  }
+
+  hit
+}
+
+.infer_panel_xlim_chr <- function(x, panels, hit) {
+  panel_rows <- panels[hit, , drop = FALSE]
+  if (nrow(panel_rows) != 1L) {
+    stop("Expected exactly one panel row.", call. = FALSE)
+  }
+
+  existing_chr <- panel_rows$xlim_chr[[1L]] %||% NA_character_
+  if (!is.na(existing_chr) && nzchar(existing_chr)) {
+    return(as.character(existing_chr))
+  }
+
+  if (!methods::is(x, "SynSpecies")) {
+    stop(
+      "Cannot infer panel chromosome from a SynLayout alone unless the panel already stores `xlim_chr`.",
+      call. = FALSE
+    )
+  }
+
+  species_name <- .layout_panel_species_name(panel_rows)
+  if (!species_name %in% names(individuals(x))) {
+    stop(
+      "Cannot infer panel chromosome because panel species ", species_name,
+      " is not attached to this SynSpecies object.",
+      call. = FALSE
+    )
+  }
+
+  individual <- individuals(x)[[species_name]]
+  ann <- annotation_data(individual)
+  seqlevels <- unique(as.character(GenomeInfoDb::seqnames(ann)))
+  seqlevels <- seqlevels[!is.na(seqlevels) & nzchar(seqlevels)]
+  if (length(seqlevels) != 1L) {
+    stop(
+      "Cannot infer chromosome automatically because annotation track ", species_name,
+      " spans multiple seqnames. Seed the layout once with `xlim_chr` or subset the individual first.",
+      call. = FALSE
+    )
+  }
+
+  seqlevels[[1L]]
+}
+
+#' Set a panel-specific x window on a stored Syn layout
+#'
+#' Updates exactly one annotation panel in a stored [`SynLayout`] or
+#' [`SynSpecies`] layout by individual name. The user supplies only the numeric
+#' `xlim`; ggexon keeps or
+#' infers the underlying chromosome automatically.
+#'
+#' @param x A [`SynSpecies`] or [`SynLayout`] object.
+#' @param individual Annotation-panel individual name from the layout table.
+#' @param xlim Numeric length-2 vector giving panel x limits.
+#'
+#' @return An updated object of the same class as `x`.
+#' @export
+set_panel_xlim <- function(x, individual, xlim) {
+  if (!(methods::is(x, "SynSpecies") || methods::is(x, "SynLayout"))) {
+    stop("`set_panel_xlim()` expects a SynSpecies or SynLayout object.", call. = FALSE)
+  }
+  if (!is.numeric(xlim) || length(xlim) != 2L || anyNA(xlim)) {
+    stop("`xlim` must be a numeric vector of length 2.", call. = FALSE)
+  }
+
+  layout <- if (methods::is(x, "SynSpecies")) species_layout(x) else x
+  if (is.null(layout)) {
+    stop("The object does not contain a stored SynLayout.", call. = FALSE)
+  }
+
+  panels <- .ensure_syn_layout_xlim_cols(syn_layout_panels(layout))
+  hit <- .resolve_layout_individual_panel(panels, individual)
+  inferred_chr <- .infer_panel_xlim_chr(x, panels, hit)
+  panels$xlim_chr[[hit]] <- inferred_chr
+  panels$xlim_min[[hit]] <- min(xlim)
+  panels$xlim_max[[hit]] <- max(xlim)
+
+  updated_layout <- SynLayout(
+    panels = panels,
+    layout_type = layout@layout_type,
+    free = layout@free,
+    exon_height = layout@exon_height,
+    y_scale = layout@y_scale,
+    x_translation = layout@x_translation,
+    metadata = layout@metadata
+  )
+
+  if (methods::is(x, "SynLayout")) {
+    return(updated_layout)
+  }
+
+  species_layout(x) <- updated_layout
+  x
+}
+
+#' Clear a panel-specific x window from a stored Syn layout
+#'
+#' @param x A [`SynSpecies`] or [`SynLayout`] object.
+#' @param individual Annotation-panel individual name from the layout table.
+#'
+#' @return An updated object of the same class as `x`.
+#' @export
+clear_panel_xlim <- function(x, individual) {
+  if (!(methods::is(x, "SynSpecies") || methods::is(x, "SynLayout"))) {
+    stop("`clear_panel_xlim()` expects a SynSpecies or SynLayout object.", call. = FALSE)
+  }
+
+  layout <- if (methods::is(x, "SynSpecies")) species_layout(x) else x
+  if (is.null(layout)) {
+    stop("The object does not contain a stored SynLayout.", call. = FALSE)
+  }
+
+  panels <- .ensure_syn_layout_xlim_cols(syn_layout_panels(layout))
+  hit <- .resolve_layout_individual_panel(panels, individual)
+
+  panels$xlim_chr[[hit]] <- NA_character_
+  panels$xlim_min[[hit]] <- NA_real_
+  panels$xlim_max[[hit]] <- NA_real_
+
+  updated_layout <- SynLayout(
+    panels = panels,
+    layout_type = layout@layout_type,
+    free = layout@free,
+    exon_height = layout@exon_height,
+    y_scale = layout@y_scale,
+    x_translation = layout@x_translation,
+    metadata = layout@metadata
+  )
+
+  if (methods::is(x, "SynLayout")) {
+    return(updated_layout)
+  }
+
+  species_layout(x) <- updated_layout
+  x
 }
 
 setGeneric("species_name", function(x) standardGeneric("species_name"))
@@ -632,6 +899,22 @@ setMethod("alignment_individuals", "SynPairAlignment", function(x) {
 })
 setMethod("alignment_individuals", "SynMultiAlignment", function(x) x@individuals)
 
+#' Retrieve pairwise alignment rows
+#'
+#' Returns the pairwise alignment table for a [`SynPairAlignment`] object or a
+#' stored pairwise alignment inside a [`SynSpecies`] object.
+#'
+#' @param x A [`SynPairAlignment`] or [`SynSpecies`] object.
+#' @param alignment Optional alignment name when `x` is a [`SynSpecies`].
+#' @param ... Passed through to the internal alignment-data resolver, including
+#'   options such as `subset` or `filter`.
+#' @param odgi Optional path to the `odgi` executable when ODGI-backed
+#'   alignments need to be loaded.
+#' @param python Optional path to the Python interpreter when ODGI-backed
+#'   alignments need helper script execution.
+#'
+#' @return A `data.frame` containing pairwise alignment rows.
+#' @export
 setGeneric("pairwise_alignment_data", function(x, ...) standardGeneric("pairwise_alignment_data"))
 setMethod("pairwise_alignment_data", "SynPairAlignment", function(x, alignment = NULL, ..., odgi = NULL, python = NULL) {
   .pairwise_alignment_data_impl(

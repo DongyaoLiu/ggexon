@@ -1,7 +1,10 @@
-#' designed for plot coverage data.
-#' detect there is imcompbility with scale_x_reverse
-
-
+#' Coverage geom ggproto
+#'
+#' `GeomCoverage` draws coverage rectangles derived from BigWig signal over a
+#' selected genomic window.
+#'
+#' @format NULL
+#' @usage NULL
 GeomCoverage <- ggproto("GeomCoverage", GeomRect,
                     required_aes = c("ymin", "xmin", "xmax","transcripts","strand", "track", "type"),
                     non_missing_aes = c("ymax", "linewidth", "shape"),

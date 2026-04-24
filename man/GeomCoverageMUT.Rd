@@ -3,30 +3,20 @@
 \docType{data}
 \name{GeomCoverageMUT}
 \alias{GeomCoverageMUT}
-\title{designed for plot coverage data.
-detect there is imcompbility with scale_x_reverse
+\title{Coverage-by-mutation geom ggproto}
+\usage{
+NULL
 extract the subset coordinates.
 filter base on the subset region.
 select transcript data.
 single track single bigwig
 single track multiple bigwig
 ./R/utilities.R:empty <- function(df) will exam the data at rendering
-layout$panel_params[[data$PANEL\link{1}]] this will check the PANEL col}
-\format{
-An object of class \code{GeomCoverageMUT} (inherits from \code{GeomRect}, \code{Geom}, \code{ggproto}, \code{gg}) of length 7.
-}
-\usage{
-GeomCoverageMUT
+layout$panel_params[[data$PANEL[1]]] this will check the PANEL col
 }
 \description{
-designed for plot coverage data.
-detect there is imcompbility with scale_x_reverse
-extract the subset coordinates.
-filter base on the subset region.
-select transcript data.
-single track single bigwig
-single track multiple bigwig
-./R/utilities.R:empty <- function(df) will exam the data at rendering
-layout$panel_params[[data$PANEL\link{1}]] this will check the PANEL col
+\code{GeomCoverageMUT} draws coverage rectangles derived from BigWig signal and
+optionally rescales them by mutation frequencies supplied in a VCF summary
+table.
 }
 \keyword{datasets}

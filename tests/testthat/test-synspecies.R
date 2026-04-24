@@ -676,6 +676,105 @@ test_that("SynLayout shared geom parameters are resolved before layer overrides"
   expect_identical(override_params$x_translation, 3)
 })
 
+test_that("SynLayout validates panel-specific x windows stored in panels", {
+  expect_s4_class(
+    SynLayout(
+      panels = data.frame(
+        PANEL = c(1L, 2L),
+        ROW = c(1L, 2L),
+        COL = c(1L, 1L),
+        track = c("sp1", "sp2"),
+        panel_type = c("annotation", "annotation"),
+        xlim_chr = c("chr1", "chr2"),
+        xlim_min = c(10, 30),
+        xlim_max = c(20, 40),
+        stringsAsFactors = FALSE
+      ),
+      free = list(x = TRUE, y = FALSE)
+    ),
+    "SynLayout"
+  )
+
+  expect_error(
+    SynLayout(
+      panels = data.frame(
+        PANEL = c(1L, 2L),
+        ROW = c(1L, 2L),
+        COL = c(1L, 1L),
+        track = c("sp1", "sp2"),
+        panel_type = c("annotation", "annotation"),
+        xlim_chr = c("chr1", "chr2"),
+        xlim_min = c(10, 30),
+        xlim_max = c(20, 40),
+        stringsAsFactors = FALSE
+      ),
+      free = list(x = FALSE, y = FALSE)
+    ),
+    "free\\$x = TRUE"
+  )
+
+  expect_error(
+    SynLayout(
+      panels = data.frame(
+        PANEL = 1L,
+        ROW = 1L,
+        COL = 1L,
+        track = "sp1",
+        panel_type = "annotation",
+        xlim_chr = NA_character_,
+        xlim_min = 10,
+        xlim_max = 20,
+        stringsAsFactors = FALSE
+      ),
+      free = list(x = TRUE, y = FALSE)
+    ),
+    "must provide `xlim_chr`, `xlim_min`, and `xlim_max`"
+  )
+})
+
+test_that("set_panel_xlim updates one panel by individual name and clear_panel_xlim removes it", {
+  annotation_path <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+
+  x <- SynIndividual(
+    annotation_file = annotation_path,
+    genome_file = genome_waiver(),
+    id = "XZ1516"
+  ) |>
+    load_annotation() |>
+    subset_feature_annotation(chr = "RagTag_V", start = 21550000, end = 21680000)
+
+  sp <- SynSpecies(name = "worms")
+  sp <- add_individual(sp, x)
+  species_layout(sp) <- SynLayout(
+    panels = data.frame(
+      PANEL = 1L,
+      ROW = 1L,
+      COL = 1L,
+      track = "XZ1516",
+      stringsAsFactors = FALSE
+    )
+  )
+
+  sp2 <- set_panel_xlim(sp, individual = "XZ1516", xlim = c(21574445, 21584356))
+  layout_df <- syn_layout_panels(species_layout(sp2))
+  expected_chr <- unique(as.character(GenomeInfoDb::seqnames(annotation_data(individuals(sp2)[["XZ1516"]]))))[[1L]]
+
+  expect_identical(layout_df$xlim_chr[[1L]], expected_chr)
+  expect_identical(layout_df$xlim_min[[1L]], 21574445)
+  expect_identical(layout_df$xlim_max[[1L]], 21584356)
+
+  sp3 <- clear_panel_xlim(sp2, individual = "XZ1516")
+  layout_df2 <- syn_layout_panels(species_layout(sp3))
+
+  expect_true(is.na(layout_df2$xlim_chr[[1L]]))
+  expect_true(is.na(layout_df2$xlim_min[[1L]]))
+  expect_true(is.na(layout_df2$xlim_max[[1L]]))
+})
+
 test_that("reference-led comparative subsetting trims both annotations and the paf window", {
   skip_if_not(
     exists("subset_synspecies_window", mode = "function"),

@@ -4,7 +4,14 @@
 \alias{load_alignment}
 \title{Load alignment data into Syn-aware alignment objects}
 \usage{
-load_alignment(x, odgi = NULL, python = NULL, more = NULL, alignment = NULL)
+load_alignment(
+  x,
+  odgi = NULL,
+  python = NULL,
+  more = NULL,
+  cigar = NULL,
+  alignment = NULL
+)
 }
 \arguments{
 \item{x}{A \code{\link{SynPairAlignment}}, \code{\link{SynMultiAlignment}}, or \code{\link{SynSpecies}}
@@ -21,6 +28,13 @@ ODGI multiple alignments from raw \code{.og} graph files.}
 block before caching the parsed data. When \code{NULL}, preserve any existing
 cached PSL detail level and default unloaded PSL alignments to the coarse
 one-row-per-record representation.}
+
+\item{cigar}{Logical or \code{NULL}; when \code{TRUE} and \code{x} is a PAF-backed
+\code{\link{SynPairAlignment}}, expand each \verb{cg:Z:} CIGAR string into one row per
+match block before caching the parsed data. Only match operations are
+emitted; gap and mismatch operations are used only to advance coordinates.
+When \code{NULL}, preserve any existing cached PAF detail level and default
+unloaded PAF alignments to the coarse one-row-per-record representation.}
 
 \item{alignment}{Optional stored alignment name when \code{x} is a \code{SynSpecies}.
 When omitted, all stored pairwise and multiple alignments are loaded.}
@@ -55,4 +69,5 @@ pair <- SynPairAlignment(
   file = paf_path
 )
 pair <- load_alignment(pair)
+
 }

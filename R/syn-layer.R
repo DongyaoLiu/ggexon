@@ -121,7 +121,11 @@ collect_syn_plot_context <- function(layers, plot_data) {
     link_requests = link_requests
   )
 
-  windows <- collect_explicit_annotation_windows(annotation_requests, syn_data)
+  windows <- collect_layout_panel_windows(syn_data)
+  windows <- utils::modifyList(
+    windows,
+    collect_explicit_annotation_windows(annotation_requests, syn_data)
+  )
   windows <- derive_syn_plot_windows(
     syn_data,
     windows,
@@ -136,6 +140,65 @@ collect_syn_plot_context <- function(layers, plot_data) {
     windows = windows,
     annotation_species_order = annotation_species_order
   )
+}
+
+collect_layout_panel_windows <- function(syn_data) {
+  if (!methods::is(syn_data, "SynSpecies")) {
+    return(list())
+  }
+
+  layout <- species_layout(syn_data)
+  if (is.null(layout)) {
+    return(list())
+  }
+
+  panels <- syn_layout_panels(layout)
+  required_cols <- c("xlim_chr", "xlim_min", "xlim_max")
+  if (!is.data.frame(panels) || !all(required_cols %in% names(panels))) {
+    return(list())
+  }
+
+  annotation_rows <- if ("panel_type" %in% names(panels)) {
+    is.na(panels$panel_type) | panels$panel_type == "annotation"
+  } else {
+    rep(TRUE, nrow(panels))
+  }
+  species_col <- if ("species" %in% names(panels)) {
+    as.character(panels$species)
+  } else {
+    as.character(panels$track)
+  }
+  complete_rows <- annotation_rows &
+    !is.na(species_col) & nzchar(species_col) &
+    !is.na(panels$xlim_chr) &
+    !is.na(panels$xlim_min) &
+    !is.na(panels$xlim_max)
+
+  if (!any(complete_rows)) {
+    return(list())
+  }
+
+  panels <- panels[complete_rows, , drop = FALSE]
+  species_col <- species_col[complete_rows]
+  keep_rows <- species_col %in% names(individuals(syn_data))
+  if (!any(keep_rows)) {
+    return(list())
+  }
+  panels <- panels[keep_rows, , drop = FALSE]
+  species_col <- species_col[keep_rows]
+
+  out <- list()
+  for (i in seq_len(nrow(panels))) {
+    species_name <- species_col[[i]]
+    individual <- individuals(syn_data)[[species_name]]
+    out[[species_name]] <- list(
+      chr = resolve_syn_seqname(individual, as.character(panels$xlim_chr[[i]])),
+      start = as.numeric(panels$xlim_min[[i]]),
+      end = as.numeric(panels$xlim_max[[i]])
+    )
+  }
+
+  out
 }
 
 find_syn_plot_data <- function(layers, plot_data) {

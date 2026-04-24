@@ -3,8 +3,9 @@
 \docType{data}
 \name{GeomCoverage}
 \alias{GeomCoverage}
-\title{designed for plot coverage data.
-detect there is imcompbility with scale_x_reverse
+\title{Coverage geom ggproto}
+\usage{
+NULL
 extract the subset coordinates.
 filter base on the subset region.
 select transcript data.
@@ -12,23 +13,10 @@ single track single bigwig
 single track multiple bigwig
 multiple track multiple bigwig files.
 ./R/utilities.R:empty <- function(df) will exam the data at rendering
-layout$panel_params[[data$PANEL\link{1}]] this will check the PANEL col}
-\format{
-An object of class \code{GeomCoverage} (inherits from \code{GeomRect}, \code{Geom}, \code{ggproto}, \code{gg}) of length 7.
-}
-\usage{
-GeomCoverage
+layout$panel_params[[data$PANEL[1]]] this will check the PANEL col
 }
 \description{
-designed for plot coverage data.
-detect there is imcompbility with scale_x_reverse
-extract the subset coordinates.
-filter base on the subset region.
-select transcript data.
-single track single bigwig
-single track multiple bigwig
-multiple track multiple bigwig files.
-./R/utilities.R:empty <- function(df) will exam the data at rendering
-layout$panel_params[[data$PANEL\link{1}]] this will check the PANEL col
+\code{GeomCoverage} draws coverage rectangles derived from BigWig signal over a
+selected genomic window.
 }
 \keyword{datasets}

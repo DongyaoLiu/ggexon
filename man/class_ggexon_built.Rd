@@ -13,7 +13,7 @@ class_ggexon_built(..., data = NULL, layout = NULL, plot = NULL)
 
 \item{layout}{A Layout ggproto object.}
 
-\item{plot}{A completed ggplot class object.}
+\item{plot}{A completed ggexon class object.}
 }
 \description{
 The ggplot built class is an intermediate class and represents a processed

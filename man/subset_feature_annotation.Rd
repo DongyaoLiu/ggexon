@@ -69,4 +69,5 @@ ann_view <- subset_feature_annotation(
   end = end
 )
 ind_view <- subset_feature_annotation(ind, chr = chr, start = start, end = end)
+
 }

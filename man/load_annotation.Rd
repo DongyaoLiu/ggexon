@@ -52,4 +52,5 @@ ind <- load_annotation(ind)
 
 sp <- SynSpecies(name = "worms") |> add_individual(ind)
 sp <- load_annotation(sp)
+
 }
