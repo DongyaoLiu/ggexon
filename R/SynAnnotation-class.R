@@ -34,7 +34,8 @@ NULL
 #' semantics.
 #'
 #' @slot name Short unique label used to retrieve the annotation layer.
-#' @slot source_file Path to the on-disk file backing the annotation.
+#' @slot source_file Path or paths to the on-disk file(s) backing the
+#'   annotation.
 #' @slot annotation_scope Scalar coordinate scope such as `"nucleotide"` or
 #'   `"protein"`.
 #' @slot lazy Logical; whether data loading should normally be deferred.
@@ -51,8 +52,8 @@ NULL
 #' * `plot_cache = list()`
 #'
 #' @section Validity rules:
-#' * `name`, `source_file`, and `annotation_scope` must each be one non-empty
-#'   character value.
+#' * `name` and `annotation_scope` must each be one non-empty character value.
+#' * `source_file` must be a non-empty character vector with no empty entries.
 #' * `lazy` and `loaded` must each be scalar logical values.
 #'
 #' @exportClass SynAnnotation
@@ -83,12 +84,12 @@ setClass(
     if (length(object@name) != 1L || is.na(object@name) || !nzchar(object@name)) {
       problems <- c(problems, "`name` must be a single non-empty character value.")
     }
-    if (length(object@source_file) != 1L ||
-        is.na(object@source_file) ||
-        !nzchar(object@source_file)) {
+    if (length(object@source_file) == 0L ||
+        any(is.na(object@source_file)) ||
+        any(!nzchar(object@source_file))) {
       problems <- c(
         problems,
-        "`source_file` must be a single non-empty character value."
+        "`source_file` must be a non-empty character vector with no empty entries."
       )
     }
     if (length(object@annotation_scope) != 1L ||
@@ -181,7 +182,8 @@ setClass("SynProteinAnnotation", contains = "SynIndAnnotation")
 #' * `protein_seq = NULL`
 #'
 #' @section Validity rules:
-#' * `annotation_format` must be one of `"auto"`, `"gff"`, or `"gtf"`.
+#' * `annotation_format` must be one of `"auto"`, `"gff"`, or `"gtf"`, either
+#'   length one or the same length as `source_file`.
 #'
 #' @exportClass SynFeatureAnnotation
 setClass(
@@ -209,9 +211,9 @@ setClass(
     protein_seq = NULL
   ),
   validity = function(object) {
-    if (length(object@annotation_format) != 1L ||
-        !(object@annotation_format %in% c("auto", "gff", "gtf"))) {
-      "`annotation_format` must be one of 'auto', 'gff', or 'gtf'."
+    if (!(length(object@annotation_format) %in% c(1L, length(object@source_file))) ||
+        any(!(object@annotation_format %in% c("auto", "gff", "gtf")))) {
+      "`annotation_format` must be one of 'auto', 'gff', or 'gtf', with length 1 or the same length as `source_file`."
     } else {
       TRUE
     }
@@ -422,8 +424,9 @@ setClass(
 #' Constructor for SynFeatureAnnotation
 #'
 #' @param name Short unique label for the annotation layer.
-#' @param annotation_file Path to the GFF or GTF file.
-#' @param annotation_format One of `"auto"`, `"gff"`, or `"gtf"`.
+#' @param annotation_file Path or paths to the GFF or GTF file(s).
+#' @param annotation_format One of `"auto"`, `"gff"`, or `"gtf"`, or a vector
+#'   of the same length as `annotation_file`.
 #' @param metadata Optional metadata list.
 #' @param lazy Logical; whether downstream loading should default to lazy mode.
 #'
@@ -432,10 +435,10 @@ setClass(
 #' @export
 SynFeatureAnnotation <- function(name,
                                  annotation_file,
-                                 annotation_format = c("auto", "gff", "gtf"),
+                                 annotation_format = "auto",
                                  metadata = list(),
                                  lazy = TRUE) {
-  annotation_format <- match.arg(annotation_format)
+  annotation_format <- .normalize_annotation_format_input(annotation_format, annotation_file)
 
   new(
     "SynFeatureAnnotation",

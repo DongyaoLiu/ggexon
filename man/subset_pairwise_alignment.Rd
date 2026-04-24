@@ -9,8 +9,11 @@ subset_pairwise_alignment(x, subset, alignment = NULL)
 \arguments{
 \item{x}{A \code{SynSpecies} or \code{SynPairAlignment} object.}
 
-\item{subset}{Named character vector/list with one region per species, e.g.
-\code{c(XZ1516 = "RagTag_V:21550000-21680000", N2 = "V:20450000-20451000")}.}
+\item{subset}{Named character vector/list with one region per species for
+one or both alignment partners, e.g.
+\code{c(XZ1516 = "RagTag_V:21550000-21680000", N2 = "V:20450000-20451000")},
+\code{c(XZ1516 = "RagTag_V:21550000-21680000")}, or
+\code{c(XZ1516 = "RagTag_V")}.}
 
 \item{alignment}{Optional alignment name when \code{x} is a \code{SynSpecies}.}
 }

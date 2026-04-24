@@ -208,6 +208,36 @@ test_that("subset_feature_annotation accepts coords strings", {
   )
 })
 
+test_that("subset_feature_annotation returns an updated SynIndividual when given SynIndividual", {
+  annotation_path <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+
+  x <- SynIndividual(
+    annotation_file = annotation_path,
+    genome_file = genome_waiver()
+  )
+  x <- load_annotation(x)
+
+  gr <- annotation_data(x)
+  target_chr <- as.character(GenomeInfoDb::seqnames(gr))[[1L]]
+  target_start <- IRanges::start(gr)[[1L]]
+  target_end <- IRanges::end(gr)[[1L]]
+
+  subset_x <- subset_feature_annotation(
+    x,
+    chr = target_chr,
+    start = target_start,
+    end = target_end
+  )
+
+  expect_s4_class(subset_x, "SynIndividual")
+  expect_true(length(annotation_data(subset_x)) >= 1L)
+  expect_true(all(as.character(GenomeInfoDb::seqnames(annotation_data(subset_x))) == target_chr))
+})
+
 test_that("SynProteinDomainAnnotation reads the shipped InterProScan export", {
   interpro_path <- system.file(
     "extdata",

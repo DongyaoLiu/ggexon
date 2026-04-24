@@ -6,6 +6,8 @@
 \usage{
 subset_feature_annotation(
   x,
+  annotation = NULL,
+  individual = NULL,
   chr = NULL,
   start = NULL,
   end = NULL,
@@ -13,7 +15,12 @@ subset_feature_annotation(
 )
 }
 \arguments{
-\item{x}{A \code{SynFeatureAnnotation} object.}
+\item{x}{A \code{SynFeatureAnnotation}, \code{SynIndividual}, or \code{SynSpecies} object.}
+
+\item{annotation}{Optional feature-annotation layer name when \code{x} is a
+\code{SynIndividual} or \code{SynSpecies}. Defaults to the active feature annotation.}
+
+\item{individual}{Optional individual name when \code{x} is a \code{SynSpecies}.}
 
 \item{chr}{Chromosome or sequence name to keep.}
 
@@ -25,7 +32,8 @@ the annotation.}
 \code{"V_RagTag:21559983-21620009"}. Use either \code{coords} or \code{chr}/\code{start}/\code{end}.}
 }
 \value{
-A \code{SynFeatureAnnotation} object.
+Returns an object of the same top-level class supplied to \code{x}: a
+\code{SynFeatureAnnotation}, updated \code{SynIndividual}, or updated \code{SynSpecies}.
 }
 \description{
 Returns a windowed snapshot of a \code{\link{SynFeatureAnnotation}}. The current

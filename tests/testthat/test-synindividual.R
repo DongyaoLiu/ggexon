@@ -76,6 +76,90 @@ test_that("SynIndividual can waive the genome file at construction time", {
   )
 })
 
+test_that("SynIndividual accepts multiple annotation files and merges them on load", {
+  annotation_one <- tempfile(fileext = ".gff3")
+  annotation_two <- tempfile(fileext = ".gff3")
+
+  writeLines(
+    c(
+      "##gff-version 3",
+      "chrI\ttest\tgene\t10\t100\t.\t+\t.\tID=geneA;Name=geneA",
+      "chrI\ttest\tmRNA\t10\t100\t.\t+\t.\tID=txA;Parent=geneA;Name=txA",
+      "chrI\ttest\texon\t10\t40\t.\t+\t.\tID=exonA1;Parent=txA"
+    ),
+    annotation_one
+  )
+  writeLines(
+    c(
+      "##gff-version 3",
+      "chrI\ttest\tgene\t200\t260\t.\t-\t.\tID=geneB;Name=geneB",
+      "chrI\ttest\tmRNA\t200\t260\t.\t-\t.\tID=txB;Parent=geneB;Name=txB",
+      "chrI\ttest\texon\t220\t260\t.\t-\t.\tID=exonB1;Parent=txB"
+    ),
+    annotation_two
+  )
+
+  x <- SynIndividual(
+    annotation_file = c(annotation_one, annotation_two),
+    genome_file = genome_waiver(),
+    id = "multi"
+  )
+
+  expect_identical(annotation_file(x), c(annotation_one, annotation_two))
+  expect_identical(annotation_format(x), c("auto", "auto"))
+
+  loaded <- load_annotation(x)
+  gr <- annotation_data(loaded)
+
+  expect_s4_class(gr, "GRanges")
+  expect_equal(length(gr), 6L)
+  expect_true(all(c("geneA", "geneB") %in% as.character(S4Vectors::mcols(gr)$gene_name)))
+})
+
+test_that("query_features combines indexed windows across multiple annotation files", {
+  skip_if_not_installed("Rsamtools")
+
+  annotation_one <- write_indexed_annotation_fixture(
+    c(
+      "##gff-version 3",
+      "chrI\ttest\tgene\t10\t100\t.\t+\t.\tID=geneA;Name=geneA",
+      "chrI\ttest\tmRNA\t10\t100\t.\t+\t.\tID=txA;Parent=geneA;Name=txA",
+      "chrI\ttest\texon\t10\t40\t.\t+\t.\tID=exonA1;Parent=txA",
+      "chrI\ttest\texon\t60\t100\t.\t+\t.\tID=exonA2;Parent=txA"
+    ),
+    ext = ".gff3"
+  )
+  annotation_two <- write_indexed_annotation_fixture(
+    c(
+      "##gff-version 3",
+      "chrI\ttest\tgene\t200\t260\t.\t-\t.\tID=geneB;Name=geneB",
+      "chrI\ttest\tmRNA\t200\t260\t.\t-\t.\tID=txB;Parent=geneB;Name=txB",
+      "chrI\ttest\texon\t200\t220\t.\t-\t.\tID=exonB1;Parent=txB",
+      "chrI\ttest\texon\t240\t260\t.\t-\t.\tID=exonB2;Parent=txB"
+    ),
+    ext = ".gff3"
+  )
+
+  x <- SynIndividual(
+    annotation_file = c(annotation_one, annotation_two),
+    genome_file = genome_waiver(),
+    id = "multi_indexed"
+  )
+
+  region_gr <- query_features(
+    x,
+    chr = "chrI",
+    start = 1,
+    end = 300,
+    feature_type = "exon"
+  )
+
+  expect_null(annotation_data(x))
+  expect_identical(as.character(unique(GenomeInfoDb::seqnames(region_gr))), "chrI")
+  expect_identical(as.character(unique(S4Vectors::mcols(region_gr)$type)), "exon")
+  expect_identical(length(region_gr), 4L)
+})
+
 test_that("query_features returns the same window on unloaded and loaded annotations", {
   annotation_path <- system.file(
     "extdata",
@@ -365,4 +449,38 @@ test_that("subset_individual accepts coords strings", {
     subset_individual(x, chr = target_chr, coords = coords),
     "Provide either `coords` or `chr`/`start`/`end`"
   )
+})
+
+test_that("subset_individual can resolve through SynSpecies", {
+  annotation_path <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+
+  x <- SynIndividual(
+    annotation_file = annotation_path,
+    genome_file = genome_waiver(),
+    id = "XZ1516"
+  )
+  x <- load_annotation(x)
+  sp <- SynSpecies(name = "worms")
+  sp <- add_individual(sp, x)
+
+  gr <- annotation_data(x)
+  target_chr <- as.character(GenomeInfoDb::seqnames(gr))[[1L]]
+  target_start <- IRanges::start(gr)[[1L]]
+  target_end <- IRanges::end(gr)[[1L]]
+
+  subset_x <- subset_individual(
+    sp,
+    individual = "XZ1516",
+    chr = target_chr,
+    start = target_start,
+    end = target_end
+  )
+
+  expect_s4_class(subset_x, "SynIndividual")
+  expect_identical(syn_id(subset_x), "XZ1516")
+  expect_true(length(annotation_data(subset_x)) >= 1L)
 })

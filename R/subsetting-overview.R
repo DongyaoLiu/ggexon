@@ -112,6 +112,12 @@
 #'     N2 = "V:20456000-20465040"
 #'   )
 #' )
+#'
+#' paf_query_only <- pairwise_alignment_data(
+#'   sp,
+#'   alignment = "XZ1516_vs_N2",
+#'   subset = c(XZ1516 = "RagTag_V")
+#' )
 #' }
 #'
 #' @section Which function should I use?:

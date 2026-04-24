@@ -964,8 +964,11 @@ subset_species <- function(x,
 #' Subset a pairwise alignment by query/target regions
 #'
 #' @param x A `SynSpecies` or `SynPairAlignment` object.
-#' @param subset Named character vector/list with one region per species, e.g.
-#'   `c(XZ1516 = "RagTag_V:21550000-21680000", N2 = "V:20450000-20451000")`.
+#' @param subset Named character vector/list with one region per species for
+#'   one or both alignment partners, e.g.
+#'   `c(XZ1516 = "RagTag_V:21550000-21680000", N2 = "V:20450000-20451000")`,
+#'   `c(XZ1516 = "RagTag_V:21550000-21680000")`, or
+#'   `c(XZ1516 = "RagTag_V")`.
 #' @param alignment Optional alignment name when `x` is a `SynSpecies`.
 #'
 #' @return A filtered PAF-like `data.frame`.
@@ -1767,16 +1770,21 @@ read_pairwise_psl <- function(path,
     qspec <- subset_specs[[query_individual(x)]]
     tspec <- subset_specs[[target_individual(x)]]
 
-    paf <- paf[
-      as.character(paf$qchr) == qspec$chr &
+    keep <- rep(TRUE, nrow(paf))
+    if (!is.null(qspec)) {
+      keep <- keep &
+        as.character(paf$qchr) == qspec$chr &
         paf$qstart < qspec$end &
-        paf$qend > qspec$start &
+        paf$qend > qspec$start
+    }
+    if (!is.null(tspec)) {
+      keep <- keep &
         as.character(paf$tchr) == tspec$chr &
         paf$tstart < tspec$end &
-        paf$tend > tspec$start,
-      ,
-      drop = FALSE
-    ]
+        paf$tend > tspec$start
+    }
+
+    paf <- paf[keep, , drop = FALSE]
   }
 
   if (!is.null(filter)) {
@@ -1891,17 +1899,18 @@ load_alignment <- function(x, odgi = NULL, python = NULL, more = NULL) {
   if (is.list(subset) && !is.atomic(subset)) {
     subset <- unlist(subset, use.names = TRUE)
   }
-  if (!is.character(subset) || length(subset) != 2L || is.null(names(subset))) {
+  if (!is.character(subset) || length(subset) < 1L || is.null(names(subset))) {
     stop(
-      "`subset` must be a named character vector/list with one region for query and target species.",
+      "`subset` must be a named character vector/list with one region for one or both species in the pairwise alignment.",
       call. = FALSE
     )
   }
 
-  subset <- subset[alignment_individuals(pair)]
-  if (any(is.na(subset))) {
+  subset <- subset[!is.na(names(subset)) & nzchar(names(subset))]
+  subset <- subset[names(subset) %in% alignment_individuals(pair)]
+  if (length(subset) == 0L) {
     stop(
-      "`subset` must be named with both species in the pairwise alignment: ",
+      "`subset` must be named with one or both species in the pairwise alignment: ",
       paste(alignment_individuals(pair), collapse = ", "),
       call. = FALSE
     )
@@ -1920,9 +1929,22 @@ load_alignment <- function(x, odgi = NULL, python = NULL, more = NULL) {
     }
     spec$paf_chr <- paf_chr
     spec$chr <- paf_chr
+    spec <- .complete_pairwise_subset_window(
+      spec = spec,
+      species_name = species_name,
+      pair = pair,
+      species_obj = species_obj,
+      paf = paf
+    )
     spec
   })
   names(out) <- names(subset)
+
+  missing_species <- setdiff(alignment_individuals(pair), names(out))
+  for (species_name in missing_species) {
+    out[[species_name]] <- NULL
+  }
+
   out
 }
 
@@ -1935,10 +1957,14 @@ load_alignment <- function(x, odgi = NULL, python = NULL, more = NULL) {
   region <- chartr("\uFF1A", ":", region)
   region <- gsub(",", "", region, fixed = TRUE)
 
+  if (!grepl(":", region, fixed = TRUE)) {
+    return(list(chr = region, start = NULL, end = NULL))
+  }
+
   m <- regexec("^([^:]+):(\\d+)-(\\d+)$", region)
   hits <- regmatches(region, m)[[1L]]
   if (length(hits) != 4L) {
-    stop("Region must look like `chr:start-end`: ", x, call. = FALSE)
+    stop("Region must look like `chr` or `chr:start-end`: ", x, call. = FALSE)
   }
 
   start <- as.integer(hits[[3L]])
@@ -1948,6 +1974,49 @@ load_alignment <- function(x, odgi = NULL, python = NULL, more = NULL) {
     start = min(start, end),
     end = max(start, end)
   )
+}
+
+.complete_pairwise_subset_window <- function(spec,
+                                             species_name,
+                                             pair,
+                                             species_obj = NULL,
+                                             paf) {
+  if (!is.null(spec$start) && !is.null(spec$end)) {
+    return(spec)
+  }
+
+  chr_col <- if (identical(species_name, query_individual(pair))) "qchr" else "tchr"
+  start_col <- if (identical(species_name, query_individual(pair))) "qstart" else "tstart"
+  end_col <- if (identical(species_name, query_individual(pair))) "qend" else "tend"
+
+  if (!is.null(species_obj) && methods::is(species_obj, "SynSpecies")) {
+    individual <- individuals(species_obj)[[species_name]]
+    if (methods::is(individual, "SynIndividual")) {
+      seqinfo_obj <- seqinfo(individual)
+      if (!is.null(seqinfo_obj)) {
+        seq_lengths <- GenomeInfoDb::seqlengths(seqinfo_obj)
+        if (spec$chr %in% names(seq_lengths)) {
+          chr_length <- seq_lengths[[spec$chr]]
+          if (!is.na(chr_length) && chr_length > 0) {
+            spec$start <- 1L
+            spec$end <- as.integer(chr_length)
+            return(spec)
+          }
+        }
+      }
+    }
+  }
+
+  chr_rows <- as.character(paf[[chr_col]]) == spec$chr
+  chr_starts <- paf[[start_col]][chr_rows]
+  chr_ends <- paf[[end_col]][chr_rows]
+  if (length(chr_starts) == 0L || length(chr_ends) == 0L) {
+    stop("No pairwise alignment rows found on chromosome ", spec$chr, ".", call. = FALSE)
+  }
+
+  spec$start <- as.integer(min(chr_starts, na.rm = TRUE))
+  spec$end <- as.integer(max(chr_ends, na.rm = TRUE))
+  spec
 }
 
 .resolve_paf_seqname <- function(chr, available) {

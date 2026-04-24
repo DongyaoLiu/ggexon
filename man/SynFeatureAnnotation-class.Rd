@@ -56,7 +56,8 @@ annotated features.}
 \section{Validity rules}{
 
 \itemize{
-\item \code{annotation_format} must be one of \code{"auto"}, \code{"gff"}, or \code{"gtf"}.
+\item \code{annotation_format} must be one of \code{"auto"}, \code{"gff"}, or \code{"gtf"}, either
+length one or the same length as \code{source_file}.
 }
 }
 

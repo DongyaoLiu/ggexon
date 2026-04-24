@@ -6,6 +6,7 @@
 \usage{
 subset_individual(
   x,
+  individual = NULL,
   chr = NULL,
   start = NULL,
   end = NULL,
@@ -14,7 +15,9 @@ subset_individual(
 )
 }
 \arguments{
-\item{x}{A \code{SynIndividual} object.}
+\item{x}{A \code{SynIndividual} or \code{SynSpecies} object.}
+
+\item{individual}{Optional individual name when \code{x} is a \code{SynSpecies}.}
 
 \item{chr}{Chromosome or sequence name to keep.}
 

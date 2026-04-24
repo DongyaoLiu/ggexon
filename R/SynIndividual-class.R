@@ -4,15 +4,17 @@ NULL
 #' SynIndividual class
 #'
 #' `SynIndividual` stores the per-individual data needed to build synteny plots.
-#' The constructor requires an annotation GFF/GTF path and can optionally store
-#' a genome FASTA path. Parsed annotations, nucleotide/protein sequences, and
-#' plotting caches can be attached later through accessor methods.
+#' The constructor requires one or more annotation GFF/GTF paths and can
+#' optionally store a genome FASTA path. Parsed annotations,
+#' nucleotide/protein sequences, and plotting caches can be attached later
+#' through accessor methods.
 #'
 #' @slot id Scalar identifier for the species, genome, or plotting track.
 #' @slot genome_file Path to the genome FASTA file, or `NA_character_` when the
 #'   genome was waived during construction.
-#' @slot annotation_file Path to the corresponding GFF or GTF file.
-#' @slot annotation_format One of `"gff"`, `"gtf"`, or `"auto"`.
+#' @slot annotation_file Path or paths to the corresponding GFF or GTF file(s).
+#' @slot annotation_format One of `"gff"`, `"gtf"`, or `"auto"`, or a vector
+#'   matching `annotation_file`.
 #' @slot annotation Parsed annotation container used for plotting as a
 #'   `GenomicRanges::GRanges` object.
 #' @slot nucleotide_seq Nucleotide sequences extracted from the genome as a
@@ -48,10 +50,12 @@ NULL
 #' [SynFeatureAnnotation()] immediately.
 #'
 #' @section Validity rules:
-#' * `id`, `annotation_file`, and `active_annotation` must be scalar non-empty
-#'   character values.
+#' * `id` and `active_annotation` must be scalar non-empty character values.
+#' * `annotation_file` must be a non-empty character vector with no empty
+#'   entries.
 #' * `genome_file` must be a length-one character vector or `NA_character_`.
-#' * `annotation_format` must be one of `"auto"`, `"gff"`, or `"gtf"`.
+#' * `annotation_format` must be one of `"auto"`, `"gff"`, or `"gtf"`, either
+#'   length one or the same length as `annotation_file`.
 #' * When `annotations` is non-empty, every entry must inherit from
 #'   `SynAnnotation` and `active_annotation` must name one of them.
 #' * `projected_domains` must be a list of data-frame-like objects.
@@ -103,18 +107,18 @@ setClass(
         "`genome_file` must be a single character value or `NA_character_`."
       )
     }
-    if (length(object@annotation_file) != 1L || is.na(object@annotation_file) ||
-        !nzchar(object@annotation_file)) {
+    if (length(object@annotation_file) == 0L || any(is.na(object@annotation_file)) ||
+        any(!nzchar(object@annotation_file))) {
       problems <- c(
         problems,
-        "`annotation_file` must be a single non-empty character value."
+        "`annotation_file` must be a non-empty character vector with no empty entries."
       )
     }
-    if (length(object@annotation_format) != 1L ||
-        !(object@annotation_format %in% c("auto", "gff", "gtf"))) {
+    if (!(length(object@annotation_format) %in% c(1L, length(object@annotation_file))) ||
+        any(!(object@annotation_format %in% c("auto", "gff", "gtf")))) {
       problems <- c(
         problems,
-        "`annotation_format` must be one of 'auto', 'gff', or 'gtf'."
+        "`annotation_format` must be one of 'auto', 'gff', or 'gtf', with length 1 or the same length as `annotation_file`."
       )
     }
     if (length(object@active_annotation) != 1L ||
@@ -167,10 +171,11 @@ setClass(
 #'
 #' @param genome_file Path to the genome FASTA file. Use `genome_waiver()` to
 #'   initialize a `SynIndividual` without a genome FASTA.
-#' @param annotation_file Path to the corresponding GFF or GTF file.
+#' @param annotation_file Path or paths to the corresponding GFF or GTF file(s).
 #' @param id Optional scalar identifier. Defaults to the FASTA stem, or to the
-#'   annotation-file stem when `genome_file` is waived.
-#' @param annotation_format One of `"auto"`, `"gff"`, or `"gtf"`.
+#'   first annotation-file stem when `genome_file` is waived.
+#' @param annotation_format One of `"auto"`, `"gff"`, or `"gtf"`, or a vector
+#'   of the same length as `annotation_file`.
 #' @param metadata Optional metadata list.
 #'
 #' @return A `SynIndividual` object with deferred slots left empty.
@@ -178,9 +183,10 @@ setClass(
 SynIndividual <- function(genome_file = genome_waiver(),
                           annotation_file,
                           id = NULL,
-                          annotation_format = c("auto", "gff", "gtf"),
+                          annotation_format = "auto",
                           metadata = list()) {
-  annotation_format <- match.arg(annotation_format)
+  annotation_file <- .normalize_annotation_file_input(annotation_file)
+  annotation_format <- .normalize_annotation_format_input(annotation_format, annotation_file)
   genome_file <- .normalize_genome_file_input(genome_file)
 
   if (.has_genome_file(genome_file)) {
@@ -194,7 +200,7 @@ SynIndividual <- function(genome_file = genome_waiver(),
 
   if (is.null(id)) {
     id_source <- if (.has_genome_file(genome_file)) genome_file else annotation_file
-    id <- .path_stem(id_source)
+    id <- .path_stem(id_source[[1L]])
   }
 
   default_annotation <- SynFeatureAnnotation(
@@ -219,6 +225,49 @@ SynIndividual <- function(genome_file = genome_waiver(),
   stem <- basename(path)
   stem <- sub("\\.gz$", "", stem, ignore.case = TRUE)
   tools::file_path_sans_ext(stem)
+}
+
+.normalize_annotation_file_input <- function(annotation_file) {
+  if (!is.character(annotation_file) || length(annotation_file) == 0L) {
+    stop(
+      "`annotation_file` must be a non-empty character vector.",
+      call. = FALSE
+    )
+  }
+  annotation_file <- as.character(annotation_file)
+  if (any(is.na(annotation_file)) || any(!nzchar(annotation_file))) {
+    stop(
+      "`annotation_file` must not contain missing or empty paths.",
+      call. = FALSE
+    )
+  }
+  unname(annotation_file)
+}
+
+.normalize_annotation_format_input <- function(annotation_format, annotation_file) {
+  allowed <- c("auto", "gff", "gtf")
+  if (missing(annotation_format) || is.null(annotation_format)) {
+    return(rep("auto", length(annotation_file)))
+  }
+
+  annotation_format <- as.character(annotation_format)
+  if (!(length(annotation_format) %in% c(1L, length(annotation_file)))) {
+    stop(
+      "`annotation_format` must have length 1 or the same length as `annotation_file`.",
+      call. = FALSE
+    )
+  }
+  if (any(is.na(annotation_format)) || any(!(annotation_format %in% allowed))) {
+    stop(
+      "`annotation_format` must contain only 'auto', 'gff', or 'gtf'.",
+      call. = FALSE
+    )
+  }
+  if (length(annotation_format) == 1L) {
+    rep(annotation_format, length(annotation_file))
+  } else {
+    annotation_format
+  }
 }
 
 #' Genome-file waiver for `SynIndividual()`
@@ -250,18 +299,13 @@ check_syn_files <- function(genome_file, annotation_file) {
       is.na(genome_file) || !nzchar(genome_file)) {
     stop("`genome_file` must be a single non-empty character value.", call. = FALSE)
   }
-  if (!is.character(annotation_file) || length(annotation_file) != 1L ||
-      is.na(annotation_file) || !nzchar(annotation_file)) {
-    stop(
-      "`annotation_file` must be a single non-empty character value.",
-      call. = FALSE
-    )
-  }
+  annotation_file <- .normalize_annotation_file_input(annotation_file)
   if (!file.exists(genome_file)) {
     stop("Genome FASTA file does not exist: ", genome_file, call. = FALSE)
   }
-  if (!file.exists(annotation_file)) {
-    stop("Annotation file does not exist: ", annotation_file, call. = FALSE)
+  missing_files <- annotation_file[!file.exists(annotation_file)]
+  if (length(missing_files) > 0L) {
+    stop("Annotation file does not exist: ", missing_files[[1L]], call. = FALSE)
   }
 
   fasta_headers <- .read_fasta_headers(genome_file)
@@ -318,15 +362,10 @@ check_syn_files <- function(genome_file, annotation_file) {
 }
 
 .check_annotation_file <- function(annotation_file) {
-  if (!is.character(annotation_file) || length(annotation_file) != 1L ||
-      is.na(annotation_file) || !nzchar(annotation_file)) {
-    stop(
-      "`annotation_file` must be a single non-empty character value.",
-      call. = FALSE
-    )
-  }
-  if (!file.exists(annotation_file)) {
-    stop("Annotation file does not exist: ", annotation_file, call. = FALSE)
+  annotation_file <- .normalize_annotation_file_input(annotation_file)
+  missing_files <- annotation_file[!file.exists(annotation_file)]
+  if (length(missing_files) > 0L) {
+    stop("Annotation file does not exist: ", missing_files[[1L]], call. = FALSE)
   }
   invisible(TRUE)
 }
@@ -370,10 +409,7 @@ load_annotation <- function(x) {
     if (!is.null(annotation_data(x))) {
       return(x)
     }
-    gr <- rtracklayer::import(
-      annotation_file(x),
-      format = .annotation_import_format(x)
-    )
+    gr <- .import_all_annotation_files(x)
     annotation_data(x) <- .normalize_annotation(gr)
     x@base_annotation <- annotation_data(x)
     x@loaded <- TRUE
@@ -510,33 +546,40 @@ load_annotation <- function(x) {
   )
 
   import_colnames <- if (is.null(colnames)) NULL else unique(colnames)
-  annotation_path <- annotation_file(x)
+  annotation_paths <- annotation_file(x)
+  annotation_formats <- .annotation_import_format(x)
 
-  if (.is_indexed_annotation_file(annotation_path)) {
-    tabix <- Rsamtools::TabixFile(
-      annotation_path,
-      index = .annotation_index_path(annotation_path)
-    )
-    open(tabix)
-    on.exit(try(close(tabix), silent = TRUE), add = TRUE)
+  imported <- lapply(seq_along(annotation_paths), function(i) {
+    annotation_path <- annotation_paths[[i]]
+    annotation_format <- annotation_formats[[i]]
 
-    gr <- .quiet_indexed_annotation_import(
+    if (.is_indexed_annotation_file(annotation_path)) {
+      tabix <- Rsamtools::TabixFile(
+        annotation_path,
+        index = .annotation_index_path(annotation_path)
+      )
+      open(tabix)
+      on.exit(try(close(tabix), silent = TRUE), add = TRUE)
+
+      .quiet_indexed_annotation_import(
+        rtracklayer::import(
+          tabix,
+          format = annotation_format,
+          which = which,
+          feature.type = feature_types,
+          colnames = import_colnames
+        )
+      )
+    } else {
       rtracklayer::import(
-        tabix,
-        format = .annotation_import_format(x),
+        rtracklayer::GFFFile(annotation_path),
         which = which,
         feature.type = feature_types,
         colnames = import_colnames
       )
-    )
-  } else {
-    gr <- rtracklayer::import(
-      rtracklayer::GFFFile(annotation_path),
-      which = which,
-      feature.type = feature_types,
-      colnames = import_colnames
-    )
-  }
+    }
+  })
+  gr <- .combine_annotation_granges(imported)
 
   list(
     gr = .normalize_annotation(gr),
@@ -1085,7 +1128,10 @@ query_features <- function(x,
 #' genomic interval. Patch history and derived caches are cleared so the
 #' returned object behaves as a self-contained view of the selected region.
 #'
-#' @param x A `SynFeatureAnnotation` object.
+#' @param x A `SynFeatureAnnotation`, `SynIndividual`, or `SynSpecies` object.
+#' @param annotation Optional feature-annotation layer name when `x` is a
+#'   `SynIndividual` or `SynSpecies`. Defaults to the active feature annotation.
+#' @param individual Optional individual name when `x` is a `SynSpecies`.
 #' @param chr Chromosome or sequence name to keep.
 #' @param start,end Optional numeric window bounds. If one bound is omitted,
 #'   the helper expands to the start or end of the selected sequence present in
@@ -1093,19 +1139,23 @@ query_features <- function(x,
 #' @param coords Optional coordinate string in the form
 #'   `"V_RagTag:21559983-21620009"`. Use either `coords` or `chr`/`start`/`end`.
 #'
-#' @return A `SynFeatureAnnotation` object.
+#' @return
+#' Returns an object of the same top-level class supplied to `x`: a
+#' `SynFeatureAnnotation`, updated `SynIndividual`, or updated `SynSpecies`.
 #' @export
 subset_feature_annotation <- function(x,
+                                      annotation = NULL,
+                                      individual = NULL,
                                       chr = NULL,
                                       start = NULL,
                                       end = NULL,
                                       coords = NULL) {
-  if (!methods::is(x, "SynFeatureAnnotation")) {
-    stop(
-      "`subset_feature_annotation()` expects a SynFeatureAnnotation object.",
-      call. = FALSE
-    )
-  }
+  owner <- .resolve_subset_feature_annotation_input(
+    x = x,
+    annotation = annotation,
+    individual = individual
+  )
+  ann <- owner$annotation
 
   args <- .resolve_subset_window_args(
     chr = chr,
@@ -1114,9 +1164,9 @@ subset_feature_annotation <- function(x,
     coords = coords
   )
 
-  x <- load_annotation(x)
-  active_gr <- annotation_data(x)
-  base_gr <- base_annotation(x)
+  ann <- load_annotation(ann)
+  active_gr <- annotation_data(ann)
+  base_gr <- base_annotation(ann)
   if (is.null(base_gr)) {
     base_gr <- active_gr
   }
@@ -1126,31 +1176,96 @@ subset_feature_annotation <- function(x,
     chr = args$chr,
     start = args$start,
     end = args$end,
-    label = paste0("annotation layer ", annotation_name(x))
+    label = paste0("annotation layer ", annotation_name(ann))
   )
 
-  x@annotation <- .subset_granges_window(
+  ann@annotation <- .subset_granges_window(
     gr = active_gr,
     chr = window$chr,
     start = window$start,
     end = window$end,
     resolve_seqname = FALSE
   )
-  x@base_annotation <- .subset_granges_window(
+  ann@base_annotation <- .subset_granges_window(
     gr = base_gr,
     chr = window$chr,
     start = window$start,
     end = window$end,
     resolve_seqname = FALSE
   )
-  x@patches <- list()
-  x@feature_index <- NULL
-  x@nucleotide_seq <- NULL
-  x@protein_seq <- NULL
-  x@plot_cache <- list()
-  x@loaded <- TRUE
-  validObject(x)
-  x
+  ann@patches <- list()
+  ann@feature_index <- NULL
+  ann@nucleotide_seq <- NULL
+  ann@protein_seq <- NULL
+  ann@plot_cache <- list()
+  ann@loaded <- TRUE
+  validObject(ann)
+
+  if (identical(owner$kind, "annotation")) {
+    return(ann)
+  }
+
+  if (identical(owner$kind, "individual")) {
+    return(add_annotation(owner$object, ann, set_active = identical(annotation_name(ann), active_feature_annotation(owner$object))))
+  }
+
+  if (identical(owner$kind, "species")) {
+    updated_individual <- add_annotation(
+      owner$individual,
+      ann,
+      set_active = identical(annotation_name(ann), active_feature_annotation(owner$individual))
+    )
+    individuals <- owner$object@individuals
+    individuals[[syn_id(updated_individual)]] <- updated_individual
+    owner$object@individuals <- individuals
+    validObject(owner$object)
+    return(owner$object)
+  }
+
+  ann
+}
+
+.resolve_subset_feature_annotation_input <- function(x,
+                                                     annotation = NULL,
+                                                     individual = NULL) {
+  if (methods::is(x, "SynFeatureAnnotation")) {
+    return(list(kind = "annotation", annotation = x))
+  }
+
+  if (methods::is(x, "SynSpecies")) {
+    individual_obj <- resolve_syn_individual(x, species = individual)
+    ann_name <- annotation %||% active_feature_annotation(individual_obj)
+    ann <- get_annotation(individual_obj, ann_name)
+    if (!methods::is(ann, "SynFeatureAnnotation")) {
+      stop(
+        "`subset_feature_annotation()` requires a SynFeatureAnnotation layer.",
+        call. = FALSE
+      )
+    }
+    return(list(
+      kind = "species",
+      object = x,
+      individual = individual_obj,
+      annotation = ann
+    ))
+  }
+
+  if (methods::is(x, "SynIndividual")) {
+    ann_name <- annotation %||% active_feature_annotation(x)
+    ann <- get_annotation(x, ann_name)
+    if (!methods::is(ann, "SynFeatureAnnotation")) {
+      stop(
+        "`subset_feature_annotation()` requires a SynFeatureAnnotation layer.",
+        call. = FALSE
+      )
+    }
+    return(list(kind = "individual", object = x, annotation = ann))
+  }
+
+  stop(
+    "`subset_feature_annotation()` expects a SynFeatureAnnotation, SynIndividual, or SynSpecies object.",
+    call. = FALSE
+  )
 }
 
 #' Subset a SynIndividual by genomic window
@@ -1161,7 +1276,8 @@ subset_feature_annotation <- function(x,
 #' layers remain attached unchanged. Object-level derived caches are cleared so
 #' the result is ready to use as a clean windowed view.
 #'
-#' @param x A `SynIndividual` object.
+#' @param x A `SynIndividual` or `SynSpecies` object.
+#' @param individual Optional individual name when `x` is a `SynSpecies`.
 #' @param chr Chromosome or sequence name to keep.
 #' @param start,end Optional numeric window bounds. If one bound is omitted,
 #'   the helper expands to the start or end of the selected sequence present in
@@ -1174,13 +1290,17 @@ subset_feature_annotation <- function(x,
 #' @return A `SynIndividual` object.
 #' @export
 subset_individual <- function(x,
+                              individual = NULL,
                               chr = NULL,
                               start = NULL,
                               end = NULL,
                               coords = NULL,
                               annotations = c("all_feature", "active")) {
+  if (methods::is(x, "SynSpecies")) {
+    x <- resolve_syn_individual(x, species = individual)
+  }
   if (!methods::is(x, "SynIndividual")) {
-    stop("`subset_individual()` expects a SynIndividual object.", call. = FALSE)
+    stop("`subset_individual()` expects a SynIndividual or SynSpecies object.", call. = FALSE)
   }
 
   args <- .resolve_subset_window_args(
@@ -1421,24 +1541,29 @@ setGeneric("annotation_data<-", function(x, value) {
     "auto"
   }
 
-  if (!identical(declared_format, "auto")) {
-    return(declared_format)
-  }
-
   path <- if (methods::is(x, "SynIndividual") || methods::is(x, "SynFeatureAnnotation")) {
     annotation_file(x)
   } else {
     x
   }
-  ext <- base::tolower(tools::file_ext(sub("\\.gz$", "", path, ignore.case = TRUE)))
+  if (length(declared_format) == 1L) {
+    declared_format <- rep(declared_format, length(path))
+  }
 
-  switch(
-    ext,
-    gff = "gff",
-    gff3 = "gff",
-    gtf = "gtf",
-    stop("Unsupported annotation file format: ", path, call. = FALSE)
-  )
+  vapply(seq_along(path), function(i) {
+    if (!identical(declared_format[[i]], "auto")) {
+      return(declared_format[[i]])
+    }
+
+    ext <- base::tolower(tools::file_ext(sub("\\.gz$", "", path[[i]], ignore.case = TRUE)))
+    switch(
+      ext,
+      gff = "gff",
+      gff3 = "gff",
+      gtf = "gtf",
+      stop("Unsupported annotation file format: ", path[[i]], call. = FALSE)
+    )
+  }, character(1))
 }
 
 .read_fasta_headers <- function(path) {
@@ -1455,36 +1580,63 @@ setGeneric("annotation_data<-", function(x, value) {
 }
 
 .read_annotation_seqnames <- function(path) {
-  if (.is_indexed_annotation_file(path)) {
-    tabix <- Rsamtools::TabixFile(path, index = .annotation_index_path(path))
-    open(tabix)
-    on.exit(try(close(tabix), silent = TRUE), add = TRUE)
+  path <- .normalize_annotation_file_input(path)
+  seqnames <- unlist(lapply(path, function(one_path) {
+    if (.is_indexed_annotation_file(one_path)) {
+      tabix <- Rsamtools::TabixFile(one_path, index = .annotation_index_path(one_path))
+      open(tabix)
+      on.exit(try(close(tabix), silent = TRUE), add = TRUE)
 
-    seqnames <- as.character(Rsamtools::seqnamesTabix(tabix))
-    seqnames <- trimws(seqnames)
-    return(unique(seqnames[nzchar(seqnames)]))
+      seqs <- as.character(Rsamtools::seqnamesTabix(tabix))
+      seqs <- trimws(seqs)
+      return(unique(seqs[nzchar(seqs)]))
+    }
+
+    con <- .open_text_connection(one_path)
+    on.exit(close(con), add = TRUE)
+
+    lines <- readLines(con, warn = FALSE)
+    lines <- lines[!grepl("^\\s*#", lines)]
+    lines <- lines[nzchar(lines)]
+    if (length(lines) == 0L) {
+      return(character())
+    }
+
+    fields <- strsplit(lines, "\t", fixed = TRUE)
+    seqs <- vapply(
+      fields,
+      function(x) {
+        if (length(x) == 0L) "" else x[[1L]]
+      },
+      character(1)
+    )
+    seqs <- trimws(seqs)
+    unique(seqs[nzchar(seqs)])
+  }), use.names = FALSE)
+  unique(seqnames)
+}
+
+.combine_annotation_granges <- function(gr_list) {
+  gr_list <- Filter(function(x) length(x) > 0L, gr_list)
+  if (length(gr_list) == 0L) {
+    return(GenomicRanges::GRanges())
   }
-
-  con <- .open_text_connection(path)
-  on.exit(close(con), add = TRUE)
-
-  lines <- readLines(con, warn = FALSE)
-  lines <- lines[!grepl("^\\s*#", lines)]
-  lines <- lines[nzchar(lines)]
-  if (length(lines) == 0L) {
-    return(character())
+  if (length(gr_list) == 1L) {
+    return(gr_list[[1L]])
   }
+  do.call(c, unname(gr_list))
+}
 
-  fields <- strsplit(lines, "\t", fixed = TRUE)
-  seqnames <- vapply(
-    fields,
-    function(x) {
-      if (length(x) == 0L) "" else x[[1L]]
-    },
-    character(1)
-  )
-  seqnames <- trimws(seqnames)
-  unique(seqnames[nzchar(seqnames)])
+.import_all_annotation_files <- function(x) {
+  annotation_paths <- annotation_file(x)
+  annotation_formats <- .annotation_import_format(x)
+  imported <- lapply(seq_along(annotation_paths), function(i) {
+    rtracklayer::import(
+      annotation_paths[[i]],
+      format = annotation_formats[[i]]
+    )
+  })
+  .combine_annotation_granges(imported)
 }
 
 .normalize_annotation <- function(gr) {

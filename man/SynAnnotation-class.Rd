@@ -16,7 +16,8 @@ semantics.
 \describe{
 \item{\code{name}}{Short unique label used to retrieve the annotation layer.}
 
-\item{\code{source_file}}{Path to the on-disk file backing the annotation.}
+\item{\code{source_file}}{Path or paths to the on-disk file(s) backing the
+annotation.}
 
 \item{\code{annotation_scope}}{Scalar coordinate scope such as \code{"nucleotide"} or
 \code{"protein"}.}
@@ -45,8 +46,8 @@ reusable render-time state.}
 \section{Validity rules}{
 
 \itemize{
-\item \code{name}, \code{source_file}, and \code{annotation_scope} must each be one non-empty
-character value.
+\item \code{name} and \code{annotation_scope} must each be one non-empty character value.
+\item \code{source_file} must be a non-empty character vector with no empty entries.
 \item \code{lazy} and \code{loaded} must each be scalar logical values.
 }
 }

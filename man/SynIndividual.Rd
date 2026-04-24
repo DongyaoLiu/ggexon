@@ -8,7 +8,7 @@ SynIndividual(
   genome_file = genome_waiver(),
   annotation_file,
   id = NULL,
-  annotation_format = c("auto", "gff", "gtf"),
+  annotation_format = "auto",
   metadata = list()
 )
 }
@@ -16,12 +16,13 @@ SynIndividual(
 \item{genome_file}{Path to the genome FASTA file. Use \code{genome_waiver()} to
 initialize a \code{SynIndividual} without a genome FASTA.}
 
-\item{annotation_file}{Path to the corresponding GFF or GTF file.}
+\item{annotation_file}{Path or paths to the corresponding GFF or GTF file(s).}
 
 \item{id}{Optional scalar identifier. Defaults to the FASTA stem, or to the
-annotation-file stem when \code{genome_file} is waived.}
+first annotation-file stem when \code{genome_file} is waived.}
 
-\item{annotation_format}{One of \code{"auto"}, \code{"gff"}, or \code{"gtf"}.}
+\item{annotation_format}{One of \code{"auto"}, \code{"gff"}, or \code{"gtf"}, or a vector
+of the same length as \code{annotation_file}.}
 
 \item{metadata}{Optional metadata list.}
 }

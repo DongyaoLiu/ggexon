@@ -445,6 +445,40 @@ test_that("subset_species trims selected individuals from species-tagged coords"
   )
 })
 
+test_that("subset_feature_annotation returns an updated SynSpecies when given SynSpecies", {
+  annotation_path <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+
+  x <- SynIndividual(
+    annotation_file = annotation_path,
+    genome_file = genome_waiver(),
+    id = "XZ1516"
+  ) |>
+    load_annotation()
+
+  sp <- SynSpecies(name = "worms")
+  sp <- add_individual(sp, x)
+
+  gr <- annotation_data(x)
+  target_chr <- as.character(GenomeInfoDb::seqnames(gr))[[1L]]
+  target_start <- IRanges::start(gr)[[1L]]
+  target_end <- IRanges::end(gr)[[1L]]
+
+  subset_sp <- subset_feature_annotation(
+    sp,
+    individual = "XZ1516",
+    chr = target_chr,
+    start = target_start,
+    end = target_end
+  )
+
+  expect_s4_class(subset_sp, "SynSpecies")
+  expect_true(length(annotation_data(individuals(subset_sp)[["XZ1516"]])) >= 1L)
+})
+
 test_that("SynLayout shared geom parameters are resolved before layer overrides", {
   genome_path <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
   annotation_path <- system.file(
@@ -931,4 +965,121 @@ test_that("subset_pairwise_alignment and filter_pairwise_alignment compose on a 
   expect_true(all(filtered$alen >= 200L))
   expect_true(all(subsetted$qstart < 21584356L & subsetted$qend > 21574445L))
   expect_true(all(subsetted$tstart < 20465040L & subsetted$tend > 20456000L))
+})
+
+test_that("subset_pairwise_alignment accepts one-sided subsets", {
+  xz_genome <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
+  xz_annotation <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+  n2_genome <- system.file(
+    "extdata",
+    "c_elegans.PRJNA13758.WS285.genomic.fa",
+    package = "ggexon"
+  )
+  n2_annotation <- system.file(
+    "extdata",
+    "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
+    package = "ggexon"
+  )
+  paf_path <- system.file("extdata", "V_alginment.paf", package = "ggexon")
+
+  sp <- SynSpecies(name = "Caenorhabditis")
+  sp <- add_individual(
+    sp,
+    test_syn_individual(
+      genome_file = xz_genome,
+      annotation_file = xz_annotation,
+      id = "XZ1516"
+    )
+  )
+  sp <- add_individual(
+    sp,
+    test_syn_individual(
+      genome_file = n2_genome,
+      annotation_file = n2_annotation,
+      id = "N2",
+      annotation_format = "gtf"
+    )
+  )
+  sp <- add_pairwise_alignment(
+    sp,
+    SynPairAlignment(
+      name = "XZ1516_vs_N2",
+      query_individual = "XZ1516",
+      target_individual = "N2",
+      file = paf_path
+    )
+  )
+
+  subsetted <- subset_pairwise_alignment(
+    sp,
+    alignment = "XZ1516_vs_N2",
+    subset = c(XZ1516 = "RagTag_V:21574445-21584356")
+  )
+
+  expect_true(nrow(subsetted) > 0L)
+  expect_true(all(subsetted$qstart < 21584356L & subsetted$qend > 21574445L))
+  expect_identical(unique(as.character(subsetted$qchr)), "V_RagTag")
+})
+
+test_that("subset_pairwise_alignment accepts chromosome-only subset strings", {
+  xz_genome <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
+  xz_annotation <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+  n2_genome <- system.file(
+    "extdata",
+    "c_elegans.PRJNA13758.WS285.genomic.fa",
+    package = "ggexon"
+  )
+  n2_annotation <- system.file(
+    "extdata",
+    "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
+    package = "ggexon"
+  )
+  paf_path <- system.file("extdata", "V_alginment.paf", package = "ggexon")
+
+  sp <- SynSpecies(name = "Caenorhabditis")
+  sp <- add_individual(
+    sp,
+    test_syn_individual(
+      genome_file = xz_genome,
+      annotation_file = xz_annotation,
+      id = "XZ1516"
+    )
+  )
+  sp <- add_individual(
+    sp,
+    test_syn_individual(
+      genome_file = n2_genome,
+      annotation_file = n2_annotation,
+      id = "N2",
+      annotation_format = "gtf"
+    )
+  )
+  sp <- add_pairwise_alignment(
+    sp,
+    SynPairAlignment(
+      name = "XZ1516_vs_N2",
+      query_individual = "XZ1516",
+      target_individual = "N2",
+      file = paf_path
+    )
+  )
+
+  subsetted <- subset_pairwise_alignment(
+    sp,
+    alignment = "XZ1516_vs_N2",
+    subset = c(XZ1516 = "RagTag_V")
+  )
+  all_rows <- pairwise_alignment_data(sp, alignment = "XZ1516_vs_N2")
+
+  expect_true(nrow(subsetted) > 0L)
+  expect_identical(nrow(subsetted), sum(as.character(all_rows$qchr) == "V_RagTag"))
+  expect_true(all(as.character(subsetted$qchr) == "V_RagTag"))
 })

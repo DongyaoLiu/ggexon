@@ -7,7 +7,7 @@
 SynFeatureAnnotation(
   name,
   annotation_file,
-  annotation_format = c("auto", "gff", "gtf"),
+  annotation_format = "auto",
   metadata = list(),
   lazy = TRUE
 )
@@ -15,9 +15,10 @@ SynFeatureAnnotation(
 \arguments{
 \item{name}{Short unique label for the annotation layer.}
 
-\item{annotation_file}{Path to the GFF or GTF file.}
+\item{annotation_file}{Path or paths to the GFF or GTF file(s).}
 
-\item{annotation_format}{One of \code{"auto"}, \code{"gff"}, or \code{"gtf"}.}
+\item{annotation_format}{One of \code{"auto"}, \code{"gff"}, or \code{"gtf"}, or a vector
+of the same length as \code{annotation_file}.}
 
 \item{metadata}{Optional metadata list.}
 

@@ -6,9 +6,10 @@
 \title{SynIndividual class}
 \description{
 \code{SynIndividual} stores the per-individual data needed to build synteny plots.
-The constructor requires an annotation GFF/GTF path and can optionally store
-a genome FASTA path. Parsed annotations, nucleotide/protein sequences, and
-plotting caches can be attached later through accessor methods.
+The constructor requires one or more annotation GFF/GTF paths and can
+optionally store a genome FASTA path. Parsed annotations,
+nucleotide/protein sequences, and plotting caches can be attached later
+through accessor methods.
 }
 \section{Slots}{
 
@@ -18,9 +19,10 @@ plotting caches can be attached later through accessor methods.
 \item{\code{genome_file}}{Path to the genome FASTA file, or \code{NA_character_} when the
 genome was waived during construction.}
 
-\item{\code{annotation_file}}{Path to the corresponding GFF or GTF file.}
+\item{\code{annotation_file}}{Path or paths to the corresponding GFF or GTF file(s).}
 
-\item{\code{annotation_format}}{One of \code{"gff"}, \code{"gtf"}, or \code{"auto"}.}
+\item{\code{annotation_format}}{One of \code{"gff"}, \code{"gtf"}, or \code{"auto"}, or a vector
+matching \code{annotation_file}.}
 
 \item{\code{annotation}}{Parsed annotation container used for plotting as a
 \code{GenomicRanges::GRanges} object.}
@@ -73,10 +75,12 @@ The raw class prototype leaves \code{annotations} empty. The high-level
 \section{Validity rules}{
 
 \itemize{
-\item \code{id}, \code{annotation_file}, and \code{active_annotation} must be scalar non-empty
-character values.
+\item \code{id} and \code{active_annotation} must be scalar non-empty character values.
+\item \code{annotation_file} must be a non-empty character vector with no empty
+entries.
 \item \code{genome_file} must be a length-one character vector or \code{NA_character_}.
-\item \code{annotation_format} must be one of \code{"auto"}, \code{"gff"}, or \code{"gtf"}.
+\item \code{annotation_format} must be one of \code{"auto"}, \code{"gff"}, or \code{"gtf"}, either
+length one or the same length as \code{annotation_file}.
 \item When \code{annotations} is non-empty, every entry must inherit from
 \code{SynAnnotation} and \code{active_annotation} must name one of them.
 \item \code{projected_domains} must be a list of data-frame-like objects.
