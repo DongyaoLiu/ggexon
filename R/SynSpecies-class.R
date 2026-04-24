@@ -1469,7 +1469,165 @@ setMethod("subset_synspecies_window", "SynSpecies", function(x,
   pair_list[[alignment]]
 }
 
-.read_pairwise_paf <- function(path) {
+.paf_cigar_from_optional <- function(fields) {
+  if (length(fields) <= 12L) {
+    return(rep(NA_character_, nrow(fields)))
+  }
+
+  optional <- fields[, seq.int(13L, ncol(fields)), drop = FALSE]
+  apply(optional, 1L, function(x) {
+    hit <- grep("^cg:Z:", x)
+    if (length(hit) == 0L) {
+      return(NA_character_)
+    }
+    sub("^cg:Z:", "", x[[hit[[1L]]]])
+  })
+}
+
+.parse_paf_cigar <- function(cigar) {
+  if (length(cigar) != 1L || is.na(cigar) || !nzchar(cigar)) {
+    return(data.frame(len = integer(), op = character(), stringsAsFactors = FALSE))
+  }
+
+  pieces <- regmatches(cigar, gregexpr("[0-9]+[A-Z=]", cigar, perl = TRUE))[[1L]]
+  if (length(pieces) == 0L || identical(pieces, character(0))) {
+    return(data.frame(len = integer(), op = character(), stringsAsFactors = FALSE))
+  }
+
+  data.frame(
+    len = as.integer(sub("[A-Z=]$", "", pieces, perl = TRUE)),
+    op = sub("^[0-9]+", "", pieces, perl = TRUE),
+    stringsAsFactors = FALSE
+  )
+}
+
+.paf_query_interval <- function(cursor, width, strand = "+") {
+  cursor <- as.integer(cursor)
+  width <- as.integer(width)
+
+  if (anyNA(c(cursor, width))) {
+    return(c(NA_integer_, NA_integer_))
+  }
+
+  if (identical(strand, "-")) {
+    return(c(cursor - width, cursor))
+  }
+
+  c(cursor, cursor + width)
+}
+
+.paf_query_consumes <- function(op) {
+  op %in% c("M", "=", "X", "I", "S")
+}
+
+.paf_target_consumes <- function(op) {
+  op %in% c("M", "=", "X", "D", "N")
+}
+
+.empty_pairwise_alignment_detail_table <- function() {
+  out <- .empty_pairwise_alignment_table()
+  out$paf_row <- integer()
+  out$block_index <- integer()
+  out$block_size <- integer()
+  out$cigar_op <- character()
+  out$qstrand <- character()
+  out$tstrand <- character()
+  out$qstart_raw <- integer()
+  out$qend_raw <- integer()
+  out$tstart_raw <- integer()
+  out$tend_raw <- integer()
+  rownames(out) <- NULL
+  out
+}
+
+.expand_paf_matches <- function(paf) {
+  if (nrow(paf) == 0L) {
+    return(.empty_pairwise_alignment_detail_table())
+  }
+
+  block_rows <- vector("list", nrow(paf))
+
+  for (i in seq_len(nrow(paf))) {
+    ops <- .parse_paf_cigar(paf$cigar[[i]])
+    if (nrow(ops) == 0L) {
+      next
+    }
+
+    qstrand <- if (isTRUE(paf$strand[[i]] == "-")) "-" else "+"
+    tstrand <- "+"
+    qcursor <- if (identical(qstrand, "-")) as.integer(paf$qend[[i]]) else as.integer(paf$qstart[[i]])
+    tcursor <- as.integer(paf$tstart[[i]])
+    row_index <- 0L
+    rows <- vector("list", nrow(ops))
+
+    for (j in seq_len(nrow(ops))) {
+      op <- ops$op[[j]]
+      len <- as.integer(ops$len[[j]])
+
+      if (is.na(len) || len < 0L) {
+        next
+      }
+
+      if (op %in% c("M", "=")) {
+        row_index <- row_index + 1L
+        q_interval <- .paf_query_interval(qcursor, len, strand = qstrand)
+        t_interval <- c(tcursor, tcursor + len)
+
+        rows[[row_index]] <- data.frame(
+          qchr = as.character(paf$qchr[[i]]),
+          qlen = as.integer(paf$qlen[[i]]),
+          qstart = as.integer(q_interval[[1L]]),
+          qend = as.integer(q_interval[[2L]]),
+          strand = as.character(paf$strand[[i]]),
+          tchr = as.character(paf$tchr[[i]]),
+          tlen = as.integer(paf$tlen[[i]]),
+          tstart = as.integer(t_interval[[1L]]),
+          tend = as.integer(t_interval[[2L]]),
+          nmatch = len,
+          alen = len,
+          mapq = as.integer(paf$mapq[[i]]),
+          paf_row = as.integer(i),
+          block_index = as.integer(row_index),
+          block_size = len,
+          cigar_op = op,
+          qstrand = qstrand,
+          tstrand = tstrand,
+          qstart_raw = as.integer(q_interval[[1L]]),
+          qend_raw = as.integer(q_interval[[2L]]),
+          tstart_raw = as.integer(t_interval[[1L]]),
+          tend_raw = as.integer(t_interval[[2L]]),
+          stringsAsFactors = FALSE
+        )
+      }
+
+      if (.paf_query_consumes(op)) {
+        if (identical(qstrand, "-")) {
+          qcursor <- qcursor - len
+        } else {
+          qcursor <- qcursor + len
+        }
+      }
+      if (.paf_target_consumes(op)) {
+        tcursor <- tcursor + len
+      }
+    }
+
+    rows <- Filter(Negate(is.null), rows)
+    if (length(rows) > 0L) {
+      block_rows[[i]] <- dplyr::bind_rows(rows)
+    }
+  }
+
+  out <- dplyr::bind_rows(Filter(Negate(is.null), block_rows))
+  if (nrow(out) == 0L) {
+    return(.empty_pairwise_alignment_detail_table())
+  }
+
+  rownames(out) <- NULL
+  out
+}
+
+.read_pairwise_paf <- function(path, cigar = FALSE) {
   paf <- utils::read.delim(
     path,
     header = FALSE,
@@ -1489,6 +1647,11 @@ setMethod("subset_synspecies_window", "SynSpecies", function(x,
   for (col in numeric_cols) {
     paf[[col]] <- as.integer(paf[[col]])
   }
+  paf$cigar <- .paf_cigar_from_optional(paf)
+  if (isTRUE(cigar)) {
+    return(.expand_paf_matches(paf))
+  }
+  paf$cigar <- NULL
   paf
 }
 
@@ -1842,17 +2005,21 @@ read_pairwise_psl <- function(path,
   out
 }
 
-.pairwise_alignment_table <- function(x, odgi = NULL, python = NULL, more = NULL) {
+.pairwise_alignment_table <- function(x, odgi = NULL, python = NULL, more = NULL, cigar = NULL) {
   use_more <- if (is.null(more)) FALSE else isTRUE(more)
+  use_cigar <- if (is.null(cigar)) FALSE else isTRUE(cigar)
   use_cached <- !is.null(x@data)
   if (use_cached && identical(alignment_format(x), "psl") && !is.null(more)) {
     use_cached <- identical(isTRUE(x@metadata$psl_more), use_more)
+  }
+  if (use_cached && identical(alignment_format(x), "paf") && !is.null(cigar)) {
+    use_cached <- identical(isTRUE(x@metadata$paf_detail), use_cigar)
   }
 
   paf <- if (use_cached) {
     x@data
   } else if (identical(alignment_format(x), "paf")) {
-    .read_pairwise_paf(alignment_file(x))
+    .read_pairwise_paf(alignment_file(x), cigar = use_cigar)
   } else if (identical(alignment_format(x), "psl")) {
     read_pairwise_psl(
       alignment_file(x),
@@ -1894,8 +2061,15 @@ read_pairwise_psl <- function(path,
                                           filter = NULL,
                                           odgi = NULL,
                                           python = NULL,
-                                          more = NULL) {
-  paf <- .pairwise_alignment_table(x, odgi = odgi, python = python, more = more)
+                                          more = NULL,
+                                          cigar = NULL) {
+  paf <- .pairwise_alignment_table(
+    x,
+    odgi = odgi,
+    python = python,
+    more = more,
+    cigar = cigar
+  )
 
   if (!is.null(subset)) {
     subset_specs <- .parse_pairwise_subset(
@@ -1963,6 +2137,12 @@ read_pairwise_psl <- function(path,
 #'   block before caching the parsed data. When `NULL`, preserve any existing
 #'   cached PSL detail level and default unloaded PSL alignments to the coarse
 #'   one-row-per-record representation.
+#' @param cigar Logical or `NULL`; when `TRUE` and `x` is a PAF-backed
+#'   [`SynPairAlignment`], expand each `cg:Z:` CIGAR string into one row per
+#'   match block before caching the parsed data. Only match operations are
+#'   emitted; gap and mismatch operations are used only to advance coordinates.
+#'   When `NULL`, preserve any existing cached PAF detail level and default
+#'   unloaded PAF alignments to the coarse one-row-per-record representation.
 #' @param alignment Optional stored alignment name when `x` is a `SynSpecies`.
 #'   When omitted, all stored pairwise and multiple alignments are loaded.
 #'
@@ -1982,11 +2162,11 @@ read_pairwise_psl <- function(path,
 #' pair <- load_alignment(pair)
 #'
 #' @export
-setGeneric("load_alignment", function(x, odgi = NULL, python = NULL, more = NULL, alignment = NULL) {
+setGeneric("load_alignment", function(x, odgi = NULL, python = NULL, more = NULL, cigar = NULL, alignment = NULL) {
   standardGeneric("load_alignment")
 })
 
-setMethod("load_alignment", "SynPairAlignment", function(x, odgi = NULL, python = NULL, more = NULL, alignment = NULL) {
+setMethod("load_alignment", "SynPairAlignment", function(x, odgi = NULL, python = NULL, more = NULL, cigar = NULL, alignment = NULL) {
   if (identical(alignment_format(x), "psl")) {
     psl_more <- more
     if (is.null(psl_more)) {
@@ -1999,10 +2179,31 @@ setMethod("load_alignment", "SynPairAlignment", function(x, odgi = NULL, python 
     reload_psl <- FALSE
   }
 
-  if (is.null(x@data) || reload_psl) {
-    x@data <- .pairwise_alignment_table(x, odgi = odgi, python = python, more = psl_more)
+  if (identical(alignment_format(x), "paf")) {
+    paf_detail <- cigar
+    if (is.null(paf_detail)) {
+      paf_detail <- if (is.null(x@data)) FALSE else isTRUE(x@metadata$paf_detail)
+    }
+    reload_paf <- is.null(x@data) ||
+      !identical(isTRUE(x@metadata$paf_detail), isTRUE(paf_detail))
+  } else {
+    paf_detail <- cigar
+    reload_paf <- FALSE
+  }
+
+  if (is.null(x@data) || reload_psl || reload_paf) {
+    x@data <- .pairwise_alignment_table(
+      x,
+      odgi = odgi,
+      python = python,
+      more = psl_more,
+      cigar = paf_detail
+    )
     if (identical(alignment_format(x), "psl")) {
       x@metadata$psl_more <- isTRUE(psl_more)
+    }
+    if (identical(alignment_format(x), "paf")) {
+      x@metadata$paf_detail <- isTRUE(paf_detail)
     }
   }
   x@loaded <- TRUE
@@ -2010,7 +2211,7 @@ setMethod("load_alignment", "SynPairAlignment", function(x, odgi = NULL, python 
   x
 })
 
-setMethod("load_alignment", "SynMultiAlignment", function(x, odgi = NULL, python = NULL, more = NULL, alignment = NULL) {
+setMethod("load_alignment", "SynMultiAlignment", function(x, odgi = NULL, python = NULL, more = NULL, cigar = NULL, alignment = NULL) {
   if (is.null(x@data)) {
     if (!identical(alignment_format(x), "odgi")) {
       stop(
@@ -2031,7 +2232,7 @@ setMethod("load_alignment", "SynMultiAlignment", function(x, odgi = NULL, python
   x
 })
 
-setMethod("load_alignment", "SynSpecies", function(x, odgi = NULL, python = NULL, more = NULL, alignment = NULL) {
+setMethod("load_alignment", "SynSpecies", function(x, odgi = NULL, python = NULL, more = NULL, cigar = NULL, alignment = NULL) {
   if (!is.null(alignment)) {
     resolved <- .resolve_stored_alignment_arg(x, alignment = alignment)
     if (identical(resolved$type, "pairwise")) {
@@ -2039,7 +2240,8 @@ setMethod("load_alignment", "SynSpecies", function(x, odgi = NULL, python = NULL
         resolved$object,
         odgi = odgi,
         python = python,
-        more = more
+        more = more,
+        cigar = cigar
       )
     } else {
       x@multiple_alignments[[alignment]] <- load_alignment(
@@ -2054,7 +2256,14 @@ setMethod("load_alignment", "SynSpecies", function(x, odgi = NULL, python = NULL
 
   pairs <- pairwise_alignments(x)
   if (length(pairs) > 0L) {
-    x@pairwise_alignments <- lapply(pairs, load_alignment, odgi = odgi, python = python, more = more)
+    x@pairwise_alignments <- lapply(
+      pairs,
+      load_alignment,
+      odgi = odgi,
+      python = python,
+      more = more,
+      cigar = cigar
+    )
   }
 
   multis <- multiple_alignments(x)
