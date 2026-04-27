@@ -1517,6 +1517,74 @@ test_that("geom_exon keeps a blank annotation panel for pairwise species without
   expect_true(any(as.character(built@data[[2L]]$qspecies) == "N2"))
 })
 
+test_that("bare SynIndividuals build as blank panels and keep pairwise links", {
+  n2_genome <- system.file(
+    "extdata",
+    "c_elegans.PRJNA13758.WS285.genomic.fa",
+    package = "ggexon"
+  )
+  n2_annotation <- system.file(
+    "extdata",
+    "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
+    package = "ggexon"
+  )
+
+  psl_path <- tempfile(fileext = ".psl")
+  writeLines(
+    paste(
+      c(
+        "AFRA_V_10256132_10256237",
+        100, 5, 0, 0, 0, 0, 0, 0,
+        "++",
+        "V", 20924180, 20467551, 20467656,
+        "V", 12207686, 10256132, 10256237,
+        1, "105,", "20467551,", "10256132,"
+      ),
+      collapse = "\t"
+    ),
+    psl_path
+  )
+
+  sp <- SynSpecies(name = "PairwiseBare")
+  sp <- add_individual(
+    sp,
+    test_syn_individual(
+      genome_file = n2_genome,
+      annotation_file = n2_annotation,
+      id = "N2",
+      annotation_format = "gtf"
+    )
+  )
+  sp <- add_individual(sp, SynIndividual(id = "AFRA"))
+  sp <- add_pairwise_alignment(
+    sp,
+    SynPairAlignment(
+      name = "N2_vs_AFRA",
+      query_individual = "N2",
+      target_individual = "AFRA",
+      file = psl_path,
+      format = "psl"
+    )
+  )
+
+  built <- ggexon_build(
+    ggexon(sp) +
+      geom_exon() +
+      geom_genelabel() +
+      geom_nuclink(alignment = "N2_vs_AFRA") +
+      facet_genomics(ggplot2::vars(track), scales = "free")
+  )
+
+  expect_identical(
+    as.character(built@layout$layout$track),
+    c("N2", "link_N2_vs_AFRA", "AFRA")
+  )
+  expect_true(any(as.character(built@data[[1L]]$track) == "AFRA"))
+  expect_true(any(as.character(built@data[[1L]]$transcripts) == "__blank__AFRA"))
+  expect_true(any(as.integer(built@data[[3L]]$t_panel) == 3L))
+  expect_true(any(as.integer(built@data[[3L]]$q_panel) == 1L))
+})
+
 test_that("geom_nuclink preserves anchor metadata for detailed PSL alignments", {
   n2_genome <- system.file(
     "extdata",

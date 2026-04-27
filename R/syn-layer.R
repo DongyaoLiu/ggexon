@@ -723,7 +723,7 @@ infer_pairwise_alignment_windows <- function(x, pair) {
     query_individual_obj <- if (methods::is(x, "SynSpecies")) individuals(x)[[query_species]] else NULL
     out[[query_species]] <- data.frame(
       chr = if (methods::is(query_individual_obj, "SynIndividual")) {
-        resolve_syn_seqname(query_individual_obj, query_chr[[1L]])
+        resolve_syn_seqname_or_raw(query_individual_obj, query_chr[[1L]])
       } else {
         query_chr[[1L]]
       },
@@ -739,7 +739,7 @@ infer_pairwise_alignment_windows <- function(x, pair) {
     target_individual_obj <- if (methods::is(x, "SynSpecies")) individuals(x)[[target_species]] else NULL
     out[[target_species]] <- data.frame(
       chr = if (methods::is(target_individual_obj, "SynIndividual")) {
-        resolve_syn_seqname(target_individual_obj, target_chr[[1L]])
+        resolve_syn_seqname_or_raw(target_individual_obj, target_chr[[1L]])
       } else {
         target_chr[[1L]]
       },
@@ -772,7 +772,7 @@ normalize_syn_window_request <- function(x,
     }
 
     return(list(
-      chr = resolve_syn_seqname(individual, chr),
+      chr = resolve_syn_seqname_or_raw(individual, chr),
       start = min(subset),
       end = max(subset)
     ))
@@ -781,7 +781,7 @@ normalize_syn_window_request <- function(x,
   derived_window <- context$windows[[species]] %||% NULL
   if (!is.null(derived_window)) {
     if (!is.null(chr)) {
-      requested_chr <- resolve_syn_seqname(individual, chr)
+      requested_chr <- resolve_syn_seqname_or_raw(individual, chr)
       if (!identical(requested_chr, derived_window$chr)) {
         cli::cli_abort(
           "Derived window for {.val {species}} is on {.val {derived_window$chr}}, not {.val {requested_chr}}."
@@ -792,7 +792,7 @@ normalize_syn_window_request <- function(x,
   }
 
   if (allow_missing_subset) {
-    return(list(chr = resolve_syn_seqname(individual, chr), start = NULL, end = NULL))
+    return(list(chr = resolve_syn_seqname_or_raw(individual, chr), start = NULL, end = NULL))
   }
 
   cli::cli_abort(
@@ -1694,6 +1694,14 @@ syn_to_exon_df <- function(x,
     blank_window <- context$windows[[species]] %||% NULL
     return(blank_syn_exon_df(track = species, window = blank_window, annotation_type = annotation_type))
   }
+  if (!has_syn_annotation_source(individual)) {
+    blank_window <- context$windows[[syn_id(individual)]] %||% NULL
+    return(blank_syn_exon_df(
+      track = syn_id(individual),
+      window = blank_window,
+      annotation_type = annotation_type
+    ))
+  }
 
   window <- normalize_syn_window_request(
     x = x,
@@ -1912,6 +1920,9 @@ syn_to_gene_df <- function(x,
   }
 
   individual <- resolve_syn_individual(x, species = species)
+  if (!has_syn_annotation_source(individual)) {
+    return(data.frame())
+  }
   window <- normalize_syn_window_request(
     x = x,
     species = syn_id(individual),
@@ -2061,6 +2072,31 @@ resolve_syn_seqname <- function(individual, chr = NULL) {
       cli::cli_abort(conditionMessage(cnd))
     }
   )
+}
+
+resolve_syn_seqname_or_raw <- function(individual, chr = NULL) {
+  if (is.null(chr)) {
+    return(NULL)
+  }
+  if (has_syn_annotation_source(individual)) {
+    return(resolve_syn_seqname(individual, chr))
+  }
+  chr
+}
+
+has_syn_annotation_source <- function(individual) {
+  if (!methods::is(individual, "SynIndividual")) {
+    return(FALSE)
+  }
+  if (!is.null(annotation_data(individual))) {
+    return(TRUE)
+  }
+
+  annotation_paths <- annotation_file(individual)
+  length(annotation_paths) > 0L &&
+    !(length(annotation_paths) == 1L && is.na(annotation_paths[[1L]])) &&
+    all(!is.na(annotation_paths)) &&
+    all(nzchar(annotation_paths))
 }
 
 #' Resolve one individual from Syn-backed plot input
