@@ -76,6 +76,25 @@ test_that("SynIndividual can waive the genome file at construction time", {
   )
 })
 
+test_that("SynIndividual can be initialized with only an id", {
+  x <- SynIndividual(id = "bare")
+
+  expect_s4_class(x, "SynIndividual")
+  expect_identical(syn_id(x), "bare")
+  expect_true(is.na(genome_file(x)))
+  expect_true(is.na(annotation_file(x)))
+  expect_identical(annotation_format(x), "auto")
+  expect_identical(annotation_names(x), character())
+  expect_identical(active_feature_annotation(x), "default")
+})
+
+test_that("SynIndividual requires id when no file inputs are supplied", {
+  expect_error(
+    SynIndividual(),
+    "`id` must be supplied when neither `genome_file` nor `annotation_file` is provided."
+  )
+})
+
 test_that("SynIndividual accepts multiple annotation files and merges them on load", {
   annotation_one <- tempfile(fileext = ".gff3")
   annotation_two <- tempfile(fileext = ".gff3")

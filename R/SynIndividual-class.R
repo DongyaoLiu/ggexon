@@ -4,10 +4,9 @@ NULL
 #' SynIndividual class
 #'
 #' `SynIndividual` stores the per-individual data needed to build synteny plots.
-#' The constructor requires one or more annotation GFF/GTF paths and can
-#' optionally store a genome FASTA path. Parsed annotations,
-#' nucleotide/protein sequences, and plotting caches can be attached later
-#' through accessor methods.
+#' Only `id` is required at the class level; genome and annotation file paths
+#' can be attached later. Parsed annotations, nucleotide/protein sequences, and
+#' plotting caches can also be attached through accessor methods.
 #'
 #' @slot id Scalar identifier for the species, genome, or plotting track.
 #' @slot genome_file Path to the genome FASTA file, or `NA_character_` when the
@@ -51,11 +50,12 @@ NULL
 #'
 #' @section Validity rules:
 #' * `id` and `active_annotation` must be scalar non-empty character values.
-#' * `annotation_file` must be a non-empty character vector with no empty
-#'   entries.
 #' * `genome_file` must be a length-one character vector or `NA_character_`.
-#' * `annotation_format` must be one of `"auto"`, `"gff"`, or `"gtf"`, either
-#'   length one or the same length as `annotation_file`.
+#' * When present, `annotation_file` must be a non-empty character vector with
+#'   no empty entries.
+#' * `annotation_format` must be one of `"auto"`, `"gff"`, or `"gtf"`. When
+#'   `annotation_file` is present, it must be length one or the same length as
+#'   `annotation_file`.
 #' * When `annotations` is non-empty, every entry must inherit from
 #'   `SynAnnotation` and `active_annotation` must name one of them.
 #' * `projected_domains` must be a list of data-frame-like objects.
@@ -107,18 +107,29 @@ setClass(
         "`genome_file` must be a single character value or `NA_character_`."
       )
     }
-    if (length(object@annotation_file) == 0L || any(is.na(object@annotation_file)) ||
-        any(!nzchar(object@annotation_file))) {
+    has_annotation_file <- !(
+      length(object@annotation_file) == 1L &&
+        is.na(object@annotation_file)
+    )
+    if (has_annotation_file &&
+        (length(object@annotation_file) == 0L ||
+         any(is.na(object@annotation_file)) ||
+         any(!nzchar(object@annotation_file)))) {
       problems <- c(
         problems,
-        "`annotation_file` must be a non-empty character vector with no empty entries."
+        "`annotation_file` must be a non-empty character vector with no empty entries when supplied."
       )
     }
-    if (!(length(object@annotation_format) %in% c(1L, length(object@annotation_file))) ||
-        any(!(object@annotation_format %in% c("auto", "gff", "gtf")))) {
+    if (any(!(object@annotation_format %in% c("auto", "gff", "gtf")))) {
       problems <- c(
         problems,
-        "`annotation_format` must be one of 'auto', 'gff', or 'gtf', with length 1 or the same length as `annotation_file`."
+        "`annotation_format` must contain only 'auto', 'gff', or 'gtf'."
+      )
+    } else if (has_annotation_file &&
+               !(length(object@annotation_format) %in% c(1L, length(object@annotation_file)))) {
+      problems <- c(
+        problems,
+        "`annotation_format` must have length 1 or the same length as `annotation_file` when annotation files are supplied."
       )
     }
     if (length(object@active_annotation) != 1L ||
@@ -171,9 +182,11 @@ setClass(
 #'
 #' @param genome_file Path to the genome FASTA file. Use `genome_waiver()` to
 #'   initialize a `SynIndividual` without a genome FASTA.
-#' @param annotation_file Path or paths to the corresponding GFF or GTF file(s).
+#' @param annotation_file Optional path or paths to the corresponding GFF or
+#'   GTF file(s).
 #' @param id Optional scalar identifier. Defaults to the FASTA stem, or to the
-#'   first annotation-file stem when `genome_file` is waived.
+#'   first annotation-file stem when `genome_file` is waived. Required when
+#'   neither file input is supplied.
 #' @param annotation_format One of `"auto"`, `"gff"`, or `"gtf"`, or a vector
 #'   of the same length as `annotation_file`.
 #' @param metadata Optional metadata list.
@@ -181,33 +194,53 @@ setClass(
 #' @return A `SynIndividual` object with deferred slots left empty.
 #' @export
 SynIndividual <- function(genome_file = genome_waiver(),
-                          annotation_file,
+                          annotation_file = NA_character_,
                           id = NULL,
                           annotation_format = "auto",
                           metadata = list()) {
-  annotation_file <- .normalize_annotation_file_input(annotation_file)
-  annotation_format <- .normalize_annotation_format_input(annotation_format, annotation_file)
   genome_file <- .normalize_genome_file_input(genome_file)
+  has_annotation_file <- !missing(annotation_file) &&
+    !(length(annotation_file) == 1L && is.character(annotation_file) && is.na(annotation_file))
 
-  if (.has_genome_file(genome_file)) {
+  if (has_annotation_file) {
+    annotation_file <- .normalize_annotation_file_input(annotation_file)
+    annotation_format <- .normalize_annotation_format_input(annotation_format, annotation_file)
+  } else {
+    annotation_file <- NA_character_
+    annotation_format <- .normalize_annotation_format_absent(annotation_format)
+  }
+
+  if (.has_genome_file(genome_file) && has_annotation_file) {
     check_syn_files(
       genome_file = genome_file,
       annotation_file = annotation_file
     )
-  } else {
+  } else if (has_annotation_file) {
     .check_annotation_file(annotation_file)
   }
 
   if (is.null(id)) {
-    id_source <- if (.has_genome_file(genome_file)) genome_file else annotation_file
-    id <- .path_stem(id_source[[1L]])
+    if (.has_genome_file(genome_file)) {
+      id <- .path_stem(genome_file)
+    } else if (has_annotation_file) {
+      id <- .path_stem(annotation_file[[1L]])
+    } else {
+      stop(
+        "`id` must be supplied when neither `genome_file` nor `annotation_file` is provided.",
+        call. = FALSE
+      )
+    }
   }
 
-  default_annotation <- SynFeatureAnnotation(
-    name = "default",
-    annotation_file = annotation_file,
-    annotation_format = annotation_format
-  )
+  annotations <- list()
+  if (has_annotation_file) {
+    default_annotation <- SynFeatureAnnotation(
+      name = "default",
+      annotation_file = annotation_file,
+      annotation_format = annotation_format
+    )
+    annotations <- list(default = default_annotation)
+  }
 
   new(
     "SynIndividual",
@@ -215,7 +248,7 @@ SynIndividual <- function(genome_file = genome_waiver(),
     genome_file = genome_file,
     annotation_file = annotation_file,
     annotation_format = annotation_format,
-    annotations = list(default = default_annotation),
+    annotations = annotations,
     active_annotation = "default",
     metadata = metadata
   )
@@ -268,6 +301,29 @@ SynIndividual <- function(genome_file = genome_waiver(),
   } else {
     annotation_format
   }
+}
+
+.normalize_annotation_format_absent <- function(annotation_format) {
+  allowed <- c("auto", "gff", "gtf")
+  if (missing(annotation_format) || is.null(annotation_format)) {
+    return("auto")
+  }
+
+  annotation_format <- as.character(annotation_format)
+  if (length(annotation_format) != 1L) {
+    stop(
+      "`annotation_format` must have length 1 when `annotation_file` is not supplied.",
+      call. = FALSE
+    )
+  }
+  if (is.na(annotation_format) || !(annotation_format %in% allowed)) {
+    stop(
+      "`annotation_format` must be one of 'auto', 'gff', or 'gtf'.",
+      call. = FALSE
+    )
+  }
+
+  annotation_format
 }
 
 #' Genome-file waiver for `SynIndividual()`
@@ -2013,7 +2069,7 @@ setGeneric("projected_domains", function(x) standardGeneric("projected_domains")
 setMethod("projected_domains", "SynIndividual", function(x) x@projected_domains)
 
 setGeneric("annotation_names", function(x) standardGeneric("annotation_names"))
-setMethod("annotation_names", "SynIndividual", function(x) names(x@annotations))
+setMethod("annotation_names", "SynIndividual", function(x) names(x@annotations) %||% character())
 
 setGeneric("active_annotation", function(x) {
   standardGeneric("active_annotation")
