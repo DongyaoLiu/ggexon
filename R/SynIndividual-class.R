@@ -363,6 +363,10 @@ check_syn_files <- function(genome_file, annotation_file) {
   if (length(missing_files) > 0L) {
     stop("Annotation file does not exist: ", missing_files[[1L]], call. = FALSE)
   }
+  non_files <- annotation_file[!file_test("-f", annotation_file)]
+  if (length(non_files) > 0L) {
+    stop("Annotation file is not a regular file: ", non_files[[1L]], call. = FALSE)
+  }
 
   fasta_headers <- .read_fasta_headers(genome_file)
   annotation_chr <- .read_annotation_seqnames(annotation_file)
@@ -422,6 +426,10 @@ check_syn_files <- function(genome_file, annotation_file) {
   missing_files <- annotation_file[!file.exists(annotation_file)]
   if (length(missing_files) > 0L) {
     stop("Annotation file does not exist: ", missing_files[[1L]], call. = FALSE)
+  }
+  non_files <- annotation_file[!file_test("-f", annotation_file)]
+  if (length(non_files) > 0L) {
+    stop("Annotation file is not a regular file: ", non_files[[1L]], call. = FALSE)
   }
   invisible(TRUE)
 }

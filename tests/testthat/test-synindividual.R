@@ -95,6 +95,15 @@ test_that("SynIndividual requires id when no file inputs are supplied", {
   )
 })
 
+test_that("SynIndividual rejects annotation directories", {
+  annotation_dir <- tempdir()
+
+  expect_error(
+    SynIndividual(annotation_file = annotation_dir, id = "dir_case"),
+    "Annotation file is not a regular file"
+  )
+})
+
 test_that("SynIndividual accepts multiple annotation files and merges them on load", {
   annotation_one <- tempfile(fileext = ".gff3")
   annotation_two <- tempfile(fileext = ".gff3")

@@ -22,6 +22,10 @@ GeomExon <- ggproto("GeomExon", Geom,
                       if (!"blank_panel" %in% names(data)) {
                         data$blank_panel <- FALSE
                       }
+                      if ("transcripts" %in% names(data)) {
+                        blank_transcript <- grepl("^__blank__", as.character(data$transcripts))
+                        data$blank_panel <- as.logical(data$blank_panel) | blank_transcript
+                      }
 
                       if (!is.null(params$annotation_type)){
                         data = data %>% filter(type == params$annotation_type)
@@ -55,7 +59,8 @@ GeomExon <- ggproto("GeomExon", Geom,
 
                     },
 
-                      draw_panel = function(data, panel_params, coord, flipped_aes = FALSE){
+                      draw_panel = function(data, panel_params, coord, flipped_aes = FALSE,
+                                            transcript_backbone_ratio = 0.1){
                         blank_flags <- if ("blank_panel" %in% names(data)) {
                           isTRUE(data$blank_panel) | (data$blank_panel %in% TRUE)
                         } else {
@@ -68,7 +73,7 @@ GeomExon <- ggproto("GeomExon", Geom,
                         track_data = add_transcripts_seq_line(visible_data)
                         track_rect_data = add_transcripts_seq_rect(
                           track_data,
-                          backbone_ratio = params$transcript_backbone_ratio %||% 0.1
+                          backbone_ratio = transcript_backbone_ratio %||% 0.1
                         )
                         transcripts_line_Grob = ggplot2::GeomRect$draw_panel(track_rect_data, panel_params, coord)
                         tri_data = add_transcripts_direction(track_data)

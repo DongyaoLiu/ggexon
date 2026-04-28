@@ -1581,6 +1581,7 @@ test_that("bare SynIndividuals build as blank panels and keep pairwise links", {
   )
   expect_true(any(as.character(built@data[[1L]]$track) == "AFRA"))
   expect_true(any(as.character(built@data[[1L]]$transcripts) == "__blank__AFRA"))
+  expect_true(all(built@data[[1L]]$blank_panel[as.character(built@data[[1L]]$track) == "AFRA"]))
   expect_true(any(as.integer(built@data[[3L]]$t_panel) == 3L))
   expect_true(any(as.integer(built@data[[3L]]$q_panel) == 1L))
 })
