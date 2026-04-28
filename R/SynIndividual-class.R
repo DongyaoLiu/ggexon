@@ -1190,7 +1190,17 @@ query_features <- function(x,
     seqnames = window$chr,
     ranges = IRanges::IRanges(start = window$start, end = window$end)
   )
-  gr[IRanges::overlapsAny(gr, region)]
+  keep <- IRanges::overlapsAny(gr, region)
+  out <- gr[keep]
+  if (length(out) == 0L) {
+    return(out)
+  }
+
+  IRanges::ranges(out) <- IRanges::pintersect(
+    IRanges::ranges(out),
+    IRanges::ranges(region)[rep(1L, length(out))]
+  )
+  out
 }
 
 #' Subset a feature annotation layer by genomic window

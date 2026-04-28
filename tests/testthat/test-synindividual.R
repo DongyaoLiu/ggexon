@@ -412,6 +412,8 @@ test_that("subset_individual trims all feature annotation layers by default", {
       IRanges::start(layer_gr) <= target_end &
         IRanges::end(layer_gr) >= target_start
     ))
+    expect_true(all(IRanges::start(layer_gr) >= target_start))
+    expect_true(all(IRanges::end(layer_gr) <= target_end))
   }
 })
 

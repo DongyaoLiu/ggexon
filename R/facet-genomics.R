@@ -562,16 +562,17 @@ synspecies_chain_layout <- function(x,
 
   link_tracks <- unique(as.character(link_pairs$track %||% character()))
   link_tracks <- link_tracks[!is.na(link_tracks) & nzchar(link_tracks)]
-  keep_link <- panel_type == "link" &
-    (
-      (("track" %in% names(panels)) & (as.character(panels$track) %in% link_tracks)) |
-      (
-        ("tspecies" %in% names(panels)) &
-        ("qspecies" %in% names(panels)) &
-        as.character(panels$tspecies) %in% selected_species &
-        as.character(panels$qspecies) %in% selected_species
-      )
-    )
+  keep_link <- if (length(link_tracks) > 0L) {
+    panel_type == "link" &
+      ("track" %in% names(panels)) &
+      (as.character(panels$track) %in% link_tracks)
+  } else {
+    panel_type == "link" &
+      ("tspecies" %in% names(panels)) &
+      ("qspecies" %in% names(panels)) &
+      as.character(panels$tspecies) %in% selected_species &
+      as.character(panels$qspecies) %in% selected_species
+  }
 
   keep <- keep_annotation | keep_link
   filtered <- panels[keep, , drop = FALSE]

@@ -370,6 +370,8 @@ test_that("subset_feature_annotation returns a clean windowed snapshot", {
   expect_null(nucleotide_seq(subset_ann))
   expect_null(protein_seq(subset_ann))
   expect_identical(plot_cache(subset_ann), list())
+  expect_true(all(IRanges::start(annotation_data(subset_ann)) >= target_start))
+  expect_true(all(IRanges::end(annotation_data(subset_ann)) <= target_end))
 })
 
 test_that("build_feature_index also supports SynFeatureAnnotation objects", {

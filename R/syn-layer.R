@@ -254,19 +254,37 @@ collect_syn_link_requests <- function(layer, syn_data, plot_data) {
 
   params <- syn_layer_params(layer)
   alignment <- resolve_plot_alignment_name(syn_data, params$alignment)
-  alignment_obj <- tryCatch(
-    resolve_plot_alignment_object(syn_data, alignment),
-    error = function(...) NULL
-  )
+  alignments <- if (length(alignment) == 0L || is.null(alignment)) NULL else as.character(alignment)
 
-  list(list(
-    alignment = alignment,
-    alignment_obj = alignment_obj,
-    reference = params$reference,
-    chr = params$chr,
-    subset = params$subset,
-    filter_by_len = params$filter_by_len
-  ))
+  if (is.null(alignments) || length(alignments) <= 1L) {
+    alignment_obj <- tryCatch(
+      resolve_plot_alignment_object(syn_data, alignment),
+      error = function(...) NULL
+    )
+
+    return(list(list(
+      alignment = alignment,
+      alignment_obj = alignment_obj,
+      reference = params$reference,
+      chr = params$chr,
+      subset = params$subset,
+      filter_by_len = params$filter_by_len
+    )))
+  }
+
+  lapply(alignments, function(one_alignment) {
+    list(
+      alignment = one_alignment,
+      alignment_obj = tryCatch(
+        resolve_plot_alignment_object(syn_data, one_alignment),
+        error = function(...) NULL
+      ),
+      reference = params$reference,
+      chr = params$chr,
+      subset = params$subset,
+      filter_by_len = params$filter_by_len
+    )
+  })
 }
 
 syn_layer_params <- function(layer) {
@@ -517,6 +535,17 @@ resolve_plot_link_alignments <- function(x,
   pair_list <- pairwise_alignments(x)
   species_order <- unique(as.character(species_order %||% character()))
   species_order <- species_order[species_order %in% names(individuals(x))]
+
+  if (!is.null(alignment) && length(alignment) > 1L) {
+    alignment <- as.character(alignment)
+    missing_alignments <- setdiff(alignment, names(pair_list))
+    if (length(missing_alignments) > 0L) {
+      cli::cli_abort(
+        "Unknown alignment {.val {missing_alignments[[1L]]}}. Available pairwise alignments: {.val {names(pair_list)}}."
+      )
+    }
+    return(unname(pair_list[alignment]))
+  }
 
   if (!is.null(alignment) && alignment %in% names(pair_list)) {
     return(list(pair_list[[alignment]]))

@@ -1585,6 +1585,207 @@ test_that("bare SynIndividuals build as blank panels and keep pairwise links", {
   expect_true(any(as.integer(built@data[[3L]]$q_panel) == 1L))
 })
 
+test_that("geom_nuclink accepts multiple pairwise alignment names", {
+  n2_genome <- system.file(
+    "extdata",
+    "c_elegans.PRJNA13758.WS285.genomic.fa",
+    package = "ggexon"
+  )
+  n2_annotation <- system.file(
+    "extdata",
+    "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
+    package = "ggexon"
+  )
+  xz_annotation <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+
+  psl_n2 <- tempfile(fileext = ".psl")
+  writeLines(
+    paste(
+      c(
+        "AFRA_V_10256132_10256237",
+        100, 5, 0, 0, 0, 0, 0, 0,
+        "++",
+        "V", 20924180, 20467551, 20467656,
+        "V", 12207686, 10256132, 10256237,
+        1, "105,", "20467551,", "10256132,"
+      ),
+      collapse = "\t"
+    ),
+    psl_n2
+  )
+  psl_xz <- tempfile(fileext = ".psl")
+  writeLines(
+    paste(
+      c(
+        "AFRA_RagTag_V_200_260",
+        50, 0, 0, 0, 0, 0, 0, 0,
+        "++",
+        "RagTag_V", 30000000, 21574445, 21574495,
+        "RagTag_V", 5000000, 200, 250,
+        1, "50,", "21574445,", "200,"
+      ),
+      collapse = "\t"
+    ),
+    psl_xz
+  )
+
+  sp <- SynSpecies(name = "MultiLink")
+  sp <- add_individual(
+    sp,
+    test_syn_individual(
+      genome_file = n2_genome,
+      annotation_file = n2_annotation,
+      id = "N2",
+      annotation_format = "gtf"
+    )
+  )
+  sp <- add_individual(
+    sp,
+    test_syn_individual(
+      annotation_file = xz_annotation,
+      genome_file = genome_waiver(),
+      id = "XZ1516"
+    )
+  )
+  sp <- add_individual(sp, SynIndividual(id = "AFRA"))
+  sp <- add_pairwise_alignment(
+    sp,
+    SynPairAlignment(
+      name = "N2_vs_AFRA",
+      query_individual = "N2",
+      target_individual = "AFRA",
+      file = psl_n2,
+      format = "psl"
+    )
+  )
+  sp <- add_pairwise_alignment(
+    sp,
+    SynPairAlignment(
+      name = "XZ1516_vs_AFRA",
+      query_individual = "XZ1516",
+      target_individual = "AFRA",
+      file = psl_xz,
+      format = "psl"
+    )
+  )
+  sp <- store_chain_layout(sp, free = list(x = TRUE, y = TRUE))
+
+  built <- ggexon_build(
+    ggexon(sp) +
+      geom_exon(species = c("N2", "XZ1516", "AFRA")) +
+      geom_nuclink(alignment = c("N2_vs_AFRA", "XZ1516_vs_AFRA")) +
+      facet_genomics(ggplot2::vars(track), scales = "free")
+  )
+
+  expect_true(any(as.character(built@layout$layout$track) == "link_N2_vs_AFRA"))
+  expect_true(any(as.character(built@layout$layout$track) == "link_XZ1516_vs_AFRA"))
+  expect_true(length(unique(as.integer(built@data[[2L]]$PANEL))) >= 2L)
+})
+
+test_that("stored chain layouts drop unused link panels when one alignment is requested", {
+  n2_genome <- system.file(
+    "extdata",
+    "c_elegans.PRJNA13758.WS285.genomic.fa",
+    package = "ggexon"
+  )
+  n2_annotation <- system.file(
+    "extdata",
+    "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
+    package = "ggexon"
+  )
+  xz_annotation <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+
+  psl_n2 <- tempfile(fileext = ".psl")
+  writeLines(
+    paste(
+      c(
+        "AFRA_V_10256132_10256237",
+        100, 5, 0, 0, 0, 0, 0, 0,
+        "++",
+        "V", 20924180, 20467551, 20467656,
+        "V", 12207686, 10256132, 10256237,
+        1, "105,", "20467551,", "10256132,"
+      ),
+      collapse = "\t"
+    ),
+    psl_n2
+  )
+  psl_xz <- tempfile(fileext = ".psl")
+  writeLines(
+    paste(
+      c(
+        "AFRA_RagTag_V_200_260",
+        50, 0, 0, 0, 0, 0, 0, 0,
+        "++",
+        "RagTag_V", 30000000, 21574445, 21574495,
+        "RagTag_V", 5000000, 200, 250,
+        1, "50,", "21574445,", "200,"
+      ),
+      collapse = "\t"
+    ),
+    psl_xz
+  )
+
+  sp <- SynSpecies(name = "SingleLinkFromStoredLayout")
+  sp <- add_individual(
+    sp,
+    test_syn_individual(
+      genome_file = n2_genome,
+      annotation_file = n2_annotation,
+      id = "N2",
+      annotation_format = "gtf"
+    )
+  )
+  sp <- add_individual(
+    sp,
+    test_syn_individual(
+      annotation_file = xz_annotation,
+      genome_file = genome_waiver(),
+      id = "XZ1516"
+    )
+  )
+  sp <- add_individual(sp, SynIndividual(id = "AFRA"))
+  sp <- add_pairwise_alignment(
+    sp,
+    SynPairAlignment(
+      name = "N2_vs_AFRA",
+      query_individual = "N2",
+      target_individual = "AFRA",
+      file = psl_n2,
+      format = "psl"
+    )
+  )
+  sp <- add_pairwise_alignment(
+    sp,
+    SynPairAlignment(
+      name = "XZ1516_vs_AFRA",
+      query_individual = "XZ1516",
+      target_individual = "AFRA",
+      file = psl_xz,
+      format = "psl"
+    )
+  )
+  sp <- store_chain_layout(sp, free = list(x = TRUE, y = TRUE))
+
+  built <- ggexon_build(
+    ggexon(sp) +
+      geom_exon(species = c("N2", "XZ1516", "AFRA")) +
+      geom_nuclink(alignment = "N2_vs_AFRA") +
+      facet_genomics(ggplot2::vars(track), scales = "free")
+  )
+
+  expect_true(any(as.character(built@layout$layout$track) == "link_N2_vs_AFRA"))
+  expect_false(any(as.character(built@layout$layout$track) == "link_XZ1516_vs_AFRA"))
+})
+
 test_that("geom_nuclink preserves anchor metadata for detailed PSL alignments", {
   n2_genome <- system.file(
     "extdata",
