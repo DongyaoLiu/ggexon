@@ -862,14 +862,23 @@ query_features <- function(x,
       genes <- unique(as.character(genes))
       gene_rows <- .lookup_feature_index_rows(index, "gene", genes)
       gene_ids <- unique(.annotation_primary_ids(all_gr[gene_rows]))
+      gene_ids <- gene_ids[!is.na(gene_ids) & nzchar(gene_ids)]
       transcript_ids <- unique(c(
-        .annotation_transcript_ids(all_gr[gene_rows]),
+        .annotation_transcript_ids(
+          all_gr[
+            .lookup_feature_index_rows(index, "gene", gene_ids)
+          ]
+        ),
         .annotation_transcript_ids(
           all_gr[.lookup_feature_index_rows(index, "parent", gene_ids)]
         )
       ))
+      transcript_ids <- transcript_ids[!is.na(transcript_ids) & nzchar(transcript_ids)]
 
-      keep_gene_rows <- gene_rows
+      keep_gene_rows <- union(
+        gene_rows,
+        .lookup_feature_index_rows(index, "gene", gene_ids)
+      )
       if (length(transcript_ids) > 0L) {
         keep_gene_rows <- union(
           keep_gene_rows,
@@ -881,9 +890,23 @@ query_features <- function(x,
 
     if (!is.null(transcripts)) {
       transcripts <- unique(as.character(transcripts))
+      transcript_rows <- .lookup_feature_index_rows(index, "transcript", transcripts)
+      transcript_gene_ids <- unique(.annotation_primary_ids(all_gr[transcript_rows]))
+      transcript_gene_ids <- transcript_gene_ids[
+        !is.na(transcript_gene_ids) & nzchar(transcript_gene_ids)
+      ]
+      parent_gene_rows <- integer()
+      if (length(transcript_gene_ids) > 0L) {
+        parent_gene_rows <- .lookup_feature_index_rows(index, "gene", transcript_gene_ids)
+        if (length(parent_gene_rows) > 0L) {
+          parent_gene_rows <- parent_gene_rows[
+            .annotation_gene_row_match(all_gr[parent_gene_rows], transcript_gene_ids)
+          ]
+        }
+      }
       keep_rows <- intersect(
         keep_rows,
-        .lookup_feature_index_rows(index, "transcript", transcripts)
+        union(transcript_rows, parent_gene_rows)
       )
     }
 
@@ -912,9 +935,18 @@ query_features <- function(x,
         genes
       )
       gene_ids <- unique(.annotation_primary_ids(all_gr[gene_match]))
+      gene_ids <- gene_ids[!is.na(gene_ids) & nzchar(gene_ids)]
 
       transcript_ids <- unique(c(
-        .annotation_transcript_ids(all_gr[gene_match]),
+        .annotation_transcript_ids(
+          all_gr[
+            .match_annotation_values(
+              all_gr,
+              c("gene_id"),
+              gene_ids
+            )
+          ]
+        ),
         .annotation_transcript_ids(
           all_gr[
             .match_annotation_values(
@@ -925,12 +957,20 @@ query_features <- function(x,
           ]
         )
       ))
+      transcript_ids <- transcript_ids[!is.na(transcript_ids) & nzchar(transcript_ids)]
 
       gene_filter <- .match_annotation_values(
         gr,
         c("gene_name", "gene_id", "Name", "gene", "ID"),
         genes
       )
+      if (length(gene_ids) > 0L) {
+        gene_filter <- gene_filter | .match_annotation_values(
+          gr,
+          c("gene_id"),
+          gene_ids
+        )
+      }
       if (length(transcript_ids) > 0L) {
         gene_filter <- gene_filter | .match_annotation_values(
           gr,
@@ -943,11 +983,29 @@ query_features <- function(x,
 
     if (!is.null(transcripts)) {
       transcripts <- unique(as.character(transcripts))
+      transcript_gene_ids <- unique(.annotation_primary_ids(
+        gr[
+          .match_annotation_values(
+            gr,
+            c("transcript_id", "Parent", "transcript_name", "ID"),
+            transcripts
+          )
+        ]
+      ))
+      transcript_gene_ids <- transcript_gene_ids[
+        !is.na(transcript_gene_ids) & nzchar(transcript_gene_ids)
+      ]
       transcript_match <- .match_annotation_values(
         gr,
         c("transcript_id", "Parent", "transcript_name", "ID"),
         transcripts
       )
+      if (length(transcript_gene_ids) > 0L) {
+        transcript_match <- transcript_match | .annotation_gene_row_match(
+          gr,
+          transcript_gene_ids
+        )
+      }
       gr <- gr[transcript_match]
     }
   }
@@ -1122,6 +1180,7 @@ query_features <- function(x,
                                         start = NULL,
                                         end = NULL,
                                         coords = NULL,
+                                        require_window = TRUE,
                                         arg = "`coords`") {
   if (!is.null(coords)) {
     if (!is.null(chr) || !is.null(start) || !is.null(end)) {
@@ -1136,10 +1195,177 @@ query_features <- function(x,
   }
 
   if (is.null(chr)) {
-    stop("Provide either `coords` or `chr`.", call. = FALSE)
+    if (isTRUE(require_window)) {
+      stop("Provide either `coords` or `chr`.", call. = FALSE)
+    }
+    return(NULL)
   }
 
   list(chr = chr, start = start, end = end)
+}
+
+.normalize_subset_feature_selector <- function(x, arg) {
+  if (is.null(x)) {
+    return(NULL)
+  }
+  if (is.list(x)) {
+    x <- unlist(x, use.names = FALSE)
+  }
+  if (!is.character(x)) {
+    stop("`", arg, "` must be a character vector or list of strings.", call. = FALSE)
+  }
+  x <- unique(as.character(x))
+  x <- x[!is.na(x) & nzchar(x)]
+  if (length(x) == 0L) {
+    stop("`", arg, "` must contain at least one non-empty string.", call. = FALSE)
+  }
+  x
+}
+
+.filter_annotation_by_feature_ids <- function(gr,
+                                              genes = NULL,
+                                              transcripts = NULL) {
+  if (length(gr) == 0L || (is.null(genes) && is.null(transcripts))) {
+    return(gr)
+  }
+
+  out <- gr
+  if (!is.null(genes)) {
+    gene_match <- .match_annotation_values(
+      out,
+      c("gene_name", "gene_id", "Name", "gene", "ID"),
+      genes
+    )
+    gene_ids <- unique(.annotation_primary_ids(out[gene_match]))
+    gene_ids <- gene_ids[!is.na(gene_ids) & nzchar(gene_ids)]
+
+    transcript_ids <- unique(c(
+      .annotation_transcript_ids(
+        out[
+          .match_annotation_values(
+            out,
+            c("gene_id"),
+            gene_ids
+          )
+        ]
+      ),
+      .annotation_transcript_ids(
+        out[
+          .match_annotation_values(
+            out,
+            c("Parent"),
+            gene_ids
+          )
+        ]
+      )
+    ))
+    transcript_ids <- transcript_ids[!is.na(transcript_ids) & nzchar(transcript_ids)]
+
+    gene_filter <- .match_annotation_values(
+      out,
+      c("gene_name", "gene_id", "Name", "gene", "ID"),
+      genes
+    )
+    if (length(gene_ids) > 0L) {
+      gene_filter <- gene_filter | .match_annotation_values(
+        out,
+        c("gene_id"),
+        gene_ids
+      )
+    }
+    if (length(transcript_ids) > 0L) {
+      gene_filter <- gene_filter | .match_annotation_values(
+        out,
+        c("transcript_id", "Parent"),
+        transcript_ids
+      )
+    }
+    out <- out[gene_filter]
+  }
+
+  if (!is.null(transcripts)) {
+    transcript_gene_ids <- unique(.annotation_primary_ids(
+      out[
+        .match_annotation_values(
+          out,
+          c("transcript_id", "Parent", "transcript_name", "ID"),
+          transcripts
+        )
+      ]
+    ))
+    transcript_gene_ids <- transcript_gene_ids[
+      !is.na(transcript_gene_ids) & nzchar(transcript_gene_ids)
+    ]
+    transcript_match <- .match_annotation_values(
+      out,
+      c("transcript_id", "Parent", "transcript_name", "ID"),
+      transcripts
+    )
+    if (length(transcript_gene_ids) > 0L) {
+      transcript_match <- transcript_match | .annotation_gene_row_match(
+        out,
+        transcript_gene_ids
+      )
+    }
+    out <- out[transcript_match]
+  }
+
+  out
+}
+
+.annotation_gene_row_match <- function(gr, gene_ids) {
+  gene_ids <- unique(as.character(gene_ids))
+  gene_ids <- gene_ids[!is.na(gene_ids) & nzchar(gene_ids)]
+  if (length(gene_ids) == 0L || length(gr) == 0L) {
+    return(rep(FALSE, length(gr)))
+  }
+
+  meta <- S4Vectors::mcols(gr)
+  types <- base::tolower(as.character(meta$type))
+  gene_rows <- !is.na(types) & types == "gene"
+  gene_rows &
+    .match_annotation_values(gr, c("gene_id", "gene_name", "Name", "gene", "ID"), gene_ids)
+}
+
+.infer_subset_window_from_gr <- function(gr) {
+  if (length(gr) == 0L) {
+    return(NULL)
+  }
+  seqlevels <- unique(as.character(GenomeInfoDb::seqnames(gr)))
+  seqlevels <- seqlevels[!is.na(seqlevels) & nzchar(seqlevels)]
+  if (length(seqlevels) != 1L) {
+    return(NULL)
+  }
+  list(
+    chr = seqlevels[[1L]],
+    start = min(IRanges::start(gr), na.rm = TRUE),
+    end = max(IRanges::end(gr), na.rm = TRUE)
+  )
+}
+
+.subset_feature_annotation_counts <- function(gr) {
+  if (length(gr) == 0L) {
+    return(list(rows = 0L, genes = 0L, transcripts = 0L))
+  }
+
+  meta <- S4Vectors::mcols(gr)
+  gene_ids <- unique(as.character(meta$gene_id))
+  gene_ids <- gene_ids[!is.na(gene_ids) & nzchar(gene_ids)]
+  transcript_ids <- unique(as.character(meta$transcript_id))
+  transcript_ids <- transcript_ids[!is.na(transcript_ids) & nzchar(transcript_ids)]
+
+  list(
+    rows = as.integer(length(gr)),
+    genes = as.integer(length(gene_ids)),
+    transcripts = as.integer(length(transcript_ids))
+  )
+}
+
+.inform_subset_feature_annotation <- function(gr) {
+  counts <- .subset_feature_annotation_counts(gr)
+  cli::cli_inform(
+    "subset_feature_annotation() kept {counts$rows} rows, {counts$genes} genes, and {counts$transcripts} transcripts."
+  )
 }
 
 .normalize_annotation_window <- function(gr,
@@ -1269,7 +1495,9 @@ setGeneric("subset_feature_annotation", function(x,
                                                  chr = NULL,
                                                  start = NULL,
                                                  end = NULL,
-                                                 coords = NULL) {
+                                                 coords = NULL,
+                                                 gene = NULL,
+                                                 transcript = NULL) {
   standardGeneric("subset_feature_annotation")
 })
 
@@ -1279,19 +1507,25 @@ setGeneric("subset_feature_annotation", function(x,
                                            chr = NULL,
                                            start = NULL,
                                            end = NULL,
-                                           coords = NULL) {
+                                           coords = NULL,
+                                           gene = NULL,
+                                           transcript = NULL) {
   owner <- .resolve_subset_feature_annotation_input(
     x = x,
     annotation = annotation,
     individual = individual
   )
   ann <- owner$annotation
+  genes <- .normalize_subset_feature_selector(gene, "gene")
+  transcripts <- .normalize_subset_feature_selector(transcript, "transcript")
+  require_window <- is.null(genes) && is.null(transcripts)
 
   args <- .resolve_subset_window_args(
     chr = chr,
     start = start,
     end = end,
-    coords = coords
+    coords = coords,
+    require_window = require_window
   )
 
   ann <- load_annotation(ann)
@@ -1301,36 +1535,52 @@ setGeneric("subset_feature_annotation", function(x,
     base_gr <- active_gr
   }
 
-  window <- .normalize_annotation_window(
-    gr = active_gr,
-    chr = args$chr,
-    start = args$start,
-    end = args$end,
-    label = paste0("annotation layer ", annotation_name(ann))
+  active_gr <- .filter_annotation_by_feature_ids(
+    active_gr,
+    genes = genes,
+    transcripts = transcripts
   )
+  base_gr <- .filter_annotation_by_feature_ids(
+    base_gr,
+    genes = genes,
+    transcripts = transcripts
+  )
+
+  window <- if (is.null(args)) {
+    .infer_subset_window_from_gr(active_gr)
+  } else {
+    .normalize_annotation_window(
+      gr = active_gr,
+      chr = args$chr,
+      start = args$start,
+      end = args$end,
+      label = paste0("annotation layer ", annotation_name(ann))
+    )
+  }
 
   window_metadata <- annotation_metadata(ann)
-  window_metadata$subset_window <- list(
-    chr = window$chr,
-    start = window$start,
-    end = window$end
-  )
+  window_metadata$subset_window <- window
   annotation_metadata(ann) <- window_metadata
 
-  ann@annotation <- .subset_granges_window(
-    gr = active_gr,
-    chr = window$chr,
-    start = window$start,
-    end = window$end,
-    resolve_seqname = FALSE
-  )
-  ann@base_annotation <- .subset_granges_window(
-    gr = base_gr,
-    chr = window$chr,
-    start = window$start,
-    end = window$end,
-    resolve_seqname = FALSE
-  )
+  if (is.null(window)) {
+    ann@annotation <- active_gr
+    ann@base_annotation <- base_gr
+  } else {
+    ann@annotation <- .subset_granges_window(
+      gr = active_gr,
+      chr = window$chr,
+      start = window$start,
+      end = window$end,
+      resolve_seqname = FALSE
+    )
+    ann@base_annotation <- .subset_granges_window(
+      gr = base_gr,
+      chr = window$chr,
+      start = window$start,
+      end = window$end,
+      resolve_seqname = FALSE
+    )
+  }
   ann@patches <- list()
   ann@feature_index <- NULL
   ann@nucleotide_seq <- NULL
@@ -1338,6 +1588,7 @@ setGeneric("subset_feature_annotation", function(x,
   ann@plot_cache <- list()
   ann@loaded <- TRUE
   validObject(ann)
+  .inform_subset_feature_annotation(ann@annotation)
 
   if (identical(owner$kind, "annotation")) {
     return(ann)
@@ -1369,8 +1620,10 @@ setMethod("subset_feature_annotation", "SynFeatureAnnotation", function(x,
                                                                         chr = NULL,
                                                                         start = NULL,
                                                                         end = NULL,
-                                                                        coords = NULL) {
-  .subset_feature_annotation_impl(x, annotation, individual, chr, start, end, coords)
+                                                                        coords = NULL,
+                                                                        gene = NULL,
+                                                                        transcript = NULL) {
+  .subset_feature_annotation_impl(x, annotation, individual, chr, start, end, coords, gene, transcript)
 })
 
 setMethod("subset_feature_annotation", "SynIndividual", function(x,
@@ -1379,8 +1632,10 @@ setMethod("subset_feature_annotation", "SynIndividual", function(x,
                                                                  chr = NULL,
                                                                  start = NULL,
                                                                  end = NULL,
-                                                                 coords = NULL) {
-  .subset_feature_annotation_impl(x, annotation, individual, chr, start, end, coords)
+                                                                 coords = NULL,
+                                                                 gene = NULL,
+                                                                 transcript = NULL) {
+  .subset_feature_annotation_impl(x, annotation, individual, chr, start, end, coords, gene, transcript)
 })
 
 .resolve_subset_feature_annotation_input <- function(x,

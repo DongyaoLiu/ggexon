@@ -426,6 +426,33 @@ test_that("subset_individual trims all feature annotation layers by default", {
   }
 })
 
+test_that("subset_feature_annotation returns an updated SynIndividual for gene-only selection", {
+  annotation_path <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+
+  x <- SynIndividual(
+    annotation_file = annotation_path,
+    genome_file = genome_waiver()
+  ) |>
+    load_annotation()
+
+  meta <- S4Vectors::mcols(annotation_data(x))
+  gene_id <- unique(as.character(meta$gene_id[!is.na(meta$gene_id) & nzchar(meta$gene_id)]))[[1L]]
+
+  subset_x <- subset_feature_annotation(x, gene = list(gene_id))
+  subset_meta <- S4Vectors::mcols(annotation_data(subset_x))
+
+  expect_s4_class(subset_x, "SynIndividual")
+  expect_true(length(annotation_data(subset_x)) >= 1L)
+  expect_true(all(
+    (is.na(subset_meta$gene_id) | !nzchar(subset_meta$gene_id)) |
+      subset_meta$gene_id == gene_id
+  ))
+})
+
 test_that("subset_individual can limit trimming to the active feature layer", {
   genome_path <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
   annotation_path <- system.file(

@@ -1628,8 +1628,10 @@ setMethod("subset_feature_annotation", "SynSpecies", function(x,
                                                               chr = NULL,
                                                               start = NULL,
                                                               end = NULL,
-                                                              coords = NULL) {
-  .subset_feature_annotation_impl(x, annotation, individual, chr, start, end, coords)
+                                                              coords = NULL,
+                                                              gene = NULL,
+                                                              transcript = NULL) {
+  .subset_feature_annotation_impl(x, annotation, individual, chr, start, end, coords, gene, transcript)
 })
 
 setMethod("subset_individual", "SynSpecies", function(x,

@@ -378,6 +378,112 @@ test_that("subset_feature_annotation returns a clean windowed snapshot", {
   )
 })
 
+test_that("subset_feature_annotation supports gene and transcript selectors", {
+  annotation_path <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+  expect_true(nzchar(annotation_path))
+
+  ann <- SynFeatureAnnotation(
+    name = "default",
+    annotation_file = annotation_path
+  ) |>
+    load_annotation()
+
+  gr <- annotation_data(ann)
+  meta <- S4Vectors::mcols(gr)
+  gene_id <- unique(as.character(meta$gene_id[!is.na(meta$gene_id) & nzchar(meta$gene_id)]))[[1L]]
+  transcript_id <- unique(as.character(meta$transcript_id[!is.na(meta$transcript_id) & nzchar(meta$transcript_id)]))[[1L]]
+
+  gene_subset <- subset_feature_annotation(ann, gene = gene_id)
+  gene_meta <- S4Vectors::mcols(annotation_data(gene_subset))
+  expect_true(all(
+    (is.na(gene_meta$gene_id) | !nzchar(gene_meta$gene_id)) | gene_meta$gene_id == gene_id
+  ))
+
+  transcript_subset <- subset_feature_annotation(ann, transcript = transcript_id)
+  tx_meta <- S4Vectors::mcols(annotation_data(transcript_subset))
+  expect_true(any(tx_meta$transcript_id == transcript_id, na.rm = TRUE))
+  expect_true(all(
+    (is.na(tx_meta$transcript_id) | !nzchar(tx_meta$transcript_id)) |
+      tx_meta$transcript_id == transcript_id
+  ))
+})
+
+test_that("subset_feature_annotation reports retained rows and features", {
+  annotation_path <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+  expect_true(nzchar(annotation_path))
+
+  ann <- SynFeatureAnnotation(
+    name = "default",
+    annotation_file = annotation_path
+  ) |>
+    load_annotation()
+
+  gr <- annotation_data(ann)
+  target_chr <- as.character(GenomeInfoDb::seqnames(gr))[[1L]]
+  target_start <- IRanges::start(gr)[[1L]]
+  target_end <- IRanges::end(gr)[[1L]]
+
+  expect_message(
+    subset_feature_annotation(
+      ann,
+      chr = target_chr,
+      start = target_start,
+      end = target_end
+    ),
+    "kept .* rows, .* genes, and .* transcripts"
+  )
+})
+
+test_that("subset_feature_annotation intersects selectors with coordinates", {
+  annotation_path <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+  expect_true(nzchar(annotation_path))
+
+  ann <- SynFeatureAnnotation(
+    name = "default",
+    annotation_file = annotation_path
+  ) |>
+    load_annotation()
+
+  gr <- annotation_data(ann)
+  meta <- S4Vectors::mcols(gr)
+  transcript_id <- unique(as.character(meta$transcript_id[!is.na(meta$transcript_id) & nzchar(meta$transcript_id)]))[[1L]]
+  tx_gr <- query_features(ann, transcripts = transcript_id, feature_type = NULL)
+  tx_chr <- unique(as.character(GenomeInfoDb::seqnames(tx_gr)))[[1L]]
+  tx_start <- min(IRanges::start(tx_gr))
+  tx_end <- max(IRanges::end(tx_gr))
+  clip_end <- tx_start + floor((tx_end - tx_start) / 2)
+
+  subset_ann <- subset_feature_annotation(
+    ann,
+    transcript = transcript_id,
+    chr = tx_chr,
+    start = tx_start,
+    end = clip_end
+  )
+
+  subset_gr <- annotation_data(subset_ann)
+  subset_meta <- S4Vectors::mcols(subset_gr)
+  expect_true(all(as.character(GenomeInfoDb::seqnames(subset_gr)) == tx_chr))
+  expect_true(all(IRanges::start(subset_gr) >= tx_start))
+  expect_true(all(IRanges::end(subset_gr) <= clip_end))
+  expect_true(all(
+    (is.na(subset_meta$transcript_id) | !nzchar(subset_meta$transcript_id)) |
+      subset_meta$transcript_id == transcript_id
+  ))
+})
+
 test_that("build_feature_index also supports SynFeatureAnnotation objects", {
   annotation_path <- system.file(
     "extdata",
