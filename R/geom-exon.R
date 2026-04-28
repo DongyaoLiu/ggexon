@@ -4,7 +4,7 @@
 GeomExon <- ggproto("GeomExon", Geom,
                       required_aes = c("ymin", "xmin", "xmax", "transcripts","strand", "track", "type"),
                       non_missing_aes = c("linewidth", "shape"),
-                      extra_params = c("exon_height", "na.rm", "y_scale", "x_translation", "subset", "annotation_type",
+                      extra_params = c("exon_height", "transcript_backbone_ratio", "na.rm", "y_scale", "x_translation", "subset", "annotation_type",
                                        "breakdata", "species", "chr"),
                       default_aes = aes(linewidth = 0, linejoin = "mitre", fill="black",
                         colour = NULL,
@@ -66,8 +66,11 @@ GeomExon <- ggproto("GeomExon", Geom,
                           return(zeroGrob())
                         }
                         track_data = add_transcripts_seq_line(visible_data)
-                        track_data$linewidth = 1
-                        transcripts_line_Grob = GeomSegment$draw_panel(track_data, panel_params, coord)
+                        track_rect_data = add_transcripts_seq_rect(
+                          track_data,
+                          backbone_ratio = params$transcript_backbone_ratio %||% 0.1
+                        )
+                        transcripts_line_Grob = ggplot2::GeomRect$draw_panel(track_rect_data, panel_params, coord)
                         tri_data = add_transcripts_direction(track_data)
                         tri_data$linewidth = 0
                         transcripts_tri_Grob = GeomPolygon$draw_panel(tri_data, panel_params, coord)
@@ -84,6 +87,7 @@ GeomExon <- ggproto("GeomExon", Geom,
                     default_params = function() {
                       list(
                         exon_height = 0.8,
+                        transcript_backbone_ratio = 0.1,
                         y_scale = 100,
                         x_translation = 0,
                         subset = NULL,
@@ -128,6 +132,8 @@ GeomExon <- ggproto("GeomExon", Geom,
 #'   ggexon layout helpers.
 #' @param y_scale Optional y scaling factor for the track layout.
 #' @param exon_height Optional exon rectangle height.
+#' @param transcript_backbone_ratio Relative backbone height as a fraction of
+#'   `exon_height`. Defaults to `0.1`.
 #' @param x_translation Optional x offset applied before drawing.
 #' @param subset Optional numeric length-2 genomic window to keep. When omitted
 #'   for Syn-backed data, the full annotation range is used.
@@ -146,6 +152,7 @@ geom_exon <- function(mapping = NULL, data = NULL,
                       stat = "identity", position = "identity",
                       ..., na.rm = FALSE, show.legend = NA,
                       transcripts_track_ratio = NULL, y_scale = NULL, exon_height = NULL,
+                      transcript_backbone_ratio = NULL,
                       x_translation = NULL, subset = NULL,
                       annotation_type ="exon",
                       species = NULL, chr = NULL,
@@ -155,6 +162,7 @@ geom_exon <- function(mapping = NULL, data = NULL,
       ...,
       na.rm = na.rm,
       exon_height = exon_height,
+      transcript_backbone_ratio = transcript_backbone_ratio,
       y_scale = y_scale,
       x_translation = x_translation,
       subset = subset,

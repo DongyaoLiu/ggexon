@@ -130,6 +130,23 @@ add_transcripts_seq_line = function(data, transcripts_stop_proportion = NULL, tr
   return(data2)
 }
 
+add_transcripts_seq_rect = function(data, backbone_ratio = 0.1) {
+  if (!is.numeric(backbone_ratio) || length(backbone_ratio) != 1L || is.na(backbone_ratio) ||
+      backbone_ratio <= 0) {
+    stop("`backbone_ratio` must be a single positive numeric value.", call. = FALSE)
+  }
+
+  data %>%
+    mutate(
+      xmin = pmin(x, xend),
+      xmax = pmax(x, xend),
+      ymin = y_middle - (y_range * backbone_ratio) / 2,
+      ymax = y_middle + (y_range * backbone_ratio) / 2,
+      linewidth = 0,
+      colour = NA
+    )
+}
+
 add_transcripts_direction = function(data, ratio = 0.25, angle = pi/3, lengthABS = 160, lengthPRO =NULL){
   #' angle is the base angle of isosceles
   #' pre: the transcripts dataframe , is the output of add_transcripts, require at least the end point of each transcripts. xend, yend, y_range(the height of exon) and the ID of
@@ -258,7 +275,6 @@ Splines_link_generate = function(data, detail = 100){
     }
   )
 }
-
 
 
 
