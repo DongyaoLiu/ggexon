@@ -1044,11 +1044,17 @@ syn_layout_panels <- function(x) {
   }
 
   panels <- .ensure_syn_layout_xlim_cols(syn_layout_panels(layout))
-  target_hits <- .resolve_layout_individual_panels(panels, individual)
+  explicit_hits <- .resolve_layout_individual_panels(panels, individual)
+  explicit_individuals <- names(explicit_hits)
+  target_hits <- if (methods::is(x, "SynSpecies")) {
+    .resolve_layout_individual_panels(panels, NULL)
+  } else {
+    explicit_hits
+  }
   target_individuals <- names(target_hits)
 
-  xlim_map <- .normalize_panel_xlim_map(target_individuals, xlim, arg = "xlim")
-  xlim_chr_map <- .normalize_panel_xlim_chr_map(target_individuals, xlim_chr)
+  xlim_map <- .normalize_panel_xlim_map(explicit_individuals, xlim, arg = "xlim")
+  xlim_chr_map <- .normalize_panel_xlim_chr_map(explicit_individuals, xlim_chr)
   sources <- .layout_panel_xlim_sources(layout)
 
   if (methods::is(x, "SynLayout") && length(xlim_map) == 0L) {
@@ -1077,13 +1083,13 @@ syn_layout_panels <- function(x) {
       next
     }
 
-    if (identical(current_source, "explicit") && is.null(individual)) {
+    if (identical(current_source, "explicit") && !species_name %in% explicit_individuals) {
       next
     }
 
     subset_window <- .derive_panel_xlim_from_subset(x, species_name)
     if (is.null(subset_window)) {
-      if (!is.null(individual)) {
+      if (species_name %in% explicit_individuals && is.null(explicit_xlim)) {
         stop(
           "Cannot infer `xlim` automatically because the active feature annotation for ",
           species_name,

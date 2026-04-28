@@ -875,6 +875,61 @@ test_that("set_panel_xlim seeds all subsetted annotation panels and preserves ex
   expect_identical(layout3$xlim_max[[1L]], 21584356)
 })
 
+test_that("set_panel_xlim explicit override also keeps subset windows for other panels", {
+  annotation_path <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+
+  x1 <- SynIndividual(
+    annotation_file = annotation_path,
+    genome_file = genome_waiver(),
+    id = "XZ1516"
+  ) |>
+    load_annotation() |>
+    subset_feature_annotation(chr = "RagTag_V", start = 21555003, end = 21616743)
+
+  x2 <- SynIndividual(
+    annotation_file = annotation_path,
+    genome_file = genome_waiver(),
+    id = "N2"
+  ) |>
+    load_annotation() |>
+    subset_feature_annotation(chr = "RagTag_V", start = 20448654, end = 20480485)
+
+  x3 <- SynIndividual(
+    annotation_file = annotation_path,
+    genome_file = genome_waiver(),
+    id = "ECA1238"
+  )
+
+  sp <- SynSpecies(name = "worms") |>
+    add_individual(x1, x2, x3)
+  species_layout(sp) <- SynLayout(
+    panels = data.frame(
+      PANEL = 1:3,
+      ROW = 1:3,
+      COL = 1L,
+      track = c("XZ1516", "ECA1238", "N2"),
+      stringsAsFactors = FALSE
+    ),
+    free = list(x = TRUE, y = FALSE)
+  )
+
+  sp2 <- set_panel_xlim(sp, individual = "ECA1238", xlim = c(15000, 60000))
+  layout_df <- syn_layout_panels(species_layout(sp2))
+
+  expect_identical(layout_df$xlim_chr[[1L]], "V_RagTag")
+  expect_identical(layout_df$xlim_min[[1L]], 21555003)
+  expect_identical(layout_df$xlim_max[[1L]], 21616743)
+  expect_identical(layout_df$xlim_min[[2L]], 15000)
+  expect_identical(layout_df$xlim_max[[2L]], 60000)
+  expect_identical(layout_df$xlim_chr[[3L]], "V_RagTag")
+  expect_identical(layout_df$xlim_min[[3L]], 20448654)
+  expect_identical(layout_df$xlim_max[[3L]], 20480485)
+})
+
 test_that("set_panel_xlim errors clearly when no subset window is stored", {
   sp <- SynSpecies(name = "worms") |>
     add_individual(
