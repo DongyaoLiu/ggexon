@@ -3,6 +3,7 @@
 S3method(drawDetails,crossPanelSegmentsGrob)
 S3method(ggexon,default)
 S3method(ggplot_add,cross_panel_annotation)
+S3method(ggplot_add,set_panel_xlim_spec)
 S3method(ggplot_build,ggexon)
 export("annotation_data<-")
 export("species_layout<-")

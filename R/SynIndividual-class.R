@@ -1309,6 +1309,14 @@ setGeneric("subset_feature_annotation", function(x,
     label = paste0("annotation layer ", annotation_name(ann))
   )
 
+  window_metadata <- annotation_metadata(ann)
+  window_metadata$subset_window <- list(
+    chr = window$chr,
+    start = window$start,
+    end = window$end
+  )
+  annotation_metadata(ann) <- window_metadata
+
   ann@annotation <- .subset_granges_window(
     gr = active_gr,
     chr = window$chr,

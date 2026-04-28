@@ -600,6 +600,168 @@ test_that("stored SynLayout panel x windows seed annotation and link windows", {
   expect_true(all(link_layer$qstart < 20465040 & link_layer$qend > 20456948))
 })
 
+test_that("set_panel_xlim can update ggexon plots from subset windows", {
+  annotation_path <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+
+  sp <- SynSpecies(name = "worms") |>
+    add_individual(
+      SynIndividual(
+        annotation_file = annotation_path,
+        genome_file = genome_waiver(),
+        id = "XZ1516"
+      ) |>
+        load_annotation() |>
+        subset_feature_annotation(chr = "RagTag_V", start = 21574445, end = 21584356)
+    )
+  species_layout(sp) <- SynLayout(
+    panels = data.frame(
+      PANEL = 1L,
+      ROW = 1L,
+      COL = 1L,
+      track = "XZ1516",
+      stringsAsFactors = FALSE
+    )
+  )
+
+  plot_obj <- ggexon(sp) +
+    geom_exon() +
+    facet_genomics(ggplot2::vars(track), scales = "free")
+
+  plot_obj <- set_panel_xlim(plot_obj)
+  built <- ggplot2::ggplot_build(plot_obj)
+
+  expect_true(all(built$data[[1L]]$xmin >= 21574445))
+  expect_true(all(built$data[[1L]]$xmax <= 21584356))
+})
+
+test_that("set_panel_xlim supports ggplot add grammar", {
+  annotation_path <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+
+  sp <- SynSpecies(name = "worms") |>
+    add_individual(
+      SynIndividual(
+        annotation_file = annotation_path,
+        genome_file = genome_waiver(),
+        id = "XZ1516"
+      ) |>
+        load_annotation() |>
+        subset_feature_annotation(chr = "RagTag_V", start = 21574445, end = 21584356)
+    )
+  species_layout(sp) <- SynLayout(
+    panels = data.frame(
+      PANEL = 1L,
+      ROW = 1L,
+      COL = 1L,
+      track = "XZ1516",
+      stringsAsFactors = FALSE
+    )
+  )
+
+  plot_obj <- ggexon(sp) +
+    geom_exon() +
+    facet_genomics(ggplot2::vars(track), scales = "free") +
+    set_panel_xlim()
+
+  built <- ggplot2::ggplot_build(plot_obj)
+
+  expect_true(all(built$data[[1L]]$xmin >= 21574445))
+  expect_true(all(built$data[[1L]]$xmax <= 21584356))
+})
+
+test_that("set_panel_xlim ggplot add grammar supports explicit overrides", {
+  xz_annotation <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+  n2_annotation <- system.file(
+    "extdata",
+    "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
+    package = "ggexon"
+  )
+
+  sp <- SynSpecies(name = "worms") |>
+    add_individual(
+      SynIndividual(
+        annotation_file = xz_annotation,
+        genome_file = genome_waiver(),
+        id = "XZ1516"
+      ) |>
+        load_annotation() |>
+        subset_feature_annotation(chr = "RagTag_V", start = 21574445, end = 21584356),
+      SynIndividual(
+        annotation_file = n2_annotation,
+        genome_file = genome_waiver(),
+        id = "N2"
+      ) |>
+        load_annotation() |>
+        subset_feature_annotation(chr = "V", start = 20448654, end = 20480485)
+    )
+  species_layout(sp) <- SynLayout(
+    panels = data.frame(
+      PANEL = 1:2,
+      ROW = 1:2,
+      COL = 1L,
+      track = c("N2", "XZ1516"),
+      stringsAsFactors = FALSE
+    ),
+    free = list(x = TRUE, y = FALSE)
+  )
+
+  plot_obj <- ggexon(sp) +
+    geom_exon(species = c("N2", "XZ1516")) +
+    facet_genomics(ggplot2::vars(track), scales = "free") +
+    set_panel_xlim(individual = "N2", xlim = c(20450000, 20470000), xlim_chr = "V")
+
+  windows <- effective_panel_windows(plot_obj)
+  n2_window <- windows[windows$individual == "N2", , drop = FALSE]
+  xz_window <- windows[windows$individual == "XZ1516", , drop = FALSE]
+
+  expect_identical(n2_window$chr[[1L]], "V")
+  expect_identical(n2_window$start[[1L]], 20450000)
+  expect_identical(n2_window$end[[1L]], 20470000)
+  expect_identical(xz_window$chr[[1L]], NA_character_)
+})
+
+test_that("set_panel_xlim does not break plotting for unloaded annotation panels", {
+  annotation_path <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+
+  sp <- SynSpecies(name = "worms") |>
+    add_individual(
+      SynIndividual(annotation_file = annotation_path, id = "ECA1238")
+    )
+  species_layout(sp) <- SynLayout(
+    panels = data.frame(
+      PANEL = 1L,
+      ROW = 1L,
+      COL = 1L,
+      track = "ECA1238",
+      stringsAsFactors = FALSE
+    )
+  )
+
+  plot_obj <- ggexon(sp) +
+    geom_exon(species = "ECA1238") +
+    facet_genomics(ggplot2::vars(track), scales = "free") +
+    set_panel_xlim(individual = "ECA1238", xlim = c(0, 15000))
+
+  built <- ggplot2::ggplot_build(plot_obj)
+
+  expect_true(nrow(built$data[[1L]]) > 0L)
+})
+
 test_that("stored SynLayout is pruned to the species requested by the plot", {
   xz_genome <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
   xz_annotation <- system.file(

@@ -372,6 +372,10 @@ test_that("subset_feature_annotation returns a clean windowed snapshot", {
   expect_identical(plot_cache(subset_ann), list())
   expect_true(all(IRanges::start(annotation_data(subset_ann)) >= target_start))
   expect_true(all(IRanges::end(annotation_data(subset_ann)) <= target_end))
+  expect_identical(
+    annotation_metadata(subset_ann)$subset_window,
+    list(chr = target_chr, start = target_start, end = target_end)
+  )
 })
 
 test_that("build_feature_index also supports SynFeatureAnnotation objects", {

@@ -713,7 +713,7 @@ test_that("SynLayout validates panel-specific x windows stored in panels", {
     "free\\$x = TRUE"
   )
 
-  expect_error(
+  expect_s4_class(
     SynLayout(
       panels = data.frame(
         PANEL = 1L,
@@ -728,7 +728,7 @@ test_that("SynLayout validates panel-specific x windows stored in panels", {
       ),
       free = list(x = TRUE, y = FALSE)
     ),
-    "must provide `xlim_chr`, `xlim_min`, and `xlim_max`"
+    "SynLayout"
   )
 })
 
@@ -773,6 +773,233 @@ test_that("set_panel_xlim updates one panel by individual name and clear_panel_x
   expect_true(is.na(layout_df2$xlim_chr[[1L]]))
   expect_true(is.na(layout_df2$xlim_min[[1L]]))
   expect_true(is.na(layout_df2$xlim_max[[1L]]))
+})
+
+test_that("set_panel_xlim can reuse subset_feature_annotation coordinates", {
+  annotation_path <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+
+  target_chr <- "RagTag_V"
+  target_start <- 21574445
+  target_end <- 21584356
+
+  x <- SynIndividual(
+    annotation_file = annotation_path,
+    genome_file = genome_waiver(),
+    id = "XZ1516"
+  ) |>
+    load_annotation() |>
+    subset_feature_annotation(chr = target_chr, start = target_start, end = target_end)
+
+  sp <- SynSpecies(name = "worms") |>
+    add_individual(x)
+  species_layout(sp) <- SynLayout(
+    panels = data.frame(
+      PANEL = 1L,
+      ROW = 1L,
+      COL = 1L,
+      track = "XZ1516",
+      stringsAsFactors = FALSE
+    )
+  )
+
+  sp2 <- set_panel_xlim(sp, individual = "XZ1516")
+  layout_df <- syn_layout_panels(species_layout(sp2))
+
+  expect_identical(layout_df$xlim_chr[[1L]], "V_RagTag")
+  expect_identical(layout_df$xlim_min[[1L]], target_start)
+  expect_identical(layout_df$xlim_max[[1L]], target_end)
+})
+
+test_that("set_panel_xlim seeds all subsetted annotation panels and preserves explicit overrides", {
+  annotation_path <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+
+  x1 <- SynIndividual(
+    annotation_file = annotation_path,
+    genome_file = genome_waiver(),
+    id = "XZ1516"
+  ) |>
+    load_annotation() |>
+    subset_feature_annotation(chr = "RagTag_V", start = 21574445, end = 21584356)
+
+  x2 <- SynIndividual(
+    annotation_file = annotation_path,
+    genome_file = genome_waiver(),
+    id = "CB4856"
+  ) |>
+    load_annotation() |>
+    subset_feature_annotation(chr = "RagTag_V", start = 21570000, end = 21576000)
+
+  x3 <- SynIndividual(id = "ECA1238")
+
+  sp <- SynSpecies(name = "worms") |>
+    add_individual(x1, x2, x3)
+  species_layout(sp) <- SynLayout(
+    panels = data.frame(
+      PANEL = 1:3,
+      ROW = 1:3,
+      COL = 1L,
+      track = c("XZ1516", "CB4856", "ECA1238"),
+      stringsAsFactors = FALSE
+    )
+  )
+
+  sp1 <- set_panel_xlim(sp)
+  layout1 <- syn_layout_panels(species_layout(sp1))
+
+  expect_identical(layout1$xlim_chr[[1L]], "V_RagTag")
+  expect_identical(layout1$xlim_min[[1L]], 21574445)
+  expect_identical(layout1$xlim_max[[1L]], 21584356)
+  expect_identical(layout1$xlim_chr[[2L]], "V_RagTag")
+  expect_identical(layout1$xlim_min[[2L]], 21570000)
+  expect_identical(layout1$xlim_max[[2L]], 21576000)
+  expect_true(is.na(layout1$xlim_chr[[3L]]))
+  expect_true(is.na(layout1$xlim_min[[3L]]))
+  expect_true(is.na(layout1$xlim_max[[3L]]))
+
+  sp2 <- set_panel_xlim(sp1, individual = "CB4856", xlim = c(1, 100), xlim_chr = "RagTag_V")
+  sp3 <- set_panel_xlim(sp2)
+  layout3 <- syn_layout_panels(species_layout(sp3))
+
+  expect_identical(layout3$xlim_min[[2L]], 1)
+  expect_identical(layout3$xlim_max[[2L]], 100)
+  expect_identical(layout3$xlim_chr[[2L]], "V_RagTag")
+  expect_identical(layout3$xlim_min[[1L]], 21574445)
+  expect_identical(layout3$xlim_max[[1L]], 21584356)
+})
+
+test_that("set_panel_xlim errors clearly when no subset window is stored", {
+  sp <- SynSpecies(name = "worms") |>
+    add_individual(
+      SynIndividual(
+        annotation_file = system.file("extdata", "caenorhabditis_XZ1516.gff3", package = "ggexon"),
+        genome_file = genome_waiver(),
+        id = "XZ1516"
+      ) |>
+        load_annotation()
+    )
+  species_layout(sp) <- SynLayout(
+    panels = data.frame(
+      PANEL = 1L,
+      ROW = 1L,
+      COL = 1L,
+      track = "XZ1516",
+      stringsAsFactors = FALSE
+    )
+  )
+
+  expect_error(
+    set_panel_xlim(sp, individual = "XZ1516"),
+    "does not store a subset window"
+  )
+})
+
+test_that("set_panel_xlim requires explicit limits for SynLayout inputs", {
+  layout <- SynLayout(
+    panels = data.frame(
+      PANEL = 1L,
+      ROW = 1L,
+      COL = 1L,
+      track = "XZ1516",
+      stringsAsFactors = FALSE
+    )
+  )
+
+  expect_error(
+    set_panel_xlim(layout),
+    "must be supplied for SynLayout objects"
+  )
+})
+
+test_that("set_panel_xlim infers seqname from attached pairwise alignments", {
+  annotation_path <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+
+  sp <- SynSpecies(name = "worms") |>
+    add_individual(
+      SynIndividual(annotation_file = annotation_path, id = "ECA1238"),
+      SynIndividual(annotation_file = annotation_path, id = "N2")
+    ) |>
+    add_pairwise_alignment(
+      SynPairAlignment(
+        name = "map",
+        query_individual = "ECA1238",
+        target_individual = "N2",
+        file = tempfile(fileext = ".paf"),
+        format = "paf",
+        data = data.frame(
+          qchr = "V_RagTag",
+          qlen = 50000L,
+          qstart = 100L,
+          qend = 1000L,
+          strand = "+",
+          tchr = "V_RagTag",
+          tlen = 50000L,
+          tstart = 500L,
+          tend = 1400L,
+          nmatch = 900L,
+          alen = 900L,
+          mapq = 60L,
+          stringsAsFactors = FALSE
+        )
+      )
+    )
+  species_layout(sp) <- SynLayout(
+    panels = data.frame(
+      PANEL = 1:2,
+      ROW = 1:2,
+      COL = 1L,
+      track = c("ECA1238", "N2"),
+      stringsAsFactors = FALSE
+    ),
+    free = list(x = TRUE, y = FALSE)
+  )
+
+  sp2 <- set_panel_xlim(sp, individual = "ECA1238", xlim = c(0, 15000))
+  layout_df <- syn_layout_panels(species_layout(sp2))
+
+  expect_identical(layout_df$xlim_chr[[1L]], "V_RagTag")
+  expect_identical(layout_df$xlim_min[[1L]], 0)
+  expect_identical(layout_df$xlim_max[[1L]], 15000)
+})
+
+test_that("set_panel_xlim stores numeric-only windows for unloaded annotations", {
+  annotation_path <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+
+  sp <- SynSpecies(name = "worms") |>
+    add_individual(
+      SynIndividual(annotation_file = annotation_path, id = "ECA1238")
+    )
+  species_layout(sp) <- SynLayout(
+    panels = data.frame(
+      PANEL = 1L,
+      ROW = 1L,
+      COL = 1L,
+      track = "ECA1238",
+      stringsAsFactors = FALSE
+    )
+  )
+
+  sp2 <- set_panel_xlim(sp, individual = "ECA1238", xlim = c(0, 15000))
+  layout_df <- syn_layout_panels(species_layout(sp2))
+
+  expect_true(is.na(layout_df$xlim_chr[[1L]]))
+  expect_identical(layout_df$xlim_min[[1L]], 0)
+  expect_identical(layout_df$xlim_max[[1L]], 15000)
 })
 
 test_that("set_panel_xlim accepts explicit xlim_chr", {
