@@ -41,6 +41,7 @@ RoxygenNote: 7.3.3
 Collate: 
     'SynBioc-unions.R'
     'SynAnnotation-class.R'
+    'protein-mutation-annotation.R'
     'SynIndividual-class.R'
     'SynSpecies-class.R'
     'aes-evaluation.R'
@@ -56,6 +57,7 @@ Collate:
     'geom-gene.R'
     'geom-genetag.R'
     'geom-motif.R'
+    'geom-protein-lollipop.R'
     'geom-nuclink.R'
     'geom_genelabel.R'
     'ggexon.R'

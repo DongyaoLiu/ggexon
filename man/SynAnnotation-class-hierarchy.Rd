@@ -23,6 +23,7 @@ individual-level branch.
 \item \code{SynVCFAnnotation}: VCF/BCF variant annotation
 \item \code{SynBigWigAnnotation}: BigWig signal annotation
 \item \code{SynProteinDomainAnnotation}: protein-domain annotation
+\item \code{SynProteinMutationAnnotation}: protein-coordinate mutation annotation
 }
 }
 

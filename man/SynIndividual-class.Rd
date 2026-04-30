@@ -82,8 +82,8 @@ entries.
 \item \code{annotation_format} must be one of \code{"auto"}, \code{"gff"}, or \code{"gtf"}, either
 length one or the same length as \code{annotation_file}.
 \item When \code{annotations} is non-empty, every entry must inherit from
-\code{SynAnnotation} and \code{active_annotation} must name one of them.
+\code{SynAnnotation}. When feature annotations are present,
+\code{active_annotation} must name one of those feature layers.
 \item \code{projected_domains} must be a list of data-frame-like objects.
 }
 }
-

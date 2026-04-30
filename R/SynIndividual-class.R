@@ -57,7 +57,8 @@ NULL
 #'   `annotation_file` is present, it must be length one or the same length as
 #'   `annotation_file`.
 #' * When `annotations` is non-empty, every entry must inherit from
-#'   `SynAnnotation` and `active_annotation` must name one of them.
+#'   `SynAnnotation`. When feature annotations are present,
+#'   `active_annotation` must name one of those feature layers.
 #' * `projected_domains` must be a list of data-frame-like objects.
 #'
 #' @exportClass SynIndividual
@@ -153,10 +154,23 @@ setClass(
           "`annotations` must be a list of SynAnnotation objects."
         )
       }
-      if (!(object@active_annotation %in% names(object@annotations))) {
+      feature_annotations <- vapply(
+        object@annotations,
+        methods::is,
+        logical(1),
+        class2 = "SynFeatureAnnotation"
+      )
+      has_feature_annotations <- any(feature_annotations)
+      if (has_feature_annotations && !(object@active_annotation %in% names(object@annotations))) {
         problems <- c(
           problems,
-          "`active_annotation` must be one of the names in `annotations`."
+          "`active_annotation` must be one of the feature annotation names in `annotations`."
+        )
+      } else if (has_feature_annotations &&
+                 !methods::is(object@annotations[[object@active_annotation]], "SynFeatureAnnotation")) {
+        problems <- c(
+          problems,
+          "`active_annotation` must refer to a SynFeatureAnnotation layer."
         )
       }
     }
@@ -2391,7 +2405,9 @@ add_annotation <- function(x, annotation, set_active = FALSE) {
     )
   }
 
-  if ((isTRUE(set_active) || length(annotations) == 1L) &&
+  active_is_feature <- x@active_annotation %in% names(annotations) &&
+    methods::is(annotations[[x@active_annotation]], "SynFeatureAnnotation")
+  if ((isTRUE(set_active) || !active_is_feature) &&
       methods::is(annotation, "SynFeatureAnnotation")) {
     x@active_annotation <- annotation_name(annotation)
   }

@@ -21,6 +21,7 @@ NULL
 #' * `SynVCFAnnotation`: VCF/BCF variant annotation
 #' * `SynBigWigAnnotation`: BigWig signal annotation
 #' * `SynProteinDomainAnnotation`: protein-domain annotation
+#' * `SynProteinMutationAnnotation`: protein-coordinate mutation annotation
 #'
 #' @keywords internal
 NULL
@@ -421,6 +422,64 @@ setClass(
   )
 )
 
+#' SynProteinMutationAnnotation class
+#'
+#' `SynProteinMutationAnnotation` stores protein-coordinate mutation records,
+#' such as amino-acid substitutions summarized across strains or individuals.
+#' It is a protein-space annotation parallel to `SynProteinDomainAnnotation`.
+#'
+#' In addition to the slots listed below, the class inherits `name`,
+#' `source_file`, `annotation_scope`, `lazy`, `loaded`, `metadata`, and
+#' `plot_cache` from `SynAnnotation`.
+#'
+#' @slot data_format Mutation file format label. Currently
+#'   `"protein_mutation"`.
+#' @slot mutation_data Optional cached normalized mutation table.
+#' @slot individual_index Optional long index mapping source mutation rows to
+#'   individual/strain identifiers.
+#' @slot keytype Identifier column used to join mutations to proteins,
+#'   transcripts, or genes.
+#'
+#' @section Prototype defaults:
+#' * `data_format = "protein_mutation"`
+#' * `annotation_scope = "protein"`
+#' * `mutation_data = NULL`
+#' * `individual_index = NULL`
+#' * `keytype = "gene_id"`
+#'
+#' @exportClass SynProteinMutationAnnotation
+setClass(
+  "SynProteinMutationAnnotation",
+  contains = "SynProteinAnnotation",
+  slots = c(
+    data_format = "character",
+    mutation_data = "ANY",
+    individual_index = "ANY",
+    keytype = "character"
+  ),
+  prototype = list(
+    data_format = "protein_mutation",
+    annotation_scope = "protein",
+    mutation_data = NULL,
+    individual_index = NULL,
+    keytype = "gene_id"
+  ),
+  validity = function(object) {
+    problems <- character()
+    if (length(object@data_format) != 1L ||
+        is.na(object@data_format) ||
+        !nzchar(object@data_format)) {
+      problems <- c(problems, "`data_format` must be a single non-empty character value.")
+    }
+    if (length(object@keytype) != 1L ||
+        is.na(object@keytype) ||
+        !nzchar(object@keytype)) {
+      problems <- c(problems, "`keytype` must be a single non-empty character value.")
+    }
+    if (length(problems) == 0L) TRUE else problems
+  }
+)
+
 #' Constructor for SynFeatureAnnotation
 #'
 #' @param name Short unique label for the annotation layer.
@@ -557,6 +616,44 @@ SynProteinDomainAnnotation <- function(name,
     metadata = metadata,
     keytype = keytype,
     source_db = source_db
+  )
+}
+
+#' Constructor for SynProteinMutationAnnotation
+#'
+#' @param name Short unique label for the annotation layer.
+#' @param mutation_file Path to the protein-mutation annotation file.
+#' @param keytype Identifier column used to match mutation rows to features.
+#' @param mutation_data Optional normalized mutation table.
+#' @param individual_index Optional long table mapping mutation rows to
+#'   individual identifiers.
+#' @param metadata Optional metadata list.
+#' @param lazy Logical; whether to defer loading until requested.
+#'
+#' @return A `SynProteinMutationAnnotation` object.
+#' @export
+SynProteinMutationAnnotation <- function(name,
+                                         mutation_file,
+                                         keytype = "gene_id",
+                                         mutation_data = NULL,
+                                         individual_index = NULL,
+                                         metadata = list(),
+                                         lazy = TRUE) {
+  if (!is.character(keytype) || length(keytype) != 1L ||
+      is.na(keytype) || !nzchar(keytype)) {
+    stop("`keytype` must be a single non-empty character value.", call. = FALSE)
+  }
+
+  new(
+    "SynProteinMutationAnnotation",
+    name = name,
+    source_file = mutation_file,
+    lazy = lazy,
+    loaded = !is.null(mutation_data),
+    metadata = metadata,
+    keytype = keytype,
+    mutation_data = mutation_data,
+    individual_index = individual_index
   )
 }
 
