@@ -160,12 +160,12 @@ protein_lollipop_data <- function(mutations,
 #' Draw lollipop annotations on a protein-coordinate track
 #'
 #' This helper returns a list of ggplot2 layers: backbone, optional domains,
-#' curved stems, mutation heads, and labels. It is designed for protein tracks
+#' curved stems, and mutation heads. It is designed for protein tracks
 #' but only assumes that mutations and domains share the same linear coordinate
 #' system.
 #'
 #' @inheritParams protein_lollipop_data
-#' @param show_backbone,show_domains,show_stems,show_points,show_labels Logical
+#' @param show_backbone,show_domains,show_stems,show_points Logical
 #'   switches for layer components.
 #' @param backbone_fill,backbone_colour Backbone rectangle styling.
 #' @param domain_colour Domain rectangle outline colour.
@@ -173,7 +173,6 @@ protein_lollipop_data <- function(mutations,
 #' @param point_size,point_colour Mutation point styling. `point_colour` is used
 #'   only when `score` is `NULL`; otherwise point colour is mapped to
 #'   `lollipop_score`.
-#' @param label_size,label_nudge_y,label_angle Label text styling.
 #' @param show.legend Passed to generated ggplot2 layers.
 #'
 #' @return A list of ggplot2 layers.
@@ -182,9 +181,6 @@ geom_protein_lollipop <- function(mutations,
                                   domains = NULL,
                                   protein_length = NULL,
                                   position = "position",
-                                  label = NULL,
-                                  ref = NULL,
-                                  alt = NULL,
                                   score = NULL,
                                   domain_start = "start",
                                   domain_end = "end",
@@ -204,7 +200,6 @@ geom_protein_lollipop <- function(mutations,
                                   show_domains = TRUE,
                                   show_stems = TRUE,
                                   show_points = TRUE,
-                                  show_labels = TRUE,
                                   backbone_fill = "grey80",
                                   backbone_colour = NA,
                                   domain_colour = NA,
@@ -212,18 +207,12 @@ geom_protein_lollipop <- function(mutations,
                                   stem_linewidth = 0.4,
                                   point_size = 4,
                                   point_colour = "black",
-                                  label_size = 3.5,
-                                  label_nudge_y = 0.35,
-                                  label_angle = 90,
                                   show.legend = NA) {
   prepared <- protein_lollipop_data(
     mutations = mutations,
     domains = domains,
     protein_length = protein_length,
     position = position,
-    label = label,
-    ref = ref,
-    alt = alt,
     score = score,
     domain_start = domain_start,
     domain_end = domain_end,
@@ -331,24 +320,6 @@ geom_protein_lollipop <- function(mutations,
       )
     }
     layers <- c(layers, list(point_layer))
-  }
-
-  if (isTRUE(show_labels)) {
-    layers <- c(layers, list(
-      ggplot2::geom_text(
-        data = prepared$mutations,
-        mapping = ggplot2::aes(
-          x = .data$lollipop_x,
-          y = .data$lollipop_y,
-          label = .data$lollipop_label
-        ),
-        nudge_y = label_nudge_y,
-        angle = label_angle,
-        size = label_size,
-        inherit.aes = FALSE,
-        show.legend = FALSE
-      )
-    ))
   }
 
   layers

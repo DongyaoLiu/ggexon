@@ -9,9 +9,6 @@ geom_protein_lollipop(
   domains = NULL,
   protein_length = NULL,
   position = "position",
-  label = NULL,
-  ref = NULL,
-  alt = NULL,
   score = NULL,
   domain_start = "start",
   domain_end = "end",
@@ -31,7 +28,6 @@ geom_protein_lollipop(
   show_domains = TRUE,
   show_stems = TRUE,
   show_points = TRUE,
-  show_labels = TRUE,
   backbone_fill = "grey80",
   backbone_colour = NA,
   domain_colour = NA,
@@ -39,9 +35,6 @@ geom_protein_lollipop(
   stem_linewidth = 0.4,
   point_size = 4,
   point_colour = "black",
-  label_size = 3.5,
-  label_nudge_y = 0.35,
-  label_angle = 90,
   show.legend = NA
 )
 }
@@ -56,13 +49,6 @@ system as \code{mutations}.}
 mutation position/domain end is used.}
 
 \item{position}{Column in \code{mutations} containing mutation positions.}
-
-\item{label}{Optional label column in \code{mutations}. When omitted, a
-\code{mutation} column is used if present; otherwise labels are built from
-\code{ref}, \code{position}, and \code{alt} when both amino-acid columns are supplied.}
-
-\item{ref, alt}{Optional reference and alternate residue/base columns used to
-generate labels.}
 
 \item{score}{Optional column in \code{mutations} used for lollipop point colour,
 for example a BLOSUM score.}
@@ -90,7 +76,7 @@ intervals when the interval table does not already contain y columns.}
 
 \item{curve_k}{Sigmoid steepness for curved stems.}
 
-\item{show_backbone, show_domains, show_stems, show_points, show_labels}{Logical
+\item{show_backbone, show_domains, show_stems, show_points}{Logical
 switches for layer components.}
 
 \item{backbone_fill, backbone_colour}{Backbone rectangle styling.}
@@ -103,8 +89,6 @@ switches for layer components.}
 only when \code{score} is \code{NULL}; otherwise point colour is mapped to
 \code{lollipop_score}.}
 
-\item{label_size, label_nudge_y, label_angle}{Label text styling.}
-
 \item{show.legend}{Passed to generated ggplot2 layers.}
 }
 \value{
@@ -112,7 +96,7 @@ A list of ggplot2 layers.
 }
 \description{
 This helper returns a list of ggplot2 layers: backbone, optional domains,
-curved stems, mutation heads, and labels. It is designed for protein tracks
+curved stems, and mutation heads. It is designed for protein tracks
 but only assumes that mutations and domains share the same linear coordinate
 system.
 }

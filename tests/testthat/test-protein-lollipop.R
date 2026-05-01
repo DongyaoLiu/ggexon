@@ -54,19 +54,17 @@ test_that("geom_protein_lollipop builds ggplot layers", {
       mutations = mutations,
       domains = domains,
       protein_length = 30,
-      label = "mutation",
       score = "blosum",
       stem_points = 5
     )
 
   build <- ggplot2::ggplot_build(plot_obj)
 
-  expect_length(build$data, 5)
+  expect_length(build$data, 4)
   expect_equal(nrow(build$data[[1L]]), nrow(mutations) * 5)
   expect_equal(nrow(build$data[[2L]]), 1)
   expect_equal(nrow(build$data[[3L]]), 2)
   expect_equal(nrow(build$data[[4L]]), nrow(mutations))
-  expect_equal(nrow(build$data[[5L]]), nrow(mutations))
 })
 
 test_that("protein_lollipop_data supports empty mutation tables with domains", {

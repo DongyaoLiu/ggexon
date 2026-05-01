@@ -58,6 +58,7 @@ Collate:
     'geom-genetag.R'
     'geom-motif.R'
     'geom-protein-lollipop.R'
+    'geom-mutation-label.R'
     'geom-nuclink.R'
     'geom_genelabel.R'
     'ggexon.R'

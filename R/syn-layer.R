@@ -79,6 +79,10 @@ default_syn_aesthetics <- function(data, layer) {
     cols <- c("xmin", "xmax", "ymin", "transcripts", "strand", "track", "label", "group")
     return(intersect(cols, names(data)))
   }
+  if (identical(layer$geom, GeomMutationLabel)) {
+    cols <- c("x", "y", "label", "group")
+    return(intersect(cols, names(data)))
+  }
   if (identical(layer$geom, GeomMotif)) {
     cols <- c("xmin", "xmax", "ymin", "transcripts", "strand", "track", "text", "group")
     return(intersect(cols, names(data)))
@@ -891,6 +895,30 @@ resolve_syn_layer_data <- function(x, layer) {
         model = params$model %||% "all",
         motif = params$motif,
         y_offset = params$y_offset %||% 0,
+        context = context
+      )
+    )
+  }
+  if (identical(layer$geom, GeomMutationLabel)) {
+    return(
+      syn_to_mutation_label_df(
+        x = x,
+        annotation = params$annotation,
+        individual = params$individual,
+        species = params$species,
+        genes = params$genes,
+        event_type = params$event_type,
+        min_sample_count = params$min_sample_count,
+        strains = params$strains,
+        mutation = params$mutation,
+        mutation_position = params$mutation_position %||% "position",
+        label = params$label_col %||% "mutation",
+        ref = params$ref,
+        alt = params$alt,
+        spread_threshold = params$spread_threshold %||% 7,
+        mutation_y = params$mutation_y %||% 1,
+        label_nudge_y = params$label_nudge_y %||% 0.35,
+        show_empty = params$show_empty %||% FALSE,
         context = context
       )
     )
