@@ -62,6 +62,17 @@ read_protein_mutation_counts <- function(file,
 #' @param strains Optional strain/individual identifiers to match against a
 #'   routed mutation table.
 #' @param mutation Optional mutation labels, for example `"C316H"`.
+#' @param protein_ranges Optional protein-coordinate windows such as
+#'   `"100-160"`. Values outside the inferred or supplied protein boundaries
+#'   are clamped to those boundaries.
+#' @param domains Optional protein-domain interval table used with
+#'   `protein_domains`.
+#' @param protein_domains Optional domain names. Matching domain intervals are
+#'   converted to protein-coordinate windows.
+#' @param ref Optional reference amino acid filter. Values must be one-letter
+#'   amino-acid codes.
+#' @param protein_length Optional protein length used to clamp
+#'   `protein_ranges`.
 #'
 #' @return A `data.frame` of matching mutation records.
 #' @export
@@ -72,7 +83,12 @@ query_protein_mutations <- function(x,
                                     event_type = NULL,
                                     min_sample_count = NULL,
                                     strains = NULL,
-                                    mutation = NULL) {
+                                    mutation = NULL,
+                                    protein_ranges = NULL,
+                                    domains = NULL,
+                                    protein_domains = NULL,
+                                    ref = NULL,
+                                    protein_length = NULL) {
   if (methods::is(x, "SynProteinMutationAnnotation")) {
     out <- protein_mutation_data(x)
     index <- protein_mutation_individual_index(x)
@@ -86,6 +102,11 @@ query_protein_mutations <- function(x,
       min_sample_count = min_sample_count,
       strains = strains,
       mutation = mutation,
+      protein_ranges = protein_ranges,
+      domains = domains,
+      protein_domains = protein_domains,
+      ref = ref,
+      protein_length = protein_length,
       individual_index = index
     ))
   }
@@ -98,7 +119,12 @@ query_protein_mutations <- function(x,
       event_type = event_type,
       min_sample_count = min_sample_count,
       strains = strains,
-      mutation = mutation
+      mutation = mutation,
+      protein_ranges = protein_ranges,
+      domains = domains,
+      protein_domains = protein_domains,
+      ref = ref,
+      protein_length = protein_length
     ))
   }
 
@@ -131,7 +157,12 @@ query_protein_mutations <- function(x,
         event_type = event_type,
         min_sample_count = min_sample_count,
         strains = strains,
-        mutation = mutation
+        mutation = mutation,
+        protein_ranges = protein_ranges,
+        domains = domains,
+        protein_domains = protein_domains,
+        ref = ref,
+        protein_length = protein_length
       )
       if (nrow(one) > 0L && !"individual" %in% names(one)) {
         one$individual <- individual_id
@@ -145,6 +176,94 @@ query_protein_mutations <- function(x,
     "`query_protein_mutations()` expects a SynProteinMutationAnnotation, SynIndividual, or SynSpecies object.",
     call. = FALSE
   )
+}
+
+#' Subset protein-mutation tables
+#'
+#' `subset_protein_mutations()` filters normalized protein-mutation data frames
+#' by individual/strain IDs, protein-coordinate windows, domain names, and
+#' reference amino acids. Protein-domain filters are converted to coordinate
+#' windows before filtering.
+#'
+#' @param mutations A data frame returned by `read_protein_mutation_counts()` or
+#'   another data frame with at least a protein-position column.
+#' @param individuals Optional strain/species/individual IDs. A single string,
+#'   character vector, or list is accepted.
+#' @param protein_ranges Optional protein-coordinate windows such as
+#'   `"10-50"`. A single string, character vector, or list is accepted. Bounds
+#'   are validated and clamped to the inferred protein boundaries.
+#' @param domains Optional protein-domain interval table, `S4Vectors::DataFrame`,
+#'   or `SynProteinDomainAnnotation` used with `protein_domains`.
+#' @param protein_domains Optional domain names. Matching domain intervals are
+#'   treated like protein-coordinate windows.
+#' @param ref Optional reference amino acids. Values are matched against `ref`
+#'   or common reference-amino-acid columns.
+#' @param position Mutation protein-coordinate column.
+#' @param protein_start Lower protein-coordinate boundary.
+#' @param protein_length Optional protein length used as the upper coordinate
+#'   boundary. When `NULL`, the upper boundary is inferred from mutation and
+#'   domain coordinates.
+#' @param domain_start,domain_end Domain interval start/end columns.
+#' @param domain Optional domain-name column. When omitted, a common domain
+#'   column name is inferred.
+#' @param individual_index Optional long mutation-individual index. Defaults to
+#'   the `individual_index` attribute created by `read_protein_mutation_counts()`.
+#'
+#' @return A filtered mutation `data.frame`.
+#' @export
+subset_protein_mutations <- function(mutations,
+                                     individuals = NULL,
+                                     protein_ranges = NULL,
+                                     domains = NULL,
+                                     protein_domains = NULL,
+                                     ref = NULL,
+                                     position = "position",
+                                     protein_start = 1,
+                                     protein_length = NULL,
+                                     domain_start = "start",
+                                     domain_end = "end",
+                                     domain = NULL,
+                                     individual_index = attr(mutations, "individual_index", exact = TRUE)) {
+  out <- .protein_mutation_table_as_data_frame(mutations, "mutations")
+  original_attrs <- attributes(mutations)
+  if (nrow(out) == 0L) {
+    return(out)
+  }
+
+  if (!is.null(individuals)) {
+    out <- .subset_protein_mutations_by_individual(
+      out,
+      individuals = individuals,
+      individual_index = individual_index
+    )
+  }
+
+  if (!is.null(ref)) {
+    out <- .subset_protein_mutations_by_ref(out, ref = ref)
+  }
+
+  if (!is.null(protein_ranges) || !is.null(protein_domains)) {
+    out <- .subset_protein_mutations_by_coordinates(
+      out,
+      position = position,
+      protein_ranges = protein_ranges,
+      domains = domains,
+      protein_domains = protein_domains,
+      protein_start = protein_start,
+      protein_length = protein_length,
+      domain_start = domain_start,
+      domain_end = domain_end,
+      domain = domain
+    )
+  }
+
+  rownames(out) <- NULL
+  attr(out, "individual_col") <- original_attrs$individual_col %||% attr(mutations, "individual_col", exact = TRUE)
+  attr(out, "individual_index") <- .protein_mutation_filter_index(
+    individual_index,
+    source_row_id = out$source_row_id %||% integer()
+  )
+  out
 }
 
 #' Add protein-mutation annotations
@@ -568,6 +687,11 @@ resolve_syn_protein_mutation_annotation <- function(x,
                                            min_sample_count = NULL,
                                            strains = NULL,
                                            mutation = NULL,
+                                           protein_ranges = NULL,
+                                           domains = NULL,
+                                           protein_domains = NULL,
+                                           ref = NULL,
+                                           protein_length = NULL,
                                            individual_index = NULL) {
   out <- as.data.frame(tbl, stringsAsFactors = FALSE)
   if (nrow(out) == 0L) {
@@ -599,23 +723,277 @@ resolve_syn_protein_mutation_annotation <- function(x,
     out <- out[as.character(out$mutation) %in% as.character(mutation), , drop = FALSE]
   }
 
-  if (!is.null(strains)) {
-    strains <- as.character(strains)
-    if (!is.null(individual_index) && nrow(individual_index) > 0L) {
-      source_ids <- individual_index$source_row_id[individual_index$individual %in% strains]
-      out <- out[out$source_row_id %in% source_ids, , drop = FALSE]
-    } else if ("strains" %in% names(out)) {
-      keep <- vapply(out$strains, function(value) {
-        any(.split_individual_values(value) %in% strains)
-      }, logical(1))
-      out <- out[keep, , drop = FALSE]
-    } else {
-      return(out[0L, , drop = FALSE])
-    }
+  if (!is.null(strains) || !is.null(protein_ranges) ||
+      !is.null(protein_domains) || !is.null(ref)) {
+    out <- subset_protein_mutations(
+      out,
+      individuals = strains,
+      protein_ranges = protein_ranges,
+      domains = domains,
+      protein_domains = protein_domains,
+      ref = ref,
+      protein_length = protein_length,
+      individual_index = individual_index
+    )
   }
 
   rownames(out) <- NULL
   out
+}
+
+.protein_mutation_table_as_data_frame <- function(x, arg) {
+  if (methods::is(x, "SynProteinMutationAnnotation")) {
+    return(as.data.frame(protein_mutation_data(x), stringsAsFactors = FALSE))
+  }
+  if (methods::is(x, "DataFrame")) {
+    return(as.data.frame(x, stringsAsFactors = FALSE))
+  }
+  if (is.data.frame(x)) {
+    return(as.data.frame(x, stringsAsFactors = FALSE))
+  }
+  stop("`", arg, "` must be a data frame-like object.", call. = FALSE)
+}
+
+.subset_protein_mutations_by_individual <- function(tbl,
+                                                    individuals,
+                                                    individual_index = NULL) {
+  individuals <- .protein_mutation_character_values(individuals, "individuals")
+  if (length(individuals) == 0L) {
+    return(tbl[0L, , drop = FALSE])
+  }
+
+  if (!is.null(individual_index) && nrow(individual_index) > 0L &&
+      "source_row_id" %in% names(tbl)) {
+    source_ids <- unique(individual_index$source_row_id[
+      as.character(individual_index$individual) %in% individuals
+    ])
+    return(tbl[tbl$source_row_id %in% source_ids, , drop = FALSE])
+  }
+
+  individual_cols <- intersect(c("individual", "species", "strain", "id", "strains"), names(tbl))
+  if (length(individual_cols) == 0L) {
+    return(tbl[0L, , drop = FALSE])
+  }
+
+  keep <- rep(FALSE, nrow(tbl))
+  for (col in individual_cols) {
+    if (identical(col, "strains")) {
+      keep <- keep | vapply(tbl[[col]], function(value) {
+        any(.split_individual_values(value) %in% individuals)
+      }, logical(1))
+    } else {
+      keep <- keep | as.character(tbl[[col]]) %in% individuals
+    }
+  }
+  tbl[keep, , drop = FALSE]
+}
+
+.subset_protein_mutations_by_ref <- function(tbl, ref) {
+  ref <- to_upper_ascii(.protein_mutation_character_values(ref, "ref"))
+  invalid <- !grepl("^[A-Z]$", ref)
+  if (any(invalid)) {
+    stop("`ref` values must be one-letter amino-acid codes.", call. = FALSE)
+  }
+
+  ref_col <- .find_named_column(tbl, c("ref", "reference", "reference_aa", "ref_aa", "from"))
+  if (is.null(ref_col)) {
+    return(tbl[0L, , drop = FALSE])
+  }
+  tbl[to_upper_ascii(as.character(tbl[[ref_col]])) %in% ref, , drop = FALSE]
+}
+
+.subset_protein_mutations_by_coordinates <- function(tbl,
+                                                     position = "position",
+                                                     protein_ranges = NULL,
+                                                     domains = NULL,
+                                                     protein_domains = NULL,
+                                                     protein_start = 1,
+                                                     protein_length = NULL,
+                                                     domain_start = "start",
+                                                     domain_end = "end",
+                                                     domain = NULL) {
+  if (!position %in% names(tbl)) {
+    stop("Column `", position, "` was not found in mutation data.", call. = FALSE)
+  }
+  positions <- suppressWarnings(as.numeric(tbl[[position]]))
+  if (anyNA(positions)) {
+    stop("`position` must identify a numeric protein-coordinate column.", call. = FALSE)
+  }
+
+  domain_df <- .protein_mutation_domain_df(
+    domains = domains,
+    domain_start = domain_start,
+    domain_end = domain_end,
+    domain = domain
+  )
+  bounds <- .protein_mutation_bounds(
+    positions = positions,
+    domain_df = domain_df,
+    protein_start = protein_start,
+    protein_length = protein_length
+  )
+
+  ranges <- data.frame(start = numeric(), end = numeric())
+  if (!is.null(protein_ranges)) {
+    ranges <- rbind(
+      ranges,
+      .parse_protein_mutation_ranges(protein_ranges, bounds = bounds)
+    )
+  }
+  if (!is.null(protein_domains)) {
+    ranges <- rbind(
+      ranges,
+      .protein_mutation_ranges_from_domains(
+        domain_df = domain_df,
+        protein_domains = protein_domains,
+        bounds = bounds
+      )
+    )
+  }
+
+  if (nrow(ranges) == 0L) {
+    return(tbl[0L, , drop = FALSE])
+  }
+
+  keep <- vapply(positions, function(position) {
+    any(position >= ranges$start & position <= ranges$end)
+  }, logical(1))
+  tbl[keep, , drop = FALSE]
+}
+
+.protein_mutation_domain_df <- function(domains,
+                                        domain_start = "start",
+                                        domain_end = "end",
+                                        domain = NULL) {
+  if (is.null(domains)) {
+    return(data.frame(start = numeric(), end = numeric(), domain = character()))
+  }
+  if (methods::is(domains, "SynProteinDomainAnnotation")) {
+    domains <- query_domains(domains)
+  }
+  domain_df <- .protein_mutation_table_as_data_frame(domains, "domains")
+  if (nrow(domain_df) == 0L) {
+    return(data.frame(start = numeric(), end = numeric(), domain = character()))
+  }
+
+  if (!domain_start %in% names(domain_df)) {
+    stop("Column `", domain_start, "` was not found in domain data.", call. = FALSE)
+  }
+  if (!domain_end %in% names(domain_df)) {
+    stop("Column `", domain_end, "` was not found in domain data.", call. = FALSE)
+  }
+
+  domain <- domain %||% .find_named_column(
+    domain_df,
+    c(
+      "domain", "Domain", "domain_name", "motif", "interpro_description",
+      "signature_description", "interpro_accession", "signature_accession",
+      "analysis", "Model", "model", "name", "lollipop_domain"
+    )
+  )
+  if (is.null(domain)) {
+    stop("Could not infer a domain-name column. Supply `domain` explicitly.", call. = FALSE)
+  }
+
+  out <- data.frame(
+    start = suppressWarnings(as.numeric(domain_df[[domain_start]])),
+    end = suppressWarnings(as.numeric(domain_df[[domain_end]])),
+    domain = as.character(domain_df[[domain]]),
+    stringsAsFactors = FALSE
+  )
+  if (anyNA(out$start) || anyNA(out$end)) {
+    stop("Domain start/end columns must be numeric.", call. = FALSE)
+  }
+  flipped <- out$start > out$end
+  if (any(flipped)) {
+    old_start <- out$start[flipped]
+    out$start[flipped] <- out$end[flipped]
+    out$end[flipped] <- old_start
+  }
+  out
+}
+
+.protein_mutation_bounds <- function(positions,
+                                     domain_df = NULL,
+                                     protein_start = 1,
+                                     protein_length = NULL) {
+  protein_start <- suppressWarnings(as.numeric(protein_start))
+  if (length(protein_start) != 1L || is.na(protein_start) || !is.finite(protein_start)) {
+    stop("`protein_start` must be a finite numeric scalar.", call. = FALSE)
+  }
+
+  if (!is.null(protein_length)) {
+    protein_length <- suppressWarnings(as.numeric(protein_length))
+    if (length(protein_length) != 1L || is.na(protein_length) || !is.finite(protein_length)) {
+      stop("`protein_length` must be a finite numeric scalar.", call. = FALSE)
+    }
+    if (protein_length < protein_start) {
+      stop("`protein_length` must be greater than or equal to `protein_start`.", call. = FALSE)
+    }
+    return(c(start = protein_start, end = protein_length))
+  }
+
+  candidates <- positions[is.finite(positions)]
+  if (!is.null(domain_df) && nrow(domain_df) > 0L) {
+    candidates <- c(candidates, domain_df$end[is.finite(domain_df$end)])
+  }
+  if (length(candidates) == 0L) {
+    stop("Cannot infer protein-coordinate boundaries from empty data.", call. = FALSE)
+  }
+  c(start = protein_start, end = max(candidates, protein_start))
+}
+
+.parse_protein_mutation_ranges <- function(protein_ranges, bounds) {
+  ranges <- .protein_mutation_character_values(protein_ranges, "protein_ranges")
+  parsed <- lapply(ranges, function(range) {
+    matched <- regexec("^\\s*([0-9]+)\\s*-\\s*([0-9]+)\\s*$", range)
+    pieces <- regmatches(range, matched)[[1L]]
+    if (length(pieces) != 3L) {
+      stop(
+        "`protein_ranges` values must use the form 'start-end'. Invalid value: ",
+        range,
+        call. = FALSE
+      )
+    }
+    start <- as.numeric(pieces[[2L]])
+    end <- as.numeric(pieces[[3L]])
+    if (start > end) {
+      old_start <- start
+      start <- end
+      end <- old_start
+    }
+    start <- max(bounds[["start"]], min(start, bounds[["end"]]))
+    end <- max(bounds[["start"]], min(end, bounds[["end"]]))
+    data.frame(start = start, end = end)
+  })
+  do.call(rbind, parsed)
+}
+
+.protein_mutation_ranges_from_domains <- function(domain_df,
+                                                  protein_domains,
+                                                  bounds) {
+  if (is.null(domain_df) || nrow(domain_df) == 0L) {
+    stop("`domains` must be supplied when filtering by `protein_domains`.", call. = FALSE)
+  }
+  protein_domains <- .protein_mutation_character_values(protein_domains, "protein_domains")
+  hit <- domain_df[as.character(domain_df$domain) %in% protein_domains, , drop = FALSE]
+  if (nrow(hit) == 0L) {
+    return(data.frame(start = numeric(), end = numeric()))
+  }
+  start <- pmax(bounds[["start"]], pmin(hit$start, bounds[["end"]]))
+  end <- pmax(bounds[["start"]], pmin(hit$end, bounds[["end"]]))
+  data.frame(start = start, end = end)
+}
+
+.protein_mutation_character_values <- function(x, arg) {
+  if (is.null(x)) {
+    return(character())
+  }
+  values <- unlist(x, recursive = TRUE, use.names = FALSE)
+  values <- as.character(values)
+  values <- trimws(values)
+  values <- values[!is.na(values) & nzchar(values)]
+  unique(values)
 }
 
 .find_named_column <- function(tbl, candidates) {

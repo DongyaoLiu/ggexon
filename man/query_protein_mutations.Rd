@@ -12,7 +12,12 @@ query_protein_mutations(
   event_type = NULL,
   min_sample_count = NULL,
   strains = NULL,
-  mutation = NULL
+  mutation = NULL,
+  protein_ranges = NULL,
+  domains = NULL,
+  protein_domains = NULL,
+  ref = NULL,
+  protein_length = NULL
 )
 }
 \arguments{
@@ -33,6 +38,22 @@ attached \code{SynProteinMutationAnnotation}.}
 routed mutation table.}
 
 \item{mutation}{Optional mutation labels, for example \code{"C316H"}.}
+
+\item{protein_ranges}{Optional protein-coordinate windows such as
+\code{"100-160"}. Values outside the inferred or supplied protein boundaries
+are clamped to those boundaries.}
+
+\item{domains}{Optional protein-domain interval table used with
+\code{protein_domains}.}
+
+\item{protein_domains}{Optional domain names. Matching domain intervals are
+converted to protein-coordinate windows.}
+
+\item{ref}{Optional reference amino acid filter. Values must be one-letter
+amino-acid codes.}
+
+\item{protein_length}{Optional protein length used to clamp
+\code{protein_ranges}.}
 }
 \value{
 A \code{data.frame} of matching mutation records.

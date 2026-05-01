@@ -21,6 +21,88 @@ test_that("read_protein_mutation_counts normalizes hash notation and strain inde
   expect_equal(nrow(idx), 3)
 })
 
+test_that("subset_protein_mutations filters by individual, coordinates, domains, and reference residue", {
+  mutation_file <- tempfile(fileext = ".tsv")
+  writeLines(
+    c(
+      "gene\tevent_type\tmutation_hash_or_notation\tlength\tsample_count\tstrains",
+      "zina-1\tsubstitution\tC#10#H\t1\t2\tind1,ind2",
+      "zina-1\tsubstitution\tD#40#I\t1\t1\tind2",
+      "zina-1\tsubstitution\tC#90#Y\t1\t3\tind3",
+      "zina-1\tsubstitution\tR#120#Q\t1\t1\tind2"
+    ),
+    mutation_file
+  )
+  tbl <- read_protein_mutation_counts(mutation_file)
+  domains <- data.frame(
+    start = c(35, 85),
+    end = c(45, 110),
+    Domain = c("C2H2", "Coil"),
+    stringsAsFactors = FALSE
+  )
+
+  by_individual <- subset_protein_mutations(tbl, individuals = list("ind1", "ind3"))
+  expect_setequal(by_individual$mutation, c("C10H", "C90Y"))
+
+  direct_ids <- data.frame(
+    position = c(5, 15),
+    mutation = c("A5T", "G15D"),
+    species = c("N2", "CB4856"),
+    ref = c("A", "G"),
+    stringsAsFactors = FALSE
+  )
+  expect_equal(
+    subset_protein_mutations(direct_ids, individuals = "CB4856")$mutation,
+    "G15D"
+  )
+
+  by_range <- subset_protein_mutations(
+    tbl,
+    protein_ranges = c("0-20", "100-999"),
+    protein_length = 120
+  )
+  expect_setequal(by_range$mutation, c("C10H", "R120Q"))
+
+  by_domain <- subset_protein_mutations(tbl, domains = domains, protein_domains = "C2H2")
+  expect_equal(by_domain$mutation, "D40I")
+
+  by_ref <- subset_protein_mutations(tbl, ref = "C")
+  expect_setequal(by_ref$mutation, c("C10H", "C90Y"))
+})
+
+test_that("query_protein_mutations supports protein-coordinate subset filters", {
+  mutation_file <- tempfile(fileext = ".tsv")
+  writeLines(
+    c(
+      "gene\tevent_type\tmutation_hash_or_notation\tlength\tsample_count\tstrains",
+      "zina-1\tsubstitution\tC#10#H\t1\t2\tind1,ind2",
+      "zina-1\tsubstitution\tD#40#I\t1\t1\tind2",
+      "zina-1\tsubstitution\tC#90#Y\t1\t3\tind3"
+    ),
+    mutation_file
+  )
+  domains <- data.frame(
+    start = 35,
+    end = 45,
+    Domain = "C2H2",
+    stringsAsFactors = FALSE
+  )
+  ann <- SynProteinMutationAnnotation(
+    name = "protein_mutations",
+    mutation_file = mutation_file
+  )
+
+  hits <- query_protein_mutations(
+    ann,
+    strains = "ind2",
+    domains = domains,
+    protein_domains = "C2H2",
+    ref = "D"
+  )
+
+  expect_equal(hits$mutation, "D40I")
+})
+
 test_that("add_protein_mutation_annotation filters rows for SynIndividual ids", {
   mutation_file <- tempfile(fileext = ".tsv")
   writeLines(
