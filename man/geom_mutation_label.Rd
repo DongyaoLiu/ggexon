@@ -25,6 +25,12 @@ geom_mutation_label(
   alt = NULL,
   spread_threshold = 7,
   mutation_y = 1,
+  mutation_y_by = NULL,
+  mutation_y_strategy = c("scaled", "bins"),
+  mutation_y_range = c(0.85, 1.45),
+  mutation_y_trans = "identity",
+  mutation_y_breaks = NULL,
+  mutation_y_values = NULL,
   label_nudge_y = 0.35,
   show_empty = FALSE,
   na.rm = FALSE,
@@ -57,7 +63,13 @@ passed to \code{query_protein_mutations()}.}
 
 \item{spread_threshold}{Minimum x-distance between adjacent labels.}
 
-\item{mutation_y}{Y coordinate of mutation heads.}
+\item{mutation_y}{Fixed y coordinate of mutation heads when
+\code{mutation_y_by} is \code{NULL}.}
+
+\item{mutation_y_by}{Optional numeric column used to align labels to
+multi-height lollipop heads.}
+
+\item{mutation_y_strategy, mutation_y_range, mutation_y_trans, mutation_y_breaks, mutation_y_values}{Height-mapping controls shared with \code{protein_lollipop_data()}.}
 
 \item{label_nudge_y}{Vertical offset above mutation heads.}
 

@@ -29,7 +29,25 @@
 #' @param track_ymin,track_ymax Backbone y-range.
 #' @param domain_default_ymin,domain_default_ymax Default y-range for domain
 #'   intervals when the interval table does not already contain y columns.
-#' @param mutation_y Y coordinate for lollipop heads.
+#' @param mutation_y Fixed y coordinate for lollipop heads when
+#'   `mutation_y_by` is `NULL`.
+#' @param mutation_y_by Optional numeric column in `mutations` used to map
+#'   lollipop heads to multiple y levels, for example `"sample_count"`.
+#' @param mutation_y_strategy Height-mapping strategy used when
+#'   `mutation_y_by` is supplied. `"scaled"` rescales values into
+#'   `mutation_y_range`; `"bins"` assigns values to tiered y levels.
+#' @param mutation_y_range Numeric length-2 y range used by non-fixed height
+#'   strategies.
+#' @param mutation_y_trans Transformation applied before height mapping. One
+#'   of `"identity"`, `"log10"`, `"log2"`, `"log"`, `"sqrt"`, or a function.
+#'   Log and square-root transformations require non-negative values and logs
+#'   use `value + 1`, which is convenient for count data.
+#' @param mutation_y_breaks Optional numeric upper bounds for
+#'   `mutation_y_strategy = "bins"`, expressed on the original
+#'   `mutation_y_by` scale.
+#' @param mutation_y_values Optional numeric y levels for
+#'   `mutation_y_strategy = "bins"`. When `mutation_y_breaks` is supplied,
+#'   this must have length `length(mutation_y_breaks) + 1`.
 #' @param stem_points Number of points used per stem curve.
 #' @param curve_k Sigmoid steepness for curved stems.
 #'
@@ -56,6 +74,12 @@ protein_lollipop_data <- function(mutations,
                                   domain_default_ymin = 0.35,
                                   domain_default_ymax = 0.65,
                                   mutation_y = 1,
+                                  mutation_y_by = NULL,
+                                  mutation_y_strategy = c("scaled", "bins"),
+                                  mutation_y_range = c(0.85, 1.45),
+                                  mutation_y_trans = "identity",
+                                  mutation_y_breaks = NULL,
+                                  mutation_y_values = NULL,
                                   stem_points = 30,
                                   curve_k = 1) {
   mut_df <- .lollipop_as_data_frame(mutations, "mutations")
@@ -78,7 +102,16 @@ protein_lollipop_data <- function(mutations,
   )
   track_ymin <- .lollipop_scalar_number(track_ymin, "track_ymin")
   track_ymax <- .lollipop_scalar_number(track_ymax, "track_ymax")
-  mutation_y <- .lollipop_scalar_number(mutation_y, "mutation_y")
+  mutation_y_values_out <- .lollipop_mutation_y_values(
+    mut_df = mut_df,
+    mutation_y = mutation_y,
+    mutation_y_by = mutation_y_by,
+    mutation_y_strategy = mutation_y_strategy,
+    mutation_y_range = mutation_y_range,
+    mutation_y_trans = mutation_y_trans,
+    mutation_y_breaks = mutation_y_breaks,
+    mutation_y_values = mutation_y_values
+  )
 
   label_values <- .lollipop_label_values(
     mut_df = mut_df,
@@ -90,7 +123,7 @@ protein_lollipop_data <- function(mutations,
 
   mut_df$lollipop_position <- positions
   mut_df$lollipop_x <- .spread_lollipop_positions(positions, spread_threshold)
-  mut_df$lollipop_y <- rep(mutation_y, length(positions))
+  mut_df$lollipop_y <- mutation_y_values_out
   mut_df$lollipop_label <- label_values
   mut_df$lollipop_stem_y <- rep(track_ymax, length(positions))
   mut_df$lollipop_domain <- rep(NA_character_, length(positions))
@@ -194,6 +227,12 @@ geom_protein_lollipop <- function(mutations,
                                   domain_default_ymin = 0.35,
                                   domain_default_ymax = 0.65,
                                   mutation_y = 1,
+                                  mutation_y_by = NULL,
+                                  mutation_y_strategy = c("scaled", "bins"),
+                                  mutation_y_range = c(0.85, 1.45),
+                                  mutation_y_trans = "identity",
+                                  mutation_y_breaks = NULL,
+                                  mutation_y_values = NULL,
                                   stem_points = 30,
                                   curve_k = 1,
                                   show_backbone = TRUE,
@@ -226,6 +265,12 @@ geom_protein_lollipop <- function(mutations,
     domain_default_ymin = domain_default_ymin,
     domain_default_ymax = domain_default_ymax,
     mutation_y = mutation_y,
+    mutation_y_by = mutation_y_by,
+    mutation_y_strategy = mutation_y_strategy,
+    mutation_y_range = mutation_y_range,
+    mutation_y_trans = mutation_y_trans,
+    mutation_y_breaks = mutation_y_breaks,
+    mutation_y_values = mutation_y_values,
     stem_points = stem_points,
     curve_k = curve_k
   )
@@ -494,6 +539,164 @@ geom_protein_lollipop <- function(mutations,
   })
 }
 
+.lollipop_mutation_y_values <- function(mut_df,
+                                        mutation_y = 1,
+                                        mutation_y_by = NULL,
+                                        mutation_y_strategy = c("scaled", "bins"),
+                                        mutation_y_range = c(0.85, 1.45),
+                                        mutation_y_trans = "identity",
+                                        mutation_y_breaks = NULL,
+                                        mutation_y_values = NULL) {
+  if (nrow(mut_df) == 0L) {
+    return(numeric())
+  }
+
+  if (is.null(mutation_y_by)) {
+    return(rep(.lollipop_scalar_number(mutation_y, "mutation_y"), nrow(mut_df)))
+  }
+
+  .lollipop_check_column(mut_df, mutation_y_by, "mutation_y_by")
+  mutation_y_strategy <- match.arg(mutation_y_strategy)
+  raw_values <- suppressWarnings(as.numeric(mut_df[[mutation_y_by]]))
+  if (anyNA(raw_values)) {
+    stop("`mutation_y_by` must identify a numeric column.", call. = FALSE)
+  }
+
+  transformed <- .lollipop_transform_y_values(
+    raw_values,
+    transform = mutation_y_trans,
+    arg = "mutation_y_by"
+  )
+
+  switch(
+    mutation_y_strategy,
+    scaled = .lollipop_rescale_y_values(
+      transformed,
+      y_range = mutation_y_range
+    ),
+    bins = .lollipop_bin_y_values(
+      transformed,
+      raw_breaks = mutation_y_breaks,
+      y_values = mutation_y_values,
+      y_range = mutation_y_range,
+      transform = mutation_y_trans
+    )
+  )
+}
+
+.lollipop_rescale_y_values <- function(values, y_range) {
+  y_range <- .lollipop_numeric_vector(y_range, "mutation_y_range", length = 2L)
+  if (length(values) == 0L) {
+    return(numeric())
+  }
+  if (!all(is.finite(values))) {
+    stop("Transformed `mutation_y_by` values must be finite.", call. = FALSE)
+  }
+
+  value_range <- base::range(values)
+  if (value_range[[1L]] == value_range[[2L]]) {
+    return(rep(mean(y_range), length(values)))
+  }
+  y_range[[1L]] + (values - value_range[[1L]]) /
+    (value_range[[2L]] - value_range[[1L]]) * diff(y_range)
+}
+
+.lollipop_bin_y_values <- function(values,
+                                   raw_breaks = NULL,
+                                   y_values = NULL,
+                                   y_range = c(0.85, 1.45),
+                                   transform = "identity") {
+  if (!all(is.finite(values))) {
+    stop("Transformed `mutation_y_by` values must be finite.", call. = FALSE)
+  }
+
+  raw_breaks <- if (is.null(raw_breaks)) {
+    NULL
+  } else {
+    .lollipop_numeric_vector(raw_breaks, "mutation_y_breaks")
+  }
+
+  if (is.null(y_values)) {
+    n_values <- if (is.null(raw_breaks)) 4L else length(raw_breaks) + 1L
+    y_range <- .lollipop_numeric_vector(y_range, "mutation_y_range", length = 2L)
+    y_values <- seq(
+      y_range[[1L]],
+      y_range[[2L]],
+      length.out = n_values
+    )
+  } else {
+    y_values <- .lollipop_numeric_vector(y_values, "mutation_y_values")
+  }
+
+  if (is.null(raw_breaks)) {
+    if (length(y_values) == 1L) {
+      return(rep(y_values, length(values)))
+    }
+    probs <- seq(0, 1, length.out = length(y_values) + 1L)
+    breaks <- as.numeric(stats::quantile(
+      values,
+      probs = probs[-c(1L, length(probs))],
+      na.rm = TRUE,
+      names = FALSE,
+      type = 7
+    ))
+  } else {
+    if (length(y_values) != length(raw_breaks) + 1L) {
+      stop(
+        "`mutation_y_values` must have length `length(mutation_y_breaks) + 1`.",
+        call. = FALSE
+      )
+    }
+    breaks <- .lollipop_transform_y_values(
+      raw_breaks,
+      transform = transform,
+      arg = "mutation_y_breaks"
+    )
+  }
+
+  breaks <- sort(unique(breaks))
+  if (length(y_values) != length(breaks) + 1L && !is.null(raw_breaks)) {
+    stop("`mutation_y_breaks` must contain unique values after transformation.", call. = FALSE)
+  }
+  if (length(breaks) == 0L) {
+    return(rep(y_values[[1L]], length(values)))
+  }
+
+  tier <- rep(length(breaks) + 1L, length(values))
+  for (i in seq_along(breaks)) {
+    tier[values <= breaks[[i]] & tier == length(breaks) + 1L] <- i
+  }
+  y_values[pmin(tier, length(y_values))]
+}
+
+.lollipop_transform_y_values <- function(values, transform = "identity", arg = "mutation_y_by") {
+  if (is.function(transform)) {
+    out <- transform(values)
+  } else {
+    if (!is.character(transform) || length(transform) != 1L || is.na(transform)) {
+      stop("`mutation_y_trans` must be a single string or function.", call. = FALSE)
+    }
+    transform <- match.arg(transform, c("identity", "log10", "log2", "log", "sqrt"))
+    if (transform %in% c("log10", "log2", "log", "sqrt") && any(values < 0, na.rm = TRUE)) {
+      stop("`", arg, "` must be non-negative for `mutation_y_trans = \"", transform, "\"`.", call. = FALSE)
+    }
+    out <- switch(
+      transform,
+      identity = values,
+      log10 = log10(values + 1),
+      log2 = log2(values + 1),
+      log = log(values + 1),
+      sqrt = sqrt(values)
+    )
+  }
+
+  out <- suppressWarnings(as.numeric(out))
+  if (length(out) != length(values) || anyNA(out) || !all(is.finite(out))) {
+    stop("`mutation_y_trans` must return finite numeric values.", call. = FALSE)
+  }
+  out
+}
+
 .infer_lollipop_track_length <- function(positions, domain_df) {
   candidates <- positions
   if (nrow(domain_df) > 0L) {
@@ -543,6 +746,16 @@ geom_protein_lollipop <- function(mutations,
 .lollipop_scalar_number <- function(x, arg) {
   if (!is.numeric(x) || length(x) != 1L || is.na(x)) {
     stop("`", arg, "` must be a single numeric value.", call. = FALSE)
+  }
+  as.numeric(x)
+}
+
+.lollipop_numeric_vector <- function(x, arg, length = NULL) {
+  if (!is.numeric(x) || anyNA(x) || !all(is.finite(x))) {
+    stop("`", arg, "` must be a finite numeric vector.", call. = FALSE)
+  }
+  if (!is.null(length) && length(x) != length) {
+    stop("`", arg, "` must have length ", length, ".", call. = FALSE)
   }
   as.numeric(x)
 }

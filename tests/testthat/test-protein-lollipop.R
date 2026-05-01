@@ -35,6 +35,50 @@ test_that("protein_lollipop_data spreads dense mutation labels and anchors domai
   expect_equal(nrow(prepared$stems), nrow(mutations) * 5)
 })
 
+test_that("protein_lollipop_data maps mutation counts to y levels", {
+  mutations <- data.frame(
+    position = c(5, 8, 20),
+    mutation = c("M5T", "K8R", "A20V"),
+    sample_count = c(1, 5, 9),
+    stringsAsFactors = FALSE
+  )
+
+  prepared <- protein_lollipop_data(
+    mutations = mutations,
+    protein_length = 30,
+    mutation_y_by = "sample_count",
+    mutation_y_range = c(0.8, 1.2),
+    stem_points = 5
+  )
+
+  expect_equal(prepared$mutations$lollipop_y, c(0.8, 1.0, 1.2))
+  expect_equal(
+    prepared$stems$lollipop_y[seq(5, 15, by = 5)],
+    c(0.8, 1.0, 1.2)
+  )
+})
+
+test_that("protein_lollipop_data supports tiered mutation y levels", {
+  mutations <- data.frame(
+    position = c(5, 8, 20, 25),
+    mutation = c("M5T", "K8R", "A20V", "R25Q"),
+    sample_count = c(1, 3, 8, 21),
+    stringsAsFactors = FALSE
+  )
+
+  prepared <- protein_lollipop_data(
+    mutations = mutations,
+    protein_length = 30,
+    mutation_y_by = "sample_count",
+    mutation_y_strategy = "bins",
+    mutation_y_breaks = c(1, 5, 20),
+    mutation_y_values = c(0.8, 1.0, 1.2, 1.4),
+    stem_points = 5
+  )
+
+  expect_equal(prepared$mutations$lollipop_y, c(0.8, 1.0, 1.2, 1.4))
+})
+
 test_that("geom_protein_lollipop builds ggplot layers", {
   mutations <- data.frame(
     position = c(5, 8, 20),

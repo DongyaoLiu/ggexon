@@ -17,8 +17,9 @@ GeomMutationLabel <- ggproto(
   extra_params = c(
     "na.rm", "annotation", "individual", "species", "genes", "event_type",
     "min_sample_count", "strains", "mutation", "mutation_position", "label_col",
-    "ref", "alt", "spread_threshold", "mutation_y", "label_nudge_y",
-    "show_empty"
+    "ref", "alt", "spread_threshold", "mutation_y", "mutation_y_by",
+    "mutation_y_strategy", "mutation_y_range", "mutation_y_trans",
+    "mutation_y_breaks", "mutation_y_values", "label_nudge_y", "show_empty"
   ),
   default_params = function() {
     list(
@@ -36,6 +37,12 @@ GeomMutationLabel <- ggproto(
       alt = NULL,
       spread_threshold = 7,
       mutation_y = 1,
+      mutation_y_by = NULL,
+      mutation_y_strategy = "scaled",
+      mutation_y_range = c(0.85, 1.45),
+      mutation_y_trans = "identity",
+      mutation_y_breaks = NULL,
+      mutation_y_values = NULL,
       label_nudge_y = 0.35,
       show_empty = FALSE
     )
@@ -63,7 +70,12 @@ GeomMutationLabel <- ggproto(
 #' @param ref,alt Optional residue/base columns used to build labels when
 #'   `label` is `NULL`.
 #' @param spread_threshold Minimum x-distance between adjacent labels.
-#' @param mutation_y Y coordinate of mutation heads.
+#' @param mutation_y Fixed y coordinate of mutation heads when
+#'   `mutation_y_by` is `NULL`.
+#' @param mutation_y_by Optional numeric column used to align labels to
+#'   multi-height lollipop heads.
+#' @param mutation_y_strategy,mutation_y_range,mutation_y_trans,mutation_y_breaks,mutation_y_values
+#'   Height-mapping controls shared with `protein_lollipop_data()`.
 #' @param label_nudge_y Vertical offset above mutation heads.
 #' @param show_empty Logical; keep empty/`NA` labels when `TRUE`.
 #'
@@ -89,6 +101,12 @@ geom_mutation_label <- function(mapping = NULL,
                                 alt = NULL,
                                 spread_threshold = 7,
                                 mutation_y = 1,
+                                mutation_y_by = NULL,
+                                mutation_y_strategy = c("scaled", "bins"),
+                                mutation_y_range = c(0.85, 1.45),
+                                mutation_y_trans = "identity",
+                                mutation_y_breaks = NULL,
+                                mutation_y_values = NULL,
                                 label_nudge_y = 0.35,
                                 show_empty = FALSE,
                                 na.rm = FALSE,
@@ -109,6 +127,12 @@ geom_mutation_label <- function(mapping = NULL,
       alt = alt,
       spread_threshold = spread_threshold,
       mutation_y = mutation_y,
+      mutation_y_by = mutation_y_by,
+      mutation_y_strategy = mutation_y_strategy,
+      mutation_y_range = mutation_y_range,
+      mutation_y_trans = mutation_y_trans,
+      mutation_y_breaks = mutation_y_breaks,
+      mutation_y_values = mutation_y_values,
       label_nudge_y = label_nudge_y,
       show_empty = show_empty
     )
@@ -134,6 +158,12 @@ geom_mutation_label <- function(mapping = NULL,
     alt = alt,
     spread_threshold = spread_threshold,
     mutation_y = mutation_y,
+    mutation_y_by = mutation_y_by,
+    mutation_y_strategy = mutation_y_strategy,
+    mutation_y_range = mutation_y_range,
+    mutation_y_trans = mutation_y_trans,
+    mutation_y_breaks = mutation_y_breaks,
+    mutation_y_values = mutation_y_values,
     label_nudge_y = label_nudge_y,
     show_empty = show_empty
   ))
@@ -158,6 +188,12 @@ mutation_label_data <- function(mutations,
                                 alt = NULL,
                                 spread_threshold = 7,
                                 mutation_y = 1,
+                                mutation_y_by = NULL,
+                                mutation_y_strategy = c("scaled", "bins"),
+                                mutation_y_range = c(0.85, 1.45),
+                                mutation_y_trans = "identity",
+                                mutation_y_breaks = NULL,
+                                mutation_y_values = NULL,
                                 label_nudge_y = 0.35,
                                 show_empty = FALSE) {
   mut_df <- .lollipop_as_data_frame(mutations, "mutations")
@@ -181,7 +217,16 @@ mutation_label_data <- function(mutations,
     positions = positions,
     threshold = spread_threshold
   )
-  mut_df$y <- .lollipop_scalar_number(mutation_y, "mutation_y") +
+  mut_df$y <- .lollipop_mutation_y_values(
+    mut_df = mut_df,
+    mutation_y = mutation_y,
+    mutation_y_by = mutation_y_by,
+    mutation_y_strategy = mutation_y_strategy,
+    mutation_y_range = mutation_y_range,
+    mutation_y_trans = mutation_y_trans,
+    mutation_y_breaks = mutation_y_breaks,
+    mutation_y_values = mutation_y_values
+  ) +
     .lollipop_scalar_number(label_nudge_y, "label_nudge_y")
   mut_df$label <- label_values
 
@@ -209,6 +254,12 @@ syn_to_mutation_label_df <- function(x,
                                      alt = NULL,
                                      spread_threshold = 7,
                                      mutation_y = 1,
+                                     mutation_y_by = NULL,
+                                     mutation_y_strategy = c("scaled", "bins"),
+                                     mutation_y_range = c(0.85, 1.45),
+                                     mutation_y_trans = "identity",
+                                     mutation_y_breaks = NULL,
+                                     mutation_y_values = NULL,
                                      label_nudge_y = 0.35,
                                      show_empty = FALSE,
                                      context = NULL) {
@@ -240,6 +291,12 @@ syn_to_mutation_label_df <- function(x,
     alt = alt,
     spread_threshold = spread_threshold,
     mutation_y = mutation_y,
+    mutation_y_by = mutation_y_by,
+    mutation_y_strategy = mutation_y_strategy,
+    mutation_y_range = mutation_y_range,
+    mutation_y_trans = mutation_y_trans,
+    mutation_y_breaks = mutation_y_breaks,
+    mutation_y_values = mutation_y_values,
     label_nudge_y = label_nudge_y,
     show_empty = show_empty
   )

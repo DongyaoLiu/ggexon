@@ -22,6 +22,28 @@ test_that("geom_mutation_label builds explicit data-frame label layers", {
   expect_equal(build$data[[1L]]$y, c(1.25, 1.25))
 })
 
+test_that("geom_mutation_label aligns labels to mapped mutation heights", {
+  mutations <- data.frame(
+    position = c(5, 8, 20),
+    mutation = c("M5T", "K8R", "A20V"),
+    sample_count = c(1, 5, 9),
+    stringsAsFactors = FALSE
+  )
+
+  plot_obj <- ggplot2::ggplot() +
+    geom_mutation_label(
+      mutations = mutations,
+      label = "mutation",
+      mutation_y_by = "sample_count",
+      mutation_y_range = c(0.8, 1.2),
+      label_nudge_y = 0.25
+    )
+
+  build <- ggplot2::ggplot_build(plot_obj)
+
+  expect_equal(build$data[[1L]]$y, c(1.05, 1.25, 1.45))
+})
+
 test_that("geom_mutation_label dispatches from SynSpecies mutation annotations", {
   mutation_file <- tempfile(fileext = ".tsv")
   writeLines(

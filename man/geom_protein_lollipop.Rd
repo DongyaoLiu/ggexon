@@ -22,6 +22,12 @@ geom_protein_lollipop(
   domain_default_ymin = 0.35,
   domain_default_ymax = 0.65,
   mutation_y = 1,
+  mutation_y_by = NULL,
+  mutation_y_strategy = c("scaled", "bins"),
+  mutation_y_range = c(0.85, 1.45),
+  mutation_y_trans = "identity",
+  mutation_y_breaks = NULL,
+  mutation_y_values = NULL,
   stem_points = 30,
   curve_k = 1,
   show_backbone = TRUE,
@@ -70,7 +76,31 @@ existing \code{ymin}/\code{ymax} columns are used when present.}
 \item{domain_default_ymin, domain_default_ymax}{Default y-range for domain
 intervals when the interval table does not already contain y columns.}
 
-\item{mutation_y}{Y coordinate for lollipop heads.}
+\item{mutation_y}{Fixed y coordinate for lollipop heads when
+\code{mutation_y_by} is \code{NULL}.}
+
+\item{mutation_y_by}{Optional numeric column in \code{mutations} used to map
+lollipop heads to multiple y levels, for example \code{"sample_count"}.}
+
+\item{mutation_y_strategy}{Height-mapping strategy used when
+\code{mutation_y_by} is supplied. \code{"scaled"} rescales values into
+\code{mutation_y_range}; \code{"bins"} assigns values to tiered y levels.}
+
+\item{mutation_y_range}{Numeric length-2 y range used by non-fixed height
+strategies.}
+
+\item{mutation_y_trans}{Transformation applied before height mapping. One
+of \code{"identity"}, \code{"log10"}, \code{"log2"}, \code{"log"}, \code{"sqrt"}, or a function.
+Log and square-root transformations require non-negative values and logs
+use \code{value + 1}, which is convenient for count data.}
+
+\item{mutation_y_breaks}{Optional numeric upper bounds for
+\code{mutation_y_strategy = "bins"}, expressed on the original
+\code{mutation_y_by} scale.}
+
+\item{mutation_y_values}{Optional numeric y levels for
+\code{mutation_y_strategy = "bins"}. When \code{mutation_y_breaks} is supplied,
+this must have length \code{length(mutation_y_breaks) + 1}.}
 
 \item{stem_points}{Number of points used per stem curve.}
 
