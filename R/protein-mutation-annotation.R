@@ -287,34 +287,119 @@ subset_protein_mutations <- function(mutations,
 #'
 #' @return The updated `SynIndividual` or `SynSpecies`.
 #' @export
-add_protein_mutation_annotation <- function(x,
-                                            mutation_file,
-                                            name = "protein_mutations",
-                                            keytype = "gene_id",
-                                            individual = NULL,
-                                            individual_col = "auto",
-                                            all = TRUE,
-                                            create_missing = TRUE,
-                                            metadata = list()) {
-  mutation_data <- read_protein_mutation_counts(
-    file = mutation_file,
-    individual_col = individual_col,
-    as_long = FALSE
-  )
-  resolved_col <- attr(mutation_data, "individual_col", exact = TRUE)
-  individual_index <- attr(mutation_data, "individual_index", exact = TRUE)
+setGeneric("add_protein_mutation_annotation", function(x,
+                                                       mutation_file,
+                                                       name = "protein_mutations",
+                                                       keytype = "gene_id",
+                                                       individual = NULL,
+                                                       individual_col = "auto",
+                                                       all = TRUE,
+                                                       create_missing = TRUE,
+                                                       metadata = list()) {
+  standardGeneric("add_protein_mutation_annotation")
+}, signature = "x")
 
-  if (methods::is(x, "SynIndividual")) {
-    target <- individual %||% syn_id(x)
-    target <- as.character(target)
-    if (length(target) != 1L || is.na(target) || !nzchar(target)) {
-      stop("`individual` must be one non-empty value for SynIndividual imports.", call. = FALSE)
+setMethod("add_protein_mutation_annotation", "SynIndividual", function(x,
+                                                                       mutation_file,
+                                                                       name = "protein_mutations",
+                                                                       keytype = "gene_id",
+                                                                       individual = NULL,
+                                                                       individual_col = "auto",
+                                                                       all = TRUE,
+                                                                       create_missing = TRUE,
+                                                                       metadata = list()) {
+  input <- .protein_mutation_annotation_input(
+    mutation_file = mutation_file,
+    individual_col = individual_col
+  )
+  mutation_data <- input$mutation_data
+  resolved_col <- input$individual_col
+  individual_index <- input$individual_index
+
+  target <- individual %||% syn_id(x)
+  target <- as.character(target)
+  if (length(target) != 1L || is.na(target) || !nzchar(target)) {
+    stop("`individual` must be one non-empty value for SynIndividual imports.", call. = FALSE)
+  }
+  subset <- .protein_mutation_subset_for_individual(
+    mutation_data,
+    individual = target,
+    individual_index = individual_index
+  )
+  subset_index <- .protein_mutation_filter_index(individual_index, subset$source_row_id)
+  ann <- SynProteinMutationAnnotation(
+    name = name,
+    mutation_file = mutation_file,
+    keytype = keytype,
+    mutation_data = subset,
+    individual_index = subset_index,
+    metadata = .protein_mutation_metadata(
+      metadata = metadata,
+      individual_col = resolved_col,
+      source_rows = nrow(mutation_data),
+      imported_rows = nrow(subset),
+      individual = target
+    ),
+    lazy = FALSE
+  )
+  add_annotation(x, ann, set_active = FALSE)
+})
+
+setMethod("add_protein_mutation_annotation", "SynSpecies", function(x,
+                                                                    mutation_file,
+                                                                    name = "protein_mutations",
+                                                                    keytype = "gene_id",
+                                                                    individual = NULL,
+                                                                    individual_col = "auto",
+                                                                    all = TRUE,
+                                                                    create_missing = TRUE,
+                                                                    metadata = list()) {
+  input <- .protein_mutation_annotation_input(
+    mutation_file = mutation_file,
+    individual_col = individual_col
+  )
+  mutation_data <- input$mutation_data
+  resolved_col <- input$individual_col
+  individual_index <- input$individual_index
+
+  if (!is.logical(all) || length(all) != 1L || is.na(all)) {
+    stop("`all` must be a single TRUE/FALSE value.", call. = FALSE)
+  }
+  if (!is.logical(create_missing) || length(create_missing) != 1L || is.na(create_missing)) {
+    stop("`create_missing` must be a single TRUE/FALSE value.", call. = FALSE)
+  }
+
+  targets <- .protein_mutation_targets_for_synspecies(
+    x = x,
+    mutation_data = mutation_data,
+    individual = individual,
+    individual_index = individual_index,
+    all = all
+  )
+  if (length(targets) == 0L) {
+    return(x)
+  }
+
+  for (target in targets) {
+    if (!target %in% names(individuals(x))) {
+      if (!isTRUE(create_missing)) {
+        next
+      }
+      x <- add_individual(
+        x,
+        SynIndividual(genome_file = genome_waiver(), id = target)
+      )
     }
-    subset <- .protein_mutation_subset_for_individual(
-      mutation_data,
-      individual = target,
-      individual_index = individual_index
-    )
+
+    subset <- if (is.null(resolved_col)) {
+      mutation_data
+    } else {
+      .protein_mutation_subset_for_individual(
+        mutation_data,
+        individual = target,
+        individual_index = individual_index
+      )
+    }
     subset_index <- .protein_mutation_filter_index(individual_index, subset$source_row_id)
     ann <- SynProteinMutationAnnotation(
       name = name,
@@ -331,76 +416,27 @@ add_protein_mutation_annotation <- function(x,
       ),
       lazy = FALSE
     )
-    return(add_annotation(x, ann, set_active = FALSE))
+    x@individuals[[target]] <- add_annotation(x@individuals[[target]], ann, set_active = FALSE)
   }
 
-  if (methods::is(x, "SynSpecies")) {
-    if (!is.logical(all) || length(all) != 1L || is.na(all)) {
-      stop("`all` must be a single TRUE/FALSE value.", call. = FALSE)
-    }
-    if (!is.logical(create_missing) || length(create_missing) != 1L || is.na(create_missing)) {
-      stop("`create_missing` must be a single TRUE/FALSE value.", call. = FALSE)
-    }
+  validObject(x)
+  x
+})
 
-    targets <- .protein_mutation_targets_for_synspecies(
-      x = x,
-      mutation_data = mutation_data,
-      individual = individual,
-      individual_index = individual_index,
-      all = all
-    )
-    if (length(targets) == 0L) {
-      return(x)
-    }
-
-    for (target in targets) {
-      if (!target %in% names(individuals(x))) {
-        if (!isTRUE(create_missing)) {
-          next
-        }
-        x <- add_individual(
-          x,
-          SynIndividual(genome_file = genome_waiver(), id = target)
-        )
-      }
-
-      subset <- if (is.null(resolved_col)) {
-        mutation_data
-      } else {
-        .protein_mutation_subset_for_individual(
-          mutation_data,
-          individual = target,
-          individual_index = individual_index
-        )
-      }
-      subset_index <- .protein_mutation_filter_index(individual_index, subset$source_row_id)
-      ann <- SynProteinMutationAnnotation(
-        name = name,
-        mutation_file = mutation_file,
-        keytype = keytype,
-        mutation_data = subset,
-        individual_index = subset_index,
-        metadata = .protein_mutation_metadata(
-          metadata = metadata,
-          individual_col = resolved_col,
-          source_rows = nrow(mutation_data),
-          imported_rows = nrow(subset),
-          individual = target
-        ),
-        lazy = FALSE
-      )
-      x@individuals[[target]] <- add_annotation(x@individuals[[target]], ann, set_active = FALSE)
-    }
-
-    validObject(x)
-    return(x)
-  }
-
+setMethod("add_protein_mutation_annotation", "ANY", function(x,
+                                                            mutation_file,
+                                                            name = "protein_mutations",
+                                                            keytype = "gene_id",
+                                                            individual = NULL,
+                                                            individual_col = "auto",
+                                                            all = TRUE,
+                                                            create_missing = TRUE,
+                                                            metadata = list()) {
   stop(
     "`add_protein_mutation_annotation()` expects a SynIndividual or SynSpecies object.",
     call. = FALSE
   )
-}
+})
 
 #' Access protein-mutation data
 #'
@@ -633,6 +669,19 @@ resolve_syn_protein_mutation_annotation <- function(x,
   out <- individual_index[individual_index$source_row_id %in% source_row_id, , drop = FALSE]
   rownames(out) <- NULL
   out
+}
+
+.protein_mutation_annotation_input <- function(mutation_file, individual_col = "auto") {
+  mutation_data <- read_protein_mutation_counts(
+    file = mutation_file,
+    individual_col = individual_col,
+    as_long = FALSE
+  )
+  list(
+    mutation_data = mutation_data,
+    individual_col = attr(mutation_data, "individual_col", exact = TRUE),
+    individual_index = attr(mutation_data, "individual_index", exact = TRUE)
+  )
 }
 
 .protein_mutation_targets_for_synspecies <- function(x,

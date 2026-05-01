@@ -17,8 +17,10 @@ system with verb families that follow one shared rule: the same high-level verb
 should work on the layer object itself and on larger containers that hold that
 layer.
 
-Two families matter most:
+Three families matter most:
 
+- `add_*()` attaches child objects or annotation layers to the Syn object that
+  owns them.
 - `load_*()` materializes data into a Syn object while preserving the top-level
   class of the input.
 - `subset_*()` trims a Syn object to a genomic or alignment window and, in most
@@ -37,6 +39,7 @@ as `subset_pairwise_alignment()` now return updated Syn objects. In other
 words:
 
 - `*_data()` answers "give me the rows"
+- `add_*()` answers "store this child object or layer"
 - `load_*()` answers "load this into the object"
 - `subset_*()` answers "keep this window inside the object"
 
@@ -48,7 +51,69 @@ unpacking and repacking intermediate objects.
 
 Below are the most important generic-dispatch patterns.
 
-### 1. `load_annotation()` works at three levels
+### 1. `add_*()` builds the object graph
+
+`SynSpecies` works as the project-level data hub. It stores `SynIndividual`
+children, while each `SynIndividual` stores its own annotation layers. The
+`add_*()` verbs are S4 generics, so the same verb name can do different work
+depending on the classes of the input objects.
+
+```r
+xz <- SynIndividual(
+  annotation_file = "XZ1516.gff3",
+  genome_file = genome_waiver(),
+  id = "XZ1516"
+)
+
+n2 <- SynIndividual(
+  annotation_file = "N2.gff3",
+  genome_file = genome_waiver(),
+  id = "N2"
+)
+
+sp <- SynSpecies(name = "worms") |>
+  add_individual(xz, n2)
+
+sp <- add_pairwise_alignment(
+  sp,
+  SynPairAlignment(
+    name = "XZ1516_vs_N2",
+    query_individual = "XZ1516",
+    target_individual = "N2",
+    file = "XZ1516_vs_N2.paf"
+  )
+)
+```
+
+Annotation layers are attached to the object that owns them. For example, a
+protein-mutation table can be added to one individual:
+
+```r
+xz <- add_protein_mutation_annotation(
+  xz,
+  mutation_file = "mutation_counts.tsv"
+)
+```
+
+Or to the species hub. If the table contains a strain/species/id column,
+`add_protein_mutation_annotation()` routes rows to the matching individuals.
+Missing individuals can be created as annotation-only children when
+`create_missing = TRUE`.
+
+```r
+sp <- add_protein_mutation_annotation(
+  sp,
+  mutation_file = "mutation_counts.tsv",
+  individual_col = "auto",
+  all = TRUE,
+  create_missing = TRUE
+)
+```
+
+This pattern keeps plotting code clean: the plot can receive a `SynSpecies`
+object and the geoms can resolve the relevant child data at build time.
+
+### 2. `load_annotation()` works at three levels
 
 ```r
 ann <- SynFeatureAnnotation(
@@ -80,7 +145,7 @@ sp <- load_annotation(
 )
 ```
 
-### 2. `subset_feature_annotation()` keeps the same outer shape
+### 3. `subset_feature_annotation()` keeps the same outer shape
 
 ```r
 ann_small <- subset_feature_annotation(
@@ -120,7 +185,7 @@ The return type matches the input:
 - `SynIndividual` in, `SynIndividual` out
 - `SynSpecies` in, `SynSpecies` out
 
-### 3. `subset_individual()` and `subset_species()` are container verbs
+### 4. `subset_individual()` and `subset_species()` are container verbs
 
 If you already know you want an individual back, use `subset_individual()`:
 
@@ -156,7 +221,7 @@ sp_window <- subset_species(
 )
 ```
 
-### 4. Pairwise alignments now follow the same object grammar
+### 5. Pairwise alignments now follow the same object grammar
 
 Use `pairwise_alignment_data()` when you want extracted link rows:
 
@@ -203,12 +268,14 @@ sp <- filter_pairwise_alignment(
 )
 ```
 
-### 5. A practical rule of thumb
+### 6. A practical rule of thumb
 
 When deciding which helper to call:
 
 - use `load_*()` when the object knows where the file is, but has not yet
   materialized the data
+- use `add_*()` when you want a Syn object to remember a child individual,
+  alignment, or annotation layer
 - use `subset_*()` when you want a reusable windowed Syn object
 - use `*_data()` or `query_*()` when you only want extracted tables or ranges
 

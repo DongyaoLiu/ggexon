@@ -1416,11 +1416,11 @@ setMethod("pairwise_alignment_data", "SynSpecies", function(x, alignment = NULL,
 #'
 #' @return An updated `SynSpecies` object.
 #' @export
-add_individual <- function(x, individual, ...) {
-  if (!methods::is(x, "SynSpecies")) {
-    stop("`add_individual()` expects a SynSpecies object.", call. = FALSE)
-  }
+setGeneric("add_individual", function(x, individual, ...) {
+  standardGeneric("add_individual")
+}, signature = c("x", "individual"))
 
+setMethod("add_individual", c("SynSpecies", "SynIndividual"), function(x, individual, ...) {
   new_individuals <- c(list(individual), list(...))
   bad_individuals <- !vapply(
     new_individuals,
@@ -1439,7 +1439,19 @@ add_individual <- function(x, individual, ...) {
   x@individuals <- entries
   validObject(x)
   x
-}
+})
+
+setMethod("add_individual", c("SynSpecies", "ANY"), function(x, individual, ...) {
+  stop("All inputs after `x` must be SynIndividual objects.", call. = FALSE)
+})
+
+setMethod("add_individual", c("ANY", "SynIndividual"), function(x, individual, ...) {
+  stop("`add_individual()` expects a SynSpecies object.", call. = FALSE)
+})
+
+setMethod("add_individual", c("ANY", "ANY"), function(x, individual, ...) {
+  stop("`add_individual()` expects a SynSpecies object.", call. = FALSE)
+})
 
 #' Add many annotation files from a folder as SynIndividuals
 #'
@@ -1468,14 +1480,17 @@ add_individual <- function(x, individual, ...) {
 #'
 #' @return An updated [`SynSpecies`] object.
 #' @export
-add_individuals_from_folder <- function(x,
-                                        folder,
-                                        annotation_format = c("auto", "gff", "gtf"),
-                                        recursive = FALSE) {
-  if (!methods::is(x, "SynSpecies")) {
-    stop("`add_individuals_from_folder()` expects a SynSpecies object.", call. = FALSE)
-  }
+setGeneric("add_individuals_from_folder", function(x,
+                                                   folder,
+                                                   annotation_format = c("auto", "gff", "gtf"),
+                                                   recursive = FALSE) {
+  standardGeneric("add_individuals_from_folder")
+}, signature = "x")
 
+setMethod("add_individuals_from_folder", "SynSpecies", function(x,
+                                                               folder,
+                                                               annotation_format = c("auto", "gff", "gtf"),
+                                                               recursive = FALSE) {
   annotation_format <- match.arg(annotation_format)
 
   if (!is.character(folder) || length(folder) != 1L || is.na(folder) || !nzchar(folder)) {
@@ -1534,7 +1549,14 @@ add_individuals_from_folder <- function(x,
   }
 
   x
-}
+})
+
+setMethod("add_individuals_from_folder", "ANY", function(x,
+                                                         folder,
+                                                         annotation_format = c("auto", "gff", "gtf"),
+                                                         recursive = FALSE) {
+  stop("`add_individuals_from_folder()` expects a SynSpecies object.", call. = FALSE)
+})
 
 #' Add a pairwise alignment to a SynSpecies object
 #'
@@ -1543,13 +1565,11 @@ add_individuals_from_folder <- function(x,
 #'
 #' @return An updated `SynSpecies` object.
 #' @export
-add_pairwise_alignment <- function(x, alignment) {
-  if (!methods::is(x, "SynSpecies")) {
-    stop("`add_pairwise_alignment()` expects a SynSpecies object.", call. = FALSE)
-  }
-  if (!methods::is(alignment, "SynPairAlignment")) {
-    stop("`alignment` must be a SynPairAlignment object.", call. = FALSE)
-  }
+setGeneric("add_pairwise_alignment", function(x, alignment) {
+  standardGeneric("add_pairwise_alignment")
+}, signature = c("x", "alignment"))
+
+setMethod("add_pairwise_alignment", c("SynSpecies", "SynPairAlignment"), function(x, alignment) {
 
   missing_species <- setdiff(alignment_individuals(alignment), names(individuals(x)))
   if (length(missing_species) > 0L) {
@@ -1565,7 +1585,19 @@ add_pairwise_alignment <- function(x, alignment) {
   x@pairwise_alignments <- entries
   validObject(x)
   x
-}
+})
+
+setMethod("add_pairwise_alignment", c("SynSpecies", "ANY"), function(x, alignment) {
+  stop("`alignment` must be a SynPairAlignment object.", call. = FALSE)
+})
+
+setMethod("add_pairwise_alignment", c("ANY", "SynPairAlignment"), function(x, alignment) {
+  stop("`add_pairwise_alignment()` expects a SynSpecies object.", call. = FALSE)
+})
+
+setMethod("add_pairwise_alignment", c("ANY", "ANY"), function(x, alignment) {
+  stop("`add_pairwise_alignment()` expects a SynSpecies object.", call. = FALSE)
+})
 
 #' Add a multiple alignment to a SynSpecies object
 #'
@@ -1574,19 +1606,29 @@ add_pairwise_alignment <- function(x, alignment) {
 #'
 #' @return An updated `SynSpecies` object.
 #' @export
-add_multiple_alignment <- function(x, alignment) {
-  if (!methods::is(x, "SynSpecies")) {
-    stop("`add_multiple_alignment()` expects a SynSpecies object.", call. = FALSE)
-  }
-  if (!methods::is(alignment, "SynMultiAlignment")) {
-    stop("`alignment` must be a SynMultiAlignment object.", call. = FALSE)
-  }
+setGeneric("add_multiple_alignment", function(x, alignment) {
+  standardGeneric("add_multiple_alignment")
+}, signature = c("x", "alignment"))
+
+setMethod("add_multiple_alignment", c("SynSpecies", "SynMultiAlignment"), function(x, alignment) {
   entries <- x@multiple_alignments
   entries[[alignment_name(alignment)]] <- alignment
   x@multiple_alignments <- entries
   validObject(x)
   x
-}
+})
+
+setMethod("add_multiple_alignment", c("SynSpecies", "ANY"), function(x, alignment) {
+  stop("`alignment` must be a SynMultiAlignment object.", call. = FALSE)
+})
+
+setMethod("add_multiple_alignment", c("ANY", "SynMultiAlignment"), function(x, alignment) {
+  stop("`add_multiple_alignment()` expects a SynSpecies object.", call. = FALSE)
+})
+
+setMethod("add_multiple_alignment", c("ANY", "ANY"), function(x, alignment) {
+  stop("`add_multiple_alignment()` expects a SynSpecies object.", call. = FALSE)
+})
 
 #' Store a ggexon panel layout on a `SynSpecies` object
 #'

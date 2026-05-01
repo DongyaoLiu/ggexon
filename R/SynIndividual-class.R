@@ -2386,14 +2386,11 @@ setMethod("active_feature_annotation", "SynIndividual", function(x) {
 #'
 #' @return An updated `SynIndividual` object.
 #' @export
-add_annotation <- function(x, annotation, set_active = FALSE) {
-  if (!methods::is(x, "SynIndividual")) {
-    stop("`add_annotation()` expects a SynIndividual object.", call. = FALSE)
-  }
-  if (!methods::is(annotation, "SynAnnotation")) {
-    stop("`annotation` must be a SynAnnotation object.", call. = FALSE)
-  }
+setGeneric("add_annotation", function(x, annotation, set_active = FALSE) {
+  standardGeneric("add_annotation")
+}, signature = c("x", "annotation"))
 
+setMethod("add_annotation", c("SynIndividual", "SynAnnotation"), function(x, annotation, set_active = FALSE) {
   annotations <- x@annotations
   annotations[[annotation_name(annotation)]] <- annotation
   x@annotations <- annotations
@@ -2424,7 +2421,19 @@ add_annotation <- function(x, annotation, set_active = FALSE) {
 
   validObject(x)
   x
-}
+})
+
+setMethod("add_annotation", c("SynIndividual", "ANY"), function(x, annotation, set_active = FALSE) {
+  stop("`annotation` must be a SynAnnotation object.", call. = FALSE)
+})
+
+setMethod("add_annotation", c("ANY", "SynAnnotation"), function(x, annotation, set_active = FALSE) {
+  stop("`add_annotation()` expects a SynIndividual object.", call. = FALSE)
+})
+
+setMethod("add_annotation", c("ANY", "ANY"), function(x, annotation, set_active = FALSE) {
+  stop("`add_annotation()` expects a SynIndividual object.", call. = FALSE)
+})
 
 #' Attach an InterProScan protein-domain layer to a SynIndividual
 #'
@@ -2439,22 +2448,27 @@ add_annotation <- function(x, annotation, set_active = FALSE) {
 #' @return An updated `SynIndividual` object with a
 #'   `SynProteinDomainAnnotation` layer attached.
 #' @export
-add_interproscan_annotation <- function(x,
-                                        domain_file = system.file(
-                                          "extdata",
-                                          "InterProScan.tsv",
-                                          package = "ggexon"
-                                        ),
-                                        name = "interpro",
-                                        keytype = c("protein_id", "transcript_id", "gene_id"),
-                                        source_db = "InterPro") {
-  if (!methods::is(x, "SynIndividual")) {
-    stop(
-      "`add_interproscan_annotation()` expects a SynIndividual object.",
-      call. = FALSE
-    )
-  }
+setGeneric("add_interproscan_annotation", function(x,
+                                                   domain_file = system.file(
+                                                     "extdata",
+                                                     "InterProScan.tsv",
+                                                     package = "ggexon"
+                                                   ),
+                                                   name = "interpro",
+                                                   keytype = c("protein_id", "transcript_id", "gene_id"),
+                                                   source_db = "InterPro") {
+  standardGeneric("add_interproscan_annotation")
+}, signature = "x")
 
+setMethod("add_interproscan_annotation", "SynIndividual", function(x,
+                                                                  domain_file = system.file(
+                                                                    "extdata",
+                                                                    "InterProScan.tsv",
+                                                                    package = "ggexon"
+                                                                  ),
+                                                                  name = "interpro",
+                                                                  keytype = c("protein_id", "transcript_id", "gene_id"),
+                                                                  source_db = "InterPro") {
   keytype <- match.arg(keytype)
 
   if (!is.character(domain_file) || length(domain_file) != 1L ||
@@ -2477,7 +2491,22 @@ add_interproscan_annotation <- function(x,
       source_db = source_db
     )
   )
-}
+})
+
+setMethod("add_interproscan_annotation", "ANY", function(x,
+                                                        domain_file = system.file(
+                                                          "extdata",
+                                                          "InterProScan.tsv",
+                                                          package = "ggexon"
+                                                        ),
+                                                        name = "interpro",
+                                                        keytype = c("protein_id", "transcript_id", "gene_id"),
+                                                        source_db = "InterPro") {
+  stop(
+    "`add_interproscan_annotation()` expects a SynIndividual object.",
+    call. = FALSE
+  )
+})
 
 #' Retrieve an annotation layer from a SynIndividual
 #'

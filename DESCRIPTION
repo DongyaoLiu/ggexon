@@ -41,9 +41,9 @@ RoxygenNote: 7.3.3
 Collate: 
     'SynBioc-unions.R'
     'SynAnnotation-class.R'
-    'protein-mutation-annotation.R'
     'SynIndividual-class.R'
     'SynSpecies-class.R'
+    'protein-mutation-annotation.R'
     'aes-evaluation.R'
     'all-classes-S7.R'
     'axis-secondary.R'
