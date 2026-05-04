@@ -28,6 +28,8 @@ Imports:
     ggplot2,
     Rsamtools,
 Suggests:
+    ape,
+    ggtree,
     knitr,
     rmarkdown,
     testthat (>= 3.0.0)

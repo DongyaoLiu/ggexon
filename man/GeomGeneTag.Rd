@@ -3,18 +3,14 @@
 \docType{data}
 \name{GeomGeneTag}
 \alias{GeomGeneTag}
-\title{construct the function of to generate the
-need one more or two parameter to control distance between the tags.
-or automatically compute form the gene number and track length.}
+\title{Geom implementation for strand-aware gene tags}
 \format{
-An object of class \code{GeomGeneTag} (inherits from \code{Geom}, \code{ggproto}, \code{gg}) of length 8.
+An object of class \code{GeomGeneTag} (inherits from \code{Geom}, \code{ggproto}, \code{gg}).
 }
 \usage{
 GeomGeneTag
 }
 \description{
-construct the function of to generate the
-need one more or two parameter to control distance between the tags.
-or automatically compute form the gene number and track length.
+Internal ggproto used by \code{\link[=geom_genetag]{geom_genetag()}} to draw each gene as a constant-height polygon with a strand-specific triangular arrow head.
 }
 \keyword{datasets}

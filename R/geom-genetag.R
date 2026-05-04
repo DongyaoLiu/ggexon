@@ -1,76 +1,514 @@
-#‘ construct basic geom element to represents the gene.
-#' construct the function of to generate the 
+#' Compile gene-tag rows for a rectangular ggtree panel
+#'
+#' `compile_ggtree_genetag()` extracts rectangular-layout tip positions from a
+#' ggtree plot or tree object, matches tip labels to `SynSpecies` individuals,
+#' and returns one row per gene feature. The first column is `id`, matching
+#' ggtree's `facet_plot()` convention.
+#'
+#' @param x A `SynSpecies` object.
+#' @param tree Optional tree object accepted by `ggtree::ggtree()`.
+#' @param tree_plot Optional existing `ggtree` plot. If supplied, `tree` is
+#'   ignored.
+#' @param layout ggtree layout. Currently only `"rectangular"` is supported.
+#' @param individual Optional individual selector. When named, names are tree
+#'   tip labels and values are `SynSpecies` individual ids. When unnamed, values
+#'   are used as both tip labels and individual ids. When `NULL`, matching uses
+#'   identical tree-tip labels and individual ids.
+#' @param chr Optional chromosome/seqname. May be a scalar or a named vector/list
+#'   keyed by tree tip or individual id.
+#' @param start,end Optional coordinate bounds. May be scalar or named by tree
+#'   tip or individual id.
+#' @param subset Optional numeric length-2 bounds. May be a scalar vector or a
+#'   named list keyed by tree tip or individual id. Overrides `start` and `end`.
+#' @param feature_type Feature type passed to [query_features()]. Defaults to
+#'   `"gene"`.
+#' @param include_y Logical; when `TRUE`, also include a `y` column copied from
+#'   `tree_y`. Keep the default `FALSE` for `ggtree::facet_plot()`, which
+#'   injects its own `y` column after tip matching.
+#'
+#' @return A `data.frame` ready for `ggtree::facet_plot()` and
+#'   [geom_genetag()]. It contains `id`, `individual`, `tree_y`, `xmin`,
+#'   `xmax`, `strand`, and gene metadata columns.
+#' @export
+compile_ggtree_genetag <- function(x,
+                                   tree = NULL,
+                                   tree_plot = NULL,
+                                   layout = "rectangular",
+                                   individual = NULL,
+                                   chr = NULL,
+                                   start = NULL,
+                                   end = NULL,
+                                   subset = NULL,
+                                   feature_type = "gene",
+                                   include_y = FALSE) {
+  if (!methods::is(x, "SynSpecies")) {
+    stop("`compile_ggtree_genetag()` expects a SynSpecies object.", call. = FALSE)
+  }
+  if (!identical(layout, "rectangular")) {
+    stop("Only `layout = \"rectangular\"` is currently supported.", call. = FALSE)
+  }
 
-GeomGeneTag <- ggproto("GeomGeneTag", Geom,
-                    required_aes = c("gene", "trackname", "xmin", "xmax", "track_y", "strand"),
-                    non_missing_aes = c("linewidth", "shape"),
-                    extra_params = c("tag_height", "tag_width", "tag_angle", "tag_rotate_angle", "na.rm", "position2"),
-                    default_aes = aes(linewidth = 0, fill = "black", linejoin = "mitre", 
-                                      colour = "black",
-                                      size = 15,
-                                      linetype = 1,
-                                      shape = 19,
-                                      alpha = NA,
-                                      stroke = 1
-                    ),
-                    
-                    setup_data = function(data, params){
-                      # trackname_levels = tibble(levels = levels(data$trackname), track_y = 1:length(levels(data$trackname)))
-                      # data$track_y = data[ ,which(data$trackname %in% trackname_levels$name)]
-                      data = data %>% mutate(x = (xmin + xmax)/2) %>% 
-                        group_by(trackname) %>% mutate(track_length = max(xmax) - min(xmin)) %>% ungroup()
-                      print(data)
-                      tag_data = add_genetag(data, tag_height=params$tag_height, 
-                                             tag_width=params$tag_width, 
-                                             tag_angle=params$tag_angle, 
-                                             tag_rotate_angle=params$tag_rotate_angle, 
-                                             point_number = 4)
-                      if (params$position2 == "center") {
-                        #' need one more or two parameter to control distance between the tags. 
-                        #' or automatically compute form the gene number and track length. 
-                        print("position of tags: center")
-                        
-                      }else if(params$position2 == "identity"){
-                        print("position of tags: identity")
-                      }else if(params$position2 == "cluster"){
-                        print("position of tags: cluster")
-                      }
-                      return(data)
-                     
-                    },
-                    
-                    draw_panel = function(data, panel_params, coord, flipped_aes = FALSE){
+  tip_data <- .ggtree_rectangular_tip_data(tree = tree, tree_plot = tree_plot, layout = layout)
+  tip_map <- .genetag_tip_individual_map(
+    tip_labels = tip_data$label,
+    available_individuals = names(individuals(x)),
+    individual = individual
+  )
+  if (nrow(tip_map) == 0L) {
+    return(.empty_ggtree_genetag_df(include_y = include_y))
+  }
 
-                      ggname("geom_genetag", gTree(children = gList(
-                        GeomPolygon$draw_panel(tri_data, panel_params, coord)
-                          )
-                        )
-                      )
-                    },
-                    draw_key = draw_key_polygon
+  rows <- vector("list", nrow(tip_map))
+  for (i in seq_len(nrow(tip_map))) {
+    tip_id <- tip_map$id[[i]]
+    individual_id <- tip_map$individual[[i]]
+    tip_row <- tip_data[match(tip_id, tip_data$label), , drop = FALSE]
+    individual_obj <- individuals(x)[[individual_id]]
+    window <- .genetag_window_for_individual(
+      individual = individual_obj,
+      tip_id = tip_id,
+      individual_id = individual_id,
+      chr = chr,
+      start = start,
+      end = end,
+      subset = subset
+    )
+
+    gene_gr <- query_features(
+      individual_obj,
+      chr = window$chr,
+      start = window$start,
+      end = window$end,
+      feature_type = feature_type,
+      all = is.null(window$chr) && is.null(window$start) && is.null(window$end)
+    )
+    rows[[i]] <- .genetag_gr_to_df(
+      gene_gr = gene_gr,
+      id = tip_id,
+      individual = individual_id,
+      tree_node = tip_row$node[[1L]],
+      tree_x = tip_row$x[[1L]],
+      tree_y = tip_row$y[[1L]],
+      include_y = include_y
+    )
+  }
+
+  out <- do.call(rbind, rows)
+  if (is.null(out) || nrow(out) == 0L) {
+    return(.empty_ggtree_genetag_df(include_y = include_y))
+  }
+  rownames(out) <- NULL
+  out$group <- seq_len(nrow(out))
+  out
+}
+
+#' Draw gene tags as constant-height strand arrows
+#'
+#' `geom_genetag()` draws each gene as one polygon spanning `xmin` to `xmax`.
+#' The arrow head has the same height as the body and points toward the
+#' strand-specific end of the feature. It is designed for gene-level summaries,
+#' including ggtree side panels generated with `ggtree::facet_plot()`.
+#'
+#' @param mapping,data,stat,position,...,na.rm,show.legend,inherit.aes Standard
+#'   ggplot2 layer arguments. `inherit.aes` defaults to `FALSE` so the layer can
+#'   be used cleanly in `ggtree::facet_plot()` side panels.
+#' @param height Total tag height in y-axis units.
+#' @param arrow_width Optional arrow-head width in x-axis units. When `NULL`,
+#'   width is calculated from `arrow_fraction`.
+#' @param arrow_fraction Fraction of each gene span used for the arrow head when
+#'   `arrow_width` is `NULL`.
+#'
+#' @return A ggplot layer.
+#' @export
+geom_genetag <- function(mapping = NULL,
+                         data = NULL,
+                         stat = "identity",
+                         position = "identity",
+                         ...,
+                         height = 0.8,
+                         arrow_width = NULL,
+                         arrow_fraction = 0.18,
+                         na.rm = FALSE,
+                         show.legend = NA,
+                         inherit.aes = FALSE) {
+  mapping <- .genetag_complete_mapping(mapping, data)
+  layer(
+    data = data,
+    mapping = mapping,
+    geom = GeomGeneTag,
+    stat = stat,
+    position = position,
+    show.legend = show.legend,
+    inherit.aes = inherit.aes,
+    params = list(
+      ...,
+      height = height,
+      arrow_width = arrow_width,
+      arrow_fraction = arrow_fraction,
+      na.rm = na.rm
+    )
+  )
+}
+
+GeomGeneTag <- ggproto(
+  "GeomGeneTag",
+  Geom,
+  required_aes = c("xmin", "xmax", "y", "strand"),
+  default_aes = aes(
+    colour = "black",
+    fill = "grey35",
+    linewidth = 0.25,
+    linetype = 1,
+    alpha = NA
+  ),
+  extra_params = c("na.rm", "height", "arrow_width", "arrow_fraction"),
+  default_params = function() {
+    list(
+      height = 0.8,
+      arrow_width = NULL,
+      arrow_fraction = 0.18,
+      na.rm = FALSE
+    )
+  },
+  handle_na = function(data, params) {
+    missing <- is.na(data$xmin) | is.na(data$xmax) | is.na(data$y) | is.na(data$strand)
+    if (any(missing)) {
+      if (!isTRUE(params$na.rm)) {
+        warning(
+          "Removed ", sum(missing), " row(s) containing missing values in geom_genetag().",
+          call. = FALSE
+        )
+      }
+      data <- data[!missing, , drop = FALSE]
+    }
+    data
+  },
+  draw_panel = function(data,
+                        panel_params,
+                        coord,
+                        flipped_aes = FALSE,
+                        height = 0.8,
+                        arrow_width = NULL,
+                        arrow_fraction = 0.18) {
+    if (nrow(data) == 0L) {
+      return(zeroGrob())
+    }
+    tag_data <- .genetag_polygon_data(
+      data = data,
+      height = height,
+      arrow_width = arrow_width,
+      arrow_fraction = arrow_fraction
+    )
+    ggname("geom_genetag", GeomPolygon$draw_panel(tag_data, panel_params, coord))
+  },
+  draw_key = draw_key_polygon
 )
 
-geom_genetag <- function(mapping = NULL, data = NULL, 
-                       stat = "identity", position = "identity", 
-                       ..., na.rm = FALSE, show.legend = TRUE, 
-                       tag_height = NULL,
-                       tag_width = NULL, 
-                       tag_angle = NULL,
-                       tag_rotate_angle = NULL,
-                       position2 = NULL,
-                       inherit.aes = TRUE) {
-  layer(
-    data = data, 
-    mapping = mapping, 
-    geom = GeomGeneTag, 
-    stat = stat, 
-    position = position, 
-    show.legend = show.legend, 
-    inherit.aes = inherit.aes, 
-    params = list(na.rm = na.rm, 
-                  tag_height = tag_height,
-                  tag_width = tag_width, 
-                  tag_angle = tag_angle,
-                  tag_rotate_angle = tag_rotate_angle,
-                  position2 = position2))
+.ggtree_rectangular_tip_data <- function(tree = NULL, tree_plot = NULL, layout = "rectangular") {
+  if (is.null(tree_plot)) {
+    if (is.null(tree)) {
+      stop("Supply either `tree` or `tree_plot`.", call. = FALSE)
+    }
+    if (!requireNamespace("ggtree", quietly = TRUE)) {
+      stop("Package `ggtree` is required to compile ggtree gene tags.", call. = FALSE)
+    }
+    tree_plot <- ggtree::ggtree(tree, layout = layout)
+  }
+
+  tree_data <- tree_plot$data
+  if (is.null(tree_data) || !is.data.frame(tree_data)) {
+    stop("`tree_plot` must be a ggtree object with a data frame in `$data`.", call. = FALSE)
+  }
+  required_cols <- c("label", "node", "x", "y", "isTip")
+  missing_cols <- setdiff(required_cols, names(tree_data))
+  if (length(missing_cols) > 0L) {
+    stop(
+      "`tree_plot$data` is missing required ggtree columns: ",
+      paste(missing_cols, collapse = ", "),
+      call. = FALSE
+    )
+  }
+
+  tip_data <- tree_data[tree_data$isTip %in% TRUE, required_cols, drop = FALSE]
+  tip_data <- tip_data[!is.na(tip_data$label) & nzchar(tip_data$label), , drop = FALSE]
+  tip_data$label <- as.character(tip_data$label)
+  tip_data$node <- as.integer(tip_data$node)
+  tip_data$x <- as.numeric(tip_data$x)
+  tip_data$y <- as.numeric(tip_data$y)
+  tip_data[order(tip_data$y), , drop = FALSE]
+}
+
+.genetag_tip_individual_map <- function(tip_labels, available_individuals, individual = NULL) {
+  tip_labels <- unique(as.character(tip_labels))
+  available_individuals <- unique(as.character(available_individuals))
+
+  if (is.null(individual)) {
+    matched <- intersect(tip_labels, available_individuals)
+    return(data.frame(id = matched, individual = matched, stringsAsFactors = FALSE))
+  }
+
+  individual <- as.character(individual)
+  if (anyNA(individual) || any(!nzchar(individual))) {
+    stop("`individual` must contain only non-empty values.", call. = FALSE)
+  }
+  if (!is.null(names(individual)) && any(nzchar(names(individual)))) {
+    ids <- names(individual)
+    ids[!nzchar(ids)] <- individual[!nzchar(ids)]
+  } else {
+    ids <- individual
+  }
+
+  missing_tips <- setdiff(ids, tip_labels)
+  if (length(missing_tips) > 0L) {
+    stop("Tree tip labels not found: ", paste(missing_tips, collapse = ", "), call. = FALSE)
+  }
+  missing_individuals <- setdiff(individual, available_individuals)
+  if (length(missing_individuals) > 0L) {
+    stop(
+      "SynSpecies individuals not found: ",
+      paste(missing_individuals, collapse = ", "),
+      call. = FALSE
+    )
+  }
+
+  data.frame(id = ids, individual = individual, stringsAsFactors = FALSE)
+}
+
+.genetag_window_for_individual <- function(individual,
+                                           tip_id,
+                                           individual_id,
+                                           chr = NULL,
+                                           start = NULL,
+                                           end = NULL,
+                                           subset = NULL) {
+  subset_value <- .genetag_pick_value(subset, tip_id = tip_id, individual_id = individual_id)
+  start_value <- .genetag_pick_value(start, tip_id = tip_id, individual_id = individual_id)
+  end_value <- .genetag_pick_value(end, tip_id = tip_id, individual_id = individual_id)
+  chr_value <- .genetag_pick_value(chr, tip_id = tip_id, individual_id = individual_id)
+
+  if (!is.null(subset_value)) {
+    if (!is.numeric(subset_value) || length(subset_value) != 2L || anyNA(subset_value)) {
+      stop("`subset` values must be numeric vectors of length 2.", call. = FALSE)
+    }
+    start_value <- min(subset_value)
+    end_value <- max(subset_value)
+  }
+
+  if (!is.null(start_value)) {
+    start_value <- .genetag_scalar_numeric(start_value, "start")
+  }
+  if (!is.null(end_value)) {
+    end_value <- .genetag_scalar_numeric(end_value, "end")
+  }
+  if (!is.null(chr_value)) {
+    if (!is.character(chr_value) || length(chr_value) != 1L || is.na(chr_value) || !nzchar(chr_value)) {
+      stop("`chr` values must be single non-empty character values.", call. = FALSE)
+    }
+    chr_value <- resolve_syn_seqname_or_raw(individual, chr_value)
+  }
+
+  list(chr = chr_value, start = start_value, end = end_value)
+}
+
+.genetag_pick_value <- function(x, tip_id, individual_id) {
+  if (is.null(x)) {
+    return(NULL)
+  }
+  if (is.list(x) && !is.data.frame(x)) {
+    if (!is.null(names(x))) {
+      if (tip_id %in% names(x)) {
+        return(x[[tip_id]])
+      }
+      if (individual_id %in% names(x)) {
+        return(x[[individual_id]])
+      }
+    }
+    if (length(x) == 1L) {
+      return(x[[1L]])
+    }
+    stop("Named per-tip/per-individual list values are required for multi-value inputs.", call. = FALSE)
+  }
+
+  if (!is.null(names(x))) {
+    if (tip_id %in% names(x)) {
+      return(unname(x[[tip_id]]))
+    }
+    if (individual_id %in% names(x)) {
+      return(unname(x[[individual_id]]))
+    }
+  }
+  if (length(x) == 1L || (is.numeric(x) && length(x) == 2L)) {
+    return(unname(x))
+  }
+  stop("Named per-tip/per-individual values are required for multi-value inputs.", call. = FALSE)
+}
+
+.genetag_scalar_numeric <- function(x, name) {
+  if (!is.numeric(x) || length(x) != 1L || is.na(x)) {
+    stop("`", name, "` values must be single numeric values.", call. = FALSE)
+  }
+  as.numeric(x)
+}
+
+.genetag_gr_to_df <- function(gene_gr,
+                              id,
+                              individual,
+                              tree_node,
+                              tree_x,
+                              tree_y,
+                              include_y = FALSE) {
+  if (length(gene_gr) == 0L) {
+    return(.empty_ggtree_genetag_df(include_y = include_y))
+  }
+
+  meta <- S4Vectors::mcols(gene_gr)
+  gene_ids <- .coalesce_character_cols(meta, c("gene_id", "gene_name", "ID", "Name"))
+  gene_labels <- .coalesce_character_cols(meta, c("plot_label", "gene_name", "gene_id", "Name", "ID"))
+  gene_ids[is.na(gene_ids) | !nzchar(gene_ids)] <- paste0("gene_", seq_len(length(gene_ids)))[
+    is.na(gene_ids) | !nzchar(gene_ids)
+  ]
+  gene_labels[is.na(gene_labels) | !nzchar(gene_labels)] <- gene_ids[
+    is.na(gene_labels) | !nzchar(gene_labels)
+  ]
+
+  out <- data.frame(
+    id = rep(id, length(gene_gr)),
+    individual = rep(individual, length(gene_gr)),
+    node = rep(as.integer(tree_node), length(gene_gr)),
+    tree_x = rep(as.numeric(tree_x), length(gene_gr)),
+    tree_y = rep(as.numeric(tree_y), length(gene_gr)),
+    chr = as.character(GenomeInfoDb::seqnames(gene_gr)),
+    xmin = IRanges::start(gene_gr),
+    xmax = IRanges::end(gene_gr),
+    start = IRanges::start(gene_gr),
+    end = IRanges::end(gene_gr),
+    strand = as.character(BiocGenerics::strand(gene_gr)),
+    gene_id = gene_ids,
+    gene = gene_labels,
+    label = gene_labels,
+    track = rep(individual, length(gene_gr)),
+    stringsAsFactors = FALSE
+  )
+  if (isTRUE(include_y)) {
+    out$y <- out$tree_y
+    out <- out[, c("id", setdiff(names(out), "id")), drop = FALSE]
+  }
+  out[order(out$xmin, out$xmax, out$gene_id), , drop = FALSE]
+}
+
+.empty_ggtree_genetag_df <- function(include_y = FALSE) {
+  out <- data.frame(
+    id = character(),
+    individual = character(),
+    node = integer(),
+    tree_x = numeric(),
+    tree_y = numeric(),
+    chr = character(),
+    xmin = numeric(),
+    xmax = numeric(),
+    start = numeric(),
+    end = numeric(),
+    strand = character(),
+    gene_id = character(),
+    gene = character(),
+    label = character(),
+    track = character(),
+    group = integer(),
+    stringsAsFactors = FALSE
+  )
+  if (isTRUE(include_y)) {
+    out$y <- numeric()
+    out <- out[, c("id", setdiff(names(out), "id")), drop = FALSE]
+  }
+  out
+}
+
+.genetag_complete_mapping <- function(mapping, data) {
+  mapping_exprs <- if (is.null(mapping)) {
+    list()
+  } else {
+    as.list(mapping)
+  }
+  for (col in c("xmin", "xmax", "y", "strand")) {
+    if (!col %in% names(mapping_exprs)) {
+      mapping_exprs[[col]] <- rlang::sym(col)
+    }
+  }
+  if (length(mapping_exprs) == 0L) {
+    return(mapping)
+  }
+  rlang::inject(ggplot2::aes(!!!mapping_exprs))
+}
+
+.genetag_polygon_data <- function(data, height = 0.8, arrow_width = NULL, arrow_fraction = 0.18) {
+  height <- .genetag_positive_number(height, "height")
+  arrow_fraction <- .genetag_positive_number(arrow_fraction, "arrow_fraction")
+  if (arrow_fraction > 0.5) {
+    stop("`arrow_fraction` must be no larger than 0.5.", call. = FALSE)
+  }
+  if (!is.null(arrow_width) && !is.na(arrow_width)) {
+    arrow_width <- .genetag_positive_number(arrow_width, "arrow_width")
+  } else {
+    arrow_width <- NULL
+  }
+
+  pieces <- vector("list", nrow(data))
+  for (i in seq_len(nrow(data))) {
+    xmin <- min(data$xmin[[i]], data$xmax[[i]])
+    xmax <- max(data$xmin[[i]], data$xmax[[i]])
+    y <- data$y[[i]]
+    width <- xmax - xmin
+    head_width <- if (is.null(arrow_width)) width * arrow_fraction else min(arrow_width, width)
+    strand <- .genetag_normalize_strand(data$strand[[i]])
+    y_min <- y - height / 2
+    y_max <- y + height / 2
+
+    coords <- switch(
+      strand,
+      "+" = data.frame(
+        x = c(xmin, xmax - head_width, xmax, xmax - head_width, xmin),
+        y = c(y_min, y_min, y, y_max, y_max)
+      ),
+      "-" = data.frame(
+        x = c(xmin + head_width, xmax, xmax, xmin + head_width, xmin),
+        y = c(y_min, y_min, y_max, y_max, y)
+      ),
+      data.frame(
+        x = c(xmin, xmax, xmax, xmin),
+        y = c(y_min, y_min, y_max, y_max)
+      )
+    )
+
+    row <- data[rep(i, nrow(coords)), , drop = FALSE]
+    row$x <- coords$x
+    row$y <- coords$y
+    row$group <- i
+    pieces[[i]] <- row
+  }
+
+  out <- do.call(rbind, pieces)
+  rownames(out) <- NULL
+  out
+}
+
+.genetag_positive_number <- function(x, name) {
+  if (!is.numeric(x) || length(x) != 1L || is.na(x) || !is.finite(x) || x <= 0) {
+    stop("`", name, "` must be one positive numeric value.", call. = FALSE)
+  }
+  as.numeric(x)
+}
+
+.genetag_normalize_strand <- function(x) {
+  x <- as.character(x)
+  if (length(x) == 0L || is.na(x) || !nzchar(x)) {
+    return("*")
+  }
+  x <- base::tolower(x[[1L]])
+  if (x %in% c("+", "plus", "forward", "1")) {
+    return("+")
+  }
+  if (x %in% c("-", "minus", "reverse", "-1")) {
+    return("-")
+  }
+  "*"
 }
