@@ -267,19 +267,6 @@ print.ggtree_genomic_alignment_gtable <- function(x, ...) {
   invisible(x)
 }
 
-.ggtree_alignment_x_limits <- function(x, pad_mult = c(0.03, 0.03), fallback = c(0, 1)) {
-  x <- x[is.finite(x)]
-  if (length(x) == 0L) {
-    return(fallback)
-  }
-  rng <- range(x)
-  span <- diff(rng)
-  if (span <= 0) {
-    span <- 1
-  }
-  rng + c(-span * pad_mult[[1L]], span * pad_mult[[2L]])
-}
-
 .ggtree_alignment_panel_theme <- function(show_x_axis = TRUE,
                                           base_size = 9,
                                           plot_margin = ggplot2::margin(0, 0, 0, 0)) {

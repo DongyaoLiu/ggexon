@@ -52,6 +52,7 @@ Collate:
     'coord.R'
     'cross-panel-annotations.R'
     'facet-genomics.R'
+    'ggtree-layout.R'
     'facet-genomictree.R'
     'geom-coverage.R'
     'geom-coverageMUT.R'
