@@ -90,6 +90,7 @@ Layout2 <- ggproto("Layout2", Layout,
     self$facet_params$plot_data <- plot_data_raw
     self$facet_params$layout_override <- layout_override
     self$facet_params$has_link_layers <- .detect_link_layers(data)
+    self$facet_params$genomic_tree <- self$genomic_tree %||% NULL
 
     # detect any link data inside the data list
     # self$facet_params <- self$facet$compute_layer_type(data, self$facet_params)

@@ -79,6 +79,10 @@ default_syn_aesthetics <- function(data, layer) {
     cols <- c("xmin", "xmax", "ymin", "transcripts", "strand", "track", "label", "group")
     return(intersect(cols, names(data)))
   }
+  if (identical(layer$geom, GeomGeneTag)) {
+    cols <- c("xmin", "xmax", "y", "strand", "track", "group")
+    return(intersect(cols, names(data)))
+  }
   if (identical(layer$geom, GeomMutationLabel)) {
     cols <- c("x", "y", "label", "group")
     return(intersect(cols, names(data)))
@@ -224,6 +228,7 @@ collect_syn_annotation_requests <- function(layer, syn_data, plot_data) {
         identical(layer$geom, GeomExon2) ||
         identical(layer$geom, GeomGene) ||
         identical(layer$geom, GeomGeneLabel) ||
+        identical(layer$geom, GeomGeneTag) ||
         identical(layer$geom, GeomMotif))) {
     return(list())
   }
@@ -878,6 +883,18 @@ resolve_syn_layer_data <- function(x, layer) {
         species = params$species,
         chr = params$chr,
         subset = params$subset,
+        context = context
+      )
+    )
+  }
+  if (identical(layer$geom, GeomGeneTag)) {
+    return(
+      syn_to_genetag_df(
+        x = x,
+        species = params$species,
+        chr = params$chr,
+        subset = params$subset,
+        feature_type = params$feature_type %||% "gene",
         context = context
       )
     )

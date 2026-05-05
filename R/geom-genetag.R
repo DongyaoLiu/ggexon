@@ -180,6 +180,13 @@ ggplot_add.ggtree <- function(object, plot, object_name) {
 #'   When `NULL`, width is calculated from `arrow_fraction`.
 #' @param arrow_fraction Fraction of each gene span used for the terminal
 #'   triangle when `arrow_width` is `NULL`.
+#' @param species Optional species / individual identifier when `data` is a
+#'   `SynSpecies`.
+#' @param chr Optional chromosome / seqname restriction when `data` is
+#'   Syn-backed.
+#' @param subset Optional numeric length-2 genomic window to keep.
+#' @param feature_type Feature type passed to [query_features()]. Defaults to
+#'   `"gene"`.
 #'
 #' @return A ggplot layer.
 #' @export
@@ -192,6 +199,10 @@ geom_genetag <- function(mapping = NULL,
                          height = NULL,
                          arrow_width = NULL,
                          arrow_fraction = 0.18,
+                         species = NULL,
+                         chr = NULL,
+                         subset = NULL,
+                         feature_type = "gene",
                          na.rm = FALSE,
                          show.legend = NA,
                          inherit.aes = FALSE) {
@@ -210,8 +221,13 @@ geom_genetag <- function(mapping = NULL,
       height = height,
       arrow_width = arrow_width,
       arrow_fraction = arrow_fraction,
+      species = species,
+      chr = chr,
+      subset = subset,
+      feature_type = feature_type,
       na.rm = na.rm
-    )
+    ),
+    layer_class = LayerSyn
   )
 }
 
@@ -226,13 +242,20 @@ GeomGeneTag <- ggproto(
     linetype = 1,
     alpha = NA
   ),
-  extra_params = c("na.rm", "exon_height", "height", "arrow_width", "arrow_fraction"),
+  extra_params = c(
+    "na.rm", "exon_height", "height", "arrow_width", "arrow_fraction",
+    "species", "chr", "subset", "feature_type"
+  ),
   default_params = function() {
     list(
       exon_height = NULL,
       height = NULL,
       arrow_width = NULL,
       arrow_fraction = 0.18,
+      species = NULL,
+      chr = NULL,
+      subset = NULL,
+      feature_type = "gene",
       na.rm = FALSE
     )
   },
@@ -565,6 +588,72 @@ GeomGeneTag <- ggproto(
     out <- out[, c("id", setdiff(names(out), "id")), drop = FALSE]
   }
   out[order(out$xmin, out$xmax, out$gene_id), , drop = FALSE]
+}
+
+syn_to_genetag_df <- function(x,
+                              species = NULL,
+                              chr = NULL,
+                              subset = NULL,
+                              feature_type = "gene",
+                              context = NULL) {
+  species <- resolve_context_species_params(x, species, context)
+
+  if (methods::is(x, "SynSpecies") && length(species %||% character()) > 1L) {
+    species <- unique(as.character(species))
+    return(dplyr::bind_rows(lapply(species, function(species_name) {
+      syn_to_genetag_df(
+        x = x,
+        species = species_name,
+        chr = chr,
+        subset = subset,
+        feature_type = feature_type,
+        context = context
+      )
+    })))
+  }
+
+  individual <- if (methods::is(x, "SynSpecies") && !species %in% names(individuals(x))) {
+    NULL
+  } else {
+    resolve_syn_individual(x, species = species)
+  }
+  if (is.null(individual) || !has_syn_annotation_source(individual)) {
+    return(data.frame())
+  }
+
+  window <- normalize_syn_window_request(
+    x = x,
+    species = syn_id(individual),
+    chr = chr,
+    subset = subset,
+    allow_missing_subset = TRUE,
+    context = context,
+    geom = "geom_genetag"
+  )
+
+  gene_gr <- query_features(
+    individual,
+    chr = window$chr,
+    start = window$start,
+    end = window$end,
+    feature_type = feature_type,
+    all = is_unrestricted_syn_window(window)
+  )
+  if (length(gene_gr) == 0L) {
+    return(data.frame())
+  }
+
+  out <- .genetag_gr_to_df(
+    gene_gr = gene_gr,
+    id = syn_id(individual),
+    individual = syn_id(individual),
+    tree_node = NA_integer_,
+    tree_x = NA_real_,
+    tree_y = 1,
+    include_y = TRUE
+  )
+  out$group <- seq_len(nrow(out))
+  out
 }
 
 .genetag_apply_layout_modes <- function(data,

@@ -14,6 +14,10 @@ geom_genetag(
   height = NULL,
   arrow_width = NULL,
   arrow_fraction = 0.18,
+  species = NULL,
+  chr = NULL,
+  subset = NULL,
+  feature_type = "gene",
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = FALSE
@@ -29,6 +33,14 @@ geom_genetag(
 \item{arrow_width}{Optional width of the terminal triangle in x-axis units. When \code{NULL}, width is calculated from \code{arrow_fraction}.}
 
 \item{arrow_fraction}{Fraction of each gene span used for the terminal triangle when \code{arrow_width} is \code{NULL}.}
+
+\item{species}{Optional species / individual identifier when \code{data} is a \code{SynSpecies}.}
+
+\item{chr}{Optional chromosome / seqname restriction when \code{data} is Syn-backed.}
+
+\item{subset}{Optional numeric length-2 genomic window to keep.}
+
+\item{feature_type}{Feature type passed to \code{\link[=query_features]{query_features()}}. Defaults to \code{"gene"}.}
 }
 \value{
 A ggplot layer.

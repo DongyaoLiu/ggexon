@@ -196,3 +196,81 @@ test_that("ggtree genomic alignment keeps tree y and per-individual genomic pane
   expect_s3_class(aligned_plot, "ggtree_genomic_alignment_gtable")
   expect_true(inherits(aligned_plot, "gtable"))
 })
+
+test_that("additive genomic tree grammar renders gene tags and exon layers", {
+  testthat::skip_if_not_installed("ape")
+  testthat::skip_if_not_installed("ggtree")
+
+  annotation_path <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+  sp <- SynSpecies(name = "worms")
+  for (id in c("XZ1516", "N2")) {
+    sp <- add_individual(
+      sp,
+      SynIndividual(
+        annotation_file = annotation_path,
+        genome_file = genome_waiver(),
+        id = id
+      )
+    )
+  }
+
+  tree <- ape::read.tree(text = "(XZ1516:0.1,N2:0.2);")
+  tree_plot <- suppressWarnings(ggtree::ggtree(tree, layout = "rectangular"))
+
+  gene_tag_plot <- ggexon(sp) +
+    geom_genetag(chr = "RagTag_V", subset = c(21574445, 21584356)) +
+    geom_genomic_tree(tree_plot = tree_plot) +
+    facet_genomictree(scales = "free_x")
+  gene_tag_grob <- ggplot2::ggplotGrob(gene_tag_plot)
+  expect_true(inherits(gene_tag_grob, "gtable"))
+  expect_true(any(gene_tag_grob$layout$name == "genomic-tree"))
+
+  exon_plot <- ggexon(sp) +
+    geom_exon(chr = "RagTag_V", subset = c(21574445, 21584356)) +
+    geom_genomic_tree(tree_plot = tree_plot) +
+    facet_genomictree(scales = "free_x")
+  exon_grob <- ggplot2::ggplotGrob(exon_plot)
+  expect_true(inherits(exon_grob, "gtable"))
+  expect_true(any(exon_grob$layout$name == "genomic-tree"))
+
+  exon2_plot <- ggexon(sp) +
+    geom_exon2(chr = "RagTag_V", subset = c(21574445, 21584356)) +
+    geom_genomic_tree(tree_plot = tree_plot) +
+    facet_genomictree(scales = "free_x")
+  exon2_grob <- ggplot2::ggplotGrob(exon2_plot)
+  expect_true(inherits(exon2_grob, "gtable"))
+  expect_true(any(exon2_grob$layout$name == "genomic-tree"))
+})
+
+test_that("facet_genomictree orders ordinary track data by tree tips", {
+  testthat::skip_if_not_installed("ape")
+  testthat::skip_if_not_installed("ggtree")
+
+  tree <- ape::read.tree(text = "((sp_a:0.1,sp_b:0.1):0.1,sp_c:0.2);")
+  tree_plot <- suppressWarnings(ggtree::ggtree(tree, layout = "rectangular"))
+  expected <- tree_plot$data[tree_plot$data$isTip %in% TRUE, c("label", "y")]
+  expected <- expected[order(-expected$y), "label", drop = TRUE]
+
+  track_data <- data.frame(
+    track = c("sp_c", "sp_a", "sp_b"),
+    xmin = c(1, 1, 1),
+    xmax = c(2, 2, 2),
+    y = 1,
+    strand = "+",
+    stringsAsFactors = FALSE
+  )
+
+  p <- ggexon(track_data) +
+    geom_genetag() +
+    geom_genomic_tree(tree_plot = tree_plot) +
+    facet_genomictree(scales = "free_x")
+  built <- ggplot2::ggplot_build(p)
+  panel_layout <- as.data.frame(built@layout$layout)
+
+  expect_equal(as.character(panel_layout$track), expected)
+  expect_true(inherits(ggplot2::ggplotGrob(p), "gtable"))
+})

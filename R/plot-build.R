@@ -63,7 +63,16 @@ apply_panel_xlim_to_trained_scales <- function(layout) {
 
 #' @export
 ggplot_build.ggexon <- function(plot, ...) {
-  as_standard_ggplot_built(ggexon_build(plot, ...))
+  build <- ggexon_build(plot, ...)
+  if (inherits(plot@facet, "FacetGenomicTree") && !is.null(plot@genomic_tree)) {
+    return(build)
+  }
+  as_standard_ggplot_built(build)
+}
+
+#' @export
+ggplot_gtable.ggexon_built <- function(data) {
+  ggexon_gtable(data)
 }
 
 
@@ -94,6 +103,7 @@ build_ggexon <- S7::method(ggexon_build, class_ggexon) <- function(plot, ...) {
     # Initialise panels, add extra data for margins & missing faceting
     # variables, and add on a PANEL variable to data
     layout <- create_layout2(plot@facet, plot@coordinates, plot@layout)
+    layout$genomic_tree <- plot@genomic_tree
     data <- layout$setup(data, plot@data, plot@plot_env)
 
     # add aesthetics mapping to preserve link-anchor metadata. this is specialized for ggexon
@@ -237,6 +247,7 @@ S7::method(ggexon_gtable, class_ggexon_built) <- function(data) {
   plot_table <- table_add_titles(plot_table, labels, theme)
   plot_table <- table_add_caption(plot_table, labels$caption, theme)
   plot_table <- table_add_tag(plot_table, labels$tag, theme)
+  plot_table <- inject_genomictree_panel(plot_table, build)
   plot_table <- table_add_background(plot_table, theme)
   plot_table <- inject_cross_panel_annotations(plot_table, build)
 
@@ -244,6 +255,273 @@ S7::method(ggexon_gtable, class_ggexon_built) <- function(data) {
   attr(plot_table, "alt-label") <- labels$alt
 
   plot_table
+}
+
+inject_genomictree_panel <- function(table, build) {
+  plot <- build@plot
+  tree_spec <- plot@genomic_tree
+  if (is.null(tree_spec) || !inherits(plot@facet, "FacetGenomicTree")) {
+    return(table)
+  }
+
+  panel_idx <- grep("^panel", table$layout$name)
+  if (length(panel_idx) == 0L) {
+    return(table)
+  }
+
+  table <- strip_genomictree_panel_strips(table)
+  panel_idx <- grep("^panel", table$layout$name)
+  panel_rows <- table$layout[panel_idx, , drop = FALSE]
+  layout_df <- as.data.frame(build@layout$layout)
+
+  tree_data <- .ggtree_rectangular_plot_data(
+    tree = tree_spec$tree,
+    tree_plot = tree_spec$tree_plot,
+    layout = tree_spec$layout
+  )
+  tree_segments <- .ggtree_rectangular_segments_from_data(tree_data, track = "Tree")
+  panel_tree_y <- genomictree_panel_tree_y(layout_df, tree_data)
+  panel_row_map <- genomictree_panel_row_map(table, layout_df)
+
+  keep <- is.finite(panel_tree_y) & !is.na(panel_row_map)
+  if (!any(keep)) {
+    return(table)
+  }
+  panel_tree_y <- panel_tree_y[keep]
+  panel_row_map <- panel_row_map[keep]
+  label_values <- as.character(layout_df$track)[keep]
+
+  full_t <- min(c(panel_rows$t, grep_table_rows(table, "^axis-[tb]")))
+  full_b <- max(c(panel_rows$b, grep_table_rows(table, "^axis-[tb]")))
+  panel_l <- min(panel_rows$l)
+
+  label_position <- plot@facet$params$label_position %||% "left"
+  label_col <- NA_integer_
+  if (!identical(label_position, "none")) {
+    label_width <- plot@facet$params$label_width %||% grid::unit(0.7, "in")
+    if (identical(label_position, "left")) {
+      table <- gtable::gtable_add_cols(table, label_width, pos = panel_l - 1L)
+      label_col <- panel_l
+      panel_l <- panel_l + 1L
+      panel_rows$l <- panel_rows$l + 1L
+    } else {
+      panel_r <- max(panel_rows$r)
+      table <- gtable::gtable_add_cols(table, label_width, pos = panel_r)
+      label_col <- panel_r + 1L
+    }
+
+    for (i in seq_along(label_values)) {
+      table <- gtable::gtable_add_grob(
+        table,
+        grid::textGrob(
+          label_values[[i]],
+          x = if (identical(label_position, "left")) grid::unit(1, "npc") else grid::unit(0, "npc"),
+          y = grid::unit(0.5, "npc"),
+          just = if (identical(label_position, "left")) c("right", "center") else c("left", "center"),
+          gp = grid::gpar(fontsize = 9)
+        ),
+        t = panel_row_map[[i]],
+        l = label_col,
+        clip = "off",
+        name = paste0("genomic-tree-label-", label_values[[i]])
+      )
+    }
+  }
+
+  tree_width <- tree_spec$tree_width %||% grid::unit(1.5, "in")
+  if (identical(label_position, "left") && !is.na(label_col)) {
+    table <- gtable::gtable_add_cols(table, tree_width, pos = label_col - 1L)
+    tree_col <- label_col
+  } else {
+    table <- gtable::gtable_add_cols(table, tree_width, pos = panel_l - 1L)
+    tree_col <- panel_l
+  }
+
+  tree_grob <- genomictree_segments_grob(
+    data = tree_segments,
+    heights = table$heights[full_t:full_b],
+    panel_rows = panel_row_map - full_t + 1L,
+    panel_tree_y = panel_tree_y,
+    x_range = .ggtree_alignment_x_limits(
+      c(tree_segments$x, tree_segments$xend),
+      pad_mult = c(0.03, 0.05)
+    ),
+    colour = tree_spec$colour %||% "black",
+    linewidth = tree_spec$linewidth %||% 0.5,
+    show_x_axis = isTRUE(plot@facet$params$show_tree_x_axis)
+  )
+  table <- gtable::gtable_add_grob(
+    table,
+    tree_grob,
+    t = full_t,
+    l = tree_col,
+    b = full_b,
+    r = tree_col,
+    clip = "off",
+    name = "genomic-tree"
+  )
+  attr(table, "genomic_tree") <- tree_spec
+  table
+}
+
+strip_genomictree_panel_strips <- function(table) {
+  strip_idx <- grep("^strip-[tblr]", table$layout$name)
+  if (length(strip_idx) == 0L) {
+    return(table)
+  }
+  for (idx in strip_idx) {
+    table$grobs[[idx]] <- zeroGrob()
+  }
+  horizontal <- grepl("^strip-[tb]", table$layout$name[strip_idx])
+  vertical <- grepl("^strip-[lr]", table$layout$name[strip_idx])
+  if (any(horizontal)) {
+    rows <- unique(unlist(Map(seq, table$layout$t[strip_idx[horizontal]], table$layout$b[strip_idx[horizontal]])))
+    table$heights[rows] <- grid::unit(0, "pt")
+  }
+  if (any(vertical)) {
+    cols <- unique(unlist(Map(seq, table$layout$l[strip_idx[vertical]], table$layout$r[strip_idx[vertical]])))
+    table$widths[cols] <- grid::unit(0, "pt")
+  }
+  table
+}
+
+grep_table_rows <- function(table, pattern) {
+  idx <- grep(pattern, table$layout$name)
+  if (length(idx) == 0L) {
+    return(integer())
+  }
+  unique(unlist(Map(seq, table$layout$t[idx], table$layout$b[idx])))
+}
+
+genomictree_panel_tree_y <- function(layout_df, tree_data) {
+  if ("tree_y" %in% names(layout_df)) {
+    return(as.numeric(layout_df$tree_y))
+  }
+  tip_data <- .ggtree_rectangular_tip_data_from_data(tree_data)
+  track <- if ("track" %in% names(layout_df)) as.character(layout_df$track) else rep(NA_character_, nrow(layout_df))
+  tip_data$y[match(track, tip_data$label)]
+}
+
+genomictree_panel_row_map <- function(table, layout_df) {
+  out <- rep(NA_integer_, nrow(layout_df))
+  for (i in seq_len(nrow(layout_df))) {
+    panel_col <- layout_df$COL[[i]] %||% 1L
+    panel_row <- layout_df$ROW[[i]] %||% i
+    idx <- which(table$layout$name == paste0("panel-", panel_col, "-", panel_row))
+    if (length(idx) != 1L) {
+      idx <- grep("^panel", table$layout$name)[i]
+    }
+    if (length(idx) == 1L && !is.na(idx)) {
+      out[[i]] <- table$layout$t[[idx]]
+    }
+  }
+  out
+}
+
+genomictree_segments_grob <- function(data,
+                                      heights,
+                                      panel_rows,
+                                      panel_tree_y,
+                                      x_range,
+                                      colour = "black",
+                                      linewidth = 0.5,
+                                      show_x_axis = TRUE,
+                                      name = NULL) {
+  grid::grob(
+    data = data,
+    heights = heights,
+    panel_rows = panel_rows,
+    panel_tree_y = panel_tree_y,
+    x_range = x_range,
+    colour = colour,
+    linewidth = linewidth,
+    show_x_axis = show_x_axis,
+    name = name %||% "genomic-tree",
+    cl = "genomicTreeSegmentsGrob"
+  )
+}
+
+#' @export
+drawDetails.genomicTreeSegmentsGrob <- function(x, recording = TRUE) {
+  if (nrow(x$data) == 0L || length(x$panel_rows) == 0L) {
+    return(invisible())
+  }
+  total_height_cm <- grid::convertHeight(grid::unit(1, "npc"), "cm", TRUE)
+  total_width_cm <- grid::convertWidth(grid::unit(1, "npc"), "cm", TRUE)
+  resolved_heights_cm <- resolve_genomictree_heights_cm(x$heights, total_height_cm)
+
+  panel_y_cm <- vapply(x$panel_rows, function(row) {
+    panel_relative_y_cm_resolved(resolved_heights_cm, row, 0.5, total_height_cm)
+  }, numeric(1))
+  ordered <- order(x$panel_tree_y)
+  tree_y <- x$panel_tree_y[ordered]
+  panel_y_cm <- panel_y_cm[ordered]
+
+  map_y <- function(y) {
+    stats::approx(tree_y, panel_y_cm, xout = y, rule = 2, ties = mean)$y
+  }
+  map_x <- function(x_value) {
+    scales::rescale(x_value, from = x$x_range, to = c(0, total_width_cm))
+  }
+
+  for (i in seq_len(nrow(x$data))) {
+    row <- x$data[i, , drop = FALSE]
+    grid::grid.segments(
+      x0 = grid::unit(map_x(row$x[[1L]]), "cm"),
+      x1 = grid::unit(map_x(row$xend[[1L]]), "cm"),
+      y0 = grid::unit(map_y(row$y[[1L]]), "cm"),
+      y1 = grid::unit(map_y(row$yend[[1L]]), "cm"),
+      gp = grid::gpar(col = x$colour, lwd = x$linewidth),
+      default.units = "cm"
+    )
+  }
+
+  if (isTRUE(x$show_x_axis)) {
+    breaks <- pretty(x$x_range, n = 4)
+    breaks <- breaks[breaks >= min(x$x_range) & breaks <= max(x$x_range)]
+    if (length(breaks) > 0L) {
+      grid::grid.xaxis(
+        at = scales::rescale(breaks, from = x$x_range, to = c(0, 1)),
+        label = breaks,
+        gp = grid::gpar(fontsize = 8)
+      )
+    }
+  }
+  invisible()
+}
+
+resolve_genomictree_heights_cm <- function(heights, total_height_cm) {
+  unit_type <- grid::unitType(heights)
+  null_rows <- identical(unit_type, "null") | unit_type == "null"
+  out <- numeric(length(heights))
+
+  if (any(!null_rows)) {
+    out[!null_rows] <- grid::convertHeight(heights[!null_rows], "cm", TRUE)
+  }
+
+  if (any(null_rows)) {
+    fixed_height <- sum(out[!null_rows], na.rm = TRUE)
+    null_weight <- as.numeric(heights[null_rows])
+    null_weight[!is.finite(null_weight) | null_weight < 0] <- 0
+    total_weight <- sum(null_weight)
+    remaining <- max(total_height_cm - fixed_height, 0)
+    if (total_weight > 0) {
+      out[null_rows] <- remaining * null_weight / total_weight
+    }
+  }
+
+  out
+}
+
+panel_relative_y_cm_resolved <- function(heights_cm, panel_row, rel_y, total_height_cm) {
+  offset_top_cm <- if (panel_row > 1L) {
+    sum(heights_cm[seq_len(panel_row - 1L)], na.rm = TRUE)
+  } else {
+    0
+  }
+  panel_height_cm <- heights_cm[[panel_row]]
+  y_from_top_cm <- offset_top_cm + (1 - rel_y) * panel_height_cm
+  total_height_cm - y_from_top_cm
 }
 
 #' Generate a ggplot2 plot grob.
