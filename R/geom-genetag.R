@@ -310,6 +310,10 @@ GeomGeneTag <- ggproto(
 
 .ggtree_rectangular_tip_data <- function(tree = NULL, tree_plot = NULL, layout = "rectangular") {
   tree_data <- .ggtree_rectangular_plot_data(tree = tree, tree_plot = tree_plot, layout = layout)
+  .ggtree_rectangular_tip_data_from_data(tree_data)
+}
+
+.ggtree_rectangular_tip_data_from_data <- function(tree_data) {
   required_cols <- c("label", "node", "x", "y", "isTip")
 
   tip_data <- tree_data[tree_data$isTip %in% TRUE, required_cols, drop = FALSE]

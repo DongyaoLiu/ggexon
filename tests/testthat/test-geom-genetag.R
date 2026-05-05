@@ -151,3 +151,48 @@ test_that("compile_ggtree_genetag aligns gene rows to rectangular ggtree tips", 
 
   expect_true(inherits(suppressWarnings(ggplot2::ggplotGrob(p)), "gtable"))
 })
+
+test_that("ggtree genomic alignment keeps tree y and per-individual genomic panels", {
+  testthat::skip_if_not_installed("ape")
+  testthat::skip_if_not_installed("ggtree")
+
+  annotation_path <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+  sp <- SynSpecies(name = "worms")
+  for (id in c("XZ1516", "N2")) {
+    sp <- add_individual(
+      sp,
+      SynIndividual(
+        annotation_file = annotation_path,
+        genome_file = genome_waiver(),
+        id = id
+      )
+    )
+  }
+
+  tree <- ape::read.tree(text = "(XZ1516:0.1,N2:0.2);")
+  tree_plot <- suppressWarnings(ggtree::ggtree(tree, layout = "rectangular"))
+  alignment <- compile_ggtree_genomic_alignment(
+    sp,
+    tree_plot = tree_plot,
+    chr = c(XZ1516 = "RagTag_V", N2 = "RagTag_V"),
+    subset = list(
+      XZ1516 = c(21574445, 21584356),
+      N2 = c(21574445, 21584356)
+    )
+  )
+
+  expect_s3_class(alignment, "ggtree_genomic_alignment")
+  expect_equal(nrow(alignment$tip_layout), 2L)
+  expect_setequal(alignment$tip_layout$individual, c("XZ1516", "N2"))
+  expect_true(nrow(alignment$tree_segments) > 0L)
+  expect_true(nrow(alignment$gene_tags) > 0L)
+  expect_true(all(c("alignment_id", "alignment_panel", "y") %in% names(alignment$gene_tags)))
+
+  aligned_plot <- plot_ggtree_genomic_alignment(alignment)
+  expect_s3_class(aligned_plot, "ggtree_genomic_alignment_gtable")
+  expect_true(inherits(aligned_plot, "gtable"))
+})

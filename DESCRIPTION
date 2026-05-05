@@ -58,6 +58,7 @@ Collate:
     'geom-exon.R'
     'geom-gene.R'
     'geom-genetag.R'
+    'ggtree-genomic-alignment.R'
     'geom-motif.R'
     'geom-protein-lollipop.R'
     'geom-mutation-label.R'
