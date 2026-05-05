@@ -22,6 +22,14 @@
 #'   named list keyed by tree tip or individual id. Overrides `start` and `end`.
 #' @param feature_type Feature type passed to [query_features()]. Defaults to
 #'   `"gene"`.
+#' @param inter_genetic Intergenic-gap layout mode. `"scaled"` keeps the
+#'   original gap between consecutive features within each track. `"union"` uses
+#'   the maximum gap observed at each feature step so corresponding gaps are the
+#'   same across tracks in the same panel.
+#' @param exon_length Feature-length layout mode. `"scaled"` keeps original
+#'   feature lengths. `"union"` uses the maximum feature length observed at each
+#'   feature step so corresponding features have the same displayed length
+#'   across tracks in the same panel.
 #' @param include_y Logical; when `TRUE`, also include a `y` column copied from
 #'   `tree_y`. Keep the default `FALSE` for `ggtree::facet_plot()`, which
 #'   injects its own `y` column after tip matching.
@@ -40,6 +48,8 @@ compile_ggtree_genetag <- function(x,
                                    end = NULL,
                                    subset = NULL,
                                    feature_type = "gene",
+                                   inter_genetic = c("scaled", "union"),
+                                   exon_length = c("scaled", "union"),
                                    include_y = FALSE) {
   if (!methods::is(x, "SynSpecies")) {
     stop("`compile_ggtree_genetag()` expects a SynSpecies object.", call. = FALSE)
@@ -47,6 +57,8 @@ compile_ggtree_genetag <- function(x,
   if (!identical(layout, "rectangular")) {
     stop("Only `layout = \"rectangular\"` is currently supported.", call. = FALSE)
   }
+  inter_genetic <- match.arg(inter_genetic)
+  exon_length <- match.arg(exon_length)
 
   tip_data <- .ggtree_rectangular_tip_data(tree = tree, tree_plot = tree_plot, layout = layout)
   tip_map <- .genetag_tip_individual_map(
@@ -98,25 +110,76 @@ compile_ggtree_genetag <- function(x,
     return(.empty_ggtree_genetag_df(include_y = include_y))
   }
   rownames(out) <- NULL
+  out <- .genetag_apply_layout_modes(
+    out,
+    inter_genetic = inter_genetic,
+    exon_length = exon_length
+  )
   out$group <- seq_len(nrow(out))
   out
 }
 
-#' Draw gene tags as constant-height strand arrows
+#' Compile rectangular ggtree branches for a ggexon tree panel
 #'
-#' `geom_genetag()` draws each gene as one polygon spanning `xmin` to `xmax`.
-#' The arrow head has the same height as the body and points toward the
+#' `compile_ggtree_rectangular_segments()` converts a rectangular ggtree plot or
+#' tree object into plain segment rows. The returned data can be drawn with
+#' `ggplot2::geom_segment()` inside `ggexon()` and aligned to a gene-tag panel
+#' with [facet_genomics()].
+#'
+#' @param tree Optional tree object accepted by `ggtree::ggtree()`.
+#' @param tree_plot Optional existing `ggtree` plot. If supplied, `tree` is
+#'   ignored.
+#' @param layout ggtree layout. Currently only `"rectangular"` is supported.
+#' @param track Facet-track value assigned to all branch segments.
+#'
+#' @return A `data.frame` with `track`, `x`, `xend`, `y`, `yend`, `node`,
+#'   `parent`, `segment`, `isTip`, and `label` columns.
+#' @export
+compile_ggtree_rectangular_segments <- function(tree = NULL,
+                                                tree_plot = NULL,
+                                                layout = "rectangular",
+                                                track = "Tree") {
+  if (!identical(layout, "rectangular")) {
+    stop("Only `layout = \"rectangular\"` is currently supported.", call. = FALSE)
+  }
+  tree_data <- .ggtree_rectangular_plot_data(tree = tree, tree_plot = tree_plot, layout = layout)
+  .ggtree_rectangular_segments_from_data(tree_data, track = track)
+}
+
+#' @export
+ggplot_add.ggtree <- function(object, plot, object_name) {
+  if (!inherits(plot, "ggexon")) {
+    stop(
+      "Adding a ggtree object with `+` is supported only for `ggexon()` plots. ",
+      "Use ggtree's own layer grammar inside ggtree plots.",
+      call. = FALSE
+    )
+  }
+
+  tree_segments <- compile_ggtree_rectangular_segments(tree_plot = object)
+  plot + ggplot2::geom_segment(
+    data = tree_segments,
+    mapping = ggplot2::aes(x = x, xend = xend, y = y, yend = yend),
+    inherit.aes = FALSE
+  )
+}
+
+#' Draw gene tags as exon bodies with strand-direction triangles
+#'
+#' `geom_genetag()` draws each stranded gene as a rectangular exon-like body
+#' plus a symmetric terminal triangle. The triangle apex points toward the
 #' strand-specific end of the feature. It is designed for gene-level summaries,
 #' including ggtree side panels generated with `ggtree::facet_plot()`.
 #'
 #' @param mapping,data,stat,position,...,na.rm,show.legend,inherit.aes Standard
 #'   ggplot2 layer arguments. `inherit.aes` defaults to `FALSE` so the layer can
 #'   be used cleanly in `ggtree::facet_plot()` side panels.
-#' @param height Total tag height in y-axis units.
-#' @param arrow_width Optional arrow-head width in x-axis units. When `NULL`,
-#'   width is calculated from `arrow_fraction`.
-#' @param arrow_fraction Fraction of each gene span used for the arrow head when
-#'   `arrow_width` is `NULL`.
+#' @param exon_height Total tag height in y-axis units. Defaults to `0.8`.
+#' @param height Deprecated-compatible alias for `exon_height`.
+#' @param arrow_width Optional width of the terminal triangle in x-axis units.
+#'   When `NULL`, width is calculated from `arrow_fraction`.
+#' @param arrow_fraction Fraction of each gene span used for the terminal
+#'   triangle when `arrow_width` is `NULL`.
 #'
 #' @return A ggplot layer.
 #' @export
@@ -125,7 +188,8 @@ geom_genetag <- function(mapping = NULL,
                          stat = "identity",
                          position = "identity",
                          ...,
-                         height = 0.8,
+                         exon_height = NULL,
+                         height = NULL,
                          arrow_width = NULL,
                          arrow_fraction = 0.18,
                          na.rm = FALSE,
@@ -142,6 +206,7 @@ geom_genetag <- function(mapping = NULL,
     inherit.aes = inherit.aes,
     params = list(
       ...,
+      exon_height = exon_height,
       height = height,
       arrow_width = arrow_width,
       arrow_fraction = arrow_fraction,
@@ -161,10 +226,11 @@ GeomGeneTag <- ggproto(
     linetype = 1,
     alpha = NA
   ),
-  extra_params = c("na.rm", "height", "arrow_width", "arrow_fraction"),
+  extra_params = c("na.rm", "exon_height", "height", "arrow_width", "arrow_fraction"),
   default_params = function() {
     list(
-      height = 0.8,
+      exon_height = NULL,
+      height = NULL,
       arrow_width = NULL,
       arrow_fraction = 0.18,
       na.rm = FALSE
@@ -187,7 +253,8 @@ GeomGeneTag <- ggproto(
                         panel_params,
                         coord,
                         flipped_aes = FALSE,
-                        height = 0.8,
+                        exon_height = NULL,
+                        height = NULL,
                         arrow_width = NULL,
                         arrow_fraction = 0.18) {
     if (nrow(data) == 0L) {
@@ -195,6 +262,7 @@ GeomGeneTag <- ggproto(
     }
     tag_data <- .genetag_polygon_data(
       data = data,
+      exon_height = exon_height,
       height = height,
       arrow_width = arrow_width,
       arrow_fraction = arrow_fraction
@@ -204,7 +272,7 @@ GeomGeneTag <- ggproto(
   draw_key = draw_key_polygon
 )
 
-.ggtree_rectangular_tip_data <- function(tree = NULL, tree_plot = NULL, layout = "rectangular") {
+.ggtree_rectangular_plot_data <- function(tree = NULL, tree_plot = NULL, layout = "rectangular") {
   if (is.null(tree_plot)) {
     if (is.null(tree)) {
       stop("Supply either `tree` or `tree_plot`.", call. = FALSE)
@@ -219,7 +287,7 @@ GeomGeneTag <- ggproto(
   if (is.null(tree_data) || !is.data.frame(tree_data)) {
     stop("`tree_plot` must be a ggtree object with a data frame in `$data`.", call. = FALSE)
   }
-  required_cols <- c("label", "node", "x", "y", "isTip")
+  required_cols <- c("node", "parent", "x", "y", "isTip")
   missing_cols <- setdiff(required_cols, names(tree_data))
   if (length(missing_cols) > 0L) {
     stop(
@@ -228,6 +296,21 @@ GeomGeneTag <- ggproto(
       call. = FALSE
     )
   }
+  if (!"label" %in% names(tree_data)) {
+    tree_data$label <- NA_character_
+  }
+  tree_data$label <- as.character(tree_data$label)
+  tree_data$node <- as.integer(tree_data$node)
+  tree_data$parent <- as.integer(tree_data$parent)
+  tree_data$x <- as.numeric(tree_data$x)
+  tree_data$y <- as.numeric(tree_data$y)
+  tree_data$isTip <- as.logical(tree_data$isTip)
+  tree_data
+}
+
+.ggtree_rectangular_tip_data <- function(tree = NULL, tree_plot = NULL, layout = "rectangular") {
+  tree_data <- .ggtree_rectangular_plot_data(tree = tree, tree_plot = tree_plot, layout = layout)
+  required_cols <- c("label", "node", "x", "y", "isTip")
 
   tip_data <- tree_data[tree_data$isTip %in% TRUE, required_cols, drop = FALSE]
   tip_data <- tip_data[!is.na(tip_data$label) & nzchar(tip_data$label), , drop = FALSE]
@@ -236,6 +319,90 @@ GeomGeneTag <- ggproto(
   tip_data$x <- as.numeric(tip_data$x)
   tip_data$y <- as.numeric(tip_data$y)
   tip_data[order(tip_data$y), , drop = FALSE]
+}
+
+.ggtree_rectangular_segments_from_data <- function(tree_data, track = "Tree") {
+  if (!is.character(track) || length(track) != 1L || is.na(track) || !nzchar(track)) {
+    stop("`track` must be one non-empty character value.", call. = FALSE)
+  }
+  if (nrow(tree_data) == 0L) {
+    return(.empty_ggtree_rectangular_segments_df())
+  }
+
+  node_key <- as.character(tree_data$node)
+  parent_index <- match(as.character(tree_data$parent), node_key)
+  has_parent <- !is.na(parent_index) & tree_data$parent != tree_data$node
+
+  horizontal <- .empty_ggtree_rectangular_segments_df()
+  if (any(has_parent)) {
+    children <- tree_data[has_parent, , drop = FALSE]
+    parents <- tree_data[parent_index[has_parent], , drop = FALSE]
+    horizontal <- data.frame(
+      track = rep(track, nrow(children)),
+      segment = rep("horizontal", nrow(children)),
+      node = children$node,
+      parent = children$parent,
+      isTip = children$isTip,
+      label = children$label,
+      x = parents$x,
+      xend = children$x,
+      y = children$y,
+      yend = children$y,
+      stringsAsFactors = FALSE
+    )
+  }
+
+  vertical_pieces <- list()
+  children_by_parent <- split(tree_data[has_parent, , drop = FALSE], tree_data$parent[has_parent])
+  for (parent_node in names(children_by_parent)) {
+    child_rows <- children_by_parent[[parent_node]]
+    if (nrow(child_rows) < 2L) {
+      next
+    }
+    parent_row <- tree_data[match(parent_node, node_key), , drop = FALSE]
+    if (nrow(parent_row) != 1L) {
+      next
+    }
+    vertical_pieces[[length(vertical_pieces) + 1L]] <- data.frame(
+      track = track,
+      segment = "vertical",
+      node = parent_row$node,
+      parent = parent_row$parent,
+      isTip = FALSE,
+      label = parent_row$label,
+      x = parent_row$x,
+      xend = parent_row$x,
+      y = min(child_rows$y, na.rm = TRUE),
+      yend = max(child_rows$y, na.rm = TRUE),
+      stringsAsFactors = FALSE
+    )
+  }
+
+  vertical <- if (length(vertical_pieces) == 0L) {
+    .empty_ggtree_rectangular_segments_df()
+  } else {
+    do.call(rbind, vertical_pieces)
+  }
+
+  out <- rbind(vertical, horizontal)
+  rownames(out) <- NULL
+  out[order(out$segment, out$parent, out$node), , drop = FALSE]
+}
+
+.empty_ggtree_rectangular_segments_df <- function() {
+  data.frame(
+    track = character(),
+    segment = character(),
+    node = integer(),
+    parent = integer(),
+    isTip = logical(),
+    label = character(),
+    x = numeric(),
+    xend = numeric(),
+    y = numeric(),
+    yend = numeric(),
+    stringsAsFactors = FALSE
+  )
 }
 
 .genetag_tip_individual_map <- function(tip_labels, available_individuals, individual = NULL) {
@@ -396,6 +563,95 @@ GeomGeneTag <- ggproto(
   out[order(out$xmin, out$xmax, out$gene_id), , drop = FALSE]
 }
 
+.genetag_apply_layout_modes <- function(data,
+                                        inter_genetic = c("scaled", "union"),
+                                        exon_length = c("scaled", "union")) {
+  inter_genetic <- match.arg(inter_genetic)
+  exon_length <- match.arg(exon_length)
+  if (nrow(data) == 0L || (identical(inter_genetic, "scaled") && identical(exon_length, "scaled"))) {
+    return(data)
+  }
+  if (!all(c("xmin", "xmax") %in% names(data))) {
+    stop("Gene-tag layout data must contain `xmin` and `xmax` columns.", call. = FALSE)
+  }
+  if (any(!is.finite(data$xmin)) || any(!is.finite(data$xmax))) {
+    stop("Gene-tag layout coordinates must be finite.", call. = FALSE)
+  }
+
+  track_col <- .genetag_layout_track_col(data)
+  out <- data
+  out$genomic_xmin <- out$xmin
+  out$genomic_xmax <- out$xmax
+  out$genomic_start <- if ("start" %in% names(out)) out$start else out$xmin
+  out$genomic_end <- if ("end" %in% names(out)) out$end else out$xmax
+  out$.row_id <- seq_len(nrow(out))
+  out$.layout_track <- as.character(out[[track_col]])
+
+  sorted <- out[order(out$.layout_track, out$xmin, out$xmax, out$.row_id), , drop = FALSE]
+  split_rows <- split(seq_len(nrow(sorted)), sorted$.layout_track)
+
+  sorted$.layout_index <- NA_integer_
+  sorted$.feature_width <- pmax(0, sorted$xmax - sorted$xmin)
+  sorted$.gap_after <- 0
+
+  for (rows in split_rows) {
+    sorted$.layout_index[rows] <- seq_along(rows)
+    if (length(rows) > 1L) {
+      gaps <- sorted$xmin[rows[-1L]] - sorted$xmax[rows[-length(rows)]]
+      sorted$.gap_after[rows[-length(rows)]] <- pmax(0, gaps)
+    }
+  }
+
+  width_by_index <- tapply(sorted$.feature_width, sorted$.layout_index, max, na.rm = TRUE)
+  gap_by_index <- tapply(sorted$.gap_after, sorted$.layout_index, max, na.rm = TRUE)
+  base_x <- min(sorted$xmin, na.rm = TRUE)
+
+  for (rows in split_rows) {
+    current_x <- base_x
+    for (j in seq_along(rows)) {
+      row <- rows[[j]]
+      layout_index <- sorted$.layout_index[[row]]
+      width <- if (identical(exon_length, "union")) {
+        width_by_index[[as.character(layout_index)]]
+      } else {
+        sorted$.feature_width[[row]]
+      }
+      sorted$xmin[[row]] <- current_x
+      sorted$xmax[[row]] <- current_x + width
+
+      if (j < length(rows)) {
+        gap <- if (identical(inter_genetic, "union")) {
+          gap_by_index[[as.character(layout_index)]]
+        } else {
+          sorted$.gap_after[[row]]
+        }
+        current_x <- sorted$xmax[[row]] + gap
+      }
+    }
+  }
+
+  sorted$layout_index <- sorted$.layout_index
+  sorted$layout_inter_genetic <- inter_genetic
+  sorted$layout_exon_length <- exon_length
+  sorted <- sorted[order(sorted$.row_id), , drop = FALSE]
+  sorted$.row_id <- NULL
+  sorted$.layout_track <- NULL
+  sorted$.layout_index <- NULL
+  sorted$.feature_width <- NULL
+  sorted$.gap_after <- NULL
+  rownames(sorted) <- NULL
+  sorted
+}
+
+.genetag_layout_track_col <- function(data) {
+  for (col in c("id", "track", "individual")) {
+    if (col %in% names(data)) {
+      return(col)
+    }
+  }
+  stop("Gene-tag layout data must contain one of `id`, `track`, or `individual`.", call. = FALSE)
+}
+
 .empty_ggtree_genetag_df <- function(include_y = FALSE) {
   out <- data.frame(
     id = character(),
@@ -440,8 +696,12 @@ GeomGeneTag <- ggproto(
   rlang::inject(ggplot2::aes(!!!mapping_exprs))
 }
 
-.genetag_polygon_data <- function(data, height = 0.8, arrow_width = NULL, arrow_fraction = 0.18) {
-  height <- .genetag_positive_number(height, "height")
+.genetag_polygon_data <- function(data,
+                                  exon_height = NULL,
+                                  height = NULL,
+                                  arrow_width = NULL,
+                                  arrow_fraction = 0.18) {
+  exon_height <- .genetag_effective_height(exon_height = exon_height, height = height)
   arrow_fraction <- .genetag_positive_number(arrow_fraction, "arrow_fraction")
   if (arrow_fraction > 0.5) {
     stop("`arrow_fraction` must be no larger than 0.5.", call. = FALSE)
@@ -457,11 +717,15 @@ GeomGeneTag <- ggproto(
     xmin <- min(data$xmin[[i]], data$xmax[[i]])
     xmax <- max(data$xmin[[i]], data$xmax[[i]])
     y <- data$y[[i]]
-    width <- xmax - xmin
-    head_width <- if (is.null(arrow_width)) width * arrow_fraction else min(arrow_width, width)
     strand <- .genetag_normalize_strand(data$strand[[i]])
-    y_min <- y - height / 2
-    y_max <- y + height / 2
+    width <- xmax - xmin
+    head_width <- if (is.null(arrow_width)) {
+      width * arrow_fraction
+    } else {
+      min(arrow_width, width)
+    }
+    y_min <- y - exon_height / 2
+    y_max <- y + exon_height / 2
 
     coords <- switch(
       strand,
@@ -489,6 +753,16 @@ GeomGeneTag <- ggproto(
   out <- do.call(rbind, pieces)
   rownames(out) <- NULL
   out
+}
+
+.genetag_effective_height <- function(exon_height = NULL, height = NULL) {
+  if (!is.null(exon_height)) {
+    return(.genetag_positive_number(exon_height, "exon_height"))
+  }
+  if (!is.null(height)) {
+    return(.genetag_positive_number(height, "height"))
+  }
+  0.8
 }
 
 .genetag_positive_number <- function(x, name) {

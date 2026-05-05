@@ -1,4 +1,4 @@
-test_that("geom_genetag polygon data uses constant-height strand arrows", {
+test_that("geom_genetag polygon data uses exon bodies with strand triangles", {
   data <- data.frame(
     xmin = c(0, 10),
     xmax = c(10, 20),
@@ -13,7 +13,7 @@ test_that("geom_genetag polygon data uses constant-height strand arrows", {
     alpha = NA_real_
   )
 
-  poly <- .genetag_polygon_data(data, height = 0.5, arrow_fraction = 0.2)
+  poly <- .genetag_polygon_data(data, exon_height = 0.5, arrow_fraction = 0.2)
 
   expect_identical(nrow(poly), 10L)
 
@@ -22,8 +22,13 @@ test_that("geom_genetag polygon data uses constant-height strand arrows", {
 
   expect_equal(range(plus$y), c(0.75, 1.25))
   expect_true(any(plus$x == 10 & plus$y == 1))
+  expect_equal(sum(plus$x == 0), 2L)
   expect_equal(range(minus$y), c(1.75, 2.25))
   expect_true(any(minus$x == 10 & minus$y == 2))
+  expect_equal(sum(minus$x == 20), 2L)
+
+  alias_poly <- .genetag_polygon_data(data[1L, , drop = FALSE], height = 0.4)
+  expect_equal(range(alias_poly$y), c(0.8, 1.2))
 })
 
 test_that("geom_genetag renders with data-default aesthetics", {
@@ -39,6 +44,63 @@ test_that("geom_genetag renders with data-default aesthetics", {
     geom_genetag(ggplot2::aes(fill = gene))
 
   expect_true(inherits(ggplot2::ggplotGrob(p), "gtable"))
+})
+
+test_that("gene-tag layout modes can union gaps and feature lengths independently", {
+  data <- data.frame(
+    id = c("A", "A", "B", "B"),
+    xmin = c(0, 15, 100, 140),
+    xmax = c(10, 25, 120, 150),
+    start = c(0, 15, 100, 140),
+    end = c(10, 25, 120, 150),
+    stringsAsFactors = FALSE
+  )
+
+  scaled <- .genetag_apply_layout_modes(data, inter_genetic = "scaled", exon_length = "scaled")
+  expect_identical(scaled, data)
+
+  union_gap <- .genetag_apply_layout_modes(data, inter_genetic = "union", exon_length = "scaled")
+  expect_equal(union_gap$xmin, c(0, 30, 0, 40))
+  expect_equal(union_gap$xmax, c(10, 40, 20, 50))
+  expect_equal(union_gap$genomic_xmin, data$xmin)
+
+  union_length <- .genetag_apply_layout_modes(data, inter_genetic = "scaled", exon_length = "union")
+  expect_equal(union_length$xmin, c(0, 25, 0, 40))
+  expect_equal(union_length$xmax, c(20, 35, 20, 50))
+
+  union_both <- .genetag_apply_layout_modes(data, inter_genetic = "union", exon_length = "union")
+  expect_equal(union_both$xmin, c(0, 40, 0, 40))
+  expect_equal(union_both$xmax, c(20, 50, 20, 50))
+  expect_equal(union_both$layout_index, c(1L, 2L, 1L, 2L))
+})
+
+test_that("rectangular ggtree segments can be added to a ggexon faceted plot", {
+  testthat::skip_if_not_installed("ape")
+  testthat::skip_if_not_installed("ggtree")
+
+  tree <- ape::read.tree(text = "(A:0.1,B:0.2);")
+  tree_plot <- suppressWarnings(ggtree::ggtree(tree, layout = "rectangular"))
+  tree_segments <- compile_ggtree_rectangular_segments(tree_plot = tree_plot)
+
+  expect_true(all(c("track", "x", "xend", "y", "yend") %in% names(tree_segments)))
+  expect_true(any(tree_segments$segment == "horizontal"))
+  expect_true(any(tree_segments$segment == "vertical"))
+
+  gene_tags <- data.frame(
+    track = "Gene tags",
+    xmin = c(0, 10),
+    xmax = c(8, 18),
+    y = c(1, 2),
+    strand = c("+", "-"),
+    gene = c("gA", "gB")
+  )
+
+  p <- ggexon() +
+    tree_plot +
+    geom_genetag(data = gene_tags, ggplot2::aes(fill = gene)) +
+    facet_genomics(ggplot2::vars(track), nrow = 1, scales = "free_x")
+
+  expect_true(inherits(suppressWarnings(ggplot2::ggplotGrob(p)), "gtable"))
 })
 
 test_that("compile_ggtree_genetag aligns gene rows to rectangular ggtree tips", {
@@ -68,12 +130,15 @@ test_that("compile_ggtree_genetag aligns gene rows to rectangular ggtree tips", 
     sp,
     tree_plot = tree_plot,
     chr = "RagTag_V",
-    subset = c(21574445, 21584356)
+    subset = c(21574445, 21584356),
+    inter_genetic = "union",
+    exon_length = "union"
   )
 
   expect_true(nrow(gene_tags) > 0L)
   expect_false("y" %in% names(gene_tags))
   expect_true(all(c("id", "tree_y", "xmin", "xmax", "strand") %in% names(gene_tags)))
+  expect_true(all(c("genomic_xmin", "genomic_xmax", "layout_index") %in% names(gene_tags)))
   expect_setequal(unique(gene_tags$id), c("XZ1516", "N2"))
 
   p <- ggtree::facet_plot(

@@ -2,7 +2,7 @@
 % Please edit documentation in R/geom-genetag.R
 \name{geom_genetag}
 \alias{geom_genetag}
-\title{Draw gene tags as constant-height strand arrows}
+\title{Draw gene tags as exon bodies with strand-direction triangles}
 \usage{
 geom_genetag(
   mapping = NULL,
@@ -10,7 +10,8 @@ geom_genetag(
   stat = "identity",
   position = "identity",
   ...,
-  height = 0.8,
+  exon_height = NULL,
+  height = NULL,
   arrow_width = NULL,
   arrow_fraction = 0.18,
   na.rm = FALSE,
@@ -21,15 +22,17 @@ geom_genetag(
 \arguments{
 \item{mapping, data, stat, position, ..., na.rm, show.legend, inherit.aes}{Standard ggplot2 layer arguments. \code{inherit.aes} defaults to \code{FALSE} so the layer can be used cleanly in \code{ggtree::facet_plot()} side panels.}
 
-\item{height}{Total tag height in y-axis units.}
+\item{exon_height}{Total tag height in y-axis units. Defaults to \code{0.8}.}
 
-\item{arrow_width}{Optional arrow-head width in x-axis units. When \code{NULL}, width is calculated from \code{arrow_fraction}.}
+\item{height}{Deprecated-compatible alias for \code{exon_height}.}
 
-\item{arrow_fraction}{Fraction of each gene span used for the arrow head when \code{arrow_width} is \code{NULL}.}
+\item{arrow_width}{Optional width of the terminal triangle in x-axis units. When \code{NULL}, width is calculated from \code{arrow_fraction}.}
+
+\item{arrow_fraction}{Fraction of each gene span used for the terminal triangle when \code{arrow_width} is \code{NULL}.}
 }
 \value{
 A ggplot layer.
 }
 \description{
-\code{geom_genetag()} draws each gene as one polygon spanning \code{xmin} to \code{xmax}. The arrow head has the same height as the body and points toward the strand-specific end of the feature. It is designed for gene-level summaries, including ggtree side panels generated with \code{ggtree::facet_plot()}.
+\code{geom_genetag()} draws each stranded gene as a rectangular exon-like body plus a symmetric terminal triangle. The triangle apex points toward the strand-specific end of the feature. It is designed for gene-level summaries, including ggtree side panels generated with \code{ggtree::facet_plot()}.
 }

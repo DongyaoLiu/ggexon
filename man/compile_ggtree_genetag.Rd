@@ -15,6 +15,8 @@ compile_ggtree_genetag(
   end = NULL,
   subset = NULL,
   feature_type = "gene",
+  inter_genetic = c("scaled", "union"),
+  exon_length = c("scaled", "union"),
   include_y = FALSE
 )
 }
@@ -36,6 +38,10 @@ compile_ggtree_genetag(
 \item{subset}{Optional numeric length-2 bounds. May be a scalar vector or a named list keyed by tree tip or individual id. Overrides \code{start} and \code{end}.}
 
 \item{feature_type}{Feature type passed to \code{\link[=query_features]{query_features()}}. Defaults to \code{"gene"}.}
+
+\item{inter_genetic}{Intergenic-gap layout mode. \code{"scaled"} keeps the original gap between consecutive features within each track. \code{"union"} uses the maximum gap observed at each feature step so corresponding gaps are the same across tracks in the same panel.}
+
+\item{exon_length}{Feature-length layout mode. \code{"scaled"} keeps original feature lengths. \code{"union"} uses the maximum feature length observed at each feature step so corresponding features have the same displayed length across tracks in the same panel.}
 
 \item{include_y}{Logical; when \code{TRUE}, also include a \code{y} column copied from \code{tree_y}. Keep the default \code{FALSE} for \code{ggtree::facet_plot()}, which injects its own \code{y} column after tip matching.}
 }
