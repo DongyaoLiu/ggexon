@@ -6,7 +6,8 @@
 #'
 #' @param tree Optional tree object accepted by `ggtree::ggtree()`.
 #' @param tree_plot Optional existing rectangular `ggtree` plot. If supplied,
-#'   `tree` is ignored.
+#'   `tree` is ignored. When this layer is added to `ggexon(SynSpecies)`, omitted
+#'   tree inputs are filled from the stored `SynSpecies` tree slots when present.
 #' @param layout ggtree layout. Currently only `"rectangular"` is supported.
 #' @param individual Optional individual selector. When named, names are tree
 #'   tip labels and values are `SynSpecies` individual ids.
@@ -46,6 +47,13 @@ ggplot_add.ggexon_genomic_tree_spec <- function(object, plot, object_name) {
   if (!is_ggexon(plot)) {
     stop("`geom_genomic_tree()` can only be added to a ggexon plot.", call. = FALSE)
   }
+  tree_inputs <- .resolve_synspecies_tree_inputs(
+    plot@data,
+    tree = object$tree,
+    tree_plot = object$tree_plot
+  )
+  object$tree <- tree_inputs$tree
+  object$tree_plot <- tree_inputs$tree_plot
   plot@genomic_tree <- object
   plot
 }

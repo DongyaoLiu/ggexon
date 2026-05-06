@@ -126,9 +126,9 @@ test_that("compile_ggtree_genetag aligns gene rows to rectangular ggtree tips", 
 
   tree <- ape::read.tree(text = "(XZ1516:0.1,N2:0.2);")
   tree_plot <- suppressWarnings(ggtree::ggtree(tree, layout = "rectangular"))
+  species_tree_plot(sp) <- tree_plot
   gene_tags <- compile_ggtree_genetag(
     sp,
-    tree_plot = tree_plot,
     chr = "RagTag_V",
     subset = c(21574445, 21584356),
     inter_genetic = "union",
@@ -175,9 +175,9 @@ test_that("ggtree genomic alignment keeps tree y and per-individual genomic pane
 
   tree <- ape::read.tree(text = "(XZ1516:0.1,N2:0.2);")
   tree_plot <- suppressWarnings(ggtree::ggtree(tree, layout = "rectangular"))
+  species_tree_plot(sp) <- tree_plot
   alignment <- compile_ggtree_genomic_alignment(
     sp,
-    tree_plot = tree_plot,
     chr = c(XZ1516 = "RagTag_V", N2 = "RagTag_V"),
     subset = list(
       XZ1516 = c(21574445, 21584356),
@@ -220,10 +220,11 @@ test_that("additive genomic tree grammar renders gene tags and exon layers", {
 
   tree <- ape::read.tree(text = "(XZ1516:0.1,N2:0.2);")
   tree_plot <- suppressWarnings(ggtree::ggtree(tree, layout = "rectangular"))
+  species_tree_plot(sp) <- tree_plot
 
   gene_tag_plot <- ggexon(sp) +
     geom_genetag(chr = "RagTag_V", subset = c(21574445, 21584356)) +
-    geom_genomic_tree(tree_plot = tree_plot) +
+    geom_genomic_tree() +
     facet_genomictree(scales = "free_x")
   gene_tag_grob <- ggplot2::ggplotGrob(gene_tag_plot)
   expect_true(inherits(gene_tag_grob, "gtable"))

@@ -4,6 +4,16 @@
 # computing rectangular tree coordinates; ggexon converts those coordinates into
 # plain tip and segment tables that can be aligned to genomic panels.
 
+.resolve_synspecies_tree_inputs <- function(x, tree = NULL, tree_plot = NULL) {
+  if (!methods::is(x, "SynSpecies") || !is.null(tree) || !is.null(tree_plot)) {
+    return(list(tree = tree, tree_plot = tree_plot))
+  }
+  list(
+    tree = species_tree(x),
+    tree_plot = species_tree_plot(x)
+  )
+}
+
 .ggtree_rectangular_plot_data <- function(tree = NULL, tree_plot = NULL, layout = "rectangular") {
   if (is.null(tree_plot)) {
     if (is.null(tree)) {

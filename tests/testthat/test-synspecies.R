@@ -7,6 +7,11 @@ test_that("SynSpecies stores individuals and explicit alignment relationships", 
   expect_true(methods::isGeneric("subset_pairwise_alignment"))
   expect_true(methods::isGeneric("filter_pairwise_alignment"))
   expect_true(methods::isGeneric("subset_synspecies_window"))
+  expect_true(methods::isGeneric("species_tree"))
+  expect_true(methods::isGeneric("species_tree<-"))
+  expect_true(methods::isGeneric("species_tree_plot"))
+  expect_true(methods::isGeneric("species_tree_plot<-"))
+  expect_true(methods::isGeneric("add_tree"))
   expect_true(methods::hasMethod("load_annotation", "SynFeatureAnnotation"))
   expect_true(methods::hasMethod("load_annotation", "SynIndividual"))
   expect_true(methods::hasMethod("load_annotation", "SynSpecies"))
@@ -24,6 +29,11 @@ test_that("SynSpecies stores individuals and explicit alignment relationships", 
   expect_true(methods::hasMethod("filter_pairwise_alignment", "SynPairAlignment"))
   expect_true(methods::hasMethod("filter_pairwise_alignment", "SynSpecies"))
   expect_true(methods::hasMethod("subset_synspecies_window", "SynSpecies"))
+  expect_true(methods::hasMethod("species_tree", "SynSpecies"))
+  expect_true(methods::hasMethod("species_tree<-", "SynSpecies"))
+  expect_true(methods::hasMethod("species_tree_plot", "SynSpecies"))
+  expect_true(methods::hasMethod("species_tree_plot<-", "SynSpecies"))
+  expect_true(methods::hasMethod("add_tree", "SynSpecies"))
 
   genome_path <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
   annotation_path <- system.file(
@@ -102,6 +112,95 @@ test_that("SynSpecies stores individuals and explicit alignment relationships", 
   unnamed_sp@individuals <- unname(individuals(unnamed_sp))
   validObject(unnamed_sp)
   expect_identical(individual_names(unnamed_sp), c("XZ1516", "N2"))
+})
+
+test_that("SynSpecies stores tree and tree plot objects", {
+  tree <- structure(
+    list(
+      edge = matrix(c(3L, 1L, 3L, 2L), ncol = 2L, byrow = TRUE),
+      tip.label = c("XZ1516", "N2"),
+      Nnode = 1L
+    ),
+    class = "phylo"
+  )
+  tree_plot <- list(
+    data = data.frame(
+      node = c(1L, 2L, 3L),
+      parent = c(3L, 3L, 3L),
+      x = c(1, 2, 0),
+      y = c(1, 2, 1.5),
+      isTip = c(TRUE, TRUE, FALSE),
+      label = c("XZ1516", "N2", NA_character_),
+      stringsAsFactors = FALSE
+    )
+  )
+
+  sp <- SynSpecies(name = "worms", tree = tree, tree_plot = tree_plot)
+  expect_identical(species_tree(sp), tree)
+  expect_identical(species_tree_plot(sp), tree_plot)
+
+  species_tree(sp) <- NULL
+  species_tree_plot(sp) <- NULL
+  expect_null(species_tree(sp))
+  expect_null(species_tree_plot(sp))
+
+  species_tree(sp) <- tree
+  species_tree_plot(sp) <- tree_plot
+  expect_identical(sp@tree, tree)
+  expect_identical(sp@tree_plot, tree_plot)
+})
+
+test_that("add_tree routes file, tree object, and ggtree plot inputs", {
+  tree <- structure(
+    list(
+      edge = matrix(c(3L, 1L, 3L, 2L), ncol = 2L, byrow = TRUE),
+      tip.label = c("XZ1516", "N2"),
+      Nnode = 1L
+    ),
+    class = "phylo"
+  )
+  tree_plot <- structure(
+    list(
+      data = data.frame(
+        node = c(1L, 2L, 3L),
+        parent = c(3L, 3L, 3L),
+        x = c(1, 2, 0),
+        y = c(1, 2, 1.5),
+        isTip = c(TRUE, TRUE, FALSE),
+        label = c("XZ1516", "N2", NA_character_),
+        stringsAsFactors = FALSE
+      )
+    ),
+    class = c("ggtree", "ggplot")
+  )
+
+  sp <- add_tree(SynSpecies(name = "worms"), tree = tree)
+  expect_identical(species_tree(sp), tree)
+  expect_null(species_tree_plot(sp))
+
+  sp <- add_tree(sp, tree_plot = tree_plot)
+  expect_null(species_tree(sp))
+  expect_identical(species_tree_plot(sp), tree_plot)
+
+  sp <- add_tree(sp, tree)
+  expect_identical(species_tree(sp), tree)
+  expect_null(species_tree_plot(sp))
+
+  sp <- add_tree(sp, tree_plot)
+  expect_null(species_tree(sp))
+  expect_identical(species_tree_plot(sp), tree_plot)
+
+  expect_error(add_tree(sp), "Supply exactly one")
+  expect_error(add_tree(sp, tree = tree, tree_plot = tree_plot), "Supply exactly one")
+  expect_error(add_tree(sp, tree_file = c("a", "b")), "single non-empty string")
+
+  testthat::skip_if_not_installed("ape")
+  tree_file <- tempfile(fileext = ".nwk")
+  writeLines("(XZ1516:0.1,N2:0.2);", tree_file)
+  sp <- add_tree(sp, tree_file = tree_file)
+  expect_s3_class(species_tree(sp), "phylo")
+  expect_null(species_tree_plot(sp))
+  expect_identical(sp@metadata$tree_file, normalizePath(tree_file, mustWork = TRUE))
 })
 
 test_that("add_individual accepts multiple SynIndividuals", {

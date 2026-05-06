@@ -9,6 +9,8 @@ SynSpecies(
   annotation_folder = NULL,
   annotation_format = c("auto", "gff", "gtf"),
   recursive = FALSE,
+  tree = NULL,
+  tree_plot = NULL,
   metadata = list()
 )
 }
@@ -25,6 +27,12 @@ when \code{annotation_folder} is supplied.}
 
 \item{recursive}{Logical; should annotation discovery recurse into
 subfolders? Used only when \code{annotation_folder} is supplied.}
+
+\item{tree}{Optional tree object, such as an \code{ape::phylo}, to reuse for
+tree-aligned genomic plots.}
+
+\item{tree_plot}{Optional rectangular \code{ggtree} plot to reuse for
+tree-aligned genomic plots.}
 
 \item{metadata}{Optional metadata list.}
 }

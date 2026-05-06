@@ -7,7 +7,8 @@
 \description{
 \code{SynSpecies} is the top-level comparative container in \code{ggexon}. It groups
 named \code{SynIndividual} objects together with any stored pairwise or multiple
-alignments, optional metadata, and an optional reusable \code{SynLayout}.
+alignments, optional tree/tree plot objects, optional metadata, and an
+optional reusable \code{SynLayout}.
 }
 \section{Slots}{
 
@@ -19,6 +20,11 @@ alignments, optional metadata, and an optional reusable \code{SynLayout}.
 \item{\code{pairwise_alignments}}{Named list of \code{SynPairAlignment} objects.}
 
 \item{\code{multiple_alignments}}{Named list of \code{SynMultiAlignment} objects.}
+
+\item{\code{tree}}{Optional tree object, such as an \code{ape::phylo}.}
+
+\item{\code{tree_plot}}{Optional tree plot object, such as a rectangular \code{ggtree}
+plot.}
 
 \item{\code{metadata}}{Optional user or import metadata.}
 
@@ -32,6 +38,8 @@ syn-aware plot building.}
 \item \code{individuals = list()}
 \item \code{pairwise_alignments = list()}
 \item \code{multiple_alignments = list()}
+\item \code{tree = NULL}
+\item \code{tree_plot = NULL}
 \item \code{metadata = list()}
 \item \code{layout = NULL}
 }
@@ -47,4 +55,3 @@ syn-aware plot building.}
 \item \code{layout} must be either \code{NULL} or a \code{SynLayout}.
 }
 }
-

@@ -25,7 +25,9 @@ compile_ggtree_genomic_alignment(
 
 \item{tree}{Optional tree object accepted by \code{ggtree::ggtree()}.}
 
-\item{tree_plot}{Optional existing rectangular \code{ggtree} plot. If supplied, \code{tree} is ignored.}
+\item{tree_plot}{Optional existing rectangular \code{ggtree} plot. If supplied,
+\code{tree} is ignored. When both \code{tree} and \code{tree_plot} are omitted, stored
+values on \code{x} are used when present.}
 
 \item{layout}{ggtree layout. Currently only \code{"rectangular"} is supported.}
 

@@ -7,7 +7,8 @@
 #' @param x A `SynSpecies` object.
 #' @param tree Optional tree object accepted by `ggtree::ggtree()`.
 #' @param tree_plot Optional existing rectangular `ggtree` plot. If supplied,
-#'   `tree` is ignored.
+#'   `tree` is ignored. When both `tree` and `tree_plot` are omitted, stored
+#'   values on `x` are used when present.
 #' @param layout ggtree layout. Currently only `"rectangular"` is supported.
 #' @param individual Optional individual selector. When named, names are tree
 #'   tip labels and values are `SynSpecies` individual ids.
@@ -47,6 +48,9 @@ compile_ggtree_genomic_alignment <- function(x,
   }
   inter_genetic <- match.arg(inter_genetic)
   exon_length <- match.arg(exon_length)
+  tree_inputs <- .resolve_synspecies_tree_inputs(x, tree = tree, tree_plot = tree_plot)
+  tree <- tree_inputs$tree
+  tree_plot <- tree_inputs$tree_plot
 
   tree_data <- .ggtree_rectangular_plot_data(tree = tree, tree_plot = tree_plot, layout = layout)
   tip_data <- .ggtree_rectangular_tip_data_from_data(tree_data)

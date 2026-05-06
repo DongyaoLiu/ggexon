@@ -321,12 +321,16 @@ setClassUnion("NULLOrSynLayout", c("NULL", "SynLayout"))
 #'
 #' `SynSpecies` is the top-level comparative container in `ggexon`. It groups
 #' named `SynIndividual` objects together with any stored pairwise or multiple
-#' alignments, optional metadata, and an optional reusable `SynLayout`.
+#' alignments, optional tree/tree plot objects, optional metadata, and an
+#' optional reusable `SynLayout`.
 #'
 #' @slot name Scalar species-collection label.
 #' @slot individuals Named list of `SynIndividual` objects.
 #' @slot pairwise_alignments Named list of `SynPairAlignment` objects.
 #' @slot multiple_alignments Named list of `SynMultiAlignment` objects.
+#' @slot tree Optional tree object, such as an `ape::phylo`.
+#' @slot tree_plot Optional tree plot object, such as a rectangular `ggtree`
+#'   plot.
 #' @slot metadata Optional user or import metadata.
 #' @slot layout Optional stored `SynLayout` used by `facet_genomics()` and
 #'   syn-aware plot building.
@@ -335,6 +339,8 @@ setClassUnion("NULLOrSynLayout", c("NULL", "SynLayout"))
 #' * `individuals = list()`
 #' * `pairwise_alignments = list()`
 #' * `multiple_alignments = list()`
+#' * `tree = NULL`
+#' * `tree_plot = NULL`
 #' * `metadata = list()`
 #' * `layout = NULL`
 #'
@@ -353,6 +359,8 @@ setClass(
     individuals = "list",
     pairwise_alignments = "list",
     multiple_alignments = "list",
+    tree = "ANY",
+    tree_plot = "ANY",
     metadata = "list",
     layout = "NULLOrSynLayout"
   ),
@@ -361,6 +369,8 @@ setClass(
     individuals = list(),
     pairwise_alignments = list(),
     multiple_alignments = list(),
+    tree = NULL,
+    tree_plot = NULL,
     metadata = list(),
     layout = NULL
   ),
@@ -511,6 +521,10 @@ SynMultiAlignment <- function(name,
 #'   when `annotation_folder` is supplied.
 #' @param recursive Logical; should annotation discovery recurse into
 #'   subfolders? Used only when `annotation_folder` is supplied.
+#' @param tree Optional tree object, such as an `ape::phylo`, to reuse for
+#'   tree-aligned genomic plots.
+#' @param tree_plot Optional rectangular `ggtree` plot to reuse for
+#'   tree-aligned genomic plots.
 #' @param metadata Optional metadata list.
 #'
 #' @return A `SynSpecies` object. When `annotation_folder` is provided, the
@@ -521,6 +535,8 @@ SynSpecies <- function(name = NULL,
                        annotation_folder = NULL,
                        annotation_format = c("auto", "gff", "gtf"),
                        recursive = FALSE,
+                       tree = NULL,
+                       tree_plot = NULL,
                        metadata = list()) {
   annotation_format <- match.arg(annotation_format)
 
@@ -534,7 +550,13 @@ SynSpecies <- function(name = NULL,
     name <- .synspecies_name_from_folder(annotation_folder)
   }
 
-  x <- new("SynSpecies", name = name, metadata = metadata)
+  x <- new(
+    "SynSpecies",
+    name = name,
+    tree = tree,
+    tree_plot = tree_plot,
+    metadata = metadata
+  )
 
   if (!is.null(annotation_folder)) {
     x <- add_individuals_from_folder(
@@ -555,6 +577,8 @@ setMethod("show", "SynSpecies", function(object) {
   cat("  individuals:", length(object@individuals), "\n")
   cat("  pairwise_alignments:", length(object@pairwise_alignments), "\n")
   cat("  multiple_alignments:", length(object@multiple_alignments), "\n")
+  cat("  tree:", !is.null(object@tree), "\n")
+  cat("  tree_plot:", !is.null(object@tree_plot), "\n")
 })
 
 #' @export
@@ -1302,6 +1326,23 @@ setMethod("pairwise_alignments", "SynSpecies", function(x) x@pairwise_alignments
 setGeneric("multiple_alignments", function(x) standardGeneric("multiple_alignments"))
 setMethod("multiple_alignments", "SynSpecies", function(x) x@multiple_alignments)
 
+#' Access tree objects stored on a `SynSpecies`
+#'
+#' `species_tree()` returns the stored raw tree object, such as an `ape::phylo`.
+#' `species_tree_plot()` returns the stored rectangular `ggtree` plot.
+#'
+#' @param x A `SynSpecies` object.
+#'
+#' @return The stored tree or tree plot object, or `NULL`.
+#' @export
+setGeneric("species_tree", function(x) standardGeneric("species_tree"))
+setMethod("species_tree", "SynSpecies", function(x) x@tree)
+
+#' @rdname species_tree
+#' @export
+setGeneric("species_tree_plot", function(x) standardGeneric("species_tree_plot"))
+setMethod("species_tree_plot", "SynSpecies", function(x) x@tree_plot)
+
 setGeneric("species_layout", function(x) standardGeneric("species_layout"))
 setMethod("species_layout", "SynSpecies", function(x) x@layout)
 
@@ -1630,6 +1671,143 @@ setMethod("add_multiple_alignment", c("ANY", "ANY"), function(x, alignment) {
   stop("`add_multiple_alignment()` expects a SynSpecies object.", call. = FALSE)
 })
 
+.validate_synspecies_tree_file <- function(tree_file) {
+  if (!is.character(tree_file) || length(tree_file) != 1L || is.na(tree_file) || !nzchar(tree_file)) {
+    stop("`tree_file` must be a single non-empty string.", call. = FALSE)
+  }
+  if (!file.exists(tree_file)) {
+    stop("`tree_file` does not exist: ", tree_file, call. = FALSE)
+  }
+  normalizePath(tree_file, mustWork = TRUE)
+}
+
+.read_synspecies_tree_file <- function(tree_file) {
+  tree_file <- .validate_synspecies_tree_file(tree_file)
+  if (!requireNamespace("ape", quietly = TRUE)) {
+    stop("Package `ape` is required to read `tree_file`.", call. = FALSE)
+  }
+
+  ext <- to_lower_ascii(tools::file_ext(tree_file))
+  tree <- if (ext %in% c("nex", "nexus")) {
+    ape::read.nexus(tree_file)
+  } else {
+    ape::read.tree(file = tree_file)
+  }
+
+  if (inherits(tree, "multiPhylo")) {
+    stop("`tree_file` must contain a single tree, not a multi-tree object.", call. = FALSE)
+  }
+  tree
+}
+
+.is_synspecies_tree_object <- function(tree) {
+  if (is.null(tree)) {
+    return(FALSE)
+  }
+  if (inherits(tree, c("phylo", "tbl_tree", "treedata"))) {
+    return(TRUE)
+  }
+  if (methods::isS4(tree) && any(methods::is(tree) %in% c("phylo", "tbl_tree", "treedata"))) {
+    return(TRUE)
+  }
+  FALSE
+}
+
+.validate_synspecies_tree_plot <- function(tree_plot) {
+  if (!inherits(tree_plot, "ggtree")) {
+    stop("`tree_plot` must be a ggtree object.", call. = FALSE)
+  }
+  .ggtree_rectangular_plot_data(tree_plot = tree_plot)
+  invisible(tree_plot)
+}
+
+#' Add a tree or tree plot to a `SynSpecies` object
+#'
+#' `add_tree()` stores one tree representation on a `SynSpecies`. The input can
+#' be a single tree file path, a tree object from `ape`, `tidytree`, or `treeio`,
+#' or a rectangular `ggtree` plot. If a new tree object is stored, any previous
+#' stored tree plot is cleared; if a new tree plot is stored, any previous raw
+#' tree object is cleared.
+#'
+#' @param x A `SynSpecies` object.
+#' @param tree Optional tree object. Supported inputs include `ape::phylo`,
+#'   `tidytree::tbl_tree`, `treeio::treedata`, or a `ggtree` plot. A single
+#'   character value is treated as `tree_file`.
+#' @param tree_file Optional single tree-file path. Newick files are read with
+#'   `ape::read.tree()` and Nexus files with `ape::read.nexus()`.
+#' @param tree_plot Optional rectangular `ggtree` plot.
+#' @param ... Reserved for future tree reader options.
+#'
+#' @return The updated `SynSpecies` object.
+#' @export
+setGeneric("add_tree", function(x, tree = NULL, tree_file = NULL, tree_plot = NULL, ...) {
+  standardGeneric("add_tree")
+})
+
+setMethod("add_tree", "SynSpecies", function(x, tree = NULL, tree_file = NULL, tree_plot = NULL, ...) {
+  dots <- list(...)
+  if (length(dots) > 0L) {
+    stop("Unused arguments: ", paste(names(dots), collapse = ", "), call. = FALSE)
+  }
+
+  tree_was_supplied <- !is.null(tree)
+  inputs_supplied <- sum(tree_was_supplied, !is.null(tree_file), !is.null(tree_plot))
+  if (inputs_supplied != 1L) {
+    stop("Supply exactly one of `tree`, `tree_file`, or `tree_plot`.", call. = FALSE)
+  }
+
+  if (!is.null(tree_file)) {
+    x@tree <- .read_synspecies_tree_file(tree_file)
+    x@tree_plot <- NULL
+    x@metadata$tree_file <- .validate_synspecies_tree_file(tree_file)
+    validObject(x)
+    return(x)
+  }
+
+  if (!is.null(tree_plot)) {
+    .validate_synspecies_tree_plot(tree_plot)
+    x@tree <- NULL
+    x@tree_plot <- tree_plot
+    x@metadata$tree_file <- NULL
+    validObject(x)
+    return(x)
+  }
+
+  if (is.character(tree)) {
+    x@tree <- .read_synspecies_tree_file(tree)
+    x@tree_plot <- NULL
+    x@metadata$tree_file <- .validate_synspecies_tree_file(tree)
+    validObject(x)
+    return(x)
+  }
+
+  if (inherits(tree, "ggtree")) {
+    .validate_synspecies_tree_plot(tree)
+    x@tree <- NULL
+    x@tree_plot <- tree
+    x@metadata$tree_file <- NULL
+    validObject(x)
+    return(x)
+  }
+
+  if (.is_synspecies_tree_object(tree)) {
+    x@tree <- tree
+    x@tree_plot <- NULL
+    x@metadata$tree_file <- NULL
+    validObject(x)
+    return(x)
+  }
+
+  stop(
+    "`tree` must be a tree file path, an ape/tidytree/treeio tree object, or a ggtree plot.",
+    call. = FALSE
+  )
+})
+
+setMethod("add_tree", "ANY", function(x, tree = NULL, tree_file = NULL, tree_plot = NULL, ...) {
+  stop("`add_tree()` expects a SynSpecies object.", call. = FALSE)
+})
+
 #' Store a ggexon panel layout on a `SynSpecies` object
 #'
 #' @param x A `SynSpecies` object.
@@ -1640,6 +1818,29 @@ setMethod("add_multiple_alignment", c("ANY", "ANY"), function(x, alignment) {
 setGeneric("species_layout<-", function(x, value) standardGeneric("species_layout<-"))
 setReplaceMethod("species_layout", "SynSpecies", function(x, value) {
   x@layout <- as_syn_layout(value)
+  validObject(x)
+  x
+})
+
+#' Store tree objects on a `SynSpecies`
+#'
+#' @param x A `SynSpecies` object.
+#' @param value A tree object, a rectangular `ggtree` plot, or `NULL`.
+#'
+#' @return The updated `SynSpecies` object.
+#' @export
+setGeneric("species_tree<-", function(x, value) standardGeneric("species_tree<-"))
+setReplaceMethod("species_tree", "SynSpecies", function(x, value) {
+  x@tree <- value
+  validObject(x)
+  x
+})
+
+#' @rdname species_tree-set
+#' @export
+setGeneric("species_tree_plot<-", function(x, value) standardGeneric("species_tree_plot<-"))
+setReplaceMethod("species_tree_plot", "SynSpecies", function(x, value) {
+  x@tree_plot <- value
   validObject(x)
   x
 })

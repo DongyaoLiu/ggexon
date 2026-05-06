@@ -18,7 +18,9 @@ geom_genomic_tree(
 \arguments{
 \item{tree}{Optional tree object accepted by \code{ggtree::ggtree()}.}
 
-\item{tree_plot}{Optional existing rectangular \code{ggtree} plot. If supplied, \code{tree} is ignored.}
+\item{tree_plot}{Optional existing rectangular \code{ggtree} plot. If supplied,
+\code{tree} is ignored. When this layer is added to \code{ggexon(SynSpecies)}, omitted
+tree inputs are filled from the stored \code{SynSpecies} tree slots when present.}
 
 \item{layout}{ggtree layout. Currently only \code{"rectangular"} is supported.}
 
