@@ -64,7 +64,8 @@ apply_panel_xlim_to_trained_scales <- function(layout) {
 #' @export
 ggplot_build.ggexon <- function(plot, ...) {
   build <- ggexon_build(plot, ...)
-  if (inherits(plot@facet, "FacetGenomicTree") && !is.null(plot@genomic_tree)) {
+  if ((inherits(plot@facet, "FacetGenomicTree") && !is.null(plot@genomic_tree)) ||
+      identical(plot@genomic_x_scale$axis %||% NULL, "piecewise")) {
     return(build)
   }
   as_standard_ggplot_built(build)
@@ -165,6 +166,12 @@ build_ggexon <- S7::method(ggexon_build, class_ggexon) <- function(plot, ...) {
 
     # Reparameterise geoms from (e.g.) y and width to ymin and ymax
     data <- by_layer(function(l, d) l$compute_geom_1(d), layers, data, "setting up geom")
+    if (!is.null(plot@genomic_x_scale)) {
+      genomic_x_scaled <- apply_ggexon_genomic_x_scale(data, plot@genomic_x_scale, layout)
+      data <- genomic_x_scaled$data
+      layout$genomic_x_transforms <- genomic_x_scaled$transforms
+      layout$genomic_x_axis_data <- genomic_x_scaled$axis_data
+    }
 
     # Apply position adjustments
     data <- by_layer(function(l, d) l$compute_position(d, layout), layers, data, "computing position")
@@ -177,6 +184,7 @@ build_ggexon <- S7::method(ggexon_build, class_ggexon) <- function(plot, ...) {
     layout$train_position(data, scale_x(), scale_y())
     layout <- apply_panel_xlim_to_trained_scales(layout)
     layout$setup_panel_params()
+    layout <- apply_ggexon_genomic_x_axis(layout, plot@genomic_x_scale)
     data <- layout$map_position(data)
 
     # Hand off position guides to layout
@@ -240,6 +248,7 @@ S7::method(ggexon_gtable, class_ggexon_built) <- function(data) {
   geom_grobs <- by_layer(function(l, d) l$draw_geom(d, layout), plot@layers, data, "converting geom to grob")
 
   plot_table <- layout$render(geom_grobs, data, theme, labels)
+  plot_table <- inject_genomic_piecewise_axis(plot_table, build)
   # Legends
   legend_box <- plot@guides$assemble(theme)
   #plot_table <- table_add_legends(plot_table, legend_box, theme)
@@ -255,6 +264,189 @@ S7::method(ggexon_gtable, class_ggexon_built) <- function(data) {
   attr(plot_table, "alt-label") <- labels$alt
 
   plot_table
+}
+
+inject_genomic_piecewise_axis <- function(table, build) {
+  scale_spec <- build@plot@genomic_x_scale
+  axis_data <- build@layout$genomic_x_axis_data %||% NULL
+  if (is.null(scale_spec) ||
+      !identical(scale_spec$axis, "piecewise") ||
+      is.null(axis_data) ||
+      nrow(axis_data) == 0L) {
+    return(table)
+  }
+
+  layout_df <- as.data.frame(build@layout$layout)
+  if (!all(c("PANEL", "COL", "ROW") %in% names(layout_df))) {
+    return(table)
+  }
+
+  text_gp <- ggexon_element_text_gpar(
+    calc_element("axis.text.x", build@plot@theme),
+    default_size = 7
+  )
+  line_gp <- ggexon_element_line_gpar(
+    calc_element("axis.line.x", build@plot@theme),
+    default_colour = "grey40",
+    default_linewidth = 0.25
+  )
+  tick_gp <- ggexon_element_line_gpar(
+    calc_element("axis.ticks.x", build@plot@theme),
+    default_colour = "grey45",
+    default_linewidth = 0.25
+  )
+  if (is.null(text_gp) && is.null(line_gp) && is.null(tick_gp)) {
+    return(table)
+  }
+
+  max_groups <- max(axis_data$axis_group_count, na.rm = TRUE)
+  axis_height <- grid::unit(max(18, 16 * max_groups + 4), "pt")
+  for (i in seq_len(nrow(layout_df))) {
+    panel_id <- as.integer(layout_df$PANEL[[i]])
+    panel_axis_data <- axis_data[axis_data$PANEL == panel_id, , drop = FALSE]
+    if (nrow(panel_axis_data) == 0L || panel_id > length(build@layout$panel_params)) {
+      next
+    }
+
+    axis_name <- paste0("axis-b-", layout_df$COL[[i]], "-", layout_df$ROW[[i]])
+    axis_idx <- which(table$layout$name == axis_name)
+    if (length(axis_idx) != 1L) {
+      panel_name <- paste0("panel-", layout_df$COL[[i]], "-", layout_df$ROW[[i]])
+      panel_idx <- which(table$layout$name == panel_name)
+      if (length(panel_idx) != 1L && nrow(layout_df) == 1L) {
+        panel_idx <- which(table$layout$name == "panel")
+      }
+      if (length(panel_idx) == 1L) {
+        axis_idx <- which(
+          grepl("^axis-b", table$layout$name) &
+            table$layout$l == table$layout$l[[panel_idx]] &
+            table$layout$r == table$layout$r[[panel_idx]]
+        )
+      }
+    }
+    if (length(axis_idx) != 1L && nrow(layout_df) == 1L) {
+      axis_idx <- which(table$layout$name == "axis-b")
+    }
+    if (length(axis_idx) != 1L) {
+      next
+    }
+
+    x_range <- build@layout$panel_params[[panel_id]]$x$continuous_range %||%
+      build@layout$panel_params[[panel_id]]$x.range
+    table$grobs[[axis_idx]] <- ggexon_genomic_piecewise_axis_grob(
+      data = panel_axis_data,
+      x_range = x_range,
+      text_gp = text_gp,
+      line_gp = line_gp,
+      tick_gp = tick_gp
+    )
+    table$heights[[table$layout$t[[axis_idx]]]] <- grid::unit.pmax(
+      table$heights[[table$layout$t[[axis_idx]]]],
+      axis_height
+    )
+  }
+
+  table
+}
+
+ggexon_genomic_piecewise_axis_grob <- function(data,
+                                               x_range,
+                                               text_gp = NULL,
+                                               line_gp = NULL,
+                                               tick_gp = NULL,
+                                               name = NULL) {
+  grid::grob(
+    data = data,
+    x_range = x_range,
+    text_gp = text_gp,
+    line_gp = line_gp,
+    tick_gp = tick_gp,
+    name = name %||% "ggexon-genomic-piecewise-axis",
+    cl = "ggexonGenomicPiecewiseAxisGrob"
+  )
+}
+
+#' @export
+drawDetails.ggexonGenomicPiecewiseAxisGrob <- function(x, recording = TRUE) {
+  if (is.null(x$data) || nrow(x$data) == 0L || length(x$x_range) < 2L) {
+    return(invisible())
+  }
+
+  x_range <- range(as.numeric(x$x_range), finite = TRUE)
+  if (!all(is.finite(x_range)) || diff(x_range) <= 0) {
+    return(invisible())
+  }
+
+  rel_x <- function(value) {
+    value <- pmin(pmax(as.numeric(value), x_range[[1L]]), x_range[[2L]])
+    scales::rescale(value, from = x_range, to = c(0, 1))
+  }
+
+  group_count <- max(as.integer(x$data$axis_group_count), na.rm = TRUE)
+  if (!is.finite(group_count) || group_count < 1L) {
+    group_count <- 1L
+  }
+
+  ordered_data <- x$data[order(x$data$axis_group_index, x$data$region_type), , drop = FALSE]
+  for (i in seq_len(nrow(ordered_data))) {
+    row <- ordered_data[i, , drop = FALSE]
+    group_index <- as.integer(row$axis_group_index[[1L]])
+    group_top <- 1 - (group_index - 1L) / group_count
+    group_bottom <- 1 - group_index / group_count
+    group_height <- group_top - group_bottom
+    region_y <- if (identical(row$region_type[[1L]], "exon")) {
+      group_top - group_height * 0.32
+    } else {
+      group_top - group_height * 0.68
+    }
+
+    x0 <- rel_x(row$plot_start[[1L]])
+    x1 <- rel_x(row$plot_end[[1L]])
+    if (!is.finite(x0) || !is.finite(x1) || abs(x1 - x0) <= 0) {
+      next
+    }
+    xmid <- (x0 + x1) / 2
+    segment_gp <- x$line_gp %||% grid::gpar(col = "grey40", lwd = 0.25)
+    if (identical(row$region_type[[1L]], "intron")) {
+      segment_gp$lty <- 2
+      segment_gp$col <- segment_gp$col %||% "grey55"
+    }
+    grid::grid.segments(
+      x0 = grid::unit(x0, "npc"),
+      x1 = grid::unit(x1, "npc"),
+      y0 = grid::unit(region_y, "npc"),
+      y1 = grid::unit(region_y, "npc"),
+      gp = segment_gp
+    )
+
+    tick_gp <- x$tick_gp %||% segment_gp
+    tick_half_height <- min(group_height * 0.12, 0.07)
+    grid::grid.segments(
+      x0 = grid::unit(c(x0, x1), "npc"),
+      x1 = grid::unit(c(x0, x1), "npc"),
+      y0 = grid::unit(c(region_y - tick_half_height, region_y - tick_half_height), "npc"),
+      y1 = grid::unit(c(region_y + tick_half_height, region_y + tick_half_height), "npc"),
+      gp = tick_gp
+    )
+
+    if (!is.null(x$text_gp) && !is.na(row$label[[1L]]) && nzchar(row$label[[1L]])) {
+      label_y <- if (identical(row$region_type[[1L]], "exon")) {
+        min(region_y + group_height * 0.18, 0.95)
+      } else {
+        max(region_y - group_height * 0.18, 0.05)
+      }
+      label_x <- pmin(pmax(xmid, 0.08), 0.92)
+      grid::grid.text(
+        row$label[[1L]],
+        x = grid::unit(label_x, "npc"),
+        y = grid::unit(label_y, "npc"),
+        just = "center",
+        gp = x$text_gp
+      )
+    }
+  }
+
+  invisible()
 }
 
 inject_genomictree_panel <- function(table, build) {
@@ -298,6 +490,11 @@ inject_genomictree_panel <- function(table, build) {
   label_position <- plot@facet$params$label_position %||% "left"
   label_col <- NA_integer_
   if (!identical(label_position, "none")) {
+    label_element <- calc_element("strip.text.y", plot@theme)
+    label_gp <- ggexon_element_text_gpar(
+      label_element,
+      default_size = 9
+    )
     label_width <- plot@facet$params$label_width %||% grid::unit(0.7, "in")
     if (identical(label_position, "left")) {
       table <- gtable::gtable_add_cols(table, label_width, pos = panel_l - 1L)
@@ -310,21 +507,23 @@ inject_genomictree_panel <- function(table, build) {
       label_col <- panel_r + 1L
     }
 
-    for (i in seq_along(label_values)) {
-      table <- gtable::gtable_add_grob(
-        table,
-        grid::textGrob(
-          label_values[[i]],
-          x = if (identical(label_position, "left")) grid::unit(1, "npc") else grid::unit(0, "npc"),
-          y = grid::unit(0.5, "npc"),
-          just = if (identical(label_position, "left")) c("right", "center") else c("left", "center"),
-          gp = grid::gpar(fontsize = 9)
-        ),
-        t = panel_row_map[[i]],
-        l = label_col,
-        clip = "off",
-        name = paste0("genomic-tree-label-", label_values[[i]])
-      )
+    if (!is.null(label_gp)) {
+      for (i in seq_along(label_values)) {
+        table <- gtable::gtable_add_grob(
+          table,
+          grid::textGrob(
+            label_values[[i]],
+            x = if (identical(label_position, "left")) grid::unit(1, "npc") else grid::unit(0, "npc"),
+            y = grid::unit(0.5, "npc"),
+            just = if (identical(label_position, "left")) c("right", "center") else c("left", "center"),
+            gp = label_gp
+          ),
+          t = panel_row_map[[i]],
+          l = label_col,
+          clip = "off",
+          name = paste0("genomic-tree-label-", label_values[[i]])
+        )
+      }
     }
   }
 
@@ -348,7 +547,11 @@ inject_genomictree_panel <- function(table, build) {
     ),
     colour = tree_spec$colour %||% "black",
     linewidth = tree_spec$linewidth %||% 0.5,
-    show_x_axis = isTRUE(plot@facet$params$show_tree_x_axis)
+    show_x_axis = isTRUE(plot@facet$params$show_tree_x_axis),
+    axis_gp = ggexon_element_text_gpar(
+      calc_element("axis.text.x", plot@theme),
+      default_size = 8
+    )
   )
   table <- gtable::gtable_add_grob(
     table,
@@ -426,6 +629,7 @@ genomictree_segments_grob <- function(data,
                                       colour = "black",
                                       linewidth = 0.5,
                                       show_x_axis = TRUE,
+                                      axis_gp = NULL,
                                       name = NULL) {
   grid::grob(
     data = data,
@@ -436,6 +640,7 @@ genomictree_segments_grob <- function(data,
     colour = colour,
     linewidth = linewidth,
     show_x_axis = show_x_axis,
+    axis_gp = axis_gp,
     name = name %||% "genomic-tree",
     cl = "genomicTreeSegmentsGrob"
   )
@@ -476,14 +681,14 @@ drawDetails.genomicTreeSegmentsGrob <- function(x, recording = TRUE) {
     )
   }
 
-  if (isTRUE(x$show_x_axis)) {
+  if (isTRUE(x$show_x_axis) && !is.null(x$axis_gp)) {
     breaks <- pretty(x$x_range, n = 4)
     breaks <- breaks[breaks >= min(x$x_range) & breaks <= max(x$x_range)]
     if (length(breaks) > 0L) {
       grid::grid.xaxis(
         at = scales::rescale(breaks, from = x$x_range, to = c(0, 1)),
         label = breaks,
-        gp = grid::gpar(fontsize = 8)
+        gp = x$axis_gp
       )
     }
   }
