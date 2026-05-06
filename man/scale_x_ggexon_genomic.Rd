@@ -8,13 +8,11 @@ scale_x_ggexon_genomic(
   intron_factor = 10,
   species = NULL,
   match_by = c("auto", "species", "strain", "id", "track"),
-  axis = c("genomic", "piecewise", "none"),
-  axis_by = c("transcripts", "track", "panel"),
-  axis_representative = c("first"),
   breaks = waiver(),
   labels = waiver(),
   minor_breaks = NULL,
-  n.breaks = 5
+  n.breaks = 5,
+  guide = waiver()
 )
 }
 \arguments{
@@ -30,17 +28,6 @@ coordinate scale.}
 \item{match_by}{Panel-layout column used to match \code{species}. \code{"auto"} checks
 common layout columns such as \code{species}, \code{strain}, \code{id}, and \code{track}.}
 
-\item{axis}{Axis presentation. \code{"genomic"} uses ordinary genomic-coordinate
-breaks, \code{"piecewise"} draws a ggexon-owned exon/intron representative axis,
-and \code{"none"} hides the x-axis breaks for transformed panels.}
-
-\item{axis_by}{Grouping used for the piecewise representative axis.
-\code{"transcripts"} draws one first-exon/first-intron pair per transcript,
-\code{"track"} draws one per track, and \code{"panel"} draws one per panel.}
-
-\item{axis_representative}{Representative interval selection for the
-piecewise axis. Currently only \code{"first"} is supported.}
-
 \item{breaks}{Genomic-coordinate breaks. Use \code{waiver()} for pretty breaks
 over the original genomic range, \code{NULL} to hide breaks, a numeric vector,
 or a function that receives original genomic limits.}
@@ -54,6 +41,10 @@ genomic break values.}
 
 \item{n.breaks}{Approximate number of pretty major breaks when
 \code{breaks = waiver()}.}
+
+\item{guide}{Axis guide. Use \code{waiver()} or \code{"genomic"} for ordinary
+genomic-coordinate ticks, \code{"none"} to hide transformed x-axis ticks, or
+\code{\link[=guide_x_ggexon_piecewise]{guide_x_ggexon_piecewise()}} for representative exon/intron scale bars.}
 }
 \value{
 A ggexon x-scale specification.
@@ -69,4 +60,7 @@ genomic coordinates.
 This scale is intended for exon-structure layers such as \code{\link[=geom_exon]{geom_exon()}} and
 \code{\link[=geom_exon2]{geom_exon2()}}. It builds one transform per panel from the union of exon-like
 intervals, so multiple transcripts in the same panel stay aligned.
+
+Use \code{\link[=guide_x_ggexon_piecewise]{guide_x_ggexon_piecewise()}} in \code{guide} when the axis should display
+representative exon and intron scale bars instead of ordinary genomic ticks.
 }

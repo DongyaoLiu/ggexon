@@ -10,6 +10,9 @@
 #' [geom_exon2()]. It builds one transform per panel from the union of exon-like
 #' intervals, so multiple transcripts in the same panel stay aligned.
 #'
+#' Use [guide_x_ggexon_piecewise()] in `guide` when the axis should display
+#' representative exon and intron scale bars instead of ordinary genomic ticks.
+#'
 #' @param intron_factor Numeric compression factor for intronic gaps. For
 #'   example, `10` draws a 10 kb intron as 1 kb while leaving exon widths
 #'   unchanged.
@@ -19,14 +22,6 @@
 #'   coordinate scale.
 #' @param match_by Panel-layout column used to match `species`. `"auto"` checks
 #'   common layout columns such as `species`, `strain`, `id`, and `track`.
-#' @param axis Axis presentation. `"genomic"` uses ordinary genomic-coordinate
-#'   breaks, `"piecewise"` draws a ggexon-owned exon/intron representative axis,
-#'   and `"none"` hides the x-axis breaks for transformed panels.
-#' @param axis_by Grouping used for the piecewise representative axis.
-#'   `"transcripts"` draws one first-exon/first-intron pair per transcript,
-#'   `"track"` draws one per track, and `"panel"` draws one per panel.
-#' @param axis_representative Representative interval selection for the
-#'   piecewise axis. Currently only `"first"` is supported.
 #' @param breaks Genomic-coordinate breaks. Use `waiver()` for pretty breaks
 #'   over the original genomic range, `NULL` to hide breaks, a numeric vector,
 #'   or a function that receives original genomic limits.
@@ -37,23 +32,22 @@
 #'   `NULL`.
 #' @param n.breaks Approximate number of pretty major breaks when
 #'   `breaks = waiver()`.
+#' @param guide Axis guide. Use `waiver()` or `"genomic"` for ordinary
+#'   genomic-coordinate ticks, `"none"` to hide transformed x-axis ticks, or
+#'   [guide_x_ggexon_piecewise()] for representative exon/intron scale bars.
 #'
 #' @return A ggexon x-scale specification.
 #' @export
 scale_x_ggexon_genomic <- function(intron_factor = 10,
                                    species = NULL,
                                    match_by = c("auto", "species", "strain", "id", "track"),
-                                   axis = c("genomic", "piecewise", "none"),
-                                   axis_by = c("transcripts", "track", "panel"),
-                                   axis_representative = c("first"),
                                    breaks = waiver(),
                                    labels = waiver(),
                                    minor_breaks = NULL,
-                                   n.breaks = 5) {
+                                   n.breaks = 5,
+                                   guide = waiver()) {
   match_by <- match.arg(match_by)
-  axis <- match.arg(axis)
-  axis_by <- match.arg(axis_by)
-  axis_representative <- match.arg(axis_representative)
+  guide <- ggexon_genomic_x_normalize_guide(guide)
   if (!is.numeric(intron_factor) ||
       length(intron_factor) != 1L ||
       is.na(intron_factor) ||
@@ -81,16 +75,95 @@ scale_x_ggexon_genomic <- function(intron_factor = 10,
       intron_factor = as.numeric(intron_factor),
       species = species,
       match_by = match_by,
-      axis = axis,
-      axis_by = axis_by,
-      axis_representative = axis_representative,
       breaks = breaks,
       labels = labels,
       minor_breaks = minor_breaks,
-      n.breaks = if (is.null(n.breaks)) NULL else as.integer(n.breaks)
+      n.breaks = if (is.null(n.breaks)) NULL else as.integer(n.breaks),
+      guide = guide
     ),
     class = "ggexon_genomic_x_scale_spec"
   )
+}
+
+#' Draw representative exon and intron scale bars for genomic x scaling
+#'
+#' `guide_x_ggexon_piecewise()` is used with [scale_x_ggexon_genomic()] to
+#' replace ordinary x-axis ticks with representative first-exon and first-intron
+#' scale bars. This is useful because intron-compressed tracks use different
+#' display scales for exon and intron regions.
+#'
+#' @param by Grouping used to choose representative intervals. `"transcripts"`
+#'   draws one first-exon/first-intron pair per transcript, `"track"` draws one
+#'   per track, and `"panel"` draws one per panel.
+#' @param representative Representative interval selection. Currently only
+#'   `"first"` is supported.
+#' @param position Axis position. Currently only `"bottom"` is supported.
+#' @param label Logical; draw text labels for representative intervals.
+#' @param show_exon,show_intron Logical; include representative exon and/or
+#'   intron scale bars.
+#'
+#' @return A ggexon genomic x-axis guide specification.
+#' @export
+guide_x_ggexon_piecewise <- function(by = c("transcripts", "track", "panel"),
+                                     representative = c("first"),
+                                     position = c("bottom"),
+                                     label = TRUE,
+                                     show_exon = TRUE,
+                                     show_intron = TRUE) {
+  by <- match.arg(by)
+  representative <- match.arg(representative)
+  position <- match.arg(position)
+  if (!is.logical(label) || length(label) != 1L || is.na(label)) {
+    stop("`label` must be `TRUE` or `FALSE`.", call. = FALSE)
+  }
+  if (!is.logical(show_exon) || length(show_exon) != 1L || is.na(show_exon)) {
+    stop("`show_exon` must be `TRUE` or `FALSE`.", call. = FALSE)
+  }
+  if (!is.logical(show_intron) || length(show_intron) != 1L || is.na(show_intron)) {
+    stop("`show_intron` must be `TRUE` or `FALSE`.", call. = FALSE)
+  }
+  if (!isTRUE(show_exon) && !isTRUE(show_intron)) {
+    stop("At least one of `show_exon` or `show_intron` must be `TRUE`.", call. = FALSE)
+  }
+
+  structure(
+    list(
+      type = "piecewise",
+      by = by,
+      representative = representative,
+      position = position,
+      label = label,
+      show_exon = show_exon,
+      show_intron = show_intron
+    ),
+    class = c("ggexon_genomic_x_piecewise_guide", "ggexon_genomic_x_guide")
+  )
+}
+
+ggexon_genomic_x_normalize_guide <- function(guide) {
+  if (is.waive(guide) || identical(guide, "genomic")) {
+    return(structure(
+      list(type = "genomic"),
+      class = c("ggexon_genomic_x_genomic_guide", "ggexon_genomic_x_guide")
+    ))
+  }
+  if (is.null(guide) || identical(guide, "none")) {
+    return(structure(
+      list(type = "none"),
+      class = c("ggexon_genomic_x_none_guide", "ggexon_genomic_x_guide")
+    ))
+  }
+  if (inherits(guide, "ggexon_genomic_x_guide")) {
+    return(guide)
+  }
+  stop(
+    "`guide` must be `waiver()`, \"genomic\", \"none\", or `guide_x_ggexon_piecewise()`.",
+    call. = FALSE
+  )
+}
+
+ggexon_genomic_x_guide_type <- function(scale_spec) {
+  scale_spec$guide$type %||% "genomic"
 }
 
 #' @export
@@ -278,7 +351,8 @@ ggexon_genomic_x_source_rows <- function(layer_data) {
 }
 
 ggexon_genomic_x_piecewise_axis_data <- function(source_df, transforms, scale_spec) {
-  if (!identical(scale_spec$axis, "piecewise") ||
+  guide <- scale_spec$guide
+  if (!identical(ggexon_genomic_x_guide_type(scale_spec), "piecewise") ||
       is.null(source_df) ||
       nrow(source_df) == 0L ||
       is.null(transforms) ||
@@ -287,7 +361,7 @@ ggexon_genomic_x_piecewise_axis_data <- function(source_df, transforms, scale_sp
   }
 
   group_cols <- switch(
-    scale_spec$axis_by,
+    guide$by,
     transcripts = c("PANEL", "track", "transcripts"),
     track = c("PANEL", "track"),
     panel = "PANEL"
@@ -308,20 +382,30 @@ ggexon_genomic_x_piecewise_axis_data <- function(source_df, transforms, scale_sp
       return(NULL)
     }
 
-    out <- list(ggexon_genomic_x_axis_interval(
-      group_df = group_df,
-      interval = intervals[1L, , drop = FALSE],
-      transform = transform,
-      region_type = "exon"
-    ))
+    out <- list()
+    if (isTRUE(guide$show_exon)) {
+      out[[length(out) + 1L]] <- ggexon_genomic_x_axis_interval(
+        group_df = group_df,
+        interval = intervals[1L, , drop = FALSE],
+        transform = transform,
+        region_type = "exon",
+        label = isTRUE(guide$label)
+      )
+    }
 
-    if (nrow(intervals) >= 2L && intervals$start[[2L]] > intervals$end[[1L]]) {
+    if (isTRUE(guide$show_intron) &&
+        nrow(intervals) >= 2L &&
+        intervals$start[[2L]] > intervals$end[[1L]]) {
       out[[length(out) + 1L]] <- ggexon_genomic_x_axis_interval(
         group_df = group_df,
         interval = data.frame(start = intervals$end[[1L]], end = intervals$start[[2L]]),
         transform = transform,
-        region_type = "intron"
+        region_type = "intron",
+        label = isTRUE(guide$label)
       )
+    }
+    if (length(out) == 0L) {
+      return(NULL)
     }
     do.call(rbind, out)
   })
@@ -343,7 +427,11 @@ ggexon_genomic_x_piecewise_axis_data <- function(source_df, transforms, scale_sp
   axis_data
 }
 
-ggexon_genomic_x_axis_interval <- function(group_df, interval, transform, region_type) {
+ggexon_genomic_x_axis_interval <- function(group_df,
+                                           interval,
+                                           transform,
+                                           region_type,
+                                           label = TRUE) {
   genomic_start <- interval$start[[1L]]
   genomic_end <- interval$end[[1L]]
   plot_start <- ggexon_genomic_to_plot_x(genomic_start, transform)
@@ -362,7 +450,7 @@ ggexon_genomic_x_axis_interval <- function(group_df, interval, transform, region
     plot_end = plot_end,
     genomic_width = genomic_width,
     plot_width = plot_width,
-    label = ggexon_genomic_x_axis_label(region_type, genomic_width, plot_width),
+    label = if (isTRUE(label)) ggexon_genomic_x_axis_label(region_type, genomic_width, plot_width) else "",
     stringsAsFactors = FALSE
   )
 }
@@ -553,7 +641,8 @@ apply_ggexon_genomic_x_axis <- function(layout, scale_spec) {
     if (is.null(x_view)) {
       next
     }
-    if (identical(scale_spec$axis, "none") || identical(scale_spec$axis, "piecewise")) {
+    guide_type <- ggexon_genomic_x_guide_type(scale_spec)
+    if (identical(guide_type, "none") || identical(guide_type, "piecewise")) {
       x_view$scale <- x_view$scale$clone()
       x_view$breaks <- numeric()
       x_view$minor_breaks <- numeric()

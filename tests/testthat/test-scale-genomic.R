@@ -201,7 +201,7 @@ test_that("scale_x_ggexon_genomic can build a piecewise representative axis", {
       geom_exon2(annotation_type = "all") +
       scale_x_ggexon_genomic(
         intron_factor = 10,
-        axis = "piecewise"
+        guide = guide_x_ggexon_piecewise()
       )
   )
 
@@ -244,11 +244,52 @@ test_that("piecewise genomic axis replaces bottom axis grobs", {
       )
     ) +
       geom_exon2(annotation_type = "all") +
-      scale_x_ggexon_genomic(axis = "piecewise") +
+      scale_x_ggexon_genomic(guide = guide_x_ggexon_piecewise()) +
       theme_ggexon_track()
   )
   table <- ggplot_gtable(built)
   axis_idx <- grep("^axis-b", table$layout$name)
 
   expect_true(any(vapply(table$grobs[axis_idx], inherits, logical(1), "ggexonGenomicPiecewiseAxisGrob")))
+})
+
+test_that("guide_x_ggexon_piecewise can hide selected representative bars and labels", {
+  exon_df <- data.frame(
+    xmin = c(1, 1000),
+    xmax = c(100, 1100),
+    ymin = c(2, 2),
+    transcripts = c("tx1", "tx1"),
+    strand = "+",
+    track = "gene1",
+    type = "exon",
+    group = 1,
+    stringsAsFactors = FALSE
+  )
+
+  built <- ggexon_build(
+    ggexon(
+      exon_df,
+      ggplot2::aes(
+        xmin = xmin,
+        xmax = xmax,
+        ymin = ymin,
+        transcripts = transcripts,
+        strand = strand,
+        track = track,
+        type = type,
+        group = group
+      )
+    ) +
+      geom_exon2(annotation_type = "all") +
+      scale_x_ggexon_genomic(
+        guide = guide_x_ggexon_piecewise(
+          show_exon = FALSE,
+          label = FALSE
+        )
+      )
+  )
+
+  axis_data <- built@layout$genomic_x_axis_data
+  expect_equal(axis_data$region_type, "intron")
+  expect_equal(axis_data$label, "")
 })

@@ -65,7 +65,7 @@ apply_panel_xlim_to_trained_scales <- function(layout) {
 ggplot_build.ggexon <- function(plot, ...) {
   build <- ggexon_build(plot, ...)
   if ((inherits(plot@facet, "FacetGenomicTree") && !is.null(plot@genomic_tree)) ||
-      identical(plot@genomic_x_scale$axis %||% NULL, "piecewise")) {
+      identical(ggexon_genomic_x_guide_type(plot@genomic_x_scale %||% list(guide = list(type = "genomic"))), "piecewise")) {
     return(build)
   }
   as_standard_ggplot_built(build)
@@ -270,7 +270,7 @@ inject_genomic_piecewise_axis <- function(table, build) {
   scale_spec <- build@plot@genomic_x_scale
   axis_data <- build@layout$genomic_x_axis_data %||% NULL
   if (is.null(scale_spec) ||
-      !identical(scale_spec$axis, "piecewise") ||
+      !identical(ggexon_genomic_x_guide_type(scale_spec), "piecewise") ||
       is.null(axis_data) ||
       nrow(axis_data) == 0L) {
     return(table)
