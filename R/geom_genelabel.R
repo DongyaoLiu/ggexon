@@ -37,12 +37,6 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
                            if (actual_exon_height <= 0) actual_exon_height <- exon_height
                            label_offset <- actual_exon_height * label_offset_fraction
 
-                           if (label_direction == "top") {
-                             label_y <- max(data$ymax) + label_offset
-                           } else {
-                             label_y <- min(data$ymin) - label_offset
-                           }
-
                            genomic_range <- diff(range(c(data$xmin, data$xmax), na.rm = TRUE))
                            if (genomic_range <= 0) genomic_range <- 1
 
@@ -83,14 +77,19 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
                              }
                            }
 
-                           # pick leader line anchor based on direction
-                           data2$anchor_y <- if (label_direction == "top")
-                             data2$gene_ymax else data2$gene_ymin
+                           # per-gene label y and leader line anchor
+                           if (label_direction == "top") {
+                             data2$anchor_y <- data2$gene_ymax
+                             data2$label_y <- data2$gene_ymax + label_offset
+                           } else {
+                             data2$anchor_y <- data2$gene_ymin
+                             data2$label_y <- data2$gene_ymin - label_offset
+                           }
 
                            # prepare label positions for coord transform
                            label_data <- data2
                            label_data$x <- label_data$label_x
-                           label_data$y <- label_y
+                           label_data$y <- label_data$label_y
                            label_t <- coord$transform(label_data, panel_params)
 
                            # prepare leader line endpoints
@@ -101,7 +100,7 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
 
                            leader_end <- data2
                            leader_end$x <- leader_end$label_x
-                           leader_end$y <- label_y
+                           leader_end$y <- leader_end$label_y
                            leader_end_t <- coord$transform(leader_end, panel_params)
 
                            tg <- textGrob(
