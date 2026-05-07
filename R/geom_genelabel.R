@@ -10,6 +10,7 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
                          ),
                          extra_params = c("exon_height", "na.rm", "x_translation",
                             "species", "chr", "subset",
+                            "label_direction", "label_offset_fraction",
                             fontface = 1, lineheight = 1.2
                          ),
                          default_params = function() {
@@ -18,15 +19,30 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
                              x_translation = 0,
                              species = NULL,
                              chr = NULL,
-                             subset = NULL
+                             subset = NULL,
+                             label_direction = "top",
+                             label_offset_fraction = 0.3
                            )
                          },
                          setup_data = function(data, params){
                            GeomExon$setup_data(data, params)
                          },
 
-                         draw_panel = function(data, panel_params, coord, check_overlap = FALSE){
-                           label_y <- max(data$ymax)
+                         draw_panel = function(data, panel_params, coord, check_overlap = FALSE,
+                                                exon_height = 0.4,
+                                                label_direction = "top",
+                                                label_offset_fraction = 0.3){
+                           label_direction <- match.arg(label_direction, c("top", "bottom"))
+                           label_offset <- exon_height * label_offset_fraction
+
+                           if (label_direction == "top") {
+                             label_y <- max(data$ymax) + label_offset
+                             gene_y  <- data$ymax
+                           } else {
+                             label_y <- min(data$ymin) - label_offset
+                             gene_y  <- data$ymin
+                           }
+
                            genomic_range <- diff(range(c(data$xmin, data$xmax), na.rm = TRUE))
                            if (genomic_range <= 0) genomic_range <- 1
 
@@ -36,7 +52,8 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
                                gene_xmin = min(xmin),
                                gene_xmax = max(xmax),
                                orig_x_mid = (gene_xmax + gene_xmin) / 2,
-                               gene_ymax = ymax
+                               gene_ymax = ymax,
+                               gene_ymin = ymin
                              ) %>%
                              dplyr::slice(1) %>%
                              ungroup() %>%
@@ -66,6 +83,10 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
                              }
                            }
 
+                           # pick leader line anchor based on direction
+                           data2$anchor_y <- if (label_direction == "top")
+                             data2$gene_ymax else data2$gene_ymin
+
                            # prepare label positions for coord transform
                            label_data <- data2
                            label_data$x <- label_data$label_x
@@ -75,7 +96,7 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
                            # prepare leader line endpoints
                            leader_start <- data2
                            leader_start$x <- leader_start$orig_x_mid
-                           leader_start$y <- leader_start$gene_ymax
+                           leader_start$y <- leader_start$anchor_y
                            leader_start_t <- coord$transform(leader_start, panel_params)
 
                            leader_end <- data2
@@ -112,15 +133,19 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
 #' Draw gene labels on exon tracks
 #'
 #' `geom_genelabel()` places one text label per transcript or gene span on an
-#' exon-style genomic track. It uses the same Syn-backed lazy data resolution as
-#' [`geom_exon()`], so labels can be drawn from `SynIndividual` or `SynSpecies`
-#' containers as well as from precomputed data frames.
+#' exon-style genomic track. Labels sit on a single horizontal line above or
+#' below the exon tracks, with leader lines connecting each label to its gene
+#' body. Overlapping labels are pushed apart horizontally.
 #'
 #' @param mapping,data,stat,position,...,na.rm,show.legend,inherit.aes Standard
 #'   ggplot2 layer arguments.
 #' @param x_translation Optional x offset applied before drawing.
 #' @param exon_height Optional exon rectangle height used when preparing track
 #'   coordinates.
+#' @param label_direction Where to place the label line: `"top"` (above the
+#'   highest track) or `"bottom"` (below the lowest track). Default `"top"`.
+#' @param label_offset_fraction Distance between the exon tracks and the label
+#'   line, expressed as a fraction of `exon_height`. Default `0.3`.
 #' @param species Optional species / individual identifier when `data` is a
 #'   `SynSpecies`.
 #' @param chr Optional chromosome / seqname restriction when `data` is
@@ -132,6 +157,7 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
 geom_genelabel <- function(mapping = NULL, data = NULL,
                        stat = "identity", position = "identity", x_translation = NULL,
                        ..., na.rm = FALSE, show.legend = NA, exon_height = NULL,
+                       label_direction = NULL, label_offset_fraction = NULL,
                        species = NULL, chr = NULL, subset = NULL,
                        inherit.aes = TRUE) {
     params <- Filter(Negate(is.null), c(list(
@@ -139,6 +165,8 @@ geom_genelabel <- function(mapping = NULL, data = NULL,
       na.rm = na.rm,
       exon_height = exon_height,
       x_translation = x_translation,
+      label_direction = label_direction,
+      label_offset_fraction = label_offset_fraction,
       species = species,
       chr = chr,
       subset = subset

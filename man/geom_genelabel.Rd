@@ -14,6 +14,8 @@ geom_genelabel(
   na.rm = FALSE,
   show.legend = NA,
   exon_height = NULL,
+  label_direction = NULL,
+  label_offset_fraction = NULL,
   species = NULL,
   chr = NULL,
   subset = NULL,
@@ -29,6 +31,12 @@ ggplot2 layer arguments.}
 \item{exon_height}{Optional exon rectangle height used when preparing track
 coordinates.}
 
+\item{label_direction}{Where to place the label line: \code{"top"} (above the
+highest track) or \code{"bottom"} (below the lowest track). Default \code{"top"}.}
+
+\item{label_offset_fraction}{Distance between the exon tracks and the label
+line, expressed as a fraction of \code{exon_height}. Default \code{0.3}.}
+
 \item{species}{Optional species / individual identifier when \code{data} is a
 \code{SynSpecies}.}
 
@@ -42,7 +50,10 @@ A ggplot2 layer using the internal \code{GeomGeneLabel} ggproto.
 }
 \description{
 \code{geom_genelabel()} places one text label per transcript or gene span on an
-exon-style genomic track. It uses the same Syn-backed lazy data resolution as
-\code{\link[=geom_exon]{geom_exon()}}, so labels can be drawn from \code{SynIndividual} or \code{SynSpecies}
-containers as well as from precomputed data frames.
+exon-style genomic track. Labels sit on a single horizontal line above or
+below the exon tracks, with leader lines connecting each label to its gene
+body. Overlapping labels are pushed apart horizontally. It uses the same
+Syn-backed lazy data resolution as \code{\link[=geom_exon]{geom_exon()}}, so labels can be drawn
+from \code{SynIndividual} or \code{SynSpecies} containers as well as from precomputed
+data frames.
 }
