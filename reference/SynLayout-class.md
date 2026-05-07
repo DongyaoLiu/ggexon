@@ -31,10 +31,6 @@ x-axis translation.
   Shared default exon or gene block height for layout-aware annotation
   geoms.
 
-- `y_scale`:
-
-  Shared default y scaling for layout-aware annotation geoms.
-
 - `x_translation`:
 
   Shared default x-axis offset for layout-aware annotation geoms.
@@ -52,8 +48,6 @@ x-axis translation.
 - `free = list(x = FALSE, y = FALSE)`
 
 - `exon_height = NA_real_`
-
-- `y_scale = NA_real_`
 
 - `x_translation = NA_real_`
 
@@ -79,5 +73,4 @@ x-axis translation.
 
 - `free` must be a list with scalar logical `x` and `y` entries.
 
-- `exon_height`, `y_scale`, and `x_translation` must each be scalar
-  numeric values.
+- `exon_height` and `x_translation` must each be scalar numeric values.

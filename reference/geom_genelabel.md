@@ -20,7 +20,6 @@ geom_genelabel(
   na.rm = FALSE,
   show.legend = NA,
   exon_height = NULL,
-  y_scale = NULL,
   species = NULL,
   chr = NULL,
   subset = NULL,
@@ -41,10 +40,6 @@ geom_genelabel(
 - exon_height:
 
   Optional exon rectangle height used when preparing track coordinates.
-
-- y_scale:
-
-  Optional y scaling factor for the track layout.
 
 - species:
 

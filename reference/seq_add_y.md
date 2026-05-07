@@ -9,7 +9,6 @@ part
 seq_add_y(
   data,
   track_proportion,
-  y_scale,
   exon_proportion,
   blank_proportion,
   exon_height,

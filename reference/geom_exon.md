@@ -17,7 +17,6 @@ geom_exon(
   na.rm = FALSE,
   show.legend = NA,
   transcripts_track_ratio = NULL,
-  y_scale = NULL,
   exon_height = NULL,
   transcript_backbone_ratio = NULL,
   x_translation = NULL,
@@ -65,10 +64,6 @@ geom_exon(
 - transcripts_track_ratio:
 
   Optional transcript track ratio used by the ggexon layout helpers.
-
-- y_scale:
-
-  Optional y scaling factor for the track layout.
 
 - exon_height:
 

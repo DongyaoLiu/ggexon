@@ -16,7 +16,6 @@ geom_motif(
   na.rm = FALSE,
   show.legend = NA,
   exon_height = NULL,
-  y_scale = NULL,
   x_translation = NULL,
   species = NULL,
   chr = NULL,
@@ -40,10 +39,6 @@ geom_motif(
 - exon_height:
 
   Height of the motif blocks.
-
-- y_scale:
-
-  Vertical spacing between protein tracks.
 
 - x_translation:
 

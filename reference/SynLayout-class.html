@@ -81,10 +81,6 @@ should vary across panels.</p></dd>
 layout-aware annotation geoms.</p></dd>
 
 
-<dt><code>y_scale</code></dt>
-<dd><p>Shared default y scaling for layout-aware annotation geoms.</p></dd>
-
-
 <dt><code>x_translation</code></dt>
 <dd><p>Shared default x-axis offset for layout-aware annotation
 geoms.</p></dd>
@@ -103,7 +99,6 @@ geoms.</p></dd>
 <li><p><code>layout_type = "custom"</code></p></li>
 <li><p><code>free = list(x = FALSE, y = FALSE)</code></p></li>
 <li><p><code>exon_height = NA_real_</code></p></li>
-<li><p><code>y_scale = NA_real_</code></p></li>
 <li><p><code>x_translation = NA_real_</code></p></li>
 <li><p><code>metadata = list()</code></p></li>
 </ul></div>
@@ -122,8 +117,7 @@ display-only windows that should not drive annotation filtering.</p></li>
 <code>free$x</code> must be <code>TRUE</code>.</p></li>
 <li><p><code>layout_type</code> must be one non-empty character value.</p></li>
 <li><p><code>free</code> must be a list with scalar logical <code>x</code> and <code>y</code> entries.</p></li>
-<li><p><code>exon_height</code>, <code>y_scale</code>, and <code>x_translation</code> must each be scalar numeric
-values.</p></li>
+<li><p><code>exon_height</code> and <code>x_translation</code> must each be scalar numeric values.</p></li>
 </ul></div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

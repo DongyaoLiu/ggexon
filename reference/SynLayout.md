@@ -10,7 +10,6 @@ SynLayout(
   layout_type = "custom",
   free = list(x = FALSE, y = FALSE),
   exon_height = NA_real_,
-  y_scale = NA_real_,
   x_translation = NA_real_,
   metadata = list()
 )
@@ -36,10 +35,6 @@ SynLayout(
 
   Default shared exon/gene/gene-label height resolved by syn-aware
   annotation geoms.
-
-- y_scale:
-
-  Default shared y-axis scaling for layout-aware geoms.
 
 - x_translation:
 
