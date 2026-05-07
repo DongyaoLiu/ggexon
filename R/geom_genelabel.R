@@ -26,9 +26,11 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
                          },
 
                          draw_panel = function(data, panel_params, coord, check_overlap= F){
+                           label_y <- max(data$ymax)
                            data2 = data %>%group_by(transcripts) %>% mutate(gene_xmin = min(xmin), gene_xmax = max(xmax))  %>%
-                             mutate(gene_ymax = ymax , x_mid = (gene_xmax + gene_xmin)/2) %>% dplyr::slice(1) %>%
-                             dplyr::rename(x = x_mid, y = gene_ymax)
+                             mutate(x_mid = (gene_xmax + gene_xmin)/2) %>% dplyr::slice(1) %>%
+                             dplyr::rename(x = x_mid) %>%
+                             mutate(y = label_y)
                            #print(data2, n =100)
                            data <- coord$transform(data2, panel_params)
                            textGrob(data$label, data$x, data$y, default.units = "native", hjust = data$hjust,
