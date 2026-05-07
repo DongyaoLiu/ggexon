@@ -25,19 +25,87 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
                            GeomExon$setup_data(data, params)
                          },
 
-                         draw_panel = function(data, panel_params, coord, check_overlap= F){
+                         draw_panel = function(data, panel_params, coord, check_overlap = FALSE){
                            label_y <- max(data$ymax)
-                           data2 = data %>%group_by(transcripts) %>% mutate(gene_xmin = min(xmin), gene_xmax = max(xmax))  %>%
-                             mutate(x_mid = (gene_xmax + gene_xmin)/2) %>% dplyr::slice(1) %>%
-                             dplyr::rename(x = x_mid) %>%
-                             mutate(y = label_y)
-                           #print(data2, n =100)
-                           data <- coord$transform(data2, panel_params)
-                           textGrob(data$label, data$x, data$y, default.units = "native", hjust = data$hjust,
-                                    vjust = data$vjust, rot = data$angle, gp = gpar(col = alpha(data$colour,
-                                                                                                data$alpha), fontsize = data$size * .pt, fontfamily = data$family,
-                                                                                    fontface = data$fontface, lineheight = data$lineheight),
-                                    check.overlap = check_overlap)
+                           genomic_range <- diff(range(c(data$xmin, data$xmax), na.rm = TRUE))
+                           if (genomic_range <= 0) genomic_range <- 1
+
+                           data2 <- data %>%
+                             group_by(transcripts) %>%
+                             mutate(
+                               gene_xmin = min(xmin),
+                               gene_xmax = max(xmax),
+                               orig_x_mid = (gene_xmax + gene_xmin) / 2,
+                               gene_ymax = ymax
+                             ) %>%
+                             dplyr::slice(1) %>%
+                             ungroup() %>%
+                             arrange(orig_x_mid)
+
+                           # estimate text width in data coordinates
+                           # size is in mm; each char ≈ 0.5 × size mm; panel ≈ 150 mm
+                           data2 <- data2 %>%
+                             mutate(
+                               est_nchar = nchar(as.character(label)),
+                               est_width = est_nchar * size * genomic_range / 600,
+                               label_x  = orig_x_mid
+                             )
+
+                           # greedy horizontal slide to prevent overlap
+                           min_gap <- genomic_range * 0.005
+                           if (nrow(data2) > 1) {
+                             for (i in 2:nrow(data2)) {
+                               prev_right <- data2$label_x[i - 1] +
+                                 data2$est_width[i - 1] / 2 + min_gap
+                               curr_left <- data2$label_x[i] -
+                                 data2$est_width[i] / 2
+                               if (curr_left < prev_right) {
+                                 data2$label_x[i] <- prev_right +
+                                   data2$est_width[i] / 2
+                               }
+                             }
+                           }
+
+                           # prepare label positions for coord transform
+                           label_data <- data2
+                           label_data$x <- label_data$label_x
+                           label_data$y <- label_y
+                           label_t <- coord$transform(label_data, panel_params)
+
+                           # prepare leader line endpoints
+                           leader_start <- data2
+                           leader_start$x <- leader_start$orig_x_mid
+                           leader_start$y <- leader_start$gene_ymax
+                           leader_start_t <- coord$transform(leader_start, panel_params)
+
+                           leader_end <- data2
+                           leader_end$x <- leader_end$label_x
+                           leader_end$y <- label_y
+                           leader_end_t <- coord$transform(leader_end, panel_params)
+
+                           tg <- textGrob(
+                             label_t$label, label_t$x, label_t$y,
+                             default.units = "native",
+                             hjust = label_t$hjust, vjust = label_t$vjust,
+                             rot = label_t$angle,
+                             gp = gpar(
+                               col = alpha(label_t$colour, label_t$alpha),
+                               fontsize = label_t$size * .pt,
+                               fontfamily = label_t$family,
+                               fontface = label_t$fontface,
+                               lineheight = label_t$lineheight
+                             ),
+                             check.overlap = check_overlap
+                           )
+
+                           lg <- segmentsGrob(
+                             x0 = leader_start_t$x, y0 = leader_start_t$y,
+                             x1 = leader_end_t$x,   y1 = leader_end_t$y,
+                             default.units = "native",
+                             gp = gpar(col = "grey60", lwd = 0.5)
+                           )
+
+                           gList(lg, tg)
                          }
 )
 
