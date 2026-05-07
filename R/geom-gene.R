@@ -21,7 +21,7 @@ GeomGene <- ggproto("GeomGene", Geom,
 
                     setup_data = function(data, params){
                       x_translation <- if (is.null(params$x_translation)) 0 else params$x_translation
-                      exon_height <- if (is.null(params$exon_height)) 1.5 else params$exon_height
+                      exon_height <- if (is.null(params$exon_height)) 0.8 else params$exon_height
 
                       if (x_translation != 0){
                         data = data %>% mutate(xmin = xmin + x_translation, xmax =xmax + x_translation)
@@ -62,7 +62,7 @@ GeomGene <- ggproto("GeomGene", Geom,
                     },
                     default_params = function() {
                       list(
-                        exon_height = 1.5,
+                        exon_height = 0.8,
                         x_translation = 0,
                         proportion_trim3 = 0.2,
                         species = NULL,

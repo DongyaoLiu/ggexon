@@ -15,7 +15,7 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
                          ),
                          default_params = function() {
                            list(
-                             exon_height = 0.4,
+                             exon_height = 0.8,
                              x_translation = 0,
                              species = NULL,
                              chr = NULL,
@@ -29,18 +29,18 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
                          },
 
                          draw_panel = function(data, panel_params, coord, check_overlap = FALSE,
-                                                exon_height = 0.4,
+                                                exon_height = 0.8,
                                                 label_direction = "top",
                                                 label_offset_fraction = 0.3){
                            label_direction <- match.arg(label_direction, c("top", "bottom"))
-                           label_offset <- exon_height * label_offset_fraction
+                           actual_exon_height <- max(data$ymax - data$ymin, na.rm = TRUE)
+                           if (actual_exon_height <= 0) actual_exon_height <- exon_height
+                           label_offset <- actual_exon_height * label_offset_fraction
 
                            if (label_direction == "top") {
                              label_y <- max(data$ymax) + label_offset
-                             gene_y  <- data$ymax
                            } else {
                              label_y <- min(data$ymin) - label_offset
-                             gene_y  <- data$ymin
                            }
 
                            genomic_range <- diff(range(c(data$xmin, data$xmax), na.rm = TRUE))
