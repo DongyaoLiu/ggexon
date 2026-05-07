@@ -586,7 +586,6 @@ synspecies_chain_layout <- function(x,
     layout_type = layout_obj@layout_type,
     free = layout_obj@free,
     exon_height = layout_obj@exon_height,
-    y_scale = layout_obj@y_scale,
     x_translation = layout_obj@x_translation,
     metadata = layout_obj@metadata
   )
@@ -696,7 +695,6 @@ synspecies_chain_layout <- function(x,
     layout_type = layout_type %||% layout_obj@layout_type,
     free = free,
     exon_height = layout_obj@exon_height,
-    y_scale = layout_obj@y_scale,
     x_translation = layout_obj@x_translation,
     metadata = layout_obj@metadata
   )

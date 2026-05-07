@@ -13,7 +13,6 @@ geom_motif(
   na.rm = FALSE,
   show.legend = NA,
   exon_height = NULL,
-  y_scale = NULL,
   x_translation = NULL,
   species = NULL,
   chr = NULL,
@@ -32,8 +31,6 @@ geom_motif(
 ggplot2 layer arguments.}
 
 \item{exon_height}{Height of the motif blocks.}
-
-\item{y_scale}{Vertical spacing between protein tracks.}
 
 \item{x_translation}{Optional x-axis offset.}
 

@@ -4,7 +4,7 @@
 GeomExon <- ggproto("GeomExon", Geom,
                       required_aes = c("ymin", "xmin", "xmax", "transcripts","strand", "track", "type"),
                       non_missing_aes = c("linewidth", "shape"),
-                      extra_params = c("exon_height", "transcript_backbone_ratio", "na.rm", "y_scale", "x_translation", "subset", "annotation_type",
+                      extra_params = c("exon_height", "transcript_backbone_ratio", "na.rm", "x_translation", "subset", "annotation_type",
                                        "breakdata", "species", "chr"),
                       default_aes = aes(linewidth = 0, linejoin = "mitre", fill="black",
                         colour = NULL,
@@ -18,7 +18,6 @@ GeomExon <- ggproto("GeomExon", Geom,
                     setup_data = function(data, params){
                       x_translation <- if (is.null(params$x_translation)) 0 else params$x_translation
                       exon_height <- if (is.null(params$exon_height)) 0.8 else params$exon_height
-                      y_scale <- if (is.null(params$y_scale)) 100 else params$y_scale
                       if (!"blank_panel" %in% names(data)) {
                         data$blank_panel <- FALSE
                       }
@@ -51,7 +50,6 @@ GeomExon <- ggproto("GeomExon", Geom,
 
                       rec_data = seq_add_y(data = data,
                                            track_proportion = params$transcripts_track_ratio,
-                                           y_scale = y_scale,
                                            exon_proportion = 0.8, blank_proportion = 0.2,
                                            sandwich_ratio = params$sandwich_ratio,
                                            exon_height = exon_height)
@@ -93,7 +91,6 @@ GeomExon <- ggproto("GeomExon", Geom,
                       list(
                         exon_height = 0.8,
                         transcript_backbone_ratio = 0.1,
-                        y_scale = 100,
                         x_translation = 0,
                         subset = NULL,
                         annotation_type = "exon",
@@ -135,7 +132,6 @@ GeomExon <- ggproto("GeomExon", Geom,
 #' @param show.legend Logical. Should this layer be included in the legend?
 #' @param transcripts_track_ratio Optional transcript track ratio used by the
 #'   ggexon layout helpers.
-#' @param y_scale Optional y scaling factor for the track layout.
 #' @param exon_height Optional exon rectangle height.
 #' @param transcript_backbone_ratio Relative backbone height as a fraction of
 #'   `exon_height`. Defaults to `0.1`.
@@ -156,7 +152,7 @@ GeomExon <- ggproto("GeomExon", Geom,
 geom_exon <- function(mapping = NULL, data = NULL,
                       stat = "identity", position = "identity",
                       ..., na.rm = FALSE, show.legend = NA,
-                      transcripts_track_ratio = NULL, y_scale = NULL, exon_height = NULL,
+                      transcripts_track_ratio = NULL, exon_height = NULL,
                       transcript_backbone_ratio = NULL,
                       x_translation = NULL, subset = NULL,
                       annotation_type ="exon",
@@ -168,7 +164,6 @@ geom_exon <- function(mapping = NULL, data = NULL,
       na.rm = na.rm,
       exon_height = exon_height,
       transcript_backbone_ratio = transcript_backbone_ratio,
-      y_scale = y_scale,
       x_translation = x_translation,
       subset = subset,
       annotation_type = annotation_type,
@@ -190,7 +185,7 @@ geom_exon <- function(mapping = NULL, data = NULL,
 
 GeomExon2 <- ggproto("GeomExon2", GeomExon,
   extra_params = c(
-    "exon_height", "na.rm", "y_scale", "x_translation", "subset",
+    "exon_height", "na.rm", "x_translation", "subset",
     "annotation_type", "breakdata", "species", "chr", "compress_introns",
     "intron_width", "intron_shape", "utr_height", "cds_height",
     "intron_peak", "chevron_direction", "arrow_width"
@@ -268,7 +263,6 @@ GeomExon2 <- ggproto("GeomExon2", GeomExon,
   default_params = function() {
     list(
       exon_height = 0.8,
-      y_scale = 100,
       x_translation = 0,
       subset = NULL,
       annotation_type = "exon",
@@ -307,7 +301,6 @@ GeomExon2 <- ggproto("GeomExon2", GeomExon,
 #' @param show.legend Logical. Should this layer be included in the legend?
 #' @param transcripts_track_ratio Optional transcript track ratio used by the
 #'   ggexon layout helpers.
-#' @param y_scale Optional y scaling factor for the track layout.
 #' @param exon_height Optional maximum exon rectangle height.
 #' @param x_translation Optional x offset applied before drawing.
 #' @param subset Optional numeric length-2 genomic window to keep.
@@ -339,7 +332,7 @@ GeomExon2 <- ggproto("GeomExon2", GeomExon,
 geom_exon2 <- function(mapping = NULL, data = NULL,
                        stat = "identity", position = "identity",
                        ..., na.rm = FALSE, show.legend = NA,
-                       transcripts_track_ratio = NULL, y_scale = NULL,
+                       transcripts_track_ratio = NULL,
                        exon_height = NULL, x_translation = NULL,
                        subset = NULL, annotation_type = "exon",
                        species = NULL, chr = NULL, breakdata = NULL,
@@ -355,7 +348,6 @@ geom_exon2 <- function(mapping = NULL, data = NULL,
     ...,
     na.rm = na.rm,
     exon_height = exon_height,
-    y_scale = y_scale,
     x_translation = x_translation,
     subset = subset,
     annotation_type = annotation_type,

@@ -8,7 +8,7 @@
 GeomGene <- ggproto("GeomGene", Geom,
                     required_aes = c("ymin", "xmin", "xmax", "transcripts","strand", "track"),
                     non_missing_aes = c("linewidth", "shape"),
-                    extra_params = c("exon_height", "na.rm", "y_scale", "x_translation", "proportion_trim3",
+                    extra_params = c("exon_height", "na.rm", "x_translation", "proportion_trim3",
                                      "species", "chr", "subset"),
                     default_aes = aes(linewidth = 0, linejoin = "mitre", fill="black",
                                       colour = NULL,
@@ -22,7 +22,6 @@ GeomGene <- ggproto("GeomGene", Geom,
                     setup_data = function(data, params){
                       x_translation <- if (is.null(params$x_translation)) 0 else params$x_translation
                       exon_height <- if (is.null(params$exon_height)) 1.5 else params$exon_height
-                      y_scale <- if (is.null(params$y_scale)) 100 else params$y_scale
 
                       if (x_translation != 0){
                         data = data %>% mutate(xmin = xmin + x_translation, xmax =xmax + x_translation)
@@ -37,7 +36,6 @@ GeomGene <- ggproto("GeomGene", Geom,
                                xmin = if_else(strand == "-", xmin + transcripts_length * params$proportion_trim3, xmin))
                       rec_data = seq_add_y(data = data,
                                            track_proportion = params$transcripts_track_ratio,
-                                           y_scale = y_scale,
                                            exon_proportion = 0.8, blank_proportion = 0.2,
                                            sandwich_ratio = params$sandwich_ratio,
                                            exon_height = exon_height)
@@ -65,7 +63,6 @@ GeomGene <- ggproto("GeomGene", Geom,
                     default_params = function() {
                       list(
                         exon_height = 1.5,
-                        y_scale = 100,
                         x_translation = 0,
                         proportion_trim3 = 0.2,
                         species = NULL,
@@ -80,7 +77,7 @@ GeomGene <- ggproto("GeomGene", Geom,
 geom_gene <- function(mapping = NULL, data = NULL,
                       stat = "identity", position = "identity",
                       ..., na.rm = FALSE, show.legend = NA,
-                      transcripts_track_ratio = NULL, y_scale = NULL, exon_height = NULL,
+                      transcripts_track_ratio = NULL, exon_height = NULL,
                       x_translation = NULL, proportion_trim3 = 0.2,
                       species = NULL, chr = NULL, subset = NULL,
                       inherit.aes = TRUE) {
@@ -88,7 +85,6 @@ geom_gene <- function(mapping = NULL, data = NULL,
     ...,
     na.rm = na.rm,
     exon_height = exon_height,
-    y_scale = y_scale,
     x_translation = x_translation,
     proportion_trim3 = proportion_trim3,
     species = species,

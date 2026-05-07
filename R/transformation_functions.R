@@ -1,5 +1,5 @@
 #'calculate the exon block y location
-seq_add_y = function(data, track_proportion, y_scale,
+seq_add_y = function(data, track_proportion,
                      exon_proportion, blank_proportion, exon_height, sandwich_ratio){
   #' ymin and ymax is for draw the exon part
     data2 = data %>%
@@ -275,6 +275,5 @@ Splines_link_generate = function(data, detail = 100){
     }
   )
 }
-
 
 

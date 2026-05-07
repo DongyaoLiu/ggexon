@@ -13,7 +13,6 @@ geom_exon(
   na.rm = FALSE,
   show.legend = NA,
   transcripts_track_ratio = NULL,
-  y_scale = NULL,
   exon_height = NULL,
   transcript_backbone_ratio = NULL,
   x_translation = NULL,
@@ -45,8 +44,6 @@ warning. If \code{TRUE}, missing values are removed silently.}
 
 \item{transcripts_track_ratio}{Optional transcript track ratio used by the
 ggexon layout helpers.}
-
-\item{y_scale}{Optional y scaling factor for the track layout.}
 
 \item{exon_height}{Optional exon rectangle height.}
 

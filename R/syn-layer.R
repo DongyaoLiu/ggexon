@@ -324,7 +324,6 @@ syn_layout_layer_params <- function(layer) {
 
   out <- list(
     exon_height = layout@exon_height,
-    y_scale = layout@y_scale,
     x_translation = layout@x_translation
   )
   out[vapply(out, function(x) is.numeric(x) && length(x) == 1L && !is.na(x), logical(1))]

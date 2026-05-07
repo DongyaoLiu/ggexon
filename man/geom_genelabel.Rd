@@ -14,7 +14,6 @@ geom_genelabel(
   na.rm = FALSE,
   show.legend = NA,
   exon_height = NULL,
-  y_scale = NULL,
   species = NULL,
   chr = NULL,
   subset = NULL,
@@ -29,8 +28,6 @@ ggplot2 layer arguments.}
 
 \item{exon_height}{Optional exon rectangle height used when preparing track
 coordinates.}
-
-\item{y_scale}{Optional y scaling factor for the track layout.}
 
 \item{species}{Optional species / individual identifier when \code{data} is a
 \code{SynSpecies}.}

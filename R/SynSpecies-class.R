@@ -178,7 +178,6 @@ setClass(
 #'   should vary across panels.
 #' @slot exon_height Shared default exon or gene block height for
 #'   layout-aware annotation geoms.
-#' @slot y_scale Shared default y scaling for layout-aware annotation geoms.
 #' @slot x_translation Shared default x-axis offset for layout-aware annotation
 #'   geoms.
 #' @slot metadata Optional layout metadata.
@@ -188,7 +187,6 @@ setClass(
 #' * `layout_type = "custom"`
 #' * `free = list(x = FALSE, y = FALSE)`
 #' * `exon_height = NA_real_`
-#' * `y_scale = NA_real_`
 #' * `x_translation = NA_real_`
 #' * `metadata = list()`
 #'
@@ -204,8 +202,7 @@ setClass(
 #'   `free$x` must be `TRUE`.
 #' * `layout_type` must be one non-empty character value.
 #' * `free` must be a list with scalar logical `x` and `y` entries.
-#' * `exon_height`, `y_scale`, and `x_translation` must each be scalar numeric
-#'   values.
+#' * `exon_height` and `x_translation` must each be scalar numeric values.
 #'
 #' @exportClass SynLayout
 setClass(
@@ -215,7 +212,6 @@ setClass(
     layout_type = "character",
     free = "list",
     exon_height = "numeric",
-    y_scale = "numeric",
     x_translation = "numeric",
     metadata = "list"
   ),
@@ -224,7 +220,6 @@ setClass(
     layout_type = "custom",
     free = list(x = FALSE, y = FALSE),
     exon_height = NA_real_,
-    y_scale = NA_real_,
     x_translation = NA_real_,
     metadata = list()
   ),
@@ -305,9 +300,6 @@ setClass(
     }
     if (!is.numeric(object@exon_height) || length(object@exon_height) != 1L) {
       problems <- c(problems, "`exon_height` must be a single numeric value.")
-    }
-    if (!is.numeric(object@y_scale) || length(object@y_scale) != 1L) {
-      problems <- c(problems, "`y_scale` must be a single numeric value.")
     }
     if (!is.numeric(object@x_translation) || length(object@x_translation) != 1L) {
       problems <- c(problems, "`x_translation` must be a single numeric value.")
@@ -413,7 +405,6 @@ setClass(
 #'   behavior across panels.
 #' @param exon_height Default shared exon/gene/gene-label height resolved by
 #'   syn-aware annotation geoms.
-#' @param y_scale Default shared y-axis scaling for layout-aware geoms.
 #' @param x_translation Default shared x-axis translation applied to
 #'   layout-aware geoms.
 #' @param metadata Optional metadata list.
@@ -424,7 +415,6 @@ SynLayout <- function(panels,
                       layout_type = "custom",
                       free = list(x = FALSE, y = FALSE),
                       exon_height = NA_real_,
-                      y_scale = NA_real_,
                       x_translation = NA_real_,
                       metadata = list()) {
   new(
@@ -433,7 +423,6 @@ SynLayout <- function(panels,
     layout_type = layout_type,
     free = free,
     exon_height = exon_height,
-    y_scale = y_scale,
     x_translation = x_translation,
     metadata = metadata
   )
@@ -588,7 +577,6 @@ setMethod("show", "SynLayout", function(object) {
   cat("  panels:", nrow(object@panels), "\n")
   cat("  free x/y:", isTRUE(object@free$x), "/", isTRUE(object@free$y), "\n")
   cat("  exon_height:", object@exon_height, "\n")
-  cat("  y_scale:", object@y_scale, "\n")
   cat("  x_translation:", object@x_translation, "\n")
 })
 
@@ -633,7 +621,6 @@ as_syn_layout <- function(x,
                           layout_type = NULL,
                           free = NULL,
                           exon_height = NA_real_,
-                          y_scale = NA_real_,
                           x_translation = NA_real_,
                           metadata = list()) {
   if (is.null(x)) {
@@ -652,7 +639,6 @@ as_syn_layout <- function(x,
     layout_type = layout_type %||% infer_syn_layout_type(panels),
     free = free %||% infer_syn_layout_free(panels),
     exon_height = exon_height,
-    y_scale = y_scale,
     x_translation = x_translation,
     metadata = metadata
   )
@@ -1143,7 +1129,6 @@ syn_layout_panels <- function(x) {
     layout_type = layout@layout_type,
     free = .layout_free_with_panel_xlim(layout, panels),
     exon_height = layout@exon_height,
-    y_scale = layout@y_scale,
     x_translation = layout@x_translation,
     metadata = layout@metadata
   )
@@ -1268,7 +1253,6 @@ clear_panel_xlim <- function(x, individual) {
     layout_type = layout@layout_type,
     free = .layout_free_with_panel_xlim(layout, panels),
     exon_height = layout@exon_height,
-    y_scale = layout@y_scale,
     x_translation = layout@x_translation,
     metadata = layout@metadata
   )

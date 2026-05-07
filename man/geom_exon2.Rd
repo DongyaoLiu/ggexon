@@ -13,7 +13,6 @@ geom_exon2(
   na.rm = FALSE,
   show.legend = NA,
   transcripts_track_ratio = NULL,
-  y_scale = NULL,
   exon_height = NULL,
   x_translation = NULL,
   subset = NULL,
@@ -47,8 +46,6 @@ geom_exon2(
 
 \item{transcripts_track_ratio}{Optional transcript track ratio used by the
 ggexon layout helpers.}
-
-\item{y_scale}{Optional y scaling factor for the track layout.}
 
 \item{exon_height}{Optional maximum exon rectangle height.}
 

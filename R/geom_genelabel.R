@@ -8,14 +8,13 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
                            angle = 0, hjust = 0,
                            vjust = 0.5, alpha = NA, fontface = 1, lineheight = 1.2
                          ),
-                         extra_params = c("exon_height", "na.rm", "y_scale", "x_translation",
+                         extra_params = c("exon_height", "na.rm", "x_translation",
                             "species", "chr", "subset",
                             fontface = 1, lineheight = 1.2
                          ),
                          default_params = function() {
                            list(
                              exon_height = 0.4,
-                             y_scale = 100,
                              x_translation = 0,
                              species = NULL,
                              chr = NULL,
@@ -52,7 +51,6 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
 #' @param x_translation Optional x offset applied before drawing.
 #' @param exon_height Optional exon rectangle height used when preparing track
 #'   coordinates.
-#' @param y_scale Optional y scaling factor for the track layout.
 #' @param species Optional species / individual identifier when `data` is a
 #'   `SynSpecies`.
 #' @param chr Optional chromosome / seqname restriction when `data` is
@@ -64,14 +62,12 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
 geom_genelabel <- function(mapping = NULL, data = NULL,
                        stat = "identity", position = "identity", x_translation = NULL,
                        ..., na.rm = FALSE, show.legend = NA, exon_height = NULL,
-                       y_scale = NULL,
                        species = NULL, chr = NULL, subset = NULL,
                        inherit.aes = TRUE) {
     params <- Filter(Negate(is.null), c(list(
       ...,
       na.rm = na.rm,
       exon_height = exon_height,
-      y_scale = y_scale,
       x_translation = x_translation,
       species = species,
       chr = chr,

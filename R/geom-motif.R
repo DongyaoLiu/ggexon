@@ -1,7 +1,7 @@
 GeomMotif <- ggproto("GeomMotif", Geom,
                     required_aes = c("ymin", "xmin", "xmax", "transcripts", "strand", "track", "text"),
                     extra_params = c(
-                      "exon_height", "na.rm", "y_scale", "x_translation",
+                      "exon_height", "na.rm", "x_translation",
                       "species", "chr", "subset", "annotation", "ids", "domains",
                       "model", "motif", "y_offset"
                     ),
@@ -28,7 +28,6 @@ GeomMotif <- ggproto("GeomMotif", Geom,
                     default_params = function() {
                       list(
                         exon_height = 0.8,
-                        y_scale = 100,
                         x_translation = 0,
                         species = NULL,
                         chr = NULL,
@@ -53,7 +52,6 @@ GeomMotif <- ggproto("GeomMotif", Geom,
 #' @param mapping,data,stat,position,...,na.rm,show.legend,inherit.aes Standard
 #'   ggplot2 layer arguments.
 #' @param exon_height Height of the motif blocks.
-#' @param y_scale Vertical spacing between protein tracks.
 #' @param x_translation Optional x-axis offset.
 #' @param species Optional species/individual selector when plotting from a
 #'   `SynSpecies` object.
@@ -77,7 +75,7 @@ GeomMotif <- ggproto("GeomMotif", Geom,
 geom_motif <- function(mapping = NULL, data = NULL,
                        stat = "identity", position = "identity",
                        ..., na.rm = FALSE, show.legend = NA,
-                       exon_height = NULL, y_scale = NULL, x_translation = NULL,
+                       exon_height = NULL, x_translation = NULL,
                        species = NULL, chr = NULL, subset = NULL,
                        annotation = NULL, ids = NULL, domains = NULL,
                        model = "all", motif = NULL,
@@ -86,7 +84,6 @@ geom_motif <- function(mapping = NULL, data = NULL,
   params <- Filter(Negate(is.null), list(
     na.rm = na.rm,
     exon_height = exon_height,
-    y_scale = y_scale,
     x_translation = x_translation,
     species = species,
     chr = chr,

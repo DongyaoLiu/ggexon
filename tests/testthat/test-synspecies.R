@@ -739,7 +739,6 @@ test_that("SynLayout shared geom parameters are resolved before layer overrides"
       stringsAsFactors = FALSE
     ),
     exon_height = 2.2,
-    y_scale = 77,
     x_translation = 15
   )
 
@@ -754,7 +753,6 @@ test_that("SynLayout shared geom parameters are resolved before layer overrides"
   params <- ggexon:::syn_layer_params(layer)
 
   expect_identical(params$exon_height, 2.2)
-  expect_identical(params$y_scale, 77)
   expect_identical(params$x_translation, 15)
 
   override_plot <- ggexon(sp) +
@@ -762,7 +760,6 @@ test_that("SynLayout shared geom parameters are resolved before layer overrides"
       chr = "RagTag_V",
       subset = c(21550000, 21680000),
       exon_height = 1.1,
-      y_scale = 55,
       x_translation = 3
     )
   override_ctx <- ggexon:::collect_syn_plot_context(override_plot@layers, override_plot@data)
@@ -771,7 +768,6 @@ test_that("SynLayout shared geom parameters are resolved before layer overrides"
   override_params <- ggexon:::syn_layer_params(override_layer)
 
   expect_identical(override_params$exon_height, 1.1)
-  expect_identical(override_params$y_scale, 55)
   expect_identical(override_params$x_translation, 3)
 })
 

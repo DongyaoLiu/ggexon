@@ -29,8 +29,6 @@ should vary across panels.}
 \item{\code{exon_height}}{Shared default exon or gene block height for
 layout-aware annotation geoms.}
 
-\item{\code{y_scale}}{Shared default y scaling for layout-aware annotation geoms.}
-
 \item{\code{x_translation}}{Shared default x-axis offset for layout-aware annotation
 geoms.}
 
@@ -44,7 +42,6 @@ geoms.}
 \item \code{layout_type = "custom"}
 \item \code{free = list(x = FALSE, y = FALSE)}
 \item \code{exon_height = NA_real_}
-\item \code{y_scale = NA_real_}
 \item \code{x_translation = NA_real_}
 \item \code{metadata = list()}
 }
@@ -64,8 +61,6 @@ display-only windows that should not drive annotation filtering.
 \code{free$x} must be \code{TRUE}.
 \item \code{layout_type} must be one non-empty character value.
 \item \code{free} must be a list with scalar logical \code{x} and \code{y} entries.
-\item \code{exon_height}, \code{y_scale}, and \code{x_translation} must each be scalar numeric
-values.
+\item \code{exon_height} and \code{x_translation} must each be scalar numeric values.
 }
 }
-
