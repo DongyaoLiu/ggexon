@@ -374,7 +374,14 @@ setClass(
     signal = NULL,
     seqinfo = NULL,
     window_cache = list()
-  )
+  ),
+  validity = function(object) {
+    if (!is.null(object@seqinfo) && !methods::is(object@seqinfo, "Seqinfo")) {
+      "`seqinfo` must be a Seqinfo object or NULL."
+    } else {
+      TRUE
+    }
+  }
 )
 
 #' SynProteinDomainAnnotation class

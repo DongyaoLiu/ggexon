@@ -141,6 +141,9 @@ setClass(
         "`active_annotation` must be a single non-empty character value."
       )
     }
+    if (!is.null(object@seqinfo) && !methods::is(object@seqinfo, "Seqinfo")) {
+      problems <- c(problems, "`seqinfo` must be a Seqinfo object or NULL.")
+    }
     if (length(object@annotations) > 0L) {
       bad_annotations <- !vapply(
         object@annotations,

@@ -6,11 +6,13 @@
 #' @name SynBioc-unions
 #' @keywords internal
 #' @importClassesFrom GenomicRanges GRanges
-#' @importClassesFrom GenomeInfoDb Seqinfo
 #' @importClassesFrom Biostrings DNAStringSet AAStringSet
 NULL
 
 setClassUnion("NULLOrGRanges", c("NULL", "GRanges"))
-setClassUnion("NULLOrSeqinfo", c("NULL", "Seqinfo"))
+# GenomeInfoDb's Seqinfo class is not exported consistently across all
+# Bioconductor releases used on CI. Keep the slot union permissive and enforce
+# Seqinfo-or-NULL in class validity and replacement methods.
+setClassUnion("NULLOrSeqinfo", c("NULL", "ANY"))
 setClassUnion("NULLOrDNAStringSet", c("NULL", "DNAStringSet"))
 setClassUnion("NULLOrAAStringSet", c("NULL", "AAStringSet"))
