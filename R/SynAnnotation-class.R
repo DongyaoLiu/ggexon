@@ -365,7 +365,7 @@ setClass(
   slots = c(
     data_format = "character",
     signal = "ANY",
-    seqinfo = "NULLOrSeqinfo",
+    seqinfo = "ANY",
     window_cache = "list"
   ),
   prototype = list(

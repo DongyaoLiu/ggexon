@@ -72,7 +72,7 @@ setClass(
     annotation = "NULLOrGRanges",
     nucleotide_seq = "NULLOrDNAStringSet",
     protein_seq = "NULLOrAAStringSet",
-    seqinfo = "NULLOrSeqinfo",
+    seqinfo = "ANY",
     feature_index = "ANY",
     annotations = "list",
     active_annotation = "character",
