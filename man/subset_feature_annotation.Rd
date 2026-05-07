@@ -11,7 +11,9 @@ subset_feature_annotation(
   chr = NULL,
   start = NULL,
   end = NULL,
-  coords = NULL
+  coords = NULL,
+  gene = NULL,
+  transcript = NULL
 )
 }
 \arguments{

@@ -24,7 +24,8 @@ tree inputs are filled from the stored \code{SynSpecies} tree slots when present
 
 \item{layout}{ggtree layout. Currently only \code{"rectangular"} is supported.}
 
-\item{individual}{Optional individual selector. When named, names are tree tip labels and values are \code{SynSpecies} individual ids.}
+\item{individual}{Optional individual selector. When named, names are tree
+tip labels and values are \code{SynSpecies} individual ids.}
 
 \item{tree_width}{Grid unit width of the tree column.}
 
@@ -36,5 +37,7 @@ tree inputs are filled from the stored \code{SynSpecies} tree slots when present
 A ggexon tree specification consumed by \code{\link[=facet_genomictree]{facet_genomictree()}}.
 }
 \description{
-\code{geom_genomic_tree()} is a ggexon-native tree layer specification. It stores a rectangular ggtree layout on the plot so \code{\link[=facet_genomictree]{facet_genomictree()}} can order genomic panels by tree tips and inject a single spanning tree panel.
+\code{geom_genomic_tree()} is a ggexon-native tree layer specification. It stores
+a rectangular ggtree layout on the plot so \code{\link[=facet_genomictree]{facet_genomictree()}} can order
+genomic panels by tree tips and inject a single spanning tree panel.
 }

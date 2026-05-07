@@ -2,7 +2,6 @@
 % Please edit documentation in R/SynAnnotation-class.R
 \name{SynProteinMutationAnnotation}
 \alias{SynProteinMutationAnnotation}
-\alias{SynProteinMutationAnnotation-class}
 \title{Constructor for SynProteinMutationAnnotation}
 \usage{
 SynProteinMutationAnnotation(
@@ -35,18 +34,5 @@ individual identifiers.}
 A \code{SynProteinMutationAnnotation} object.
 }
 \description{
-\code{SynProteinMutationAnnotation} stores protein-coordinate mutation records,
-such as amino-acid substitutions summarized across strains or individuals.
-It is a protein-space annotation parallel to \code{SynProteinDomainAnnotation}.
-}
-\section{Slots}{
-\itemize{
-\item \code{data_format}: Mutation file format label. Currently
-\code{"protein_mutation"}.
-\item \code{mutation_data}: Optional cached normalized mutation table.
-\item \code{individual_index}: Optional long index mapping source mutation rows
-to individual/strain identifiers.
-\item \code{keytype}: Identifier column used to join mutations to proteins,
-transcripts, or genes.
-}
+Constructor for SynProteinMutationAnnotation
 }

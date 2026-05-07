@@ -9,6 +9,8 @@ class_ggexon(
   ...,
   layers = list(),
   cross_panel_annotations = list(),
+  genomic_tree = NULL,
+  genomic_x_scale = NULL,
   scales = NULL,
   guides = NULL,
   mapping = aes(),

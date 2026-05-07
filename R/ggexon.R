@@ -1,3 +1,21 @@
+#' Create a ggexon plot
+#'
+#' `ggexon()` starts a ggplot-like object for genomic annotations, synteny,
+#' and associated track data. It follows the same basic shape as
+#' [`ggplot2::ggplot()`], while preserving `SynIndividual` and `SynSpecies`
+#' containers so ggexon layers can resolve their plotting data lazily during
+#' plot build.
+#'
+#' @param data A data frame, `SynIndividual`, `SynSpecies`, or another object
+#'   that can be fortified for plotting.
+#' @param mapping Default aesthetic mappings created by [`ggplot2::aes()`].
+#' @param ... Additional arguments passed to `fortify()` when `data` is not a
+#'   ggexon Syn object.
+#' @param environment Plot environment. Defaults to the caller environment.
+#'
+#' @return A ggexon plot object inheriting from `ggplot`.
+#' @seealso [`geom_exon()`], [`facet_genomics()`], [`SynIndividual()`],
+#'   [`SynSpecies()`]
 #' @export
 ggexon <- function(data = NULL, mapping = aes(), ...,
                    environment = parent.frame()) {
@@ -5,6 +23,7 @@ ggexon <- function(data = NULL, mapping = aes(), ...,
 }
 
 
+#' @rdname ggexon
 #' @export
 ggexon.default <- function(data = NULL, mapping = aes(), ...,
                            environment = parent.frame()){

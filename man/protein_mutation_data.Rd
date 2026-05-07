@@ -13,5 +13,5 @@ protein_mutation_data(x)
 A normalized mutation \code{data.frame}.
 }
 \description{
-Access protein-mutation data.
+Access protein-mutation data
 }

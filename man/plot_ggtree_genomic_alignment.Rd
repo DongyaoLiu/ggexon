@@ -24,11 +24,14 @@ plot_ggtree_genomic_alignment(
 )
 }
 \arguments{
-\item{alignment}{A \code{ggtree_genomic_alignment} object returned by \code{\link[=compile_ggtree_genomic_alignment]{compile_ggtree_genomic_alignment()}}.}
+\item{alignment}{A \code{ggtree_genomic_alignment} object returned by
+\code{\link[=compile_ggtree_genomic_alignment]{compile_ggtree_genomic_alignment()}}.}
 
-\item{mapping}{Aesthetic mapping passed to \code{\link[=geom_genetag]{geom_genetag()}}. Defaults to \code{ggplot2::aes(fill = gene)}.}
+\item{mapping}{Aesthetic mapping passed to \code{\link[=geom_genetag]{geom_genetag()}}. Defaults to
+\code{ggplot2::aes(fill = gene)}.}
 
-\item{tree_width, track_width, label_width}{Grid units controlling column widths.}
+\item{tree_width, track_width, label_width}{Grid units controlling column
+widths.}
 
 \item{panel_height}{Grid unit controlling each tip row height.}
 
@@ -36,9 +39,11 @@ plot_ggtree_genomic_alignment(
 
 \item{tree_colour, tree_linewidth}{Tree segment styling.}
 
-\item{show_track_labels}{Logical; draw tip/individual labels between the tree and genomic panels.}
+\item{show_track_labels}{Logical; draw tip/individual labels between the tree
+and genomic panels.}
 
-\item{show_x_axis}{Logical; draw x axes for the tree and genomic panels. Defaults to \code{TRUE} so species-local coordinate systems are visible.}
+\item{show_x_axis}{Logical; draw x axes for the tree and genomic panels.
+Defaults to \code{TRUE} so species-local coordinate systems are visible.}
 
 \item{base_size}{Base font size used when \code{show_x_axis = TRUE}.}
 
@@ -50,5 +55,7 @@ plot_ggtree_genomic_alignment(
 A \code{gtable} object. Print it or call \code{grid::grid.draw()}.
 }
 \description{
-\code{plot_ggtree_genomic_alignment()} assembles one tree panel beside one species-local genomic panel per tree tip. The tree panel spans all genomic rows, and all panels share the tree-derived tip y positions.
+\code{plot_ggtree_genomic_alignment()} assembles one tree panel beside one
+species-local genomic panel per tree tip. The tree panel spans all genomic
+rows, and all panels share the tree-derived tip y positions.
 }

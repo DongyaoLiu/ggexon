@@ -31,25 +31,45 @@ ignored. When both \code{tree} and \code{tree_plot} are omitted, stored values o
 
 \item{layout}{ggtree layout. Currently only \code{"rectangular"} is supported.}
 
-\item{individual}{Optional individual selector. When named, names are tree tip labels and values are \code{SynSpecies} individual ids. When unnamed, values are used as both tip labels and individual ids. When \code{NULL}, matching uses identical tree-tip labels and individual ids.}
+\item{individual}{Optional individual selector. When named, names are tree
+tip labels and values are \code{SynSpecies} individual ids. When unnamed, values
+are used as both tip labels and individual ids. When \code{NULL}, matching uses
+identical tree-tip labels and individual ids.}
 
-\item{chr}{Optional chromosome/seqname. May be a scalar or a named vector/list keyed by tree tip or individual id.}
+\item{chr}{Optional chromosome/seqname. May be a scalar or a named vector/list
+keyed by tree tip or individual id.}
 
-\item{start, end}{Optional coordinate bounds. May be scalar or named by tree tip or individual id.}
+\item{start, end}{Optional coordinate bounds. May be scalar or named by tree
+tip or individual id.}
 
-\item{subset}{Optional numeric length-2 bounds. May be a scalar vector or a named list keyed by tree tip or individual id. Overrides \code{start} and \code{end}.}
+\item{subset}{Optional numeric length-2 bounds. May be a scalar vector or a
+named list keyed by tree tip or individual id. Overrides \code{start} and \code{end}.}
 
-\item{feature_type}{Feature type passed to \code{\link[=query_features]{query_features()}}. Defaults to \code{"gene"}.}
+\item{feature_type}{Feature type passed to \code{\link[=query_features]{query_features()}}. Defaults to
+\code{"gene"}.}
 
-\item{inter_genetic}{Intergenic-gap layout mode. \code{"scaled"} keeps the original gap between consecutive features within each track. \code{"union"} uses the maximum gap observed at each feature step so corresponding gaps are the same across tracks in the same panel.}
+\item{inter_genetic}{Intergenic-gap layout mode. \code{"scaled"} keeps the
+original gap between consecutive features within each track. \code{"union"} uses
+the maximum gap observed at each feature step so corresponding gaps are the
+same across tracks in the same panel.}
 
-\item{exon_length}{Feature-length layout mode. \code{"scaled"} keeps original feature lengths. \code{"union"} uses the maximum feature length observed at each feature step so corresponding features have the same displayed length across tracks in the same panel.}
+\item{exon_length}{Feature-length layout mode. \code{"scaled"} keeps original
+feature lengths. \code{"union"} uses the maximum feature length observed at each
+feature step so corresponding features have the same displayed length
+across tracks in the same panel.}
 
-\item{include_y}{Logical; when \code{TRUE}, also include a \code{y} column copied from \code{tree_y}. Keep the default \code{FALSE} for \code{ggtree::facet_plot()}, which injects its own \code{y} column after tip matching.}
+\item{include_y}{Logical; when \code{TRUE}, also include a \code{y} column copied from
+\code{tree_y}. Keep the default \code{FALSE} for \code{ggtree::facet_plot()}, which
+injects its own \code{y} column after tip matching.}
 }
 \value{
-A \code{data.frame} ready for \code{ggtree::facet_plot()} and \code{\link[=geom_genetag]{geom_genetag()}}. It contains \code{id}, \code{individual}, \code{tree_y}, \code{xmin}, \code{xmax}, \code{strand}, and gene metadata columns.
+A \code{data.frame} ready for \code{ggtree::facet_plot()} and
+\code{\link[=geom_genetag]{geom_genetag()}}. It contains \code{id}, \code{individual}, \code{tree_y}, \code{xmin},
+\code{xmax}, \code{strand}, and gene metadata columns.
 }
 \description{
-\code{compile_ggtree_genetag()} extracts rectangular-layout tip positions from a ggtree plot or tree object, matches tip labels to \code{SynSpecies} individuals, and returns one row per gene feature. The first column is \code{id}, matching ggtree's \code{facet_plot()} convention.
+\code{compile_ggtree_genetag()} extracts rectangular-layout tip positions from a
+ggtree plot or tree object, matches tip labels to \code{SynSpecies} individuals,
+and returns one row per gene feature. The first column is \code{id}, matching
+ggtree's \code{facet_plot()} convention.
 }

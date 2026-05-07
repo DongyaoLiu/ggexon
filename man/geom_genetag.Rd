@@ -24,27 +24,37 @@ geom_genetag(
 )
 }
 \arguments{
-\item{mapping, data, stat, position, ..., na.rm, show.legend, inherit.aes}{Standard ggplot2 layer arguments. \code{inherit.aes} defaults to \code{FALSE} so the layer can be used cleanly in \code{ggtree::facet_plot()} side panels.}
+\item{mapping, data, stat, position, ..., na.rm, show.legend, inherit.aes}{Standard
+ggplot2 layer arguments. \code{inherit.aes} defaults to \code{FALSE} so the layer can
+be used cleanly in \code{ggtree::facet_plot()} side panels.}
 
 \item{exon_height}{Total tag height in y-axis units. Defaults to \code{0.8}.}
 
 \item{height}{Deprecated-compatible alias for \code{exon_height}.}
 
-\item{arrow_width}{Optional width of the terminal triangle in x-axis units. When \code{NULL}, width is calculated from \code{arrow_fraction}.}
+\item{arrow_width}{Optional width of the terminal triangle in x-axis units.
+When \code{NULL}, width is calculated from \code{arrow_fraction}.}
 
-\item{arrow_fraction}{Fraction of each gene span used for the terminal triangle when \code{arrow_width} is \code{NULL}.}
+\item{arrow_fraction}{Fraction of each gene span used for the terminal
+triangle when \code{arrow_width} is \code{NULL}.}
 
-\item{species}{Optional species / individual identifier when \code{data} is a \code{SynSpecies}.}
+\item{species}{Optional species / individual identifier when \code{data} is a
+\code{SynSpecies}.}
 
-\item{chr}{Optional chromosome / seqname restriction when \code{data} is Syn-backed.}
+\item{chr}{Optional chromosome / seqname restriction when \code{data} is
+Syn-backed.}
 
 \item{subset}{Optional numeric length-2 genomic window to keep.}
 
-\item{feature_type}{Feature type passed to \code{\link[=query_features]{query_features()}}. Defaults to \code{"gene"}.}
+\item{feature_type}{Feature type passed to \code{\link[=query_features]{query_features()}}. Defaults to
+\code{"gene"}.}
 }
 \value{
 A ggplot layer.
 }
 \description{
-\code{geom_genetag()} draws each stranded gene as a rectangular exon-like body plus a symmetric terminal triangle. The triangle apex points toward the strand-specific end of the feature. It is designed for gene-level summaries, including ggtree side panels generated with \code{ggtree::facet_plot()}.
+\code{geom_genetag()} draws each stranded gene as a rectangular exon-like body
+plus a symmetric terminal triangle. The triangle apex points toward the
+strand-specific end of the feature. It is designed for gene-level summaries,
+including ggtree side panels generated with \code{ggtree::facet_plot()}.
 }

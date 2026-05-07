@@ -59,5 +59,5 @@ amino-acid codes.}
 A \code{data.frame} of matching mutation records.
 }
 \description{
-Query protein-mutation annotations.
+Query protein-mutation annotations
 }

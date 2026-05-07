@@ -5,6 +5,9 @@ Authors@R:
     person("Dongyao", "LIU", , "dongyao@connect.hku.hk", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-8066-1487"))
 Description: visulize genomic tracks with associate meta information.
+URL: https://dongyaoliu.github.io/ggexon/,
+    https://github.com/DongyaoLiu/ggexon
+BugReports: https://github.com/DongyaoLiu/ggexon/issues
 SystemRequirements: Python (>= 3.8), odgi
 Depends:
     methods,
@@ -34,6 +37,7 @@ Suggests:
     rmarkdown,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
+Config/Needs/website: pkgdown
 VignetteBuilder: knitr
 License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
     license
@@ -45,40 +49,40 @@ Collate:
     'SynAnnotation-class.R'
     'SynIndividual-class.R'
     'SynSpecies-class.R'
-    'protein-mutation-annotation.R'
     'aes-evaluation.R'
     'all-classes-S7.R'
     'axis-secondary.R'
     'coord.R'
     'cross-panel-annotations.R'
     'facet-genomics.R'
-    'ggtree-layout.R'
-    'theme-ggexon.R'
     'facet-genomictree.R'
-    'scale-genomic.R'
     'geom-coverage.R'
     'geom-coverageMUT.R'
     'geom-direction.R'
     'geom-exon.R'
     'geom-gene.R'
-    'geom-genomic-tree.R'
     'geom-genetag.R'
-    'ggtree-genomic-alignment.R'
+    'geom-genomic-tree.R'
     'geom-motif.R'
-    'geom-protein-lollipop.R'
     'geom-mutation-label.R'
     'geom-nuclink.R'
+    'geom-protein-lollipop.R'
     'geom_genelabel.R'
     'ggexon.R'
     'ggplot-functions.R'
     'ggplot-global.R'
+    'ggtree-genomic-alignment.R'
+    'ggtree-layout.R'
     'grob-null.R'
     'layout.R'
     'odgi.R'
     'panel-windows.R'
     'plot-build.R'
+    'protein-mutation-annotation.R'
+    'scale-genomic.R'
     'subsetting-overview.R'
     'syn-layer.R'
+    'theme-ggexon.R'
     'transformation_functions.R'
     'utilities-checks.R'
     'utilities-grid.R'

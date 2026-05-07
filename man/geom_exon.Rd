@@ -15,6 +15,7 @@ geom_exon(
   transcripts_track_ratio = NULL,
   y_scale = NULL,
   exon_height = NULL,
+  transcript_backbone_ratio = NULL,
   x_translation = NULL,
   subset = NULL,
   annotation_type = "exon",
@@ -48,6 +49,9 @@ ggexon layout helpers.}
 \item{y_scale}{Optional y scaling factor for the track layout.}
 
 \item{exon_height}{Optional exon rectangle height.}
+
+\item{transcript_backbone_ratio}{Relative backbone height as a fraction of
+\code{exon_height}. Defaults to \code{0.1}.}
 
 \item{x_translation}{Optional x offset applied before drawing.}
 

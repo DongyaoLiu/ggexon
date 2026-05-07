@@ -14,15 +14,20 @@ compile_ggtree_rectangular_segments(
 \arguments{
 \item{tree}{Optional tree object accepted by \code{ggtree::ggtree()}.}
 
-\item{tree_plot}{Optional existing \code{ggtree} plot. If supplied, \code{tree} is ignored.}
+\item{tree_plot}{Optional existing \code{ggtree} plot. If supplied, \code{tree} is
+ignored.}
 
 \item{layout}{ggtree layout. Currently only \code{"rectangular"} is supported.}
 
 \item{track}{Facet-track value assigned to all branch segments.}
 }
 \value{
-A \code{data.frame} with \code{track}, \code{x}, \code{xend}, \code{y}, \code{yend}, \code{node}, \code{parent}, \code{segment}, \code{isTip}, and \code{label} columns.
+A \code{data.frame} with \code{track}, \code{x}, \code{xend}, \code{y}, \code{yend}, \code{node},
+\code{parent}, \code{segment}, \code{isTip}, and \code{label} columns.
 }
 \description{
-\code{compile_ggtree_rectangular_segments()} converts a rectangular ggtree plot or tree object into plain segment rows. The returned data can be drawn with \code{ggplot2::geom_segment()} inside \code{ggexon()} and aligned to a gene-tag panel with \code{\link[=facet_genomics]{facet_genomics()}}.
+\code{compile_ggtree_rectangular_segments()} converts a rectangular ggtree plot or
+tree object into plain segment rows. The returned data can be drawn with
+\code{ggplot2::geom_segment()} inside \code{ggexon()} and aligned to a gene-tag panel
+with \code{\link[=facet_genomics]{facet_genomics()}}.
 }

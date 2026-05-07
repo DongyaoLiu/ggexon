@@ -31,23 +31,32 @@ values on \code{x} are used when present.}
 
 \item{layout}{ggtree layout. Currently only \code{"rectangular"} is supported.}
 
-\item{individual}{Optional individual selector. When named, names are tree tip labels and values are \code{SynSpecies} individual ids.}
+\item{individual}{Optional individual selector. When named, names are tree
+tip labels and values are \code{SynSpecies} individual ids.}
 
-\item{chr}{Optional chromosome/seqname. May be scalar or named by tree tip or individual id.}
+\item{chr}{Optional chromosome/seqname. May be scalar or named by tree tip or
+individual id.}
 
-\item{start, end}{Optional coordinate bounds. May be scalar or named by tree tip or individual id.}
+\item{start, end}{Optional coordinate bounds. May be scalar or named by tree
+tip or individual id.}
 
-\item{subset}{Optional numeric length-2 bounds. May be a scalar vector or a named list keyed by tree tip or individual id. Overrides \code{start} and \code{end}.}
+\item{subset}{Optional numeric length-2 bounds. May be a scalar vector or a
+named list keyed by tree tip or individual id. Overrides \code{start} and \code{end}.}
 
-\item{feature_type}{Feature type passed to \code{\link[=query_features]{query_features()}}. Defaults to \code{"gene"}.}
+\item{feature_type}{Feature type passed to \code{\link[=query_features]{query_features()}}. Defaults to
+\code{"gene"}.}
 
-\item{inter_genetic, exon_length}{Layout modes passed to \code{\link[=compile_ggtree_genetag]{compile_ggtree_genetag()}}.}
+\item{inter_genetic, exon_length}{Layout modes passed to
+\code{\link[=compile_ggtree_genetag]{compile_ggtree_genetag()}}.}
 
 \item{tree_track}{Facet-track label assigned to tree segments.}
 }
 \value{
-A \code{ggtree_genomic_alignment} list with \code{tip_layout}, \code{tree_segments}, and \code{gene_tags} data frames.
+A \code{ggtree_genomic_alignment} list with \code{tip_layout},
+\code{tree_segments}, and \code{gene_tags} data frames.
 }
 \description{
-\code{compile_ggtree_genomic_alignment()} prepares a ggalign-style layout where a rectangular tree provides the shared tip y positions and each matched \code{SynSpecies} individual keeps its own genomic x coordinate system.
+\code{compile_ggtree_genomic_alignment()} prepares a ggalign-style layout where a
+rectangular tree provides the shared tip y positions and each matched
+\code{SynSpecies} individual keeps its own genomic x coordinate system.
 }

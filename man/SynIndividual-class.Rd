@@ -6,10 +6,9 @@
 \title{SynIndividual class}
 \description{
 \code{SynIndividual} stores the per-individual data needed to build synteny plots.
-The constructor requires one or more annotation GFF/GTF paths and can
-optionally store a genome FASTA path. Parsed annotations,
-nucleotide/protein sequences, and plotting caches can be attached later
-through accessor methods.
+Only \code{id} is required at the class level; genome and annotation file paths
+can be attached later. Parsed annotations, nucleotide/protein sequences, and
+plotting caches can also be attached through accessor methods.
 }
 \section{Slots}{
 
@@ -76,11 +75,12 @@ The raw class prototype leaves \code{annotations} empty. The high-level
 
 \itemize{
 \item \code{id} and \code{active_annotation} must be scalar non-empty character values.
-\item \code{annotation_file} must be a non-empty character vector with no empty
-entries.
 \item \code{genome_file} must be a length-one character vector or \code{NA_character_}.
-\item \code{annotation_format} must be one of \code{"auto"}, \code{"gff"}, or \code{"gtf"}, either
-length one or the same length as \code{annotation_file}.
+\item When present, \code{annotation_file} must be a non-empty character vector with
+no empty entries.
+\item \code{annotation_format} must be one of \code{"auto"}, \code{"gff"}, or \code{"gtf"}. When
+\code{annotation_file} is present, it must be length one or the same length as
+\code{annotation_file}.
 \item When \code{annotations} is non-empty, every entry must inherit from
 \code{SynAnnotation}. When feature annotations are present,
 \code{active_annotation} must name one of those feature layers.

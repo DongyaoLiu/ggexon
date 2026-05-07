@@ -4,25 +4,31 @@
 \alias{set_panel_xlim}
 \title{Set a panel-specific x window on a stored Syn layout}
 \usage{
-set_panel_xlim(x, individual, xlim, xlim_chr = NULL)
+set_panel_xlim(x = NULL, individual = NULL, xlim = NULL, xlim_chr = NULL)
 }
 \arguments{
-\item{x}{A \code{\link{SynSpecies}} or \code{\link{SynLayout}} object.}
+\item{x}{A \code{\link{SynSpecies}}, \code{\link{SynLayout}}, or ggexon plot object.}
 
-\item{individual}{Annotation-panel individual name from the layout table.}
+\item{individual}{Optional annotation-panel individual name or names from the
+layout table. Defaults to all annotation panels.}
 
-\item{xlim}{Numeric length-2 vector giving panel x limits.}
+\item{xlim}{Optional panel limits. Supply a numeric length-2 vector for one
+individual, or a named list of length-2 numeric vectors keyed by
+individual. When omitted for a \code{SynSpecies} or ggexon plot backed by a
+\code{SynSpecies}, ggexon reuses coordinates previously stored by
+\code{\link[=subset_feature_annotation]{subset_feature_annotation()}}.}
 
-\item{xlim_chr}{Optional chromosome / seqname for the panel window. Use this
-when the individual spans multiple seqnames and chromosome inference would
-otherwise be ambiguous.}
+\item{xlim_chr}{Optional chromosome / seqname for the panel window. Supply
+one character value for one individual, or a named list/vector keyed by
+individual.}
 }
 \value{
 An updated object of the same class as \code{x}.
 }
 \description{
-Updates exactly one annotation panel in a stored \code{\link{SynLayout}} or
-\code{\link{SynSpecies}} layout by individual name. The user supplies only the numeric
-\code{xlim}; ggexon keeps or
-infers the underlying chromosome automatically.
+Updates one or more annotation panels in a stored \code{\link{SynLayout}} or
+\code{\link{SynSpecies}} layout. When called on a \code{SynSpecies} with \code{individual = NULL}
+and \code{xlim = NULL}, ggexon searches each annotation panel's active feature
+layer for subset-window metadata recorded by \code{\link[=subset_feature_annotation]{subset_feature_annotation()}}
+and seeds panel limits from those windows.
 }

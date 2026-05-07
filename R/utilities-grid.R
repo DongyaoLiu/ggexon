@@ -5,6 +5,7 @@
 #'
 #' @name reexports
 #' @keywords internal
+#' @importFrom grid drawDetails
 NULL
 
 #' @rdname reexports

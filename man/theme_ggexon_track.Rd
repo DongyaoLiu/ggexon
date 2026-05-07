@@ -24,9 +24,9 @@ theme_ggexon_genomictree(
 )
 }
 \arguments{
-\item{base_size}{Base font size passed to \code{\link[ggplot2:theme_minimal]{ggplot2::theme_minimal()}}.}
+\item{base_size}{Base font size passed to \code{\link[ggplot2:ggtheme]{ggplot2::theme_minimal()}}.}
 
-\item{base_family}{Base font family passed to \code{\link[ggplot2:theme_minimal]{ggplot2::theme_minimal()}}.}
+\item{base_family}{Base font family passed to \code{\link[ggplot2:ggtheme]{ggplot2::theme_minimal()}}.}
 
 \item{show_x_axis}{Logical; show x-axis labels, ticks, and axis line.}
 

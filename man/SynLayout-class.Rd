@@ -58,7 +58,8 @@ geoms.}
 \item when \code{panels} contains any of \code{xlim_chr}, \code{xlim_min}, or \code{xlim_max}, it
 must contain all three columns.
 \item annotation panels with panel-specific x limits must provide complete
-\code{xlim_chr}, \code{xlim_min}, and \code{xlim_max} values.
+\code{xlim_min} and \code{xlim_max} values. \code{xlim_chr} may be missing for numeric
+display-only windows that should not drive annotation filtering.
 \item when multiple annotation panels define different x windows,
 \code{free$x} must be \code{TRUE}.
 \item \code{layout_type} must be one non-empty character value.

@@ -53,5 +53,7 @@ genomic panels.}
 A \code{FacetGenomicTree} ggproto object.
 }
 \description{
-\code{facet_genomictree()} lays out one genomic panel per tree-matched individual, ordered by the y positions in \code{\link[=geom_genomic_tree]{geom_genomic_tree()}}. During rendering, ggexon injects a single tree panel that spans all genomic rows.
+\code{facet_genomictree()} lays out one genomic panel per tree-matched
+individual, ordered by the y positions in \code{\link[=geom_genomic_tree]{geom_genomic_tree()}}. During
+rendering, ggexon injects a single tree panel that spans all genomic rows.
 }
