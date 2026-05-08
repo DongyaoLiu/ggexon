@@ -12,6 +12,7 @@ import_blast_homology(
   outfmt = paste("6 qseqid sseqid pident length mismatch",
     "gapopen qstart qend sstart send evalue", "bitscore"),
   rank_by = "bitscore",
+  gene_id_map = NULL,
   strip_prefix = "^(transcript:|cds:|gene:)",
   strip_suffix = "\\\\.t\\\\d+$",
   metadata = list()
@@ -38,6 +39,13 @@ deduplication. For \code{"evalue"} the sort is ascending (lower is better);
 all other columns are descending (higher is better). When multiple
 columns are given the first is the primary key. Defaults to
 \code{"bitscore"}.}
+
+\item{gene_id_map}{Optional file path to a WormBase-style gene ID mapping
+(e.g. \code{c_elegans.PRJNA13758.WS285.geneIDs.txt}) or a named character
+vector mapping locus tags to gene names. When supplied, the
+\code{reference_gene} column is translated from locus tags (e.g. \code{"B0250.1"})
+to gene names (e.g. \code{"calf-1"}). Isoform suffixes are stripped before
+lookup when an exact match is not found.}
 
 \item{strip_prefix}{Regular expression matching prefixes to strip from
 query IDs. Defaults to \code{"^(transcript:|cds:|gene:)"}.}

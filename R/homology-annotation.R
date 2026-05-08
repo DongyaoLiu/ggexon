@@ -169,6 +169,12 @@ HomologyAnnotation <- function(name,
 #'   all other columns are descending (higher is better). When multiple
 #'   columns are given the first is the primary key. Defaults to
 #'   `"bitscore"`.
+#' @param gene_id_map Optional file path to a WormBase-style gene ID mapping
+#'   (e.g. `c_elegans.PRJNA13758.WS285.geneIDs.txt`) or a named character
+#'   vector mapping locus tags to gene names. When supplied, the
+#'   `reference_gene` column is translated from locus tags (e.g. `"B0250.1"`)
+#'   to gene names (e.g. `"calf-1"`). Isoform suffixes are stripped before
+#'   lookup when an exact match is not found.
 #' @param strip_prefix Regular expression matching prefixes to strip from
 #'   query IDs. Defaults to `"^(transcript:|cds:|gene:)"`.
 #' @param strip_suffix Regular expression matching suffixes to strip from
@@ -201,6 +207,7 @@ import_blast_homology <- function(blast_file,
                                     "bitscore"
                                   ),
                                   rank_by = "bitscore",
+                                  gene_id_map = NULL,
                                   strip_prefix = "^(transcript:|cds:|gene:)",
                                   strip_suffix = "\\.t\\d+$",
                                   metadata = list()) {
@@ -252,6 +259,14 @@ import_blast_homology <- function(blast_file,
     reference_gene = blast_df$sseqid,
     stringsAsFactors = FALSE
   )
+
+  if (!is.null(gene_id_map)) {
+    id_map <- .resolve_gene_id_map(gene_id_map)
+    homology_table$reference_gene <- .translate_locus_tags(
+      homology_table$reference_gene,
+      id_map = id_map
+    )
+  }
 
   HomologyAnnotation(
     name              = name,
@@ -394,6 +409,114 @@ import_blast_homology <- function(blast_file,
   blast_df <- blast_df[order_idx, , drop = FALSE]
   rownames(blast_df) <- NULL
   blast_df
+}
+
+#' Resolve a gene ID map from a file path or named vector
+#'
+#' Accepts either a path to a WormBase-style gene ID mapping file (CSV with
+#' columns `gene_name` and `locus_tag`) or a named character vector. Returns
+#' a named lookup vector `locus_tag → gene_name`.
+#'
+#' @param gene_id_map A file path or a named character vector.
+#'
+#' @return A named character vector.
+#' @keywords internal
+.resolve_gene_id_map <- function(gene_id_map) {
+  if (is.character(gene_id_map) && length(gene_id_map) == 1L &&
+      !is.na(gene_id_map) && nzchar(gene_id_map) && file.exists(gene_id_map)) {
+    return(.read_wormbase_gene_ids(gene_id_map))
+  }
+
+  if (is.character(gene_id_map) && !is.null(names(gene_id_map))) {
+    map <- as.character(gene_id_map)
+    map <- map[!is.na(map) & nzchar(map)]
+    map <- map[!is.na(names(map)) & nzchar(names(map))]
+    return(map)
+  }
+
+  stop(
+    "`gene_id_map` must be a path to a gene ID file or a named character vector.",
+    call. = FALSE
+  )
+}
+
+#' Read a WormBase gene ID mapping file
+#'
+#' Parses a file like `c_elegans.PRJNA13758.WS285.geneIDs.txt`. Expected
+#' columns: tax_id, WBGeneID, gene_name, locus_tag, status, type. Returns a
+#' named vector `locus_tag → gene_name`.
+#'
+#' @param path Path to the gene ID file.
+#'
+#' @return A named character vector.
+#' @keywords internal
+.read_wormbase_gene_ids <- function(path) {
+  if (!file.exists(path)) {
+    stop("Gene ID mapping file does not exist: ", path, call. = FALSE)
+  }
+
+  lines <- readLines(path, warn = FALSE)
+  lines <- lines[nzchar(trimws(lines))]
+  lines <- lines[!grepl("^\\s*#", lines)]
+
+  if (length(lines) == 0L) {
+    stop("Gene ID mapping file is empty: ", path, call. = FALSE)
+  }
+
+  fields <- strsplit(lines, ",", fixed = TRUE)
+  valid <- vapply(fields, length, integer(1L)) >= 4L
+  if (!any(valid)) {
+    stop(
+      "Gene ID mapping file does not have at least 4 comma-separated columns.",
+      call. = FALSE
+    )
+  }
+  fields <- fields[valid]
+
+  locus_tags <- trimws(vapply(fields, `[[`, character(1L), 4L))
+  gene_names <- trimws(vapply(fields, `[[`, character(1L), 3L))
+
+  keep <- nzchar(locus_tags) & nzchar(gene_names)
+  locus_tags <- locus_tags[keep]
+  gene_names <- gene_names[keep]
+
+  dupes <- duplicated(locus_tags)
+  if (any(dupes)) {
+    locus_tags <- locus_tags[!dupes]
+    gene_names <- gene_names[!dupes]
+  }
+
+  stats::setNames(gene_names, locus_tags)
+}
+
+#' Translate locus tags to gene names
+#'
+#' Looks up each value in a named mapping vector. Tries the exact value
+#' first; on miss, strips locus-tag isoform suffixes (trailing letter +
+#' optional digits, e.g. `"B0250.18a"` → `"B0250.18"`) and retries.
+#' Unmapped values are returned unchanged.
+#'
+#' @param x Character vector of locus tags.
+#' @param id_map Named character vector (`locus_tag → gene_name`).
+#'
+#' @return Character vector of translated gene names.
+#' @keywords internal
+.translate_locus_tags <- function(x, id_map) {
+  x <- as.character(x)
+  out <- id_map[x]
+  unmapped <- is.na(out)
+  if (!any(unmapped)) {
+    return(out)
+  }
+
+  stripped <- sub("[a-z]\\d*$", "", x[unmapped], perl = TRUE)
+  retry <- id_map[stripped]
+  fallback_hit <- !is.na(retry)
+  out[unmapped][fallback_hit] <- retry[fallback_hit]
+
+  still_missing <- is.na(out)
+  out[still_missing] <- x[still_missing]
+  unname(out)
 }
 
 #' Normalize BLAST query IDs to gene-level identifiers
