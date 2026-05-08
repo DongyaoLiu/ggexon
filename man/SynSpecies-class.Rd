@@ -55,3 +55,4 @@ syn-aware plot building.}
 \item \code{layout} must be either \code{NULL} or a \code{SynLayout}.
 }
 }
+

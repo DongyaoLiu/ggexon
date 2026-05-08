@@ -87,3 +87,4 @@ no empty entries.
 \item \code{projected_domains} must be a list of data-frame-like objects.
 }
 }
+

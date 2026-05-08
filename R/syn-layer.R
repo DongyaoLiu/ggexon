@@ -2038,10 +2038,9 @@ syn_gr_to_gene_df <- function(feature_gr, track) {
     meta,
     c("gene_id", "gene_name", "ID", "Name")
   )
-  valid_gene <- !is.na(gene_ids) & nzchar(gene_ids)
-  feature_gr <- feature_gr[valid_gene]
-  meta <- S4Vectors::mcols(feature_gr)
-  gene_ids <- gene_ids[valid_gene]
+  gene_ids[is.na(gene_ids) | !nzchar(gene_ids)] <- paste0("gene_", seq_len(length(gene_ids)))[
+    is.na(gene_ids) | !nzchar(gene_ids)
+  ]
 
   gene_labels <- .coalesce_character_cols(
     meta,

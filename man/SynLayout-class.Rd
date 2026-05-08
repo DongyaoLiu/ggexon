@@ -64,3 +64,4 @@ display-only windows that should not drive annotation filtering.
 \item \code{exon_height} and \code{x_translation} must each be scalar numeric values.
 }
 }
+
