@@ -11,6 +11,7 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
                          extra_params = c("exon_height", "na.rm", "x_translation",
                             "species", "chr", "subset",
                             "label_direction", "label_offset_fraction",
+                            "link_type",
                             fontface = 1, lineheight = 1.2
                          ),
                          default_params = function() {
@@ -21,7 +22,8 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
                              chr = NULL,
                              subset = NULL,
                              label_direction = "top",
-                             label_offset_fraction = 0.3
+                             label_offset_fraction = 0.3,
+                             link_type = "straight"
                            )
                          },
                          setup_data = function(data, params){
@@ -45,8 +47,10 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
                          draw_panel = function(data, panel_params, coord, check_overlap = FALSE,
                                                 exon_height = 0.8,
                                                 label_direction = "top",
-                                                label_offset_fraction = 0.3){
+                                                label_offset_fraction = 0.3,
+                                                link_type = "straight"){
                            label_direction <- match.arg(label_direction, c("top", "bottom", "both"))
+                           link_type <- match.arg(link_type, c("straight", "elbow"))
                            label_offset <- exon_height * label_offset_fraction
 
                            genomic_range <- diff(range(c(data$xmin, data$xmax), na.rm = TRUE))
@@ -154,6 +158,34 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
                            leader_end$y <- leader_end$label_y
                            leader_end_t <- coord$transform(leader_end, panel_params)
 
+                           if (link_type == "straight") {
+                             lg <- segmentsGrob(
+                               x0 = leader_start_t$x, y0 = leader_start_t$y,
+                               x1 = leader_end_t$x,   y1 = leader_end_t$y,
+                               default.units = "native",
+                               gp = gpar(col = "grey60", lwd = 0.5)
+                             )
+                           } else {
+                             bend <- data2
+                             bend$x <- bend$orig_x_mid
+                             bend$y <- bend$label_y
+                             bend_t <- coord$transform(bend, panel_params)
+                             lg <- gList(
+                               segmentsGrob(
+                                 x0 = leader_start_t$x, y0 = leader_start_t$y,
+                                 x1 = bend_t$x,         y1 = bend_t$y,
+                                 default.units = "native",
+                                 gp = gpar(col = "grey60", lwd = 0.5)
+                               ),
+                               segmentsGrob(
+                                 x0 = bend_t$x,       y0 = bend_t$y,
+                                 x1 = leader_end_t$x, y1 = leader_end_t$y,
+                                 default.units = "native",
+                                 gp = gpar(col = "grey60", lwd = 0.5)
+                               )
+                             )
+                           }
+
                            tg <- textGrob(
                              label_t$label, label_t$x, label_t$y,
                              default.units = "native",
@@ -167,13 +199,6 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
                                lineheight = label_t$lineheight
                              ),
                              check.overlap = check_overlap
-                           )
-
-                           lg <- segmentsGrob(
-                             x0 = leader_start_t$x, y0 = leader_start_t$y,
-                             x1 = leader_end_t$x,   y1 = leader_end_t$y,
-                             default.units = "native",
-                             gp = gpar(col = "grey60", lwd = 0.5)
                            )
 
                            gList(lg, tg)
@@ -197,6 +222,9 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
 #'   (odd-indexed labels above, even-indexed labels below). Default `"top"`.
 #' @param label_offset_fraction Distance between the exon tracks and the label
 #'   line, expressed as a fraction of `exon_height`. Default `0.3`.
+#' @param link_type Leader line style: `"straight"` (direct line) or
+#'   `"elbow"` (right-angle bend via vertical then horizontal segment).
+#'   Default `"straight"`.
 #' @param species Optional species / individual identifier when `data` is a
 #'   `SynSpecies`.
 #' @param chr Optional chromosome / seqname restriction when `data` is
@@ -209,6 +237,7 @@ geom_genelabel <- function(mapping = NULL, data = NULL,
                        stat = "identity", position = "identity", x_translation = NULL,
                        ..., na.rm = FALSE, show.legend = NA, exon_height = NULL,
                        label_direction = NULL, label_offset_fraction = NULL,
+                       link_type = NULL,
                        species = NULL, chr = NULL, subset = NULL,
                        inherit.aes = TRUE) {
     params <- Filter(Negate(is.null), c(list(
@@ -218,6 +247,7 @@ geom_genelabel <- function(mapping = NULL, data = NULL,
       x_translation = x_translation,
       label_direction = label_direction,
       label_offset_fraction = label_offset_fraction,
+      link_type = link_type,
       species = species,
       chr = chr,
       subset = subset

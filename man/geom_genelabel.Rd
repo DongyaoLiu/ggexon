@@ -16,6 +16,7 @@ geom_genelabel(
   exon_height = NULL,
   label_direction = NULL,
   label_offset_fraction = NULL,
+  link_type = NULL,
   species = NULL,
   chr = NULL,
   subset = NULL,
@@ -37,6 +38,10 @@ highest track), \code{"bottom"} (below the lowest track), or \code{"both"}
 
 \item{label_offset_fraction}{Distance between the exon tracks and the label
 line, expressed as a fraction of \code{exon_height}. Default \code{0.3}.}
+
+\item{link_type}{Leader line style: \code{"straight"} (direct line) or
+\code{"elbow"} (right-angle bend via vertical then horizontal segment).
+Default \code{"straight"}.}
 
 \item{species}{Optional species / individual identifier when \code{data} is a
 \code{SynSpecies}.}
