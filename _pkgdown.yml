@@ -37,8 +37,9 @@ articles:
 
 reference:
 - title: Data-storage classes
-  desc: Constructors for objects that store genomes, annotation layers, alignments, and reusable layout state.
+  desc: Constructors for objects that store genomes, annotation layers, alignments, homology maps, and reusable layout state.
   contents:
+  - HomologyAnnotation
   - SynSpecies
   - SynIndividual
   - SynFeatureAnnotation
@@ -93,8 +94,9 @@ reference:
   - plot_ggtree_genomic_alignment
 
 - title: Manage object graphs
-  desc: Add individuals, annotations, alignments, trees, and stored layout information to Syn containers.
+  desc: Add individuals, annotations, alignments, homology maps, trees, and stored layout information to Syn containers.
   contents:
+  - add_homology_annotation
   - add_individual
   - add_individuals_from_folder
   - add_annotation
@@ -105,6 +107,7 @@ reference:
   - add_genetag
   - add_tree
   - get_annotation
+  - get_homology_annotation
   - set_active_annotation
   - set_active_feature_annotation
   - individual_names
@@ -116,8 +119,9 @@ reference:
   - store_projected_domains
 
 - title: Load, query, and transform annotations
-  desc: Materialize annotation data, query layer payloads, and derive sequence or protein-level summaries.
+  desc: Materialize annotation data, query layer payloads, import homology, and derive sequence or protein-level summaries.
   contents:
+  - import_blast_homology
   - load_annotation
   - query_features
   - query_variants
@@ -129,6 +133,10 @@ reference:
   - translate_protein
   - project_domains_to_genome
   - projected_domains
+  - homology_table
+  - reference_species
+  - query_species
+  - homology_annotations
   - read_protein_mutation_counts
 
 - title: Subset, filter, and curate objects

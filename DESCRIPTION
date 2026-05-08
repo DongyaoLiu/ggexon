@@ -47,6 +47,7 @@ Collate:
     'SynBioc-unions.R'
     'SynAnnotation-class.R'
     'SynIndividual-class.R'
+    'homology-annotation.R'
     'SynSpecies-class.R'
     'aes-evaluation.R'
     'all-classes-S7.R'

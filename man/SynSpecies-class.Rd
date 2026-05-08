@@ -30,6 +30,9 @@ plot.}
 
 \item{\code{layout}}{Optional stored \code{SynLayout} used by \code{facet_genomics()} and
 syn-aware plot building.}
+
+\item{\code{homology_annotations}}{Named list of \code{HomologyAnnotation} objects
+storing cross-species gene homology mappings.}
 }}
 
 \section{Prototype defaults}{
@@ -38,6 +41,7 @@ syn-aware plot building.}
 \item \code{individuals = list()}
 \item \code{pairwise_alignments = list()}
 \item \code{multiple_alignments = list()}
+\item \code{homology_annotations = list()}
 \item \code{tree = NULL}
 \item \code{tree_plot = NULL}
 \item \code{metadata = list()}
@@ -52,6 +56,7 @@ syn-aware plot building.}
 \item \code{individuals} must contain only \code{SynIndividual} objects.
 \item \code{pairwise_alignments} must contain only \code{SynPairAlignment} objects.
 \item \code{multiple_alignments} must contain only \code{SynMultiAlignment} objects.
+\item \code{homology_annotations} must contain only \code{HomologyAnnotation} objects.
 \item \code{layout} must be either \code{NULL} or a \code{SynLayout}.
 }
 }

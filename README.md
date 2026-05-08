@@ -62,6 +62,7 @@ The core data containers are:
 | `SynBigWigAnnotation` | Signal tracks queried by genomic interval |
 | `SynProteinDomainAnnotation` | Protein-domain intervals from InterProScan-like tables |
 | `SynProteinMutationAnnotation` | Protein mutation summaries for lollipop-style tracks |
+| `HomologyAnnotation` | Cross-species gene homology mappings from BLAST results |
 | `SynPairAlignment` | Pairwise genome links from PAF, PSL, or ODGI-derived data |
 | `SynMultiAlignment` | Multi-genome alignment links from MAF or ODGI-backed data |
 | `SynLayout` | Stored panel windows and layout decisions |
@@ -72,8 +73,8 @@ The public API is organized around a few function families:
 
 | Task | Main functions |
 | --- | --- |
-| Build object graphs | `add_individual()`, `add_annotation()`, `add_pairwise_alignment()`, `add_multiple_alignment()`, `add_tree()` |
-| Load and query data | `load_annotation()`, `load_alignment()`, `query_features()`, `query_variants()`, `query_signal()`, `query_domains()` |
+| Build object graphs | `add_individual()`, `add_annotation()`, `add_homology_annotation()`, `add_pairwise_alignment()`, `add_multiple_alignment()`, `add_tree()` |
+| Load and query data | `load_annotation()`, `load_alignment()`, `import_blast_homology()`, `query_features()`, `query_variants()`, `query_signal()`, `query_domains()` |
 | Derive sequence/protein data | `extract_cds_seq()`, `translate_protein()`, `project_domains_to_genome()` |
 | Subset and curate objects | `subset_species()`, `subset_individual()`, `subset_pairwise_alignment()`, `set_gene_labels()`, `patch_annotation_from_gff()` |
 | Draw genomic layers | `ggexon()`, `geom_exon()`, `geom_genetag()`, `geom_genelabel()`, `geom_nuclink()`, `geom_protein_lollipop()` |

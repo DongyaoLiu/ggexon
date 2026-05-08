@@ -130,16 +130,75 @@ xz <- add_annotation(
 )
 ```
 
-## Alignment and layout classes
+## Alignment, homology, and layout classes
 
-Comparative links are stored at the `SynSpecies` level:
+Comparative relationships and cross-species gene mappings are stored at the
+`SynSpecies` level:
 
 - `SynPairAlignment` stores one pairwise relationship between two individuals.
   Supported inputs include PAF, PSL, and ODGI-derived pairwise links.
 - `SynMultiAlignment` stores a multiple alignment across more than two
   individuals. Supported inputs include MAF and ODGI-backed graph data.
+- `HomologyAnnotation` stores cross-species gene homology mappings, typically
+  derived from BLAST results. It maps gene identifiers from a query species
+  to gene names in a reference (center) species. When attached to a
+  `SynSpecies`, `geom_genelabel()` can use these mappings to label query-species
+  genes with their reference-species ortholog names.
 - `SynLayout` stores reusable panel windows and layout state so plots can be
   rebuilt from the same coordinate decisions.
+
+### Building homology from BLAST
+
+```{r eval = FALSE}
+sp <- SynSpecies(name = "worms")
+
+# Import a BLAST outfmt 6 result (one species → reference)
+ha <- import_blast_homology(
+  blast_file = "C_bovis.subset.proteins.blast6",
+  reference_species = "C. elegans",
+  query_species = "C. bovis"
+)
+
+# Attach to SynSpecies
+sp <- add_homology_annotation(sp, ha)
+
+# Inspect the mapping
+homology_table(ha)
+reference_species(ha)
+query_species(ha)
+```
+
+The BLAST query IDs are automatically normalised: `transcript:` prefixes and
+`.t1` isoform suffixes are stripped so that query gene identifiers match the
+`gene_id` / `gene_name` columns in your GFF3 annotations.
+
+### Using homology for gene labels
+
+When `SynSpecies` holds homology annotations, `geom_genelabel()` can apply
+reference-species gene names automatically.
+
+```{r eval = FALSE}
+# Build homologies for all query species
+for (sp_name in query_species) {
+  ha <- import_blast_homology(
+    blast_file = paste0(sp_name, ".blast6"),
+    reference_species = "C. elegans",
+    query_species = sp_name
+  )
+  sp <- add_homology_annotation(sp, ha)
+}
+
+# Auto-match: each track gets its homology by query_species
+ggexon(sp) +
+  geom_genetag(chr = "V", feature_type = "gene", mapping = aes(fill = gene)) +
+  geom_genelabel(chr = "V", size = 2.4) +  # no homology_name — auto-match
+  facet_genomictree(vars(track), scales = "free")
+```
+
+When `homology_name` is omitted and the `SynSpecies` contains homology
+annotations, each track automatically finds the matching `HomologyAnnotation`
+by its `query_species` field. For a single explicit mapping, set
+`homology_name = "bovis_to_n2"`.
 
 ```{r eval = FALSE}
 sp <- add_individual(sp, xz)
@@ -228,13 +287,18 @@ Use `geom_genelabel()` to place readable names above or below a gene track.
 Labels come from the stored feature annotation, so stable gene IDs can remain
 unchanged while plot labels are curated separately.
 
+For cross-species plots, the `homology_name` parameter (or auto-match via
+stored `HomologyAnnotation` objects) can replace each query-species gene label
+with its reference-species ortholog name.
+
 ```{r eval = FALSE}
 ggexon(sp) +
   geom_genetag(species = "XZ1516", chr = "RagTag_V") +
   geom_genelabel(
     species = "XZ1516",
     chr = "RagTag_V",
-    label_direction = "top"
+    label_direction = "top",
+    homology_name = "xz1516_to_n2"   # use N2 gene names
   )
 ```
 

@@ -1,3 +1,5 @@
+#' @include homology-annotation.R
+#'
 #' SynSpecies, SynLayout, and alignment classes
 #'
 #' These classes define the comparative object model used by `ggexon`.
@@ -326,11 +328,14 @@ setClassUnion("NULLOrSynLayout", c("NULL", "SynLayout"))
 #' @slot metadata Optional user or import metadata.
 #' @slot layout Optional stored `SynLayout` used by `facet_genomics()` and
 #'   syn-aware plot building.
+#' @slot homology_annotations Named list of `HomologyAnnotation` objects
+#'   storing cross-species gene homology mappings.
 #'
 #' @section Prototype defaults:
 #' * `individuals = list()`
 #' * `pairwise_alignments = list()`
 #' * `multiple_alignments = list()`
+#' * `homology_annotations = list()`
 #' * `tree = NULL`
 #' * `tree_plot = NULL`
 #' * `metadata = list()`
@@ -341,6 +346,7 @@ setClassUnion("NULLOrSynLayout", c("NULL", "SynLayout"))
 #' * `individuals` must contain only `SynIndividual` objects.
 #' * `pairwise_alignments` must contain only `SynPairAlignment` objects.
 #' * `multiple_alignments` must contain only `SynMultiAlignment` objects.
+#' * `homology_annotations` must contain only `HomologyAnnotation` objects.
 #' * `layout` must be either `NULL` or a `SynLayout`.
 #'
 #' @exportClass SynSpecies
@@ -351,6 +357,7 @@ setClass(
     individuals = "list",
     pairwise_alignments = "list",
     multiple_alignments = "list",
+    homology_annotations = "list",
     tree = "ANY",
     tree_plot = "ANY",
     metadata = "list",
@@ -361,6 +368,7 @@ setClass(
     individuals = list(),
     pairwise_alignments = list(),
     multiple_alignments = list(),
+    homology_annotations = list(),
     tree = NULL,
     tree_plot = NULL,
     metadata = list(),
@@ -387,6 +395,12 @@ setClass(
       bad_multi <- !vapply(object@multiple_alignments, methods::is, logical(1), class2 = "SynMultiAlignment")
       if (any(bad_multi)) {
         problems <- c(problems, "`multiple_alignments` must be a list of SynMultiAlignment objects.")
+      }
+    }
+    if (length(object@homology_annotations) > 0L) {
+      bad_homology <- !vapply(object@homology_annotations, methods::is, logical(1), class2 = "HomologyAnnotation")
+      if (any(bad_homology)) {
+        problems <- c(problems, "`homology_annotations` must be a list of HomologyAnnotation objects.")
       }
     }
     if (!is.null(object@layout) && !methods::is(object@layout, "SynLayout")) {
@@ -566,6 +580,7 @@ setMethod("show", "SynSpecies", function(object) {
   cat("  individuals:", length(object@individuals), "\n")
   cat("  pairwise_alignments:", length(object@pairwise_alignments), "\n")
   cat("  multiple_alignments:", length(object@multiple_alignments), "\n")
+  cat("  homology_annotations:", length(object@homology_annotations), "\n")
   cat("  tree:", !is.null(object@tree), "\n")
   cat("  tree_plot:", !is.null(object@tree_plot), "\n")
 })
@@ -3471,4 +3486,84 @@ setMethod("load_alignment", "SynSpecies", function(x, odgi = NULL, python = NULL
     end = end,
     feature_type = NULL
   )
+}
+
+# ── HomologyAnnotation accessors on SynSpecies ──────────────────────────
+
+#' List homology annotations attached to a SynSpecies
+#'
+#' @param x A `SynSpecies` object.
+#' @return A named list of `HomologyAnnotation` objects.
+#' @export
+setGeneric("homology_annotations", function(x) standardGeneric("homology_annotations"))
+setMethod("homology_annotations", "SynSpecies", function(x) x@homology_annotations)
+
+#' Add or replace a HomologyAnnotation on a SynSpecies
+#'
+#' @param x A `SynSpecies` object.
+#' @param homology A `HomologyAnnotation` object.
+#' @return An updated `SynSpecies` object.
+#' @export
+setGeneric("add_homology_annotation", function(x, homology) {
+  standardGeneric("add_homology_annotation")
+}, signature = c("x", "homology"))
+setMethod("add_homology_annotation", c("SynSpecies", "HomologyAnnotation"), function(x, homology) {
+  x@homology_annotations[[annotation_name(homology)]] <- homology
+  validObject(x)
+  x
+})
+setMethod("add_homology_annotation", c("SynSpecies", "ANY"), function(x, homology) {
+  stop("`homology` must be a HomologyAnnotation object.", call. = FALSE)
+})
+setMethod("add_homology_annotation", c("ANY", "HomologyAnnotation"), function(x, homology) {
+  stop("`add_homology_annotation()` expects a SynSpecies object.", call. = FALSE)
+})
+setMethod("add_homology_annotation", c("ANY", "ANY"), function(x, homology) {
+  stop("`add_homology_annotation()` expects a SynSpecies object.", call. = FALSE)
+})
+
+#' Retrieve a HomologyAnnotation from a SynSpecies by query species
+#'
+#' When `query_species` is supplied, the first `HomologyAnnotation` whose
+#' `query_species` matches is returned. When `name` is supplied, the annotation
+#' with that exact name is returned. Provide one or the other.
+#'
+#' @param x A `SynSpecies` object.
+#' @param query_species Optional name of the query species.
+#' @param name Optional name of the homology annotation layer.
+#' @return A `HomologyAnnotation` object, or `NULL` when not found.
+#' @export
+get_homology_annotation <- function(x, query_species = NULL, name = NULL) {
+  if (!methods::is(x, "SynSpecies")) {
+    stop("`get_homology_annotation()` expects a SynSpecies object.", call. = FALSE)
+  }
+  if (!is.null(name)) {
+    if (!is.null(query_species)) {
+      stop("Provide either `query_species` or `name`, not both.", call. = FALSE)
+    }
+    hit <- x@homology_annotations[[name]]
+    if (is.null(hit)) {
+      return(NULL)
+    }
+    return(hit)
+  }
+
+  if (!is.null(query_species)) {
+    if (!is.character(query_species) || length(query_species) != 1L ||
+        is.na(query_species) || !nzchar(query_species)) {
+      stop("`query_species` must be a single non-empty character value.", call. = FALSE)
+    }
+    for (ha in x@homology_annotations) {
+      if (identical(query_species(ha), query_species)) {
+        return(ha)
+      }
+    }
+    return(NULL)
+  }
+
+  if (length(x@homology_annotations) == 1L) {
+    return(x@homology_annotations[[1L]])
+  }
+
+  stop("Provide `query_species` or `name` when multiple homology annotations are attached.", call. = FALSE)
 }

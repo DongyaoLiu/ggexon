@@ -876,15 +876,28 @@ resolve_syn_layer_data <- function(x, layer) {
     )
   }
   if (identical(layer$geom, GeomGeneLabel)) {
-    return(
-      syn_to_gene_df(
-        x = x,
-        species = params$species,
-        chr = params$chr,
-        subset = params$subset,
-        context = context
-      )
+    gene_df <- syn_to_gene_df(
+      x = x,
+      species = params$species,
+      chr = params$chr,
+      subset = params$subset,
+      context = context
     )
+    if (methods::is(x, "SynSpecies") && nrow(gene_df) > 0L) {
+      homology_name <- params$homology_name %||% NULL
+      if (!is.null(homology_name)) {
+        homology <- tryCatch(
+          get_homology_annotation(x, name = homology_name),
+          error = function(e) NULL
+        )
+        if (!is.null(homology)) {
+          gene_df <- .apply_homology_labels(gene_df, homology)
+        }
+      } else if (length(homology_annotations(x)) > 0L) {
+        gene_df <- .apply_homology_labels_auto(gene_df, homology_annotations(x))
+      }
+    }
+    return(gene_df)
   }
   if (identical(layer$geom, GeomGeneTag)) {
     return(

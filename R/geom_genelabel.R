@@ -105,7 +105,7 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
   extra_params = c("exon_height", "na.rm", "x_translation",
     "species", "chr", "subset",
     "label_direction", "label_offset_fraction",
-    "link_type", "collapse_tandem",
+    "link_type", "collapse_tandem", "homology_name",
     fontface = 1, lineheight = 1.2
   ),
   default_params = function() {
@@ -118,7 +118,8 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
       label_direction = "top",
       label_offset_fraction = 0.3,
       link_type = "straight",
-      collapse_tandem = FALSE
+      collapse_tandem = FALSE,
+      homology_name = NULL
     )
   },
   setup_data = function(data, params) {
@@ -477,6 +478,11 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
 #' @param collapse_tandem When `TRUE`, consecutive genes with identical labels
 #'   (tandem duplications) share a single label connected to all gene bodies
 #'   by a bracket-style connector. Default `FALSE`.
+#' @param homology_name Optional name of a `HomologyAnnotation` stored on the
+#'   `SynSpecies` object. When set, gene labels are replaced with the
+#'   corresponding reference-species gene names using the homology mapping.
+#'   This is useful for labelling query-species genes with the names of their
+#'   orthologs in the best-annotated center species.
 #' @param species Optional species / individual identifier when `data` is a
 #'   `SynSpecies`.
 #' @param chr Optional chromosome / seqname restriction when `data` is
@@ -494,6 +500,7 @@ geom_genelabel <- function(mapping = NULL, data = NULL,
                            label_offset_fraction = NULL,
                            link_type = NULL,
                            collapse_tandem = NULL,
+                           homology_name = NULL,
                            species = NULL, chr = NULL, subset = NULL,
                            inherit.aes = TRUE) {
   params <- Filter(Negate(is.null), c(list(
@@ -505,6 +512,7 @@ geom_genelabel <- function(mapping = NULL, data = NULL,
     label_offset_fraction = label_offset_fraction,
     link_type = link_type,
     collapse_tandem = collapse_tandem,
+    homology_name = homology_name,
     species = species,
     chr = chr,
     subset = subset

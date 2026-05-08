@@ -18,6 +18,7 @@ geom_genelabel(
   label_offset_fraction = NULL,
   link_type = NULL,
   collapse_tandem = NULL,
+  homology_name = NULL,
   species = NULL,
   chr = NULL,
   subset = NULL,
@@ -38,13 +39,13 @@ coordinates.}
 Each gene receives a position based on its track index modulo the number
 of position tokens:
 \itemize{
-  \item \code{"top"} — all labels above the highest track.
-  \item \code{"bottom"} — all labels below the lowest track.
-  \item \code{"top:bottom"} — odd-indexed genes above, even-indexed below.
-  \item \code{"bottom:top:center"} — gene 1 bottom, gene 2 top, gene 3 centre
-    (and repeats). Genes assigned \code{"center"} have their label placed on
-    the gene body. If the label text is wider than the gene span, the label
-    falls back to \code{"top"}.
+\item \code{"top"} — all labels above the highest track.
+\item \code{"bottom"} — all labels below the lowest track.
+\item \code{"top:bottom"} — odd-indexed genes above, even-indexed below.
+\item \code{"bottom:top:center"} — gene 1 bottom, gene 2 top, gene 3 centre (and
+repeats). Genes assigned \code{"center"} have their label placed on the
+gene body. If the label text is wider than the gene span, the label
+falls back to \code{"top"}.
 }
 
 Valid tokens: \code{"top"}, \code{"bottom"}, \code{"center"}. Default \code{"top"}.}
@@ -56,9 +57,15 @@ line, expressed as a fraction of \code{exon_height}. Default \code{0.3}.}
 \code{"elbow"} (right-angle bend via vertical then horizontal segment).
 Default \code{"straight"}. Centre-fitting labels do not draw leader lines.}
 
-\item{collapse_tandem}{When \code{TRUE}, consecutive genes with identical
-labels (tandem duplications) share a single label connected to all gene
-bodies by a bracket-style connector. Default \code{FALSE}.}
+\item{collapse_tandem}{When \code{TRUE}, consecutive genes with identical labels
+(tandem duplications) share a single label connected to all gene bodies
+by a bracket-style connector. Default \code{FALSE}.}
+
+\item{homology_name}{Optional name of a \code{HomologyAnnotation} stored on the
+\code{SynSpecies} object. When set, gene labels are replaced with the
+corresponding reference-species gene names using the homology mapping.
+This is useful for labelling query-species genes with the names of their
+orthologs in the best-annotated center species.}
 
 \item{species}{Optional species / individual identifier when \code{data} is a
 \code{SynSpecies}.}
@@ -74,9 +81,6 @@ A ggplot2 layer using the internal \code{GeomGeneLabel} ggproto.
 \description{
 \code{geom_genelabel()} places one text label per transcript or gene span on an
 exon-style genomic track. The \code{label_direction} parameter accepts
-colon-delimited combinations to distribute labels across multiple positions
-(top, bottom, centre) using modulo assignment. Labels placed at \code{"top"} or
-\code{"bottom"} connect to their gene body with leader lines; centre-positioned
-labels sit directly on the gene body. Overlapping labels are pushed apart
-horizontally.
+colon-delimited combinations to distribute labels across positions using
+modulo assignment.
 }
