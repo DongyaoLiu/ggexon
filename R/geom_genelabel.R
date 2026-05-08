@@ -5,7 +5,7 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
                            colour = "black",
                            family = "sans",
                            size = 3,
-                           angle = 0, hjust = 0,
+                           angle = 0, hjust = 0.5,
                            vjust = 0.5, alpha = NA, fontface = 1, lineheight = 1.2
                          ),
                          extra_params = c("exon_height", "na.rm", "x_translation",
