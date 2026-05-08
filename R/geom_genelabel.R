@@ -144,7 +144,8 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
                          exon_height = 0.8,
                          label_direction = "top",
                          label_offset_fraction = 0.3,
-                         link_type = "straight") {
+                         link_type = "straight",
+                         collapse_tandem = FALSE) {
     link_type <- match.arg(link_type, c("straight", "elbow"))
     label_offset <- exon_height * label_offset_fraction
     positions <- .parse_label_positions(label_direction)
@@ -181,8 +182,7 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
 
     # Collapse tandem duplications: consecutive genes with identical labels
     # share a single label and connector bracket.
-    collapse_tandem <- isTRUE(params$collapse_tandem)
-    if (collapse_tandem) {
+    if (isTRUE(collapse_tandem)) {
       data2 <- .collapse_tandem_labels(data2)
     }
     tandem_anchors <- attr(data2, "tandem_anchors") %||% list()
