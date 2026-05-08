@@ -153,10 +153,12 @@ Comparative relationships and cross-species gene mappings are stored at the
 sp <- SynSpecies(name = "worms")
 
 # Import a BLAST outfmt 6 result (one species → reference)
+# The gene_id_map translates N2 locus tags (B0250.1) to gene names (calf-1)
 ha <- import_blast_homology(
   blast_file = "C_bovis.subset.proteins.blast6",
   reference_species = "C. elegans",
-  query_species = "C. bovis"
+  query_species = "C. bovis",
+  gene_id_map = "c_elegans.PRJNA13758.WS285.geneIDs.txt"
 )
 
 # Attach to SynSpecies
@@ -172,6 +174,12 @@ The BLAST query IDs are automatically normalised: `transcript:` prefixes and
 `.t1` isoform suffixes are stripped so that query gene identifiers match the
 `gene_id` / `gene_name` columns in your GFF3 annotations.
 
+The `gene_id_map` translates reference-species locus tags (N2 protein IDs
+like `B0250.1`) to human-readable gene names (like `calf-1`). It accepts
+either a file path to a WormBase WS285 `geneIDs.txt` or a named character
+vector. Isoform suffixes are stripped on lookup miss (e.g. `B0250.18a` →
+`B0250.18`). Unmapped tags are left unchanged.
+
 ### Using homology for gene labels
 
 When `SynSpecies` holds homology annotations, `geom_genelabel()` can apply
@@ -183,7 +191,8 @@ for (sp_name in query_species) {
   ha <- import_blast_homology(
     blast_file = paste0(sp_name, ".blast6"),
     reference_species = "C. elegans",
-    query_species = sp_name
+    query_species = sp_name,
+    gene_id_map = "c_elegans.PRJNA13758.WS285.geneIDs.txt"
   )
   sp <- add_homology_annotation(sp, ha)
 }
