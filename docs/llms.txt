@@ -66,6 +66,7 @@ name can do different work depending on the classes of the input
 objects.
 
 ``` r
+
 xz <- SynIndividual(
   annotation_file = "XZ1516.gff3",
   genome_file = genome_waiver(),
@@ -96,6 +97,7 @@ Annotation layers are attached to the object that owns them. For
 example, a protein-mutation table can be added to one individual:
 
 ``` r
+
 xz <- add_protein_mutation_annotation(
   xz,
   mutation_file = "mutation_counts.tsv"
@@ -108,6 +110,7 @@ routes rows to the matching individuals. Missing individuals can be
 created as annotation-only children when `create_missing = TRUE`.
 
 ``` r
+
 sp <- add_protein_mutation_annotation(
   sp,
   mutation_file = "mutation_counts.tsv",
@@ -124,6 +127,7 @@ build time.
 ### 2. `load_annotation()` works at three levels
 
 ``` r
+
 ann <- SynFeatureAnnotation(
   name = "default",
   annotation_file = "XZ1516.gff3"
@@ -146,6 +150,7 @@ Use `annotation =` and `individual =` when you want to target a
 contained object through its parent container:
 
 ``` r
+
 sp <- load_annotation(
   sp,
   individual = "XZ1516",
@@ -156,6 +161,7 @@ sp <- load_annotation(
 ### 3. `subset_feature_annotation()` keeps the same outer shape
 
 ``` r
+
 ann_small <- subset_feature_annotation(
   ann,
   chr = "V_RagTag",
@@ -167,6 +173,7 @@ ann_small <- subset_feature_annotation(
 The same verb can be applied to a `SynIndividual`:
 
 ``` r
+
 ind_small <- subset_feature_annotation(
   ind,
   chr = "V_RagTag",
@@ -178,6 +185,7 @@ ind_small <- subset_feature_annotation(
 Or to a `SynSpecies` when you also specify which individual to traverse:
 
 ``` r
+
 sp_small <- subset_feature_annotation(
   sp,
   individual = "XZ1516",
@@ -199,6 +207,7 @@ If you already know you want an individual back, use
 [`subset_individual()`](https://dongyaoliu.github.io/ggexon/reference/subset_individual.md):
 
 ``` r
+
 ind_window <- subset_individual(
   ind,
   chr = "V_RagTag",
@@ -211,6 +220,7 @@ If the input is a `SynSpecies`, the same generic can resolve the
 contained individual first:
 
 ``` r
+
 ind_window <- subset_individual(
   sp,
   individual = "XZ1516",
@@ -225,6 +235,7 @@ individuals inside it, use
 [`subset_species()`](https://dongyaoliu.github.io/ggexon/reference/subset_species.md):
 
 ``` r
+
 sp_window <- subset_species(
   sp,
   coords = c("XZ1516#V_RagTag:21574445-21584356")
@@ -238,6 +249,7 @@ Use
 when you want extracted link rows:
 
 ``` r
+
 paf <- pairwise_alignment_data(
   sp,
   alignment = "XZ1516_vs_N2",
@@ -253,6 +265,7 @@ Use
 when you want to update the object itself:
 
 ``` r
+
 pair <- subset_pairwise_alignment(
   pair,
   subset = c(XZ1516 = "RagTag_V")
@@ -262,6 +275,7 @@ pair <- subset_pairwise_alignment(
 Or update the stored alignment inside a `SynSpecies`:
 
 ``` r
+
 sp <- subset_pairwise_alignment(
   sp,
   alignment = "XZ1516_vs_N2",
@@ -275,6 +289,7 @@ sp <- subset_pairwise_alignment(
 The same idea applies to filtering:
 
 ``` r
+
 sp <- filter_pairwise_alignment(
   sp,
   alignment = "XZ1516_vs_N2",
@@ -298,6 +313,7 @@ After those object verbs prepare the data, the plotting side still looks
 like ordinary `ggplot2` code:
 
 ``` r
+
 library(ggexon)
 
 ggexon(sp) +
@@ -355,6 +371,7 @@ plot.
 `ggexon` is currently a development package.
 
 ``` r
+
 install.packages("remotes")
 remotes::install_github("DongyaoLiu/ggexon")
 ```
@@ -363,6 +380,7 @@ Some dependencies are from Bioconductor. If your R installation cannot
 resolve them automatically, install them first:
 
 ``` r
+
 install.packages("BiocManager")
 BiocManager::install(c(
   "Biostrings",
@@ -407,6 +425,7 @@ flowchart LR
 Use `SynIndividual` when you want to register one genome or strain.
 
 ``` r
+
 x <- SynIndividual(
   genome_file = "XZ1516.fasta",
   annotation_file = "caenorhabditis_XZ1516.gff3",
@@ -443,6 +462,7 @@ concrete annotation classes are:
 Example:
 
 ``` r
+
 x <- add_annotation(
   x,
   SynVCFAnnotation(
@@ -462,6 +482,7 @@ like bookkeeping. It collects genomes and stores the relationships
 between them.
 
 ``` r
+
 sp <- SynSpecies(name = "Caenorhabditis")
 sp <- add_individual(sp, x)
 sp <- add_individual(sp, n2)
@@ -480,6 +501,7 @@ sp <- add_pairwise_alignment(
 `SynSpecies` can also be initialized from a folder of annotation files:
 
 ``` r
+
 sp <- SynSpecies(
   name = "Caenorhabditis",
   annotation_folder = "annotations/",
@@ -508,6 +530,7 @@ starts a plot just like `ggplot()`, but it understands `SynIndividual`
 and `SynSpecies` objects.
 
 ``` r
+
 ggexon(sp) +
   geom_exon(
     species = "XZ1516",
@@ -540,6 +563,7 @@ links, default aesthetic mappings, and panel metadata.
 A typical project looks like this:
 
 ``` r
+
 library(ggexon)
 
 x <- SynIndividual("XZ1516.fasta", "XZ1516.gff3", id = "XZ1516")
@@ -585,6 +609,7 @@ ggexon(sp) +
 After installation, see the package vignettes:
 
 ``` r
+
 vignette("ggexon-workflow", package = "ggexon")
 vignette("ggexon-classes-and-verbs", package = "ggexon")
 ```

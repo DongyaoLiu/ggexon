@@ -21,6 +21,7 @@ This vignette sketches the core workflow:
 ## Create a `SynIndividual`
 
 ``` r
+
 library(ggexon)
 
 x <- SynIndividual(
@@ -36,6 +37,7 @@ x <- SynIndividual(
 ## Load the active feature annotation
 
 ``` r
+
 x <- load_annotation(x)
 ann <- get_annotation(x)
 ```
@@ -48,6 +50,7 @@ You can attach variant, signal, and protein-domain layers to the same
 `SynIndividual`.
 
 ``` r
+
 x <- add_annotation(
   x,
   SynVCFAnnotation(
@@ -82,6 +85,7 @@ Stable IDs should remain unchanged. Use
 to add readable labels for plotting.
 
 ``` r
+
 x <- set_gene_labels(
   x,
   c(
@@ -100,6 +104,7 @@ Small corrected GFF fragments can be imported and applied as structured
 patches.
 
 ``` r
+
 x <- patch_annotation_from_gff(
   x,
   patch_file = system.file("extdata", "XZ1516.TA.gff", package = "ggexon"),
@@ -114,6 +119,7 @@ annotation and clears stale sequence caches.
 ## Translate proteins for selected genes
 
 ``` r
+
 x <- translate_protein(
   x,
   genes = c("FUN_000001", "FUN_000002")
@@ -127,6 +133,7 @@ protein_seq(get_annotation(x))
 Region-based layers are queried through their type-specific verbs.
 
 ``` r
+
 variant_layer <- get_annotation(x, "variants")
 query_variants(variant_layer, chr = "V_RagTag", start = 21574336, end = 21574400)
 ```
@@ -137,6 +144,7 @@ Once you have multiple genomes or species, `SynSpecies` can hold both
 the `SynIndividual` objects and their cross-species alignments.
 
 ``` r
+
 x2 <- SynIndividual(other_genome_file, other_annotation_file)
 
 sp <- SynSpecies(name = "Caenorhabditis")
@@ -157,6 +165,7 @@ sp <- add_pairwise_alignment(
 For multiple-species alignments:
 
 ``` r
+
 sp <- add_multiple_alignment(
   sp,
   SynMultiAlignment(
@@ -176,6 +185,7 @@ Use `subset =` to trim on both query and target coordinates, and use
 `filter =` to discard short fragments by `alen`.
 
 ``` r
+
 pairwise_alignment_data(
   sp,
   alignment = "XZ1516_vs_other",
@@ -210,6 +220,7 @@ mapping needed by
 [`geom_exon()`](https://dongyaoliu.github.io/ggexon/reference/geom_exon.md).
 
 ``` r
+
 x <- SynIndividual(
   genome_file = system.file("extdata", "XZ1516.fasta", package = "ggexon"),
   annotation_file = system.file(
@@ -237,6 +248,7 @@ The same direct plotting workflow is also available for `geom_gene()`,
 which collapses the region to one directional span per `gene_id`.
 
 ``` r
+
 ggexon(sp) +
   geom_gene(
     chr = "RagTag_V",
@@ -261,6 +273,7 @@ annotation tracks plus the middle link panel from one comparative call.
 The reference species supplies the input coordinates.
 
 ``` r
+
 ggexon(sp) +
   geom_gene(
     species = c("N2", "XZ1516"),

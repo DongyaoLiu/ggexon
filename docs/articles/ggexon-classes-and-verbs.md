@@ -37,6 +37,7 @@ The current object model looks like this:
 genome FASTA plus one structural annotation file.
 
 ``` r
+
 library(ggexon)
 
 x <- SynIndividual(
@@ -58,6 +59,7 @@ annotation file exist in the FASTA headers.
 The default structural annotation layer is a `SynFeatureAnnotation`.
 
 ``` r
+
 x <- load_annotation(x)
 ann <- get_annotation(x)
 
@@ -82,6 +84,7 @@ You can attach several heterogeneous annotation layers to the same
 ### Variants
 
 ``` r
+
 x <- add_annotation(
   x,
   SynVCFAnnotation(
@@ -98,6 +101,7 @@ x <- add_annotation(
 ### Protein domains
 
 ``` r
+
 x <- add_annotation(
   x,
   SynProteinDomainAnnotation(
@@ -116,6 +120,7 @@ x <- add_annotation(
 ### BigWig signal
 
 ``` r
+
 x <- add_annotation(
   x,
   SynBigWigAnnotation(
@@ -132,6 +137,7 @@ Different annotation subclasses have different verbs.
 ### Feature annotation
 
 ``` r
+
 cds_gr <- query_features(
   x,
   genes = c("FUN_000001", "FUN_000002"),
@@ -142,6 +148,7 @@ cds_gr <- query_features(
 ### Variant annotation
 
 ``` r
+
 variant_layer <- get_annotation(x, "variants")
 
 query_variants(
@@ -155,6 +162,7 @@ query_variants(
 ### BigWig signal
 
 ``` r
+
 signal_layer <- get_annotation(x, "coverage")
 
 query_signal(
@@ -168,6 +176,7 @@ query_signal(
 ### Protein-domain annotation
 
 ``` r
+
 domain_layer <- get_annotation(x, "interpro")
 
 query_domains(
@@ -183,6 +192,7 @@ Structural annotation IDs are often machine-friendly but not
 plot-friendly. Keep the real IDs, and add readable labels separately.
 
 ``` r
+
 x <- set_gene_labels(
   x,
   c(
@@ -203,6 +213,7 @@ patches.
 ### Read a patch file
 
 ``` r
+
 patch_gr <- read_patch_gff(
   system.file("extdata", "XZ1516.TA.gff", package = "ggexon")
 )
@@ -211,6 +222,7 @@ patch_gr <- read_patch_gff(
 ### Apply a patch directly from file
 
 ``` r
+
 x <- patch_annotation_from_gff(
   x,
   patch_file = system.file("extdata", "XZ1516.TA.gff", package = "ggexon"),
@@ -222,6 +234,7 @@ x <- patch_annotation_from_gff(
 ### Inspect or clear patch history
 
 ``` r
+
 list_patches(x)
 
 x <- clear_patches(x)
@@ -238,6 +251,7 @@ Supported patch modes are:
 Protein translation is built on the active `SynFeatureAnnotation`.
 
 ``` r
+
 x <- translate_protein(
   x,
   genes = c("FUN_000001", "FUN_000002")
@@ -249,6 +263,7 @@ protein_seq(get_annotation(x))
 You can also extract the CDS nucleotide sequences directly:
 
 ``` r
+
 x <- extract_cds_seq(
   x,
   genes = c("FUN_000001", "FUN_000002")
@@ -263,6 +278,7 @@ nucleotide_seq(get_annotation(x))
 their alignment relationships.
 
 ``` r
+
 x2 <- SynIndividual(
   genome_file = other_genome_fasta,
   annotation_file = other_annotation_gff,
@@ -281,6 +297,7 @@ sp <- add_individual(sp, x2)
 For a PAF-like alignment, store the direction explicitly:
 
 ``` r
+
 sp <- add_pairwise_alignment(
   sp,
   SynPairAlignment(
@@ -295,6 +312,7 @@ sp <- add_pairwise_alignment(
 ### Multiple alignment
 
 ``` r
+
 sp <- add_multiple_alignment(
   sp,
   SynMultiAlignment(

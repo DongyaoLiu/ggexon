@@ -39,7 +39,7 @@ returned object behaves as a self-contained view of the selected region."></head
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Subset a feature annotation layer by genomic window</h1>
-      <small class="dont-index">Source: <a href="https://github.com/DongyaoLiu/ggexon/blob/HEAD/R/SynIndividual-class.R" class="external-link"><code>R/SynIndividual-class.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/DongyaoLiu/ggexon/blob/main/R/SynIndividual-class.R" class="external-link"><code>R/SynIndividual-class.R</code></a></small>
       <div class="d-none name"><code>subset_feature_annotation.Rd</code></div>
     </div>
 
@@ -120,10 +120,11 @@ the annotation.</p></dd>
 <span class="r-in"><span>  id <span class="op">=</span> <span class="st">"XZ1516"</span></span></span>
 <span class="r-in"><span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="load_annotation.html">load_annotation</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in h(simpleError(msg, call)):</span> error in evaluating the argument 'x' in selecting a method for function 'load_annotation': `annotation_file` must not contain missing or empty paths.</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">gr</span> <span class="op">&lt;-</span> <span class="fu">annotation_data</span><span class="op">(</span><span class="va">ind</span><span class="op">)</span></span></span>
 <span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in annotation_data(ind):</span> could not find function "annotation_data"</span>
-<span class="r-in"><span><span class="va">chr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="fu">GenomeInfoDb</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/GenomeInfoDb/man/seqinfo.html" class="external-link">seqnames</a></span><span class="op">(</span><span class="va">gr</span><span class="op">)</span><span class="op">)</span><span class="op">[[</span><span class="fl">1L</span><span class="op">]</span><span class="op">]</span></span></span>
+<span class="r-in"><span><span class="va">chr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="fu">GenomeInfoDb</span><span class="fu">::</span><span class="fu">seqnames</span><span class="op">(</span><span class="va">gr</span><span class="op">)</span><span class="op">)</span><span class="op">[[</span><span class="fl">1L</span><span class="op">]</span><span class="op">]</span></span></span>
 <span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in h(simpleError(msg, call)):</span> error in evaluating the argument 'x' in selecting a method for function 'seqnames': object 'gr' not found</span>
 <span class="r-in"><span><span class="va">start</span> <span class="op">&lt;-</span> <span class="fu">IRanges</span><span class="fu">::</span><span class="fu">start</span><span class="op">(</span><span class="va">gr</span><span class="op">)</span><span class="op">[[</span><span class="fl">1L</span><span class="op">]</span><span class="op">]</span></span></span>
 <span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in h(simpleError(msg, call)):</span> error in evaluating the argument 'x' in selecting a method for function 'start': object 'gr' not found</span>
@@ -136,9 +137,9 @@ the annotation.</p></dd>
 <span class="r-in"><span>  start <span class="op">=</span> <span class="va">start</span>,</span></span>
 <span class="r-in"><span>  end <span class="op">=</span> <span class="va">end</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> `chr` must be a single non-empty character value.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in h(simpleError(msg, call)):</span> error in evaluating the argument 'x' in selecting a method for function 'subset_feature_annotation': object 'ind' not found</span>
 <span class="r-in"><span><span class="va">ind_view</span> <span class="op">&lt;-</span> <span class="fu">subset_feature_annotation</span><span class="op">(</span><span class="va">ind</span>, chr <span class="op">=</span> <span class="va">chr</span>, start <span class="op">=</span> <span class="va">start</span>, end <span class="op">=</span> <span class="va">end</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> `chr` must be a single non-empty character value.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in h(simpleError(msg, call)):</span> error in evaluating the argument 'x' in selecting a method for function 'subset_feature_annotation': object 'ind' not found</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
