@@ -32,9 +32,21 @@ ggplot2 layer arguments.}
 \item{exon_height}{Optional exon rectangle height used when preparing track
 coordinates.}
 
-\item{label_direction}{Where to place the label line: \code{"top"} (above the
-highest track), \code{"bottom"} (below the lowest track), or \code{"both"}
-(odd-indexed labels above, even-indexed labels below). Default \code{"top"}.}
+\item{label_direction}{One or more label positions joined with \code{:}, e.g.
+\code{"top"}, \code{"bottom"}, \code{"top:bottom"}, or \code{"bottom:top:center"}.
+Each gene receives a position based on its track index modulo the number
+of position tokens:
+\itemize{
+  \item \code{"top"} — all labels above the highest track.
+  \item \code{"bottom"} — all labels below the lowest track.
+  \item \code{"top:bottom"} — odd-indexed genes above, even-indexed below.
+  \item \code{"bottom:top:center"} — gene 1 bottom, gene 2 top, gene 3 centre
+    (and repeats). Genes assigned \code{"center"} have their label placed on
+    the gene body. If the label text is wider than the gene span, the label
+    falls back to \code{"top"}.
+}
+
+Valid tokens: \code{"top"}, \code{"bottom"}, \code{"center"}. Default \code{"top"}.}
 
 \item{label_offset_fraction}{Distance between the exon tracks and the label
 line, expressed as a fraction of \code{exon_height}. Default \code{0.3}.}
@@ -56,7 +68,10 @@ A ggplot2 layer using the internal \code{GeomGeneLabel} ggproto.
 }
 \description{
 \code{geom_genelabel()} places one text label per transcript or gene span on an
-exon-style genomic track. Labels sit on a single horizontal line above or
-below the exon tracks, with leader lines connecting each label to its gene
-body. Overlapping labels are pushed apart horizontally.
+exon-style genomic track. The \code{label_direction} parameter accepts
+colon-delimited combinations to distribute labels across multiple positions
+(top, bottom, centre) using modulo assignment. Labels placed at \code{"top"} or
+\code{"bottom"} connect to their gene body with leader lines; centre-positioned
+labels sit directly on the gene body. Overlapping labels are pushed apart
+horizontally.
 }
