@@ -3,11 +3,7 @@
 `geom_genelabel()` places one text label per transcript or gene span on
 an exon-style genomic track. Labels sit on a single horizontal line
 above or below the exon tracks, with leader lines connecting each label
-to its gene body. Overlapping labels are pushed apart horizontally. It
-uses the same Syn-backed lazy data resolution as
-[`geom_exon()`](https://dongyaoliu.github.io/ggexon/reference/geom_exon.md),
-so labels can be drawn from `SynIndividual` or `SynSpecies` containers
-as well as from precomputed data frames.
+to its gene body. Overlapping labels are pushed apart horizontally.
 
 ## Usage
 
@@ -47,8 +43,9 @@ geom_genelabel(
 
 - label_direction:
 
-  Where to place the label line: `"top"` (above the highest track) or
-  `"bottom"` (below the lowest track). Default `"top"`.
+  Where to place the label line: `"top"` (above the highest track),
+  `"bottom"` (below the lowest track), or `"both"` (odd-indexed labels
+  above, even-indexed labels below). Default `"top"`.
 
 - label_offset_fraction:
 
