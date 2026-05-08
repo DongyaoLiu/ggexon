@@ -25,7 +25,7 @@ navbar:
       menu:
       - text: Complete workflow
         href: articles/ggexon-workflow.html
-      - text: Classes and verbs
+      - text: Classes, geoms, facets, and guides
         href: articles/ggexon-classes-and-verbs.html
 
 articles:
@@ -36,10 +36,46 @@ articles:
   - ggexon-classes-and-verbs
 
 reference:
-- title: Start a plot
-  desc: Build ggexon plots, arrange genomic panels, and set genomic scales.
+- title: Data-storage classes
+  desc: Constructors for objects that store genomes, annotation layers, alignments, and reusable layout state.
+  contents:
+  - SynSpecies
+  - SynIndividual
+  - SynFeatureAnnotation
+  - SynVCFAnnotation
+  - SynBigWigAnnotation
+  - SynProteinDomainAnnotation
+  - SynProteinMutationAnnotation
+  - SynAnnotationPatch
+  - SynPairAlignment
+  - SynMultiAlignment
+  - SynLayout
+
+- title: Class hierarchy and slot details
+  desc: Slot-level reference pages for ggexon's S4 object hierarchy.
+  contents:
+  - SynAnnotation-class-hierarchy
+  - SynSpecies-class-overview
+  - matches("^Syn.*-class$")
+  - SynBioc-unions
+
+- title: Plot entry point and geoms
+  desc: Start a ggexon plot and draw genomic tracks, gene tags, labels, motifs, links, trees, and protein mutation summaries.
   contents:
   - ggexon
+  - geom_exon
+  - geom_exon2
+  - geom_genetag
+  - geom_genelabel
+  - geom_genomic_tree
+  - geom_motif
+  - geom_mutation_label
+  - geom_nuclink
+  - geom_protein_lollipop
+
+- title: Facets, tree alignment, and guides
+  desc: Arrange genomic panels beside link panels, tree panels, or other plots, and control genomic x-axis guides.
+  contents:
   - facet_genomics
   - facet_genomictree
   - scale_x_ggexon_genomic
@@ -51,34 +87,10 @@ reference:
   - set_panel_xlim
   - clear_panel_xlim
   - effective_panel_windows
-
-- title: Draw genomic and protein features
-  desc: User-facing geoms for annotation tracks, links, motifs, trees, and mutation summaries.
-  contents:
-  - geom_exon
-  - geom_exon2
-  - geom_genetag
-  - geom_genelabel
-  - geom_genomic_tree
-  - geom_motif
-  - geom_mutation_label
-  - geom_nuclink
-  - geom_protein_lollipop
-
-- title: Create Syn objects
-  desc: Constructors for individual genomes, species collections, annotation layers, alignments, and reusable layouts.
-  contents:
-  - SynIndividual
-  - SynSpecies
-  - SynFeatureAnnotation
-  - SynVCFAnnotation
-  - SynBigWigAnnotation
-  - SynProteinDomainAnnotation
-  - SynProteinMutationAnnotation
-  - SynPairAlignment
-  - SynMultiAlignment
-  - SynLayout
-  - SynAnnotationPatch
+  - compile_ggtree_genetag
+  - compile_ggtree_genomic_alignment
+  - compile_ggtree_rectangular_segments
+  - plot_ggtree_genomic_alignment
 
 - title: Manage object graphs
   desc: Add individuals, annotations, alignments, trees, and stored layout information to Syn containers.
@@ -103,13 +115,8 @@ reference:
   - store_chain_layout
   - store_projected_domains
 
-- title: S4 class details
-  desc: Slot-level reference pages for ggexon's S4 object hierarchy.
-  contents:
-  - matches("^Syn.*-class$")
-
 - title: Load, query, and transform annotations
-  desc: Materialize annotation data, query layer payloads, patch gene models, and derive sequence or protein-level summaries.
+  desc: Materialize annotation data, query layer payloads, and derive sequence or protein-level summaries.
   contents:
   - load_annotation
   - query_features
@@ -118,21 +125,14 @@ reference:
   - query_domains
   - query_protein_mutations
   - build_feature_index
-  - set_gene_labels
-  - patch_annotation
-  - patch_annotation_from_gff
-  - read_patch_gff
-  - list_patches
-  - clear_patches
   - extract_cds_seq
   - translate_protein
   - project_domains_to_genome
   - projected_domains
-  - rename_domain_annotation_ids
   - read_protein_mutation_counts
 
-- title: Subset and filter data
-  desc: Keep genomic windows, individuals, species collections, alignments, protein mutations, and ODGI node subsets.
+- title: Subset, filter, and curate objects
+  desc: Keep genomic windows, edit feature annotations, filter alignments, and manage object-level curation state.
   contents:
   - subsetting_operations
   - subset_feature_annotation
@@ -143,9 +143,16 @@ reference:
   - subset_protein_mutations
   - filter_pairwise_alignment
   - filter_odgi_nodes
+  - set_gene_labels
+  - patch_annotation
+  - patch_annotation_from_gff
+  - read_patch_gff
+  - list_patches
+  - clear_patches
+  - rename_domain_annotation_ids
 
 - title: Alignment and tree workflows
-  desc: Read pairwise and multiple alignments, work with ODGI data, and compile ggtree-compatible genomic layouts.
+  desc: Read pairwise and multiple alignments, work with ODGI data, and extract alignment tables.
   contents:
   - load_alignment
   - pairwise_alignment_data
@@ -156,10 +163,6 @@ reference:
   - odgi_node_table
   - odgi_node_table_script
   - odgi_species_order
-  - compile_ggtree_genetag
-  - compile_ggtree_genomic_alignment
-  - compile_ggtree_rectangular_segments
-  - plot_ggtree_genomic_alignment
 
 - title: Plot-ready data helpers
   desc: Convert Syn and tabular data into shapes consumed by ggexon layers.
@@ -203,6 +206,3 @@ reference:
   - warn_dots_empty
   - reexports
   - ggplot2_class_reexports
-  - SynAnnotation-class-hierarchy
-  - SynSpecies-class-overview
-  - SynBioc-unions

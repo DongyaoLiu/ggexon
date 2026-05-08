@@ -18,7 +18,7 @@
       <ul class="navbar-nav me-auto"><li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-tutorials" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Tutorials</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-tutorials"><li><a class="dropdown-item" href="../articles/ggexon-workflow.html">Complete workflow</a></li>
-    <li><a class="dropdown-item" href="../articles/ggexon-classes-and-verbs.html">Classes and verbs</a></li>
+    <li><a class="dropdown-item" href="../articles/ggexon-classes-and-verbs.html">Classes, geoms, facets, and guides</a></li>
   </ul></li>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -36,9 +36,237 @@
     </div>
 
     <div class="section level2">
-      <h2 id="start-a-plot">Start a plot<a class="anchor" aria-label="anchor" href="#start-a-plot"></a></h2>
+      <h2 id="data-storage-classes">Data-storage classes<a class="anchor" aria-label="anchor" href="#data-storage-classes"></a></h2>
 
-      <div class="section-desc"><p>Build ggexon plots, arrange genomic panels, and set genomic scales.</p></div>
+      <div class="section-desc"><p>Constructors for objects that store genomes, annotation layers, alignments, and reusable layout state.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="SynSpecies.html">SynSpecies()</a></code>
+
+        </dt>
+        <dd>Constructor for SynSpecies</dd>
+
+        <dt>
+
+          <code><a href="SynIndividual.html">SynIndividual()</a></code>
+
+        </dt>
+        <dd>Constructor for SynIndividual</dd>
+
+        <dt>
+
+          <code><a href="SynFeatureAnnotation.html">SynFeatureAnnotation()</a></code>
+
+        </dt>
+        <dd>Constructor for SynFeatureAnnotation</dd>
+
+        <dt>
+
+          <code><a href="SynVCFAnnotation.html">SynVCFAnnotation()</a></code>
+
+        </dt>
+        <dd>Constructor for SynVCFAnnotation</dd>
+
+        <dt>
+
+          <code><a href="SynBigWigAnnotation.html">SynBigWigAnnotation()</a></code>
+
+        </dt>
+        <dd>Constructor for SynBigWigAnnotation</dd>
+
+        <dt>
+
+          <code><a href="SynProteinDomainAnnotation.html">SynProteinDomainAnnotation()</a></code>
+
+        </dt>
+        <dd>Constructor for SynProteinDomainAnnotation</dd>
+
+        <dt>
+
+          <code><a href="SynProteinMutationAnnotation.html">SynProteinMutationAnnotation()</a></code>
+
+        </dt>
+        <dd>Constructor for SynProteinMutationAnnotation</dd>
+
+        <dt>
+
+          <code><a href="SynAnnotationPatch.html">SynAnnotationPatch()</a></code>
+
+        </dt>
+        <dd>Constructor for SynAnnotationPatch</dd>
+
+        <dt>
+
+          <code><a href="SynPairAlignment.html">SynPairAlignment()</a></code>
+
+        </dt>
+        <dd>Constructor for SynPairAlignment</dd>
+
+        <dt>
+
+          <code><a href="SynMultiAlignment.html">SynMultiAlignment()</a></code>
+
+        </dt>
+        <dd>Constructor for SynMultiAlignment</dd>
+
+        <dt>
+
+          <code><a href="SynLayout.html">SynLayout()</a></code>
+
+        </dt>
+        <dd>Constructor for SynLayout</dd>
+      </dl></div><div class="section level2">
+      <h2 id="class-hierarchy-and-slot-details">Class hierarchy and slot details<a class="anchor" aria-label="anchor" href="#class-hierarchy-and-slot-details"></a></h2>
+
+      <div class="section-desc"><p>Slot-level reference pages for ggexon’s S4 object hierarchy.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="SynAnnotation-class-hierarchy.html">SynAnnotation-class-hierarchy</a></code>
+
+        </dt>
+        <dd>SynAnnotation class hierarchy</dd>
+
+        <dt>
+
+          <code><a href="SynSpecies-class-overview.html">SynSpecies-class-overview</a></code>
+
+        </dt>
+        <dd>SynSpecies, SynLayout, and alignment classes</dd>
+
+        <dt>
+
+          <code><a href="SynAnnotation-class.html">SynAnnotation-class</a></code>
+
+        </dt>
+        <dd>SynAnnotation class</dd>
+
+        <dt>
+
+          <code><a href="SynAnnotationPatch-class.html">SynAnnotationPatch-class</a></code>
+
+        </dt>
+        <dd>SynAnnotationPatch class</dd>
+
+        <dt>
+
+          <code><a href="SynBigWigAnnotation-class.html">SynBigWigAnnotation-class</a></code>
+
+        </dt>
+        <dd>SynBigWigAnnotation class</dd>
+
+        <dt>
+
+          <code><a href="SynFeatureAnnotation-class.html">SynFeatureAnnotation-class</a></code>
+
+        </dt>
+        <dd>SynFeatureAnnotation class</dd>
+
+        <dt>
+
+          <code><a href="SynGenomeAnnotation-class.html">SynGenomeAnnotation-class</a></code>
+
+        </dt>
+        <dd>SynGenomeAnnotation class</dd>
+
+        <dt>
+
+          <code><a href="SynIndAnnotation-class.html">SynIndAnnotation-class</a></code>
+
+        </dt>
+        <dd>SynIndAnnotation class</dd>
+
+        <dt>
+
+          <code><a href="SynIndividual-class.html">SynIndividual-class</a></code>
+
+        </dt>
+        <dd>SynIndividual class</dd>
+
+        <dt>
+
+          <code><a href="SynLayout-class.html">SynLayout-class</a></code>
+
+        </dt>
+        <dd>SynLayout class</dd>
+
+        <dt>
+
+          <code><a href="SynMultiAlignment-class.html">SynMultiAlignment-class</a></code>
+
+        </dt>
+        <dd>SynMultiAlignment class</dd>
+
+        <dt>
+
+          <code><a href="SynPairAlignment-class.html">SynPairAlignment-class</a></code>
+
+        </dt>
+        <dd>SynPairAlignment class</dd>
+
+        <dt>
+
+          <code><a href="SynProteinAnnotation-class.html">SynProteinAnnotation-class</a></code>
+
+        </dt>
+        <dd>SynProteinAnnotation class</dd>
+
+        <dt>
+
+          <code><a href="SynProteinDomainAnnotation-class.html">SynProteinDomainAnnotation-class</a></code>
+
+        </dt>
+        <dd>SynProteinDomainAnnotation class</dd>
+
+        <dt>
+
+          <code><a href="SynProteinMutationAnnotation-class.html">SynProteinMutationAnnotation-class</a></code>
+
+        </dt>
+        <dd>SynProteinMutationAnnotation class</dd>
+
+        <dt>
+
+          <code><a href="SynSpeAnnotation-class.html">SynSpeAnnotation-class</a></code>
+
+        </dt>
+        <dd>SynSpeAnnotation class</dd>
+
+        <dt>
+
+          <code><a href="SynSpecies-class.html">SynSpecies-class</a></code>
+
+        </dt>
+        <dd>SynSpecies class</dd>
+
+        <dt>
+
+          <code><a href="SynVCFAnnotation-class.html">SynVCFAnnotation-class</a></code>
+
+        </dt>
+        <dd>SynVCFAnnotation class</dd>
+
+        <dt>
+
+          <code><a href="SynBioc-unions.html">SynBioc-unions</a></code>
+
+        </dt>
+        <dd>Bioconductor class unions used by ggexon S4 classes</dd>
+      </dl></div><div class="section level2">
+      <h2 id="plot-entry-point-and-geoms">Plot entry point and geoms<a class="anchor" aria-label="anchor" href="#plot-entry-point-and-geoms"></a></h2>
+
+      <div class="section-desc"><p>Start a ggexon plot and draw genomic tracks, gene tags, labels, motifs, links, trees, and protein mutation summaries.</p></div>
 
       <dl></dl></div><div class="section level2">
 
@@ -53,6 +281,78 @@
         <dd>Create a ggexon plot</dd>
 
         <dt>
+
+          <code><a href="geom_exon.html">geom_exon()</a></code>
+
+        </dt>
+        <dd>Draw exon-style genomic features</dd>
+
+        <dt>
+
+          <code><a href="geom_exon2.html">geom_exon2()</a></code>
+
+        </dt>
+        <dd>Draw WormWeb-style exon-intron schematics</dd>
+
+        <dt>
+
+          <code><a href="geom_genetag.html">geom_genetag()</a></code>
+
+        </dt>
+        <dd>Draw gene tags as exon bodies with strand-direction triangles</dd>
+
+        <dt>
+
+          <code><a href="geom_genelabel.html">geom_genelabel()</a></code>
+
+        </dt>
+        <dd>Draw gene labels on exon tracks</dd>
+
+        <dt>
+
+          <code><a href="geom_genomic_tree.html">geom_genomic_tree()</a></code>
+
+        </dt>
+        <dd>Attach a tree for genomic-panel alignment</dd>
+
+        <dt>
+
+          <code><a href="geom_motif.html">geom_motif()</a></code>
+
+        </dt>
+        <dd>Plot protein-domain motifs</dd>
+
+        <dt>
+
+          <code><a href="geom_mutation_label.html">geom_mutation_label()</a></code>
+
+        </dt>
+        <dd>Draw mutation labels as a dedicated text layer</dd>
+
+        <dt>
+
+          <code><a href="geom_nuclink.html">geom_nuclink()</a></code>
+
+        </dt>
+        <dd>Draw cross-panel nucleotide links</dd>
+
+        <dt>
+
+          <code><a href="geom_protein_lollipop.html">geom_protein_lollipop()</a></code>
+
+        </dt>
+        <dd>Draw lollipop annotations on a protein-coordinate track</dd>
+      </dl></div><div class="section level2">
+      <h2 id="facets-tree-alignment-and-guides">Facets, tree alignment, and guides<a class="anchor" aria-label="anchor" href="#facets-tree-alignment-and-guides"></a></h2>
+
+      <div class="section-desc"><p>Arrange genomic panels beside link panels, tree panels, or other plots, and control genomic x-axis guides.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
 
           <code><a href="facet_genomics.html">facet_genomics()</a></code>
 
@@ -128,164 +428,34 @@
 
         </dt>
         <dd>Inspect effective annotation panel windows</dd>
-      </dl></div><div class="section level2">
-      <h2 id="draw-genomic-and-protein-features">Draw genomic and protein features<a class="anchor" aria-label="anchor" href="#draw-genomic-and-protein-features"></a></h2>
-
-      <div class="section-desc"><p>User-facing geoms for annotation tracks, links, motifs, trees, and mutation summaries.</p></div>
-
-      <dl></dl></div><div class="section level2">
-
-
-
-
-      <dl><dt>
-
-          <code><a href="geom_exon.html">geom_exon()</a></code>
-
-        </dt>
-        <dd>Draw exon-style genomic features</dd>
 
         <dt>
 
-          <code><a href="geom_exon2.html">geom_exon2()</a></code>
+          <code><a href="compile_ggtree_genetag.html">compile_ggtree_genetag()</a></code>
 
         </dt>
-        <dd>Draw WormWeb-style exon-intron schematics</dd>
+        <dd>Compile gene-tag rows for a rectangular ggtree panel</dd>
 
         <dt>
 
-          <code><a href="geom_genetag.html">geom_genetag()</a></code>
+          <code><a href="compile_ggtree_genomic_alignment.html">compile_ggtree_genomic_alignment()</a></code>
 
         </dt>
-        <dd>Draw gene tags as exon bodies with strand-direction triangles</dd>
+        <dd>Compile a tree-aligned genomic track layout</dd>
 
         <dt>
 
-          <code><a href="geom_genelabel.html">geom_genelabel()</a></code>
+          <code><a href="compile_ggtree_rectangular_segments.html">compile_ggtree_rectangular_segments()</a></code>
 
         </dt>
-        <dd>Draw gene labels on exon tracks</dd>
+        <dd>Compile rectangular ggtree branches for a ggexon tree panel</dd>
 
         <dt>
 
-          <code><a href="geom_genomic_tree.html">geom_genomic_tree()</a></code>
+          <code><a href="plot_ggtree_genomic_alignment.html">plot_ggtree_genomic_alignment()</a></code>
 
         </dt>
-        <dd>Attach a tree for genomic-panel alignment</dd>
-
-        <dt>
-
-          <code><a href="geom_motif.html">geom_motif()</a></code>
-
-        </dt>
-        <dd>Plot protein-domain motifs</dd>
-
-        <dt>
-
-          <code><a href="geom_mutation_label.html">geom_mutation_label()</a></code>
-
-        </dt>
-        <dd>Draw mutation labels as a dedicated text layer</dd>
-
-        <dt>
-
-          <code><a href="geom_nuclink.html">geom_nuclink()</a></code>
-
-        </dt>
-        <dd>Draw cross-panel nucleotide links</dd>
-
-        <dt>
-
-          <code><a href="geom_protein_lollipop.html">geom_protein_lollipop()</a></code>
-
-        </dt>
-        <dd>Draw lollipop annotations on a protein-coordinate track</dd>
-      </dl></div><div class="section level2">
-      <h2 id="create-syn-objects">Create Syn objects<a class="anchor" aria-label="anchor" href="#create-syn-objects"></a></h2>
-
-      <div class="section-desc"><p>Constructors for individual genomes, species collections, annotation layers, alignments, and reusable layouts.</p></div>
-
-      <dl></dl></div><div class="section level2">
-
-
-
-
-      <dl><dt>
-
-          <code><a href="SynIndividual.html">SynIndividual()</a></code>
-
-        </dt>
-        <dd>Constructor for SynIndividual</dd>
-
-        <dt>
-
-          <code><a href="SynSpecies.html">SynSpecies()</a></code>
-
-        </dt>
-        <dd>Constructor for SynSpecies</dd>
-
-        <dt>
-
-          <code><a href="SynFeatureAnnotation.html">SynFeatureAnnotation()</a></code>
-
-        </dt>
-        <dd>Constructor for SynFeatureAnnotation</dd>
-
-        <dt>
-
-          <code><a href="SynVCFAnnotation.html">SynVCFAnnotation()</a></code>
-
-        </dt>
-        <dd>Constructor for SynVCFAnnotation</dd>
-
-        <dt>
-
-          <code><a href="SynBigWigAnnotation.html">SynBigWigAnnotation()</a></code>
-
-        </dt>
-        <dd>Constructor for SynBigWigAnnotation</dd>
-
-        <dt>
-
-          <code><a href="SynProteinDomainAnnotation.html">SynProteinDomainAnnotation()</a></code>
-
-        </dt>
-        <dd>Constructor for SynProteinDomainAnnotation</dd>
-
-        <dt>
-
-          <code><a href="SynProteinMutationAnnotation.html">SynProteinMutationAnnotation()</a></code>
-
-        </dt>
-        <dd>Constructor for SynProteinMutationAnnotation</dd>
-
-        <dt>
-
-          <code><a href="SynPairAlignment.html">SynPairAlignment()</a></code>
-
-        </dt>
-        <dd>Constructor for SynPairAlignment</dd>
-
-        <dt>
-
-          <code><a href="SynMultiAlignment.html">SynMultiAlignment()</a></code>
-
-        </dt>
-        <dd>Constructor for SynMultiAlignment</dd>
-
-        <dt>
-
-          <code><a href="SynLayout.html">SynLayout()</a></code>
-
-        </dt>
-        <dd>Constructor for SynLayout</dd>
-
-        <dt>
-
-          <code><a href="SynAnnotationPatch.html">SynAnnotationPatch()</a></code>
-
-        </dt>
-        <dd>Constructor for SynAnnotationPatch</dd>
+        <dd>Plot a tree-aligned genomic track layout</dd>
       </dl></div><div class="section level2">
       <h2 id="manage-object-graphs">Manage object graphs<a class="anchor" aria-label="anchor" href="#manage-object-graphs"></a></h2>
 
@@ -429,130 +599,9 @@
         </dt>
         <dd>Store a projected protein-domain table on a SynIndividual</dd>
       </dl></div><div class="section level2">
-      <h2 id="s-class-details">S4 class details<a class="anchor" aria-label="anchor" href="#s-class-details"></a></h2>
-
-      <div class="section-desc"><p>Slot-level reference pages for ggexon’s S4 object hierarchy.</p></div>
-
-      <dl></dl></div><div class="section level2">
-
-
-
-
-      <dl><dt>
-
-          <code><a href="SynAnnotation-class.html">SynAnnotation-class</a></code>
-
-        </dt>
-        <dd>SynAnnotation class</dd>
-
-        <dt>
-
-          <code><a href="SynAnnotationPatch-class.html">SynAnnotationPatch-class</a></code>
-
-        </dt>
-        <dd>SynAnnotationPatch class</dd>
-
-        <dt>
-
-          <code><a href="SynBigWigAnnotation-class.html">SynBigWigAnnotation-class</a></code>
-
-        </dt>
-        <dd>SynBigWigAnnotation class</dd>
-
-        <dt>
-
-          <code><a href="SynFeatureAnnotation-class.html">SynFeatureAnnotation-class</a></code>
-
-        </dt>
-        <dd>SynFeatureAnnotation class</dd>
-
-        <dt>
-
-          <code><a href="SynGenomeAnnotation-class.html">SynGenomeAnnotation-class</a></code>
-
-        </dt>
-        <dd>SynGenomeAnnotation class</dd>
-
-        <dt>
-
-          <code><a href="SynIndAnnotation-class.html">SynIndAnnotation-class</a></code>
-
-        </dt>
-        <dd>SynIndAnnotation class</dd>
-
-        <dt>
-
-          <code><a href="SynIndividual-class.html">SynIndividual-class</a></code>
-
-        </dt>
-        <dd>SynIndividual class</dd>
-
-        <dt>
-
-          <code><a href="SynLayout-class.html">SynLayout-class</a></code>
-
-        </dt>
-        <dd>SynLayout class</dd>
-
-        <dt>
-
-          <code><a href="SynMultiAlignment-class.html">SynMultiAlignment-class</a></code>
-
-        </dt>
-        <dd>SynMultiAlignment class</dd>
-
-        <dt>
-
-          <code><a href="SynPairAlignment-class.html">SynPairAlignment-class</a></code>
-
-        </dt>
-        <dd>SynPairAlignment class</dd>
-
-        <dt>
-
-          <code><a href="SynProteinAnnotation-class.html">SynProteinAnnotation-class</a></code>
-
-        </dt>
-        <dd>SynProteinAnnotation class</dd>
-
-        <dt>
-
-          <code><a href="SynProteinDomainAnnotation-class.html">SynProteinDomainAnnotation-class</a></code>
-
-        </dt>
-        <dd>SynProteinDomainAnnotation class</dd>
-
-        <dt>
-
-          <code><a href="SynProteinMutationAnnotation-class.html">SynProteinMutationAnnotation-class</a></code>
-
-        </dt>
-        <dd>SynProteinMutationAnnotation class</dd>
-
-        <dt>
-
-          <code><a href="SynSpeAnnotation-class.html">SynSpeAnnotation-class</a></code>
-
-        </dt>
-        <dd>SynSpeAnnotation class</dd>
-
-        <dt>
-
-          <code><a href="SynSpecies-class.html">SynSpecies-class</a></code>
-
-        </dt>
-        <dd>SynSpecies class</dd>
-
-        <dt>
-
-          <code><a href="SynVCFAnnotation-class.html">SynVCFAnnotation-class</a></code>
-
-        </dt>
-        <dd>SynVCFAnnotation class</dd>
-      </dl></div><div class="section level2">
       <h2 id="load-query-and-transform-annotations">Load, query, and transform annotations<a class="anchor" aria-label="anchor" href="#load-query-and-transform-annotations"></a></h2>
 
-      <div class="section-desc"><p>Materialize annotation data, query layer payloads, patch gene models, and derive sequence or protein-level summaries.</p></div>
+      <div class="section-desc"><p>Materialize annotation data, query layer payloads, and derive sequence or protein-level summaries.</p></div>
 
       <dl></dl></div><div class="section level2">
 
@@ -610,48 +659,6 @@
 
         <dt>
 
-          <code><a href="set_gene_labels.html">set_gene_labels()</a></code>
-
-        </dt>
-        <dd>Set human-readable gene labels on a feature annotation layer</dd>
-
-        <dt>
-
-          <code><a href="patch_annotation.html">patch_annotation()</a></code>
-
-        </dt>
-        <dd>Apply a gene-model patch to a feature annotation</dd>
-
-        <dt>
-
-          <code><a href="patch_annotation_from_gff.html">patch_annotation_from_gff()</a></code>
-
-        </dt>
-        <dd>Apply a patch directly from a small GFF/GTF file</dd>
-
-        <dt>
-
-          <code><a href="read_patch_gff.html">read_patch_gff()</a></code>
-
-        </dt>
-        <dd>Read a small GFF/GTF patch file</dd>
-
-        <dt>
-
-          <code><a href="list_patches.html">list_patches()</a></code>
-
-        </dt>
-        <dd>List annotation patches</dd>
-
-        <dt>
-
-          <code><a href="clear_patches.html">clear_patches()</a></code>
-
-        </dt>
-        <dd>Clear annotation patches</dd>
-
-        <dt>
-
           <code><a href="extract_cds_seq.html">extract_cds_seq()</a></code>
 
         </dt>
@@ -680,21 +687,14 @@
 
         <dt>
 
-          <code><a href="rename_domain_annotation_ids.html">rename_domain_annotation_ids()</a></code>
-
-        </dt>
-        <dd>Rename protein-domain identifiers using an explicit mapping</dd>
-
-        <dt>
-
           <code><a href="read_protein_mutation_counts.html">read_protein_mutation_counts()</a></code>
 
         </dt>
         <dd>Read protein-mutation count summaries</dd>
       </dl></div><div class="section level2">
-      <h2 id="subset-and-filter-data">Subset and filter data<a class="anchor" aria-label="anchor" href="#subset-and-filter-data"></a></h2>
+      <h2 id="subset-filter-and-curate-objects">Subset, filter, and curate objects<a class="anchor" aria-label="anchor" href="#subset-filter-and-curate-objects"></a></h2>
 
-      <div class="section-desc"><p>Keep genomic windows, individuals, species collections, alignments, protein mutations, and ODGI node subsets.</p></div>
+      <div class="section-desc"><p>Keep genomic windows, edit feature annotations, filter alignments, and manage object-level curation state.</p></div>
 
       <dl></dl></div><div class="section level2">
 
@@ -763,10 +763,59 @@
 
         </dt>
         <dd>Filter ODGI nodes by sequence length</dd>
+
+        <dt>
+
+          <code><a href="set_gene_labels.html">set_gene_labels()</a></code>
+
+        </dt>
+        <dd>Set human-readable gene labels on a feature annotation layer</dd>
+
+        <dt>
+
+          <code><a href="patch_annotation.html">patch_annotation()</a></code>
+
+        </dt>
+        <dd>Apply a gene-model patch to a feature annotation</dd>
+
+        <dt>
+
+          <code><a href="patch_annotation_from_gff.html">patch_annotation_from_gff()</a></code>
+
+        </dt>
+        <dd>Apply a patch directly from a small GFF/GTF file</dd>
+
+        <dt>
+
+          <code><a href="read_patch_gff.html">read_patch_gff()</a></code>
+
+        </dt>
+        <dd>Read a small GFF/GTF patch file</dd>
+
+        <dt>
+
+          <code><a href="list_patches.html">list_patches()</a></code>
+
+        </dt>
+        <dd>List annotation patches</dd>
+
+        <dt>
+
+          <code><a href="clear_patches.html">clear_patches()</a></code>
+
+        </dt>
+        <dd>Clear annotation patches</dd>
+
+        <dt>
+
+          <code><a href="rename_domain_annotation_ids.html">rename_domain_annotation_ids()</a></code>
+
+        </dt>
+        <dd>Rename protein-domain identifiers using an explicit mapping</dd>
       </dl></div><div class="section level2">
       <h2 id="alignment-and-tree-workflows">Alignment and tree workflows<a class="anchor" aria-label="anchor" href="#alignment-and-tree-workflows"></a></h2>
 
-      <div class="section-desc"><p>Read pairwise and multiple alignments, work with ODGI data, and compile ggtree-compatible genomic layouts.</p></div>
+      <div class="section-desc"><p>Read pairwise and multiple alignments, work with ODGI data, and extract alignment tables.</p></div>
 
       <dl></dl></div><div class="section level2">
 
@@ -835,34 +884,6 @@
 
         </dt>
         <dd>Derive a greedy species order from an ODGI multiple alignment</dd>
-
-        <dt>
-
-          <code><a href="compile_ggtree_genetag.html">compile_ggtree_genetag()</a></code>
-
-        </dt>
-        <dd>Compile gene-tag rows for a rectangular ggtree panel</dd>
-
-        <dt>
-
-          <code><a href="compile_ggtree_genomic_alignment.html">compile_ggtree_genomic_alignment()</a></code>
-
-        </dt>
-        <dd>Compile a tree-aligned genomic track layout</dd>
-
-        <dt>
-
-          <code><a href="compile_ggtree_rectangular_segments.html">compile_ggtree_rectangular_segments()</a></code>
-
-        </dt>
-        <dd>Compile rectangular ggtree branches for a ggexon tree panel</dd>
-
-        <dt>
-
-          <code><a href="plot_ggtree_genomic_alignment.html">plot_ggtree_genomic_alignment()</a></code>
-
-        </dt>
-        <dd>Plot a tree-aligned genomic track layout</dd>
       </dl></div><div class="section level2">
       <h2 id="plot-ready-data-helpers">Plot-ready data helpers<a class="anchor" aria-label="anchor" href="#plot-ready-data-helpers"></a></h2>
 
@@ -1126,27 +1147,6 @@
 
         </dt>
         <dd>ggplot2 Class Objects Re-exported by ggexon</dd>
-
-        <dt>
-
-          <code><a href="SynAnnotation-class-hierarchy.html">SynAnnotation-class-hierarchy</a></code>
-
-        </dt>
-        <dd>SynAnnotation class hierarchy</dd>
-
-        <dt>
-
-          <code><a href="SynSpecies-class-overview.html">SynSpecies-class-overview</a></code>
-
-        </dt>
-        <dd>SynSpecies, SynLayout, and alignment classes</dd>
-
-        <dt>
-
-          <code><a href="SynBioc-unions.html">SynBioc-unions</a></code>
-
-        </dt>
-        <dd>Bioconductor class unions used by ggexon S4 classes</dd>
       </dl></div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>

@@ -5,14 +5,14 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>ggexon Classes and Verbs • ggexon</title>
+<title>ggexon Classes, Geoms, Facets, and Guides • ggexon</title>
 <script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_3-0.4.10/font.css" rel="stylesheet">
 <link href="../deps/Source_Code_Pro-0.4.10/font.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="ggexon Classes and Verbs">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="ggexon Classes, Geoms, Facets, and Guides">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -35,7 +35,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-tutorials" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Tutorials</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-tutorials">
 <li><a class="dropdown-item" href="../articles/ggexon-workflow.html">Complete workflow</a></li>
-    <li><a class="dropdown-item" href="../articles/ggexon-classes-and-verbs.html">Classes and verbs</a></li>
+    <li><a class="dropdown-item" href="../articles/ggexon-classes-and-verbs.html">Classes, geoms, facets, and guides</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
@@ -58,323 +58,185 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
-      <h1>ggexon Classes and Verbs</h1>
+      <h1>ggexon Classes, Geoms, Facets, and Guides</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/DongyaoLiu/ggexon/blob/main/vignettes/ggexon-classes-and-verbs.Rmd" class="external-link"><code>vignettes/ggexon-classes-and-verbs.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/DongyaoLiu/ggexon/blob/HEAD/vignettes/ggexon-classes-and-verbs.Rmd" class="external-link"><code>vignettes/ggexon-classes-and-verbs.Rmd</code></a></small>
       <div class="d-none name"><code>ggexon-classes-and-verbs.Rmd</code></div>
     </div>
 
     
     
 <div class="section level2">
-<h2 id="purpose">Purpose<a class="anchor" aria-label="anchor" href="#purpose"></a>
+<h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
-<p>This tutorial introduces the main object classes and verbs in
-<code>ggexon</code>.</p>
-<p>The package now has three main layers of objects:</p>
-<ul>
-<li>annotation-layer objects</li>
-<li>genome-level individual objects</li>
-<li>cross-species collection objects</li>
-</ul>
-<p>The central design idea is:</p>
-<ul>
-<li>keep stable biological identifiers for computation</li>
-<li>add readable labels for plotting</li>
-<li>separate feature annotation, variants, signal, and protein-domain
-data</li>
-<li>keep species-level alignment state above individual genome
-state</li>
-</ul>
+<p><code>ggexon</code> separates data storage from plotting. S4 classes
+remember genomes, annotation layers, alignments, trees, and layout
+decisions. Verbs then load, query, subset, curate, and draw those
+objects.</p>
+<p>The package is easiest to learn in this order:</p>
+<ol style="list-style-type: decimal">
+<li>data-storage classes</li>
+<li>plot entry point and geoms</li>
+<li>facet systems and genomic guides</li>
+<li>verbs that manage, query, and transform stored data</li>
+</ol>
 </div>
 <div class="section level2">
-<h2 id="object-hierarchy">Object hierarchy<a class="anchor" aria-label="anchor" href="#object-hierarchy"></a>
+<h2 id="data-storage-classes">Data-storage classes<a class="anchor" aria-label="anchor" href="#data-storage-classes"></a>
 </h2>
-<p>The current object model looks like this:</p>
-<ul>
-<li>
-<code>SynAnnotation</code>
-<ul>
-<li><code>SynFeatureAnnotation</code></li>
-<li><code>SynVCFAnnotation</code></li>
-<li><code>SynBigWigAnnotation</code></li>
-<li><code>SynProteinDomainAnnotation</code></li>
-</ul>
-</li>
-<li><code>SynIndividual</code></li>
-<li>
-<code>SynSpecies</code>
-<ul>
-<li><code>SynPairAlignment</code></li>
-<li><code>SynMultiAlignment</code></li>
-</ul>
-</li>
-</ul>
-</div>
-<div class="section level2">
-<h2 id="create-a-synindividual">1. Create a <code>SynIndividual</code><a class="anchor" aria-label="anchor" href="#create-a-synindividual"></a>
-</h2>
-<p><code>SynIndividual</code> is the genome-level container. It usually
-starts from a genome FASTA plus one structural annotation file.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dongyaoliu.github.io/ggexon/">ggexon</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SynIndividual.html">SynIndividual</a></span><span class="op">(</span></span>
-<span>  genome_file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"XZ1516.fasta"</span>, package <span class="op">=</span> <span class="st">"ggexon"</span><span class="op">)</span>,</span>
-<span>  annotation_file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span></span>
-<span>    <span class="st">"extdata"</span>,</span>
-<span>    <span class="st">"caenorhabditis_XZ1516.gff3"</span>,</span>
-<span>    package <span class="op">=</span> <span class="st">"ggexon"</span></span>
-<span>  <span class="op">)</span>,</span>
+<p>The object model keeps stable biological identifiers for computation
+while allowing readable labels and plot-specific layout state to be
+stored separately.</p>
+<pre class="mermaid"><code>flowchart LR
+  sp["SynSpecies&lt;br/&gt;project-level data hub"]
+  ind["SynIndividual&lt;br/&gt;one genome, strain, or sample"]
+  ann["SynAnnotation&lt;br/&gt;annotation-layer base class"]
+  feat["SynFeatureAnnotation&lt;br/&gt;genes, transcripts, exons, CDS"]
+  vcf["SynVCFAnnotation&lt;br/&gt;variants"]
+  bw["SynBigWigAnnotation&lt;br/&gt;signal tracks"]
+  domain["SynProteinDomainAnnotation&lt;br/&gt;protein domains"]
+  mut["SynProteinMutationAnnotation&lt;br/&gt;protein mutations"]
+  pair["SynPairAlignment&lt;br/&gt;pairwise links"]
+  multi["SynMultiAlignment&lt;br/&gt;multi-genome links"]
+  layout["SynLayout&lt;br/&gt;panel windows and layout state"]
+
+  sp --&gt; ind
+  ind --&gt; ann
+  ann --&gt; feat
+  ann --&gt; vcf
+  ann --&gt; bw
+  ann --&gt; domain
+  ann --&gt; mut
+  sp --&gt; pair
+  sp --&gt; multi
+  sp --&gt; layout</code></pre>
+<div class="section level3">
+<h3 id="project-and-genome-containers">Project and genome containers<a class="anchor" aria-label="anchor" href="#project-and-genome-containers"></a>
+</h3>
+<p><code>SynSpecies</code> is the project-level container. It stores the
+individuals being compared, pairwise or multiple alignments between
+them, optional trees, and reusable layout state.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SynSpecies.html">SynSpecies</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"Caenorhabditis"</span><span class="op">)</span></span></code></pre></div>
+<p><code>SynIndividual</code> stores one genome, strain, species, or
+sample. It can remember the genome FASTA, feature annotation file,
+loaded annotation layers, sequence caches, labels, patches, and feature
+indexes.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">xz</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SynIndividual.html">SynIndividual</a></span><span class="op">(</span></span>
+<span>  genome_file <span class="op">=</span> <span class="st">"XZ1516.fasta"</span>,</span>
+<span>  annotation_file <span class="op">=</span> <span class="st">"XZ1516.gff3"</span>,</span>
 <span>  id <span class="op">=</span> <span class="st">"XZ1516"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>At construction time, <code>ggexon</code> checks whether sequence
 names in the annotation file exist in the FASTA headers.</p>
 </div>
-<div class="section level2">
-<h2 id="load-the-active-feature-annotation">2. Load the active feature annotation<a class="anchor" aria-label="anchor" href="#load-the-active-feature-annotation"></a>
-</h2>
-<p>The default structural annotation layer is a
-<code>SynFeatureAnnotation</code>.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_annotation.html">load_annotation</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
-<span><span class="va">ann</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_annotation.html">get_annotation</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">ann</span><span class="op">)</span></span>
-<span><span class="fu">annotation_names</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
-<span><span class="fu">active_feature_annotation</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code></pre></div>
-<p>Feature annotations are the layers used for:</p>
-<ul>
-<li>gene/transcript/CDS queries</li>
-<li>CDS extraction</li>
-<li>protein translation</li>
-<li>gene-label mapping</li>
-<li>patching corrected models</li>
-</ul>
-</div>
-<div class="section level2">
-<h2 id="attach-additional-annotation-layers">3. Attach additional annotation layers<a class="anchor" aria-label="anchor" href="#attach-additional-annotation-layers"></a>
-</h2>
-<p>You can attach several heterogeneous annotation layers to the same
-<code>SynIndividual</code>.</p>
 <div class="section level3">
-<h3 id="variants">Variants<a class="anchor" aria-label="anchor" href="#variants"></a>
+<h3 id="annotation-layer-classes">Annotation-layer classes<a class="anchor" aria-label="anchor" href="#annotation-layer-classes"></a>
 </h3>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_annotation.html">add_annotation</a></span><span class="op">(</span></span>
-<span>  <span class="va">x</span>,</span>
+<p><code>SynAnnotation</code> is the shared base class for data layers
+attached to a <code>SynIndividual</code>.</p>
+<p>The main concrete annotation classes are:</p>
+<table class="table">
+<colgroup>
+<col width="50%">
+<col width="50%">
+</colgroup>
+<thead><tr class="header">
+<th>Class</th>
+<th>Stores</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td><code>SynFeatureAnnotation</code></td>
+<td>Structural genome annotation such as genes, transcripts, exons, CDS,
+labels, and patch history</td>
+</tr>
+<tr class="even">
+<td><code>SynVCFAnnotation</code></td>
+<td>Variant data queried by genomic region</td>
+</tr>
+<tr class="odd">
+<td><code>SynBigWigAnnotation</code></td>
+<td>Signal tracks queried by genomic region</td>
+</tr>
+<tr class="even">
+<td><code>SynProteinDomainAnnotation</code></td>
+<td>Protein-space domains from InterProScan-like tables</td>
+</tr>
+<tr class="odd">
+<td><code>SynProteinMutationAnnotation</code></td>
+<td>Protein mutation summaries and lollipop-track inputs</td>
+</tr>
+<tr class="even">
+<td><code>SynAnnotationPatch</code></td>
+<td>Small gene-model corrections that add, drop, or replace
+features</td>
+</tr>
+</tbody>
+</table>
+<p>Additional layers are attached to a <code>SynIndividual</code> with
+<code><a href="../reference/add_annotation.html">add_annotation()</a></code>.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">xz</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_annotation.html">add_annotation</a></span><span class="op">(</span></span>
+<span>  <span class="va">xz</span>,</span>
 <span>  <span class="fu"><a href="../reference/SynVCFAnnotation.html">SynVCFAnnotation</a></span><span class="op">(</span></span>
 <span>    name <span class="op">=</span> <span class="st">"variants"</span>,</span>
-<span>    vcf_file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span></span>
-<span>      <span class="st">"extdata"</span>,</span>
-<span>      <span class="st">"DL238.rename.ChrV.XZ1516.vcf.gz"</span>,</span>
-<span>      package <span class="op">=</span> <span class="st">"ggexon"</span></span>
-<span>    <span class="op">)</span></span>
+<span>    vcf_file <span class="op">=</span> <span class="st">"sample.vcf.gz"</span></span>
 <span>  <span class="op">)</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="protein-domains">Protein domains<a class="anchor" aria-label="anchor" href="#protein-domains"></a>
-</h3>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_annotation.html">add_annotation</a></span><span class="op">(</span></span>
-<span>  <span class="va">x</span>,</span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">xz</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_annotation.html">add_annotation</a></span><span class="op">(</span></span>
+<span>  <span class="va">xz</span>,</span>
 <span>  <span class="fu"><a href="../reference/SynProteinDomainAnnotation.html">SynProteinDomainAnnotation</a></span><span class="op">(</span></span>
 <span>    name <span class="op">=</span> <span class="st">"interpro"</span>,</span>
-<span>    domain_file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span></span>
-<span>      <span class="st">"extdata"</span>,</span>
-<span>      <span class="st">"InterProScan.tsv"</span>,</span>
-<span>      package <span class="op">=</span> <span class="st">"ggexon"</span></span>
-<span>    <span class="op">)</span>,</span>
+<span>    domain_file <span class="op">=</span> <span class="st">"InterProScan.tsv"</span>,</span>
 <span>    keytype <span class="op">=</span> <span class="st">"protein_id"</span>,</span>
 <span>    source_db <span class="op">=</span> <span class="st">"InterPro"</span></span>
 <span>  <span class="op">)</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="bigwig-signal">BigWig signal<a class="anchor" aria-label="anchor" href="#bigwig-signal"></a>
-</h3>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_annotation.html">add_annotation</a></span><span class="op">(</span></span>
-<span>  <span class="va">x</span>,</span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">xz</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_annotation.html">add_annotation</a></span><span class="op">(</span></span>
+<span>  <span class="va">xz</span>,</span>
 <span>  <span class="fu"><a href="../reference/SynBigWigAnnotation.html">SynBigWigAnnotation</a></span><span class="op">(</span></span>
 <span>    name <span class="op">=</span> <span class="st">"coverage"</span>,</span>
 <span>    bigwig_file <span class="op">=</span> <span class="st">"coverage.bw"</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
-</div>
-<div class="section level2">
-<h2 id="use-annotation-layer-query-verbs">4. Use annotation-layer query verbs<a class="anchor" aria-label="anchor" href="#use-annotation-layer-query-verbs"></a>
-</h2>
-<p>Different annotation subclasses have different verbs.</p>
 <div class="section level3">
-<h3 id="feature-annotation">Feature annotation<a class="anchor" aria-label="anchor" href="#feature-annotation"></a>
+<h3 id="alignment-and-layout-classes">Alignment and layout classes<a class="anchor" aria-label="anchor" href="#alignment-and-layout-classes"></a>
 </h3>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cds_gr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/query_features.html">query_features</a></span><span class="op">(</span></span>
-<span>  <span class="va">x</span>,</span>
-<span>  genes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"FUN_000001"</span>, <span class="st">"FUN_000002"</span><span class="op">)</span>,</span>
-<span>  feature_type <span class="op">=</span> <span class="st">"CDS"</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="variant-annotation">Variant annotation<a class="anchor" aria-label="anchor" href="#variant-annotation"></a>
-</h3>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">variant_layer</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_annotation.html">get_annotation</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"variants"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="../reference/query_variants.html">query_variants</a></span><span class="op">(</span></span>
-<span>  <span class="va">variant_layer</span>,</span>
-<span>  chr <span class="op">=</span> <span class="st">"V_RagTag"</span>,</span>
-<span>  start <span class="op">=</span> <span class="fl">21574336</span>,</span>
-<span>  end <span class="op">=</span> <span class="fl">21574450</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="bigwig-signal-1">BigWig signal<a class="anchor" aria-label="anchor" href="#bigwig-signal-1"></a>
-</h3>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">signal_layer</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_annotation.html">get_annotation</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"coverage"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="../reference/query_signal.html">query_signal</a></span><span class="op">(</span></span>
-<span>  <span class="va">signal_layer</span>,</span>
-<span>  chr <span class="op">=</span> <span class="st">"chr1"</span>,</span>
-<span>  start <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  end <span class="op">=</span> <span class="fl">10000</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="protein-domain-annotation">Protein-domain annotation<a class="anchor" aria-label="anchor" href="#protein-domain-annotation"></a>
-</h3>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">domain_layer</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_annotation.html">get_annotation</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"interpro"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="../reference/query_domains.html">query_domains</a></span><span class="op">(</span></span>
-<span>  <span class="va">domain_layer</span>,</span>
-<span>  ids <span class="op">=</span> <span class="st">"FUN_000001-T1"</span>,</span>
-<span>  domains <span class="op">=</span> <span class="st">"PF00001"</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-</div>
-</div>
-<div class="section level2">
-<h2 id="add-readable-gene-labels-for-plotting">5. Add readable gene labels for plotting<a class="anchor" aria-label="anchor" href="#add-readable-gene-labels-for-plotting"></a>
-</h2>
-<p>Structural annotation IDs are often machine-friendly but not
-plot-friendly. Keep the real IDs, and add readable labels
-separately.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/set_gene_labels.html">set_gene_labels</a></span><span class="op">(</span></span>
-<span>  <span class="va">x</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>    FUN_000001 <span class="op">=</span> <span class="st">"unc-1"</span>,</span>
-<span>    FUN_000002 <span class="op">=</span> <span class="st">"unc-2"</span></span>
-<span>  <span class="op">)</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<p>This writes a <code>plot_label</code> column into the active feature
-annotation while leaving the original IDs unchanged.</p>
-</div>
-<div class="section level2">
-<h2 id="patch-corrected-gene-models">6. Patch corrected gene models<a class="anchor" aria-label="anchor" href="#patch-corrected-gene-models"></a>
-</h2>
-<p>Small corrected GFF fragments can be imported and applied as
-gene-model patches.</p>
-<div class="section level3">
-<h3 id="read-a-patch-file">Read a patch file<a class="anchor" aria-label="anchor" href="#read-a-patch-file"></a>
-</h3>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">patch_gr</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_patch_gff.html">read_patch_gff</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"XZ1516.TA.gff"</span>, package <span class="op">=</span> <span class="st">"ggexon"</span><span class="op">)</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="apply-a-patch-directly-from-file">Apply a patch directly from file<a class="anchor" aria-label="anchor" href="#apply-a-patch-directly-from-file"></a>
-</h3>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/patch_annotation_from_gff.html">patch_annotation_from_gff</a></span><span class="op">(</span></span>
-<span>  <span class="va">x</span>,</span>
-<span>  patch_file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"XZ1516.TA.gff"</span>, package <span class="op">=</span> <span class="st">"ggexon"</span><span class="op">)</span>,</span>
-<span>  mode <span class="op">=</span> <span class="st">"replace"</span>,</span>
-<span>  name <span class="op">=</span> <span class="st">"ta-correction"</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="inspect-or-clear-patch-history">Inspect or clear patch history<a class="anchor" aria-label="anchor" href="#inspect-or-clear-patch-history"></a>
-</h3>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/list_patches.html">list_patches</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/clear_patches.html">clear_patches</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code></pre></div>
-<p>Supported patch modes are:</p>
+<p>Comparative links are stored at the <code>SynSpecies</code>
+level:</p>
 <ul>
-<li><code>replace</code></li>
-<li><code>add</code></li>
-<li><code>drop</code></li>
+<li>
+<code>SynPairAlignment</code> stores one pairwise relationship
+between two individuals. Supported inputs include PAF, PSL, and
+ODGI-derived pairwise links.</li>
+<li>
+<code>SynMultiAlignment</code> stores a multiple alignment across
+more than two individuals. Supported inputs include MAF and ODGI-backed
+graph data.</li>
+<li>
+<code>SynLayout</code> stores reusable panel windows and layout
+state so plots can be rebuilt from the same coordinate decisions.</li>
 </ul>
-</div>
-</div>
-<div class="section level2">
-<h2 id="translate-proteins-from-selected-genes">7. Translate proteins from selected genes<a class="anchor" aria-label="anchor" href="#translate-proteins-from-selected-genes"></a>
-</h2>
-<p>Protein translation is built on the active
-<code>SynFeatureAnnotation</code>.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/translate_protein.html">translate_protein</a></span><span class="op">(</span></span>
-<span>  <span class="va">x</span>,</span>
-<span>  genes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"FUN_000001"</span>, <span class="st">"FUN_000002"</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_individual.html">add_individual</a></span><span class="op">(</span><span class="va">sp</span>, <span class="va">xz</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">protein_seq</span><span class="op">(</span><span class="fu"><a href="../reference/get_annotation.html">get_annotation</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>You can also extract the CDS nucleotide sequences directly:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/extract_cds_seq.html">extract_cds_seq</a></span><span class="op">(</span></span>
-<span>  <span class="va">x</span>,</span>
-<span>  genes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"FUN_000001"</span>, <span class="st">"FUN_000002"</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">nucleotide_seq</span><span class="op">(</span><span class="fu"><a href="../reference/get_annotation.html">get_annotation</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="build-a-synspecies-object">8. Build a <code>SynSpecies</code> object<a class="anchor" aria-label="anchor" href="#build-a-synspecies-object"></a>
-</h2>
-<p><code>SynSpecies</code> is the container for multiple
-<code>SynIndividual</code> objects and their alignment
-relationships.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">x2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SynIndividual.html">SynIndividual</a></span><span class="op">(</span></span>
-<span>  genome_file <span class="op">=</span> <span class="va">other_genome_fasta</span>,</span>
-<span>  annotation_file <span class="op">=</span> <span class="va">other_annotation_gff</span>,</span>
-<span>  id <span class="op">=</span> <span class="st">"N2"</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SynSpecies.html">SynSpecies</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"Caenorhabditis"</span><span class="op">)</span></span>
-<span><span class="va">sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_individual.html">add_individual</a></span><span class="op">(</span><span class="va">sp</span>, <span class="va">x</span><span class="op">)</span></span>
-<span><span class="va">sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_individual.html">add_individual</a></span><span class="op">(</span><span class="va">sp</span>, <span class="va">x2</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="add-alignment-layers">9. Add alignment layers<a class="anchor" aria-label="anchor" href="#add-alignment-layers"></a>
-</h2>
-<div class="section level3">
-<h3 id="pairwise-alignment">Pairwise alignment<a class="anchor" aria-label="anchor" href="#pairwise-alignment"></a>
-</h3>
-<p>For a PAF-like alignment, store the direction explicitly:</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_pairwise_alignment.html">add_pairwise_alignment</a></span><span class="op">(</span></span>
+<span><span class="va">sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_pairwise_alignment.html">add_pairwise_alignment</a></span><span class="op">(</span></span>
 <span>  <span class="va">sp</span>,</span>
 <span>  <span class="fu"><a href="../reference/SynPairAlignment.html">SynPairAlignment</a></span><span class="op">(</span></span>
 <span>    name <span class="op">=</span> <span class="st">"XZ1516_vs_N2"</span>,</span>
 <span>    query_individual <span class="op">=</span> <span class="st">"XZ1516"</span>,</span>
 <span>    target_individual <span class="op">=</span> <span class="st">"N2"</span>,</span>
-<span>    file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"V_alginment.paf"</span>, package <span class="op">=</span> <span class="st">"ggexon"</span><span class="op">)</span></span>
+<span>    file <span class="op">=</span> <span class="st">"XZ1516_vs_N2.paf"</span></span>
 <span>  <span class="op">)</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="multiple-alignment">Multiple alignment<a class="anchor" aria-label="anchor" href="#multiple-alignment"></a>
-</h3>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_multiple_alignment.html">add_multiple_alignment</a></span><span class="op">(</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_multiple_alignment.html">add_multiple_alignment</a></span><span class="op">(</span></span>
 <span>  <span class="va">sp</span>,</span>
 <span>  <span class="fu"><a href="../reference/SynMultiAlignment.html">SynMultiAlignment</a></span><span class="op">(</span></span>
 <span>    name <span class="op">=</span> <span class="st">"worm-maf"</span>,</span>
@@ -385,47 +247,339 @@ relationships.</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="recommended-workflow-pattern">10. Recommended workflow pattern<a class="anchor" aria-label="anchor" href="#recommended-workflow-pattern"></a>
+<h2 id="plot-entry-point-and-geoms">Plot entry point and geoms<a class="anchor" aria-label="anchor" href="#plot-entry-point-and-geoms"></a>
 </h2>
-<p>A good working pattern in <code>ggexon</code> is:</p>
-<ol style="list-style-type: decimal">
-<li>create a <code>SynIndividual</code>
-</li>
-<li>load the active feature annotation</li>
-<li>attach optional VCF, BigWig, or domain layers</li>
-<li>set readable labels</li>
-<li>patch corrected gene models if needed</li>
-<li>derive CDS or protein sequences</li>
-<li>collect several individuals inside a <code>SynSpecies</code>
-</li>
-<li>attach PAF or MAF alignment layers</li>
-<li>build comparative plots</li>
-</ol>
+<p><code><a href="../reference/ggexon.html">ggexon()</a></code> starts a plot like <code>ggplot()</code>, but
+it understands <code>SynIndividual</code> and <code>SynSpecies</code>
+objects. Geoms can resolve stored annotation or alignment data at build
+time.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">sp</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_exon.html">geom_exon</a></span><span class="op">(</span></span>
+<span>    species <span class="op">=</span> <span class="st">"XZ1516"</span>,</span>
+<span>    chr <span class="op">=</span> <span class="st">"RagTag_V"</span>,</span>
+<span>    subset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">21574445</span>, <span class="fl">21584356</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="geom_exon">
+<code>geom_exon()</code><a class="anchor" aria-label="anchor" href="#geom_exon"></a>
+</h3>
+<p>Use <code><a href="../reference/geom_exon.html">geom_exon()</a></code> when transcript structure matters. It
+draws exon rectangles, the transcript backbone, and strand direction
+from feature annotation data.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">sp</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_exon.html">geom_exon</a></span><span class="op">(</span></span>
+<span>    species <span class="op">=</span> <span class="st">"XZ1516"</span>,</span>
+<span>    chr <span class="op">=</span> <span class="st">"RagTag_V"</span>,</span>
+<span>    subset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">21574445</span>, <span class="fl">21584356</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="geom_exon2">
+<code>geom_exon2()</code><a class="anchor" aria-label="anchor" href="#geom_exon2"></a>
+</h3>
+<p>Use <code><a href="../reference/geom_exon2.html">geom_exon2()</a></code> for exon/CDS/UTR-style tracks with
+compressed intron display. This is useful when the visual emphasis is on
+coding and untranslated segments rather than raw genomic spacing.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">sp</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_exon2.html">geom_exon2</a></span><span class="op">(</span></span>
+<span>    species <span class="op">=</span> <span class="st">"XZ1516"</span>,</span>
+<span>    chr <span class="op">=</span> <span class="st">"RagTag_V"</span>,</span>
+<span>    subset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">21574445</span>, <span class="fl">21584356</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="geom_genetag">
+<code>geom_genetag()</code><a class="anchor" aria-label="anchor" href="#geom_genetag"></a>
+</h3>
+<p>Use <code><a href="../reference/geom_genetag.html">geom_genetag()</a></code> when each gene should be represented
+as one directional span. This is a compact overview layer for synteny
+figures.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">sp</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_genetag.html">geom_genetag</a></span><span class="op">(</span></span>
+<span>    species <span class="op">=</span> <span class="st">"XZ1516"</span>,</span>
+<span>    chr <span class="op">=</span> <span class="st">"RagTag_V"</span>,</span>
+<span>    subset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">21574445</span>, <span class="fl">21584356</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="geom_genelabel">
+<code>geom_genelabel()</code><a class="anchor" aria-label="anchor" href="#geom_genelabel"></a>
+</h3>
+<p>Use <code><a href="../reference/geom_genelabel.html">geom_genelabel()</a></code> to place readable names above or
+below a gene track. Labels come from the stored feature annotation, so
+stable gene IDs can remain unchanged while plot labels are curated
+separately.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">sp</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_genetag.html">geom_genetag</a></span><span class="op">(</span>species <span class="op">=</span> <span class="st">"XZ1516"</span>, chr <span class="op">=</span> <span class="st">"RagTag_V"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_genelabel.html">geom_genelabel</a></span><span class="op">(</span></span>
+<span>    species <span class="op">=</span> <span class="st">"XZ1516"</span>,</span>
+<span>    chr <span class="op">=</span> <span class="st">"RagTag_V"</span>,</span>
+<span>    label_direction <span class="op">=</span> <span class="st">"top"</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="geom_genomic_tree">
+<code>geom_genomic_tree()</code><a class="anchor" aria-label="anchor" href="#geom_genomic_tree"></a>
+</h3>
+<p>Use <code><a href="../reference/geom_genomic_tree.html">geom_genomic_tree()</a></code> for genomic tree structures
+inside ggexon panels. It is intended for figures where tree-like
+relationships need to share the same panel system as genomic
+intervals.</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">tree_data</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_genomic_tree.html">geom_genomic_tree</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="geom_motif">
+<code>geom_motif()</code><a class="anchor" aria-label="anchor" href="#geom_motif"></a>
+</h3>
+<p>Use <code><a href="../reference/geom_motif.html">geom_motif()</a></code> for motif, domain-like, or other
+interval blocks. It is a general interval layer when the data are
+already in a plot-ready table.</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">motif_data</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_motif.html">geom_motif</a></span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>xmin <span class="op">=</span> <span class="va">start</span>, xmax <span class="op">=</span> <span class="va">end</span>, y <span class="op">=</span> <span class="va">track</span>, fill <span class="op">=</span> <span class="va">motif</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="geom_mutation_label">
+<code>geom_mutation_label()</code><a class="anchor" aria-label="anchor" href="#geom_mutation_label"></a>
+</h3>
+<p>Use <code><a href="../reference/geom_mutation_label.html">geom_mutation_label()</a></code> when mutation labels need to
+be placed on sequence or protein tracks.</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">mutation_data</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_mutation_label.html">geom_mutation_label</a></span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">position</span>, y <span class="op">=</span> <span class="va">track</span>, label <span class="op">=</span> <span class="va">mutation</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="geom_nuclink">
+<code>geom_nuclink()</code><a class="anchor" aria-label="anchor" href="#geom_nuclink"></a>
+</h3>
+<p>Use <code><a href="../reference/geom_nuclink.html">geom_nuclink()</a></code> for nucleotide-level links between
+aligned genomes. With a <code>SynSpecies</code> object, the geom can
+resolve stored pairwise alignments.</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">sp</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_exon.html">geom_exon</a></span><span class="op">(</span></span>
+<span>    species <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"XZ1516"</span>, <span class="st">"N2"</span><span class="op">)</span>,</span>
+<span>    chr <span class="op">=</span> <span class="st">"RagTag_V"</span>,</span>
+<span>    subset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">21574445</span>, <span class="fl">21584356</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_nuclink.html">geom_nuclink</a></span><span class="op">(</span></span>
+<span>    reference <span class="op">=</span> <span class="st">"XZ1516"</span>,</span>
+<span>    chr <span class="op">=</span> <span class="st">"RagTag_V"</span>,</span>
+<span>    subset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">21574445</span>, <span class="fl">21584356</span><span class="op">)</span>,</span>
+<span>    alignment <span class="op">=</span> <span class="st">"XZ1516_vs_N2"</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="geom_protein_lollipop">
+<code>geom_protein_lollipop()</code><a class="anchor" aria-label="anchor" href="#geom_protein_lollipop"></a>
+</h3>
+<p>Use <code><a href="../reference/geom_protein_lollipop.html">geom_protein_lollipop()</a></code> for protein-domain backbones
+with mutation lollipops. It is usually paired with protein-domain or
+protein-mutation helper data.</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">protein_lollipop_data</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_protein_lollipop.html">geom_protein_lollipop</a></span><span class="op">(</span></span>
+<span>    <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">position</span>, y <span class="op">=</span> <span class="va">protein_id</span>, label <span class="op">=</span> <span class="va">mutation</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+</div>
 </div>
 <div class="section level2">
-<h2 id="notes-for-developers">Notes for developers<a class="anchor" aria-label="anchor" href="#notes-for-developers"></a>
+<h2 id="facets-tree-alignment-and-guides">Facets, tree alignment, and guides<a class="anchor" aria-label="anchor" href="#facets-tree-alignment-and-guides"></a>
 </h2>
-<ul>
-<li>
-<code>SynFeatureAnnotation</code> is the only annotation layer
-currently used for CDS extraction and protein translation.</li>
-<li>
-<code>SynVCFAnnotation</code> and <code>SynBigWigAnnotation</code>
-are designed for lazy, region-based queries.</li>
-<li>
-<code>SynProteinDomainAnnotation</code> is table-backed and filtered
-by ID/domain.</li>
-<li>
-<code>SynSpecies</code> keeps alignment state above individual
-genome state.</li>
-</ul>
+<p><code>ggexon</code> uses facet systems to keep genomic panels,
+alignment links, trees, and other plots in register.</p>
+<div class="section level3">
+<h3 id="facet_genomics">
+<code>facet_genomics()</code><a class="anchor" aria-label="anchor" href="#facet_genomics"></a>
+</h3>
+<p><code><a href="../reference/facet_genomics.html">facet_genomics()</a></code> arranges genomic annotation panels,
+link panels, signal tracks, and other data panels in one ggplot-like
+layout.</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">sp</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_exon.html">geom_exon</a></span><span class="op">(</span>species <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"XZ1516"</span>, <span class="st">"N2"</span><span class="op">)</span>, chr <span class="op">=</span> <span class="st">"RagTag_V"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_nuclink.html">geom_nuclink</a></span><span class="op">(</span></span>
+<span>    reference <span class="op">=</span> <span class="st">"XZ1516"</span>,</span>
+<span>    chr <span class="op">=</span> <span class="st">"RagTag_V"</span>,</span>
+<span>    alignment <span class="op">=</span> <span class="st">"XZ1516_vs_N2"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/facet_genomics.html">facet_genomics</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">track</span><span class="op">)</span>, scales <span class="op">=</span> <span class="st">"free_y"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="facet_genomictree">
+<code>facet_genomictree()</code><a class="anchor" aria-label="anchor" href="#facet_genomictree"></a>
+</h3>
+<p><code><a href="../reference/facet_genomictree.html">facet_genomictree()</a></code> is for genomic panels aligned to a
+tree or another reference plot. Tree workflows are supported by helpers
+such as <code><a href="../reference/compile_ggtree_genetag.html">compile_ggtree_genetag()</a></code>,
+<code><a href="../reference/compile_ggtree_genomic_alignment.html">compile_ggtree_genomic_alignment()</a></code>,
+<code><a href="../reference/compile_ggtree_rectangular_segments.html">compile_ggtree_rectangular_segments()</a></code>, and
+<code><a href="../reference/plot_ggtree_genomic_alignment.html">plot_ggtree_genomic_alignment()</a></code>.</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_ggtree_genomic_alignment.html">plot_ggtree_genomic_alignment</a></span><span class="op">(</span></span>
+<span>  <span class="va">sp</span>,</span>
+<span>  alignment <span class="op">=</span> <span class="st">"worm-maf"</span>,</span>
+<span>  chr <span class="op">=</span> <span class="st">"RagTag_V"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="genomic-scales-and-the-piecewise-guide">Genomic scales and the piecewise guide<a class="anchor" aria-label="anchor" href="#genomic-scales-and-the-piecewise-guide"></a>
+</h3>
+<p><code><a href="../reference/scale_x_ggexon_genomic.html">scale_x_ggexon_genomic()</a></code> keeps genomic coordinate labels
+while supporting compressed regions. The guide
+<code><a href="../reference/guide_x_ggexon_piecewise.html">guide_x_ggexon_piecewise()</a></code> shows separate exon and intron
+scale bars instead of ordinary genomic ticks.</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">sp</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_exon.html">geom_exon</a></span><span class="op">(</span>species <span class="op">=</span> <span class="st">"XZ1516"</span>, chr <span class="op">=</span> <span class="st">"RagTag_V"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/scale_x_ggexon_genomic.html">scale_x_ggexon_genomic</a></span><span class="op">(</span></span>
+<span>    guide <span class="op">=</span> <span class="fu"><a href="../reference/guide_x_ggexon_piecewise.html">guide_x_ggexon_piecewise</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/facet_genomics.html">facet_genomics</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">track</span><span class="op">)</span>, scales <span class="op">=</span> <span class="st">"free_y"</span><span class="op">)</span></span></code></pre></div>
+<p>Use this guide when a figure mixes detailed exon-scale interpretation
+with compressed intronic or intergenic distances.</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="verbs-that-manage-stored-data">Verbs that manage stored data<a class="anchor" aria-label="anchor" href="#verbs-that-manage-stored-data"></a>
+</h2>
+<p>The function families follow one rule: use classes to remember the
+data, then use verbs and geoms to operate on those classes.</p>
+<div class="section level3">
+<h3 id="build-the-object-graph">Build the object graph<a class="anchor" aria-label="anchor" href="#build-the-object-graph"></a>
+</h3>
+<p>Use <code>add_*()</code> functions when a parent object should
+remember a child object, annotation layer, alignment, tree, or layout
+result.</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SynSpecies.html">SynSpecies</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"Caenorhabditis"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/add_individual.html">add_individual</a></span><span class="op">(</span><span class="va">xz</span>, <span class="va">n2</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/add_tree.html">add_tree</a></span><span class="op">(</span><span class="va">tree</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_multiple_alignment.html">add_multiple_alignment</a></span><span class="op">(</span></span>
+<span>  <span class="va">sp</span>,</span>
+<span>  <span class="fu"><a href="../reference/SynMultiAlignment.html">SynMultiAlignment</a></span><span class="op">(</span></span>
+<span>    name <span class="op">=</span> <span class="st">"worm-maf"</span>,</span>
+<span>    individuals <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"XZ1516"</span>, <span class="st">"N2"</span>, <span class="st">"CB4856"</span><span class="op">)</span>,</span>
+<span>    file <span class="op">=</span> <span class="st">"worms.maf"</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>Common graph-building functions include
+<code><a href="../reference/add_individual.html">add_individual()</a></code>,
+<code><a href="../reference/add_individuals_from_folder.html">add_individuals_from_folder()</a></code>,
+<code><a href="../reference/add_annotation.html">add_annotation()</a></code>, <code><a href="../reference/add_pairwise_alignment.html">add_pairwise_alignment()</a></code>,
+<code><a href="../reference/add_multiple_alignment.html">add_multiple_alignment()</a></code>, <code><a href="../reference/add_tree.html">add_tree()</a></code>,
+<code><a href="../reference/add_genetag.html">add_genetag()</a></code>, <code><a href="../reference/store_chain_layout.html">store_chain_layout()</a></code>, and
+<code><a href="../reference/store_projected_domains.html">store_projected_domains()</a></code>.</p>
+</div>
+<div class="section level3">
+<h3 id="load-query-and-derive-data">Load, query, and derive data<a class="anchor" aria-label="anchor" href="#load-query-and-derive-data"></a>
+</h3>
+<p>Use <code>load_*()</code> when the object knows where a file is, but
+the data have not yet been materialized.</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">xz</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_annotation.html">load_annotation</a></span><span class="op">(</span><span class="va">xz</span><span class="op">)</span></span>
+<span><span class="va">sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_alignment.html">load_alignment</a></span><span class="op">(</span><span class="va">sp</span>, alignment <span class="op">=</span> <span class="st">"XZ1516_vs_N2"</span><span class="op">)</span></span></code></pre></div>
+<p>Use <code>query_*()</code> and <code>*_data()</code> helpers when you
+want rows or ranges back:</p>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">features</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/query_features.html">query_features</a></span><span class="op">(</span></span>
+<span>  <span class="va">xz</span>,</span>
+<span>  chr <span class="op">=</span> <span class="st">"V_RagTag"</span>,</span>
+<span>  start <span class="op">=</span> <span class="fl">21574445</span>,</span>
+<span>  end <span class="op">=</span> <span class="fl">21584356</span>,</span>
+<span>  feature_type <span class="op">=</span> <span class="st">"gene"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">links</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pairwise_alignment_data.html">pairwise_alignment_data</a></span><span class="op">(</span></span>
+<span>  <span class="va">sp</span>,</span>
+<span>  alignment <span class="op">=</span> <span class="st">"XZ1516_vs_N2"</span>,</span>
+<span>  subset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    XZ1516 <span class="op">=</span> <span class="st">"RagTag_V:21574445-21584356"</span>,</span>
+<span>    N2 <span class="op">=</span> <span class="st">"V:20456000-20465040"</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>Other data verbs include <code><a href="../reference/query_variants.html">query_variants()</a></code>,
+<code><a href="../reference/query_signal.html">query_signal()</a></code>, <code><a href="../reference/query_domains.html">query_domains()</a></code>,
+<code><a href="../reference/query_protein_mutations.html">query_protein_mutations()</a></code>, <code><a href="../reference/extract_cds_seq.html">extract_cds_seq()</a></code>,
+<code><a href="../reference/translate_protein.html">translate_protein()</a></code>, and
+<code><a href="../reference/project_domains_to_genome.html">project_domains_to_genome()</a></code>.</p>
+</div>
+<div class="section level3">
+<h3 id="modify-subset-and-curate-objects">Modify, subset, and curate objects<a class="anchor" aria-label="anchor" href="#modify-subset-and-curate-objects"></a>
+</h3>
+<p>Use <code>subset_*()</code> and <code>filter_*()</code> when you want
+updated objects or filtered alignment state.</p>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sp_window</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/subset_species.html">subset_species</a></span><span class="op">(</span></span>
+<span>  <span class="va">sp</span>,</span>
+<span>  coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"XZ1516#V_RagTag:21574445-21584356"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">sp_window</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/subset_pairwise_alignment.html">subset_pairwise_alignment</a></span><span class="op">(</span></span>
+<span>  <span class="va">sp_window</span>,</span>
+<span>  alignment <span class="op">=</span> <span class="st">"XZ1516_vs_N2"</span>,</span>
+<span>  subset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    XZ1516 <span class="op">=</span> <span class="st">"RagTag_V:21574445-21584356"</span>,</span>
+<span>    N2 <span class="op">=</span> <span class="st">"V:20456000-20465040"</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>Use curation verbs when a feature annotation needs readable labels or
+corrected gene models:</p>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">xz</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/set_gene_labels.html">set_gene_labels</a></span><span class="op">(</span></span>
+<span>  <span class="va">xz</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>FUN_000001 <span class="op">=</span> <span class="st">"sept-1"</span>, FUN_000002 <span class="op">=</span> <span class="st">"zina-1"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">xz</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/patch_annotation_from_gff.html">patch_annotation_from_gff</a></span><span class="op">(</span></span>
+<span>  <span class="va">xz</span>,</span>
+<span>  patch_file <span class="op">=</span> <span class="st">"XZ1516.corrected.gff3"</span>,</span>
+<span>  mode <span class="op">=</span> <span class="st">"replace"</span>,</span>
+<span>  name <span class="op">=</span> <span class="st">"manual-curation"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>Patch modes include <code>replace</code>, <code>add</code>, and
+<code>drop</code>. Patch history can be inspected with
+<code><a href="../reference/list_patches.html">list_patches()</a></code> and cleared with
+<code><a href="../reference/clear_patches.html">clear_patches()</a></code>.</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="recommended-workflow">Recommended workflow<a class="anchor" aria-label="anchor" href="#recommended-workflow"></a>
+</h2>
+<p>A typical <code>ggexon</code> workflow is:</p>
+<ol style="list-style-type: decimal">
+<li>create one or more <code>SynIndividual</code> objects</li>
+<li>load each active feature annotation</li>
+<li>attach optional VCF, BigWig, protein-domain, or mutation layers</li>
+<li>set readable plot labels while keeping stable biological IDs</li>
+<li>patch corrected gene models if needed</li>
+<li>derive CDS, protein, or projected-domain data</li>
+<li>collect individuals inside a <code>SynSpecies</code>
+</li>
+<li>attach pairwise or multiple alignments</li>
+<li>draw geoms and arrange panels with <code><a href="../reference/facet_genomics.html">facet_genomics()</a></code> or
+<code><a href="../reference/facet_genomictree.html">facet_genomictree()</a></code>
+</li>
+<li>use <code><a href="../reference/guide_x_ggexon_piecewise.html">guide_x_ggexon_piecewise()</a></code> when compressed genomic
+axes need explicit exon and intron scale bars</li>
+</ol>
 </div>
 <div class="section level2">
 <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a>
 </h2>
 <ul>
 <li><code><a href="../articles/ggexon-workflow.html">vignette("ggexon-workflow", package = "ggexon")</a></code></li>
-<li><code>docs/object-model.md</code></li>
+<li><code><a href="../reference/ggexon.html">?ggexon</a></code></li>
+<li><code><a href="../reference/facet_genomics.html">?facet_genomics</a></code></li>
+<li><code><a href="../reference/guide_x_ggexon_piecewise.html">?guide_x_ggexon_piecewise</a></code></li>
 </ul>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

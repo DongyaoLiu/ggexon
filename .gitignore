@@ -3,3 +3,7 @@ codex_output/
 tests/ldy_test.R
 Rplots.pdf
 .DS_Store
+CLAUDE.md
+docs/CLAUDE.html
+docs/CLAUDE.md
+tests/testthat/Rplots.pdf

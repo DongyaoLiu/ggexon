@@ -1,11 +1,107 @@
 # Package index
 
-## Start a plot
+## Data-storage classes
 
-Build ggexon plots, arrange genomic panels, and set genomic scales.
+Constructors for objects that store genomes, annotation layers,
+alignments, and reusable layout state.
+
+- [`SynSpecies()`](https://dongyaoliu.github.io/ggexon/reference/SynSpecies.md)
+  : Constructor for SynSpecies
+- [`SynIndividual()`](https://dongyaoliu.github.io/ggexon/reference/SynIndividual.md)
+  : Constructor for SynIndividual
+- [`SynFeatureAnnotation()`](https://dongyaoliu.github.io/ggexon/reference/SynFeatureAnnotation.md)
+  : Constructor for SynFeatureAnnotation
+- [`SynVCFAnnotation()`](https://dongyaoliu.github.io/ggexon/reference/SynVCFAnnotation.md)
+  : Constructor for SynVCFAnnotation
+- [`SynBigWigAnnotation()`](https://dongyaoliu.github.io/ggexon/reference/SynBigWigAnnotation.md)
+  : Constructor for SynBigWigAnnotation
+- [`SynProteinDomainAnnotation()`](https://dongyaoliu.github.io/ggexon/reference/SynProteinDomainAnnotation.md)
+  : Constructor for SynProteinDomainAnnotation
+- [`SynProteinMutationAnnotation()`](https://dongyaoliu.github.io/ggexon/reference/SynProteinMutationAnnotation.md)
+  : Constructor for SynProteinMutationAnnotation
+- [`SynAnnotationPatch()`](https://dongyaoliu.github.io/ggexon/reference/SynAnnotationPatch.md)
+  : Constructor for SynAnnotationPatch
+- [`SynPairAlignment()`](https://dongyaoliu.github.io/ggexon/reference/SynPairAlignment.md)
+  : Constructor for SynPairAlignment
+- [`SynMultiAlignment()`](https://dongyaoliu.github.io/ggexon/reference/SynMultiAlignment.md)
+  : Constructor for SynMultiAlignment
+- [`SynLayout()`](https://dongyaoliu.github.io/ggexon/reference/SynLayout.md)
+  : Constructor for SynLayout
+
+## Class hierarchy and slot details
+
+Slot-level reference pages for ggexon’s S4 object hierarchy.
+
+- [`SynAnnotation-class-hierarchy`](https://dongyaoliu.github.io/ggexon/reference/SynAnnotation-class-hierarchy.md)
+  : SynAnnotation class hierarchy
+- [`SynSpecies-class-overview`](https://dongyaoliu.github.io/ggexon/reference/SynSpecies-class-overview.md)
+  : SynSpecies, SynLayout, and alignment classes
+- [`SynAnnotation-class`](https://dongyaoliu.github.io/ggexon/reference/SynAnnotation-class.md)
+  : SynAnnotation class
+- [`SynAnnotationPatch-class`](https://dongyaoliu.github.io/ggexon/reference/SynAnnotationPatch-class.md)
+  : SynAnnotationPatch class
+- [`SynBigWigAnnotation-class`](https://dongyaoliu.github.io/ggexon/reference/SynBigWigAnnotation-class.md)
+  : SynBigWigAnnotation class
+- [`SynFeatureAnnotation-class`](https://dongyaoliu.github.io/ggexon/reference/SynFeatureAnnotation-class.md)
+  : SynFeatureAnnotation class
+- [`SynGenomeAnnotation-class`](https://dongyaoliu.github.io/ggexon/reference/SynGenomeAnnotation-class.md)
+  : SynGenomeAnnotation class
+- [`SynIndAnnotation-class`](https://dongyaoliu.github.io/ggexon/reference/SynIndAnnotation-class.md)
+  : SynIndAnnotation class
+- [`SynIndividual-class`](https://dongyaoliu.github.io/ggexon/reference/SynIndividual-class.md)
+  : SynIndividual class
+- [`SynLayout-class`](https://dongyaoliu.github.io/ggexon/reference/SynLayout-class.md)
+  : SynLayout class
+- [`SynMultiAlignment-class`](https://dongyaoliu.github.io/ggexon/reference/SynMultiAlignment-class.md)
+  : SynMultiAlignment class
+- [`SynPairAlignment-class`](https://dongyaoliu.github.io/ggexon/reference/SynPairAlignment-class.md)
+  : SynPairAlignment class
+- [`SynProteinAnnotation-class`](https://dongyaoliu.github.io/ggexon/reference/SynProteinAnnotation-class.md)
+  : SynProteinAnnotation class
+- [`SynProteinDomainAnnotation-class`](https://dongyaoliu.github.io/ggexon/reference/SynProteinDomainAnnotation-class.md)
+  : SynProteinDomainAnnotation class
+- [`SynProteinMutationAnnotation-class`](https://dongyaoliu.github.io/ggexon/reference/SynProteinMutationAnnotation-class.md)
+  : SynProteinMutationAnnotation class
+- [`SynSpeAnnotation-class`](https://dongyaoliu.github.io/ggexon/reference/SynSpeAnnotation-class.md)
+  : SynSpeAnnotation class
+- [`SynSpecies-class`](https://dongyaoliu.github.io/ggexon/reference/SynSpecies-class.md)
+  : SynSpecies class
+- [`SynVCFAnnotation-class`](https://dongyaoliu.github.io/ggexon/reference/SynVCFAnnotation-class.md)
+  : SynVCFAnnotation class
+- [`SynBioc-unions`](https://dongyaoliu.github.io/ggexon/reference/SynBioc-unions.md)
+  : Bioconductor class unions used by ggexon S4 classes
+
+## Plot entry point and geoms
+
+Start a ggexon plot and draw genomic tracks, gene tags, labels, motifs,
+links, trees, and protein mutation summaries.
 
 - [`ggexon()`](https://dongyaoliu.github.io/ggexon/reference/ggexon.md)
   : Create a ggexon plot
+- [`geom_exon()`](https://dongyaoliu.github.io/ggexon/reference/geom_exon.md)
+  : Draw exon-style genomic features
+- [`geom_exon2()`](https://dongyaoliu.github.io/ggexon/reference/geom_exon2.md)
+  : Draw WormWeb-style exon-intron schematics
+- [`geom_genetag()`](https://dongyaoliu.github.io/ggexon/reference/geom_genetag.md)
+  : Draw gene tags as exon bodies with strand-direction triangles
+- [`geom_genelabel()`](https://dongyaoliu.github.io/ggexon/reference/geom_genelabel.md)
+  : Draw gene labels on exon tracks
+- [`geom_genomic_tree()`](https://dongyaoliu.github.io/ggexon/reference/geom_genomic_tree.md)
+  : Attach a tree for genomic-panel alignment
+- [`geom_motif()`](https://dongyaoliu.github.io/ggexon/reference/geom_motif.md)
+  : Plot protein-domain motifs
+- [`geom_mutation_label()`](https://dongyaoliu.github.io/ggexon/reference/geom_mutation_label.md)
+  : Draw mutation labels as a dedicated text layer
+- [`geom_nuclink()`](https://dongyaoliu.github.io/ggexon/reference/geom_nuclink.md)
+  : Draw cross-panel nucleotide links
+- [`geom_protein_lollipop()`](https://dongyaoliu.github.io/ggexon/reference/geom_protein_lollipop.md)
+  : Draw lollipop annotations on a protein-coordinate track
+
+## Facets, tree alignment, and guides
+
+Arrange genomic panels beside link panels, tree panels, or other plots,
+and control genomic x-axis guides.
+
 - [`facet_genomics()`](https://dongyaoliu.github.io/ggexon/reference/facet_genomics.md)
   : Facet genomic tracks and link panels
 - [`facet_genomictree()`](https://dongyaoliu.github.io/ggexon/reference/facet_genomictree.md)
@@ -31,58 +127,14 @@ Build ggexon plots, arrange genomic panels, and set genomic scales.
   : Clear a panel-specific x window from a stored Syn layout
 - [`effective_panel_windows()`](https://dongyaoliu.github.io/ggexon/reference/effective_panel_windows.md)
   : Inspect effective annotation panel windows
-
-## Draw genomic and protein features
-
-User-facing geoms for annotation tracks, links, motifs, trees, and
-mutation summaries.
-
-- [`geom_exon()`](https://dongyaoliu.github.io/ggexon/reference/geom_exon.md)
-  : Draw exon-style genomic features
-- [`geom_exon2()`](https://dongyaoliu.github.io/ggexon/reference/geom_exon2.md)
-  : Draw WormWeb-style exon-intron schematics
-- [`geom_genetag()`](https://dongyaoliu.github.io/ggexon/reference/geom_genetag.md)
-  : Draw gene tags as exon bodies with strand-direction triangles
-- [`geom_genelabel()`](https://dongyaoliu.github.io/ggexon/reference/geom_genelabel.md)
-  : Draw gene labels on exon tracks
-- [`geom_genomic_tree()`](https://dongyaoliu.github.io/ggexon/reference/geom_genomic_tree.md)
-  : Attach a tree for genomic-panel alignment
-- [`geom_motif()`](https://dongyaoliu.github.io/ggexon/reference/geom_motif.md)
-  : Plot protein-domain motifs
-- [`geom_mutation_label()`](https://dongyaoliu.github.io/ggexon/reference/geom_mutation_label.md)
-  : Draw mutation labels as a dedicated text layer
-- [`geom_nuclink()`](https://dongyaoliu.github.io/ggexon/reference/geom_nuclink.md)
-  : Draw cross-panel nucleotide links
-- [`geom_protein_lollipop()`](https://dongyaoliu.github.io/ggexon/reference/geom_protein_lollipop.md)
-  : Draw lollipop annotations on a protein-coordinate track
-
-## Create Syn objects
-
-Constructors for individual genomes, species collections, annotation
-layers, alignments, and reusable layouts.
-
-- [`SynIndividual()`](https://dongyaoliu.github.io/ggexon/reference/SynIndividual.md)
-  : Constructor for SynIndividual
-- [`SynSpecies()`](https://dongyaoliu.github.io/ggexon/reference/SynSpecies.md)
-  : Constructor for SynSpecies
-- [`SynFeatureAnnotation()`](https://dongyaoliu.github.io/ggexon/reference/SynFeatureAnnotation.md)
-  : Constructor for SynFeatureAnnotation
-- [`SynVCFAnnotation()`](https://dongyaoliu.github.io/ggexon/reference/SynVCFAnnotation.md)
-  : Constructor for SynVCFAnnotation
-- [`SynBigWigAnnotation()`](https://dongyaoliu.github.io/ggexon/reference/SynBigWigAnnotation.md)
-  : Constructor for SynBigWigAnnotation
-- [`SynProteinDomainAnnotation()`](https://dongyaoliu.github.io/ggexon/reference/SynProteinDomainAnnotation.md)
-  : Constructor for SynProteinDomainAnnotation
-- [`SynProteinMutationAnnotation()`](https://dongyaoliu.github.io/ggexon/reference/SynProteinMutationAnnotation.md)
-  : Constructor for SynProteinMutationAnnotation
-- [`SynPairAlignment()`](https://dongyaoliu.github.io/ggexon/reference/SynPairAlignment.md)
-  : Constructor for SynPairAlignment
-- [`SynMultiAlignment()`](https://dongyaoliu.github.io/ggexon/reference/SynMultiAlignment.md)
-  : Constructor for SynMultiAlignment
-- [`SynLayout()`](https://dongyaoliu.github.io/ggexon/reference/SynLayout.md)
-  : Constructor for SynLayout
-- [`SynAnnotationPatch()`](https://dongyaoliu.github.io/ggexon/reference/SynAnnotationPatch.md)
-  : Constructor for SynAnnotationPatch
+- [`compile_ggtree_genetag()`](https://dongyaoliu.github.io/ggexon/reference/compile_ggtree_genetag.md)
+  : Compile gene-tag rows for a rectangular ggtree panel
+- [`compile_ggtree_genomic_alignment()`](https://dongyaoliu.github.io/ggexon/reference/compile_ggtree_genomic_alignment.md)
+  : Compile a tree-aligned genomic track layout
+- [`compile_ggtree_rectangular_segments()`](https://dongyaoliu.github.io/ggexon/reference/compile_ggtree_rectangular_segments.md)
+  : Compile rectangular ggtree branches for a ggexon tree panel
+- [`plot_ggtree_genomic_alignment()`](https://dongyaoliu.github.io/ggexon/reference/plot_ggtree_genomic_alignment.md)
+  : Plot a tree-aligned genomic track layout
 
 ## Manage object graphs
 
@@ -160,47 +212,10 @@ information to Syn containers.
 - [`store_projected_domains()`](https://dongyaoliu.github.io/ggexon/reference/store_projected_domains.md)
   : Store a projected protein-domain table on a SynIndividual
 
-## S4 class details
-
-Slot-level reference pages for ggexon’s S4 object hierarchy.
-
-- [`SynAnnotation-class`](https://dongyaoliu.github.io/ggexon/reference/SynAnnotation-class.md)
-  : SynAnnotation class
-- [`SynAnnotationPatch-class`](https://dongyaoliu.github.io/ggexon/reference/SynAnnotationPatch-class.md)
-  : SynAnnotationPatch class
-- [`SynBigWigAnnotation-class`](https://dongyaoliu.github.io/ggexon/reference/SynBigWigAnnotation-class.md)
-  : SynBigWigAnnotation class
-- [`SynFeatureAnnotation-class`](https://dongyaoliu.github.io/ggexon/reference/SynFeatureAnnotation-class.md)
-  : SynFeatureAnnotation class
-- [`SynGenomeAnnotation-class`](https://dongyaoliu.github.io/ggexon/reference/SynGenomeAnnotation-class.md)
-  : SynGenomeAnnotation class
-- [`SynIndAnnotation-class`](https://dongyaoliu.github.io/ggexon/reference/SynIndAnnotation-class.md)
-  : SynIndAnnotation class
-- [`SynIndividual-class`](https://dongyaoliu.github.io/ggexon/reference/SynIndividual-class.md)
-  : SynIndividual class
-- [`SynLayout-class`](https://dongyaoliu.github.io/ggexon/reference/SynLayout-class.md)
-  : SynLayout class
-- [`SynMultiAlignment-class`](https://dongyaoliu.github.io/ggexon/reference/SynMultiAlignment-class.md)
-  : SynMultiAlignment class
-- [`SynPairAlignment-class`](https://dongyaoliu.github.io/ggexon/reference/SynPairAlignment-class.md)
-  : SynPairAlignment class
-- [`SynProteinAnnotation-class`](https://dongyaoliu.github.io/ggexon/reference/SynProteinAnnotation-class.md)
-  : SynProteinAnnotation class
-- [`SynProteinDomainAnnotation-class`](https://dongyaoliu.github.io/ggexon/reference/SynProteinDomainAnnotation-class.md)
-  : SynProteinDomainAnnotation class
-- [`SynProteinMutationAnnotation-class`](https://dongyaoliu.github.io/ggexon/reference/SynProteinMutationAnnotation-class.md)
-  : SynProteinMutationAnnotation class
-- [`SynSpeAnnotation-class`](https://dongyaoliu.github.io/ggexon/reference/SynSpeAnnotation-class.md)
-  : SynSpeAnnotation class
-- [`SynSpecies-class`](https://dongyaoliu.github.io/ggexon/reference/SynSpecies-class.md)
-  : SynSpecies class
-- [`SynVCFAnnotation-class`](https://dongyaoliu.github.io/ggexon/reference/SynVCFAnnotation-class.md)
-  : SynVCFAnnotation class
-
 ## Load, query, and transform annotations
 
-Materialize annotation data, query layer payloads, patch gene models,
-and derive sequence or protein-level summaries.
+Materialize annotation data, query layer payloads, and derive sequence
+or protein-level summaries.
 
 - [`load_annotation()`](https://dongyaoliu.github.io/ggexon/reference/load_annotation.md)
   : Load annotations into Syn-aware objects
@@ -216,18 +231,6 @@ and derive sequence or protein-level summaries.
   : Query protein-mutation annotations
 - [`build_feature_index()`](https://dongyaoliu.github.io/ggexon/reference/build_feature_index.md)
   : Build a reusable feature lookup index
-- [`set_gene_labels()`](https://dongyaoliu.github.io/ggexon/reference/set_gene_labels.md)
-  : Set human-readable gene labels on a feature annotation layer
-- [`patch_annotation()`](https://dongyaoliu.github.io/ggexon/reference/patch_annotation.md)
-  : Apply a gene-model patch to a feature annotation
-- [`patch_annotation_from_gff()`](https://dongyaoliu.github.io/ggexon/reference/patch_annotation_from_gff.md)
-  : Apply a patch directly from a small GFF/GTF file
-- [`read_patch_gff()`](https://dongyaoliu.github.io/ggexon/reference/read_patch_gff.md)
-  : Read a small GFF/GTF patch file
-- [`list_patches()`](https://dongyaoliu.github.io/ggexon/reference/list_patches.md)
-  : List annotation patches
-- [`clear_patches()`](https://dongyaoliu.github.io/ggexon/reference/clear_patches.md)
-  : Clear annotation patches
 - [`extract_cds_seq()`](https://dongyaoliu.github.io/ggexon/reference/extract_cds_seq.md)
   : Extract CDS nucleotide sequences
 - [`translate_protein()`](https://dongyaoliu.github.io/ggexon/reference/translate_protein.md)
@@ -236,15 +239,13 @@ and derive sequence or protein-level summaries.
   : Project protein-domain coordinates onto genomic coordinates
 - [`projected_domains()`](https://dongyaoliu.github.io/ggexon/reference/projected_domains.md)
   : Access stored projected protein-domain tables
-- [`rename_domain_annotation_ids()`](https://dongyaoliu.github.io/ggexon/reference/rename_domain_annotation_ids.md)
-  : Rename protein-domain identifiers using an explicit mapping
 - [`read_protein_mutation_counts()`](https://dongyaoliu.github.io/ggexon/reference/read_protein_mutation_counts.md)
   : Read protein-mutation count summaries
 
-## Subset and filter data
+## Subset, filter, and curate objects
 
-Keep genomic windows, individuals, species collections, alignments,
-protein mutations, and ODGI node subsets.
+Keep genomic windows, edit feature annotations, filter alignments, and
+manage object-level curation state.
 
 - [`subsetting_operations`](https://dongyaoliu.github.io/ggexon/reference/subsetting_operations.md)
   : Subsetting annotation and comparative windows
@@ -277,10 +278,31 @@ protein mutations, and ODGI node subsets.
 - [`filter_odgi_nodes()`](https://dongyaoliu.github.io/ggexon/reference/filter_odgi_nodes.md)
   : Filter ODGI nodes by sequence length
 
+- [`set_gene_labels()`](https://dongyaoliu.github.io/ggexon/reference/set_gene_labels.md)
+  : Set human-readable gene labels on a feature annotation layer
+
+- [`patch_annotation()`](https://dongyaoliu.github.io/ggexon/reference/patch_annotation.md)
+  : Apply a gene-model patch to a feature annotation
+
+- [`patch_annotation_from_gff()`](https://dongyaoliu.github.io/ggexon/reference/patch_annotation_from_gff.md)
+  : Apply a patch directly from a small GFF/GTF file
+
+- [`read_patch_gff()`](https://dongyaoliu.github.io/ggexon/reference/read_patch_gff.md)
+  : Read a small GFF/GTF patch file
+
+- [`list_patches()`](https://dongyaoliu.github.io/ggexon/reference/list_patches.md)
+  : List annotation patches
+
+- [`clear_patches()`](https://dongyaoliu.github.io/ggexon/reference/clear_patches.md)
+  : Clear annotation patches
+
+- [`rename_domain_annotation_ids()`](https://dongyaoliu.github.io/ggexon/reference/rename_domain_annotation_ids.md)
+  : Rename protein-domain identifiers using an explicit mapping
+
 ## Alignment and tree workflows
 
-Read pairwise and multiple alignments, work with ODGI data, and compile
-ggtree-compatible genomic layouts.
+Read pairwise and multiple alignments, work with ODGI data, and extract
+alignment tables.
 
 - [`load_alignment()`](https://dongyaoliu.github.io/ggexon/reference/load_alignment.md)
   : Load alignment data into Syn-aware alignment objects
@@ -310,18 +332,6 @@ ggtree-compatible genomic layouts.
 
 - [`odgi_species_order()`](https://dongyaoliu.github.io/ggexon/reference/odgi_species_order.md)
   : Derive a greedy species order from an ODGI multiple alignment
-
-- [`compile_ggtree_genetag()`](https://dongyaoliu.github.io/ggexon/reference/compile_ggtree_genetag.md)
-  : Compile gene-tag rows for a rectangular ggtree panel
-
-- [`compile_ggtree_genomic_alignment()`](https://dongyaoliu.github.io/ggexon/reference/compile_ggtree_genomic_alignment.md)
-  : Compile a tree-aligned genomic track layout
-
-- [`compile_ggtree_rectangular_segments()`](https://dongyaoliu.github.io/ggexon/reference/compile_ggtree_rectangular_segments.md)
-  : Compile rectangular ggtree branches for a ggexon tree panel
-
-- [`plot_ggtree_genomic_alignment()`](https://dongyaoliu.github.io/ggexon/reference/plot_ggtree_genomic_alignment.md)
-  : Plot a tree-aligned genomic track layout
 
 ## Plot-ready data helpers
 
@@ -488,12 +498,3 @@ and reexports.
   [`class_mapping()`](https://dongyaoliu.github.io/ggexon/reference/ggplot2_class_reexports.md)
   [`class_ggplot()`](https://dongyaoliu.github.io/ggexon/reference/ggplot2_class_reexports.md)
   : ggplot2 Class Objects Re-exported by ggexon
-
-- [`SynAnnotation-class-hierarchy`](https://dongyaoliu.github.io/ggexon/reference/SynAnnotation-class-hierarchy.md)
-  : SynAnnotation class hierarchy
-
-- [`SynSpecies-class-overview`](https://dongyaoliu.github.io/ggexon/reference/SynSpecies-class-overview.md)
-  : SynSpecies, SynLayout, and alignment classes
-
-- [`SynBioc-unions`](https://dongyaoliu.github.io/ggexon/reference/SynBioc-unions.md)
-  : Bioconductor class unions used by ggexon S4 classes

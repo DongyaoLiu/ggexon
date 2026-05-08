@@ -240,12 +240,12 @@ ggexon(sp) +
 If a `SynSpecies` contains multiple individuals, then `species =` becomes
 required so the geom knows which one to plot.
 
-The same direct plotting workflow is also available for `geom_gene()`, which
+The same direct plotting workflow is also available for `geom_genetag()`, which
 collapses the region to one directional span per `gene_id`.
 
 ```{r eval = FALSE}
 ggexon(sp) +
-  geom_gene(
+  geom_genetag(
     chr = "RagTag_V",
     subset = c(21550000, 21680000)
   )
@@ -255,21 +255,25 @@ Use the two geoms for different levels of detail:
 
 - `geom_exon()` keeps exon-level structure and is useful when transcript
   architecture matters.
-- `geom_gene()` reduces each gene to a start-to-end span with an arrow showing
-  strand direction.
+- `geom_genetag()` reduces each gene to a start-to-end span with an arrow
+  showing strand direction.
 
 Both geoms now use absolute genomic coordinates, so the x-axis stays in the
 original coordinate system of the chromosome rather than being re-based to a
 local zero point for each track.
 
-For pairwise comparison, a syn-aware geom can also resolve both annotation
-tracks plus the middle link panel from one comparative call. The reference
-species supplies the input coordinates.
+For pairwise comparison, draw the annotation tracks and then let
+`geom_nuclink()` resolve the stored alignment into the middle link panel. The
+reference species supplies the input coordinates.
 
 ```{r eval = FALSE}
 ggexon(sp) +
-  geom_gene(
+  geom_exon(
     species = c("N2", "XZ1516"),
+    chr = "RagTag_V",
+    subset = c(21574445, 21584356)
+  ) +
+  geom_nuclink(
     reference = "XZ1516",
     chr = "RagTag_V",
     subset = c(21574445, 21584356),
@@ -282,10 +286,10 @@ For custom pairwise views, the PAF helper and the plotting grammar are meant
 to work together: derive or specify the windows you want, filter short PAF
 rows with `filter =`, and then draw the comparison.
 
-At the moment, this direct plotting path is implemented for `geom_exon()` and
-`geom_gene()`. The same pattern can be extended to other geoms so they can
-consume `SynSpecies` or `SynIndividual` objects without requiring a manual
-`fortify()` step.
+At the moment, this direct plotting path is implemented for `geom_exon()`,
+`geom_genetag()`, and `geom_nuclink()`. The same pattern can be extended to
+other geoms so they can consume `SynSpecies` or `SynIndividual` objects without
+requiring a manual `fortify()` step.
 
 # Notes
 

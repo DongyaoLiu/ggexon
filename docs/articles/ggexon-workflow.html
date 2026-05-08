@@ -35,7 +35,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-tutorials" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Tutorials</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-tutorials">
 <li><a class="dropdown-item" href="../articles/ggexon-workflow.html">Complete workflow</a></li>
-    <li><a class="dropdown-item" href="../articles/ggexon-classes-and-verbs.html">Classes and verbs</a></li>
+    <li><a class="dropdown-item" href="../articles/ggexon-classes-and-verbs.html">Classes, geoms, facets, and guides</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
@@ -61,7 +61,7 @@
       <h1>ggexon Workflow</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/DongyaoLiu/ggexon/blob/main/vignettes/ggexon-workflow.Rmd" class="external-link"><code>vignettes/ggexon-workflow.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/DongyaoLiu/ggexon/blob/HEAD/vignettes/ggexon-workflow.Rmd" class="external-link"><code>vignettes/ggexon-workflow.Rmd</code></a></small>
       <div class="d-none name"><code>ggexon-workflow.Rmd</code></div>
     </div>
 
@@ -288,11 +288,11 @@ that sole individual, maps the user-facing chromosome label
 <code>species =</code> becomes required so the geom knows which one to
 plot.</p>
 <p>The same direct plotting workflow is also available for
-<code>geom_gene()</code>, which collapses the region to one directional
-span per <code>gene_id</code>.</p>
+<code><a href="../reference/geom_genetag.html">geom_genetag()</a></code>, which collapses the region to one
+directional span per <code>gene_id</code>.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">sp</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_gene</span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="../reference/geom_genetag.html">geom_genetag</a></span><span class="op">(</span></span>
 <span>    chr <span class="op">=</span> <span class="st">"RagTag_V"</span>,</span>
 <span>    subset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">21550000</span>, <span class="fl">21680000</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
@@ -302,19 +302,23 @@ span per <code>gene_id</code>.</p>
 <code><a href="../reference/geom_exon.html">geom_exon()</a></code> keeps exon-level structure and is useful
 when transcript architecture matters.</li>
 <li>
-<code>geom_gene()</code> reduces each gene to a start-to-end span
+<code><a href="../reference/geom_genetag.html">geom_genetag()</a></code> reduces each gene to a start-to-end span
 with an arrow showing strand direction.</li>
 </ul>
 <p>Both geoms now use absolute genomic coordinates, so the x-axis stays
 in the original coordinate system of the chromosome rather than being
 re-based to a local zero point for each track.</p>
-<p>For pairwise comparison, a syn-aware geom can also resolve both
-annotation tracks plus the middle link panel from one comparative call.
-The reference species supplies the input coordinates.</p>
+<p>For pairwise comparison, draw the annotation tracks and then let
+<code><a href="../reference/geom_nuclink.html">geom_nuclink()</a></code> resolve the stored alignment into the middle
+link panel. The reference species supplies the input coordinates.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">sp</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_gene</span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="../reference/geom_exon.html">geom_exon</a></span><span class="op">(</span></span>
 <span>    species <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"N2"</span>, <span class="st">"XZ1516"</span><span class="op">)</span>,</span>
+<span>    chr <span class="op">=</span> <span class="st">"RagTag_V"</span>,</span>
+<span>    subset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">21574445</span>, <span class="fl">21584356</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_nuclink.html">geom_nuclink</a></span><span class="op">(</span></span>
 <span>    reference <span class="op">=</span> <span class="st">"XZ1516"</span>,</span>
 <span>    chr <span class="op">=</span> <span class="st">"RagTag_V"</span>,</span>
 <span>    subset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">21574445</span>, <span class="fl">21584356</span><span class="op">)</span>,</span>
@@ -326,10 +330,11 @@ are meant to work together: derive or specify the windows you want,
 filter short PAF rows with <code>filter =</code>, and then draw the
 comparison.</p>
 <p>At the moment, this direct plotting path is implemented for
-<code><a href="../reference/geom_exon.html">geom_exon()</a></code> and <code>geom_gene()</code>. The same pattern
-can be extended to other geoms so they can consume
-<code>SynSpecies</code> or <code>SynIndividual</code> objects without
-requiring a manual <code>fortify()</code> step.</p>
+<code><a href="../reference/geom_exon.html">geom_exon()</a></code>, <code><a href="../reference/geom_genetag.html">geom_genetag()</a></code>, and
+<code><a href="../reference/geom_nuclink.html">geom_nuclink()</a></code>. The same pattern can be extended to other
+geoms so they can consume <code>SynSpecies</code> or
+<code>SynIndividual</code> objects without requiring a manual
+<code>fortify()</code> step.</p>
 </div>
 <div class="section level2">
 <h2 id="notes">Notes<a class="anchor" aria-label="anchor" href="#notes"></a>
