@@ -17,6 +17,7 @@ geom_genelabel(
   label_direction = NULL,
   label_offset_fraction = NULL,
   link_type = NULL,
+  collapse_tandem = NULL,
   species = NULL,
   chr = NULL,
   subset = NULL,
@@ -53,7 +54,11 @@ line, expressed as a fraction of \code{exon_height}. Default \code{0.3}.}
 
 \item{link_type}{Leader line style: \code{"straight"} (direct line) or
 \code{"elbow"} (right-angle bend via vertical then horizontal segment).
-Default \code{"straight"}.}
+Default \code{"straight"}. Centre-fitting labels do not draw leader lines.}
+
+\item{collapse_tandem}{When \code{TRUE}, consecutive genes with identical
+labels (tandem duplications) share a single label connected to all gene
+bodies by a bracket-style connector. Default \code{FALSE}.}
 
 \item{species}{Optional species / individual identifier when \code{data} is a
 \code{SynSpecies}.}
