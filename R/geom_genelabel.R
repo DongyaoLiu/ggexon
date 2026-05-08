@@ -25,7 +25,18 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
                            )
                          },
                          setup_data = function(data, params){
-                           GeomExon$setup_data(data, params)
+                           data <- GeomExon$setup_data(data, params)
+                           exon_height <- params$exon_height %||% 0.8
+                           label_offset <- exon_height *
+                             (params$label_offset_fraction %||% 0.3)
+                           label_direction <- params$label_direction %||% "top"
+
+                           if (label_direction == "top") {
+                             data$ymax <- data$ymax + label_offset
+                           } else {
+                             data$ymin <- data$ymin - label_offset
+                           }
+                           data
                          },
 
                          draw_panel = function(data, panel_params, coord, check_overlap = FALSE,
@@ -33,9 +44,7 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
                                                 label_direction = "top",
                                                 label_offset_fraction = 0.3){
                            label_direction <- match.arg(label_direction, c("top", "bottom"))
-                           actual_exon_height <- max(data$ymax - data$ymin, na.rm = TRUE)
-                           if (actual_exon_height <= 0) actual_exon_height <- exon_height
-                           label_offset <- actual_exon_height * label_offset_fraction
+                           label_offset <- exon_height * label_offset_fraction
 
                            genomic_range <- diff(range(c(data$xmin, data$xmax), na.rm = TRUE))
                            if (genomic_range <= 0) genomic_range <- 1
@@ -77,14 +86,16 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
                              }
                            }
 
-                           # per-gene label y and leader line anchor
+                           # panel-level label y (one line for all labels in this panel)
+                           # per-gene anchor for leader lines
                            if (label_direction == "top") {
-                             data2$anchor_y <- data2$gene_ymax
-                             data2$label_y <- data2$gene_ymax + label_offset
+                             label_y <- max(data2$gene_ymax)
+                             data2$anchor_y <- data2$gene_ymax - label_offset
                            } else {
-                             data2$anchor_y <- data2$gene_ymin
-                             data2$label_y <- data2$gene_ymin - label_offset
+                             label_y <- min(data2$gene_ymin)
+                             data2$anchor_y <- data2$gene_ymin + label_offset
                            }
+                           data2$label_y <- label_y
 
                            # prepare label positions for coord transform
                            label_data <- data2

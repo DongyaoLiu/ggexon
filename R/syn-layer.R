@@ -2066,7 +2066,7 @@ syn_gr_to_gene_df <- function(feature_gr, track) {
   ]
   gene_df$label <- gene_df$gene_name
   gene_df <- gene_df[order(gene_df$xmin, gene_df$gene_id), , drop = FALSE]
-  gene_df$ymin <- rev(seq_len(nrow(gene_df))) * 2
+  gene_df$ymin <- 0
   gene_df$group <- seq_len(nrow(gene_df))
   gene_df$transcripts <- gene_df$gene_id
   gene_df$track <- track

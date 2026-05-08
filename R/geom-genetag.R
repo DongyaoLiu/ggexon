@@ -263,6 +263,11 @@ GeomGeneTag <- ggproto(
       na.rm = FALSE
     )
   },
+  setup_data = function(data, params) {
+    exon_height <- params$exon_height %||% 0.8
+    data$y <- exon_height / 2
+    data
+  },
   handle_na = function(data, params) {
     missing <- is.na(data$xmin) | is.na(data$xmax) | is.na(data$y) | is.na(data$strand)
     if (any(missing)) {

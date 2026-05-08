@@ -45,6 +45,10 @@ ggexon.default <- function(data = NULL, mapping = aes(), ...,
     )
   class(p) = union(union(c("ggexon", "ggexon::ggexon", "ggplot2::ggplot"), class(p)), "gg")
 
+  p <- p + ggplot2::scale_y_continuous(
+    expand = ggplot2::expansion(mult = c(0.05, 0.05))
+  )
+
   set_last_plot(p)
   return(p)
 }
