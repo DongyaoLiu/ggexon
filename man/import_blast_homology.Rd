@@ -9,6 +9,9 @@ import_blast_homology(
   reference_species,
   query_species,
   name = NULL,
+  outfmt = paste("6 qseqid sseqid pident length mismatch",
+    "gapopen qstart qend sstart send evalue", "bitscore"),
+  rank_by = "bitscore",
   strip_prefix = "^(transcript:|cds:|gene:)",
   strip_suffix = "\\\\.t\\\\d+$",
   metadata = list()
@@ -19,10 +22,22 @@ import_blast_homology(
 
 \item{reference_species}{Name of the reference (center) species.}
 
-\item{query_species}{Name of the query species whose proteins were BLASTed.}
+\item{query_species}{Name of the query species whose proteins were
+BLASTed.}
 
 \item{name}{Optional label for the homology annotation. Defaults to the
 blast file stem.}
+
+\item{outfmt}{The BLAST \code{-outfmt} column specification as a single string,
+e.g. \code{"6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore"}. The leading \code{"6 "} is stripped; the
+remaining tokens become the column names of the parsed table. This must
+match the columns actually written by BLAST.}
+
+\item{rank_by}{One or more column names used to rank hits before
+deduplication. For \code{"evalue"} the sort is ascending (lower is better);
+all other columns are descending (higher is better). When multiple
+columns are given the first is the primary key. Defaults to
+\code{"bitscore"}.}
 
 \item{strip_prefix}{Regular expression matching prefixes to strip from
 query IDs. Defaults to \code{"^(transcript:|cds:|gene:)"}.}
@@ -38,13 +53,21 @@ A \code{HomologyAnnotation} object.
 \description{
 Parses a BLAST tabular output file (outfmt 6) and creates a
 \code{HomologyAnnotation} object mapping query-species genes to
-reference-species genes. The best hit per query (highest bitscore) is kept.
+reference-species genes. The best hit per query is selected by ranking
+on one or more BLAST metrics.
 }
 \details{
-BLAST outfmt 6 columns are expected as:
-\verb{qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore}
+The \code{outfmt} string is the exact argument passed to \code{blastp -outfmt}.
+All columns declared in \code{outfmt} must be present in the file; extra
+columns are ignored, and lines with fewer fields than declared are
+discarded.
 
-Query sequence IDs typically carry prefixes (e.g., \verb{transcript:}) and
-isoform suffixes (e.g., \code{.t1}). These are stripped by default so that the
-resulting \code{query_gene} values match annotation gene IDs.
+The \code{rank_by} parameter controls which BLAST metric(s) determine the
+best hit kept per query. Common choices:
+\itemize{
+\item \code{"bitscore"} — highest bitscore (default)
+\item \code{"pident"} — highest percent identity
+\item \code{"evalue"} — lowest e-value
+\item \code{c("pident", "evalue")} — highest identity, then lowest e-value on ties
+}
 }

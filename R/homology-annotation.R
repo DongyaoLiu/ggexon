@@ -150,25 +150,44 @@ HomologyAnnotation <- function(name,
 #'
 #' Parses a BLAST tabular output file (outfmt 6) and creates a
 #' `HomologyAnnotation` object mapping query-species genes to
-#' reference-species genes. The best hit per query (highest bitscore) is kept.
-#'
-#' BLAST outfmt 6 columns are expected as:
-#' `qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore`
-#'
-#' Query sequence IDs typically carry prefixes (e.g., `transcript:`) and
-#' isoform suffixes (e.g., `.t1`). These are stripped by default so that the
-#' resulting `query_gene` values match annotation gene IDs.
+#' reference-species genes. The best hit per query is selected by ranking
+#' on one or more BLAST metrics.
 #'
 #' @param blast_file Path to the BLAST outfmt 6 file.
 #' @param reference_species Name of the reference (center) species.
-#' @param query_species Name of the query species whose proteins were BLASTed.
+#' @param query_species Name of the query species whose proteins were
+#'   BLASTed.
 #' @param name Optional label for the homology annotation. Defaults to the
 #'   blast file stem.
+#' @param outfmt The BLAST `-outfmt` column specification as a single string,
+#'   e.g. `"6 qseqid sseqid pident length mismatch gapopen qstart qend
+#'   sstart send evalue bitscore"`. The leading `"6 "` is stripped; the
+#'   remaining tokens become the column names of the parsed table. This must
+#'   match the columns actually written by BLAST.
+#' @param rank_by One or more column names used to rank hits before
+#'   deduplication. For `"evalue"` the sort is ascending (lower is better);
+#'   all other columns are descending (higher is better). When multiple
+#'   columns are given the first is the primary key. Defaults to
+#'   `"bitscore"`.
 #' @param strip_prefix Regular expression matching prefixes to strip from
 #'   query IDs. Defaults to `"^(transcript:|cds:|gene:)"`.
 #' @param strip_suffix Regular expression matching suffixes to strip from
 #'   query IDs. Defaults to `"\\.t\\d+$"` (transcript isoform numbers).
 #' @param metadata Optional metadata list.
+#'
+#' @details
+#' The `outfmt` string is the exact argument passed to `blastp -outfmt`.
+#' All columns declared in `outfmt` must be present in the file; extra
+#' columns are ignored, and lines with fewer fields than declared are
+#' discarded.
+#'
+#' The `rank_by` parameter controls which BLAST metric(s) determine the
+#' best hit kept per query. Common choices:
+#'
+#' - `"bitscore"` — highest bitscore (default)
+#' - `"pident"` — highest percent identity
+#' - `"evalue"` — lowest e-value
+#' - `c("pident", "evalue")` — highest identity, then lowest e-value on ties
 #'
 #' @return A `HomologyAnnotation` object.
 #' @export
@@ -176,6 +195,12 @@ import_blast_homology <- function(blast_file,
                                   reference_species,
                                   query_species,
                                   name = NULL,
+                                  outfmt = paste(
+                                    "6 qseqid sseqid pident length mismatch",
+                                    "gapopen qstart qend sstart send evalue",
+                                    "bitscore"
+                                  ),
+                                  rank_by = "bitscore",
                                   strip_prefix = "^(transcript:|cds:|gene:)",
                                   strip_suffix = "\\.t\\d+$",
                                   metadata = list()) {
@@ -191,6 +216,103 @@ import_blast_homology <- function(blast_file,
     name <- tools::file_path_sans_ext(basename(blast_file))
   }
 
+  col_names <- .parse_blast_outfmt(outfmt)
+  required_cols <- c("qseqid", "sseqid")
+  missing_required <- setdiff(required_cols, col_names)
+  if (length(missing_required) > 0L) {
+    stop(
+      "`outfmt` must include at least 'qseqid' and 'sseqid'. Missing: ",
+      paste(missing_required, collapse = ", "),
+      call. = FALSE
+    )
+  }
+
+  missing_rank <- setdiff(rank_by, col_names)
+  if (length(missing_rank) > 0L) {
+    stop(
+      "`rank_by` column(s) not declared in `outfmt`: ",
+      paste(missing_rank, collapse = ", "),
+      call. = FALSE
+    )
+  }
+
+  blast_df <- .read_blast_tabular(blast_file, col_names = col_names)
+
+  blast_df$normalized_query <- .normalize_blast_query_id(
+    blast_df$qseqid,
+    strip_prefix = strip_prefix,
+    strip_suffix = strip_suffix
+  )
+
+  blast_df <- .rank_blast_hits(blast_df, rank_by = rank_by)
+  blast_df <- blast_df[!duplicated(blast_df$normalized_query), ]
+
+  homology_table <- data.frame(
+    query_gene     = blast_df$normalized_query,
+    reference_gene = blast_df$sseqid,
+    stringsAsFactors = FALSE
+  )
+
+  HomologyAnnotation(
+    name              = name,
+    reference_species = reference_species,
+    query_species     = query_species,
+    homology_table    = homology_table,
+    source_file       = blast_file,
+    metadata = c(metadata, list(
+      n_input_rows     = nrow(blast_df),
+      n_unique_query   = nrow(homology_table),
+      outfmt           = outfmt,
+      rank_by          = rank_by
+    ))
+  )
+}
+
+#' Parse a BLAST outfmt string into column names
+#'
+#' Strips the leading `"6 "` (tabular format specifier) and splits the
+#' remainder on whitespace.
+#'
+#' @param outfmt Character string as passed to `blastp -outfmt`.
+#'
+#' @return Character vector of column names.
+#' @keywords internal
+.parse_blast_outfmt <- function(outfmt) {
+  if (!is.character(outfmt) || length(outfmt) != 1L ||
+      is.na(outfmt) || !nzchar(outfmt)) {
+    stop("`outfmt` must be a single non-empty character value.", call. = FALSE)
+  }
+
+  outfmt <- trimws(outfmt)
+  if (!grepl("^6\\s", outfmt)) {
+    stop(
+      "`outfmt` must start with '6 ' for BLAST tabular format.",
+      call. = FALSE
+    )
+  }
+
+  tokens <- strsplit(sub("^6\\s+", "", outfmt), "\\s+")[[1L]]
+  tokens <- tokens[nzchar(tokens)]
+  if (length(tokens) == 0L) {
+    stop("No column names found after '6 ' in `outfmt`.", call. = FALSE)
+  }
+
+  tokens
+}
+
+#' Read a BLAST tabular file with named columns
+#'
+#' Reads a tab-separated BLAST outfmt 6 file, assigns column names from the
+#' parsed `outfmt` specification, and coerces numeric columns
+#' automatically.
+#'
+#' @param blast_file Path to the BLAST tabular file.
+#' @param col_names Character vector of column names, as returned by
+#'   `.parse_blast_outfmt()`.
+#'
+#' @return A data frame with named columns.
+#' @keywords internal
+.read_blast_tabular <- function(blast_file, col_names) {
   lines <- readLines(blast_file, warn = FALSE)
   lines <- lines[nzchar(trimws(lines))]
   lines <- lines[!grepl("^\\s*#", lines)]
@@ -200,54 +322,78 @@ import_blast_homology <- function(blast_file,
   }
 
   fields <- strsplit(lines, "\t", fixed = TRUE)
-  n_fields <- vapply(fields, length, integer(1L))
-  expected_n <- 12L
-  valid <- n_fields >= expected_n
+  n_expected <- length(col_names)
+  valid <- vapply(fields, length, integer(1L)) >= n_expected
+
   if (!any(valid)) {
     stop(
-      "BLAST file does not appear to be in outfmt 6 format ",
-      "(expected >= 12 tab-separated fields).",
+      "BLAST file does not contain enough columns. ",
+      "Expected at least ", n_expected, " (from outfmt), ",
+      "but no line had that many tab-separated fields.",
       call. = FALSE
     )
   }
+
   fields <- fields[valid]
 
-  blast_df <- data.frame(
-    qseqid   = vapply(fields, `[[`, character(1L), 1L),
-    sseqid   = vapply(fields, `[[`, character(1L), 2L),
-    bitscore = as.numeric(vapply(fields, `[[`, character(1L), 12L)),
-    stringsAsFactors = FALSE
-  )
-
-  blast_df$normalized_query <- .normalize_blast_query_id(
-    blast_df$qseqid,
-    strip_prefix = strip_prefix,
-    strip_suffix = strip_suffix
-  )
-
-  if (anyDuplicated(blast_df$normalized_query)) {
-    blast_df <- blast_df[order(blast_df$normalized_query, -blast_df$bitscore), ]
-    blast_df <- blast_df[!duplicated(blast_df$normalized_query), ]
+  mat <- matrix(NA_character_, nrow = length(fields), ncol = n_expected)
+  for (i in seq_along(fields)) {
+    row <- fields[[i]]
+    mat[i, ] <- row[seq_len(n_expected)]
   }
 
-  homology_table <- data.frame(
-    query_gene = blast_df$normalized_query,
-    reference_gene = blast_df$sseqid,
-    stringsAsFactors = FALSE
-  )
+  blast_df <- as.data.frame(mat, stringsAsFactors = FALSE)
+  colnames(blast_df) <- col_names
 
-  HomologyAnnotation(
-    name = name,
-    reference_species = reference_species,
-    query_species = query_species,
-    homology_table = homology_table,
-    source_file = blast_file,
-    metadata = c(metadata, list(
-      n_blast_lines = length(lines),
-      n_valid_lines = sum(valid),
-      n_unique_query = nrow(homology_table)
-    ))
-  )
+  numeric_cols <- setdiff(col_names, c("qseqid", "sseqid"))
+  for (col in numeric_cols) {
+    blast_df[[col]] <- suppressWarnings(as.numeric(blast_df[[col]]))
+  }
+
+  blast_df
+}
+
+#' Rank BLAST hits for deduplication
+#'
+#' Sorts a BLAST data frame by one or more ranking columns so that the
+#' best hit per query appears first. The sort direction for `"evalue"` is
+#' ascending (lower is better); all other columns are sorted descending
+#' (higher is better).
+#'
+#' @param blast_df A data frame with at minimum `normalized_query` and the
+#'   columns named in `rank_by`.
+#' @param rank_by Character vector of column names to sort by.
+#'
+#' @return The input data frame, sorted.
+#' @keywords internal
+.rank_blast_hits <- function(blast_df, rank_by = "bitscore") {
+  if (!is.character(rank_by) || length(rank_by) == 0L) {
+    stop("`rank_by` must be a non-empty character vector.", call. = FALSE)
+  }
+
+  missing <- setdiff(rank_by, colnames(blast_df))
+  if (length(missing) > 0L) {
+    stop(
+      "`rank_by` column(s) not found in BLAST data: ",
+      paste(missing, collapse = ", "),
+      call. = FALSE
+    )
+  }
+
+  ascending_cols <- "evalue"
+
+  order_args <- list()
+  for (col in rank_by) {
+    is_ascending <- col %in% ascending_cols
+    x <- blast_df[[col]]
+    x[is.na(x)] <- if (is_ascending) Inf else -Inf
+    order_args[[length(order_args) + 1L]] <- if (is_ascending) x else -x
+  }
+
+  order_idx <- do.call(order, order_args)
+  blast_df <- blast_df[order_idx, , drop = FALSE]
+  rownames(blast_df) <- NULL
+  blast_df
 }
 
 #' Normalize BLAST query IDs to gene-level identifiers
