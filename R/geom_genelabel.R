@@ -33,7 +33,10 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
 
                            if (label_direction == "top") {
                              data$ymax <- data$ymax + label_offset
+                           } else if (label_direction == "bottom") {
+                             data$ymin <- data$ymin - label_offset
                            } else {
+                             data$ymax <- data$ymax + label_offset
                              data$ymin <- data$ymin - label_offset
                            }
                            data
@@ -43,7 +46,7 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
                                                 exon_height = 0.8,
                                                 label_direction = "top",
                                                 label_offset_fraction = 0.3){
-                           label_direction <- match.arg(label_direction, c("top", "bottom"))
+                           label_direction <- match.arg(label_direction, c("top", "bottom", "both"))
                            label_offset <- exon_height * label_offset_fraction
 
                            genomic_range <- diff(range(c(data$xmin, data$xmax), na.rm = TRUE))
@@ -72,16 +75,40 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
                              )
 
                            # greedy horizontal slide to prevent overlap
+                           # for "both": slide odd (top) and even (bottom) rows independently
                            min_gap <- genomic_range * 0.005
-                           if (nrow(data2) > 1) {
-                             for (i in 2:nrow(data2)) {
-                               prev_right <- data2$label_x[i - 1] +
-                                 data2$est_width[i - 1] / 2 + min_gap
-                               curr_left <- data2$label_x[i] -
-                                 data2$est_width[i] / 2
-                               if (curr_left < prev_right) {
-                                 data2$label_x[i] <- prev_right +
+                           if (label_direction == "both") {
+                             data2 <- data2 %>%
+                               mutate(row_idx = seq_len(n()) %% 2L,
+                                      label_x = orig_x_mid)
+                             for (row_id in c(1L, 0L)) {
+                               idx <- which(data2$row_idx == row_id)
+                               if (length(idx) > 1) {
+                                 for (j in seq_along(idx)[-1]) {
+                                   i_curr <- idx[j]; i_prev <- idx[j - 1]
+                                   prev_right <- data2$label_x[i_prev] +
+                                     data2$est_width[i_prev] / 2 + min_gap
+                                   curr_left <- data2$label_x[i_curr] -
+                                     data2$est_width[i_curr] / 2
+                                   if (curr_left < prev_right) {
+                                     data2$label_x[i_curr] <- prev_right +
+                                       data2$est_width[i_curr] / 2
+                                   }
+                                 }
+                               }
+                             }
+                           } else {
+                             min_gap <- genomic_range * 0.005
+                             if (nrow(data2) > 1) {
+                               for (i in 2:nrow(data2)) {
+                                 prev_right <- data2$label_x[i - 1] +
+                                   data2$est_width[i - 1] / 2 + min_gap
+                                 curr_left <- data2$label_x[i] -
                                    data2$est_width[i] / 2
+                                 if (curr_left < prev_right) {
+                                   data2$label_x[i] <- prev_right +
+                                     data2$est_width[i] / 2
+                                 }
                                }
                              }
                            }
@@ -91,17 +118,29 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
                            if (label_direction == "top") {
                              label_y <- max(data2$gene_ymax)
                              data2$anchor_y <- data2$gene_ymax - label_offset
-                           } else {
+                           } else if (label_direction == "bottom") {
                              label_y <- min(data2$gene_ymin)
                              data2$anchor_y <- data2$gene_ymin + label_offset
+                           } else {
+                             top_y    <- max(data2$gene_ymax)
+                             bottom_y <- min(data2$gene_ymin)
+                             data2$label_y <- ifelse(data2$row_idx == 1L, top_y, bottom_y)
+                             data2$anchor_y <- ifelse(data2$row_idx == 1L,
+                                                      data2$gene_ymax - label_offset,
+                                                      data2$gene_ymin + label_offset)
+                             label_y <- NULL
                            }
-                           data2$label_y <- label_y
+                           if (!is.null(label_y)) {
+                             data2$label_y <- label_y
+                           }
 
                            # prepare label positions for coord transform
                            label_data <- data2
                            label_data$x <- label_data$label_x
                            label_data$y <- label_data$label_y
-                           label_data$vjust <- if (label_direction == "top") 1 else 0
+                           label_data$vjust <- if (label_direction == "top") 1
+                                                 else if (label_direction == "bottom") 0
+                                                 else ifelse(data2$row_idx == 1L, 1, 0)
                            label_t <- coord$transform(label_data, panel_params)
 
                            # prepare leader line endpoints
@@ -154,7 +193,8 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
 #' @param exon_height Optional exon rectangle height used when preparing track
 #'   coordinates.
 #' @param label_direction Where to place the label line: `"top"` (above the
-#'   highest track) or `"bottom"` (below the lowest track). Default `"top"`.
+#'   highest track), `"bottom"` (below the lowest track), or `"both"`
+#'   (odd-indexed labels above, even-indexed labels below). Default `"top"`.
 #' @param label_offset_fraction Distance between the exon tracks and the label
 #'   line, expressed as a fraction of `exon_height`. Default `0.3`.
 #' @param species Optional species / individual identifier when `data` is a
