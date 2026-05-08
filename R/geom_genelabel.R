@@ -101,6 +101,7 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
                            label_data <- data2
                            label_data$x <- label_data$label_x
                            label_data$y <- label_data$label_y
+                           label_data$vjust <- if (label_direction == "top") 1 else 0
                            label_t <- coord$transform(label_data, panel_params)
 
                            # prepare leader line endpoints
