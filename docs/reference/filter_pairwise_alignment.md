@@ -40,5 +40,7 @@ pair <- SynPairAlignment(
   target_individual = "N2",
   file = paf_path
 )
+#> Error in validObject(.Object): invalid class “SynPairAlignment” object: `source_file` must be a non-empty character vector with no empty entries.
 pair <- filter_pairwise_alignment(pair, filter = 200)
+#> Error in h(simpleError(msg, call)): error in evaluating the argument 'x' in selecting a method for function 'filter_pairwise_alignment': object 'pair' not found
 ```

@@ -25,6 +25,7 @@ composed with familiar plotting ideas.
 `ggexon` is currently a development package.
 
 ``` r
+
 install.packages("remotes")
 remotes::install_github("DongyaoLiu/ggexon")
 ```
@@ -33,6 +34,7 @@ Some dependencies are from Bioconductor. If your R installation cannot
 resolve them automatically, install them first:
 
 ``` r
+
 install.packages("BiocManager")
 BiocManager::install(c(
   "Biostrings",
@@ -84,6 +86,7 @@ The public API is organized around a few function families:
 The typical workflow is:
 
 ``` r
+
 library(ggexon)
 
 x <- SynIndividual(
