@@ -849,133 +849,14 @@ is_unrestricted_syn_window <- function(window) {
 }
 
 resolve_syn_layer_data <- function(x, layer) {
-  params <- syn_layer_params(layer)
-  context <- layer$syn_plot_context %||% NULL
-
-  if (identical(layer$geom, GeomExon) || identical(layer$geom, GeomExon2)) {
-    return(
-      syn_to_exon_df(
-        x = x,
-        species = params$species,
-        chr = params$chr,
-        subset = params$subset,
-        annotation_type = params$annotation_type,
-        context = context
-      )
+  handler <- layer$geom$syn_data
+  if (is.null(handler)) {
+    geom_name <- class(layer$geom)[1] %||% ""
+    cli::cli_abort(
+      "Syn object input is not yet implemented for geom {.val {geom_name}}."
     )
   }
-  if (identical(layer$geom, GeomGene)) {
-    return(
-      syn_to_gene_df(
-        x = x,
-        species = params$species,
-        chr = params$chr,
-        subset = params$subset,
-        context = context
-      )
-    )
-  }
-  if (identical(layer$geom, GeomGeneLabel)) {
-    gene_df <- syn_to_gene_df(
-      x = x,
-      species = params$species,
-      chr = params$chr,
-      subset = params$subset,
-      context = context
-    )
-    if (methods::is(x, "SynSpecies") && nrow(gene_df) > 0L) {
-      homology_name <- params$homology_name %||% NULL
-      if (!is.null(homology_name)) {
-        homology <- tryCatch(
-          get_homology_annotation(x, name = homology_name),
-          error = function(e) NULL
-        )
-        if (!is.null(homology)) {
-          gene_df <- .apply_homology_labels(gene_df, homology)
-        }
-      } else if (length(homology_annotations(x)) > 0L) {
-        gene_df <- .apply_homology_labels_auto(gene_df, homology_annotations(x))
-      }
-    }
-    return(gene_df)
-  }
-  if (identical(layer$geom, GeomGeneTag)) {
-    return(
-      syn_to_genetag_df(
-        x = x,
-        species = params$species,
-        chr = params$chr,
-        subset = params$subset,
-        feature_type = params$feature_type %||% "gene",
-        context = context
-      )
-    )
-  }
-  if (identical(layer$geom, GeomMotif)) {
-    return(
-      syn_to_motif_df(
-        x = x,
-        species = params$species,
-        chr = params$chr,
-        subset = params$subset,
-        annotation = params$annotation,
-        ids = params$ids,
-        domains = params$domains,
-        model = params$model %||% "all",
-        motif = params$motif,
-        y_offset = params$y_offset %||% 0,
-        context = context
-      )
-    )
-  }
-  if (identical(layer$geom, GeomMutationLabel)) {
-    return(
-      syn_to_mutation_label_df(
-        x = x,
-        annotation = params$annotation,
-        individual = params$individual,
-        species = params$species,
-        genes = params$genes,
-        event_type = params$event_type,
-        min_sample_count = params$min_sample_count,
-        strains = params$strains,
-        mutation = params$mutation,
-        mutation_position = params$mutation_position %||% "position",
-        label = params$label_col %||% "mutation",
-        ref = params$ref,
-        alt = params$alt,
-        spread_threshold = params$spread_threshold %||% 7,
-        mutation_y = params$mutation_y %||% 1,
-        mutation_y_by = params$mutation_y_by,
-        mutation_y_strategy = params$mutation_y_strategy %||% "scaled",
-        mutation_y_range = params$mutation_y_range %||% c(0.85, 1.45),
-        mutation_y_trans = params$mutation_y_trans %||% "identity",
-        mutation_y_breaks = params$mutation_y_breaks,
-        mutation_y_values = params$mutation_y_values,
-        label_nudge_y = params$label_nudge_y %||% 0.35,
-        show_empty = params$show_empty %||% FALSE,
-        context = context
-      )
-    )
-  }
-  if (identical(layer$geom, GeomNucLink)) {
-    return(
-      syn_to_nuclink_df(
-        x = x,
-        alignment = params$alignment,
-        reference = params$reference,
-        chr = params$chr,
-        subset = params$subset,
-        filter_by_len = params$filter_by_len,
-        context = context
-      )
-    )
-  }
-
-  geom_name <- class(layer$geom)[1] %||% ""
-  cli::cli_abort(
-    "Syn object input is not yet implemented for geom {.val {geom_name}}."
-  )
+  handler(x, layer)
 }
 
 resolve_syn_domain_annotation <- function(x, annotation = NULL, allow_missing = FALSE) {

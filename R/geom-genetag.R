@@ -301,7 +301,19 @@ GeomGeneTag <- ggproto(
     )
     ggname("geom_genetag", GeomPolygon$draw_panel(tag_data, panel_params, coord))
   },
-  draw_key = draw_key_polygon
+  draw_key = draw_key_polygon,
+  syn_data = function(x, layer) {
+    params <- syn_layer_params(layer)
+    context <- layer$syn_plot_context %||% NULL
+    syn_to_genetag_df(
+      x = x,
+      species = params$species,
+      chr = params$chr,
+      subset = params$subset,
+      feature_type = params$feature_type %||% "gene",
+      context = context
+    )
+  }
 )
 
 .genetag_tip_individual_map <- function(tip_labels, available_individuals, individual = NULL) {

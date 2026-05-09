@@ -46,6 +46,36 @@ GeomMutationLabel <- ggproto(
       label_nudge_y = 0.35,
       show_empty = FALSE
     )
+  },
+  syn_data = function(x, layer) {
+    params <- syn_layer_params(layer)
+    context <- layer$syn_plot_context %||% NULL
+    syn_to_mutation_label_df(
+      x = x,
+      annotation = params$annotation,
+      individual = params$individual,
+      species = params$species,
+      genes = params$genes,
+      event_type = params$event_type,
+      min_sample_count = params$min_sample_count,
+      strains = params$strains,
+      mutation = params$mutation,
+      mutation_position = params$mutation_position %||% "position",
+      label = params$label_col %||% "mutation",
+      ref = params$ref,
+      alt = params$alt,
+      spread_threshold = params$spread_threshold %||% 7,
+      mutation_y = params$mutation_y %||% 1,
+      mutation_y_by = params$mutation_y_by,
+      mutation_y_strategy = params$mutation_y_strategy %||% "scaled",
+      mutation_y_range = params$mutation_y_range %||% c(0.85, 1.45),
+      mutation_y_trans = params$mutation_y_trans %||% "identity",
+      mutation_y_breaks = params$mutation_y_breaks,
+      mutation_y_values = params$mutation_y_values,
+      label_nudge_y = params$label_nudge_y %||% 0.35,
+      show_empty = params$show_empty %||% FALSE,
+      context = context
+    )
   }
 )
 

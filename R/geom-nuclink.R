@@ -208,6 +208,19 @@ GeomNucLink <- ggproto("GeomPanel", Geom,
                            )
                          )
                        )
+                       },
+                       syn_data = function(x, layer) {
+                         params <- syn_layer_params(layer)
+                         context <- layer$syn_plot_context %||% NULL
+                         syn_to_nuclink_df(
+                           x = x,
+                           alignment = params$alignment,
+                           reference = params$reference,
+                           chr = params$chr,
+                           subset = params$subset,
+                           filter_by_len = params$filter_by_len,
+                           context = context
+                         )
                        }
 )
 

@@ -70,7 +70,18 @@ GeomGene <- ggproto("GeomGene", Geom,
                         subset = NULL
                       )
                     },
-                    draw_key = draw_key_polygon
+                    draw_key = draw_key_polygon,
+                    syn_data = function(x, layer) {
+                      params <- syn_layer_params(layer)
+                      context <- layer$syn_plot_context %||% NULL
+                      syn_to_gene_df(
+                        x = x,
+                        species = params$species,
+                        chr = params$chr,
+                        subset = params$subset,
+                        context = context
+                      )
+                    }
 )
 
 

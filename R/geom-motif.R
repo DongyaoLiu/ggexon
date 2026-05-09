@@ -40,7 +40,24 @@ GeomMotif <- ggproto("GeomMotif", Geom,
                         y_offset = 0
                       )
                     },
-                    draw_key = draw_key_polygon
+                    draw_key = draw_key_polygon,
+                    syn_data = function(x, layer) {
+                      params <- syn_layer_params(layer)
+                      context <- layer$syn_plot_context %||% NULL
+                      syn_to_motif_df(
+                        x = x,
+                        species = params$species,
+                        chr = params$chr,
+                        subset = params$subset,
+                        annotation = params$annotation,
+                        ids = params$ids,
+                        domains = params$domains,
+                        model = params$model %||% "all",
+                        motif = params$motif,
+                        y_offset = params$y_offset %||% 0,
+                        context = context
+                      )
+                    }
 )
 
 #' Plot protein-domain motifs
