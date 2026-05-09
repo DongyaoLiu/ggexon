@@ -38,7 +38,7 @@
     <div class="section level2">
       <h2 id="data-storage-classes">Data-storage classes<a class="anchor" aria-label="anchor" href="#data-storage-classes"></a></h2>
 
-      <div class="section-desc"><p>Constructors for objects that store genomes, annotation layers, alignments, and reusable layout state.</p></div>
+      <div class="section-desc"><p>Constructors for objects that store genomes, annotation layers, alignments, homology maps, and reusable layout state.</p></div>
 
       <dl></dl></div><div class="section level2">
 
@@ -46,6 +46,13 @@
 
 
       <dl><dt>
+
+          <code><a href="HomologyAnnotation.html">HomologyAnnotation()</a></code>
+
+        </dt>
+        <dd>Constructor for HomologyAnnotation</dd>
+
+        <dt>
 
           <code><a href="SynSpecies.html">SynSpecies()</a></code>
 
@@ -137,13 +144,6 @@
 
         </dt>
         <dd>SynAnnotation class hierarchy</dd>
-
-        <dt>
-
-          <code><a href="SynSpecies-class-overview.html">SynSpecies-class-overview</a></code>
-
-        </dt>
-        <dd>SynSpecies, SynLayout, and alignment classes</dd>
 
         <dt>
 
@@ -259,6 +259,13 @@
 
         <dt>
 
+          <code><a href="HomologyAnnotation-class.html">HomologyAnnotation-class</a></code>
+
+        </dt>
+        <dd>HomologyAnnotation class</dd>
+
+        <dt>
+
           <code><a href="SynBioc-unions.html">SynBioc-unions</a></code>
 
         </dt>
@@ -335,6 +342,13 @@
 
         </dt>
         <dd>Draw cross-panel nucleotide links</dd>
+
+        <dt>
+
+          <code><a href="geom_genelink.html">geom_genelink()</a></code>
+
+        </dt>
+        <dd>Draw link lines between pairs of coordinates</dd>
 
         <dt>
 
@@ -459,7 +473,7 @@
       </dl></div><div class="section level2">
       <h2 id="manage-object-graphs">Manage object graphs<a class="anchor" aria-label="anchor" href="#manage-object-graphs"></a></h2>
 
-      <div class="section-desc"><p>Add individuals, annotations, alignments, trees, and stored layout information to Syn containers.</p></div>
+      <div class="section-desc"><p>Add individuals, annotations, alignments, homology maps, trees, and stored layout information to Syn containers.</p></div>
 
       <dl></dl></div><div class="section level2">
 
@@ -467,6 +481,13 @@
 
 
       <dl><dt>
+
+          <code><a href="add_homology_annotation.html">add_homology_annotation()</a></code>
+
+        </dt>
+        <dd>Add or replace a HomologyAnnotation on a SynSpecies</dd>
+
+        <dt>
 
           <code><a href="add_individual.html">add_individual()</a></code>
 
@@ -538,6 +559,13 @@
 
         <dt>
 
+          <code><a href="get_homology_annotation.html">get_homology_annotation()</a></code>
+
+        </dt>
+        <dd>Retrieve a HomologyAnnotation from a SynSpecies by query species</dd>
+
+        <dt>
+
           <code><a href="set_active_annotation.html">set_active_annotation()</a></code>
 
         </dt>
@@ -601,7 +629,7 @@
       </dl></div><div class="section level2">
       <h2 id="load-query-and-transform-annotations">Load, query, and transform annotations<a class="anchor" aria-label="anchor" href="#load-query-and-transform-annotations"></a></h2>
 
-      <div class="section-desc"><p>Materialize annotation data, query layer payloads, and derive sequence or protein-level summaries.</p></div>
+      <div class="section-desc"><p>Materialize annotation data, query layer payloads, import homology, and derive sequence or protein-level summaries.</p></div>
 
       <dl></dl></div><div class="section level2">
 
@@ -609,6 +637,13 @@
 
 
       <dl><dt>
+
+          <code><a href="import_blast_homology.html">import_blast_homology()</a></code>
+
+        </dt>
+        <dd>Import homology from a BLAST outfmt 6 file</dd>
+
+        <dt>
 
           <code><a href="load_annotation.html">load_annotation()</a></code>
 
@@ -684,6 +719,34 @@
 
         </dt>
         <dd>Access stored projected protein-domain tables</dd>
+
+        <dt>
+
+          <code><a href="homology_table.html">homology_table()</a></code>
+
+        </dt>
+        <dd>Retrieve the homology table from a HomologyAnnotation</dd>
+
+        <dt>
+
+          <code><a href="reference_species.html">reference_species()</a></code>
+
+        </dt>
+        <dd>Retrieve the reference species from a HomologyAnnotation</dd>
+
+        <dt>
+
+          <code><a href="query_species.html">query_species()</a></code>
+
+        </dt>
+        <dd>Retrieve the query species from a HomologyAnnotation</dd>
+
+        <dt>
+
+          <code><a href="homology_annotations.html">homology_annotations()</a></code>
+
+        </dt>
+        <dd>List homology annotations attached to a SynSpecies</dd>
 
         <dt>
 

@@ -206,10 +206,10 @@ features</td>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="alignment-and-layout-classes">Alignment and layout classes<a class="anchor" aria-label="anchor" href="#alignment-and-layout-classes"></a>
+<h3 id="alignment-homology-and-layout-classes">Alignment, homology, and layout classes<a class="anchor" aria-label="anchor" href="#alignment-homology-and-layout-classes"></a>
 </h3>
-<p>Comparative links are stored at the <code>SynSpecies</code>
-level:</p>
+<p>Comparative relationships and cross-species gene mappings are stored
+at the <code>SynSpecies</code> level:</p>
 <ul>
 <li>
 <code>SynPairAlignment</code> stores one pairwise relationship
@@ -220,10 +220,79 @@ ODGI-derived pairwise links.</li>
 more than two individuals. Supported inputs include MAF and ODGI-backed
 graph data.</li>
 <li>
+<code>HomologyAnnotation</code> stores cross-species gene homology
+mappings, typically derived from BLAST results. It maps gene identifiers
+from a query species to gene names in a reference (center) species. When
+attached to a <code>SynSpecies</code>, <code><a href="../reference/geom_genelabel.html">geom_genelabel()</a></code> can
+use these mappings to label query-species genes with their
+reference-species ortholog names.</li>
+<li>
 <code>SynLayout</code> stores reusable panel windows and layout
 state so plots can be rebuilt from the same coordinate decisions.</li>
 </ul>
+<div class="section level4">
+<h4 id="building-homology-from-blast">Building homology from BLAST<a class="anchor" aria-label="anchor" href="#building-homology-from-blast"></a>
+</h4>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SynSpecies.html">SynSpecies</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"worms"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Import a BLAST outfmt 6 result (one species → reference)</span></span>
+<span><span class="co"># The gene_id_map translates N2 locus tags (B0250.1) to gene names (calf-1)</span></span>
+<span><span class="va">ha</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import_blast_homology.html">import_blast_homology</a></span><span class="op">(</span></span>
+<span>  blast_file <span class="op">=</span> <span class="st">"C_bovis.subset.proteins.blast6"</span>,</span>
+<span>  reference_species <span class="op">=</span> <span class="st">"C. elegans"</span>,</span>
+<span>  query_species <span class="op">=</span> <span class="st">"C. bovis"</span>,</span>
+<span>  gene_id_map <span class="op">=</span> <span class="st">"c_elegans.PRJNA13758.WS285.geneIDs.txt"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Attach to SynSpecies</span></span>
+<span><span class="va">sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_homology_annotation.html">add_homology_annotation</a></span><span class="op">(</span><span class="va">sp</span>, <span class="va">ha</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Inspect the mapping</span></span>
+<span><span class="fu"><a href="../reference/homology_table.html">homology_table</a></span><span class="op">(</span><span class="va">ha</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/reference_species.html">reference_species</a></span><span class="op">(</span><span class="va">ha</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/query_species.html">query_species</a></span><span class="op">(</span><span class="va">ha</span><span class="op">)</span></span></code></pre></div>
+<p>The BLAST query IDs are automatically normalised:
+<code>transcript:</code> prefixes and <code>.t1</code> isoform suffixes
+are stripped so that query gene identifiers match the
+<code>gene_id</code> / <code>gene_name</code> columns in your GFF3
+annotations.</p>
+<p>The <code>gene_id_map</code> translates reference-species locus tags
+(N2 protein IDs like <code>B0250.1</code>) to human-readable gene names
+(like <code>calf-1</code>). It accepts either a file path to a WormBase
+WS285 <code>geneIDs.txt</code> or a named character vector. Isoform
+suffixes are stripped on lookup miss (e.g. <code>B0250.18a</code> →
+<code>B0250.18</code>). Unmapped tags are left unchanged.</p>
+</div>
+<div class="section level4">
+<h4 id="using-homology-for-gene-labels">Using homology for gene labels<a class="anchor" aria-label="anchor" href="#using-homology-for-gene-labels"></a>
+</h4>
+<p>When <code>SynSpecies</code> holds homology annotations,
+<code><a href="../reference/geom_genelabel.html">geom_genelabel()</a></code> can apply reference-species gene names
+automatically.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Build homologies for all query species</span></span>
+<span><span class="kw">for</span> <span class="op">(</span><span class="va">sp_name</span> <span class="kw">in</span> <span class="va">query_species</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">ha</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import_blast_homology.html">import_blast_homology</a></span><span class="op">(</span></span>
+<span>    blast_file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">sp_name</span>, <span class="st">".blast6"</span><span class="op">)</span>,</span>
+<span>    reference_species <span class="op">=</span> <span class="st">"C. elegans"</span>,</span>
+<span>    query_species <span class="op">=</span> <span class="va">sp_name</span>,</span>
+<span>    gene_id_map <span class="op">=</span> <span class="st">"c_elegans.PRJNA13758.WS285.geneIDs.txt"</span></span>
+<span>  <span class="op">)</span></span>
+<span>  <span class="va">sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_homology_annotation.html">add_homology_annotation</a></span><span class="op">(</span><span class="va">sp</span>, <span class="va">ha</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="co"># Auto-match: each track gets its homology by query_species</span></span>
+<span><span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">sp</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_genetag.html">geom_genetag</a></span><span class="op">(</span>chr <span class="op">=</span> <span class="st">"V"</span>, feature_type <span class="op">=</span> <span class="st">"gene"</span>, mapping <span class="op">=</span> <span class="fu">aes</span><span class="op">(</span>fill <span class="op">=</span> <span class="va">gene</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_genelabel.html">geom_genelabel</a></span><span class="op">(</span>chr <span class="op">=</span> <span class="st">"V"</span>, size <span class="op">=</span> <span class="fl">2.4</span><span class="op">)</span> <span class="op">+</span>  <span class="co"># no homology_name — auto-match</span></span>
+<span>  <span class="fu"><a href="../reference/facet_genomictree.html">facet_genomictree</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">track</span><span class="op">)</span>, scales <span class="op">=</span> <span class="st">"free"</span><span class="op">)</span></span></code></pre></div>
+<p>When <code>homology_name</code> is omitted and the
+<code>SynSpecies</code> contains homology annotations, each track
+automatically finds the matching <code>HomologyAnnotation</code> by its
+<code>query_species</code> field. For a single explicit mapping, set
+<code>homology_name = "bovis_to_n2"</code>.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_individual.html">add_individual</a></span><span class="op">(</span><span class="va">sp</span>, <span class="va">xz</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_pairwise_alignment.html">add_pairwise_alignment</a></span><span class="op">(</span></span>
@@ -246,6 +315,7 @@ state so plots can be rebuilt from the same coordinate decisions.</li>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
+</div>
 <div class="section level2">
 <h2 id="plot-entry-point-and-geoms">Plot entry point and geoms<a class="anchor" aria-label="anchor" href="#plot-entry-point-and-geoms"></a>
 </h2>
@@ -253,7 +323,7 @@ state so plots can be rebuilt from the same coordinate decisions.</li>
 it understands <code>SynIndividual</code> and <code>SynSpecies</code>
 objects. Geoms can resolve stored annotation or alignment data at build
 time.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">sp</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_exon.html">geom_exon</a></span><span class="op">(</span></span>
 <span>    species <span class="op">=</span> <span class="st">"XZ1516"</span>,</span>
@@ -267,7 +337,7 @@ time.</p>
 <p>Use <code><a href="../reference/geom_exon.html">geom_exon()</a></code> when transcript structure matters. It
 draws exon rectangles, the transcript backbone, and strand direction
 from feature annotation data.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">sp</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_exon.html">geom_exon</a></span><span class="op">(</span></span>
 <span>    species <span class="op">=</span> <span class="st">"XZ1516"</span>,</span>
@@ -282,7 +352,7 @@ from feature annotation data.</p>
 <p>Use <code><a href="../reference/geom_exon2.html">geom_exon2()</a></code> for exon/CDS/UTR-style tracks with
 compressed intron display. This is useful when the visual emphasis is on
 coding and untranslated segments rather than raw genomic spacing.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">sp</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_exon2.html">geom_exon2</a></span><span class="op">(</span></span>
 <span>    species <span class="op">=</span> <span class="st">"XZ1516"</span>,</span>
@@ -297,7 +367,7 @@ coding and untranslated segments rather than raw genomic spacing.</p>
 <p>Use <code><a href="../reference/geom_genetag.html">geom_genetag()</a></code> when each gene should be represented
 as one directional span. This is a compact overview layer for synteny
 figures.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">sp</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_genetag.html">geom_genetag</a></span><span class="op">(</span></span>
 <span>    species <span class="op">=</span> <span class="st">"XZ1516"</span>,</span>
@@ -313,14 +383,91 @@ figures.</p>
 below a gene track. Labels come from the stored feature annotation, so
 stable gene IDs can remain unchanged while plot labels are curated
 separately.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<p>For cross-species plots, the <code>homology_name</code> parameter (or
+auto-match via stored <code>HomologyAnnotation</code> objects) can
+replace each query-species gene label with its reference-species
+ortholog name.</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">sp</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_genetag.html">geom_genetag</a></span><span class="op">(</span>species <span class="op">=</span> <span class="st">"XZ1516"</span>, chr <span class="op">=</span> <span class="st">"RagTag_V"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_genelabel.html">geom_genelabel</a></span><span class="op">(</span></span>
 <span>    species <span class="op">=</span> <span class="st">"XZ1516"</span>,</span>
 <span>    chr <span class="op">=</span> <span class="st">"RagTag_V"</span>,</span>
-<span>    label_direction <span class="op">=</span> <span class="st">"top"</span></span>
+<span>    label_direction <span class="op">=</span> <span class="st">"top"</span>,</span>
+<span>    homology_name <span class="op">=</span> <span class="st">"xz1516_to_n2"</span>   <span class="co"># use N2 gene names</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
+<div class="section level4">
+<h4 id="label-positions">Label positions<a class="anchor" aria-label="anchor" href="#label-positions"></a>
+</h4>
+<p>The <code>label_direction</code> parameter accepts colon-delimited
+combinations of <code>"top"</code>, <code>"bottom"</code>, and
+<code>"center"</code>. Labels are distributed across positions by
+track-index modulo:</p>
+<ul>
+<li>
+<code>"top"</code> — all labels above the highest track.</li>
+<li>
+<code>"bottom"</code> — all labels below the lowest track.</li>
+<li>
+<code>"top:bottom"</code> — odd-indexed rows above, even-indexed
+below.</li>
+<li>
+<code>"bottom:top:center"</code> — three-position rotation. Centre
+labels are placed on the gene body when the text fits; otherwise they
+fall back to <code>"top"</code>.</li>
+</ul>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/geom_genelabel.html">geom_genelabel</a></span><span class="op">(</span>label_direction <span class="op">=</span> <span class="st">"top:center:bottom"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="leader-lines">Leader lines<a class="anchor" aria-label="anchor" href="#leader-lines"></a>
+</h4>
+<p><code><a href="../reference/geom_genelabel.html">geom_genelabel()</a></code> draws leader lines from each gene body
+to its label. Control the line style with <code>link_type</code>:</p>
+<ul>
+<li>
+<code>"straight"</code> — direct line (default).</li>
+<li>
+<code>"elbow"</code> — right-angle bend (vertical then
+horizontal).</li>
+<li>
+<code>"spline"</code> — smooth Bézier curve.</li>
+</ul>
+<p>Suppress leader lines with <code>show_link = FALSE</code>. Use
+<code>label_offset_fraction</code> (default <code>0.3</code>) to adjust
+the vertical gap between tracks and labels.</p>
+</div>
+<div class="section level4">
+<h4 id="tandem-collapsing">Tandem collapsing<a class="anchor" aria-label="anchor" href="#tandem-collapsing"></a>
+</h4>
+<p>When <code>collapse_tandem = TRUE</code>, consecutive genes with
+identical labels (e.g. tandem duplications) share a single label
+connected to all gene bodies by a bracket-style connector.</p>
+</div>
+<div class="section level4">
+<h4 id="panel-width-for-accurate-label-spacing">Panel width for accurate label spacing<a class="anchor" aria-label="anchor" href="#panel-width-for-accurate-label-spacing"></a>
+</h4>
+<p><code><a href="../reference/geom_genelabel.html">geom_genelabel()</a></code> estimates text width in data
+coordinates to avoid label overlaps. By default it assumes a ~300 mm
+wide genomic panel. For wide output
+(e.g. <code>ggsave(width = 40, ...)</code>), set
+<code>panel_width_mm</code> or <code>panel_width_inch</code> to the
+actual genomic track column width so spacing is accurate:</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Genomic tracks are ~38 inches wide (40 in total minus tree and labels)</span></span>
+<span><span class="fu"><a href="../reference/geom_genelabel.html">geom_genelabel</a></span><span class="op">(</span></span>
+<span>  chr <span class="op">=</span> <span class="st">"V"</span>, size <span class="op">=</span> <span class="fl">2.4</span>,</span>
+<span>  panel_width_inch <span class="op">=</span> <span class="fl">38</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Equivalent in millimetres</span></span>
+<span><span class="fu"><a href="../reference/geom_genelabel.html">geom_genelabel</a></span><span class="op">(</span></span>
+<span>  chr <span class="op">=</span> <span class="st">"V"</span>, size <span class="op">=</span> <span class="fl">2.4</span>,</span>
+<span>  panel_width_mm <span class="op">=</span> <span class="fl">38</span> <span class="op">*</span> <span class="fl">25.4</span>   <span class="co"># = 965.2</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>When both are provided, <code>panel_width_inch</code> takes
+precedence.</p>
+</div>
 </div>
 <div class="section level3">
 <h3 id="geom_genomic_tree">
@@ -330,7 +477,7 @@ separately.</p>
 inside ggexon panels. It is intended for figures where tree-like
 relationships need to share the same panel system as genomic
 intervals.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">tree_data</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_genomic_tree.html">geom_genomic_tree</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -341,7 +488,7 @@ intervals.</p>
 <p>Use <code><a href="../reference/geom_motif.html">geom_motif()</a></code> for motif, domain-like, or other
 interval blocks. It is a general interval layer when the data are
 already in a plot-ready table.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">motif_data</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_motif.html">geom_motif</a></span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>xmin <span class="op">=</span> <span class="va">start</span>, xmax <span class="op">=</span> <span class="va">end</span>, y <span class="op">=</span> <span class="va">track</span>, fill <span class="op">=</span> <span class="va">motif</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -351,7 +498,7 @@ already in a plot-ready table.</p>
 </h3>
 <p>Use <code><a href="../reference/geom_mutation_label.html">geom_mutation_label()</a></code> when mutation labels need to
 be placed on sequence or protein tracks.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">mutation_data</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_mutation_label.html">geom_mutation_label</a></span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">position</span>, y <span class="op">=</span> <span class="va">track</span>, label <span class="op">=</span> <span class="va">mutation</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -362,7 +509,7 @@ be placed on sequence or protein tracks.</p>
 <p>Use <code><a href="../reference/geom_nuclink.html">geom_nuclink()</a></code> for nucleotide-level links between
 aligned genomes. With a <code>SynSpecies</code> object, the geom can
 resolve stored pairwise alignments.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">sp</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_exon.html">geom_exon</a></span><span class="op">(</span></span>
 <span>    species <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"XZ1516"</span>, <span class="st">"N2"</span><span class="op">)</span>,</span>
@@ -383,7 +530,7 @@ resolve stored pairwise alignments.</p>
 <p>Use <code><a href="../reference/geom_protein_lollipop.html">geom_protein_lollipop()</a></code> for protein-domain backbones
 with mutation lollipops. It is usually paired with protein-domain or
 protein-mutation helper data.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">protein_lollipop_data</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_protein_lollipop.html">geom_protein_lollipop</a></span><span class="op">(</span></span>
 <span>    <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">position</span>, y <span class="op">=</span> <span class="va">protein_id</span>, label <span class="op">=</span> <span class="va">mutation</span><span class="op">)</span></span>
@@ -402,7 +549,7 @@ alignment links, trees, and other plots in register.</p>
 <p><code><a href="../reference/facet_genomics.html">facet_genomics()</a></code> arranges genomic annotation panels,
 link panels, signal tracks, and other data panels in one ggplot-like
 layout.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">sp</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_exon.html">geom_exon</a></span><span class="op">(</span>species <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"XZ1516"</span>, <span class="st">"N2"</span><span class="op">)</span>, chr <span class="op">=</span> <span class="st">"RagTag_V"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_nuclink.html">geom_nuclink</a></span><span class="op">(</span></span>
@@ -422,12 +569,75 @@ such as <code><a href="../reference/compile_ggtree_genetag.html">compile_ggtree_
 <code><a href="../reference/compile_ggtree_genomic_alignment.html">compile_ggtree_genomic_alignment()</a></code>,
 <code><a href="../reference/compile_ggtree_rectangular_segments.html">compile_ggtree_rectangular_segments()</a></code>, and
 <code><a href="../reference/plot_ggtree_genomic_alignment.html">plot_ggtree_genomic_alignment()</a></code>.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_ggtree_genomic_alignment.html">plot_ggtree_genomic_alignment</a></span><span class="op">(</span></span>
 <span>  <span class="va">sp</span>,</span>
 <span>  alignment <span class="op">=</span> <span class="st">"worm-maf"</span>,</span>
 <span>  chr <span class="op">=</span> <span class="st">"RagTag_V"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
+<div class="section level4">
+<h4 id="column-layout">Column layout<a class="anchor" aria-label="anchor" href="#column-layout"></a>
+</h4>
+<p><code><a href="../reference/facet_genomictree.html">facet_genomictree()</a></code> lays out three columns left to
+right: tree, species labels, and genomic track panels. Each column has a
+dedicated width argument:</p>
+<table class="table">
+<colgroup>
+<col width="33%">
+<col width="33%">
+<col width="33%">
+</colgroup>
+<thead><tr class="header">
+<th>Column</th>
+<th>Argument</th>
+<th>Default</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>Tree</td>
+<td>
+<code>tree_width</code> in <code><a href="../reference/geom_genomic_tree.html">geom_genomic_tree()</a></code>
+</td>
+<td><code>unit(1.5, "in")</code></td>
+</tr>
+<tr class="even">
+<td>Labels</td>
+<td>
+<code>label_width</code> in <code><a href="../reference/facet_genomictree.html">facet_genomictree()</a></code>
+</td>
+<td><code>unit(0.7, "in")</code></td>
+</tr>
+<tr class="odd">
+<td>Tracks</td>
+<td>
+<code>track_width</code> in <code><a href="../reference/facet_genomictree.html">facet_genomictree()</a></code>
+</td>
+<td>
+<code>NULL</code> (fills remaining space)</td>
+</tr>
+</tbody>
+</table>
+<p>Species labels can be placed on the left
+(<code>label_position = "left"</code>, default), right
+(<code>"right"</code>), or hidden (<code>"none"</code>).</p>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Explicit column widths</span></span>
+<span><span class="fu"><a href="../reference/facet_genomictree.html">facet_genomictree</a></span><span class="op">(</span></span>
+<span>  label_position <span class="op">=</span> <span class="st">"left"</span>,</span>
+<span>  label_width <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">0.6</span>, <span class="st">"in"</span><span class="op">)</span>,</span>
+<span>  track_width <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">1</span>, <span class="st">"null"</span><span class="op">)</span>  <span class="co"># ratio: tree=1.5in fixed, tracks fill rest</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Fixed track width for a known output size</span></span>
+<span><span class="fu"><a href="../reference/facet_genomictree.html">facet_genomictree</a></span><span class="op">(</span></span>
+<span>  track_width <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">38</span>, <span class="st">"in"</span><span class="op">)</span>   <span class="co"># genomic panel is 38 inches wide</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>When <code>track_width</code> is <code>NULL</code> (default), the
+track panel columns keep their facet-default widths (typically
+<code>unit(1, "null")</code> filling remaining space). Set it to a
+<code>"null"</code> unit to control the ratio between tree and tracks,
+or to a fixed unit when the output dimensions are known in advance.</p>
+</div>
 </div>
 <div class="section level3">
 <h3 id="genomic-scales-and-the-piecewise-guide">Genomic scales and the piecewise guide<a class="anchor" aria-label="anchor" href="#genomic-scales-and-the-piecewise-guide"></a>
@@ -436,7 +646,7 @@ such as <code><a href="../reference/compile_ggtree_genetag.html">compile_ggtree_
 while supporting compressed regions. The guide
 <code><a href="../reference/guide_x_ggexon_piecewise.html">guide_x_ggexon_piecewise()</a></code> shows separate exon and intron
 scale bars instead of ordinary genomic ticks.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">sp</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_exon.html">geom_exon</a></span><span class="op">(</span>species <span class="op">=</span> <span class="st">"XZ1516"</span>, chr <span class="op">=</span> <span class="st">"RagTag_V"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/scale_x_ggexon_genomic.html">scale_x_ggexon_genomic</a></span><span class="op">(</span></span>
@@ -458,7 +668,7 @@ data, then use verbs and geoms to operate on those classes.</p>
 <p>Use <code>add_*()</code> functions when a parent object should
 remember a child object, annotation layer, alignment, tree, or layout
 result.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SynSpecies.html">SynSpecies</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"Caenorhabditis"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/add_individual.html">add_individual</a></span><span class="op">(</span><span class="va">xz</span>, <span class="va">n2</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/add_tree.html">add_tree</a></span><span class="op">(</span><span class="va">tree</span><span class="op">)</span></span>
@@ -484,12 +694,12 @@ result.</p>
 </h3>
 <p>Use <code>load_*()</code> when the object knows where a file is, but
 the data have not yet been materialized.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">xz</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_annotation.html">load_annotation</a></span><span class="op">(</span><span class="va">xz</span><span class="op">)</span></span>
 <span><span class="va">sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_alignment.html">load_alignment</a></span><span class="op">(</span><span class="va">sp</span>, alignment <span class="op">=</span> <span class="st">"XZ1516_vs_N2"</span><span class="op">)</span></span></code></pre></div>
 <p>Use <code>query_*()</code> and <code>*_data()</code> helpers when you
 want rows or ranges back:</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">features</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/query_features.html">query_features</a></span><span class="op">(</span></span>
 <span>  <span class="va">xz</span>,</span>
 <span>  chr <span class="op">=</span> <span class="st">"V_RagTag"</span>,</span>
@@ -517,7 +727,7 @@ want rows or ranges back:</p>
 </h3>
 <p>Use <code>subset_*()</code> and <code>filter_*()</code> when you want
 updated objects or filtered alignment state.</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sp_window</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/subset_species.html">subset_species</a></span><span class="op">(</span></span>
 <span>  <span class="va">sp</span>,</span>
 <span>  coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"XZ1516#V_RagTag:21574445-21584356"</span><span class="op">)</span></span>
@@ -533,7 +743,7 @@ updated objects or filtered alignment state.</p>
 <span><span class="op">)</span></span></code></pre></div>
 <p>Use curation verbs when a feature annotation needs readable labels or
 corrected gene models:</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">xz</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/set_gene_labels.html">set_gene_labels</a></span><span class="op">(</span></span>
 <span>  <span class="va">xz</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>FUN_000001 <span class="op">=</span> <span class="st">"sept-1"</span>, FUN_000002 <span class="op">=</span> <span class="st">"zina-1"</span><span class="op">)</span></span>

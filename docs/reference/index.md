@@ -3,8 +3,10 @@
 ## Data-storage classes
 
 Constructors for objects that store genomes, annotation layers,
-alignments, and reusable layout state.
+alignments, homology maps, and reusable layout state.
 
+- [`HomologyAnnotation()`](https://dongyaoliu.github.io/ggexon/reference/HomologyAnnotation.md)
+  : Constructor for HomologyAnnotation
 - [`SynSpecies()`](https://dongyaoliu.github.io/ggexon/reference/SynSpecies.md)
   : Constructor for SynSpecies
 - [`SynIndividual()`](https://dongyaoliu.github.io/ggexon/reference/SynIndividual.md)
@@ -34,8 +36,6 @@ Slot-level reference pages for ggexon’s S4 object hierarchy.
 
 - [`SynAnnotation-class-hierarchy`](https://dongyaoliu.github.io/ggexon/reference/SynAnnotation-class-hierarchy.md)
   : SynAnnotation class hierarchy
-- [`SynSpecies-class-overview`](https://dongyaoliu.github.io/ggexon/reference/SynSpecies-class-overview.md)
-  : SynSpecies, SynLayout, and alignment classes
 - [`SynAnnotation-class`](https://dongyaoliu.github.io/ggexon/reference/SynAnnotation-class.md)
   : SynAnnotation class
 - [`SynAnnotationPatch-class`](https://dongyaoliu.github.io/ggexon/reference/SynAnnotationPatch-class.md)
@@ -68,6 +68,8 @@ Slot-level reference pages for ggexon’s S4 object hierarchy.
   : SynSpecies class
 - [`SynVCFAnnotation-class`](https://dongyaoliu.github.io/ggexon/reference/SynVCFAnnotation-class.md)
   : SynVCFAnnotation class
+- [`HomologyAnnotation-class`](https://dongyaoliu.github.io/ggexon/reference/HomologyAnnotation-class.md)
+  : HomologyAnnotation class
 - [`SynBioc-unions`](https://dongyaoliu.github.io/ggexon/reference/SynBioc-unions.md)
   : Bioconductor class unions used by ggexon S4 classes
 
@@ -94,6 +96,8 @@ links, trees, and protein mutation summaries.
   : Draw mutation labels as a dedicated text layer
 - [`geom_nuclink()`](https://dongyaoliu.github.io/ggexon/reference/geom_nuclink.md)
   : Draw cross-panel nucleotide links
+- [`geom_genelink()`](https://dongyaoliu.github.io/ggexon/reference/geom_genelink.md)
+  : Draw link lines between pairs of coordinates
 - [`geom_protein_lollipop()`](https://dongyaoliu.github.io/ggexon/reference/geom_protein_lollipop.md)
   : Draw lollipop annotations on a protein-coordinate track
 
@@ -138,8 +142,11 @@ and control genomic x-axis guides.
 
 ## Manage object graphs
 
-Add individuals, annotations, alignments, trees, and stored layout
-information to Syn containers.
+Add individuals, annotations, alignments, homology maps, trees, and
+stored layout information to Syn containers.
+
+- [`add_homology_annotation()`](https://dongyaoliu.github.io/ggexon/reference/add_homology_annotation.md)
+  : Add or replace a HomologyAnnotation on a SynSpecies
 
 - [`add_individual()`](https://dongyaoliu.github.io/ggexon/reference/add_individual.md)
   : Add SynIndividual objects to a SynSpecies object
@@ -172,6 +179,9 @@ information to Syn containers.
 
 - [`get_annotation()`](https://dongyaoliu.github.io/ggexon/reference/get_annotation.md)
   : Retrieve an annotation layer from a SynIndividual
+
+- [`get_homology_annotation()`](https://dongyaoliu.github.io/ggexon/reference/get_homology_annotation.md)
+  : Retrieve a HomologyAnnotation from a SynSpecies by query species
 
 - [`set_active_annotation()`](https://dongyaoliu.github.io/ggexon/reference/set_active_annotation.md)
   : Set the active annotation layer on a SynIndividual
@@ -214,9 +224,11 @@ information to Syn containers.
 
 ## Load, query, and transform annotations
 
-Materialize annotation data, query layer payloads, and derive sequence
-or protein-level summaries.
+Materialize annotation data, query layer payloads, import homology, and
+derive sequence or protein-level summaries.
 
+- [`import_blast_homology()`](https://dongyaoliu.github.io/ggexon/reference/import_blast_homology.md)
+  : Import homology from a BLAST outfmt 6 file
 - [`load_annotation()`](https://dongyaoliu.github.io/ggexon/reference/load_annotation.md)
   : Load annotations into Syn-aware objects
 - [`query_features()`](https://dongyaoliu.github.io/ggexon/reference/query_features.md)
@@ -239,6 +251,14 @@ or protein-level summaries.
   : Project protein-domain coordinates onto genomic coordinates
 - [`projected_domains()`](https://dongyaoliu.github.io/ggexon/reference/projected_domains.md)
   : Access stored projected protein-domain tables
+- [`homology_table()`](https://dongyaoliu.github.io/ggexon/reference/homology_table.md)
+  : Retrieve the homology table from a HomologyAnnotation
+- [`reference_species()`](https://dongyaoliu.github.io/ggexon/reference/reference_species.md)
+  : Retrieve the reference species from a HomologyAnnotation
+- [`query_species()`](https://dongyaoliu.github.io/ggexon/reference/query_species.md)
+  : Retrieve the query species from a HomologyAnnotation
+- [`homology_annotations()`](https://dongyaoliu.github.io/ggexon/reference/homology_annotations.md)
+  : List homology annotations attached to a SynSpecies
 - [`read_protein_mutation_counts()`](https://dongyaoliu.github.io/ggexon/reference/read_protein_mutation_counts.md)
   : Read protein-mutation count summaries
 

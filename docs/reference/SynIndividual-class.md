@@ -26,32 +26,12 @@ methods.
   One of `"gff"`, `"gtf"`, or `"auto"`, or a vector matching
   `annotation_file`.
 
-- `annotation`:
-
-  Parsed annotation container used for plotting as a
-  [`GenomicRanges::GRanges`](https://rdrr.io/pkg/GenomicRanges/man/GRanges-class.html)
-  object.
-
-- `nucleotide_seq`:
-
-  Nucleotide sequences extracted from the genome as a
-  [`Biostrings::DNAStringSet`](https://rdrr.io/pkg/Biostrings/man/XStringSet-class.html).
-
-- `protein_seq`:
-
-  Protein sequences translated from CDS annotations as a
-  [`Biostrings::AAStringSet`](https://rdrr.io/pkg/Biostrings/man/XStringSet-class.html).
-
 - `seqinfo`:
 
   Sequence-level metadata such as chromosome names and lengths stored as
   a
   [`GenomeInfoDb::Seqinfo`](https://rdrr.io/pkg/Seqinfo/man/Seqinfo-class.html)
   object.
-
-- `feature_index`:
-
-  Fast lookup structure for genes, transcripts, or exons.
 
 - `annotations`:
 
@@ -77,15 +57,7 @@ methods.
 
 - `annotation_format = "auto"`
 
-- `annotation = NULL`
-
-- `nucleotide_seq = NULL`
-
-- `protein_seq = NULL`
-
 - `seqinfo = NULL`
-
-- `feature_index = NULL`
 
 - `annotations = list()`
 

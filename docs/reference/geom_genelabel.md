@@ -2,11 +2,8 @@
 
 `geom_genelabel()` places one text label per transcript or gene span on
 an exon-style genomic track. The `label_direction` parameter accepts
-colon-delimited combinations to distribute labels across multiple
-positions (top, bottom, centre) using modulo assignment. Labels placed
-at `"top"` or `"bottom"` connect to their gene body with leader lines;
-centre-positioned labels sit directly on the gene body. Overlapping
-labels are pushed apart horizontally.
+colon-delimited combinations to distribute labels across positions using
+modulo assignment.
 
 ## Usage
 
@@ -25,9 +22,12 @@ geom_genelabel(
   label_offset_fraction = NULL,
   link_type = NULL,
   collapse_tandem = NULL,
+  show_link = NULL,
   species = NULL,
   chr = NULL,
   subset = NULL,
+  panel_width_mm = NULL,
+  panel_width_inch = NULL,
   inherit.aes = TRUE
 )
 ```
@@ -73,15 +73,22 @@ geom_genelabel(
 
 - link_type:
 
-  Leader line style: `"straight"` (direct line) or `"elbow"`
-  (right-angle bend via vertical then horizontal segment). Default
-  `"straight"`. Centre-fitting labels do not draw leader lines.
+  Leader line style: `"straight"` (direct line), `"elbow"` (right-angle
+  bend via vertical then horizontal segment), or `"spline"` (smooth
+  Bézier curve). Default `"straight"`. Centre-fitting labels do not draw
+  leader lines.
 
 - collapse_tandem:
 
   When `TRUE`, consecutive genes with identical labels (tandem
   duplications) share a single label connected to all gene bodies by a
   bracket-style connector. Default `FALSE`.
+
+- show_link:
+
+  When `TRUE` (the default), leader lines are drawn between gene bodies
+  and labels. Set to `FALSE` to suppress all leader lines (only the text
+  labels are rendered).
 
 - species:
 
@@ -95,6 +102,18 @@ geom_genelabel(
 - subset:
 
   Optional numeric length-2 genomic window to keep.
+
+- panel_width_mm:
+
+  Estimated width of the genomic panel in millimetres. Used to convert
+  text size into data-coordinate units for label placement and collision
+  avoidance. Default `300` (≈ A4/US-letter panel width). Increase this
+  for wide output (e.g. `ggsave(width = 40)`).
+
+- panel_width_inch:
+
+  Same as `panel_width_mm` but in inches. When both are provided,
+  `panel_width_inch` takes precedence. One inch = 25.4 mm.
 
 ## Value
 

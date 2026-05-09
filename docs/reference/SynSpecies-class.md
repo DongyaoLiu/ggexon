@@ -42,6 +42,11 @@ metadata, and an optional reusable `SynLayout`.
   [`facet_genomics()`](https://dongyaoliu.github.io/ggexon/reference/facet_genomics.md)
   and syn-aware plot building.
 
+- `homology_annotations`:
+
+  Named list of `HomologyAnnotation` objects storing cross-species gene
+  homology mappings.
+
 ## Prototype defaults
 
 - `individuals = list()`
@@ -49,6 +54,8 @@ metadata, and an optional reusable `SynLayout`.
 - `pairwise_alignments = list()`
 
 - `multiple_alignments = list()`
+
+- `homology_annotations = list()`
 
 - `tree = NULL`
 
@@ -67,5 +74,7 @@ metadata, and an optional reusable `SynLayout`.
 - `pairwise_alignments` must contain only `SynPairAlignment` objects.
 
 - `multiple_alignments` must contain only `SynMultiAlignment` objects.
+
+- `homology_annotations` must contain only `HomologyAnnotation` objects.
 
 - `layout` must be either `NULL` or a `SynLayout`.

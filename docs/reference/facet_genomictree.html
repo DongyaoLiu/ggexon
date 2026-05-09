@@ -62,7 +62,8 @@ rendering, ggexon injects a single tree panel that spans all genomic rows.</p>
 <span>  axis.labels <span class="op">=</span> <span class="st">"all"</span>,</span>
 <span>  show_tree_x_axis <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  label_position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"left"</span>, <span class="st">"right"</span>, <span class="st">"none"</span><span class="op">)</span>,</span>
-<span>  label_width <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">0.7</span>, <span class="st">"in"</span><span class="op">)</span></span>
+<span>  label_width <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">0.7</span>, <span class="st">"in"</span><span class="op">)</span>,</span>
+<span>  track_width <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -122,6 +123,14 @@ genomic panels.</p></dd>
 
 <dt id="arg-label-width">label_width<a class="anchor" aria-label="anchor" href="#arg-label-width"></a></dt>
 <dd><p>Grid unit width for the tip-label column.</p></dd>
+
+
+<dt id="arg-track-width">track_width<a class="anchor" aria-label="anchor" href="#arg-track-width"></a></dt>
+<dd><p>Grid unit width for the genomic track panel column.
+Defaults to <code>NULL</code> (use the facet's default width, typically
+<code>unit(1, "null")</code> filling remaining space). Set to a fixed unit
+(e.g. <code>unit(30, "in")</code>) or a <code>"null"</code> unit to control the ratio
+between tree, labels, and tracks.</p></dd>
 
 </dl></div>
     <div class="section level2">
