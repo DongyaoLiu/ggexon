@@ -23,19 +23,8 @@ genome was waived during construction.}
 \item{\code{annotation_format}}{One of \code{"gff"}, \code{"gtf"}, or \code{"auto"}, or a vector
 matching \code{annotation_file}.}
 
-\item{\code{annotation}}{Parsed annotation container used for plotting as a
-\code{GenomicRanges::GRanges} object.}
-
-\item{\code{nucleotide_seq}}{Nucleotide sequences extracted from the genome as a
-\code{Biostrings::DNAStringSet}.}
-
-\item{\code{protein_seq}}{Protein sequences translated from CDS annotations as a
-\code{Biostrings::AAStringSet}.}
-
 \item{\code{seqinfo}}{Sequence-level metadata such as chromosome names and lengths
 stored as a \code{GenomeInfoDb::Seqinfo} object.}
-
-\item{\code{feature_index}}{Fast lookup structure for genes, transcripts, or exons.}
 
 \item{\code{annotations}}{Named list of \code{SynAnnotation} objects attached to this
 genome.}
@@ -54,11 +43,7 @@ for inspection.}
 
 \itemize{
 \item \code{annotation_format = "auto"}
-\item \code{annotation = NULL}
-\item \code{nucleotide_seq = NULL}
-\item \code{protein_seq = NULL}
 \item \code{seqinfo = NULL}
-\item \code{feature_index = NULL}
 \item \code{annotations = list()}
 \item \code{active_annotation = "default"}
 \item \code{metadata = list()}
