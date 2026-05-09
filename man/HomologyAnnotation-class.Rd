@@ -11,9 +11,12 @@ from BLAST results. It is a species-level annotation attached to
 }
 \details{
 Each object maps genes from one query species to genes in a reference
-species (typically the best-annotated "center" species). The mapping can
-be used by \code{geom_genelabel()} to display reference-species gene names on
-query-species tracks.
+species (typically the best-annotated "center" species). The mapping is
+automatically injected into all geom data frames (\code{geom_exon},
+\code{geom_gene}, \code{geom_genetag}, \code{geom_genelabel}) when the
+\code{HomologyAnnotation} is attached to a \code{SynSpecies}. Two new columns
+\code{reference_gene} and \code{reference_gene_name} become available for mapping
+in ggplot2 aesthetics.
 }
 \section{Slots}{
 
