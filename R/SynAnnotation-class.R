@@ -759,9 +759,6 @@ set_gene_labels <- function(x, mapping, annotation = NULL) {
     }
     ann <- set_gene_labels(ann, mapping = mapping)
     x <- add_annotation(x, ann, set_active = identical(ann_name, active_feature_annotation(x)))
-    if (identical(ann_name, active_feature_annotation(x))) {
-      x@annotation <- annotation_data(ann)
-    }
     return(x)
   }
 
@@ -817,13 +814,6 @@ patch_annotation <- function(x,
       name = name
     )
     x <- add_annotation(x, ann, set_active = identical(ann_name, active_feature_annotation(x)))
-    if (identical(ann_name, active_feature_annotation(x))) {
-      x@annotation <- annotation_data(ann)
-      x@nucleotide_seq <- NULL
-      x@protein_seq <- NULL
-      x@feature_index <- NULL
-      x@plot_cache <- list()
-    }
     return(x)
   }
 
@@ -895,13 +885,6 @@ clear_patches <- function(x, annotation = NULL) {
     ann_name <- if (is.null(annotation)) active_feature_annotation(x) else annotation
     ann <- clear_patches(get_annotation(x, ann_name))
     x <- add_annotation(x, ann, set_active = identical(ann_name, active_feature_annotation(x)))
-    if (identical(ann_name, active_feature_annotation(x))) {
-      x@annotation <- annotation_data(ann)
-      x@nucleotide_seq <- NULL
-      x@protein_seq <- NULL
-      x@feature_index <- NULL
-      x@plot_cache <- list()
-    }
     return(x)
   }
   if (!methods::is(x, "SynFeatureAnnotation")) {

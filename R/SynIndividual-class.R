@@ -14,15 +14,8 @@ NULL
 #' @slot annotation_file Path or paths to the corresponding GFF or GTF file(s).
 #' @slot annotation_format One of `"gff"`, `"gtf"`, or `"auto"`, or a vector
 #'   matching `annotation_file`.
-#' @slot annotation Parsed annotation container used for plotting as a
-#'   `GenomicRanges::GRanges` object.
-#' @slot nucleotide_seq Nucleotide sequences extracted from the genome as a
-#'   `Biostrings::DNAStringSet`.
-#' @slot protein_seq Protein sequences translated from CDS annotations as a
-#'   `Biostrings::AAStringSet`.
 #' @slot seqinfo Sequence-level metadata such as chromosome names and lengths
 #'   stored as a `GenomeInfoDb::Seqinfo` object.
-#' @slot feature_index Fast lookup structure for genes, transcripts, or exons.
 #' @slot annotations Named list of `SynAnnotation` objects attached to this
 #'   genome.
 #' @slot active_annotation Name of the default feature annotation layer to use.
@@ -33,11 +26,7 @@ NULL
 #'
 #' @section Prototype defaults:
 #' * `annotation_format = "auto"`
-#' * `annotation = NULL`
-#' * `nucleotide_seq = NULL`
-#' * `protein_seq = NULL`
 #' * `seqinfo = NULL`
-#' * `feature_index = NULL`
 #' * `annotations = list()`
 #' * `active_annotation = "default"`
 #' * `metadata = list()`
@@ -69,11 +58,7 @@ setClass(
     genome_file = "character",
     annotation_file = "character",
     annotation_format = "character",
-    annotation = "NULLOrGRanges",
-    nucleotide_seq = "NULLOrDNAStringSet",
-    protein_seq = "NULLOrAAStringSet",
     seqinfo = "ANY",
-    feature_index = "ANY",
     annotations = "list",
     active_annotation = "character",
     metadata = "list",
@@ -85,11 +70,7 @@ setClass(
     genome_file = NA_character_,
     annotation_file = NA_character_,
     annotation_format = "auto",
-    annotation = NULL,
-    nucleotide_seq = NULL,
-    protein_seq = NULL,
     seqinfo = NULL,
-    feature_index = NULL,
     annotations = list(),
     active_annotation = "default",
     metadata = list(),
@@ -155,25 +136,6 @@ setClass(
         problems <- c(
           problems,
           "`annotations` must be a list of SynAnnotation objects."
-        )
-      }
-      feature_annotations <- vapply(
-        object@annotations,
-        methods::is,
-        logical(1),
-        class2 = "SynFeatureAnnotation"
-      )
-      has_feature_annotations <- any(feature_annotations)
-      if (has_feature_annotations && !(object@active_annotation %in% names(object@annotations))) {
-        problems <- c(
-          problems,
-          "`active_annotation` must be one of the feature annotation names in `annotations`."
-        )
-      } else if (has_feature_annotations &&
-                 !methods::is(object@annotations[[object@active_annotation]], "SynFeatureAnnotation")) {
-        problems <- c(
-          problems,
-          "`active_annotation` must refer to a SynFeatureAnnotation layer."
         )
       }
     }
@@ -537,10 +499,6 @@ setMethod("load_annotation", "SynIndividual", function(x, annotation = NULL, ind
   x <- add_annotation(x, ann, set_active = identical(ann_name, active_feature_annotation(x)))
 
   active_ann <- get_annotation(x, active_feature_annotation(x))
-  annotation_data(x) <- annotation_data(active_ann)
-  nucleotide_seq(x) <- nucleotide_seq(active_ann)
-  protein_seq(x) <- protein_seq(active_ann)
-  feature_index(x) <- feature_index(active_ann)
   seqinfo(x) <- if (!is.null(annotation_data(active_ann))) {
     GenomeInfoDb::seqinfo(annotation_data(active_ann))
   } else {
@@ -1806,10 +1764,6 @@ setGeneric("subset_individual", function(x,
   active_ann <- get_annotation(out, active_feature_annotation(out))
   out@annotation_file <- annotation_file(active_ann)
   out@annotation_format <- annotation_format(active_ann)
-  out@annotation <- annotation_data(active_ann)
-  out@nucleotide_seq <- NULL
-  out@protein_seq <- NULL
-  out@feature_index <- NULL
   out@seqinfo <- if (!is.null(annotation_data(active_ann))) {
     GenomeInfoDb::seqinfo(annotation_data(active_ann))
   } else {
@@ -2302,11 +2256,11 @@ setGeneric("annotation_data<-", function(x, value) {
 #' @export
 setMethod("show", "SynIndividual", function(object) {
   loaded <- c(
-    annotation = !is.null(object@annotation),
-    nucleotide_seq = !is.null(object@nucleotide_seq),
-    protein_seq = !is.null(object@protein_seq),
+    annotation = !is.null(annotation_data(object)),
+    nucleotide_seq = !is.null(nucleotide_seq(object)),
+    protein_seq = !is.null(protein_seq(object)),
     seqinfo = !is.null(object@seqinfo),
-    feature_index = !is.null(object@feature_index)
+    feature_index = !is.null(feature_index(object))
   )
 
   cat("An object of class \"SynIndividual\"\n")
@@ -2338,22 +2292,42 @@ setMethod("annotation_format", "SynIndividual", function(x) x@annotation_format)
 setMethod("annotation_format", "SynFeatureAnnotation", function(x) x@annotation_format)
 
 setGeneric("annotation_data", function(x) standardGeneric("annotation_data"))
-setMethod("annotation_data", "SynIndividual", function(x) x@annotation)
+setMethod("annotation_data", "SynIndividual", function(x) {
+  ann_name <- active_feature_annotation(x)
+  if (!ann_name %in% names(x@annotations)) return(NULL)
+  ann <- get_annotation(x, ann_name)
+  annotation_data(ann)
+})
 setMethod("annotation_data", "SynFeatureAnnotation", function(x) x@annotation)
 
 setGeneric("nucleotide_seq", function(x) standardGeneric("nucleotide_seq"))
-setMethod("nucleotide_seq", "SynIndividual", function(x) x@nucleotide_seq)
+setMethod("nucleotide_seq", "SynIndividual", function(x) {
+  ann_name <- active_feature_annotation(x)
+  if (!ann_name %in% names(x@annotations)) return(NULL)
+  ann <- get_annotation(x, ann_name)
+  nucleotide_seq(ann)
+})
 setMethod("nucleotide_seq", "SynFeatureAnnotation", function(x) x@nucleotide_seq)
 
 setGeneric("protein_seq", function(x) standardGeneric("protein_seq"))
-setMethod("protein_seq", "SynIndividual", function(x) x@protein_seq)
+setMethod("protein_seq", "SynIndividual", function(x) {
+  ann_name <- active_feature_annotation(x)
+  if (!ann_name %in% names(x@annotations)) return(NULL)
+  ann <- get_annotation(x, ann_name)
+  protein_seq(ann)
+})
 setMethod("protein_seq", "SynFeatureAnnotation", function(x) x@protein_seq)
 
 setGeneric("seqinfo", function(x) standardGeneric("seqinfo"))
 setMethod("seqinfo", "SynIndividual", function(x) x@seqinfo)
 
 setGeneric("feature_index", function(x) standardGeneric("feature_index"))
-setMethod("feature_index", "SynIndividual", function(x) x@feature_index)
+setMethod("feature_index", "SynIndividual", function(x) {
+  ann_name <- active_feature_annotation(x)
+  if (!ann_name %in% names(x@annotations)) return(NULL)
+  ann <- get_annotation(x, ann_name)
+  feature_index(ann)
+})
 setMethod("feature_index", "SynFeatureAnnotation", function(x) x@feature_index)
 
 setGeneric("syn_metadata", function(x) standardGeneric("syn_metadata"))
@@ -2416,10 +2390,6 @@ setMethod("add_annotation", c("SynIndividual", "SynAnnotation"), function(x, ann
       methods::is(annotation, "SynFeatureAnnotation")) {
     x@annotation_file <- annotation_file(annotation)
     x@annotation_format <- annotation_format(annotation)
-    x@annotation <- annotation_data(annotation)
-    x@nucleotide_seq <- nucleotide_seq(annotation)
-    x@protein_seq <- protein_seq(annotation)
-    x@feature_index <- feature_index(annotation)
   }
 
   validObject(x)
@@ -2549,10 +2519,6 @@ set_active_annotation <- function(x, name) {
   x@active_annotation <- name
   x@annotation_file <- annotation_file(ann)
   x@annotation_format <- annotation_format(ann)
-  x@annotation <- annotation_data(ann)
-  x@nucleotide_seq <- nucleotide_seq(ann)
-  x@protein_seq <- protein_seq(ann)
-  x@feature_index <- feature_index(ann)
   validObject(x)
   x
 }
@@ -2572,7 +2538,6 @@ setReplaceMethod("annotation_data", "SynIndividual", function(x, value) {
   if (!is.null(value) && !methods::is(value, "GRanges")) {
     stop("`annotation_data<-` expects a GRanges object or NULL.", call. = FALSE)
   }
-  x@annotation <- value
   if (length(x@annotations) > 0L && active_annotation(x) %in% names(x@annotations)) {
     ann <- x@annotations[[active_annotation(x)]]
     ann@annotation <- value
@@ -2598,7 +2563,6 @@ setReplaceMethod("nucleotide_seq", "SynIndividual", function(x, value) {
   if (!is.null(value) && !methods::is(value, "DNAStringSet")) {
     stop("`nucleotide_seq<-` expects a DNAStringSet object or NULL.", call. = FALSE)
   }
-  x@nucleotide_seq <- value
   if (length(x@annotations) > 0L && active_annotation(x) %in% names(x@annotations)) {
     ann <- x@annotations[[active_annotation(x)]]
     ann@nucleotide_seq <- value
@@ -2623,7 +2587,6 @@ setReplaceMethod("protein_seq", "SynIndividual", function(x, value) {
   if (!is.null(value) && !methods::is(value, "AAStringSet")) {
     stop("`protein_seq<-` expects an AAStringSet object or NULL.", call. = FALSE)
   }
-  x@protein_seq <- value
   if (length(x@annotations) > 0L && active_annotation(x) %in% names(x@annotations)) {
     ann <- x@annotations[[active_annotation(x)]]
     ann@protein_seq <- value
@@ -2655,7 +2618,6 @@ setGeneric("feature_index<-", function(x, value) {
   standardGeneric("feature_index<-")
 })
 setReplaceMethod("feature_index", "SynIndividual", function(x, value) {
-  x@feature_index <- value
   if (length(x@annotations) > 0L && active_annotation(x) %in% names(x@annotations)) {
     ann <- x@annotations[[active_annotation(x)]]
     ann@feature_index <- value
