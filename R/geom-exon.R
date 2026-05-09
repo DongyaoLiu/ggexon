@@ -111,7 +111,8 @@ GeomExon <- ggproto("GeomExon", Geom,
                         annotation_type = params$annotation_type,
                         context = context
                       )
-                    }
+                    },
+                    syn_default_aes = c("xmin", "xmax", "ymin", "transcripts", "strand", "track", "type", "group")
 )
 
 
@@ -292,7 +293,8 @@ GeomExon2 <- ggproto("GeomExon2", GeomExon,
     )
   },
   draw_key = draw_key_polygon,
-  syn_data = GeomExon$syn_data
+  syn_data = GeomExon$syn_data,
+  syn_default_aes = GeomExon$syn_default_aes
 )
 
 #' Draw WormWeb-style exon-intron schematics

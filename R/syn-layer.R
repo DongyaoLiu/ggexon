@@ -67,39 +67,8 @@ syn_default_mapping <- function(data, layer) {
   syn_identity_mapping(default_syn_aesthetics(data, layer))
 }
 default_syn_aesthetics <- function(data, layer) {
-  if (identical(layer$geom, GeomExon) || identical(layer$geom, GeomExon2)) {
-    cols <- c("xmin", "xmax", "ymin", "transcripts", "strand", "track", "type", "group")
-    return(intersect(cols, names(data)))
-  }
-  if (identical(layer$geom, GeomGene)) {
-    cols <- c("xmin", "xmax", "ymin", "transcripts", "strand", "track", "group")
-    return(intersect(cols, names(data)))
-  }
-  if (identical(layer$geom, GeomGeneLabel)) {
-    cols <- c("xmin", "xmax", "ymin", "transcripts", "strand", "track", "label", "group")
-    return(intersect(cols, names(data)))
-  }
-  if (identical(layer$geom, GeomGeneTag)) {
-    cols <- c("xmin", "xmax", "y", "strand", "track", "group")
-    return(intersect(cols, names(data)))
-  }
-  if (identical(layer$geom, GeomMutationLabel)) {
-    cols <- c("x", "y", "label", "group")
-    return(intersect(cols, names(data)))
-  }
-  if (identical(layer$geom, GeomMotif)) {
-    cols <- c("xmin", "xmax", "ymin", "transcripts", "strand", "track", "text", "group")
-    return(intersect(cols, names(data)))
-  }
-  if (identical(layer$geom, GeomNucLink)) {
-    cols <- c(
-      "tspecies", "tchr", "tstart", "tend", "strand",
-      "qspecies", "qchr", "qstart", "qend", "group", "track", "target_anchor_y", "query_anchor_y"
-    )
-    return(intersect(cols, names(data)))
-  }
-
-  character()
+  cols <- layer$geom$syn_default_aes %||% character()
+  intersect(cols, names(data))
 }
 
 syn_identity_mapping <- function(cols) {

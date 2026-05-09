@@ -76,7 +76,8 @@ GeomMutationLabel <- ggproto(
       show_empty = params$show_empty %||% FALSE,
       context = context
     )
-  }
+  },
+  syn_default_aes = c("x", "y", "label", "group")
 )
 
 #' Draw mutation labels as a dedicated text layer

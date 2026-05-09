@@ -57,7 +57,8 @@ GeomMotif <- ggproto("GeomMotif", Geom,
                         y_offset = params$y_offset %||% 0,
                         context = context
                       )
-                    }
+                    },
+                    syn_default_aes = c("xmin", "xmax", "ymin", "transcripts", "strand", "track", "text", "group")
 )
 
 #' Plot protein-domain motifs

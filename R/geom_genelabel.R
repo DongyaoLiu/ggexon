@@ -467,7 +467,8 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
       }
     }
     gene_df
-  }
+  },
+  syn_default_aes = c("xmin", "xmax", "ymin", "transcripts", "strand", "track", "label", "group")
 )
 
 #' Draw gene labels on exon tracks

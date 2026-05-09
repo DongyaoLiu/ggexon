@@ -221,7 +221,12 @@ GeomNucLink <- ggproto("GeomPanel", Geom,
                            filter_by_len = params$filter_by_len,
                            context = context
                          )
-                       }
+                       },
+                       syn_default_aes = c(
+                         "tspecies", "tchr", "tstart", "tend", "strand",
+                         "qspecies", "qchr", "qstart", "qend", "group", "track",
+                         "target_anchor_y", "query_anchor_y"
+                       )
 )
 
 .transform_link_x_by_source_panel <- function(data, panel_params, coord) {

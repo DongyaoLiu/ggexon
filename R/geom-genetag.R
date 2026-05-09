@@ -313,7 +313,8 @@ GeomGeneTag <- ggproto(
       feature_type = params$feature_type %||% "gene",
       context = context
     )
-  }
+  },
+  syn_default_aes = c("xmin", "xmax", "y", "strand", "track", "group")
 )
 
 .genetag_tip_individual_map <- function(tip_labels, available_individuals, individual = NULL) {

@@ -81,7 +81,8 @@ GeomGene <- ggproto("GeomGene", Geom,
                         subset = params$subset,
                         context = context
                       )
-                    }
+                    },
+                    syn_default_aes = c("xmin", "xmax", "ymin", "transcripts", "strand", "track", "group")
 )
 
 
