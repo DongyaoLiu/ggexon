@@ -56,8 +56,8 @@ reference:
   desc: Slot-level reference pages for ggexon's S4 object hierarchy.
   contents:
   - SynAnnotation-class-hierarchy
-  - SynSpecies-class-overview
   - matches("^Syn.*-class$")
+  - HomologyAnnotation-class
   - SynBioc-unions
 
 - title: Plot entry point and geoms
@@ -72,6 +72,7 @@ reference:
   - geom_motif
   - geom_mutation_label
   - geom_nuclink
+  - geom_genelink
   - geom_protein_lollipop
 
 - title: Facets, tree alignment, and guides
