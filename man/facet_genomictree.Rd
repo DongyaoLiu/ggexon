@@ -17,7 +17,8 @@ facet_genomictree(
   axis.labels = "all",
   show_tree_x_axis = TRUE,
   label_position = c("left", "right", "none"),
-  label_width = grid::unit(0.7, "in")
+  label_width = grid::unit(0.7, "in"),
+  track_width = NULL
 )
 }
 \arguments{
@@ -48,6 +49,12 @@ facet_genomictree(
 genomic panels.}
 
 \item{label_width}{Grid unit width for the tip-label column.}
+
+\item{track_width}{Grid unit width for the genomic track panel column.
+Defaults to \code{NULL} (use the facet's default width, typically
+\code{unit(1, "null")} filling remaining space). Set to a fixed unit
+(e.g. \code{unit(30, "in")}) or a \code{"null"} unit to control the ratio
+between tree, labels, and tracks.}
 }
 \value{
 A \code{FacetGenomicTree} ggproto object.

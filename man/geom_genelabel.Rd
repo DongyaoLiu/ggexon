@@ -22,6 +22,8 @@ geom_genelabel(
   species = NULL,
   chr = NULL,
   subset = NULL,
+  panel_width_mm = NULL,
+  panel_width_inch = NULL,
   inherit.aes = TRUE
 )
 }
@@ -73,6 +75,14 @@ gene bodies and labels. Set to \code{FALSE} to suppress all leader lines
 Syn-backed.}
 
 \item{subset}{Optional numeric length-2 genomic window to keep.}
+
+\item{panel_width_mm}{Estimated width of the genomic panel in millimetres.
+Used to convert text size into data-coordinate units for label placement
+and collision avoidance. Default \code{300} (≈ A4/US-letter panel width).
+Increase this for wide output (e.g. \code{ggsave(width = 40)}).}
+
+\item{panel_width_inch}{Same as \code{panel_width_mm} but in inches. When both
+are provided, \code{panel_width_inch} takes precedence. One inch = 25.4 mm.}
 }
 \value{
 A ggplot2 layer using the internal \code{GeomGeneLabel} ggproto.
