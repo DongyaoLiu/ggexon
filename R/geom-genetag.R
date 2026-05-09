@@ -119,6 +119,7 @@ compile_ggtree_genetag <- function(x,
     inter_genetic = inter_genetic,
     exon_length = exon_length
   )
+  out <- .inject_homology_columns(out, homology_annotations(x))
   out$group <- seq_len(nrow(out))
   out
 }
@@ -537,6 +538,9 @@ syn_to_genetag_df <- function(x,
     tree_y = 1,
     include_y = TRUE
   )
+  if (methods::is(x, "SynSpecies")) {
+    out <- .inject_homology_columns(out, homology_annotations(x))
+  }
   out$group <- seq_len(nrow(out))
   out
 }

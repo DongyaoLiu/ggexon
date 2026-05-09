@@ -1446,6 +1446,9 @@ syn_to_comparative_annotation_df <- function(x,
   }
 
   out <- syn_flatten_annotation_rows(out)
+  if (methods::is(x, "SynSpecies")) {
+    out <- .inject_homology_columns(out, homology_annotations(x))
+  }
 
   attr(out, "syn_layout_override") <- context$layout
   out
@@ -1676,11 +1679,15 @@ syn_to_exon_df <- function(x,
     return(data.frame())
   }
 
-  syn_gr_to_exon_df(
+  result <- syn_gr_to_exon_df(
     feature_gr = feature_gr,
     track = syn_id(individual),
     annotation_type = annotation_type
   )
+  if (methods::is(x, "SynSpecies")) {
+    result <- .inject_homology_columns(result, homology_annotations(x))
+  }
+  result
 }
 
 blank_syn_exon_df <- function(track, window = NULL, annotation_type = "exon") {
@@ -1888,10 +1895,14 @@ syn_to_gene_df <- function(x,
     return(data.frame())
   }
 
-  syn_gr_to_gene_df(
+  result <- syn_gr_to_gene_df(
     feature_gr = feature_gr,
     track = syn_id(individual)
   )
+  if (methods::is(x, "SynSpecies")) {
+    result <- .inject_homology_columns(result, homology_annotations(x))
+  }
+  result
 }
 
 syn_gr_to_gene_df <- function(feature_gr, track) {

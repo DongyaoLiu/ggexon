@@ -7,7 +7,7 @@
 .normalize_blast_query_id(
   x,
   strip_prefix = "^(transcript:|cds:|gene:)",
-  strip_suffix = "\\\\.t\\\\d+$"
+  strip_suffix = "(\\\\.t\\\\d+|-T\\\\d+)$"
 )
 }
 \arguments{

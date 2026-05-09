@@ -105,7 +105,7 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
   extra_params = c("exon_height", "na.rm", "x_translation",
     "species", "chr", "subset",
     "label_direction", "label_offset_fraction",
-    "link_type", "collapse_tandem", "homology_name", "show_link",
+    "link_type", "collapse_tandem", "show_link",
     fontface = 1, lineheight = 1.2
   ),
   default_params = function() {
@@ -119,7 +119,6 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
       label_offset_fraction = 0.3,
       link_type = "straight",
       collapse_tandem = FALSE,
-      homology_name = NULL,
       show_link = TRUE
     )
   },
@@ -469,28 +468,13 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
   syn_data = function(x, layer) {
     params <- syn_layer_params(layer)
     context <- layer$syn_plot_context %||% NULL
-    gene_df <- syn_to_gene_df(
+    syn_to_gene_df(
       x = x,
       species = params$species,
       chr = params$chr,
       subset = params$subset,
       context = context
     )
-    if (methods::is(x, "SynSpecies") && nrow(gene_df) > 0L) {
-      homology_name <- params$homology_name %||% NULL
-      if (!is.null(homology_name)) {
-        homology <- tryCatch(
-          get_homology_annotation(x, name = homology_name),
-          error = function(e) NULL
-        )
-        if (!is.null(homology)) {
-          gene_df <- .apply_homology_labels(gene_df, homology)
-        }
-      } else if (length(homology_annotations(x)) > 0L) {
-        gene_df <- .apply_homology_labels_auto(gene_df, homology_annotations(x))
-      }
-    }
-    gene_df
   },
   syn_default_aes = c("xmin", "xmax", "ymin", "transcripts", "strand", "track", "label", "group")
 )
@@ -533,11 +517,6 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
 #' @param show_link When `TRUE` (the default), leader lines are drawn between
 #'   gene bodies and labels. Set to `FALSE` to suppress all leader lines
 #'   (only the text labels are rendered).
-#' @param homology_name Optional name of a `HomologyAnnotation` stored on the
-#'   `SynSpecies` object. When set, gene labels are replaced with the
-#'   corresponding reference-species gene names using the homology mapping.
-#'   This is useful for labelling query-species genes with the names of their
-#'   orthologs in the best-annotated center species.
 #' @param species Optional species / individual identifier when `data` is a
 #'   `SynSpecies`.
 #' @param chr Optional chromosome / seqname restriction when `data` is
@@ -556,7 +535,6 @@ geom_genelabel <- function(mapping = NULL, data = NULL,
                            link_type = NULL,
                            collapse_tandem = NULL,
                            show_link = NULL,
-                           homology_name = NULL,
                            species = NULL, chr = NULL, subset = NULL,
                            inherit.aes = TRUE) {
   params <- Filter(Negate(is.null), c(list(
@@ -569,7 +547,6 @@ geom_genelabel <- function(mapping = NULL, data = NULL,
     link_type = link_type,
     collapse_tandem = collapse_tandem,
     show_link = show_link,
-    homology_name = homology_name,
     species = species,
     chr = chr,
     subset = subset

@@ -14,7 +14,7 @@ import_blast_homology(
   rank_by = "bitscore",
   gene_id_map = NULL,
   strip_prefix = "^(transcript:|cds:|gene:)",
-  strip_suffix = "\\\\.t\\\\d+$",
+  strip_suffix = "(\\\\.t\\\\d+|-T\\\\d+)$",
   metadata = list()
 )
 }
@@ -51,7 +51,8 @@ lookup when an exact match is not found.}
 query IDs. Defaults to \code{"^(transcript:|cds:|gene:)"}.}
 
 \item{strip_suffix}{Regular expression matching suffixes to strip from
-query IDs. Defaults to \code{"\\\\.t\\\\d+$"} (transcript isoform numbers).}
+query IDs. Defaults to \code{"(\\\\.t\\\\d+|-T\\\\d+)$"} (transcript isoform numbers,
+covering both \code{.t1} and Funannotate-style \code{-T1} conventions).}
 
 \item{metadata}{Optional metadata list.}
 }

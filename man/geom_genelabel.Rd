@@ -19,7 +19,6 @@ geom_genelabel(
   link_type = NULL,
   collapse_tandem = NULL,
   show_link = NULL,
-  homology_name = NULL,
   species = NULL,
   chr = NULL,
   subset = NULL,
@@ -66,12 +65,6 @@ by a bracket-style connector. Default \code{FALSE}.}
 \item{show_link}{When \code{TRUE} (the default), leader lines are drawn between
 gene bodies and labels. Set to \code{FALSE} to suppress all leader lines
 (only the text labels are rendered).}
-
-\item{homology_name}{Optional name of a \code{HomologyAnnotation} stored on the
-\code{SynSpecies} object. When set, gene labels are replaced with the
-corresponding reference-species gene names using the homology mapping.
-This is useful for labelling query-species genes with the names of their
-orthologs in the best-annotated center species.}
 
 \item{species}{Optional species / individual identifier when \code{data} is a
 \code{SynSpecies}.}

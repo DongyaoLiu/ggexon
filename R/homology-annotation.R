@@ -5,9 +5,12 @@
 #' `SynSpecies` via the `homology_annotations` slot.
 #'
 #' Each object maps genes from one query species to genes in a reference
-#' species (typically the best-annotated "center" species). The mapping can
-#' be used by `geom_genelabel()` to display reference-species gene names on
-#' query-species tracks.
+#' species (typically the best-annotated "center" species). The mapping is
+#' automatically injected into all geom data frames (`geom_exon`,
+#' `geom_gene`, `geom_genetag`, `geom_genelabel`) when the
+#' `HomologyAnnotation` is attached to a `SynSpecies`. Two new columns
+#' `reference_gene` and `reference_gene_name` become available for mapping
+#' in ggplot2 aesthetics.
 #'
 #' @slot reference_species Scalar name of the reference species (e.g.,
 #'   `"C. elegans N2"`).
@@ -178,7 +181,8 @@ HomologyAnnotation <- function(name,
 #' @param strip_prefix Regular expression matching prefixes to strip from
 #'   query IDs. Defaults to `"^(transcript:|cds:|gene:)"`.
 #' @param strip_suffix Regular expression matching suffixes to strip from
-#'   query IDs. Defaults to `"\\.t\\d+$"` (transcript isoform numbers).
+#'   query IDs. Defaults to `"(\\.t\\d+|-T\\d+)$"` (transcript isoform numbers,
+#'   covering both `.t1` and Funannotate-style `-T1` conventions).
 #' @param metadata Optional metadata list.
 #'
 #' @details
@@ -209,7 +213,7 @@ import_blast_homology <- function(blast_file,
                                   rank_by = "bitscore",
                                   gene_id_map = NULL,
                                   strip_prefix = "^(transcript:|cds:|gene:)",
-                                  strip_suffix = "\\.t\\d+$",
+                                  strip_suffix = "(\\.t\\d+|-T\\d+)$",
                                   metadata = list()) {
   if (!is.character(blast_file) || length(blast_file) != 1L ||
       is.na(blast_file) || !nzchar(blast_file)) {
@@ -533,7 +537,7 @@ import_blast_homology <- function(blast_file,
 #' @keywords internal
 .normalize_blast_query_id <- function(x,
                                       strip_prefix = "^(transcript:|cds:|gene:)",
-                                      strip_suffix = "\\.t\\d+$") {
+                                      strip_suffix = "(\\.t\\d+|-T\\d+)$") {
   x <- as.character(x)
   if (!is.null(strip_prefix) && nzchar(strip_prefix)) {
     x <- sub(strip_prefix, "", x, perl = TRUE)
@@ -543,6 +547,134 @@ import_blast_homology <- function(blast_file,
   }
   x <- trimws(x)
   x
+}
+
+#' Normalize a gene identifier for symmetric matching
+#'
+#' Applies the same normalization to both BLAST query IDs and annotation
+#' feature IDs so they can be matched reliably. Normalization steps:
+#' 1. Trim whitespace
+#' 2. Strip common prefixes (gene:, transcript:, cds:, mRNA:)
+#' 3. Strip transcript isoform suffixes (.t1 .t2 ...  -T1 -T2 ...)
+#' 4. Strip locus-tag isoform letters (B0250.18a → B0250.18)
+#'
+#' @param x Character vector of gene identifiers.
+#'
+#' @return A normalized character vector.
+#' @keywords internal
+.normalize_gene_id <- function(x) {
+  x <- as.character(x)
+  x <- trimws(x)
+  x <- sub("^(gene:|transcript:|cds:|mRNA:)", "", x, perl = TRUE)
+  x <- sub("(\\.t\\d+|-T\\d+)$", "", x, perl = TRUE)
+  # Strip locus-tag isoform letters only when preceded by a digit
+  # (e.g. B0250.18a → B0250.18, but WBGene stays WBGene)
+  x <- sub("(\\d)[a-z]\\d*$", "\\1", x, perl = TRUE)
+  x <- trimws(x)
+  x
+}
+
+#' Inject homology reference columns into a geom data frame
+#'
+#' Adds `reference_gene` and `reference_gene_name` columns by matching
+#' annotation feature IDs against `HomologyAnnotation` query genes.
+#' Matching is done per-track using symmetric normalization of both
+#' annotation-side IDs (gene_id, gene_name, transcript_id, Parent, ID)
+#' and homology-side `query_gene` values.
+#'
+#' When no homology is available for a track, or when a feature has no
+#' match, both new columns fall back to the feature's original gene_name
+#' or gene_id.
+#'
+#' @param df A data frame produced by a `syn_*_df()` function.
+#'   Must contain at least a `track` column and one or more of
+#'   `gene_id`, `gene_name`, `transcript_id`, `Parent`, `ID`.
+#' @param homology_list A named list of `HomologyAnnotation` objects,
+#'   typically from `homology_annotations(synspecies)`.
+#'
+#' @return The input data frame with additional `reference_gene` and
+#'   `reference_gene_name` columns.
+#' @keywords internal
+.inject_homology_columns <- function(df, homology_list) {
+  if (!is.data.frame(df) || nrow(df) == 0L) {
+    return(df)
+  }
+  if (!is.list(homology_list) || length(homology_list) == 0L) {
+    return(df)
+  }
+
+  id_candidates <- c("gene_id", "gene_name", "transcript_id", "Parent", "ID")
+  id_columns <- intersect(id_candidates, colnames(df))
+  if (length(id_columns) == 0L) {
+    return(df)
+  }
+
+  fallback <- if ("gene_name" %in% colnames(df)) {
+    as.character(df$gene_name)
+  } else if ("gene_id" %in% colnames(df)) {
+    as.character(df$gene_id)
+  } else {
+    rep(NA_character_, nrow(df))
+  }
+  fallback[is.na(fallback) | !nzchar(fallback)] <- NA_character_
+
+  df$reference_gene <- fallback
+  df$reference_gene_name <- fallback
+
+  tracks <- unique(as.character(df$track))
+
+  for (track_name in tracks) {
+    ha <- NULL
+    for (h in homology_list) {
+      if (methods::is(h, "HomologyAnnotation") &&
+          identical(query_species(h), track_name)) {
+        ha <- h
+        break
+      }
+    }
+    if (is.null(ha)) {
+      next
+    }
+
+    ht <- homology_table(ha)
+    if (nrow(ht) == 0L) {
+      next
+    }
+
+    norm_query <- .normalize_gene_id(ht$query_gene)
+    ref_gene <- as.character(ht$reference_gene)
+
+    keep <- !duplicated(norm_query) & nzchar(norm_query)
+    norm_query <- norm_query[keep]
+    ref_gene <- ref_gene[keep]
+
+    matched <- rep(FALSE, length(df$track))
+    matched_values <- rep(NA_character_, length(df$track))
+
+    for (col in id_columns) {
+      ann_values <- as.character(df[[col]])
+      norm_ann <- .normalize_gene_id(ann_values)
+
+      for (i_packed in which(df$track == track_name)) {
+        i <- as.integer(i_packed)
+        if (matched[[i]]) next
+
+        ni <- norm_ann[[i]]
+        if (is.na(ni) || !nzchar(ni)) next
+
+        hit <- which(norm_query == ni)
+        if (length(hit) > 0L) {
+          matched[[i]] <- TRUE
+          matched_values[[i]] <- ref_gene[[hit[[1L]]]]
+        }
+      }
+    }
+
+    df$reference_gene[matched] <- matched_values[matched]
+    df$reference_gene_name[matched] <- matched_values[matched]
+  }
+
+  df
 }
 
 #' Retrieve the homology table from a HomologyAnnotation
@@ -571,102 +703,6 @@ setMethod("reference_species", "HomologyAnnotation", function(x) x@reference_spe
 #' @export
 setGeneric("query_species", function(x) standardGeneric("query_species"))
 setMethod("query_species", "HomologyAnnotation", function(x) x@query_species)
-
-#' Apply homology-based labels to a gene data frame
-#'
-#' Replaces the `label` column for rows whose `gene_id` (or `gene_name`)
-#' matches a `query_gene` entry in the homology table with the corresponding
-#' `reference_gene`.
-#'
-#' @param gene_df A data frame with at least `gene_id`, `gene_name`, and
-#'   `label` columns, as produced by `syn_to_gene_df()`.
-#' @param homology A `HomologyAnnotation` object.
-#' @param id_columns Character vector of column names in `gene_df` to match
-#'   against `query_gene`. Defaults to `c("gene_id", "gene_name")`.
-#'
-#' @return The input data frame with updated `label` values where homology
-#'   mappings exist.
-#' @keywords internal
-.apply_homology_labels <- function(gene_df,
-                                   homology,
-                                   id_columns = c("gene_id", "gene_name")) {
-  if (!is.data.frame(gene_df) || nrow(gene_df) == 0L) {
-    return(gene_df)
-  }
-  if (!methods::is(homology, "HomologyAnnotation")) {
-    return(gene_df)
-  }
-
-  ht <- homology_table(homology)
-  if (nrow(ht) == 0L) {
-    return(gene_df)
-  }
-
-  available_cols <- intersect(id_columns, colnames(gene_df))
-  if (length(available_cols) == 0L) {
-    return(gene_df)
-  }
-
-  lookup <- stats::setNames(ht$reference_gene, ht$query_gene)
-
-  for (col in available_cols) {
-    gene_values <- as.character(gene_df[[col]])
-    matches <- gene_values %in% names(lookup)
-    if (any(matches)) {
-      gene_df$label[matches] <- lookup[gene_values[matches]]
-    }
-  }
-
-  gene_df
-}
-
-#' Apply homology labels per track (auto-matching)
-#'
-#' Like `.apply_homology_labels()`, but accepts a named list of
-#' `HomologyAnnotation` objects. For each unique track in `gene_df`, the
-#' matching homology is found by `query_species` and applied only to that
-#' track's rows.
-#'
-#' @param gene_df A data frame with at least `gene_id`, `gene_name`, `label`,
-#'   and `track` columns.
-#' @param homology_list A named list of `HomologyAnnotation` objects.
-#'
-#' @return The input data frame with per-track label updates.
-#' @keywords internal
-.apply_homology_labels_auto <- function(gene_df, homology_list) {
-  if (!is.data.frame(gene_df) || nrow(gene_df) == 0L) {
-    return(gene_df)
-  }
-  if (!is.list(homology_list) || length(homology_list) == 0L) {
-    return(gene_df)
-  }
-
-  tracks <- unique(as.character(gene_df$track))
-  for (track_name in tracks) {
-    ha <- NULL
-    for (h in homology_list) {
-      if (methods::is(h, "HomologyAnnotation") &&
-          identical(query_species(h), track_name)) {
-        ha <- h
-        break
-      }
-    }
-    if (is.null(ha)) {
-      next
-    }
-
-    track_rows <- gene_df$track == track_name
-    if (!any(track_rows)) {
-      next
-    }
-
-    track_df <- gene_df[track_rows, , drop = FALSE]
-    track_df <- .apply_homology_labels(track_df, ha)
-    gene_df[track_rows, ] <- track_df
-  }
-
-  gene_df
-}
 
 #' @export
 setMethod("show", "HomologyAnnotation", function(object) {
