@@ -105,7 +105,7 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
   extra_params = c("exon_height", "na.rm", "x_translation",
     "species", "chr", "subset",
     "label_direction", "label_offset_fraction",
-    "link_type", "collapse_tandem", "homology_name",
+    "link_type", "collapse_tandem", "homology_name", "show_link",
     fontface = 1, lineheight = 1.2
   ),
   default_params = function() {
@@ -119,7 +119,8 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
       label_offset_fraction = 0.3,
       link_type = "straight",
       collapse_tandem = FALSE,
-      homology_name = NULL
+      homology_name = NULL,
+      show_link = TRUE
     )
   },
   setup_data = function(data, params) {
@@ -142,12 +143,13 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
   },
 
   draw_panel = function(data, panel_params, coord, check_overlap = FALSE,
+                         show_link = TRUE,
                          exon_height = 0.8,
                          label_direction = "top",
                          label_offset_fraction = 0.3,
                          link_type = "straight",
                          collapse_tandem = FALSE) {
-    link_type <- match.arg(link_type, c("straight", "elbow"))
+    link_type <- match.arg(link_type, c("straight", "elbow", "spline"))
     label_offset <- exon_height * label_offset_fraction
     positions <- .parse_label_positions(label_direction)
 
@@ -219,31 +221,58 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
     data2 <- data2 %>%
       mutate(label_x = .data$orig_x_mid)
 
-    # Greedy horizontal collision avoidance, independently per position group
+    # Minimum-displacement collision avoidance (alternating projections)
     min_gap <- genomic_range * 0.005
     for (pos in unique(data2$label_pos)) {
       idx <- which(data2$label_pos == pos)
-      if (length(idx) > 1L) {
-        for (j in seq_along(idx)[-1L]) {
-          i_curr <- idx[[j]]
-          i_prev <- idx[[j - 1L]]
-          prev_right <- data2$label_x[[i_prev]] +
-            data2$est_width[[i_prev]] / 2 + min_gap
-          curr_left  <- data2$label_x[[i_curr]] -
-            data2$est_width[[i_curr]] / 2
-          if (curr_left < prev_right) {
-            new_x <- prev_right + data2$est_width[[i_curr]] / 2
-            # Constrain centre labels to stay within their gene span
-            if (identical(pos, "center")) {
-              new_x <- pmin(new_x, data2$gene_xmax[[i_curr]] -
-                data2$est_width[[i_curr]] / 2)
-              new_x <- pmax(new_x, data2$gene_xmin[[i_curr]] +
-                data2$est_width[[i_curr]] / 2)
-            }
-            data2$label_x[[i_curr]] <- new_x
+      n <- length(idx)
+      if (n <= 1L) next
+
+      ideal <- data2$label_x[idx]
+      halfw <- data2$est_width[idx] / 2
+      D <- halfw[-n] + halfw[-1L] + min_gap
+
+      x <- ideal
+      changed <- TRUE
+      max_iter <- 50L
+      iter <- 0L
+      while (changed && iter < max_iter) {
+        changed <- FALSE
+        iter <- iter + 1L
+
+        # Forward pass: enforce x[i+1] >= x[i] + D[i]
+        for (j in 2L:n) {
+          d <- D[[j - 1L]]
+          if (x[[j]] < x[[j - 1L]] + d) {
+            delta <- (x[[j - 1L]] + d - x[[j]]) / 2
+            x[[j - 1L]] <- x[[j - 1L]] - delta
+            x[[j]]      <- x[[j]] + delta
+            changed <- TRUE
+          }
+        }
+
+        # Backward pass
+        for (j in seq.int(n - 1L, 1L)) {
+          d <- D[[j]]
+          if (x[[j + 1L]] < x[[j]] + d) {
+            delta <- (x[[j]] + d - x[[j + 1L]]) / 2
+            x[[j]]      <- x[[j]] - delta
+            x[[j + 1L]] <- x[[j + 1L]] + delta
+            changed <- TRUE
           }
         }
       }
+
+      # Constrain centre labels to stay within their gene span
+      if (identical(pos, "center")) {
+        for (j in seq_len(n)) {
+          i <- idx[[j]]
+          x[[j]] <- pmin(x[[j]], data2$gene_xmax[[i]] - halfw[[j]])
+          x[[j]] <- pmax(x[[j]], data2$gene_xmin[[i]] + halfw[[j]])
+        }
+      }
+
+      data2$label_x[idx] <- x
     }
 
     # Per-position label y and anchor y
@@ -282,147 +311,142 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
     has_leader <- data2$label_pos != "center" | !data2$fits_in_gene
     ls_idx <- which(has_leader)
 
-    leader_grobs <- list()
+    lg <- zeroGrob()
+    if (isTRUE(show_link)) {
+      leader_grobs <- list()
 
-    if (length(ls_idx) > 0L) {
-      # Split leader rows into tandem and non-tandem
-      is_tandem <- !is.na(data2$tandem_id[ls_idx])
-      singletons <- ls_idx[!is_tandem]
-      tandems    <- ls_idx[is_tandem]
+      if (length(ls_idx) > 0L) {
+        # Split leader rows into tandem and non-tandem
+        is_tandem <- !is.na(data2$tandem_id[ls_idx])
+        singletons <- ls_idx[!is_tandem]
+        tandems    <- ls_idx[is_tandem]
 
-      # ---- non-tandem leader lines ----
-      if (length(singletons) > 0L) {
-        leader_start <- data2[singletons, , drop = FALSE]
-        leader_start$x <- leader_start$orig_x_mid
-        leader_start$y <- leader_start$anchor_y
-        leader_start_t <- coord$transform(leader_start, panel_params)
+        # ---- non-tandem leader lines ----
+        if (length(singletons) > 0L) {
+          leader_start <- data2[singletons, , drop = FALSE]
+          leader_start$x <- leader_start$orig_x_mid
+          leader_start$y <- leader_start$anchor_y
+          leader_start_t <- coord$transform(leader_start, panel_params)
 
-        leader_end <- data2[singletons, , drop = FALSE]
-        leader_end$x <- leader_end$label_x
-        leader_end$y <- leader_end$label_y
-        leader_end_t <- coord$transform(leader_end, panel_params)
+          leader_end <- data2[singletons, , drop = FALSE]
+          leader_end$x <- leader_end$label_x
+          leader_end$y <- leader_end$label_y
+          leader_end_t <- coord$transform(leader_end, panel_params)
 
-        if (link_type == "straight") {
-          leader_grobs[[length(leader_grobs) + 1L]] <- segmentsGrob(
-            x0 = leader_start_t$x, y0 = leader_start_t$y,
-            x1 = leader_end_t$x,   y1 = leader_end_t$y,
-            default.units = "native",
-            gp = gpar(col = "grey60", lwd = 0.5)
-          )
-        } else {
-          bend <- data2[singletons, , drop = FALSE]
-          bend$x <- bend$orig_x_mid
-          bend$y <- bend$label_y
-          bend_t <- coord$transform(bend, panel_params)
-          leader_grobs[[length(leader_grobs) + 1L]] <- gList(
-            segmentsGrob(
-              x0 = leader_start_t$x, y0 = leader_start_t$y,
-              x1 = bend_t$x,         y1 = bend_t$y,
-              default.units = "native",
-              gp = gpar(col = "grey60", lwd = 0.5)
-            ),
-            segmentsGrob(
-              x0 = bend_t$x,       y0 = bend_t$y,
-              x1 = leader_end_t$x, y1 = leader_end_t$y,
-              default.units = "native",
-              gp = gpar(col = "grey60", lwd = 0.5)
-            )
-          )
-        }
-      }
-
-      # ---- tandem bracket connectors ----
-      for (i in tandems) {
-        tid <- data2$tandem_id[[i]]
-        members <- tandem_anchors[[as.character(tid)]]
-        if (is.null(members) || nrow(members) < 2L) {
-          # Fallback: draw as regular singleton leader
-          leader_s <- data2[i, , drop = FALSE]
-          leader_s$x <- leader_s$orig_x_mid
-          leader_s$y <- leader_s$anchor_y
-          leader_s_t <- coord$transform(leader_s, panel_params)
-          leader_e <- data2[i, , drop = FALSE]
-          leader_e$x <- leader_e$label_x
-          leader_e$y <- leader_e$label_y
-          leader_e_t <- coord$transform(leader_e, panel_params)
-          leader_grobs[[length(leader_grobs) + 1L]] <- segmentsGrob(
-            x0 = leader_s_t$x, y0 = leader_s_t$y,
-            x1 = leader_e_t$x, y1 = leader_e_t$y,
-            default.units = "native",
-            gp = gpar(col = "grey60", lwd = 0.5)
-          )
-          next
-        }
-
-        label_pos <- data2$label_pos[[i]]
-        # Compute each member's anchor y based on the shared label position
-        members$anchor_y <- if (identical(label_pos, "top")) {
-          members$gene_ymax - label_offset
-        } else if (identical(label_pos, "bottom")) {
-          members$gene_ymin + label_offset
-        } else if (identical(label_pos, "center")) {
-          members$gene_ymid
-        } else {
-          members$gene_ymax - label_offset
-        }
-
-        bracket_y <- mean(range(members$anchor_y, na.rm = TRUE))
-
-        # Horizontal bracket at mean anchor y — use data-space x
-        bracket_df <- data.frame(
-          x = c(members$x[[1L]], members$x[[nrow(members)]]),
-          y = c(bracket_y, bracket_y),
-          stringsAsFactors = FALSE
-        )
-        bracket_df_t <- coord$transform(bracket_df, panel_params)
-
-        leader_grobs[[length(leader_grobs) + 1L]] <- segmentsGrob(
-          x0 = bracket_df_t$x[[1L]], y0 = bracket_df_t$y[[1L]],
-          x1 = bracket_df_t$x[[2L]], y1 = bracket_df_t$y[[2L]],
-          default.units = "native",
-          gp = gpar(col = "grey60", lwd = 0.5)
-        )
-
-        # Vertical drops from bracket to each gene anchor
-        for (k in seq_len(nrow(members))) {
-          drop_df <- data.frame(
-            x = rep(members$x[[k]], 2L),
-            y = c(bracket_y, members$anchor_y[[k]]),
+          link_data <- data.frame(
+            x = leader_start_t$x,
+            y = leader_start_t$y,
+            xend = leader_end_t$x,
+            yend = leader_end_t$y,
+            colour = "grey60",
+            linewidth = 0.5,
+            linetype = "solid",
+            alpha = NA_real_,
             stringsAsFactors = FALSE
           )
-          drop_df_t <- coord$transform(drop_df, panel_params)
-          leader_grobs[[length(leader_grobs) + 1L]] <- segmentsGrob(
-            x0 = drop_df_t$x[[1L]], y0 = drop_df_t$y[[1L]],
-            x1 = drop_df_t$x[[2L]], y1 = drop_df_t$y[[2L]],
-            default.units = "native",
-            gp = gpar(col = "grey60", lwd = 0.3)
-          )
+          leader_grobs[[length(leader_grobs) + 1L]] <- .draw_link_grobs_raw(link_data, link_type)
         }
 
-        # Main vertical leader from bracket centre to label
-        bracket_mid_x <- mean(range(members$x))
-        label_point <- data2[i, , drop = FALSE]
-        label_point$x <- label_point$label_x
-        label_point$y <- label_point$label_y
-        label_point_t <- coord$transform(label_point, panel_params)
+        # ---- tandem bracket connectors ----
+        for (i in tandems) {
+          tid <- data2$tandem_id[[i]]
+          members <- tandem_anchors[[as.character(tid)]]
+          if (is.null(members) || nrow(members) < 2L) {
+            # Fallback: draw as regular singleton leader
+            leader_s <- data2[i, , drop = FALSE]
+            leader_s$x <- leader_s$orig_x_mid
+            leader_s$y <- leader_s$anchor_y
+            leader_s_t <- coord$transform(leader_s, panel_params)
+            leader_e <- data2[i, , drop = FALSE]
+            leader_e$x <- leader_e$label_x
+            leader_e$y <- leader_e$label_y
+            leader_e_t <- coord$transform(leader_e, panel_params)
 
-        leader_grobs[[length(leader_grobs) + 1L]] <- segmentsGrob(
-          x0 = grid::unit(bracket_mid_x, "native"),
-          y0 = bracket_df_t$y[[1L]],
-          x1 = label_point_t$x,
-          y1 = label_point_t$y,
-          default.units = "native",
-          gp = gpar(col = "grey60", lwd = 0.5)
-        )
+            link_data <- data.frame(
+              x = leader_s_t$x,
+              y = leader_s_t$y,
+              xend = leader_e_t$x,
+              yend = leader_e_t$y,
+              colour = "grey60",
+              linewidth = 0.5,
+              linetype = "solid",
+              alpha = NA_real_,
+              stringsAsFactors = FALSE
+            )
+            leader_grobs[[length(leader_grobs) + 1L]] <- .draw_link_grobs_raw(link_data, link_type)
+            next
+          }
+
+          label_pos <- data2$label_pos[[i]]
+          # Compute each member's anchor y based on the shared label position
+          members$anchor_y <- if (identical(label_pos, "top")) {
+            members$gene_ymax - label_offset
+          } else if (identical(label_pos, "bottom")) {
+            members$gene_ymin + label_offset
+          } else if (identical(label_pos, "center")) {
+            members$gene_ymid
+          } else {
+            members$gene_ymax - label_offset
+          }
+
+          bracket_y <- mean(range(members$anchor_y, na.rm = TRUE))
+
+          # Horizontal bracket at mean anchor y — use data-space x
+          bracket_df <- data.frame(
+            x = c(members$x[[1L]], members$x[[nrow(members)]]),
+            y = c(bracket_y, bracket_y),
+            stringsAsFactors = FALSE
+          )
+          bracket_df_t <- coord$transform(bracket_df, panel_params)
+
+          leader_grobs[[length(leader_grobs) + 1L]] <- segmentsGrob(
+            x0 = bracket_df_t$x[[1L]], y0 = bracket_df_t$y[[1L]],
+            x1 = bracket_df_t$x[[2L]], y1 = bracket_df_t$y[[2L]],
+            default.units = "native",
+            gp = gpar(col = "grey60", lwd = 0.5)
+          )
+
+          # Vertical drops from bracket to each gene anchor
+          for (k in seq_len(nrow(members))) {
+            drop_df <- data.frame(
+              x = rep(members$x[[k]], 2L),
+              y = c(bracket_y, members$anchor_y[[k]]),
+              stringsAsFactors = FALSE
+            )
+            drop_df_t <- coord$transform(drop_df, panel_params)
+            leader_grobs[[length(leader_grobs) + 1L]] <- segmentsGrob(
+              x0 = drop_df_t$x[[1L]], y0 = drop_df_t$y[[1L]],
+              x1 = drop_df_t$x[[2L]], y1 = drop_df_t$y[[2L]],
+              default.units = "native",
+              gp = gpar(col = "grey60", lwd = 0.3)
+            )
+          }
+
+          # Main vertical leader from bracket centre to label
+          bracket_mid_x <- mean(range(members$x))
+          label_point <- data2[i, , drop = FALSE]
+          label_point$x <- label_point$label_x
+          label_point$y <- label_point$label_y
+          label_point_t <- coord$transform(label_point, panel_params)
+
+          leader_grobs[[length(leader_grobs) + 1L]] <- segmentsGrob(
+            x0 = grid::unit(bracket_mid_x, "native"),
+            y0 = bracket_df_t$y[[1L]],
+            x1 = label_point_t$x,
+            y1 = label_point_t$y,
+            default.units = "native",
+            gp = gpar(col = "grey60", lwd = 0.5)
+          )
+        }
       }
-    }
 
-    if (length(leader_grobs) == 0L) {
-      lg <- zeroGrob()
-    } else if (length(leader_grobs) == 1L) {
-      lg <- leader_grobs[[1L]]
-    } else {
-      lg <- do.call(gList, leader_grobs)
+      if (length(leader_grobs) == 0L) {
+        lg <- zeroGrob()
+      } else if (length(leader_grobs) == 1L) {
+        lg <- leader_grobs[[1L]]
+      } else {
+        lg <- do.call(gList, leader_grobs)
+      }
     }
 
     tg <- textGrob(
@@ -499,12 +523,16 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
 #'   Valid tokens: `"top"`, `"bottom"`, `"center"`. Default `"top"`.
 #' @param label_offset_fraction Distance between the exon tracks and the label
 #'   line, expressed as a fraction of `exon_height`. Default `0.3`.
-#' @param link_type Leader line style: `"straight"` (direct line) or
-#'   `"elbow"` (right-angle bend via vertical then horizontal segment).
-#'   Default `"straight"`. Centre-fitting labels do not draw leader lines.
+#' @param link_type Leader line style: `"straight"` (direct line),
+#'   `"elbow"` (right-angle bend via vertical then horizontal segment),
+#'   or `"spline"` (smooth Bézier curve). Default `"straight"`.
+#'   Centre-fitting labels do not draw leader lines.
 #' @param collapse_tandem When `TRUE`, consecutive genes with identical labels
 #'   (tandem duplications) share a single label connected to all gene bodies
 #'   by a bracket-style connector. Default `FALSE`.
+#' @param show_link When `TRUE` (the default), leader lines are drawn between
+#'   gene bodies and labels. Set to `FALSE` to suppress all leader lines
+#'   (only the text labels are rendered).
 #' @param homology_name Optional name of a `HomologyAnnotation` stored on the
 #'   `SynSpecies` object. When set, gene labels are replaced with the
 #'   corresponding reference-species gene names using the homology mapping.
@@ -527,6 +555,7 @@ geom_genelabel <- function(mapping = NULL, data = NULL,
                            label_offset_fraction = NULL,
                            link_type = NULL,
                            collapse_tandem = NULL,
+                           show_link = NULL,
                            homology_name = NULL,
                            species = NULL, chr = NULL, subset = NULL,
                            inherit.aes = TRUE) {
@@ -539,6 +568,7 @@ geom_genelabel <- function(mapping = NULL, data = NULL,
     label_offset_fraction = label_offset_fraction,
     link_type = link_type,
     collapse_tandem = collapse_tandem,
+    show_link = show_link,
     homology_name = homology_name,
     species = species,
     chr = chr,

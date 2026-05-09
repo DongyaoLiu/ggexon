@@ -18,6 +18,7 @@ geom_genelabel(
   label_offset_fraction = NULL,
   link_type = NULL,
   collapse_tandem = NULL,
+  show_link = NULL,
   homology_name = NULL,
   species = NULL,
   chr = NULL,
@@ -53,13 +54,18 @@ Valid tokens: \code{"top"}, \code{"bottom"}, \code{"center"}. Default \code{"top
 \item{label_offset_fraction}{Distance between the exon tracks and the label
 line, expressed as a fraction of \code{exon_height}. Default \code{0.3}.}
 
-\item{link_type}{Leader line style: \code{"straight"} (direct line) or
-\code{"elbow"} (right-angle bend via vertical then horizontal segment).
-Default \code{"straight"}. Centre-fitting labels do not draw leader lines.}
+\item{link_type}{Leader line style: \code{"straight"} (direct line),
+\code{"elbow"} (right-angle bend via vertical then horizontal segment),
+or \code{"spline"} (smooth Bézier curve). Default \code{"straight"}.
+Centre-fitting labels do not draw leader lines.}
 
 \item{collapse_tandem}{When \code{TRUE}, consecutive genes with identical labels
 (tandem duplications) share a single label connected to all gene bodies
 by a bracket-style connector. Default \code{FALSE}.}
+
+\item{show_link}{When \code{TRUE} (the default), leader lines are drawn between
+gene bodies and labels. Set to \code{FALSE} to suppress all leader lines
+(only the text labels are rendered).}
 
 \item{homology_name}{Optional name of a \code{HomologyAnnotation} stored on the
 \code{SynSpecies} object. When set, gene labels are replaced with the
