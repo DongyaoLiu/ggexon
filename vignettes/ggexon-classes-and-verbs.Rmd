@@ -311,6 +311,63 @@ ggexon(sp) +
   )
 ```
 
+### Label positions
+
+The `label_direction` parameter accepts colon-delimited combinations of
+`"top"`, `"bottom"`, and `"center"`. Labels are distributed across positions
+by track-index modulo:
+
+- `"top"` — all labels above the highest track.
+- `"bottom"` — all labels below the lowest track.
+- `"top:bottom"` — odd-indexed rows above, even-indexed below.
+- `"bottom:top:center"` — three-position rotation. Centre labels are placed
+  on the gene body when the text fits; otherwise they fall back to `"top"`.
+
+```{r eval = FALSE}
+geom_genelabel(label_direction = "top:center:bottom")
+```
+
+### Leader lines
+
+`geom_genelabel()` draws leader lines from each gene body to its label.
+Control the line style with `link_type`:
+
+- `"straight"` — direct line (default).
+- `"elbow"` — right-angle bend (vertical then horizontal).
+- `"spline"` — smooth Bézier curve.
+
+Suppress leader lines with `show_link = FALSE`. Use `label_offset_fraction`
+(default `0.3`) to adjust the vertical gap between tracks and labels.
+
+### Tandem collapsing
+
+When `collapse_tandem = TRUE`, consecutive genes with identical labels
+(e.g. tandem duplications) share a single label connected to all gene bodies
+by a bracket-style connector.
+
+### Panel width for accurate label spacing
+
+`geom_genelabel()` estimates text width in data coordinates to avoid label
+overlaps. By default it assumes a ~300 mm wide genomic panel. For wide output
+(e.g. `ggsave(width = 40, ...)`), set `panel_width_mm` or `panel_width_inch`
+to the actual genomic track column width so spacing is accurate:
+
+```{r eval = FALSE}
+# Genomic tracks are ~38 inches wide (40 in total minus tree and labels)
+geom_genelabel(
+  chr = "V", size = 2.4,
+  panel_width_inch = 38
+)
+
+# Equivalent in millimetres
+geom_genelabel(
+  chr = "V", size = 2.4,
+  panel_width_mm = 38 * 25.4   # = 965.2
+)
+```
+
+When both are provided, `panel_width_inch` takes precedence.
+
 ## `geom_genomic_tree()`
 
 Use `geom_genomic_tree()` for genomic tree structures inside ggexon panels. It
@@ -411,6 +468,40 @@ plot_ggtree_genomic_alignment(
   chr = "RagTag_V"
 )
 ```
+
+### Column layout
+
+`facet_genomictree()` lays out three columns left to right: tree, species
+labels, and genomic track panels. Each column has a dedicated width
+argument:
+
+| Column | Argument | Default |
+|---|---|---|
+| Tree | `tree_width` in `geom_genomic_tree()` | `unit(1.5, "in")` |
+| Labels | `label_width` in `facet_genomictree()` | `unit(0.7, "in")` |
+| Tracks | `track_width` in `facet_genomictree()` | `NULL` (fills remaining space) |
+
+Species labels can be placed on the left (`label_position = "left"`, default),
+right (`"right"`), or hidden (`"none"`).
+
+```{r eval = FALSE}
+# Explicit column widths
+facet_genomictree(
+  label_position = "left",
+  label_width = unit(0.6, "in"),
+  track_width = unit(1, "null")  # ratio: tree=1.5in fixed, tracks fill rest
+)
+
+# Fixed track width for a known output size
+facet_genomictree(
+  track_width = unit(38, "in")   # genomic panel is 38 inches wide
+)
+```
+
+When `track_width` is `NULL` (default), the track panel columns keep their
+facet-default widths (typically `unit(1, "null")` filling remaining space).
+Set it to a `"null"` unit to control the ratio between tree and tracks, or
+to a fixed unit when the output dimensions are known in advance.
 
 ## Genomic scales and the piecewise guide
 

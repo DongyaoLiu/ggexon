@@ -19,6 +19,11 @@
 #'   `"right"`, or `"none"`. `"left"` places labels between the tree and
 #'   genomic panels.
 #' @param label_width Grid unit width for the tip-label column.
+#' @param track_width Grid unit width for the genomic track panel column.
+#'   Defaults to `NULL` (use the facet's default width, typically
+#'   `unit(1, "null")` filling remaining space). Set to a fixed unit
+#'   (e.g. `unit(30, "in")`) or a `"null"` unit to control the ratio
+#'   between tree, labels, and tracks.
 #'
 #' @return A `FacetGenomicTree` ggproto object.
 #' @export
@@ -34,7 +39,8 @@ facet_genomictree <- function(facets = ggplot2::vars(track),
                               axis.labels = "all",
                               show_tree_x_axis = TRUE,
                               label_position = c("left", "right", "none"),
-                              label_width = grid::unit(0.7, "in")) {
+                              label_width = grid::unit(0.7, "in"),
+                              track_width = NULL) {
   scales <- arg_match0(scales %||% "free_x", c("fixed", "free_x", "free_y", "free"))
   label_position <- match.arg(label_position)
   free <- list(
@@ -72,7 +78,8 @@ facet_genomictree <- function(facets = ggplot2::vars(track),
       axis_labels = axis_labels,
       show_tree_x_axis = show_tree_x_axis,
       label_position = label_position,
-      label_width = label_width
+      label_width = label_width,
+      track_width = track_width
     )
   )
 }

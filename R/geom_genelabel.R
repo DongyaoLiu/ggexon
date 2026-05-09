@@ -106,6 +106,7 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
     "species", "chr", "subset",
     "label_direction", "label_offset_fraction",
     "link_type", "collapse_tandem", "show_link",
+    "panel_width_mm", "panel_width_inch",
     fontface = 1, lineheight = 1.2
   ),
   default_params = function() {
@@ -119,7 +120,9 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
       label_offset_fraction = 0.3,
       link_type = "straight",
       collapse_tandem = FALSE,
-      show_link = TRUE
+      show_link = TRUE,
+      panel_width_mm = NULL,
+      panel_width_inch = NULL
     )
   },
   setup_data = function(data, params) {
@@ -147,7 +150,9 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
                          label_direction = "top",
                          label_offset_fraction = 0.3,
                          link_type = "straight",
-                         collapse_tandem = FALSE) {
+                         collapse_tandem = FALSE,
+                         panel_width_mm = NULL,
+                         panel_width_inch = NULL) {
     link_type <- match.arg(link_type, c("straight", "elbow", "spline"))
     label_offset <- exon_height * label_offset_fraction
     positions <- .parse_label_positions(label_direction)
@@ -174,12 +179,17 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
       return(zeroGrob())
     }
 
-    # Estimate text width in data coordinates
-    # size is in mm; each char ≈ 0.5 × size mm; panel ≈ 150 mm
+    # Estimate text width in data coordinates:
+    #   text_width_data = text_width_mm × (genomic_range / panel_width_mm)
+    #   text_width_mm    = nchar × 0.5 × size
+    # → est_width = nchar × 0.5 × size × genomic_range / panel_width_mm
+    # panel_width_inch overrides panel_width_mm when both are provided.
+    panel_mm <- if (!is.null(panel_width_inch)) panel_width_inch * 25.4 else panel_width_mm %||% 300
+    if (!is.numeric(panel_mm) || panel_mm <= 0) panel_mm <- 300
     data2 <- data2 %>%
       mutate(
         est_nchar = nchar(as.character(.data$label)),
-        est_width = .data$est_nchar * .data$size * genomic_range / 600
+        est_width = .data$est_nchar * 0.5 * .data$size * genomic_range / panel_mm
       )
 
     # Collapse tandem duplications: consecutive genes with identical labels
@@ -273,6 +283,14 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
 
       data2$label_x[idx] <- x
     }
+
+    # Constrain all labels to stay within the data range to prevent
+    # horizontal overflow when the plot is saved at non-standard dimensions
+    data_xmin <- min(data$xmin, na.rm = TRUE)
+    data_xmax <- max(data$xmax, na.rm = TRUE)
+    halfw <- data2$est_width / 2
+    data2$label_x <- pmax(data2$label_x, data_xmin + halfw)
+    data2$label_x <- pmin(data2$label_x, data_xmax - halfw)
 
     # Per-position label y and anchor y
     top_label_y    <- if ("top"    %in% data2$label_pos) max(data2$gene_ymax) else NA_real_
@@ -522,6 +540,12 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
 #' @param chr Optional chromosome / seqname restriction when `data` is
 #'   Syn-backed.
 #' @param subset Optional numeric length-2 genomic window to keep.
+#' @param panel_width_mm Estimated width of the genomic panel in millimetres.
+#'   Used to convert text size into data-coordinate units for label placement
+#'   and collision avoidance. Default `300` (≈ A4/US-letter panel width).
+#'   Increase this for wide output (e.g. `ggsave(width = 40)`).
+#' @param panel_width_inch Same as `panel_width_mm` but in inches. When both
+#'   are provided, `panel_width_inch` takes precedence. One inch = 25.4 mm.
 #'
 #' @return A ggplot2 layer using the internal `GeomGeneLabel` ggproto.
 #' @export
@@ -536,6 +560,8 @@ geom_genelabel <- function(mapping = NULL, data = NULL,
                            collapse_tandem = NULL,
                            show_link = NULL,
                            species = NULL, chr = NULL, subset = NULL,
+                           panel_width_mm = NULL,
+                           panel_width_inch = NULL,
                            inherit.aes = TRUE) {
   params <- Filter(Negate(is.null), c(list(
     ...,
@@ -549,7 +575,9 @@ geom_genelabel <- function(mapping = NULL, data = NULL,
     show_link = show_link,
     species = species,
     chr = chr,
-    subset = subset
+    subset = subset,
+    panel_width_mm = panel_width_mm,
+    panel_width_inch = panel_width_inch
   )))
   layer(
     data = data,

@@ -563,6 +563,12 @@ inject_genomictree_panel <- function(table, build) {
     clip = "off",
     name = "genomic-tree"
   )
+  # Apply user-specified track width to panel columns
+  track_width <- plot@facet$params$track_width %||% NULL
+  if (!is.null(track_width)) {
+    panel_cols <- seq.int(min(panel_rows$l), max(panel_rows$r))
+    table$widths[panel_cols] <- track_width
+  }
   attr(table, "genomic_tree") <- tree_spec
   table
 }
