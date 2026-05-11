@@ -172,6 +172,11 @@ build_ggexon <- S7::method(ggexon_build, class_ggexon) <- function(plot, ...) {
       layout$genomic_x_transforms <- genomic_x_scaled$transforms
       layout$genomic_x_axis_data <- genomic_x_scaled$axis_data
     }
+    if (!is.null(plot@strip_scale)) {
+      strip_scaled <- apply_strip_scale(data, layers, plot@strip_scale, layout, plot)
+      data <- strip_scaled$data
+      layout <- strip_scaled$layout
+    }
 
     # Apply position adjustments
     data <- by_layer(function(l, d) l$compute_position(d, layout), layers, data, "computing position")

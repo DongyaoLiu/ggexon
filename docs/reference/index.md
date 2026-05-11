@@ -112,6 +112,8 @@ and control genomic x-axis guides.
   : Facet genomic panels by tree-tip order
 - [`scale_x_ggexon_genomic()`](https://dongyaoliu.github.io/ggexon/reference/scale_x_ggexon_genomic.md)
   : Compress introns while keeping genomic x-axis labels
+- [`strip_scale()`](https://dongyaoliu.github.io/ggexon/reference/strip_scale.md)
+  : Uniform gene-width scale for multi-track genomic plots
 - [`guide_x_ggexon_piecewise()`](https://dongyaoliu.github.io/ggexon/reference/guide_x_ggexon_piecewise.md)
   : Draw representative exon and intron scale bars for genomic x scaling
 - [`sec_axis()`](https://dongyaoliu.github.io/ggexon/reference/sec_axis.md)

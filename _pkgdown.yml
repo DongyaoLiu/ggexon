@@ -81,6 +81,7 @@ reference:
   - facet_genomics
   - facet_genomictree
   - scale_x_ggexon_genomic
+  - strip_scale
   - guide_x_ggexon_piecewise
   - sec_axis
   - theme_ggexon_track
