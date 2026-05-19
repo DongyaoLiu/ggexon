@@ -384,3 +384,178 @@ test_that("strip_scale right alignment places sparse track at right edge", {
   n2_max <- max(n2_data$xmin, n2_data$xmax, na.rm = TRUE)
   expect_equal(xz_max, n2_max, tolerance = 1e-6)
 })
+
+# ── homo_align tests ────────────────────────────────────────────────────
+
+test_that("strip_scale validates homo_align and species_ratio", {
+  expect_identical(strip_scale(homo_align = "yes")$homo_active, TRUE)
+  expect_identical(strip_scale(homo_align = TRUE)$homo_active, TRUE)
+  expect_identical(strip_scale(homo_align = "C. elegans")$homo_active, TRUE)
+  expect_identical(strip_scale()$homo_active, FALSE)
+  expect_error(strip_scale(species_ratio = 0), "in \\(0, 1\\]")
+  expect_error(strip_scale(species_ratio = 2), "in \\(0, 1\\]")
+  expect_error(strip_scale(species_ratio = c(0.3, 0.5)), "number in")
+})
+
+test_that("strip_scale warns when align is set with homo_align", {
+  annotation_path <- system.file(
+    "extdata", "caenorhabditis_XZ1516.gff3", package = "ggexon"
+  )
+  sp <- SynSpecies(name = "test") |>
+    add_individual(
+      test_syn_individual(annotation_file = annotation_path, id = "XZ1516")
+    )
+  p <- ggexon(sp) +
+    geom_genelabel(chr = "RagTag_V", subset = c(21558028, 21620381)) +
+    strip_scale(align = "center", homo_align = TRUE) +
+    facet_genomics(ggplot2::vars(track), scales = "free_x")
+  expect_warning(ggexon_build(p), "align.*ignored")
+})
+
+test_that("strip_scale homo_align builds with single species", {
+  annotation_path <- system.file(
+    "extdata", "caenorhabditis_XZ1516.gff3", package = "ggexon"
+  )
+  sp <- SynSpecies(name = "test") |>
+    add_individual(
+      test_syn_individual(annotation_file = annotation_path, id = "XZ1516")
+    )
+  p <- ggexon(sp) +
+    geom_genelabel(chr = "RagTag_V", subset = c(21558028, 21620381)) +
+    strip_scale(homo_align = TRUE) +
+    facet_genomics(ggplot2::vars(track), scales = "free_x")
+  expect_no_error(ggexon_build(p))
+})
+
+test_that("strip_scale homo_align builds with two species and no homology", {
+  annotation_path <- system.file(
+    "extdata", "caenorhabditis_XZ1516.gff3", package = "ggexon"
+  )
+  n2_annotation <- system.file(
+    "extdata", "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf", package = "ggexon"
+  )
+  sp <- SynSpecies(name = "test")
+  sp <- add_individual(sp,
+    test_syn_individual(annotation_file = annotation_path, id = "XZ1516"))
+  sp <- add_individual(sp,
+    test_syn_individual(annotation_file = n2_annotation, id = "N2",
+                        annotation_format = "gtf"))
+  p <- ggexon(sp) +
+    geom_genelabel(species = "XZ1516", chr = "RagTag_V",
+                   subset = c(21558028, 21620381)) +
+    geom_genelabel(species = "N2", chr = "V",
+                   subset = c(20454111, 20491853)) +
+    strip_scale(homo_align = TRUE) +
+    facet_genomics(ggplot2::vars(track), scales = "free_x")
+  expect_no_error(ggexon_build(p))
+})
+
+test_that("strip_scale homo_align forces fixed x", {
+  annotation_path <- system.file(
+    "extdata", "caenorhabditis_XZ1516.gff3", package = "ggexon"
+  )
+  n2_annotation <- system.file(
+    "extdata", "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf", package = "ggexon"
+  )
+  sp <- SynSpecies(name = "test")
+  sp <- add_individual(sp,
+    test_syn_individual(annotation_file = annotation_path, id = "XZ1516"))
+  sp <- add_individual(sp,
+    test_syn_individual(annotation_file = n2_annotation, id = "N2",
+                        annotation_format = "gtf"))
+  p <- ggexon(sp) +
+    geom_genelabel(species = "XZ1516", chr = "RagTag_V") +
+    geom_genelabel(species = "N2", chr = "V") +
+    strip_scale(homo_align = TRUE) +
+    facet_genomics(ggplot2::vars(track), scales = "free_x")
+  built <- ggexon_build(p)
+  scale_x <- unique(as.integer(built@layout$layout$SCALE_X))
+  expect_identical(scale_x, 1L)
+})
+
+test_that("strip_scale homo_align with explicit reference species name", {
+  annotation_path <- system.file(
+    "extdata", "caenorhabditis_XZ1516.gff3", package = "ggexon"
+  )
+  n2_annotation <- system.file(
+    "extdata", "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf", package = "ggexon"
+  )
+  sp <- SynSpecies(name = "test")
+  sp <- add_individual(sp,
+    test_syn_individual(annotation_file = annotation_path, id = "XZ1516"))
+  sp <- add_individual(sp,
+    test_syn_individual(annotation_file = n2_annotation, id = "N2",
+                        annotation_format = "gtf"))
+  p <- ggexon(sp) +
+    geom_genelabel(species = "XZ1516", chr = "RagTag_V",
+                   subset = c(21558028, 21620381)) +
+    geom_genelabel(species = "N2", chr = "V",
+                   subset = c(20454111, 20491853)) +
+    strip_scale(homo_align = "N2") +
+    facet_genomics(ggplot2::vars(track), scales = "free_x")
+  built <- ggexon_build(p)
+  expect_true(nrow(built@data[[1L]]) > 0L)
+})
+
+test_that("strip_scale homo_align errors for unknown reference species", {
+  annotation_path <- system.file(
+    "extdata", "caenorhabditis_XZ1516.gff3", package = "ggexon"
+  )
+  sp <- SynSpecies(name = "test") |>
+    add_individual(
+      test_syn_individual(annotation_file = annotation_path, id = "XZ1516")
+    )
+  p <- ggexon(sp) +
+    geom_genelabel(chr = "RagTag_V", subset = c(21558028, 21620381)) +
+    strip_scale(homo_align = "NoSuchSpecies") +
+    facet_genomics(ggplot2::vars(track), scales = "free_x")
+  expect_error(ggexon_build(p), "not found in genelabel tracks")
+})
+
+test_that("strip_scale homo_align with homology table aligns genes", {
+  annotation_path <- system.file(
+    "extdata", "caenorhabditis_XZ1516.gff3", package = "ggexon"
+  )
+  n2_annotation <- system.file(
+    "extdata", "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf", package = "ggexon"
+  )
+  sp <- SynSpecies(name = "test")
+  sp <- add_individual(sp,
+    test_syn_individual(annotation_file = annotation_path, id = "XZ1516"))
+  sp <- add_individual(sp,
+    test_syn_individual(annotation_file = n2_annotation, id = "N2",
+                        annotation_format = "gtf"))
+
+  xz_genes <- query_features(individuals(sp)[["XZ1516"]],
+    chr = "RagTag_V", start = 21558028, end = 21620381, feature_type = "gene")
+  n2_genes <- query_features(individuals(sp)[["N2"]],
+    chr = "V", start = 20454111, end = 20491853, feature_type = "gene")
+  xz_ids <- unique(as.character(S4Vectors::mcols(xz_genes)$gene_id))
+  xz_ids <- xz_ids[!is.na(xz_ids) & nzchar(xz_ids)]
+  n2_ids <- unique(as.character(S4Vectors::mcols(n2_genes)$gene_id))
+  n2_ids <- n2_ids[!is.na(n2_ids) & nzchar(n2_ids)]
+
+  n_pairs <- min(length(xz_ids), length(n2_ids), 3L)
+  if (n_pairs > 0L) {
+    homo_tbl <- data.frame(
+      query_gene = xz_ids[seq_len(n_pairs)],
+      reference_gene = n2_ids[seq_len(n_pairs)],
+      stringsAsFactors = FALSE
+    )
+    ha <- HomologyAnnotation(name = "test_homology",
+      reference_species = "N2", query_species = "XZ1516",
+      homology_table = homo_tbl)
+    sp <- add_homology_annotation(sp, ha)
+  }
+
+  p <- ggexon(sp) +
+    geom_genelabel(species = "XZ1516", chr = "RagTag_V",
+                   subset = c(21558028, 21620381)) +
+    geom_genelabel(species = "N2", chr = "V",
+                   subset = c(20454111, 20491853)) +
+    strip_scale(gene_gap_ratio = 3, homo_align = TRUE) +
+    facet_genomics(ggplot2::vars(track), scales = "free_x")
+  built <- ggexon_build(p)
+  expect_true(nrow(built@data[[1L]]) > 0L)
+  expect_true(nrow(built@data[[2L]]) > 0L)
+})

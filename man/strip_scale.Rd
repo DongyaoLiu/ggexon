@@ -4,7 +4,12 @@
 \alias{strip_scale}
 \title{Uniform gene-width scale for multi-track genomic plots}
 \usage{
-strip_scale(gene_gap_ratio = NULL, align = c("left", "right", "center"))
+strip_scale(
+  gene_gap_ratio = NULL,
+  align = c("left", "right", "center"),
+  homo_align = FALSE,
+  species_ratio = NULL
+)
 }
 \arguments{
 \item{gene_gap_ratio}{Ratio of gene visual width to intergenic gap width.
@@ -14,7 +19,20 @@ median gap width).}
 
 \item{align}{How tracks with fewer genes are positioned within the
 shared x-axis. \code{"left"} packs genes to the left edge, \code{"right"} to
-the right edge, \code{"center"} centres them.}
+the right edge, \code{"center"} centres them.  Ignored when \code{homo_align}
+is active (a warning is issued if set explicitly).}
+
+\item{homo_align}{\code{FALSE} (default) for independent per-track ordering.
+\code{TRUE} to auto-detect the reference species from homology annotations
+and align homologous genes at the same visual x-position across all
+tracks.  A character value (e.g. \code{"C. elegans N2"}) explicitly names
+the reference species.}
+
+\item{species_ratio}{Visual width ratio for species-specific genes
+relative to homologous genes.  \code{NULL} (default) auto-scales each
+gene proportionally to its genomic length relative to the median
+reference gene length.  A numeric value (e.g. \code{0.5}) sets a fixed
+ratio.}
 }
 \value{
 A ggexon strip-scale specification, added to the plot with \code{+}.
