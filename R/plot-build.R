@@ -148,6 +148,13 @@ build_ggexon <- S7::method(ggexon_build, class_ggexon) <- function(plot, ...) {
     scale_x <- function() scales$get_scales("x")
     scale_y <- function() scales$get_scales("y")
 
+    # Save genomic x values before map_position rescaling, so strip_scale
+    # can restore them after compute_geom_1 (whose subset filter needs
+    # genomic coords, not visual-space coords).
+    if (!is.null(plot@strip_scale)) {
+      data <- .strip_scale_save_genomic_x(data)
+    }
+
     # init ScaleContinuousPosition for each panel and train position and stored
     # in the range property of ScaleContinuousPosition
     layout$train_position(data, scale_x(), scale_y())
@@ -173,11 +180,13 @@ build_ggexon <- S7::method(ggexon_build, class_ggexon) <- function(plot, ...) {
       layout$genomic_x_axis_data <- genomic_x_scaled$axis_data
     }
     if (!is.null(plot@strip_scale)) {
+      # Restore genomic x values (saved before map_position) so strip_scale
+      # builds transforms and transforms from real genomic coordinates.
+      data <- .strip_scale_restore_genomic_x(data)
       strip_scaled <- apply_strip_scale(data, layers, plot@strip_scale, layout, plot)
       data <- strip_scaled$data
       layout <- strip_scaled$layout
     }
-
     # Apply position adjustments
     data <- by_layer(function(l, d) l$compute_position(d, layout), layers, data, "computing position")
 
@@ -1063,6 +1072,34 @@ plot_extent <- function(table) {
 #' @param i Layer index.
 #' @export
 layer_grob <- get_layer_grob
+
+
+# Save genomic x values before they get rescaled by map_position.
+# Strip scale needs these later (after compute_geom_1 subset filter).
+.strip_scale_save_genomic_x <- function(data) {
+  x_cols <- c("xmin", "xmax", "x", "xend", "xintercept")
+  lapply(data, function(df) {
+    if (!is.data.frame(df)) return(df)
+    for (col in intersect(x_cols, names(df))) {
+      df[[paste0(".gx_", col)]] <- df[[col]]
+    }
+    df
+  })
+}
+.strip_scale_restore_genomic_x <- function(data) {
+  x_cols <- c("xmin", "xmax", "x", "xend", "xintercept")
+  lapply(data, function(df) {
+    if (!is.data.frame(df)) return(df)
+    for (col in intersect(x_cols, names(df))) {
+      gcol <- paste0(".gx_", col)
+      if (gcol %in% names(df)) {
+        df[[col]] <- df[[gcol]]
+        df[[gcol]] <- NULL
+      }
+    }
+    df
+  })
+}
 
 # Apply function to layer and matching data
 by_layer <- function(f, layers, data, step = NULL) {

@@ -13,7 +13,9 @@ strip_scale(
   gene_gap_ratio = NULL,
   align = c("left", "right", "center"),
   homo_align = FALSE,
-  species_ratio = NULL
+  species_ratio = NULL,
+  collapse_contiguous_slot = TRUE,
+  overlap = c("stack", "merge")
 )
 ```
 
@@ -46,6 +48,20 @@ strip_scale(
   genes. `NULL` (default) auto-scales each gene proportionally to its
   genomic length relative to the median reference gene length. A numeric
   value (e.g. `0.5`) sets a fixed ratio.
+
+- collapse_contiguous_slot:
+
+  When `TRUE` (default), a run of contiguous species-specific genes
+  between two anchored homology blocks is compressed into a single
+  visual slot. When `FALSE`, each species-specific gene gets its own
+  slot.
+
+- overlap:
+
+  How to handle overlapping genes within a track. `"stack"` (default)
+  assigns overlapping genes to separate y-levels (like transcript
+  stacking in `geom_exon`). `"merge"` combines overlapping genomic
+  intervals into a single merged block.
 
 ## Value
 

@@ -8,7 +8,9 @@ strip_scale(
   gene_gap_ratio = NULL,
   align = c("left", "right", "center"),
   homo_align = FALSE,
-  species_ratio = NULL
+  species_ratio = NULL,
+  collapse_contiguous_slot = TRUE,
+  overlap = c("stack", "merge")
 )
 }
 \arguments{
@@ -33,6 +35,16 @@ relative to homologous genes.  \code{NULL} (default) auto-scales each
 gene proportionally to its genomic length relative to the median
 reference gene length.  A numeric value (e.g. \code{0.5}) sets a fixed
 ratio.}
+
+\item{collapse_contiguous_slot}{When \code{TRUE} (default), a run of
+contiguous species-specific genes between two anchored homology
+blocks is compressed into a single visual slot.  When \code{FALSE},
+each species-specific gene gets its own slot.}
+
+\item{overlap}{How to handle overlapping genes within a track.
+\code{"stack"} (default) assigns overlapping genes to separate y-levels
+(like transcript stacking in \code{geom_exon}).  \code{"merge"} combines
+overlapping genomic intervals into a single merged block.}
 }
 \value{
 A ggexon strip-scale specification, added to the plot with \code{+}.
