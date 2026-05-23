@@ -50,3 +50,5 @@ in ggplot2 aesthetics.
 
 - `homology_table` must be a data frame containing at least `query_gene`
   and `reference_gene` columns.
+
+- `homology_table$query_gene` must be unique.

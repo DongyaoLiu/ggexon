@@ -254,7 +254,8 @@ derive sequence or protein-level summaries.
 - [`projected_domains()`](https://dongyaoliu.github.io/ggexon/reference/projected_domains.md)
   : Access stored projected protein-domain tables
 - [`homology_table()`](https://dongyaoliu.github.io/ggexon/reference/homology_table.md)
-  : Retrieve the homology table from a HomologyAnnotation
+  [`` `homology_table<-`() ``](https://dongyaoliu.github.io/ggexon/reference/homology_table.md)
+  : Retrieve or replace the homology table from a HomologyAnnotation
 - [`reference_species()`](https://dongyaoliu.github.io/ggexon/reference/reference_species.md)
   : Retrieve the reference species from a HomologyAnnotation
 - [`query_species()`](https://dongyaoliu.github.io/ggexon/reference/query_species.md)
@@ -302,6 +303,11 @@ manage object-level curation state.
 
 - [`set_gene_labels()`](https://dongyaoliu.github.io/ggexon/reference/set_gene_labels.md)
   : Set human-readable gene labels on a feature annotation layer
+
+- [`add_homology()`](https://dongyaoliu.github.io/ggexon/reference/homology-crud.md)
+  [`delete_homology()`](https://dongyaoliu.github.io/ggexon/reference/homology-crud.md)
+  [`replace_homology()`](https://dongyaoliu.github.io/ggexon/reference/homology-crud.md)
+  : Edit homology rows
 
 - [`patch_annotation()`](https://dongyaoliu.github.io/ggexon/reference/patch_annotation.md)
   : Apply a gene-model patch to a feature annotation
