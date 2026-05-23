@@ -1,4 +1,5 @@
 .Rproj.user
+.deepseek/
 codex_output/
 tests/ldy_test.R
 Rplots.pdf
