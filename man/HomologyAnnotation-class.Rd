@@ -50,6 +50,7 @@ and \code{reference_gene}.}
 character value and must differ.
 \item \code{homology_table} must be a data frame containing at least \code{query_gene} and
 \code{reference_gene} columns.
+\item \code{homology_table$query_gene} must be unique.
 }
 }
 

@@ -2,16 +2,28 @@
 % Please edit documentation in R/homology-annotation.R
 \name{homology_table}
 \alias{homology_table}
-\title{Retrieve the homology table from a HomologyAnnotation}
+\alias{homology_table<-}
+\title{Retrieve or replace the homology table from a HomologyAnnotation}
 \usage{
 homology_table(x)
+
+homology_table(x) <- value
 }
 \arguments{
 \item{x}{A \code{HomologyAnnotation} object.}
+
+\item{value}{A data frame with at least \code{query_gene} and \code{reference_gene}.}
 }
 \value{
-A data frame with \code{query_gene} and \code{reference_gene} columns.
+A data frame with \code{query_gene}, \code{reference_gene}, and any extra
+homology metadata columns.
+
+The updated \code{HomologyAnnotation} object.
 }
 \description{
-Retrieve the homology table from a HomologyAnnotation
+\code{homology_table()} returns the current table. \verb{homology_table<-} replaces the
+full table after applying the same normalization rules as
+\code{\link[=HomologyAnnotation]{HomologyAnnotation()}}: \code{query_gene} and \code{reference_gene} are coerced to
+character, incomplete rows are dropped, duplicated \code{query_gene} values warn,
+and the first row for each duplicated query is kept.
 }

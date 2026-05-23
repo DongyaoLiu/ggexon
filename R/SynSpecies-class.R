@@ -3567,3 +3567,139 @@ get_homology_annotation <- function(x, query_species = NULL, name = NULL) {
 
   stop("Provide `query_species` or `name` when multiple homology annotations are attached.", call. = FALSE)
 }
+
+.resolve_homology_annotation_for_edit <- function(x, name = NULL, query_species = NULL) {
+  if (!methods::is(x, "SynSpecies")) {
+    stop("Homology edits on containers require a SynSpecies object.", call. = FALSE)
+  }
+  if (!is.null(name) && !is.null(query_species)) {
+    stop("Provide either `name` or `query_species`, not both.", call. = FALSE)
+  }
+  if (length(x@homology_annotations) == 0L) {
+    stop("No HomologyAnnotation objects are attached to this SynSpecies.", call. = FALSE)
+  }
+
+  if (!is.null(name)) {
+    if (!is.character(name) || length(name) != 1L || is.na(name) || !nzchar(name)) {
+      stop("`name` must be a single non-empty character value.", call. = FALSE)
+    }
+    hit <- match(name, names(x@homology_annotations))
+    if (is.na(hit)) {
+      stop("No HomologyAnnotation named `", name, "` is attached.", call. = FALSE)
+    }
+    return(list(index = hit, homology = x@homology_annotations[[hit]]))
+  }
+
+  if (!is.null(query_species)) {
+    if (!is.character(query_species) || length(query_species) != 1L ||
+        is.na(query_species) || !nzchar(query_species)) {
+      stop("`query_species` must be a single non-empty character value.", call. = FALSE)
+    }
+    hits <- which(vapply(
+      x@homology_annotations,
+      function(ha) identical(methods::slot(ha, "query_species"), query_species),
+      logical(1)
+    ))
+    if (length(hits) == 0L) {
+      stop(
+        "No HomologyAnnotation with `query_species` ",
+        query_species,
+        " is attached.",
+        call. = FALSE
+      )
+    }
+    if (length(hits) > 1L) {
+      stop(
+        "Multiple HomologyAnnotation objects match `query_species` ",
+        query_species,
+        "; use `name` to select one.",
+        call. = FALSE
+      )
+    }
+    return(list(index = hits[[1L]], homology = x@homology_annotations[[hits[[1L]]]]))
+  }
+
+  if (length(x@homology_annotations) == 1L) {
+    return(list(index = 1L, homology = x@homology_annotations[[1L]]))
+  }
+
+  stop("Provide `query_species` or `name` when multiple homology annotations are attached.", call. = FALSE)
+}
+
+.replace_homology_annotation_for_edit <- function(x, target, homology) {
+  x@homology_annotations[[target$index]] <- homology
+  validObject(x)
+  x
+}
+
+setMethod("add_homology", "SynSpecies", function(x,
+                                                  data = NULL,
+                                                  query_gene = NULL,
+                                                  reference_gene = NULL,
+                                                  ...,
+                                                  name = NULL,
+                                                  query_species = NULL,
+                                                  overwrite = FALSE) {
+  target <- .resolve_homology_annotation_for_edit(
+    x,
+    name = name,
+    query_species = query_species
+  )
+  homology <- add_homology(
+    target$homology,
+    data = data,
+    query_gene = query_gene,
+    reference_gene = reference_gene,
+    ...,
+    overwrite = overwrite
+  )
+  .replace_homology_annotation_for_edit(x, target, homology)
+})
+
+setMethod("replace_homology", "SynSpecies", function(x,
+                                                      data = NULL,
+                                                      query_gene = NULL,
+                                                      reference_gene = NULL,
+                                                      ...,
+                                                      name = NULL,
+                                                      query_species = NULL,
+                                                      add_missing = FALSE) {
+  target <- .resolve_homology_annotation_for_edit(
+    x,
+    name = name,
+    query_species = query_species
+  )
+  homology <- replace_homology(
+    target$homology,
+    data = data,
+    query_gene = query_gene,
+    reference_gene = reference_gene,
+    ...,
+    add_missing = add_missing
+  )
+  .replace_homology_annotation_for_edit(x, target, homology)
+})
+
+setMethod("delete_homology", "SynSpecies", function(x,
+                                                     data = NULL,
+                                                     query_gene = NULL,
+                                                     reference_gene = NULL,
+                                                     ...,
+                                                     name = NULL,
+                                                     query_species = NULL,
+                                                     missing = c("error", "warn", "ignore")) {
+  target <- .resolve_homology_annotation_for_edit(
+    x,
+    name = name,
+    query_species = query_species
+  )
+  homology <- delete_homology(
+    target$homology,
+    data = data,
+    query_gene = query_gene,
+    reference_gene = reference_gene,
+    ...,
+    missing = missing
+  )
+  .replace_homology_annotation_for_edit(x, target, homology)
+})

@@ -154,6 +154,9 @@ reference:
   - filter_pairwise_alignment
   - filter_odgi_nodes
   - set_gene_labels
+  - add_homology
+  - replace_homology
+  - delete_homology
   - patch_annotation
   - patch_annotation_from_gff
   - read_patch_gff

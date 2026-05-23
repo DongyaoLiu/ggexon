@@ -32,6 +32,7 @@
 #'   character value and must differ.
 #' * `homology_table` must be a data frame containing at least `query_gene` and
 #'   `reference_gene` columns.
+#' * `homology_table$query_gene` must be unique.
 #'
 #' @exportClass HomologyAnnotation
 setClass(
@@ -89,11 +90,89 @@ setClass(
         problems,
         "`homology_table` must contain `query_gene` and `reference_gene` columns."
       )
+    } else {
+      query_gene <- as.character(object@homology_table$query_gene)
+      keep <- !is.na(query_gene) & nzchar(query_gene)
+      if (any(duplicated(query_gene[keep]))) {
+        problems <- c(
+          problems,
+          "`homology_table$query_gene` must be unique."
+        )
+      }
     }
 
     if (length(problems) == 0L) TRUE else problems
   }
 )
+
+.format_duplicated_query_gene_warning <- function(query_gene) {
+  duplicated_queries <- query_gene[
+    duplicated(query_gene) | duplicated(query_gene, fromLast = TRUE)
+  ]
+  duplicated_counts <- table(duplicated_queries)
+  entries <- paste0(
+    names(duplicated_counts),
+    " (",
+    as.integer(duplicated_counts),
+    " rows)"
+  )
+  paste(
+    "Duplicated `query_gene` values were found and only the first row was kept:",
+    paste(entries, collapse = ", ")
+  )
+}
+
+.normalize_homology_table <- function(homology_table,
+                                      warn_duplicates = TRUE,
+                                      require_reference_gene = TRUE) {
+  if (!is.data.frame(homology_table)) {
+    stop("`homology_table` must be a data frame.", call. = FALSE)
+  }
+
+  required_cols <- "query_gene"
+  if (isTRUE(require_reference_gene)) {
+    required_cols <- c(required_cols, "reference_gene")
+  }
+  missing_cols <- setdiff(required_cols, colnames(homology_table))
+  if (length(missing_cols) > 0L) {
+    stop(
+      "`homology_table` must contain columns: ",
+      paste(missing_cols, collapse = ", "),
+      call. = FALSE
+    )
+  }
+
+  homology_table <- as.data.frame(homology_table, stringsAsFactors = FALSE)
+  homology_table$query_gene <- as.character(homology_table$query_gene)
+  if ("reference_gene" %in% colnames(homology_table)) {
+    homology_table$reference_gene <- as.character(homology_table$reference_gene)
+  }
+
+  keep <- !is.na(homology_table$query_gene) &
+    nzchar(homology_table$query_gene)
+  if (isTRUE(require_reference_gene)) {
+    keep <- keep &
+      !is.na(homology_table$reference_gene) &
+      nzchar(homology_table$reference_gene)
+  }
+  homology_table <- homology_table[keep, , drop = FALSE]
+
+  if (nrow(homology_table) > 0L) {
+    duplicated_query <- duplicated(homology_table$query_gene)
+    if (any(duplicated_query)) {
+      if (isTRUE(warn_duplicates)) {
+        warning(
+          .format_duplicated_query_gene_warning(homology_table$query_gene),
+          call. = FALSE
+        )
+      }
+      homology_table <- homology_table[!duplicated_query, , drop = FALSE]
+    }
+  }
+
+  rownames(homology_table) <- NULL
+  homology_table
+}
 
 #' Constructor for HomologyAnnotation
 #'
@@ -113,30 +192,7 @@ HomologyAnnotation <- function(name,
                                homology_table,
                                source_file = "<homology>",
                                metadata = list()) {
-  required_cols <- c("query_gene", "reference_gene")
-  if (!is.data.frame(homology_table)) {
-    stop("`homology_table` must be a data frame.", call. = FALSE)
-  }
-  missing_cols <- setdiff(required_cols, colnames(homology_table))
-  if (length(missing_cols) > 0L) {
-    stop(
-      "`homology_table` must contain columns: ",
-      paste(missing_cols, collapse = ", "),
-      call. = FALSE
-    )
-  }
-
-  homology_table <- as.data.frame(homology_table, stringsAsFactors = FALSE)
-  homology_table$query_gene <- as.character(homology_table$query_gene)
-  homology_table$reference_gene <- as.character(homology_table$reference_gene)
-
-  keep <- !is.na(homology_table$query_gene) &
-    nzchar(homology_table$query_gene) &
-    !is.na(homology_table$reference_gene) &
-    nzchar(homology_table$reference_gene)
-  homology_table <- homology_table[keep, , drop = FALSE]
-  homology_table <- unique(homology_table)
-  rownames(homology_table) <- NULL
+  homology_table <- .normalize_homology_table(homology_table)
 
   new(
     "HomologyAnnotation",
@@ -677,14 +733,412 @@ import_blast_homology <- function(blast_file,
   df
 }
 
-#' Retrieve the homology table from a HomologyAnnotation
+.homology_recycle_column <- function(value, n, arg) {
+  value_length <- length(value)
+  if (value_length == n) {
+    return(value)
+  }
+  if (value_length == 1L) {
+    return(rep(value, n))
+  }
+
+  stop(
+    "`", arg, "` must have length 1 or match the length of `query_gene`.",
+    call. = FALSE
+  )
+}
+
+.homology_rows_from_vectors <- function(query_gene,
+                                        reference_gene = NULL,
+                                        dots = list(),
+                                        require_reference_gene = TRUE) {
+  if (is.null(query_gene)) {
+    stop("Supply `query_gene` or `data`.", call. = FALSE)
+  }
+  n <- length(query_gene)
+  if (n == 0L) {
+    stop("`query_gene` must contain at least one value.", call. = FALSE)
+  }
+
+  dot_names <- names(dots)
+  if (length(dots) > 0L &&
+      (is.null(dot_names) || any(is.na(dot_names)) || any(!nzchar(dot_names)))) {
+    stop("Extra homology columns supplied in `...` must be named.", call. = FALSE)
+  }
+
+  cols <- list(query_gene = query_gene)
+  if (!is.null(reference_gene)) {
+    cols$reference_gene <- reference_gene
+  } else if (isTRUE(require_reference_gene)) {
+    stop("`reference_gene` must be supplied.", call. = FALSE)
+  }
+  cols <- c(cols, dots)
+
+  for (col in names(cols)) {
+    cols[[col]] <- .homology_recycle_column(cols[[col]], n, col)
+  }
+
+  as.data.frame(cols, stringsAsFactors = FALSE, check.names = FALSE)
+}
+
+.homology_edit_rows <- function(data = NULL,
+                                query_gene = NULL,
+                                reference_gene = NULL,
+                                dots = list(),
+                                require_reference_gene = TRUE,
+                                require_update_columns = FALSE) {
+  if (!is.null(data)) {
+    if (!is.null(query_gene) || !is.null(reference_gene) || length(dots) > 0L) {
+      stop(
+        "`data` cannot be supplied with `query_gene`, `reference_gene`, or extra columns in `...`.",
+        call. = FALSE
+      )
+    }
+    rows <- data
+  } else {
+    rows <- .homology_rows_from_vectors(
+      query_gene = query_gene,
+      reference_gene = reference_gene,
+      dots = dots,
+      require_reference_gene = require_reference_gene
+    )
+  }
+
+  rows <- .normalize_homology_table(
+    rows,
+    require_reference_gene = require_reference_gene
+  )
+  if (isTRUE(require_update_columns) &&
+      length(setdiff(colnames(rows), "query_gene")) == 0L) {
+    stop("Supply at least one homology column to replace.", call. = FALSE)
+  }
+  rows
+}
+
+.homology_align_columns <- function(df, columns) {
+  for (col in setdiff(columns, colnames(df))) {
+    df[[col]] <- rep(NA, nrow(df))
+  }
+  df[, columns, drop = FALSE]
+}
+
+.homology_bind_rows <- function(x, y) {
+  columns <- union(colnames(x), colnames(y))
+  x <- .homology_align_columns(x, columns)
+  y <- .homology_align_columns(y, columns)
+  out <- rbind(x, y)
+  rownames(out) <- NULL
+  out
+}
+
+.homology_format_keys <- function(x) {
+  paste(unique(as.character(x)), collapse = ", ")
+}
+
+.homology_patch_rows <- function(current, updates, add_missing = FALSE) {
+  current <- .normalize_homology_table(current, warn_duplicates = FALSE)
+  updates <- .normalize_homology_table(
+    updates,
+    require_reference_gene = FALSE
+  )
+  if (nrow(updates) == 0L) {
+    return(current)
+  }
+
+  update_cols <- setdiff(colnames(updates), "query_gene")
+  if (length(update_cols) == 0L) {
+    stop("Supply at least one homology column to replace.", call. = FALSE)
+  }
+
+  missing_keys <- setdiff(updates$query_gene, current$query_gene)
+  if (length(missing_keys) > 0L && !isTRUE(add_missing)) {
+    stop(
+      "Cannot replace missing `query_gene`: ",
+      .homology_format_keys(missing_keys),
+      call. = FALSE
+    )
+  }
+  if (length(missing_keys) > 0L) {
+    missing_rows <- updates$query_gene %in% missing_keys
+    if (!"reference_gene" %in% colnames(updates) ||
+        any(is.na(updates$reference_gene[missing_rows]) |
+            !nzchar(updates$reference_gene[missing_rows]))) {
+      stop(
+        "Cannot add missing homology rows without non-empty `reference_gene` values.",
+        call. = FALSE
+      )
+    }
+  }
+
+  columns <- union(colnames(current), colnames(updates))
+  current <- .homology_align_columns(current, columns)
+  updates <- .homology_align_columns(updates, columns)
+
+  for (i in seq_len(nrow(updates))) {
+    row_key <- updates$query_gene[[i]]
+    hit <- match(row_key, current$query_gene)
+    if (is.na(hit)) {
+      new_row <- as.data.frame(
+        stats::setNames(rep(list(NA), length(columns)), columns),
+        stringsAsFactors = FALSE,
+        check.names = FALSE
+      )
+      new_row[1L, colnames(updates)] <- updates[i, colnames(updates), drop = FALSE]
+      current <- rbind(current, new_row)
+      hit <- nrow(current)
+    }
+    current[hit, update_cols] <- updates[i, update_cols, drop = FALSE]
+  }
+
+  .normalize_homology_table(current, warn_duplicates = FALSE)
+}
+
+.record_homology_edit <- function(x, action, n) {
+  if (n <= 0L) {
+    return(x)
+  }
+  edits <- x@metadata$homology_edits
+  if (!is.list(edits)) {
+    edits <- list()
+  }
+  edits[[length(edits) + 1L]] <- list(
+    action = action,
+    n = as.integer(n),
+    timestamp = Sys.time()
+  )
+  x@metadata$homology_edits <- edits
+  x
+}
+
+#' Retrieve or replace the homology table from a HomologyAnnotation
+#'
+#' `homology_table()` returns the current table. `homology_table<-` replaces the
+#' full table after applying the same normalization rules as
+#' [HomologyAnnotation()]: `query_gene` and `reference_gene` are coerced to
+#' character, incomplete rows are dropped, duplicated `query_gene` values warn,
+#' and the first row for each duplicated query is kept.
 #'
 #' @param x A `HomologyAnnotation` object.
 #'
-#' @return A data frame with `query_gene` and `reference_gene` columns.
+#' @return A data frame with `query_gene`, `reference_gene`, and any extra
+#'   homology metadata columns.
 #' @export
 setGeneric("homology_table", function(x) standardGeneric("homology_table"))
 setMethod("homology_table", "HomologyAnnotation", function(x) x@homology_table)
+
+#' @param x A `HomologyAnnotation` object.
+#' @param value A data frame with at least `query_gene` and `reference_gene`.
+#'
+#' @return The updated `HomologyAnnotation` object.
+#' @rdname homology_table
+#' @export
+setGeneric("homology_table<-", function(x, value) {
+  standardGeneric("homology_table<-")
+})
+setReplaceMethod("homology_table", "HomologyAnnotation", function(x, value) {
+  x@homology_table <- .normalize_homology_table(value)
+  x <- .record_homology_edit(x, action = "replace_table", n = nrow(x@homology_table))
+  validObject(x)
+  x
+})
+
+#' Edit homology rows
+#'
+#' These S4 methods add, delete, or replace rows in a `HomologyAnnotation`
+#' table. Methods for `SynSpecies` edit one attached homology annotation selected
+#' by `name`, by `query_species`, or by omission when exactly one homology
+#' annotation is attached.
+#'
+#' @param x A `HomologyAnnotation` or `SynSpecies` object.
+#' @param data Optional data frame of rows. For `add_homology()` it must contain
+#'   `query_gene` and `reference_gene`. For `replace_homology()` it must contain
+#'   `query_gene` plus at least one column to update. For `delete_homology()`,
+#'   only `query_gene` and optional `reference_gene` are used.
+#' @param query_gene Query-side gene IDs.
+#' @param reference_gene Reference-side gene IDs. In `delete_homology()` this is
+#'   an optional guard: rows are deleted only when the current reference gene
+#'   matches.
+#' @param ... Extra homology table columns for `add_homology()` and
+#'   `replace_homology()`.
+#' @param overwrite For `add_homology()`, whether incoming rows for existing
+#'   `query_gene` values should update those rows. When `FALSE`, existing rows
+#'   are kept and a warning is emitted.
+#' @param add_missing For `replace_homology()`, whether missing `query_gene`
+#'   values should be added. Missing rows require non-empty `reference_gene`
+#'   values.
+#' @param missing For `delete_homology()`, behavior when a requested
+#'   `query_gene` is absent.
+#' @param name Optional homology annotation name when `x` is a `SynSpecies`.
+#' @param query_species Optional query species selector when `x` is a
+#'   `SynSpecies`.
+#'
+#' @return The updated object.
+#' @name homology-crud
+NULL
+
+#' @rdname homology-crud
+#' @export
+setGeneric("add_homology", function(x, ...) standardGeneric("add_homology"))
+
+#' @rdname homology-crud
+#' @export
+setGeneric("delete_homology", function(x, ...) standardGeneric("delete_homology"))
+
+#' @rdname homology-crud
+#' @export
+setGeneric("replace_homology", function(x, ...) standardGeneric("replace_homology"))
+
+setMethod("add_homology", "HomologyAnnotation", function(x,
+                                                          data = NULL,
+                                                          query_gene = NULL,
+                                                          reference_gene = NULL,
+                                                          ...,
+                                                          overwrite = FALSE) {
+  rows <- .homology_edit_rows(
+    data = data,
+    query_gene = query_gene,
+    reference_gene = reference_gene,
+    dots = list(...),
+    require_reference_gene = TRUE
+  )
+  if (nrow(rows) == 0L) {
+    return(x)
+  }
+
+  current <- homology_table(x)
+  existing <- rows$query_gene %in% current$query_gene
+  if (any(existing) && !isTRUE(overwrite)) {
+    warning(
+      "Existing `query_gene` values were kept because `overwrite = FALSE`: ",
+      .homology_format_keys(rows$query_gene[existing]),
+      call. = FALSE
+    )
+    rows <- rows[!existing, , drop = FALSE]
+  }
+
+  if (isTRUE(overwrite)) {
+    x@homology_table <- .homology_patch_rows(
+      current = current,
+      updates = rows,
+      add_missing = TRUE
+    )
+    x <- .record_homology_edit(x, action = "add", n = nrow(rows))
+    validObject(x)
+    return(x)
+  }
+
+  if (nrow(rows) == 0L) {
+    return(x)
+  }
+  x@homology_table <- .normalize_homology_table(
+    .homology_bind_rows(current, rows),
+    warn_duplicates = FALSE
+  )
+  x <- .record_homology_edit(x, action = "add", n = nrow(rows))
+  validObject(x)
+  x
+})
+
+setMethod("replace_homology", "HomologyAnnotation", function(x,
+                                                              data = NULL,
+                                                              query_gene = NULL,
+                                                              reference_gene = NULL,
+                                                              ...,
+                                                              add_missing = FALSE) {
+  rows <- .homology_edit_rows(
+    data = data,
+    query_gene = query_gene,
+    reference_gene = reference_gene,
+    dots = list(...),
+    require_reference_gene = FALSE,
+    require_update_columns = TRUE
+  )
+  x@homology_table <- .homology_patch_rows(
+    current = homology_table(x),
+    updates = rows,
+    add_missing = add_missing
+  )
+  x <- .record_homology_edit(x, action = "replace", n = nrow(rows))
+  validObject(x)
+  x
+})
+
+setMethod("delete_homology", "HomologyAnnotation", function(x,
+                                                            data = NULL,
+                                                            query_gene = NULL,
+                                                            reference_gene = NULL,
+                                                            ...,
+                                                            missing = c("error", "warn", "ignore")) {
+  if (length(list(...)) > 0L) {
+    stop("`delete_homology()` does not accept extra columns in `...`.", call. = FALSE)
+  }
+  missing <- match.arg(missing)
+  rows <- .homology_edit_rows(
+    data = data,
+    query_gene = query_gene,
+    reference_gene = reference_gene,
+    dots = list(),
+    require_reference_gene = FALSE
+  )
+  rows <- rows[, intersect(colnames(rows), c("query_gene", "reference_gene")), drop = FALSE]
+  current <- homology_table(x)
+
+  absent <- setdiff(rows$query_gene, current$query_gene)
+  if (length(absent) > 0L) {
+    message <- paste0(
+      "Cannot delete missing `query_gene`: ",
+      .homology_format_keys(absent)
+    )
+    if (identical(missing, "error")) {
+      stop(message, call. = FALSE)
+    }
+    if (identical(missing, "warn")) {
+      warning(message, call. = FALSE)
+    }
+  }
+
+  rows <- rows[rows$query_gene %in% current$query_gene, , drop = FALSE]
+  if (nrow(rows) == 0L) {
+    return(x)
+  }
+
+  if ("reference_gene" %in% colnames(rows)) {
+    guarded <- !is.na(rows$reference_gene) & nzchar(rows$reference_gene)
+    mismatched <- character()
+    for (i in which(guarded)) {
+      hit <- match(rows$query_gene[[i]], current$query_gene)
+      if (!identical(current$reference_gene[[hit]], rows$reference_gene[[i]])) {
+        mismatched <- c(mismatched, rows$query_gene[[i]])
+      }
+    }
+    if (length(mismatched) > 0L) {
+      stop(
+        "Cannot delete rows whose `reference_gene` guard does not match: ",
+        .homology_format_keys(mismatched),
+        call. = FALSE
+      )
+    }
+  }
+
+  keep <- !current$query_gene %in% rows$query_gene
+  x@homology_table <- current[keep, , drop = FALSE]
+  rownames(x@homology_table) <- NULL
+  x <- .record_homology_edit(x, action = "delete", n = sum(!keep))
+  validObject(x)
+  x
+})
+
+setMethod("add_homology", "ANY", function(x, ...) {
+  stop("`add_homology()` expects a HomologyAnnotation or SynSpecies object.", call. = FALSE)
+})
+
+setMethod("replace_homology", "ANY", function(x, ...) {
+  stop("`replace_homology()` expects a HomologyAnnotation or SynSpecies object.", call. = FALSE)
+})
+
+setMethod("delete_homology", "ANY", function(x, ...) {
+  stop("`delete_homology()` expects a HomologyAnnotation or SynSpecies object.", call. = FALSE)
+})
 
 #' Retrieve the reference species from a HomologyAnnotation
 #'
