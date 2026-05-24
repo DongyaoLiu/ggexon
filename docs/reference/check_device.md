@@ -174,7 +174,7 @@ if (check_device("patterns", action = "test")) {
 } else {
   print("Nay")
 }
-#> Error in check_bool(maybe, allow_na = TRUE): could not find function "check_bool"
+#> [1] "Yay"
 
 # Automatically throw a warning when unavailable
 if (check_device("compositing", action = "warn")) {
@@ -182,10 +182,9 @@ if (check_device("compositing", action = "warn")) {
 } else {
   print("Nay")
 }
-#> Error in check_bool(maybe, allow_na = TRUE): could not find function "check_bool"
+#> [1] "Yay"
 
 # Possibly throw an error
 try(check_device("glyphs", action = "abort"))
-#> Error in check_bool(maybe, allow_na = TRUE) :
-#>   could not find function "check_bool"
+#> [1] TRUE
 ```
