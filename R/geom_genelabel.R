@@ -100,7 +100,10 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
     family = "sans",
     size = 3,
     angle = 0, hjust = 0.5,
-    vjust = 0.5, alpha = NA, fontface = 1, lineheight = 1.2
+    vjust = 0.5, alpha = NA, fontface = 1, lineheight = 1.2,
+    reference_gene = NA_character_,
+    reference_gene_name = NA_character_,
+    homology_hit = NA
   ),
   extra_params = c("exon_height", "na.rm", "x_translation",
     "species", "chr", "subset",
@@ -494,7 +497,10 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
       context = context
     )
   },
-  syn_default_aes = c("xmin", "xmax", "ymin", "transcripts", "strand", "track", "label", "group")
+  syn_default_aes = c(
+    "xmin", "xmax", "ymin", "transcripts", "strand", "track", "label",
+    "group", "reference_gene", "reference_gene_name", "homology_hit"
+  )
 )
 
 #' Draw gene labels on exon tracks

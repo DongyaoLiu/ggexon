@@ -74,8 +74,9 @@ compile_ggtree_genomic_alignment(
 
 - inter_genetic, exon_length:
 
-  Layout modes passed to
-  [`compile_ggtree_genetag()`](https://dongyaoliu.github.io/ggexon/reference/compile_ggtree_genetag.md).
+  Deprecated x-layout arguments. Only `"scaled"` is supported. Use
+  [`strip_scale_x()`](https://dongyaoliu.github.io/ggexon/reference/strip_scale_x.md)
+  in ggexon plots for gene-tag x-coordinate normalization.
 
 - tree_track:
 

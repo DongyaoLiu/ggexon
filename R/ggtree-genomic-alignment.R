@@ -20,8 +20,9 @@
 #'   named list keyed by tree tip or individual id. Overrides `start` and `end`.
 #' @param feature_type Feature type passed to [query_features()]. Defaults to
 #'   `"gene"`.
-#' @param inter_genetic,exon_length Layout modes passed to
-#'   [compile_ggtree_genetag()].
+#' @param inter_genetic,exon_length Deprecated x-layout arguments. Only
+#'   `"scaled"` is supported. Use [strip_scale_x()] in ggexon plots for
+#'   gene-tag x-coordinate normalization.
 #' @param tree_track Facet-track label assigned to tree segments.
 #'
 #' @return A `ggtree_genomic_alignment` list with `tip_layout`,
@@ -48,6 +49,7 @@ compile_ggtree_genomic_alignment <- function(x,
   }
   inter_genetic <- match.arg(inter_genetic)
   exon_length <- match.arg(exon_length)
+  .genetag_abort_layout_mode(inter_genetic = inter_genetic, exon_length = exon_length)
   tree_inputs <- .resolve_synspecies_tree_inputs(x, tree = tree, tree_plot = tree_plot)
   tree <- tree_inputs$tree
   tree_plot <- tree_inputs$tree_plot

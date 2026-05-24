@@ -1058,7 +1058,8 @@ syn_layout_panels <- function(x) {
 .set_panel_xlim_on_synspecies_or_layout <- function(x,
                                                     individual = NULL,
                                                     xlim = NULL,
-                                                    xlim_chr = NULL) {
+                                                    xlim_chr = NULL,
+                                                    seed_other_panels = TRUE) {
   if (!(methods::is(x, "SynSpecies") || methods::is(x, "SynLayout"))) {
     stop("`set_panel_xlim()` expects a SynSpecies or SynLayout object.", call. = FALSE)
   }
@@ -1069,15 +1070,22 @@ syn_layout_panels <- function(x) {
   }
 
   panels <- .ensure_syn_layout_xlim_cols(syn_layout_panels(layout))
-  explicit_hits <- .resolve_layout_individual_panels(panels, individual)
+  explicit_hits <- if (is.null(individual)) {
+    stats::setNames(integer(), character())
+  } else {
+    .resolve_layout_individual_panels(panels, individual)
+  }
   explicit_individuals <- names(explicit_hits)
-  target_hits <- if (methods::is(x, "SynSpecies")) {
+  target_hits <- if (methods::is(x, "SynSpecies") && isTRUE(seed_other_panels)) {
     .resolve_layout_individual_panels(panels, NULL)
   } else {
     explicit_hits
   }
   target_individuals <- names(target_hits)
 
+  if (length(explicit_hits) == 0L && (!is.null(xlim) || !is.null(xlim_chr))) {
+    stop("`individual` must be supplied when `xlim` or `xlim_chr` is supplied.", call. = FALSE)
+  }
   xlim_map <- .normalize_panel_xlim_map(explicit_individuals, xlim, arg = "xlim")
   xlim_chr_map <- .normalize_panel_xlim_chr_map(explicit_individuals, xlim_chr)
   sources <- .layout_panel_xlim_sources(layout)
@@ -1210,7 +1218,8 @@ set_panel_xlim <- function(x = NULL, individual = NULL, xlim = NULL, xlim_chr = 
       x@data,
       individual = individual,
       xlim = xlim,
-      xlim_chr = xlim_chr
+      xlim_chr = xlim_chr,
+      seed_other_panels = is.null(individual)
     )
     return(x)
   }
@@ -3403,6 +3412,11 @@ setMethod("load_alignment", "SynSpecies", function(x, odgi = NULL, python = NULL
     if (swapped_lower %in% lower_available) {
       return(available[match(swapped_lower, lower_available)])
     }
+
+    part_matches <- lower_available %in% base::tolower(chr_parts)
+    if (sum(part_matches) == 1L) {
+      return(available[part_matches])
+    }
   }
 
   stop(
@@ -3554,7 +3568,7 @@ get_homology_annotation <- function(x, query_species = NULL, name = NULL) {
       stop("`query_species` must be a single non-empty character value.", call. = FALSE)
     }
     for (ha in x@homology_annotations) {
-      if (identical(query_species(ha), query_species)) {
+      if (.homology_same_species(methods::slot(ha, "query_species"), query_species)) {
         return(ha)
       }
     }
@@ -3597,7 +3611,7 @@ get_homology_annotation <- function(x, query_species = NULL, name = NULL) {
     }
     hits <- which(vapply(
       x@homology_annotations,
-      function(ha) identical(methods::slot(ha, "query_species"), query_species),
+      function(ha) .homology_same_species(methods::slot(ha, "query_species"), query_species),
       logical(1)
     ))
     if (length(hits) == 0L) {

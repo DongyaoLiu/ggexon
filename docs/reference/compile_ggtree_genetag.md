@@ -74,19 +74,11 @@ compile_ggtree_genetag(
   [`query_features()`](https://dongyaoliu.github.io/ggexon/reference/query_features.md).
   Defaults to `"gene"`.
 
-- inter_genetic:
+- inter_genetic, exon_length:
 
-  Intergenic-gap layout mode. `"scaled"` keeps the original gap between
-  consecutive features within each track. `"union"` uses the maximum gap
-  observed at each feature step so corresponding gaps are the same
-  across tracks in the same panel.
-
-- exon_length:
-
-  Feature-length layout mode. `"scaled"` keeps original feature lengths.
-  `"union"` uses the maximum feature length observed at each feature
-  step so corresponding features have the same displayed length across
-  tracks in the same panel.
+  Deprecated x-layout arguments. Only `"scaled"` is supported. Use
+  [`strip_scale_x()`](https://dongyaoliu.github.io/ggexon/reference/strip_scale_x.md)
+  for gene-tag x-coordinate normalization.
 
 - include_y:
 

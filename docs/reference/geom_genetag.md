@@ -23,6 +23,14 @@ geom_genetag(
   chr = NULL,
   subset = NULL,
   feature_type = "gene",
+  show_label = TRUE,
+  label_size = 3,
+  label_colour = "black",
+  label_family = "sans",
+  label_fontface = 1,
+  label_lineheight = 1.2,
+  panel_width_mm = NULL,
+  panel_width_inch = NULL,
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = FALSE
@@ -74,6 +82,20 @@ geom_genetag(
   Feature type passed to
   [`query_features()`](https://dongyaoliu.github.io/ggexon/reference/query_features.md).
   Defaults to `"gene"`.
+
+- show_label:
+
+  Logical; draw gene labels inside tags. Defaults to `TRUE`.
+
+- label_size, label_colour, label_family, label_fontface,
+  label_lineheight:
+
+  Fixed label styling used when `show_label = TRUE`.
+
+- panel_width_mm, panel_width_inch:
+
+  Optional panel width for estimating whether labels fit inside
+  transformed gene tags.
 
 ## Value
 

@@ -46,8 +46,9 @@ named list keyed by tree tip or individual id. Overrides \code{start} and \code{
 \item{feature_type}{Feature type passed to \code{\link[=query_features]{query_features()}}. Defaults to
 \code{"gene"}.}
 
-\item{inter_genetic, exon_length}{Layout modes passed to
-\code{\link[=compile_ggtree_genetag]{compile_ggtree_genetag()}}.}
+\item{inter_genetic, exon_length}{Deprecated x-layout arguments. Only
+\code{"scaled"} is supported. Use \code{\link[=strip_scale_x]{strip_scale_x()}} in ggexon plots for
+gene-tag x-coordinate normalization.}
 
 \item{tree_track}{Facet-track label assigned to tree segments.}
 }

@@ -130,15 +130,13 @@ test_that("compile_ggtree_genetag aligns gene rows to rectangular ggtree tips", 
   gene_tags <- compile_ggtree_genetag(
     sp,
     chr = "RagTag_V",
-    subset = c(21574445, 21584356),
-    inter_genetic = "union",
-    exon_length = "union"
+    subset = c(21574445, 21584356)
   )
 
   expect_true(nrow(gene_tags) > 0L)
   expect_false("y" %in% names(gene_tags))
   expect_true(all(c("id", "tree_y", "xmin", "xmax", "strand") %in% names(gene_tags)))
-  expect_true(all(c("genomic_xmin", "genomic_xmax", "layout_index") %in% names(gene_tags)))
+  expect_true(all(c("genomic_xmin", "genomic_xmax", "gene_key") %in% names(gene_tags)))
   expect_setequal(unique(gene_tags$id), c("XZ1516", "N2"))
 
   p <- ggtree::facet_plot(
@@ -150,6 +148,80 @@ test_that("compile_ggtree_genetag aligns gene rows to rectangular ggtree tips", 
   )
 
   expect_true(inherits(suppressWarnings(ggplot2::ggplotGrob(p)), "gtable"))
+})
+
+test_that("gene tags expose direct transcript children as homology aliases", {
+  annotation_path <- tempfile(fileext = ".gff3")
+  writeLines(
+    c(
+      "##gff-version 3",
+      "chrI\ttest\tgene\t10\t100\t.\t+\t.\tID=gene-GCK72_021860;Name=GCK72_021860",
+      paste0(
+        "chrI\ttest\tmRNA\t10\t100\t.\t+\t.\t",
+        "ID=rna-XM_053734541.1;Parent=gene-GCK72_021860;",
+        "Name=XM_053734541.1;transcript_id=XM_053734541.1"
+      ),
+      "chrI\ttest\texon\t10\t100\t.\t+\t.\tID=exon-XM_053734541.1-1;Parent=rna-XM_053734541.1"
+    ),
+    annotation_path
+  )
+
+  individual <- SynIndividual(
+    annotation_file = annotation_path,
+    genome_file = genome_waiver(),
+    id = "query"
+  )
+  individual <- load_annotation(individual)
+  sp <- SynSpecies(name = "worms") |>
+    add_individual(individual) |>
+    add_homology_annotation(HomologyAnnotation(
+      name = "query_to_ref",
+      reference_species = "ref",
+      query_species = "query",
+      homology_table = data.frame(
+        query_gene = "rna-XM_053734541.1",
+        reference_gene = "prp-6"
+      )
+    ))
+
+  gene_tags <- syn_to_genetag_df(sp, species = "query", chr = "chrI", feature_type = "gene")
+
+  expect_equal(nrow(gene_tags), 1L)
+  expect_match(gene_tags$homology_query_aliases[[1L]], "rna-XM_053734541.1", fixed = TRUE)
+  expect_true(gene_tags$homology_hit[[1L]])
+  expect_identical(gene_tags$reference_gene[[1L]], "prp-6")
+})
+
+test_that("compile_ggtree_genetag rejects old x-layout modifiers", {
+  testthat::skip_if_not_installed("ape")
+  testthat::skip_if_not_installed("ggtree")
+
+  annotation_path <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+  sp <- SynSpecies(name = "worms") |>
+    add_individual(
+      SynIndividual(
+        annotation_file = annotation_path,
+        genome_file = genome_waiver(),
+        id = "XZ1516"
+      )
+    )
+  tree <- ape::read.tree(text = "(XZ1516:0.1,other:0.2);")
+  tree_plot <- suppressWarnings(ggtree::ggtree(tree, layout = "rectangular"))
+
+  expect_error(
+    compile_ggtree_genetag(
+      sp,
+      tree_plot = tree_plot,
+      chr = "RagTag_V",
+      subset = c(21574445, 21584356),
+      inter_genetic = "union"
+    ),
+    "Use `strip_scale_x\\(\\)`"
+  )
 })
 
 test_that("ggtree genomic alignment keeps tree y and per-individual genomic panels", {

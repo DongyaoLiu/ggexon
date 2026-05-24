@@ -1,51 +1,12 @@
-#' Uniform gene-width scale for multi-track genomic plots
-#'
-#' `strip_scale()` normalizes gene and intergenic region widths across
-#' genomic tracks so that every gene occupies the same visual width and
-#' every intergenic gap occupies the same visual width. The track with the
-#' most genes determines the shared coordinate system; sparser tracks are
-#' aligned within that space.
-#'
-#' This scale is designed for [`geom_genelabel()`] layers and is mutually
-#' exclusive with [`scale_x_ggexon_genomic()`]. It works best with
-#' `facet_genomictree(scales = "fixed_x")` — the function will modify the
-#' facet to use fixed x scales internally.
-#'
-#' @param gene_gap_ratio Ratio of gene visual width to intergenic gap width.
-#'   When `NULL` (the default), the ratio is derived from the densest
-#'   track's actual genomic proportions (median gene width divided by
-#'   median gap width).
-#' @param align How tracks with fewer genes are positioned within the
-#'   shared x-axis. `"left"` packs genes to the left edge, `"right"` to
-#'   the right edge, `"center"` centres them.  Ignored when `homo_align`
-#'   is active (a warning is issued if set explicitly).
-#' @param homo_align `FALSE` (default) for independent per-track ordering.
-#'   `TRUE` to auto-detect the reference species from homology annotations
-#'   and align homologous genes at the same visual x-position across all
-#'   tracks.  A character value (e.g. `"C. elegans N2"`) explicitly names
-#'   the reference species.
-#' @param species_ratio Visual width ratio for species-specific genes
-#'   relative to homologous genes.  `NULL` (default) auto-scales each
-#'   gene proportionally to its genomic length relative to the median
-#'   reference gene length.  A numeric value (e.g. `0.5`) sets a fixed
-#'   ratio.
-#' @param collapse_contiguous_slot When `TRUE` (default), a run of
-#'   contiguous species-specific genes between two anchored homology
-#'   blocks is compressed into a single visual slot.  When `FALSE`,
-#'   each species-specific gene gets its own slot.
-#' @param overlap How to handle overlapping genes within a track.
-#'   `"stack"` (default) assigns overlapping genes to separate y-levels
-#'   (like transcript stacking in `geom_exon`).  `"merge"` combines
-#'   overlapping genomic intervals into a single merged block.
-#'
-#' @return A ggexon strip-scale specification, added to the plot with `+`.
-#' @export
-strip_scale <- function(gene_gap_ratio = NULL,
-                        align = c("left", "right", "center"),
-                        homo_align = FALSE,
-                        species_ratio = NULL,
-                        collapse_contiguous_slot = TRUE,
-                        overlap = c("stack", "merge")) {
+# Legacy implementation for old `ggexon_strip_scale_spec` objects. New public
+# calls should use strip_scale_x(); strip_scale() is a wrapper defined in
+# R/strip-scale-x.R.
+.strip_scale_legacy <- function(gene_gap_ratio = NULL,
+                                align = c("left", "right", "center"),
+                                homo_align = FALSE,
+                                species_ratio = NULL,
+                                collapse_contiguous_slot = TRUE,
+                                overlap = c("stack", "merge")) {
   align <- match.arg(align)
   overlap <- match.arg(overlap)
   if (!is.null(gene_gap_ratio)) {
@@ -247,14 +208,20 @@ apply_strip_scale <- function(data, layers, strip_scale_spec, layout, plot) {
     if (identical(spec$overlap, "stack")) {
       sp_genes <- .strip_scale_assign_y_levels(sp_genes)
       if (!is.null(sp_genes$.y_level)) {
-        y_adjust[[sp]] <- sp_genes$.y_level
+        y_adjust[[sp]] <- stats::setNames(
+          sp_genes$.y_level,
+          as.character(sp_genes$transcripts)
+        )
       }
     }
 
     # ── insert species-specific genes ────────────────────────────
     if (nrow(sp_genes[is.na(sp_genes$.slot), , drop = FALSE]) > 0L) {
-      sp_genes <- .strip_scale_insert_unplaced(
+      inserted <- .strip_scale_insert_unplaced(
         sp_genes, master, slot_map, spec$collapse_contiguous_slot)
+      sp_genes <- inserted$sp_genes
+      master <- inserted$master
+      slot_map <- inserted$slot_map
       sp_slots <- sp_genes$.slot
     }
 
@@ -269,7 +236,12 @@ apply_strip_scale <- function(data, layers, strip_scale_spec, layout, plot) {
       s <- sp_slots[[i]]
       if (is.na(s)) next
       if (s > length(master)) master <- c(master, rep(list(list()), s - length(master)))
-      master[[s]][[sp]] <- sp_genes[i, , drop = FALSE]
+      if (is.null(master[[s]][[sp]])) {
+        master[[s]][[sp]] <- sp_genes[i, , drop = FALSE]
+      } else {
+        master[[s]][[sp]] <- rbind(master[[s]][[sp]], sp_genes[i, , drop = FALSE])
+        master[[s]][[sp]] <- master[[s]][[sp]][order(master[[s]][[sp]]$gene_start), , drop = FALSE]
+      }
     }
 
     processed <- c(processed, sp)
@@ -372,36 +344,42 @@ apply_strip_scale <- function(data, layers, strip_scale_spec, layout, plot) {
   n <- nrow(sp_genes)
   if (n <= 1L) return(sp_genes)
   levels <- rep(1L, n)
-  for (i in seq.int(2L, n)) {
-    prev_end <- sp_genes$gene_end[[i - 1L]]
+  level_ends <- numeric(0)
+
+  for (i in seq_len(n)) {
     cur_start <- sp_genes$gene_start[[i]]
-    if (!is.finite(prev_end) || !is.finite(cur_start)) next
-    if (cur_start < prev_end) {
-      # overlap: bump level
-      levels[[i]] <- levels[[i - 1L]] + 1L
+    cur_end <- sp_genes$gene_end[[i]]
+    if (!is.finite(cur_start) || !is.finite(cur_end)) next
+
+    available <- which(cur_start >= level_ends)
+    if (length(available) > 0L) {
+      level <- available[[1L]]
     } else {
-      levels[[i]] <- 1L
+      level <- length(level_ends) + 1L
+      level_ends[[level]] <- -Inf
     }
+    levels[[i]] <- level
+    level_ends[[level]] <- max(level_ends[[level]], cur_end, na.rm = TRUE)
   }
   sp_genes$.y_level <- levels
   sp_genes
 }
 
 .strip_scale_apply_y_adjust <- function(data, gene_layers, y_adjust) {
+  y_tbl <- dplyr::bind_rows(lapply(names(y_adjust), function(track_name) {
+    lev <- y_adjust[[track_name]]
+    if (is.null(lev) || length(lev) == 0L) return(NULL)
+    data.frame(track = track_name, transcripts = names(lev),
+               .y_level = as.integer(lev), stringsAsFactors = FALSE)
+  }))
+  if (is.null(y_tbl) || nrow(y_tbl) == 0L) return(data)
+
   for (i in gene_layers) {
     df <- data[[i]]
-    if (!is.data.frame(df) || !"track" %in% names(df)) next
-    track_name <- unique(as.character(df$track))
-    if (length(track_name) != 1L) next
-    lev <- y_adjust[[track_name]]
-    if (is.null(lev)) next
+    if (!is.data.frame(df) || !all(c("track", "transcripts") %in% names(df))) next
 
-    # match genes by transcripts
     df <- df %>%
-      dplyr::left_join(
-        data.frame(transcripts = names(lev), .y_level = as.integer(lev),
-                   stringsAsFactors = FALSE),
-        by = "transcripts")
+      dplyr::left_join(y_tbl, by = c("track", "transcripts"))
     if (".y_level" %in% names(df) && any(!is.na(df$.y_level))) {
       offset <- (df$.y_level - 1L) * 1.5
       offset[is.na(offset)] <- 0
@@ -419,29 +397,34 @@ apply_strip_scale <- function(data, layers, strip_scale_spec, layout, plot) {
 .strip_scale_insert_unplaced <- function(sp_genes, master, slot_map,
                                          collapse_contiguous) {
   n <- nrow(sp_genes)
-  placed_idx   <- which(!is.na(sp_genes$.slot))
   unplaced_idx <- which(is.na(sp_genes$.slot))
 
-  if (length(unplaced_idx) == 0L) return(sp_genes)
+  if (length(unplaced_idx) == 0L)
+    return(list(sp_genes = sp_genes, master = master, slot_map = slot_map))
+
+  insert_slots <- function(insert_pos, n_slots) {
+    if (n_slots <= 0L) return(invisible(NULL))
+    slot_map <<- .shift_slot_maps(slot_map, insert_pos, n_slots)
+    shift_current <- !is.na(sp_genes$.slot) & sp_genes$.slot >= insert_pos
+    sp_genes$.slot[shift_current] <<- sp_genes$.slot[shift_current] + n_slots
+    master <<- append(master, rep(list(list()), n_slots), after = insert_pos - 1L)
+    invisible(NULL)
+  }
+
+  placed_idx <- which(!is.na(sp_genes$.slot))
   if (length(placed_idx) == 0L) {
     # no anchors at all — place all species-specific at end as one block
     insert_pos <- length(master) + 1L
     if (isTRUE(collapse_contiguous)) {
+      insert_slots(insert_pos, 1L)
       sp_genes$.slot[unplaced_idx] <- insert_pos
-      .shift_slot_maps(slot_map, insert_pos)
-      master <- append(master, list(list()), after = insert_pos - 1L)
     } else {
+      insert_slots(insert_pos, length(unplaced_idx))
       for (k in seq_along(unplaced_idx)) {
         sp_genes$.slot[[unplaced_idx[[k]]]] <- insert_pos + k - 1L
       }
-      for (k in seq_along(unplaced_idx)) {
-        .shift_slot_maps(slot_map, insert_pos)
-        master <- append(master, list(list()), after = insert_pos - 1L)
-      }
     }
-    # update master reference
-    eval.parent(substitute(master <- master))
-    return(sp_genes)
+    return(list(sp_genes = sp_genes, master = master, slot_map = slot_map))
   }
 
   # identify contiguous runs of unplaced genes
@@ -459,6 +442,7 @@ apply_strip_scale <- function(data, layers, strip_scale_spec, layout, plot) {
 
   for (run in runs) {
     run_idx <- seq.int(run[[1L]], run[[2L]])
+    placed_idx <- which(!is.na(sp_genes$.slot))
     # find flanking placed genes
     left_placed  <- max(placed_idx[placed_idx < run[[1L]]], 0L)
     right_placed <- min(placed_idx[placed_idx > run[[2L]]], n + 1L)
@@ -475,30 +459,26 @@ apply_strip_scale <- function(data, layers, strip_scale_spec, layout, plot) {
 
     if (isTRUE(collapse_contiguous)) {
       # entire run → one slot
+      insert_slots(insert_pos, 1L)
       sp_genes$.slot[run_idx] <- insert_pos
-      .shift_slot_maps(slot_map, insert_pos)
-      master <- append(master, list(list()), after = insert_pos - 1L)
     } else {
+      insert_slots(insert_pos, length(run_idx))
       for (k in seq_along(run_idx)) {
         sp_genes$.slot[[run_idx[[k]]]] <- insert_pos + k - 1L
       }
-      for (k in seq_along(run_idx)) {
-        .shift_slot_maps(slot_map, insert_pos)
-        master <- append(master, list(list()), after = insert_pos - 1L)
-      }
     }
   }
-  eval.parent(substitute(master <- master))
-  sp_genes
+  list(sp_genes = sp_genes, master = master, slot_map = slot_map)
 }
 
-.shift_slot_maps <- function(slot_map, from_pos) {
+.shift_slot_maps <- function(slot_map, from_pos, n_slots = 1L) {
   for (sname in names(slot_map)) {
     sm <- slot_map[[sname]]
     to_shift <- sm >= from_pos
-    sm[to_shift] <- sm[to_shift] + 1L
+    sm[to_shift] <- sm[to_shift] + n_slots
     slot_map[[sname]] <- sm
   }
+  slot_map
 }
 
 # ── Per-panel transform ────────────────────────────────────────────────
@@ -510,14 +490,17 @@ apply_strip_scale <- function(data, layers, strip_scale_spec, layout, plot) {
   for (slot_i in seq_along(master)) {
     slot <- master[[slot_i]]
     gene <- slot[[track]]
+    has_next_slot <- slot_i < length(master)
 
     if (is.null(gene) || nrow(gene) == 0L) {
-      current_visual <- current_visual + p
+      current_visual <- current_visual + g + if (has_next_slot) p else 0
       next
     }
 
-    gene <- gene[1L, , drop = FALSE]
-    gw <- gene$gene_end - gene$gene_start
+    gene <- gene[order(gene$gene_start), , drop = FALSE]
+    gene_start <- min(gene$gene_start, na.rm = TRUE)
+    gene_end <- max(gene$gene_end, na.rm = TRUE)
+    gw <- gene_end - gene_start
 
     if (length(slot) > 1L) {
       block_width <- g
@@ -527,23 +510,23 @@ apply_strip_scale <- function(data, layers, strip_scale_spec, layout, plot) {
 
     if (gw > 0) {
       pieces[[length(pieces) + 1L]] <- data.frame(
-        genomic_start = gene$gene_start, genomic_end = gene$gene_end,
+        genomic_start = gene_start, genomic_end = gene_end,
         plot_start = current_visual, plot_end = current_visual + block_width,
         slope = block_width / gw, region_type = "gene", stringsAsFactors = FALSE)
     }
     current_visual <- current_visual + block_width
 
-    if (slot_i < length(master)) {
+    if (has_next_slot) {
       gap_extra <- g - block_width
       gap_width <- p + gap_extra
       next_slot <- master[[slot_i + 1L]]
       next_gene <- next_slot[[track]]
       if (!is.null(next_gene) && nrow(next_gene) > 0L) {
-        next_gene <- next_gene[1L, , drop = FALSE]
-        gap_genomic <- next_gene$gene_start - gene$gene_end
+        next_gene_start <- min(next_gene$gene_start, na.rm = TRUE)
+        gap_genomic <- next_gene_start - gene_end
         if (gap_genomic > 0) {
           pieces[[length(pieces) + 1L]] <- data.frame(
-            genomic_start = gene$gene_end, genomic_end = next_gene$gene_start,
+            genomic_start = gene_end, genomic_end = next_gene_start,
             plot_start = current_visual, plot_end = current_visual + gap_width,
             slope = gap_width / gap_genomic, region_type = "gap",
             stringsAsFactors = FALSE)
@@ -695,17 +678,51 @@ apply_strip_scale <- function(data, layers, strip_scale_spec, layout, plot) {
 strip_scale_to_plot_x <- function(x, transform) {
   vapply(as.numeric(x), function(value) {
     if (!is.finite(value) || is.null(transform) || nrow(transform) == 0L) return(value)
-    first <- transform[1L, , drop = FALSE]; last <- transform[nrow(transform), , drop = FALSE]
-    if (value < first$genomic_start[[1L]])
-      return(first$plot_start[[1L]] - (first$genomic_start[[1L]] - value))
-    if (value > last$genomic_end[[1L]])
-      return(last$plot_end[[1L]] + (value - last$genomic_end[[1L]]))
+
     idx <- which(value >= transform$genomic_start & value <= transform$genomic_end)
-    if (length(idx) == 0L) {
-      dists <- abs(value - transform$genomic_start); idx <- which.min(dists)
-      if (length(idx) == 0L) return(value)
+    if (length(idx) > 0L) {
+      widths <- transform$genomic_end[idx] - transform$genomic_start[idx]
+      idx <- idx[[which.min(widths)]]
+      row <- transform[idx, , drop = FALSE]
+      return(row$plot_start[[1L]] + (value - row$genomic_start[[1L]]) * row$slope[[1L]])
     }
-    idx <- idx[[1L]]; row <- transform[idx, , drop = FALSE]
+
+    min_start_idx <- which.min(transform$genomic_start)
+    max_end_idx <- which.max(transform$genomic_end)
+    if (value < transform$genomic_start[[min_start_idx]]) {
+      row <- transform[min_start_idx, , drop = FALSE]
+      return(row$plot_start[[1L]] - (row$genomic_start[[1L]] - value))
+    }
+    if (value > transform$genomic_end[[max_end_idx]]) {
+      row <- transform[max_end_idx, , drop = FALSE]
+      return(row$plot_end[[1L]] + (value - row$genomic_end[[1L]]))
+    }
+
+    left_idx <- which(transform$genomic_end <= value)
+    right_idx <- which(transform$genomic_start >= value)
+    left <- if (length(left_idx) > 0L) {
+      left_idx[[which.min(value - transform$genomic_end[left_idx])]]
+    } else {
+      NA_integer_
+    }
+    right <- if (length(right_idx) > 0L) {
+      right_idx[[which.min(transform$genomic_start[right_idx] - value)]]
+    } else {
+      NA_integer_
+    }
+    if (!is.na(left) && !is.na(right) &&
+        transform$genomic_start[[right]] > transform$genomic_end[[left]]) {
+      frac <- (value - transform$genomic_end[[left]]) /
+        (transform$genomic_start[[right]] - transform$genomic_end[[left]])
+      return(transform$plot_end[[left]] +
+        frac * (transform$plot_start[[right]] - transform$plot_end[[left]]))
+    }
+
+    nearest <- which.min(pmin(
+      abs(value - transform$genomic_start),
+      abs(value - transform$genomic_end)
+    ))
+    row <- transform[nearest, , drop = FALSE]
     row$plot_start[[1L]] + (value - row$genomic_start[[1L]]) * row$slope[[1L]]
   }, numeric(1))
 }

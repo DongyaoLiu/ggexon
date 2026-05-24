@@ -193,6 +193,8 @@ HomologyAnnotation <- function(name,
                                source_file = "<homology>",
                                metadata = list()) {
   homology_table <- .normalize_homology_table(homology_table)
+  reference_species <- unname(as.character(reference_species))
+  query_species <- unname(as.character(query_species))
 
   new(
     "HomologyAnnotation",
@@ -203,6 +205,14 @@ HomologyAnnotation <- function(name,
     homology_table = homology_table,
     metadata = metadata
   )
+}
+
+.homology_same_species <- function(x, y) {
+  x <- unname(as.character(x))
+  y <- unname(as.character(y))
+  length(x) == 1L && length(y) == 1L &&
+    !is.na(x) && !is.na(y) &&
+    identical(x, y)
 }
 
 #' Import homology from a BLAST outfmt 6 file
@@ -622,7 +632,9 @@ import_blast_homology <- function(blast_file,
   x <- as.character(x)
   x <- trimws(x)
   x <- sub("^(gene:|transcript:|cds:|mRNA:)", "", x, perl = TRUE)
-  x <- sub("(\\.t\\d+|-T\\d+)$", "", x, perl = TRUE)
+  x <- sub("^(gene-|rna-|transcript-|cds-|mRNA-)", "", x, perl = TRUE)
+  x <- sub("(\\.t\\d+|-T\\d+)(\\.mrna)?$", "", x, perl = TRUE)
+  x <- sub("\\.mrna$", "", x, perl = TRUE)
   # Strip locus-tag isoform letters only when preceded by a digit
   # (e.g. B0250.18a → B0250.18, but WBGene stays WBGene)
   x <- sub("(\\d)[a-z]\\d*$", "\\1", x, perl = TRUE)
@@ -640,7 +652,8 @@ import_blast_homology <- function(blast_file,
 #'
 #' When no homology is available for a track, or when a feature has no
 #' match, both new columns fall back to the feature's original gene_name
-#' or gene_id.
+#' or gene_id, while `homology_hit` records whether a real homology table
+#' match was found.
 #'
 #' @param df A data frame produced by a `syn_*_df()` function.
 #'   Must contain at least a `track` column and one or more of
@@ -648,8 +661,8 @@ import_blast_homology <- function(blast_file,
 #' @param homology_list A named list of `HomologyAnnotation` objects,
 #'   typically from `homology_annotations(synspecies)`.
 #'
-#' @return The input data frame with additional `reference_gene` and
-#'   `reference_gene_name` columns.
+#' @return The input data frame with additional `reference_gene`,
+#'   `reference_gene_name`, and `homology_hit` columns.
 #' @keywords internal
 .inject_homology_columns <- function(df, homology_list) {
   if (!is.data.frame(df) || nrow(df) == 0L) {
@@ -659,7 +672,10 @@ import_blast_homology <- function(blast_file,
     return(df)
   }
 
-  id_candidates <- c("gene_id", "gene_name", "transcript_id", "Parent", "ID")
+  id_candidates <- c(
+    "gene_id", "gene_name", "transcript_id", "Parent", "ID",
+    "homology_query_aliases"
+  )
   id_columns <- intersect(id_candidates, colnames(df))
   if (length(id_columns) == 0L) {
     return(df)
@@ -676,6 +692,7 @@ import_blast_homology <- function(blast_file,
 
   df$reference_gene <- fallback
   df$reference_gene_name <- fallback
+  df$homology_hit <- FALSE
 
   tracks <- unique(as.character(df$track))
 
@@ -683,7 +700,7 @@ import_blast_homology <- function(blast_file,
     ha <- NULL
     for (h in homology_list) {
       if (methods::is(h, "HomologyAnnotation") &&
-          identical(query_species(h), track_name)) {
+          .homology_same_species(methods::slot(h, "query_species"), track_name)) {
         ha <- h
         break
       }
@@ -708,17 +725,19 @@ import_blast_homology <- function(blast_file,
     matched_values <- rep(NA_character_, length(df$track))
 
     for (col in id_columns) {
-      ann_values <- as.character(df[[col]])
-      norm_ann <- .normalize_gene_id(ann_values)
+      ann_values <- .homology_split_alias_values(df[[col]])
+      norm_ann <- lapply(ann_values, .normalize_gene_id)
 
       for (i_packed in which(df$track == track_name)) {
         i <- as.integer(i_packed)
         if (matched[[i]]) next
 
         ni <- norm_ann[[i]]
-        if (is.na(ni) || !nzchar(ni)) next
+        ni <- ni[!is.na(ni) & nzchar(ni)]
+        if (length(ni) == 0L) next
 
-        hit <- which(norm_query == ni)
+        hit <- match(ni, norm_query)
+        hit <- hit[!is.na(hit)]
         if (length(hit) > 0L) {
           matched[[i]] <- TRUE
           matched_values[[i]] <- ref_gene[[hit[[1L]]]]
@@ -726,11 +745,51 @@ import_blast_homology <- function(blast_file,
       }
     }
 
+    label_columns <- intersect(c("gene_name", "gene", "label", "Name"), colnames(df))
+    if (length(label_columns) > 0L && any(!matched)) {
+      norm_ref <- .normalize_gene_id(ref_gene)
+      keep_ref <- !duplicated(norm_ref) & !is.na(norm_ref) & nzchar(norm_ref)
+      norm_ref <- norm_ref[keep_ref]
+      ref_gene_lookup <- ref_gene[keep_ref]
+
+      for (col in label_columns) {
+        ann_values <- as.character(df[[col]])
+        norm_ann <- .normalize_gene_id(ann_values)
+
+        for (i_packed in which(df$track == track_name)) {
+          i <- as.integer(i_packed)
+          if (matched[[i]]) next
+
+          ni <- norm_ann[[i]]
+          if (is.na(ni) || !nzchar(ni)) next
+
+          hit <- match(ni, norm_ref)
+          if (!is.na(hit)) {
+            matched[[i]] <- TRUE
+            matched_values[[i]] <- ref_gene_lookup[[hit]]
+          }
+        }
+      }
+    }
+
     df$reference_gene[matched] <- matched_values[matched]
     df$reference_gene_name[matched] <- matched_values[matched]
+    df$homology_hit[matched] <- TRUE
   }
 
   df
+}
+
+.homology_split_alias_values <- function(x) {
+  values <- as.character(x)
+  lapply(values, function(value) {
+    if (is.na(value) || !nzchar(value)) {
+      return(character())
+    }
+    out <- strsplit(value, "\r", fixed = TRUE)[[1L]]
+    out <- trimws(out)
+    out[!is.na(out) & nzchar(out)]
+  })
 }
 
 .homology_recycle_column <- function(value, n, arg) {

@@ -120,8 +120,13 @@ GeomNucLink <- ggproto("GeomPanel", Geom,
 
                                # each row are a group will have a same id after melting
                                data$id = 1:nrow(data)
-                               melt_data = data %>% select(-any_of(c("tspecies", "qspecies", "track", "tchr", "qchr", "target_anchor_y", "query_anchor_y"))) %>%
-                                 melt(id = c("id", "strand", "PANEL", "group", "t_panel", "q_panel"), variable.name = "x_variable", value.name = "x") %>%
+	                               id_cols <- intersect(
+	                                 c("id", "strand", "PANEL", "group", "t_panel", "q_panel",
+	                                   "tspecies", "qspecies", "track", "tchr", "qchr"),
+	                                 names(data)
+	                               )
+	                               melt_data = data %>% select(-any_of(c("target_anchor_y", "query_anchor_y"))) %>%
+	                                 melt(id = id_cols, variable.name = "x_variable", value.name = "x") %>%
                                  mutate(y_variable = if_else(stringr::str_detect(x_variable,"^t"), "target_anchor_y", "query_anchor_y")) %>%
                                  left_join(link_y_out, join_by(PANEL == PANEL, group == group, y_variable == y_variable)) %>%
                                  mutate(source_panel = if_else(stringr::str_detect(x_variable, "^t"), t_panel, q_panel)) %>%

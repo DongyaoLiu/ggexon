@@ -18,6 +18,14 @@ geom_genetag(
   chr = NULL,
   subset = NULL,
   feature_type = "gene",
+  show_label = TRUE,
+  label_size = 3,
+  label_colour = "black",
+  label_family = "sans",
+  label_fontface = 1,
+  label_lineheight = 1.2,
+  panel_width_mm = NULL,
+  panel_width_inch = NULL,
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = FALSE
@@ -48,6 +56,13 @@ Syn-backed.}
 
 \item{feature_type}{Feature type passed to \code{\link[=query_features]{query_features()}}. Defaults to
 \code{"gene"}.}
+
+\item{show_label}{Logical; draw gene labels inside tags. Defaults to \code{TRUE}.}
+
+\item{label_size, label_colour, label_family, label_fontface, label_lineheight}{Fixed label styling used when \code{show_label = TRUE}.}
+
+\item{panel_width_mm, panel_width_inch}{Optional panel width for estimating
+whether labels fit inside transformed gene tags.}
 }
 \value{
 A ggplot layer.

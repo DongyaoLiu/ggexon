@@ -27,11 +27,12 @@ homology-side `query_gene` values.
 
 ## Value
 
-The input data frame with additional `reference_gene` and
-`reference_gene_name` columns.
+The input data frame with additional `reference_gene`,
+`reference_gene_name`, and `homology_hit` columns.
 
 ## Details
 
 When no homology is available for a track, or when a feature has no
 match, both new columns fall back to the feature's original gene_name or
-gene_id.
+gene_id, while `homology_hit` records whether a real homology table
+match was found.

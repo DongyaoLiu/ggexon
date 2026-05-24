@@ -48,15 +48,9 @@ named list keyed by tree tip or individual id. Overrides \code{start} and \code{
 \item{feature_type}{Feature type passed to \code{\link[=query_features]{query_features()}}. Defaults to
 \code{"gene"}.}
 
-\item{inter_genetic}{Intergenic-gap layout mode. \code{"scaled"} keeps the
-original gap between consecutive features within each track. \code{"union"} uses
-the maximum gap observed at each feature step so corresponding gaps are the
-same across tracks in the same panel.}
-
-\item{exon_length}{Feature-length layout mode. \code{"scaled"} keeps original
-feature lengths. \code{"union"} uses the maximum feature length observed at each
-feature step so corresponding features have the same displayed length
-across tracks in the same panel.}
+\item{inter_genetic, exon_length}{Deprecated x-layout arguments. Only
+\code{"scaled"} is supported. Use \code{\link[=strip_scale_x]{strip_scale_x()}} for gene-tag x-coordinate
+normalization.}
 
 \item{include_y}{Logical; when \code{TRUE}, also include a \code{y} column copied from
 \code{tree_y}. Keep the default \code{FALSE} for \code{ggtree::facet_plot()}, which

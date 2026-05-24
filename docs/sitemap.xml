@@ -1,6 +1,7 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://dongyaoliu.github.io/ggexon/404.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/AGENTS.html</loc></url>
+<url><loc>https://dongyaoliu.github.io/ggexon/CLAUDE.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/LICENSE-text.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/LICENSE.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/articles/ggexon-classes-and-verbs.html</loc></url>
@@ -166,7 +167,7 @@
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/species_tree.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/store_chain_layout.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/store_projected_domains.html</loc></url>
-<url><loc>https://dongyaoliu.github.io/ggexon/reference/strip_scale.html</loc></url>
+<url><loc>https://dongyaoliu.github.io/ggexon/reference/strip_scale_x.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/subset_feature_annotation.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/subset_individual.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/subset_pairwise_alignment.html</loc></url>

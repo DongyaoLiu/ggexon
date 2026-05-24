@@ -1,0 +1,902 @@
+#' X-only strip scale for gene-tag tracks
+#'
+#' `strip_scale_x()` normalizes gene-tag x coordinates so genes and intergenic
+#' gaps occupy predictable visual widths. In homology mode, it can compress
+#' species-specific local runs and translate tracks to align the most conserved
+#' block against an explicit reference track.
+#'
+#' @param gene_gap_ratio Ratio of full gene visual width to intergenic gap
+#'   visual width. When `NULL`, the ratio is estimated from the densest track.
+#' @param align Alignment for level-1, non-homology tracks with fewer genes than
+#'   the widest track.
+#' @param homo_align `FALSE` for level-1 layout only, or a single character
+#'   reference track name for homology-aware layout. `TRUE` is not supported.
+#' @param species_specific_ratio Visual width of a species-specific gene or
+#'   collapsed run relative to a homologous gene.
+#' @param secondary_homology_ratio Visual width of a homologous off-track or
+#'   duplicate gene relative to a primary visible homologous gene.
+#' @param species_ratio Deprecated alias for `species_specific_ratio`.
+#' @param collapse_contiguous_slot Logical; when `TRUE`, contiguous
+#'   species-specific genes are compressed into one local run slot.
+#' @param block_align Homology-mode track translation. `"conserved"` aligns the
+#'   highest-support reference homology block by median center offset, without
+#'   requiring query genes to appear in the same order. `"left"`, `"center"`,
+#'   and `"right"` align each local track span to the reference span. `"none"`
+#'   leaves level-2 local coordinates untranslated.
+#' @param ... Arguments passed from the compatibility wrapper `strip_scale()` to
+#'   `strip_scale_x()`.
+#'
+#' @return A ggexon strip-scale-x specification, added to a plot with `+`.
+#' @export
+strip_scale_x <- function(gene_gap_ratio = NULL,
+                          align = c("left", "right", "center"),
+                          homo_align = FALSE,
+                          species_specific_ratio = 0.5,
+                          secondary_homology_ratio = 0.75,
+                          species_ratio = NULL,
+                          collapse_contiguous_slot = TRUE,
+                          block_align = c("conserved", "left", "center", "right", "none")) {
+  align <- match.arg(align)
+  block_align <- match.arg(block_align)
+  if (!is.null(species_ratio)) {
+    warning("`species_ratio` is deprecated; use `species_specific_ratio`.", call. = FALSE)
+    species_specific_ratio <- species_ratio
+  }
+  if (!is.null(gene_gap_ratio)) {
+    if (!is.numeric(gene_gap_ratio) || length(gene_gap_ratio) != 1L ||
+        is.na(gene_gap_ratio) || gene_gap_ratio <= 0) {
+      stop("`gene_gap_ratio` must be a single positive number or `NULL`.", call. = FALSE)
+    }
+  }
+  if (!is.numeric(species_specific_ratio) || length(species_specific_ratio) != 1L ||
+      is.na(species_specific_ratio) || species_specific_ratio <= 0 ||
+      species_specific_ratio > 1) {
+    stop("`species_specific_ratio` must be a number in (0, 1].", call. = FALSE)
+  }
+  if (!is.numeric(secondary_homology_ratio) || length(secondary_homology_ratio) != 1L ||
+      is.na(secondary_homology_ratio) || secondary_homology_ratio <= 0 ||
+      secondary_homology_ratio > 1) {
+    stop("`secondary_homology_ratio` must be a number in (0, 1].", call. = FALSE)
+  }
+  if (!isTRUE(collapse_contiguous_slot) && !identical(collapse_contiguous_slot, FALSE)) {
+    stop("`collapse_contiguous_slot` must be `TRUE` or `FALSE`.", call. = FALSE)
+  }
+  if (isTRUE(homo_align)) {
+    stop(
+      "`homo_align = TRUE` is no longer supported because homology alignment ",
+      "requires an explicit reference track. Use `homo_align = \"<reference track>\"`.",
+      call. = FALSE
+    )
+  }
+  homo_active <- is.character(homo_align) && length(homo_align) == 1L &&
+    !is.na(homo_align) && nzchar(homo_align)
+  if (!identical(homo_align, FALSE) && !homo_active) {
+    stop("`homo_align` must be `FALSE` or a single reference track name.", call. = FALSE)
+  }
+  if (!homo_active && !identical(block_align, "conserved")) {
+    warning("`block_align` is ignored unless `homo_align` is set.", call. = FALSE)
+  }
+
+  structure(
+    list(
+      gene_gap_ratio = gene_gap_ratio,
+      align = align,
+      homo_align = homo_align,
+      homo_active = homo_active,
+      species_specific_ratio = as.numeric(species_specific_ratio),
+      secondary_homology_ratio = as.numeric(secondary_homology_ratio),
+      collapse_contiguous_slot = isTRUE(collapse_contiguous_slot),
+      block_align = block_align
+    ),
+    class = "ggexon_strip_scale_x_spec"
+  )
+}
+
+#' @rdname strip_scale_x
+#' @export
+strip_scale <- function(...) {
+  strip_scale_x(...)
+}
+
+#' @export
+ggplot_add.ggexon_strip_scale_x_spec <- function(object, plot, object_name) {
+  if (!is_ggexon(plot)) {
+    stop("`strip_scale_x()` can only be added to a ggexon plot.", call. = FALSE)
+  }
+  if (!is.null(plot@genomic_x_scale)) {
+    stop("`strip_scale_x()` and `scale_x_ggexon_genomic()` are mutually exclusive.", call. = FALSE)
+  }
+  if (!is.null(plot@strip_scale)) {
+    warning("`strip_scale_x()` is already set on this plot; replacing it.", call. = FALSE)
+  }
+  plot@strip_scale <- object
+  plot
+}
+
+apply_strip_scale_x <- function(data, layers, strip_scale_spec, layout, plot) {
+  tag_layers <- strip_scale_x_genetag_layers(layers)
+  if (length(tag_layers) == 0L) {
+    stop("`strip_scale_x()` requires at least one `geom_genetag()` layer.", call. = FALSE)
+  }
+
+  tags <- strip_scale_x_collect_genetags(data, tag_layers)
+  if (nrow(tags) == 0L) {
+    stop("`strip_scale_x()` found no gene-tag rows.", call. = FALSE)
+  }
+  ratio <- strip_scale_x_resolve_ratio(tags, strip_scale_spec$gene_gap_ratio)
+
+  built <- if (isTRUE(strip_scale_spec$homo_active)) {
+    strip_scale_x_build_homology_layout(tags, ratio, strip_scale_spec)
+  } else {
+    strip_scale_x_build_level1_layout(tags, ratio, strip_scale_spec$align)
+  }
+
+  data <- strip_scale_x_apply_transforms(data, tag_layers, built$transform)
+  layout <- .strip_scale_force_fixed_x(layout, unique(as.character(built$transform$PANEL)))
+  layout$strip_scale_x_transform <- built$transform
+  layout$strip_scale_x_axis_data <- built$axis_data
+  layout$strip_scale_x_spec <- strip_scale_spec
+  layout$strip_scale_x_conserved_block <- built$conserved_reference_block %||% character()
+  list(data = data, layout = layout, transforms = built$transform)
+}
+
+strip_scale_x_genetag_layers <- function(layers) {
+  which(vapply(layers, function(l) identical(l$geom, GeomGeneTag), logical(1)))
+}
+
+strip_scale_x_collect_genetags <- function(data, tag_layers) {
+  pieces <- list()
+  for (layer_i in tag_layers) {
+    df <- data[[layer_i]]
+    if (!is.data.frame(df) || nrow(df) == 0L) next
+    if (!"track" %in% names(df)) {
+      stop("`strip_scale_x()` requires `geom_genetag()` data with a `track` column.", call. = FALSE)
+    }
+    if (!all(c("PANEL", "xmin", "xmax") %in% names(df))) next
+    if (!"genomic_xmin" %in% names(df)) df$genomic_xmin <- df$xmin
+    if (!"genomic_xmax" %in% names(df)) df$genomic_xmax <- df$xmax
+    if (!"gene_key" %in% names(df)) df$gene_key <- .genetag_gene_key(df)
+
+    reference_gene <- if ("reference_gene" %in% names(df)) {
+      as.character(df$reference_gene)
+    } else {
+      rep(NA_character_, nrow(df))
+    }
+    homology_hit <- if ("homology_hit" %in% names(df)) {
+      strip_scale_x_logical_or_na(df$homology_hit)
+    } else {
+      rep(NA, nrow(df))
+    }
+    inferred_hit <- !is.na(reference_gene) & nzchar(reference_gene)
+    homology_hit[is.na(homology_hit)] <- inferred_hit[is.na(homology_hit)]
+
+    start <- pmin(as.numeric(df$genomic_xmin), as.numeric(df$genomic_xmax))
+    end <- pmax(as.numeric(df$genomic_xmin), as.numeric(df$genomic_xmax))
+    out <- data.frame(
+      layer = layer_i,
+      row = seq_len(nrow(df)),
+      PANEL = ggexon_panel_id(df$PANEL),
+      track = as.character(df$track),
+      gene_key = as.character(df$gene_key),
+      label = if ("label" %in% names(df)) as.character(df$label) else as.character(df$gene_key),
+      gene_id = if ("gene_id" %in% names(df)) as.character(df$gene_id) else NA_character_,
+      gene = if ("gene" %in% names(df)) as.character(df$gene) else NA_character_,
+      reference_gene = reference_gene,
+      homology_hit = homology_hit,
+      genomic_start = start,
+      genomic_end = end,
+      stringsAsFactors = FALSE
+    )
+    keep <- is.finite(out$genomic_start) & is.finite(out$genomic_end) &
+      out$genomic_end > out$genomic_start &
+      !is.na(out$track) & nzchar(out$track) &
+      !is.na(out$gene_key) & nzchar(out$gene_key)
+    if (any(!keep)) {
+      warning("`strip_scale_x()` dropped invalid gene-tag row(s).", call. = FALSE)
+    }
+    out <- out[keep, , drop = FALSE]
+    if (nrow(out) > 0L) pieces[[length(pieces) + 1L]] <- out
+  }
+  if (length(pieces) == 0L) return(data.frame())
+  out <- dplyr::bind_rows(pieces)
+  out <- out[order(out$PANEL, out$track, out$genomic_start, out$genomic_end, out$row), , drop = FALSE]
+  rownames(out) <- NULL
+  out
+}
+
+strip_scale_x_logical_or_na <- function(x) {
+  if (is.logical(x)) return(x)
+  x_chr <- tolower(as.character(x))
+  out <- rep(NA, length(x_chr))
+  out[x_chr %in% c("true", "t", "1", "yes", "y")] <- TRUE
+  out[x_chr %in% c("false", "f", "0", "no", "n")] <- FALSE
+  out
+}
+
+strip_scale_x_resolve_ratio <- function(tags, gene_gap_ratio = NULL) {
+  if (!is.null(gene_gap_ratio)) return(as.numeric(gene_gap_ratio))
+  group_key <- paste(tags$PANEL, tags$track, sep = "\r")
+  counts <- sort(table(group_key), decreasing = TRUE)
+  if (length(counts) == 0L) return(3)
+  densest <- names(counts)[[1L]]
+  genes <- tags[group_key == densest, , drop = FALSE]
+  genes <- genes[order(genes$genomic_start, genes$genomic_end), , drop = FALSE]
+  gene_widths <- genes$genomic_end - genes$genomic_start
+  gene_widths <- gene_widths[is.finite(gene_widths) & gene_widths > 0]
+  gap_widths <- pmax(genes$genomic_start[-1L] - genes$genomic_end[-nrow(genes)], 0)
+  gap_widths <- gap_widths[is.finite(gap_widths) & gap_widths > 0]
+  med_gene <- stats::median(gene_widths, na.rm = TRUE)
+  med_gap <- stats::median(gap_widths, na.rm = TRUE)
+  if (!is.finite(med_gene) || med_gene <= 0) return(3)
+  if (!is.finite(med_gap) || med_gap <= 0) return(max(med_gene / 1000, 3))
+  max(med_gene / med_gap, 0.1)
+}
+
+strip_scale_x_build_level1_layout <- function(tags, ratio, align = "left") {
+  g <- ratio
+  p <- 1
+  groups <- split(tags, paste(tags$PANEL, tags$track, sep = "\r"), drop = TRUE)
+  max_genes <- max(vapply(groups, nrow, integer(1)))
+  total_span <- max_genes * g + max(max_genes - 1L, 0L) * p
+  transforms <- list()
+
+  for (group_name in names(groups)) {
+    group <- groups[[group_name]]
+    group <- group[order(group$genomic_start, group$genomic_end, group$row), , drop = FALSE]
+    track_span <- nrow(group) * g + max(nrow(group) - 1L, 0L) * p
+    offset <- switch(
+      align,
+      left = 0,
+      right = total_span - track_span,
+      center = (total_span - track_span) / 2
+    )
+    transforms[[length(transforms) + 1L]] <- strip_scale_x_track_layout(
+      group,
+      gene_width = g,
+      gap_width = p,
+      widths = rep(g, nrow(group)),
+      slot_types = rep("gene", nrow(group)),
+      is_anchor = rep(FALSE, nrow(group)),
+      reference_gene = rep(NA_character_, nrow(group)),
+      start_offset = max(offset, 0)
+    )
+  }
+  transform <- dplyr::bind_rows(transforms)
+  strip_scale_x_finalize_layout(transform)
+}
+
+strip_scale_x_build_homology_layout <- function(tags, ratio, spec) {
+  reference_track <- spec$homo_align
+  if (!reference_track %in% tags$track) {
+    stop("Reference track '", reference_track, "' not found in `geom_genetag()` tracks.", call. = FALSE)
+  }
+
+  g <- ratio
+  p <- 1
+  species_width <- g * spec$species_specific_ratio
+  secondary_width <- g * spec$secondary_homology_ratio
+  groups <- split(tags, paste(tags$PANEL, tags$track, sep = "\r"), drop = TRUE)
+  ref_tags <- tags[tags$track == reference_track, , drop = FALSE]
+  ref_alias <- strip_scale_x_reference_aliases(ref_tags)
+
+  ref_transforms <- list()
+  for (group_name in names(groups)) {
+    group <- groups[[group_name]]
+    if (unique(group$track) %in% reference_track) {
+      group <- group[order(group$genomic_start, group$genomic_end, group$row), , drop = FALSE]
+      ref_transforms[[length(ref_transforms) + 1L]] <- strip_scale_x_track_layout(
+        group,
+        gene_width = g,
+        gap_width = p,
+        widths = rep(g, nrow(group)),
+        slot_types = rep("homologous_visible_primary", nrow(group)),
+        is_anchor = rep(TRUE, nrow(group)),
+        reference_gene = group$gene_key,
+        visual_classes = rep("homologous_visible_primary", nrow(group)),
+        homology_anchor = rep(TRUE, nrow(group)),
+        start_offset = 0
+      )
+    }
+  }
+  reference_transform <- dplyr::bind_rows(ref_transforms)
+  reference_centers <- strip_scale_x_reference_centers(reference_transform)
+  reference_span <- strip_scale_x_span(reference_transform)
+  conserved_reference_block <- strip_scale_x_conserved_reference_block(
+    groups = groups,
+    reference_track = reference_track,
+    ref_alias = ref_alias,
+    reference_centers = reference_centers
+  )
+
+  transforms <- ref_transforms
+  for (group_name in names(groups)) {
+    group <- groups[[group_name]]
+    track_name <- unique(group$track)
+    if (length(track_name) != 1L || identical(track_name, reference_track)) next
+    group <- group[order(group$genomic_start, group$genomic_end, group$row), , drop = FALSE]
+    resolved <- strip_scale_x_resolve_group_reference_gene(group, ref_alias)
+    class <- strip_scale_x_homology_class(group, resolved)
+    transforms[[length(transforms) + 1L]] <- strip_scale_x_homology_track_layout(
+      group = group,
+      resolved_reference = resolved,
+      visual_class = class$visual_class,
+      homology_anchor = class$homology_anchor,
+      gene_width = g,
+      gap_width = p,
+      species_width = species_width,
+      secondary_width = secondary_width,
+      collapse_contiguous_slot = spec$collapse_contiguous_slot,
+      block_align = spec$block_align,
+      reference_centers = reference_centers,
+      reference_span = reference_span,
+      conserved_reference_block = conserved_reference_block
+    )
+  }
+
+  transform <- dplyr::bind_rows(transforms)
+  built <- strip_scale_x_finalize_layout(transform)
+  built$conserved_reference_block <- conserved_reference_block
+  built
+}
+
+strip_scale_x_homology_class <- function(group, resolved_reference) {
+  n <- nrow(group)
+  homology_hit <- group$homology_hit %in% TRUE
+  visible <- !is.na(resolved_reference) & nzchar(resolved_reference)
+  visual_class <- rep("species_specific", n)
+  visual_class[homology_hit & !visible] <- "homologous_offtrack"
+
+  homology_anchor <- rep(FALSE, n)
+  seen <- character()
+  for (i in seq_len(n)) {
+    if (!isTRUE(visible[[i]])) next
+    ref_key <- resolved_reference[[i]]
+    if (ref_key %in% seen) {
+      visual_class[[i]] <- "homologous_visible_duplicate"
+      next
+    }
+    visual_class[[i]] <- "homologous_visible_primary"
+    homology_anchor[[i]] <- TRUE
+    seen <- c(seen, ref_key)
+  }
+
+  list(
+    visual_class = visual_class,
+    homology_anchor = homology_anchor
+  )
+}
+
+strip_scale_x_track_layout <- function(group,
+                                       gene_width,
+                                       gap_width,
+                                       widths,
+                                       slot_types,
+                                       is_anchor,
+                                       reference_gene,
+                                       visual_classes = slot_types,
+                                       homology_anchor = is_anchor,
+                                       start_offset = 0) {
+  slots <- vector("list", nrow(group))
+  for (i in seq_len(nrow(group))) {
+    slots[[i]] <- list(
+      rows = i,
+      genomic_start = group$genomic_start[[i]],
+      genomic_end = group$genomic_end[[i]],
+      width = widths[[i]],
+      slot_type = slot_types[[i]],
+      visual_class = visual_classes[[i]],
+      gene_key = group$gene_key[[i]],
+      label = group$label[[i]],
+      reference_gene = reference_gene[[i]],
+      is_anchor = is_anchor[[i]],
+      homology_anchor = homology_anchor[[i]]
+    )
+  }
+  strip_scale_x_slots_to_transform(group, slots, gap_width, start_offset)
+}
+
+strip_scale_x_homology_track_layout <- function(group,
+                                                resolved_reference,
+                                                visual_class,
+                                                homology_anchor,
+                                                gene_width,
+                                                gap_width,
+                                                species_width,
+                                                secondary_width,
+                                                collapse_contiguous_slot,
+                                                block_align,
+                                                reference_centers,
+                                                reference_span,
+                                                conserved_reference_block = character()) {
+  slots <- list()
+  i <- 1L
+  while (i <= nrow(group)) {
+    if (isTRUE(collapse_contiguous_slot) && identical(visual_class[[i]], "species_specific")) {
+      run_start <- i
+      while (i <= nrow(group) && identical(visual_class[[i]], "species_specific")) i <- i + 1L
+      run_idx <- seq.int(run_start, i - 1L)
+      slots[[length(slots) + 1L]] <- list(
+        rows = run_idx,
+        genomic_start = min(group$genomic_start[run_idx], na.rm = TRUE),
+        genomic_end = max(group$genomic_end[run_idx], na.rm = TRUE),
+        width = species_width,
+        slot_type = "species_specific_run",
+        visual_class = "species_specific",
+        gene_key = paste(group$gene_key[run_idx], collapse = ","),
+        label = paste(group$label[run_idx], collapse = ","),
+        reference_gene = NA_character_,
+        is_anchor = FALSE,
+        homology_anchor = FALSE
+      )
+      next
+    }
+
+    class <- visual_class[[i]]
+    width <- switch(
+      class,
+      homologous_visible_primary = gene_width,
+      homologous_visible_duplicate = secondary_width,
+      homologous_offtrack = secondary_width,
+      species_specific = species_width,
+      species_width
+    )
+    ref_gene <- switch(
+      class,
+      homologous_visible_primary = resolved_reference[[i]],
+      homologous_visible_duplicate = resolved_reference[[i]],
+      homologous_offtrack = group$reference_gene[[i]],
+      species_specific = NA_character_,
+      NA_character_
+    )
+    slots[[length(slots) + 1L]] <- list(
+      rows = i,
+      genomic_start = group$genomic_start[[i]],
+      genomic_end = group$genomic_end[[i]],
+      width = width,
+      slot_type = class,
+      visual_class = class,
+      gene_key = group$gene_key[[i]],
+      label = group$label[[i]],
+      reference_gene = ref_gene,
+      is_anchor = homology_anchor[[i]],
+      homology_anchor = homology_anchor[[i]]
+    )
+    i <- i + 1L
+  }
+
+  transform <- strip_scale_x_slots_to_transform(group, slots, gap_width, start_offset = 0)
+  local_span <- strip_scale_x_span(transform)
+  track_offset <- switch(
+    block_align,
+    none = 0,
+    left = reference_span$min - local_span$min,
+    center = ((reference_span$min + reference_span$max) / 2) - ((local_span$min + local_span$max) / 2),
+    right = reference_span$max - local_span$max,
+    conserved = strip_scale_x_conserved_offset(
+      transform,
+      group,
+      homology_anchor,
+      resolved_reference,
+      reference_centers,
+      conserved_reference_block = conserved_reference_block
+    )
+  )
+  transform$track_offset <- track_offset
+  transform
+}
+
+strip_scale_x_slots_to_transform <- function(group, slots, gap_width, start_offset = 0) {
+  pieces <- list()
+  current <- start_offset
+  panel <- group$PANEL[[1L]]
+  track <- group$track[[1L]]
+  for (slot_i in seq_along(slots)) {
+    slot <- slots[[slot_i]]
+    width <- slot$width
+    pieces[[length(pieces) + 1L]] <- strip_scale_x_transform_row(
+      PANEL = panel,
+      track = track,
+      local_slot_id = slot_i,
+      global_slot_id = if (isTRUE(slot$is_anchor)) slot$reference_gene else paste(track, slot_i, sep = "::"),
+      slot_type = slot$slot_type,
+      visual_class = slot$visual_class %||% slot$slot_type,
+      gene_key = slot$gene_key,
+      label = slot$label,
+      reference_gene = slot$reference_gene,
+      is_anchor = slot$is_anchor,
+      homology_anchor = slot$homology_anchor %||% slot$is_anchor,
+      members = paste(group$gene_key[slot$rows], collapse = ","),
+      source_keys = paste(group$layer[slot$rows], group$row[slot$rows], sep = ":", collapse = ","),
+      genomic_start = slot$genomic_start,
+      genomic_end = slot$genomic_end,
+      plot_start_raw = current,
+      plot_end_raw = current + width,
+      region_type = "gene"
+    )
+    current <- current + width
+
+    if (slot_i < length(slots)) {
+      next_slot <- slots[[slot_i + 1L]]
+      gap_start <- slot$genomic_end
+      gap_end <- next_slot$genomic_start
+      if (is.finite(gap_start) && is.finite(gap_end) && gap_end > gap_start) {
+        pieces[[length(pieces) + 1L]] <- strip_scale_x_transform_row(
+          PANEL = panel,
+          track = track,
+          local_slot_id = slot_i,
+          global_slot_id = paste(track, "gap", slot_i, sep = "::"),
+          slot_type = "gap",
+          visual_class = "gap",
+          gene_key = NA_character_,
+          label = NA_character_,
+          reference_gene = NA_character_,
+          is_anchor = FALSE,
+          homology_anchor = FALSE,
+          members = NA_character_,
+          source_keys = NA_character_,
+          genomic_start = gap_start,
+          genomic_end = gap_end,
+          plot_start_raw = current,
+          plot_end_raw = current + gap_width,
+          region_type = "gap"
+        )
+      }
+      current <- current + gap_width
+    }
+  }
+  out <- dplyr::bind_rows(pieces)
+  out$track_offset <- out$track_offset %||% 0
+  out
+}
+
+strip_scale_x_transform_row <- function(PANEL,
+                                        track,
+                                        local_slot_id,
+                                        global_slot_id,
+                                        slot_type,
+                                        visual_class,
+                                        gene_key,
+                                        label,
+                                        reference_gene,
+                                        is_anchor,
+                                        homology_anchor,
+                                        members,
+                                        source_keys,
+                                        genomic_start,
+                                        genomic_end,
+                                        plot_start_raw,
+                                        plot_end_raw,
+                                        region_type) {
+  width <- genomic_end - genomic_start
+  data.frame(
+    PANEL = PANEL,
+    track = track,
+    local_slot_id = local_slot_id,
+    global_slot_id = global_slot_id,
+    slot_type = slot_type,
+    visual_class = visual_class,
+    gene_key = gene_key,
+    label = label,
+    reference_gene = reference_gene,
+    is_anchor = isTRUE(is_anchor),
+    homology_anchor = isTRUE(homology_anchor),
+    members = members,
+    source_keys = source_keys,
+    genomic_start = genomic_start,
+    genomic_end = genomic_end,
+    plot_start_raw = plot_start_raw,
+    plot_end_raw = plot_end_raw,
+    slope = if (is.finite(width) && width > 0) (plot_end_raw - plot_start_raw) / width else NA_real_,
+    region_type = region_type,
+    track_offset = 0,
+    global_offset = 0,
+    plot_start = plot_start_raw,
+    plot_end = plot_end_raw,
+    stringsAsFactors = FALSE
+  )
+}
+
+strip_scale_x_reference_aliases <- function(ref_tags) {
+  ref_counts <- table(ref_tags$gene_key)
+  duplicate_ref <- names(ref_counts)[ref_counts > 1L]
+  alias_df <- dplyr::bind_rows(lapply(seq_len(nrow(ref_tags)), function(i) {
+    values <- unique(stats::na.omit(c(
+      ref_tags$gene_key[[i]],
+      ref_tags$gene_id[[i]],
+      ref_tags$gene[[i]],
+      ref_tags$label[[i]]
+    )))
+    values <- values[nzchar(values)]
+    if (length(values) == 0L) return(NULL)
+    data.frame(alias = values, gene_key = ref_tags$gene_key[[i]], stringsAsFactors = FALSE)
+  }))
+  if (is.null(alias_df) || nrow(alias_df) == 0L) return(stats::setNames(character(), character()))
+  alias_df <- alias_df[!alias_df$gene_key %in% duplicate_ref, , drop = FALSE]
+  split_keys <- split(alias_df$gene_key, alias_df$alias)
+  usable <- vapply(split_keys, function(x) length(unique(x)) == 1L, logical(1))
+  stats::setNames(vapply(split_keys[usable], function(x) unique(x)[[1L]], character(1)), names(split_keys)[usable])
+}
+
+strip_scale_x_resolve_reference_gene <- function(reference_gene, ref_alias) {
+  ref <- as.character(reference_gene)
+  out <- rep(NA_character_, length(ref))
+  ok <- !is.na(ref) & nzchar(ref) & ref %in% names(ref_alias)
+  out[ok] <- unname(ref_alias[ref[ok]])
+  out
+}
+
+strip_scale_x_resolve_group_reference_gene <- function(group, ref_alias) {
+  resolved <- strip_scale_x_resolve_reference_gene(group$reference_gene, ref_alias)
+  unresolved <- is.na(resolved) | !nzchar(resolved)
+  if (!any(unresolved)) {
+    return(resolved)
+  }
+
+  fallback_cols <- intersect(c("gene_key", "gene_id", "gene", "label"), names(group))
+  for (col in fallback_cols) {
+    unresolved <- is.na(resolved) | !nzchar(resolved)
+    if (!any(unresolved)) {
+      break
+    }
+    fallback <- strip_scale_x_resolve_reference_gene(group[[col]], ref_alias)
+    use_fallback <- unresolved & !is.na(fallback) & nzchar(fallback)
+    resolved[use_fallback] <- fallback[use_fallback]
+  }
+  resolved
+}
+
+strip_scale_x_reference_centers <- function(reference_transform) {
+  ref <- reference_transform[reference_transform$region_type == "gene" &
+    !is.na(reference_transform$gene_key) & nzchar(reference_transform$gene_key), , drop = FALSE]
+  ref <- ref[order(ref$plot_start_raw, ref$plot_end_raw), , drop = FALSE]
+  data.frame(
+    gene_key = ref$gene_key,
+    ref_order = seq_len(nrow(ref)),
+    ref_center = (ref$plot_start_raw + ref$plot_end_raw) / 2,
+    ref_start = ref$genomic_start,
+    ref_end = ref$genomic_end,
+    stringsAsFactors = FALSE
+  )
+}
+
+strip_scale_x_conserved_reference_block <- function(groups,
+                                                    reference_track,
+                                                    ref_alias,
+                                                    reference_centers) {
+  if (nrow(reference_centers) == 0L) return(character())
+
+  support <- stats::setNames(rep(0L, nrow(reference_centers)), reference_centers$gene_key)
+  for (group_name in names(groups)) {
+    group <- groups[[group_name]]
+    track_name <- unique(group$track)
+    if (length(track_name) != 1L) next
+    if (identical(track_name, reference_track)) {
+      track_refs <- unique(group$gene_key)
+    } else {
+      group <- group[order(group$genomic_start, group$genomic_end, group$row), , drop = FALSE]
+      resolved <- strip_scale_x_resolve_group_reference_gene(group, ref_alias)
+      class <- strip_scale_x_homology_class(group, resolved)
+      track_refs <- resolved[class$homology_anchor]
+    }
+    track_refs <- unique(track_refs[!is.na(track_refs) & nzchar(track_refs) & track_refs %in% names(support)])
+    support[track_refs] <- support[track_refs] + 1L
+  }
+
+  if (!any(support > 1L)) return(character())
+  max_support <- max(support, na.rm = TRUE)
+  is_best <- support[reference_centers$gene_key] == max_support
+  best_idx <- which(is_best)
+  if (length(best_idx) == 0L) return(character())
+
+  runs <- split(best_idx, cumsum(c(TRUE, diff(best_idx) != 1L)))
+  scores <- do.call(rbind, lapply(runs, function(idx) {
+    rows <- reference_centers[idx, , drop = FALSE]
+    data.frame(
+      n = nrow(rows),
+      ref_span = max(rows$ref_end, na.rm = TRUE) - min(rows$ref_start, na.rm = TRUE),
+      left_order = min(rows$ref_order, na.rm = TRUE),
+      stringsAsFactors = FALSE
+    )
+  }))
+  best <- order(-scores$n, -scores$ref_span, scores$left_order)[[1L]]
+  reference_centers[runs[[best]], "gene_key", drop = TRUE]
+}
+
+strip_scale_x_first_reference_hits <- function(resolved_reference) {
+  seen <- character()
+  hits <- character()
+  for (ref_key in resolved_reference) {
+    if (is.na(ref_key) || !nzchar(ref_key) || ref_key %in% seen) next
+    hits <- c(hits, ref_key)
+    seen <- c(seen, ref_key)
+  }
+  hits
+}
+
+strip_scale_x_conserved_offset <- function(transform,
+                                           group,
+                                           is_anchor,
+                                           resolved_reference,
+                                           reference_centers,
+                                           conserved_reference_block = character()) {
+  gene_rows <- transform[transform$region_type == "gene", , drop = FALSE]
+  anchor_rows <- gene_rows[gene_rows$is_anchor %in% TRUE, , drop = FALSE]
+  if (nrow(anchor_rows) == 0L) return(0)
+  anchor_rows$query_center <- (anchor_rows$plot_start_raw + anchor_rows$plot_end_raw) / 2
+  anchor_rows$gene_order <- match(anchor_rows$gene_key, group$gene_key)
+  ref_match <- match(anchor_rows$reference_gene, reference_centers$gene_key)
+  anchor_rows$ref_center <- reference_centers$ref_center[ref_match]
+  anchor_rows$ref_order <- reference_centers$ref_order[ref_match]
+  anchor_rows$ref_start <- reference_centers$ref_start[ref_match]
+  anchor_rows$ref_end <- reference_centers$ref_end[ref_match]
+  anchor_rows <- anchor_rows[is.finite(anchor_rows$ref_center), , drop = FALSE]
+  if (nrow(anchor_rows) == 0L) return(0)
+
+  block_rows <- anchor_rows[anchor_rows$reference_gene %in% conserved_reference_block, , drop = FALSE]
+  if (nrow(block_rows) > 0L) {
+    return(stats::median(block_rows$ref_center - block_rows$query_center, na.rm = TRUE))
+  }
+
+  blocks <- list()
+  current <- integer()
+  for (i in seq_len(nrow(group))) {
+    if (!isTRUE(is_anchor[[i]])) {
+      if (length(current) > 0L) blocks[[length(blocks) + 1L]] <- current
+      current <- integer()
+      next
+    }
+    row_idx <- match(group$gene_key[[i]], anchor_rows$gene_key)
+    if (is.na(row_idx)) next
+    current <- c(current, row_idx)
+  }
+  if (length(current) > 0L) blocks[[length(blocks) + 1L]] <- current
+  if (length(blocks) == 0L) return(0)
+
+  scores <- do.call(rbind, lapply(blocks, function(idx) {
+    rows <- anchor_rows[idx, , drop = FALSE]
+    data.frame(
+      n = nrow(rows),
+      ref_span = max(rows$ref_end, na.rm = TRUE) - min(rows$ref_start, na.rm = TRUE),
+      left_order = min(rows$ref_order, na.rm = TRUE),
+      stringsAsFactors = FALSE
+    )
+  }))
+  best <- order(-scores$n, -scores$ref_span, scores$left_order)[[1L]]
+  best_rows <- anchor_rows[blocks[[best]], , drop = FALSE]
+  stats::median(best_rows$ref_center - best_rows$query_center, na.rm = TRUE)
+}
+
+strip_scale_x_span <- function(transform) {
+  rows <- transform[transform$region_type == "gene", , drop = FALSE]
+  if (nrow(rows) == 0L) rows <- transform
+  list(
+    min = min(rows$plot_start_raw, rows$plot_end_raw, na.rm = TRUE),
+    max = max(rows$plot_start_raw, rows$plot_end_raw, na.rm = TRUE)
+  )
+}
+
+strip_scale_x_finalize_layout <- function(transform) {
+  if (nrow(transform) == 0L) {
+    return(list(transform = transform, axis_data = data.frame()))
+  }
+  transform$plot_start <- transform$plot_start_raw + transform$track_offset
+  transform$plot_end <- transform$plot_end_raw + transform$track_offset
+  min_x <- min(transform$plot_start, transform$plot_end, na.rm = TRUE)
+  global_offset <- if (is.finite(min_x) && min_x < 0) -min_x else 0
+  transform$global_offset <- global_offset
+  transform$plot_start <- transform$plot_start + global_offset
+  transform$plot_end <- transform$plot_end + global_offset
+
+  axis_data <- transform[transform$region_type == "gene", c(
+    "PANEL", "track", "global_slot_id", "local_slot_id", "gene_key",
+    "label", "slot_type", "visual_class", "reference_gene", "is_anchor",
+    "homology_anchor", "members",
+    "plot_start", "plot_end"
+  ), drop = FALSE]
+  axis_data$plot_mid <- (axis_data$plot_start + axis_data$plot_end) / 2
+  list(transform = transform, axis_data = axis_data)
+}
+
+strip_scale_x_apply_transforms <- function(data, tag_layers, transform) {
+  split_transform <- split(transform, paste(transform$PANEL, transform$track, sep = "\r"), drop = TRUE)
+  for (layer_i in tag_layers) {
+    df <- data[[layer_i]]
+    if (!is.data.frame(df) || nrow(df) == 0L) next
+    if (!all(c("PANEL", "track", "xmin", "xmax") %in% names(df))) next
+    if (!"genomic_xmin" %in% names(df)) df$genomic_xmin <- df$xmin
+    if (!"genomic_xmax" %in% names(df)) df$genomic_xmax <- df$xmax
+    panel_ids <- ggexon_panel_id(df$PANEL)
+    keys <- paste(panel_ids, as.character(df$track), sep = "\r")
+    for (key in unique(keys)) {
+      tr <- split_transform[[key]]
+      if (is.null(tr) || nrow(tr) == 0L) next
+      idx <- which(keys == key)
+      df <- strip_scale_x_apply_layer_coordinates(df, layer_i, idx, tr)
+      df <- strip_scale_x_apply_row_metadata(df, layer_i, idx, tr)
+    }
+    data[[layer_i]] <- df
+  }
+  data
+}
+
+strip_scale_x_apply_layer_coordinates <- function(df, layer_i, idx, transform) {
+  row_keys <- paste(layer_i, seq_len(nrow(df)), sep = ":")
+  source_index <- strip_scale_x_source_key_index(transform)
+  transform_idx <- unname(source_index[row_keys[idx]])
+  has_source <- !is.na(transform_idx)
+
+  if (any(has_source)) {
+    rows <- transform[transform_idx[has_source], , drop = FALSE]
+    df$xmin[idx[has_source]] <- strip_scale_x_map_with_rows(df$genomic_xmin[idx[has_source]], rows)
+    df$xmax[idx[has_source]] <- strip_scale_x_map_with_rows(df$genomic_xmax[idx[has_source]], rows)
+  }
+
+  if (any(!has_source)) {
+    fallback <- idx[!has_source]
+    df$xmin[fallback] <- strip_scale_to_plot_x(df$genomic_xmin[fallback], transform)
+    df$xmax[fallback] <- strip_scale_to_plot_x(df$genomic_xmax[fallback], transform)
+  }
+
+  df
+}
+
+strip_scale_x_source_key_index <- function(transform) {
+  if (!"source_keys" %in% names(transform)) {
+    return(stats::setNames(integer(), character()))
+  }
+  gene_row_index <- which(transform$region_type == "gene")
+  gene_rows <- transform[gene_row_index, , drop = FALSE]
+  if (nrow(gene_rows) == 0L) {
+    return(stats::setNames(integer(), character()))
+  }
+
+  keys <- strsplit(as.character(gene_rows$source_keys), ",", fixed = TRUE)
+  valid <- lengths(keys) > 0L & !is.na(gene_rows$source_keys)
+  if (!any(valid)) {
+    return(stats::setNames(integer(), character()))
+  }
+
+  keys <- keys[valid]
+  row_index <- gene_row_index[valid]
+  out <- rep(row_index, lengths(keys))
+  names(out) <- unlist(keys, use.names = FALSE)
+  out[nzchar(names(out))]
+}
+
+strip_scale_x_map_with_rows <- function(x, rows) {
+  vapply(seq_along(x), function(i) {
+    value <- as.numeric(x[[i]])
+    if (!is.finite(value)) return(value)
+    row <- rows[i, , drop = FALSE]
+    if (!is.finite(row$slope[[1L]]) ||
+        !is.finite(row$genomic_start[[1L]]) ||
+        !is.finite(row$plot_start[[1L]])) {
+      return(value)
+    }
+    row$plot_start[[1L]] + (value - row$genomic_start[[1L]]) * row$slope[[1L]]
+  }, numeric(1))
+}
+
+strip_scale_x_apply_row_metadata <- function(df, layer_i, idx, transform) {
+  gene_rows <- transform[transform$region_type == "gene", , drop = FALSE]
+  if (nrow(gene_rows) == 0L || !"source_keys" %in% names(gene_rows)) return(df)
+
+  for (col in c("visual_class", "slot_type")) {
+    if (!col %in% names(df)) df[[col]] <- NA_character_
+  }
+  for (col in c("homology_anchor", "is_anchor")) {
+    if (!col %in% names(df)) df[[col]] <- FALSE
+  }
+
+  row_keys <- paste(layer_i, seq_len(nrow(df)), sep = ":")
+  for (i in seq_len(nrow(gene_rows))) {
+    source_keys <- strsplit(as.character(gene_rows$source_keys[[i]]), ",", fixed = TRUE)[[1L]]
+    matched <- idx[row_keys[idx] %in% source_keys]
+    if (length(matched) == 0L) next
+    df$visual_class[matched] <- gene_rows$visual_class[[i]]
+    df$slot_type[matched] <- gene_rows$slot_type[[i]]
+    df$homology_anchor[matched] <- isTRUE(gene_rows$homology_anchor[[i]])
+    df$is_anchor[matched] <- isTRUE(gene_rows$is_anchor[[i]])
+  }
+  df
+}

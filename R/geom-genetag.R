@@ -23,14 +23,9 @@
 #'   named list keyed by tree tip or individual id. Overrides `start` and `end`.
 #' @param feature_type Feature type passed to [query_features()]. Defaults to
 #'   `"gene"`.
-#' @param inter_genetic Intergenic-gap layout mode. `"scaled"` keeps the
-#'   original gap between consecutive features within each track. `"union"` uses
-#'   the maximum gap observed at each feature step so corresponding gaps are the
-#'   same across tracks in the same panel.
-#' @param exon_length Feature-length layout mode. `"scaled"` keeps original
-#'   feature lengths. `"union"` uses the maximum feature length observed at each
-#'   feature step so corresponding features have the same displayed length
-#'   across tracks in the same panel.
+#' @param inter_genetic,exon_length Deprecated x-layout arguments. Only
+#'   `"scaled"` is supported. Use [strip_scale_x()] for gene-tag x-coordinate
+#'   normalization.
 #' @param include_y Logical; when `TRUE`, also include a `y` column copied from
 #'   `tree_y`. Keep the default `FALSE` for `ggtree::facet_plot()`, which
 #'   injects its own `y` column after tip matching.
@@ -60,6 +55,7 @@ compile_ggtree_genetag <- function(x,
   }
   inter_genetic <- match.arg(inter_genetic)
   exon_length <- match.arg(exon_length)
+  .genetag_abort_layout_mode(inter_genetic = inter_genetic, exon_length = exon_length)
   tree_inputs <- .resolve_synspecies_tree_inputs(x, tree = tree, tree_plot = tree_plot)
   tree <- tree_inputs$tree
   tree_plot <- tree_inputs$tree_plot
@@ -98,6 +94,15 @@ compile_ggtree_genetag <- function(x,
       feature_type = feature_type,
       all = is.null(window$chr) && is.null(window$start) && is.null(window$end)
     )
+    homology_query_aliases <- if (.genetag_feature_type_is_gene(feature_type)) {
+      .genetag_homology_query_aliases(
+        individual = individual_obj,
+        gene_gr = gene_gr,
+        window = window
+      )
+    } else {
+      rep(NA_character_, length(gene_gr))
+    }
     rows[[i]] <- .genetag_gr_to_df(
       gene_gr = gene_gr,
       id = tip_id,
@@ -105,7 +110,8 @@ compile_ggtree_genetag <- function(x,
       tree_node = tip_row$node[[1L]],
       tree_x = tip_row$x[[1L]],
       tree_y = tip_row$y[[1L]],
-      include_y = include_y
+      include_y = include_y,
+      homology_query_aliases = homology_query_aliases
     )
   }
 
@@ -114,11 +120,6 @@ compile_ggtree_genetag <- function(x,
     return(.empty_ggtree_genetag_df(include_y = include_y))
   }
   rownames(out) <- NULL
-  out <- .genetag_apply_layout_modes(
-    out,
-    inter_genetic = inter_genetic,
-    exon_length = exon_length
-  )
   out <- .inject_homology_columns(out, homology_annotations(x))
   out$group <- seq_len(nrow(out))
   out
@@ -149,6 +150,18 @@ compile_ggtree_rectangular_segments <- function(tree = NULL,
   }
   tree_data <- .ggtree_rectangular_plot_data(tree = tree, tree_plot = tree_plot, layout = layout)
   .ggtree_rectangular_segments_from_data(tree_data, track = track)
+}
+
+.genetag_abort_layout_mode <- function(inter_genetic = "scaled", exon_length = "scaled") {
+  if (!identical(inter_genetic, "scaled") || !identical(exon_length, "scaled")) {
+    stop(
+      "`inter_genetic = \"union\"` and `exon_length = \"union\"` are no longer ",
+      "handled by `compile_ggtree_genetag()`. Use `strip_scale_x()` to modify ",
+      "gene-tag x coordinates.",
+      call. = FALSE
+    )
+  }
+  invisible(NULL)
 }
 
 #' @export
@@ -192,6 +205,11 @@ ggplot_add.ggtree <- function(object, plot, object_name) {
 #' @param subset Optional numeric length-2 genomic window to keep.
 #' @param feature_type Feature type passed to [query_features()]. Defaults to
 #'   `"gene"`.
+#' @param show_label Logical; draw gene labels inside tags. Defaults to `TRUE`.
+#' @param label_size,label_colour,label_family,label_fontface,label_lineheight
+#'   Fixed label styling used when `show_label = TRUE`.
+#' @param panel_width_mm,panel_width_inch Optional panel width for estimating
+#'   whether labels fit inside transformed gene tags.
 #'
 #' @return A ggplot layer.
 #' @export
@@ -205,13 +223,21 @@ geom_genetag <- function(mapping = NULL,
                          arrow_width = NULL,
                          arrow_fraction = 0.18,
                          species = NULL,
-                         chr = NULL,
-                         subset = NULL,
-                         feature_type = "gene",
-                         na.rm = FALSE,
-                         show.legend = NA,
-                         inherit.aes = FALSE) {
-  mapping <- .genetag_complete_mapping(mapping, data)
+	                         chr = NULL,
+	                         subset = NULL,
+	                         feature_type = "gene",
+                         show_label = TRUE,
+                         label_size = 3,
+                         label_colour = "black",
+                         label_family = "sans",
+                         label_fontface = 1,
+                         label_lineheight = 1.2,
+                         panel_width_mm = NULL,
+                         panel_width_inch = NULL,
+	                         na.rm = FALSE,
+	                         show.legend = NA,
+	                         inherit.aes = FALSE) {
+  mapping <- .genetag_complete_mapping(mapping, data, show_label = show_label)
   layer(
     data = data,
     mapping = mapping,
@@ -228,10 +254,18 @@ geom_genetag <- function(mapping = NULL,
       arrow_fraction = arrow_fraction,
       species = species,
       chr = chr,
-      subset = subset,
-      feature_type = feature_type,
-      na.rm = na.rm
-    ),
+	      subset = subset,
+	      feature_type = feature_type,
+      show_label = show_label,
+      label_size = label_size,
+      label_colour = label_colour,
+      label_family = label_family,
+      label_fontface = label_fontface,
+      label_lineheight = label_lineheight,
+      panel_width_mm = panel_width_mm,
+      panel_width_inch = panel_width_inch,
+	      na.rm = na.rm
+	    ),
     layer_class = LayerSyn
   )
 }
@@ -240,17 +274,29 @@ GeomGeneTag <- ggproto(
   "GeomGeneTag",
   Geom,
   required_aes = c("xmin", "xmax", "y", "strand"),
-  default_aes = aes(
-    colour = "black",
-    fill = "grey35",
-    linewidth = 0.25,
-    linetype = 1,
-    alpha = NA
-  ),
-  extra_params = c(
-    "na.rm", "exon_height", "height", "arrow_width", "arrow_fraction",
-    "species", "chr", "subset", "feature_type"
-  ),
+	  default_aes = aes(
+	    colour = "black",
+	    fill = "grey35",
+	    linewidth = 0.25,
+	    linetype = 1,
+	    alpha = NA,
+    label = NA_character_,
+    track = NA_character_,
+    gene_key = NA_character_,
+    gene_id = NA_character_,
+    gene = NA_character_,
+    genomic_xmin = NA_real_,
+    genomic_xmax = NA_real_,
+    reference_gene = NA_character_,
+    reference_gene_name = NA_character_,
+    homology_hit = NA
+	  ),
+	  extra_params = c(
+	    "na.rm", "exon_height", "height", "arrow_width", "arrow_fraction",
+	    "species", "chr", "subset", "feature_type", "show_label",
+    "label_size", "label_colour", "label_family", "label_fontface",
+    "label_lineheight", "panel_width_mm", "panel_width_inch"
+	  ),
   default_params = function() {
     list(
       exon_height = NULL,
@@ -259,16 +305,30 @@ GeomGeneTag <- ggproto(
       arrow_fraction = 0.18,
       species = NULL,
       chr = NULL,
-      subset = NULL,
-      feature_type = "gene",
-      na.rm = FALSE
-    )
-  },
-  setup_data = function(data, params) {
-    exon_height <- params$exon_height %||% 0.8
-    data$y <- exon_height / 2
-    data
-  },
+	      subset = NULL,
+	      feature_type = "gene",
+      show_label = TRUE,
+      label_size = 3,
+      label_colour = "black",
+      label_family = "sans",
+      label_fontface = 1,
+      label_lineheight = 1.2,
+      panel_width_mm = NULL,
+      panel_width_inch = NULL,
+	      na.rm = FALSE
+	    )
+	  },
+	  setup_data = function(data, params) {
+	    exon_height <- params$exon_height %||% 0.8
+    if (!"genomic_xmin" %in% names(data)) data$genomic_xmin <- data$xmin
+    if (!"genomic_xmax" %in% names(data)) data$genomic_xmax <- data$xmax
+    if (!"genomic_start" %in% names(data)) data$genomic_start <- data$genomic_xmin
+    if (!"genomic_end" %in% names(data)) data$genomic_end <- data$genomic_xmax
+    if (!"gene_key" %in% names(data)) data$gene_key <- .genetag_gene_key(data)
+    if (!"label" %in% names(data)) data$label <- .genetag_label(data)
+	    data$y <- exon_height / 2
+	    data
+	  },
   handle_na = function(data, params) {
     missing <- is.na(data$xmin) | is.na(data$xmax) | is.na(data$y) | is.na(data$strand)
     if (any(missing)) {
@@ -287,21 +347,43 @@ GeomGeneTag <- ggproto(
                         coord,
                         flipped_aes = FALSE,
                         exon_height = NULL,
-                        height = NULL,
-                        arrow_width = NULL,
-                        arrow_fraction = 0.18) {
-    if (nrow(data) == 0L) {
-      return(zeroGrob())
-    }
+	                        height = NULL,
+	                        arrow_width = NULL,
+	                        arrow_fraction = 0.18,
+                         show_label = TRUE,
+                         label_size = 3,
+                         label_colour = "black",
+                         label_family = "sans",
+                         label_fontface = 1,
+                         label_lineheight = 1.2,
+                         panel_width_mm = NULL,
+                         panel_width_inch = NULL) {
+	    if (nrow(data) == 0L) {
+	      return(zeroGrob())
+	    }
     tag_data <- .genetag_polygon_data(
       data = data,
       exon_height = exon_height,
       height = height,
       arrow_width = arrow_width,
-      arrow_fraction = arrow_fraction
+	      arrow_fraction = arrow_fraction
+	    )
+    tag_grob <- GeomPolygon$draw_panel(tag_data, panel_params, coord)
+    label_grob <- .genetag_label_grob(
+      data = data,
+      panel_params = panel_params,
+      coord = coord,
+      show_label = show_label,
+      label_size = label_size,
+      label_colour = label_colour,
+      label_family = label_family,
+      label_fontface = label_fontface,
+      label_lineheight = label_lineheight,
+      panel_width_mm = panel_width_mm,
+      panel_width_inch = panel_width_inch
     )
-    ggname("geom_genetag", GeomPolygon$draw_panel(tag_data, panel_params, coord))
-  },
+	    ggname("geom_genetag", gTree(children = gList(tag_grob, label_grob)))
+	  },
   draw_key = draw_key_polygon,
   syn_data = function(x, layer) {
     params <- syn_layer_params(layer)
@@ -315,7 +397,10 @@ GeomGeneTag <- ggproto(
       context = context
     )
   },
-  syn_default_aes = c("xmin", "xmax", "y", "strand", "track", "group")
+  syn_default_aes = c(
+    "xmin", "xmax", "y", "strand", "track", "group", "label", "gene_key",
+    "reference_gene", "reference_gene_name", "homology_hit", "gene_id", "gene"
+  )
 )
 
 .genetag_tip_individual_map <- function(tip_labels, available_individuals, individual = NULL) {
@@ -436,7 +521,8 @@ GeomGeneTag <- ggproto(
                               tree_node,
                               tree_x,
                               tree_y,
-                              include_y = FALSE) {
+                              include_y = FALSE,
+                              homology_query_aliases = NULL) {
   if (length(gene_gr) == 0L) {
     return(.empty_ggtree_genetag_df(include_y = include_y))
   }
@@ -450,25 +536,39 @@ GeomGeneTag <- ggproto(
   gene_labels[is.na(gene_labels) | !nzchar(gene_labels)] <- gene_ids[
     is.na(gene_labels) | !nzchar(gene_labels)
   ]
+  if (is.null(homology_query_aliases)) {
+    homology_query_aliases <- rep(NA_character_, length(gene_gr))
+  } else {
+    homology_query_aliases <- as.character(homology_query_aliases)
+    if (length(homology_query_aliases) != length(gene_gr)) {
+      stop("`homology_query_aliases` must match the number of gene ranges.", call. = FALSE)
+    }
+  }
 
-  out <- data.frame(
-    id = rep(id, length(gene_gr)),
-    individual = rep(individual, length(gene_gr)),
+		  out <- data.frame(
+		    id = rep(id, length(gene_gr)),
+	    individual = rep(individual, length(gene_gr)),
     node = rep(as.integer(tree_node), length(gene_gr)),
     tree_x = rep(as.numeric(tree_x), length(gene_gr)),
     tree_y = rep(as.numeric(tree_y), length(gene_gr)),
-    chr = as.character(GenomeInfoDb::seqnames(gene_gr)),
-    xmin = IRanges::start(gene_gr),
-    xmax = IRanges::end(gene_gr),
-    start = IRanges::start(gene_gr),
-    end = IRanges::end(gene_gr),
-    strand = as.character(BiocGenerics::strand(gene_gr)),
-    gene_id = gene_ids,
-    gene = gene_labels,
-    label = gene_labels,
-    track = rep(individual, length(gene_gr)),
-    stringsAsFactors = FALSE
-  )
+	    chr = as.character(GenomeInfoDb::seqnames(gene_gr)),
+	    xmin = IRanges::start(gene_gr),
+	    xmax = IRanges::end(gene_gr),
+    genomic_xmin = IRanges::start(gene_gr),
+    genomic_xmax = IRanges::end(gene_gr),
+    genomic_start = IRanges::start(gene_gr),
+    genomic_end = IRanges::end(gene_gr),
+	    start = IRanges::start(gene_gr),
+	    end = IRanges::end(gene_gr),
+	    strand = as.character(BiocGenerics::strand(gene_gr)),
+	    gene_id = gene_ids,
+	    gene_key = gene_ids,
+		    gene = gene_labels,
+		    label = gene_labels,
+    homology_query_aliases = homology_query_aliases,
+	    track = rep(individual, length(gene_gr)),
+	    stringsAsFactors = FALSE
+	  )
   if (isTRUE(include_y)) {
     out$y <- out$tree_y
     out <- out[, c("id", setdiff(names(out), "id")), drop = FALSE]
@@ -528,6 +628,15 @@ syn_to_genetag_df <- function(x,
   if (length(gene_gr) == 0L) {
     return(data.frame())
   }
+  homology_query_aliases <- if (.genetag_feature_type_is_gene(feature_type)) {
+    .genetag_homology_query_aliases(
+      individual = individual,
+      gene_gr = gene_gr,
+      window = window
+    )
+  } else {
+    rep(NA_character_, length(gene_gr))
+  }
 
   out <- .genetag_gr_to_df(
     gene_gr = gene_gr,
@@ -536,7 +645,8 @@ syn_to_genetag_df <- function(x,
     tree_node = NA_integer_,
     tree_x = NA_real_,
     tree_y = 1,
-    include_y = TRUE
+    include_y = TRUE,
+    homology_query_aliases = homology_query_aliases
   )
   if (methods::is(x, "SynSpecies")) {
     out <- .inject_homology_columns(out, homology_annotations(x))
@@ -644,12 +754,18 @@ syn_to_genetag_df <- function(x,
     chr = character(),
     xmin = numeric(),
     xmax = numeric(),
+    genomic_xmin = numeric(),
+    genomic_xmax = numeric(),
+    genomic_start = numeric(),
+    genomic_end = numeric(),
     start = numeric(),
     end = numeric(),
     strand = character(),
     gene_id = character(),
+    gene_key = character(),
     gene = character(),
     label = character(),
+    homology_query_aliases = character(),
     track = character(),
     group = integer(),
     stringsAsFactors = FALSE
@@ -661,7 +777,94 @@ syn_to_genetag_df <- function(x,
   out
 }
 
-.genetag_complete_mapping <- function(mapping, data) {
+.genetag_feature_type_is_gene <- function(feature_type) {
+  feature_type <- as.character(feature_type)
+  length(feature_type) == 1L &&
+    !is.na(feature_type) &&
+    identical(base::tolower(feature_type), "gene")
+}
+
+.genetag_homology_query_aliases <- function(individual, gene_gr, window) {
+  if (length(gene_gr) == 0L || is.null(window)) {
+    return(rep(NA_character_, length(gene_gr)))
+  }
+
+  transcript_gr <- .genetag_query_transcript_children(
+    individual = individual,
+    window = window
+  )
+  if (length(transcript_gr) == 0L) {
+    return(rep(NA_character_, length(gene_gr)))
+  }
+
+  gene_meta <- S4Vectors::mcols(gene_gr)
+  gene_ids <- .coalesce_character_cols(gene_meta, c("gene_id", "ID", "Name", "gene_name"))
+  gene_norm <- .normalize_gene_id(gene_ids)
+
+  tx_meta <- S4Vectors::mcols(transcript_gr)
+  parent_ids <- .coalesce_character_cols(tx_meta, c("Parent", "gene_id"))
+  parent_norm <- .normalize_gene_id(parent_ids)
+  tx_aliases <- .genetag_transcript_alias_values(tx_meta)
+
+  valid <- !is.na(parent_norm) & nzchar(parent_norm) & lengths(tx_aliases) > 0L
+  if (!any(valid)) {
+    return(rep(NA_character_, length(gene_gr)))
+  }
+
+  alias_by_parent <- split(tx_aliases[valid], parent_norm[valid])
+  alias_by_parent <- lapply(alias_by_parent, function(x) {
+    aliases <- unique(unlist(x, use.names = FALSE))
+    aliases[!is.na(aliases) & nzchar(aliases)]
+  })
+
+  out <- rep(NA_character_, length(gene_gr))
+  for (i in seq_along(gene_norm)) {
+    key <- gene_norm[[i]]
+    if (is.na(key) || !nzchar(key) || is.null(alias_by_parent[[key]])) {
+      next
+    }
+    out[[i]] <- paste(alias_by_parent[[key]], collapse = "\r")
+  }
+  out
+}
+
+.genetag_query_transcript_children <- function(individual, window) {
+  feature_types <- c("mRNA", "transcript")
+  pieces <- lapply(feature_types, function(feature_type) {
+    query_features(
+      individual,
+      chr = window$chr,
+      start = window$start,
+      end = window$end,
+      feature_type = feature_type,
+      all = is.null(window$chr) && is.null(window$start) && is.null(window$end)
+    )
+  })
+  pieces <- Filter(function(x) length(x) > 0L, pieces)
+  if (length(pieces) == 0L) {
+    return(GenomicRanges::GRanges())
+  }
+  if (length(pieces) == 1L) {
+    return(pieces[[1L]])
+  }
+  do.call(c, unname(pieces))
+}
+
+.genetag_transcript_alias_values <- function(meta) {
+  alias_columns <- intersect(c("transcript_id", "ID", "Name", "transcript_name"), colnames(meta))
+  if (length(alias_columns) == 0L) {
+    return(rep(list(character()), nrow(meta)))
+  }
+
+  lapply(seq_len(nrow(meta)), function(i) {
+    values <- unique(unlist(lapply(alias_columns, function(col) {
+      as.character(meta[[col]][[i]])
+    }), use.names = FALSE))
+    values[!is.na(values) & nzchar(values)]
+  })
+}
+
+.genetag_complete_mapping <- function(mapping, data, show_label = TRUE) {
   mapping_exprs <- if (is.null(mapping)) {
     list()
   } else {
@@ -672,10 +875,98 @@ syn_to_genetag_df <- function(x,
       mapping_exprs[[col]] <- rlang::sym(col)
     }
   }
+  if (isTRUE(show_label) && !"label" %in% names(mapping_exprs)) {
+    label_col <- .genetag_label_column(data)
+    if (!is.null(label_col)) {
+      mapping_exprs[["label"]] <- rlang::sym(label_col)
+    }
+  }
+  if (is.data.frame(data)) {
+    for (col in c(
+      "track", "gene_key", "gene_id", "gene", "genomic_xmin", "genomic_xmax",
+      "reference_gene", "reference_gene_name", "homology_hit"
+    )) {
+      if (col %in% names(data) && !col %in% names(mapping_exprs)) {
+        mapping_exprs[[col]] <- rlang::sym(col)
+      }
+    }
+  }
   if (length(mapping_exprs) == 0L) {
     return(mapping)
   }
   rlang::inject(ggplot2::aes(!!!mapping_exprs))
+}
+
+.genetag_label_column <- function(data) {
+  if (!is.data.frame(data)) return(NULL)
+  for (col in c("label", "gene", "gene_id", "gene_key", "Name", "ID", "transcripts")) {
+    if (col %in% names(data)) return(col)
+  }
+  NULL
+}
+
+.genetag_gene_key <- function(data) {
+  key <- .coalesce_character_cols(data, c("gene_key", "gene_id", "ID", "Name", "gene", "label", "transcripts"))
+  missing <- is.na(key) | !nzchar(key)
+  key[missing] <- paste0("gene_", seq_len(length(key)))[missing]
+  key
+}
+
+.genetag_label <- function(data) {
+  label <- .coalesce_character_cols(data, c("label", "gene", "gene_id", "gene_key", "Name", "ID", "transcripts"))
+  missing <- is.na(label) | !nzchar(label)
+  label[missing] <- ""
+  label
+}
+
+.genetag_label_grob <- function(data,
+                                panel_params,
+                                coord,
+                                show_label = TRUE,
+                                label_size = 3,
+                                label_colour = "black",
+                                label_family = "sans",
+                                label_fontface = 1,
+                                label_lineheight = 1.2,
+                                panel_width_mm = NULL,
+                                panel_width_inch = NULL) {
+  if (!isTRUE(show_label) || !"label" %in% names(data) || nrow(data) == 0L) {
+    return(zeroGrob())
+  }
+  labels <- as.character(data$label)
+  keep <- !is.na(labels) & nzchar(labels)
+  if (!any(keep)) return(zeroGrob())
+
+  data_range <- diff(range(c(data$xmin, data$xmax), na.rm = TRUE))
+  if (!is.finite(data_range) || data_range <= 0) data_range <- 1
+  panel_mm <- if (!is.null(panel_width_inch)) {
+    panel_width_inch * 25.4
+  } else {
+    panel_width_mm %||% 300
+  }
+  if (!is.numeric(panel_mm) || length(panel_mm) != 1L ||
+      is.na(panel_mm) || panel_mm <= 0) {
+    panel_mm <- 300
+  }
+  tag_width <- abs(data$xmax - data$xmin)
+  est_width <- nchar(labels) * 0.5 * label_size * data_range / panel_mm
+  keep <- keep & is.finite(tag_width) & is.finite(est_width) & est_width <= tag_width
+  if (!any(keep)) return(zeroGrob())
+
+  label_data <- data[keep, , drop = FALSE]
+  label_data$x <- (label_data$xmin + label_data$xmax) / 2
+  label_data$y <- label_data$y
+  label_data$label <- labels[keep]
+  label_data$colour <- label_colour
+  label_data$size <- label_size
+  label_data$angle <- 0
+  label_data$hjust <- 0.5
+  label_data$vjust <- 0.5
+  label_data$alpha <- NA_real_
+  label_data$family <- label_family
+  label_data$fontface <- label_fontface
+  label_data$lineheight <- label_lineheight
+  ggplot2::GeomText$draw_panel(label_data, panel_params, coord)
 }
 
 .genetag_polygon_data <- function(data,

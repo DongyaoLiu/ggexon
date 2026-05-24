@@ -30,6 +30,7 @@ Imports:
     GenomicRanges,
     ggplot2,
     Rsamtools,
+    tibble,
 Suggests:
     ape,
     ggtree,
@@ -81,6 +82,7 @@ Collate:
     'plot-build.R'
     'protein-mutation-annotation.R'
     'scale-genomic.R'
+    'strip-scale-x.R'
     'strip-scale.R'
     'subsetting-overview.R'
     'syn-layer.R'

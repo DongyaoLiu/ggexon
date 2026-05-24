@@ -183,7 +183,11 @@ build_ggexon <- S7::method(ggexon_build, class_ggexon) <- function(plot, ...) {
       # Restore genomic x values (saved before map_position) so strip_scale
       # builds transforms and transforms from real genomic coordinates.
       data <- .strip_scale_restore_genomic_x(data)
-      strip_scaled <- apply_strip_scale(data, layers, plot@strip_scale, layout, plot)
+      strip_scaled <- if (inherits(plot@strip_scale, "ggexon_strip_scale_x_spec")) {
+        apply_strip_scale_x(data, layers, plot@strip_scale, layout, plot)
+      } else {
+        apply_strip_scale(data, layers, plot@strip_scale, layout, plot)
+      }
       data <- strip_scaled$data
       layout <- strip_scaled$layout
     }
@@ -1094,6 +1098,10 @@ layer_grob <- get_layer_grob
       gcol <- paste0(".gx_", col)
       if (gcol %in% names(df)) {
         df[[col]] <- df[[gcol]]
+        genomic_col <- paste0("genomic_", col)
+        if (genomic_col %in% names(df)) {
+          df[[genomic_col]] <- df[[gcol]]
+        }
         df[[gcol]] <- NULL
       }
     }

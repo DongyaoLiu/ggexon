@@ -194,25 +194,21 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
         )
       }
 
-      if (isTRUE(params$has_link_layers)) {
-        # If link layers are present, prefer the stored Syn layout so
-        # annotation panels and link panels stay in the intended chain order.
-        stored_layout <- species_layout(params$plot_data)
-        if (!is.null(stored_layout)) {
-          stored_layout <- .filter_stored_syn_layout(
-            stored_layout,
-            annotation_species = .annotation_species_from_layers(data),
-            link_pairs = .link_pairs_from_layers(data)
-          )
-          return(
-            syn_layout_panels(
-              .finalize_synspecies_layout_scales(
-                stored_layout,
-                free = params$free
-              )
+      stored_layout <- species_layout(params$plot_data)
+      if (!is.null(stored_layout)) {
+        stored_layout <- .filter_stored_syn_layout(
+          stored_layout,
+          annotation_species = .annotation_species_from_layers(data),
+          link_pairs = .link_pairs_from_layers(data)
+        )
+        return(
+          syn_layout_panels(
+            .finalize_synspecies_layout_scales(
+              stored_layout,
+              free = params$free
             )
           )
-        }
+        )
       }
 
       # Otherwise derive a SynSpecies layout from the layers participating in
@@ -518,7 +514,16 @@ synspecies_chain_layout <- function(x,
     ))
   })
 
-  dplyr::bind_rows(Filter(Negate(is.null), pair_rows))
+  out <- dplyr::bind_rows(Filter(Negate(is.null), pair_rows))
+  if (is.null(out) || nrow(out) == 0L) {
+    return(data.frame(
+      track = character(),
+      tspecies = character(),
+      qspecies = character(),
+      stringsAsFactors = FALSE
+    ))
+  }
+  out
 }
 
 .filter_stored_syn_layout <- function(layout,
@@ -580,6 +585,37 @@ synspecies_chain_layout <- function(x,
     return(layout_obj)
   }
 
+  missing_link_tracks <- setdiff(link_tracks, as.character(filtered$track %||% character()))
+  if (length(missing_link_tracks) > 0L) {
+    missing_pairs <- link_pairs[as.character(link_pairs$track) %in% missing_link_tracks, , drop = FALSE]
+    start_panel <- max(as.integer(filtered$PANEL %||% seq_len(nrow(filtered))), na.rm = TRUE)
+    start_row <- max(as.integer(filtered$ROW %||% seq_len(nrow(filtered))), na.rm = TRUE)
+    if (!is.finite(start_panel)) start_panel <- nrow(filtered)
+    if (!is.finite(start_row)) start_row <- nrow(filtered)
+    extra_links <- data.frame(
+      PANEL = start_panel + seq_len(nrow(missing_pairs)),
+      ROW = start_row + seq_len(nrow(missing_pairs)),
+      COL = 1L,
+      track = as.character(missing_pairs$track),
+      panel_type = "link",
+      species = NA_character_,
+      alignment_name = sub("^link_", "", as.character(missing_pairs$track)),
+      tspecies = as.character(missing_pairs$tspecies),
+      qspecies = as.character(missing_pairs$qspecies),
+      stringsAsFactors = FALSE
+    )
+    missing_cols <- setdiff(names(filtered), names(extra_links))
+    for (col in missing_cols) {
+      extra_links[[col]] <- NA
+    }
+    missing_cols <- setdiff(names(extra_links), names(filtered))
+    for (col in missing_cols) {
+      filtered[[col]] <- NA
+    }
+    extra_links <- extra_links[, names(filtered), drop = FALSE]
+    filtered <- dplyr::bind_rows(filtered, extra_links)
+  }
+
   rownames(filtered) <- NULL
   SynLayout(
     panels = filtered,
@@ -615,6 +651,7 @@ synspecies_chain_layout <- function(x,
   link_pairs <- unique(link_pairs[, c("track", "tspecies", "qspecies"), drop = FALSE])
   panel_rows <- vector("list", length(annotation_species) + nrow(link_pairs))
   panel_index <- 1L
+  used_links <- rep(FALSE, nrow(link_pairs))
 
   for (i in seq_along(annotation_species)) {
     species_name <- annotation_species[[i]]
@@ -632,34 +669,60 @@ synspecies_chain_layout <- function(x,
     )
     panel_index <- panel_index + 1L
 
-    if (i < length(annotation_species)) {
-      species_pair <- c(annotation_species[[i]], annotation_species[[i + 1L]])
-      pair_match <- vapply(seq_len(nrow(link_pairs)), function(j) {
-        setequal(species_pair, c(link_pairs$tspecies[[j]], link_pairs$qspecies[[j]]))
-      }, logical(1))
-      matched_pairs <- link_pairs[pair_match, , drop = FALSE]
-      if (nrow(matched_pairs) > 1L) {
-        return(NULL)
-      }
-      if (nrow(matched_pairs) == 1L) {
-        pair_track <- matched_pairs$track[[1L]]
-        pair_name <- sub("^link_", "", pair_track)
-        pair_obj <- pairwise_alignments(x)[[pair_name]]
-        panel_rows[[panel_index]] <- data.frame(
-          PANEL = panel_index,
-          ROW = panel_index,
-          COL = 1L,
-          track = pair_track,
-          panel_type = "link",
-          species = NA_character_,
-          alignment_name = pair_name,
-          tspecies = if (is.null(pair_obj)) matched_pairs$tspecies[[1L]] else target_individual(pair_obj),
-          qspecies = if (is.null(pair_obj)) matched_pairs$qspecies[[1L]] else query_individual(pair_obj),
-          stringsAsFactors = FALSE
-        )
-        panel_index <- panel_index + 1L
-      }
+    if (i >= length(annotation_species)) {
+      next
     }
+
+    later_species <- annotation_species[seq.int(i + 1L, length(annotation_species))]
+    pair_match <- vapply(seq_len(nrow(link_pairs)), function(j) {
+      if (isTRUE(used_links[[j]])) return(FALSE)
+      pair_species <- c(link_pairs$tspecies[[j]], link_pairs$qspecies[[j]])
+      species_name %in% pair_species && any(later_species %in% pair_species)
+    }, logical(1))
+    matched_pairs <- link_pairs[pair_match, , drop = FALSE]
+    if (nrow(matched_pairs) == 0L) {
+      next
+    }
+
+    for (j in which(pair_match)) {
+      pair_track <- link_pairs$track[[j]]
+      pair_name <- sub("^link_", "", pair_track)
+      pair_obj <- pairwise_alignments(x)[[pair_name]]
+      panel_rows[[panel_index]] <- data.frame(
+        PANEL = panel_index,
+        ROW = panel_index,
+        COL = 1L,
+        track = pair_track,
+        panel_type = "link",
+        species = NA_character_,
+        alignment_name = pair_name,
+        tspecies = if (is.null(pair_obj)) link_pairs$tspecies[[j]] else target_individual(pair_obj),
+        qspecies = if (is.null(pair_obj)) link_pairs$qspecies[[j]] else query_individual(pair_obj),
+        stringsAsFactors = FALSE
+      )
+      used_links[[j]] <- TRUE
+      panel_index <- panel_index + 1L
+    }
+  }
+
+  remaining_links <- which(!used_links)
+  for (j in remaining_links) {
+    pair_track <- link_pairs$track[[j]]
+    pair_name <- sub("^link_", "", pair_track)
+    pair_obj <- pairwise_alignments(x)[[pair_name]]
+    panel_rows[[panel_index]] <- data.frame(
+      PANEL = panel_index,
+      ROW = panel_index,
+      COL = 1L,
+      track = pair_track,
+      panel_type = "link",
+      species = NA_character_,
+      alignment_name = pair_name,
+      tspecies = if (is.null(pair_obj)) link_pairs$tspecies[[j]] else target_individual(pair_obj),
+      qspecies = if (is.null(pair_obj)) link_pairs$qspecies[[j]] else query_individual(pair_obj),
+      stringsAsFactors = FALSE
+    )
+    panel_index <- panel_index + 1L
   }
 
   panels <- dplyr::bind_rows(panel_rows[seq_len(panel_index - 1L)])

@@ -15,8 +15,8 @@ Must contain at least a \code{track} column and one or more of
 typically from \code{homology_annotations(synspecies)}.}
 }
 \value{
-The input data frame with additional \code{reference_gene} and
-\code{reference_gene_name} columns.
+The input data frame with additional \code{reference_gene},
+\code{reference_gene_name}, and \code{homology_hit} columns.
 }
 \description{
 Adds \code{reference_gene} and \code{reference_gene_name} columns by matching
@@ -28,6 +28,7 @@ and homology-side \code{query_gene} values.
 \details{
 When no homology is available for a track, or when a feature has no
 match, both new columns fall back to the feature's original gene_name
-or gene_id.
+or gene_id, while \code{homology_hit} records whether a real homology table
+match was found.
 }
 \keyword{internal}

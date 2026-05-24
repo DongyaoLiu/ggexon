@@ -157,19 +157,16 @@ collect_layout_panel_windows <- function(syn_data) {
 
   panels <- panels[complete_rows, , drop = FALSE]
   species_col <- species_col[complete_rows]
-  keep_rows <- species_col %in% names(individuals(syn_data))
-  if (!any(keep_rows)) {
-    return(list())
-  }
-  panels <- panels[keep_rows, , drop = FALSE]
-  species_col <- species_col[keep_rows]
-
   out <- list()
   for (i in seq_len(nrow(panels))) {
     species_name <- species_col[[i]]
     individual <- individuals(syn_data)[[species_name]]
     out[[species_name]] <- list(
-      chr = resolve_syn_seqname(individual, as.character(panels$xlim_chr[[i]])),
+      chr = if (methods::is(individual, "SynIndividual")) {
+        resolve_syn_seqname(individual, as.character(panels$xlim_chr[[i]]))
+      } else {
+        as.character(panels$xlim_chr[[i]])
+      },
       start = as.numeric(panels$xlim_min[[i]]),
       end = as.numeric(panels$xlim_max[[i]])
     )
@@ -330,7 +327,7 @@ resolve_syn_plot_species_order <- function(x,
   }, character(1)))
 
   if (length(explicit_species) > 0L) {
-    selected_species <- explicit_species[explicit_species %in% names(individuals(x))]
+    selected_species <- explicit_species
   } else {
     selected_species <- names(individuals(x))
 
@@ -341,7 +338,6 @@ resolve_syn_plot_species_order <- function(x,
       }
       character()
     }), use.names = FALSE))
-    pairwise_species <- pairwise_species[pairwise_species %in% names(individuals(x))]
     if (length(pairwise_species) >= 2L) {
       selected_species <- pairwise_species
     }
@@ -442,7 +438,6 @@ infer_nuclink_species_order <- function(x,
   }
 
   annotation_species <- context$annotation_species_order %||% character()
-  annotation_species <- annotation_species[annotation_species %in% names(individuals(x))]
   annotation_species <- unique(annotation_species)
   if (length(annotation_species) > 0L) {
     return(annotation_species)
@@ -450,7 +445,6 @@ infer_nuclink_species_order <- function(x,
 
   context_windows <- context$windows %||% list()
   context_species <- names(context_windows)
-  context_species <- context_species[context_species %in% names(individuals(x))]
   context_species <- unique(context_species)
   if (length(context_species) > 0L) {
     return(context_species)
@@ -511,7 +505,6 @@ resolve_plot_link_alignments <- function(x,
 
   pair_list <- pairwise_alignments(x)
   species_order <- unique(as.character(species_order %||% character()))
-  species_order <- species_order[species_order %in% names(individuals(x))]
 
   if (!is.null(alignment) && length(alignment) > 1L) {
     alignment <- as.character(alignment)
@@ -649,7 +642,6 @@ derive_syn_plot_windows <- function(x, windows, link_requests, annotation_specie
 
     selected_species <- annotation_species_order %||% names(windows)
     selected_species <- unique(as.character(selected_species))
-    selected_species <- selected_species[selected_species %in% names(individuals(x))]
 
     pair_species <- if (methods::is(alignment_obj, "SynPairAlignment")) {
       alignment_individuals(alignment_obj)
@@ -2000,10 +1992,12 @@ syn_to_nuclink_df <- function(x,
     reference_species = reference,
     filter_by_len = filter_by_len
   )
+  use_context_windows <- length(pairs) == 1L
   link_data <- lapply(pairs, function(pair) {
     pair_species <- alignment_individuals(pair)
     pair_windows <- if (!is.null(context)) context$windows[pair_species] else list()
-    if (length(pair_windows) == length(pair_species) &&
+    if (isTRUE(use_context_windows) &&
+        length(pair_windows) == length(pair_species) &&
         all(!vapply(pair_windows, is.null, logical(1)))) {
       subset_regions <- vapply(pair_windows, window_to_region_string, character(1))
       return(pairwise_alignment_data(pair, subset = subset_regions))
