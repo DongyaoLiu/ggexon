@@ -24,11 +24,23 @@ geom_genetag(
   subset = NULL,
   feature_type = "gene",
   show_label = TRUE,
-  label_size = 3,
-  label_colour = "black",
-  label_family = "sans",
-  label_fontface = 1,
-  label_lineheight = 1.2,
+  label_position = NULL,
+  label_direction = NULL,
+  label_offset_fraction = NULL,
+  label_link = NULL,
+  label_link_type = NULL,
+  collapse_tandem = NULL,
+  check_overlap = FALSE,
+  label_size = NULL,
+  label_colour = NULL,
+  label_alpha = NULL,
+  label_family = NULL,
+  label_fontface = NULL,
+  label_lineheight = NULL,
+  label_link_colour = NULL,
+  label_link_linewidth = NULL,
+  label_link_linetype = NULL,
+  label_link_alpha = NULL,
   panel_width_mm = NULL,
   panel_width_inch = NULL,
   na.rm = FALSE,
@@ -85,12 +97,54 @@ geom_genetag(
 
 - show_label:
 
-  Logical; draw gene labels inside tags. Defaults to `TRUE`.
+  Logical; draw gene labels. Defaults to `TRUE`.
 
-- label_size, label_colour, label_family, label_fontface,
+- label_position:
+
+  Label placement mode. `"auto"` draws labels inside tags when they fit
+  and falls back outside otherwise; `"inside"` keeps the previous
+  inside-only behavior; `"outside"` draws all labels outside the tag;
+  `"none"` suppresses labels.
+
+- label_direction:
+
+  Outside label position. Accepts `"top"`, `"bottom"`, `"center"`, or
+  colon-delimited combinations such as `"top:bottom"`. Outside fallback
+  treats `"center"` labels that do not fit as `"top"`.
+
+- label_offset_fraction:
+
+  Distance between the tag and outside label line, as a fraction of
+  `exon_height`.
+
+- label_link:
+
+  Logical; draw leader links for outside labels.
+
+- label_link_type:
+
+  Leader line style: `"straight"`, `"elbow"`, or `"spline"`.
+
+- collapse_tandem:
+
+  When `TRUE`, consecutive outside labels with the same displayed
+  `label` in a track are collapsed into one label.
+
+- check_overlap:
+
+  Logical passed to text drawing for opt-in label overlap suppression.
+
+- label_size, label_colour, label_alpha, label_family, label_fontface,
   label_lineheight:
 
-  Fixed label styling used when `show_label = TRUE`.
+  Fixed label styling used when `show_label = TRUE`. These can also be
+  mapped as aesthetics with names such as `aes(label_colour = ...)`.
+
+- label_link_colour, label_link_linewidth, label_link_linetype,
+  label_link_alpha:
+
+  Fixed leader-link styling for outside labels. These can also be mapped
+  as aesthetics with the same names.
 
 - panel_width_mm, panel_width_inch:
 
