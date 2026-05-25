@@ -46,6 +46,100 @@ test_that("geom_genetag renders with data-default aesthetics", {
   expect_true(inherits(ggplot2::ggplotGrob(p), "gtable"))
 })
 
+test_that("geom_genetag auto labels fall back outside when labels do not fit", {
+  data <- data.frame(
+    xmin = c(0, 10),
+    xmax = c(8, 18),
+    y = 0.4,
+    strand = c("+", "+"),
+    label = c("g1", "very_long_gene_label"),
+    track = "track_a",
+    stringsAsFactors = FALSE
+  )
+
+  layout <- .genetag_label_layout(
+    data,
+    label_position = "auto",
+    exon_height = 0.8,
+    panel_width_mm = 20
+  )
+
+  expect_equal(layout$inside$label, "g1")
+  expect_equal(layout$outside$label, "very_long_gene_label")
+  expect_equal(layout$outside$label_pos, "top")
+  expect_gt(layout$outside$y, layout$outside$gene_ymax)
+
+  inside_only <- .genetag_label_layout(
+    data,
+    label_position = "inside",
+    exon_height = 0.8,
+    panel_width_mm = 20
+  )
+  expect_equal(inside_only$inside$label, "g1")
+  expect_equal(nrow(inside_only$outside), 0L)
+})
+
+test_that("geom_genetag supports prefixed label aesthetics", {
+  data <- data.frame(
+    xmin = c(0, 10),
+    xmax = c(8, 18),
+    y = 1,
+    strand = c("+", "-"),
+    gene = c("g1", "g2"),
+    text_colour = c("red", "blue"),
+    link_colour = c("orange", "green"),
+    stringsAsFactors = FALSE
+  )
+
+  p <- ggplot2::ggplot() +
+    geom_genetag(
+      data = data,
+      ggplot2::aes(
+        label_colour = text_colour,
+        label_link_colour = link_colour
+      ),
+      label_position = "outside"
+    )
+  built <- ggplot2::ggplot_build(p)$data[[1]]
+
+  expect_equal(built$label, data$gene)
+  expect_equal(built$label_colour, data$text_colour)
+  expect_equal(built$label_link_colour, data$link_colour)
+  expect_true(inherits(ggplot2::ggplotGrob(p), "gtable"))
+})
+
+test_that("geom_genetag tandem label collapse stays within tracks", {
+  data <- data.frame(
+    xmin = c(0, 2, 10, 12),
+    xmax = c(1, 3, 11, 13),
+    y = 0.4,
+    strand = "+",
+    label = "dup",
+    track = c("track_a", "track_a", "track_b", "track_b"),
+    stringsAsFactors = FALSE
+  )
+
+  layout <- .genetag_label_layout(
+    data,
+    label_position = "outside",
+    collapse_tandem = TRUE,
+    exon_height = 0.8,
+    panel_width_mm = 40
+  )
+
+  expect_equal(nrow(layout$outside), 2L)
+  expect_equal(layout$outside$track, c("track_a", "track_b"))
+  expect_length(layout$tandem_anchors, 2L)
+
+  p <- ggplot2::ggplot() +
+    geom_genetag(
+      data = data,
+      label_position = "outside",
+      collapse_tandem = TRUE
+    )
+  expect_true(inherits(ggplot2::ggplotGrob(p), "gtable"))
+})
+
 test_that("gene-tag layout modes can union gaps and feature lengths independently", {
   data <- data.frame(
     id = c("A", "A", "B", "B"),

@@ -205,9 +205,29 @@ ggplot_add.ggtree <- function(object, plot, object_name) {
 #' @param subset Optional numeric length-2 genomic window to keep.
 #' @param feature_type Feature type passed to [query_features()]. Defaults to
 #'   `"gene"`.
-#' @param show_label Logical; draw gene labels inside tags. Defaults to `TRUE`.
-#' @param label_size,label_colour,label_family,label_fontface,label_lineheight
-#'   Fixed label styling used when `show_label = TRUE`.
+#' @param show_label Logical; draw gene labels. Defaults to `TRUE`.
+#' @param label_position Label placement mode. `"auto"` draws labels inside
+#'   tags when they fit and falls back outside otherwise; `"inside"` keeps the
+#'   previous inside-only behavior; `"outside"` draws all labels outside the
+#'   tag; `"none"` suppresses labels.
+#' @param label_direction Outside label position. Accepts `"top"`, `"bottom"`,
+#'   `"center"`, or colon-delimited combinations such as `"top:bottom"`.
+#'   Outside fallback treats `"center"` labels that do not fit as `"top"`.
+#' @param label_offset_fraction Distance between the tag and outside label line,
+#'   as a fraction of `exon_height`.
+#' @param label_link Logical; draw leader links for outside labels.
+#' @param label_link_type Leader line style: `"straight"`, `"elbow"`, or
+#'   `"spline"`.
+#' @param collapse_tandem When `TRUE`, consecutive outside labels with the same
+#'   displayed `label` in a track are collapsed into one label.
+#' @param check_overlap Logical passed to text drawing for opt-in label overlap
+#'   suppression.
+#' @param label_size,label_colour,label_alpha,label_family,label_fontface,label_lineheight
+#'   Fixed label styling used when `show_label = TRUE`. These can also be mapped
+#'   as aesthetics with names such as `aes(label_colour = ...)`.
+#' @param label_link_colour,label_link_linewidth,label_link_linetype,label_link_alpha
+#'   Fixed leader-link styling for outside labels. These can also be mapped as
+#'   aesthetics with the same names.
 #' @param panel_width_mm,panel_width_inch Optional panel width for estimating
 #'   whether labels fit inside transformed gene tags.
 #'
@@ -227,17 +247,61 @@ geom_genetag <- function(mapping = NULL,
 	                         subset = NULL,
 	                         feature_type = "gene",
                          show_label = TRUE,
-                         label_size = 3,
-                         label_colour = "black",
-                         label_family = "sans",
-                         label_fontface = 1,
-                         label_lineheight = 1.2,
+                         label_position = NULL,
+                         label_direction = NULL,
+                         label_offset_fraction = NULL,
+                         label_link = NULL,
+                         label_link_type = NULL,
+                         collapse_tandem = NULL,
+                         check_overlap = FALSE,
+                         label_size = NULL,
+                         label_colour = NULL,
+                         label_alpha = NULL,
+                         label_family = NULL,
+                         label_fontface = NULL,
+                         label_lineheight = NULL,
+                         label_link_colour = NULL,
+                         label_link_linewidth = NULL,
+                         label_link_linetype = NULL,
+                         label_link_alpha = NULL,
                          panel_width_mm = NULL,
                          panel_width_inch = NULL,
 	                         na.rm = FALSE,
 	                         show.legend = NA,
 	                         inherit.aes = FALSE) {
   mapping <- .genetag_complete_mapping(mapping, data, show_label = show_label)
+  params <- Filter(Negate(is.null), list(
+    ...,
+    exon_height = exon_height,
+    height = height,
+    arrow_width = arrow_width,
+    arrow_fraction = arrow_fraction,
+    species = species,
+    chr = chr,
+    subset = subset,
+    feature_type = feature_type,
+    show_label = show_label,
+    label_position = label_position,
+    label_direction = label_direction,
+    label_offset_fraction = label_offset_fraction,
+    label_link = label_link,
+    label_link_type = label_link_type,
+    collapse_tandem = collapse_tandem,
+    check_overlap = check_overlap,
+    label_size = label_size,
+    label_colour = label_colour,
+    label_alpha = label_alpha,
+    label_family = label_family,
+    label_fontface = label_fontface,
+    label_lineheight = label_lineheight,
+    label_link_colour = label_link_colour,
+    label_link_linewidth = label_link_linewidth,
+    label_link_linetype = label_link_linetype,
+    label_link_alpha = label_link_alpha,
+    panel_width_mm = panel_width_mm,
+    panel_width_inch = panel_width_inch,
+    na.rm = na.rm
+  ))
   layer(
     data = data,
     mapping = mapping,
@@ -246,26 +310,7 @@ geom_genetag <- function(mapping = NULL,
     position = position,
     show.legend = show.legend,
     inherit.aes = inherit.aes,
-    params = list(
-      ...,
-      exon_height = exon_height,
-      height = height,
-      arrow_width = arrow_width,
-      arrow_fraction = arrow_fraction,
-      species = species,
-      chr = chr,
-	      subset = subset,
-	      feature_type = feature_type,
-      show_label = show_label,
-      label_size = label_size,
-      label_colour = label_colour,
-      label_family = label_family,
-      label_fontface = label_fontface,
-      label_lineheight = label_lineheight,
-      panel_width_mm = panel_width_mm,
-      panel_width_inch = panel_width_inch,
-	      na.rm = na.rm
-	    ),
+    params = params,
     layer_class = LayerSyn
   )
 }
@@ -280,7 +325,19 @@ GeomGeneTag <- ggproto(
 	    linewidth = 0.25,
 	    linetype = 1,
 	    alpha = NA,
+    ymin = NA_real_,
+    ymax = NA_real_,
     label = NA_character_,
+    label_colour = "black",
+    label_size = 3,
+    label_alpha = NA_real_,
+    label_family = "sans",
+    label_fontface = 1,
+    label_lineheight = 1.2,
+    label_link_colour = "grey60",
+    label_link_linewidth = 0.5,
+    label_link_linetype = "solid",
+    label_link_alpha = NA_real_,
     track = NA_character_,
     gene_key = NA_character_,
     gene_id = NA_character_,
@@ -294,8 +351,9 @@ GeomGeneTag <- ggproto(
 	  extra_params = c(
 	    "na.rm", "exon_height", "height", "arrow_width", "arrow_fraction",
 	    "species", "chr", "subset", "feature_type", "show_label",
-    "label_size", "label_colour", "label_family", "label_fontface",
-    "label_lineheight", "panel_width_mm", "panel_width_inch"
+    "label_position", "label_direction", "label_offset_fraction",
+    "label_link", "label_link_type", "collapse_tandem", "check_overlap",
+    "panel_width_mm", "panel_width_inch"
 	  ),
   default_params = function() {
     list(
@@ -308,11 +366,13 @@ GeomGeneTag <- ggproto(
 	      subset = NULL,
 	      feature_type = "gene",
       show_label = TRUE,
-      label_size = 3,
-      label_colour = "black",
-      label_family = "sans",
-      label_fontface = 1,
-      label_lineheight = 1.2,
+      label_position = "auto",
+      label_direction = "top",
+      label_offset_fraction = 0.3,
+      label_link = TRUE,
+      label_link_type = "straight",
+      collapse_tandem = FALSE,
+      check_overlap = FALSE,
       panel_width_mm = NULL,
       panel_width_inch = NULL,
 	      na.rm = FALSE
@@ -326,7 +386,23 @@ GeomGeneTag <- ggproto(
     if (!"genomic_end" %in% names(data)) data$genomic_end <- data$genomic_xmax
     if (!"gene_key" %in% names(data)) data$gene_key <- .genetag_gene_key(data)
     if (!"label" %in% names(data)) data$label <- .genetag_label(data)
-	    data$y <- exon_height / 2
+    label_position <- .genetag_label_position(
+      params$label_position %||% "auto",
+      show_label = params$show_label %||% TRUE
+    )
+    data$y <- exon_height / 2
+    data$ymin <- data$y - exon_height / 2
+    data$ymax <- data$y + exon_height / 2
+    if (!identical(label_position, "none") && !identical(label_position, "inside")) {
+      label_offset <- exon_height * (params$label_offset_fraction %||% 0.3)
+      positions <- .parse_label_positions(params$label_direction %||% "top")
+      if ("top" %in% positions || "center" %in% positions) {
+        data$ymax <- data$ymax + label_offset
+      }
+      if ("bottom" %in% positions) {
+        data$ymin <- data$ymin - label_offset
+      }
+    }
 	    data
 	  },
   handle_na = function(data, params) {
@@ -348,14 +424,16 @@ GeomGeneTag <- ggproto(
                         flipped_aes = FALSE,
                         exon_height = NULL,
 	                        height = NULL,
-	                        arrow_width = NULL,
+                         arrow_width = NULL,
 	                        arrow_fraction = 0.18,
                          show_label = TRUE,
-                         label_size = 3,
-                         label_colour = "black",
-                         label_family = "sans",
-                         label_fontface = 1,
-                         label_lineheight = 1.2,
+                         label_position = "auto",
+                         label_direction = "top",
+                         label_offset_fraction = 0.3,
+                         label_link = TRUE,
+                         label_link_type = "straight",
+                         collapse_tandem = FALSE,
+                         check_overlap = FALSE,
                          panel_width_mm = NULL,
                          panel_width_inch = NULL) {
 	    if (nrow(data) == 0L) {
@@ -374,11 +452,14 @@ GeomGeneTag <- ggproto(
       panel_params = panel_params,
       coord = coord,
       show_label = show_label,
-      label_size = label_size,
-      label_colour = label_colour,
-      label_family = label_family,
-      label_fontface = label_fontface,
-      label_lineheight = label_lineheight,
+      label_position = label_position,
+      label_direction = label_direction,
+      label_offset_fraction = label_offset_fraction,
+      label_link = label_link,
+      label_link_type = label_link_type,
+      collapse_tandem = collapse_tandem,
+      check_overlap = check_overlap,
+      exon_height = .genetag_effective_height(exon_height = exon_height, height = height),
       panel_width_mm = panel_width_mm,
       panel_width_inch = panel_width_inch
     )
@@ -399,7 +480,10 @@ GeomGeneTag <- ggproto(
   },
   syn_default_aes = c(
     "xmin", "xmax", "y", "strand", "track", "group", "label", "gene_key",
-    "reference_gene", "reference_gene_name", "homology_hit", "gene_id", "gene"
+    "reference_gene", "reference_gene_name", "homology_hit", "gene_id", "gene",
+    "label_colour", "label_size", "label_alpha", "label_family",
+    "label_fontface", "label_lineheight", "label_link_colour",
+    "label_link_linewidth", "label_link_linetype", "label_link_alpha"
   )
 )
 
@@ -884,7 +968,8 @@ syn_to_genetag_df <- function(x,
   if (is.data.frame(data)) {
     for (col in c(
       "track", "gene_key", "gene_id", "gene", "genomic_xmin", "genomic_xmax",
-      "reference_gene", "reference_gene_name", "homology_hit"
+      "reference_gene", "reference_gene_name", "homology_hit",
+      .genetag_label_aesthetics()
     )) {
       if (col %in% names(data) && !col %in% names(mapping_exprs)) {
         mapping_exprs[[col]] <- rlang::sym(col)
@@ -919,26 +1004,26 @@ syn_to_genetag_df <- function(x,
   label
 }
 
-.genetag_label_grob <- function(data,
-                                panel_params,
-                                coord,
-                                show_label = TRUE,
-                                label_size = 3,
-                                label_colour = "black",
-                                label_family = "sans",
-                                label_fontface = 1,
-                                label_lineheight = 1.2,
-                                panel_width_mm = NULL,
-                                panel_width_inch = NULL) {
-  if (!isTRUE(show_label) || !"label" %in% names(data) || nrow(data) == 0L) {
-    return(zeroGrob())
-  }
-  labels <- as.character(data$label)
-  keep <- !is.na(labels) & nzchar(labels)
-  if (!any(keep)) return(zeroGrob())
+.genetag_label_aesthetics <- function() {
+  c(
+    "label_colour", "label_size", "label_alpha", "label_family",
+    "label_fontface", "label_lineheight", "label_link_colour",
+    "label_link_linewidth", "label_link_linetype", "label_link_alpha"
+  )
+}
 
-  data_range <- diff(range(c(data$xmin, data$xmax), na.rm = TRUE))
-  if (!is.finite(data_range) || data_range <= 0) data_range <- 1
+.genetag_label_position <- function(label_position = "auto", show_label = TRUE) {
+  if (!isTRUE(show_label)) {
+    return("none")
+  }
+  label_position <- label_position %||% "auto"
+  if (length(label_position) != 1L || is.na(label_position) || !nzchar(label_position)) {
+    label_position <- "auto"
+  }
+  match.arg(label_position, c("auto", "inside", "outside", "none"))
+}
+
+.genetag_panel_mm <- function(panel_width_mm = NULL, panel_width_inch = NULL) {
   panel_mm <- if (!is.null(panel_width_inch)) {
     panel_width_inch * 25.4
   } else {
@@ -948,25 +1033,437 @@ syn_to_genetag_df <- function(x,
       is.na(panel_mm) || panel_mm <= 0) {
     panel_mm <- 300
   }
-  tag_width <- abs(data$xmax - data$xmin)
-  est_width <- nchar(labels) * 0.5 * label_size * data_range / panel_mm
-  keep <- keep & is.finite(tag_width) & is.finite(est_width) & est_width <= tag_width
-  if (!any(keep)) return(zeroGrob())
+  panel_mm
+}
 
-  label_data <- data[keep, , drop = FALSE]
-  label_data$x <- (label_data$xmin + label_data$xmax) / 2
-  label_data$y <- label_data$y
-  label_data$label <- labels[keep]
-  label_data$colour <- label_colour
-  label_data$size <- label_size
-  label_data$angle <- 0
-  label_data$hjust <- 0.5
-  label_data$vjust <- 0.5
-  label_data$alpha <- NA_real_
-  label_data$family <- label_family
-  label_data$fontface <- label_fontface
-  label_data$lineheight <- label_lineheight
-  ggplot2::GeomText$draw_panel(label_data, panel_params, coord)
+.genetag_label_defaults <- list(
+  label_colour = "black",
+  label_size = 3,
+  label_alpha = NA_real_,
+  label_family = "sans",
+  label_fontface = 1,
+  label_lineheight = 1.2,
+  label_link_colour = "grey60",
+  label_link_linewidth = 0.5,
+  label_link_linetype = "solid",
+  label_link_alpha = NA_real_
+)
+
+.genetag_apply_label_defaults <- function(data) {
+  for (name in names(.genetag_label_defaults)) {
+    if (!name %in% names(data) || is.null(data[[name]])) {
+      data[[name]] <- rep(.genetag_label_defaults[[name]], nrow(data))
+    }
+  }
+  data
+}
+
+.genetag_label_width <- function(labels, label_size, data_range, panel_mm) {
+  label_size <- suppressWarnings(as.numeric(label_size))
+  label_size[!is.finite(label_size)] <- .genetag_label_defaults$label_size
+  nchar(as.character(labels)) * 0.5 * label_size * data_range / panel_mm
+}
+
+.genetag_label_grob <- function(data,
+                                panel_params,
+                                coord,
+                                show_label = TRUE,
+                                label_position = "auto",
+                                label_direction = "top",
+                                label_offset_fraction = 0.3,
+                                label_link = TRUE,
+                                label_link_type = "straight",
+                                collapse_tandem = FALSE,
+                                check_overlap = FALSE,
+                                exon_height = 0.8,
+                                panel_width_mm = NULL,
+                                panel_width_inch = NULL) {
+  label_position <- .genetag_label_position(label_position, show_label = show_label)
+  if (identical(label_position, "none") || !"label" %in% names(data) || nrow(data) == 0L) {
+    return(zeroGrob())
+  }
+
+  label_link_type <- match.arg(label_link_type %||% "straight", c("straight", "elbow", "spline"))
+  label_layout <- .genetag_label_layout(
+    data = data,
+    label_position = label_position,
+    label_direction = label_direction,
+    label_offset_fraction = label_offset_fraction,
+    collapse_tandem = collapse_tandem,
+    exon_height = exon_height,
+    panel_width_mm = panel_width_mm,
+    panel_width_inch = panel_width_inch
+  )
+
+  grobs <- list()
+  if (nrow(label_layout$outside) > 0L && isTRUE(label_link)) {
+    grobs[[length(grobs) + 1L]] <- .genetag_as_grob(.genetag_outside_link_grob(
+      label_layout$outside,
+      tandem_anchors = label_layout$tandem_anchors,
+      panel_params = panel_params,
+      coord = coord,
+      label_link_type = label_link_type
+    ))
+  }
+  if (nrow(label_layout$inside) > 0L) {
+    grobs[[length(grobs) + 1L]] <- .genetag_as_grob(ggplot2::GeomText$draw_panel(
+      label_layout$inside,
+      panel_params,
+      coord,
+      check_overlap = check_overlap
+    ))
+  }
+  if (nrow(label_layout$outside) > 0L) {
+    grobs[[length(grobs) + 1L]] <- .genetag_as_grob(ggplot2::GeomText$draw_panel(
+      label_layout$outside,
+      panel_params,
+      coord,
+      check_overlap = check_overlap
+    ))
+  }
+
+  grobs <- Filter(function(x) !inherits(x, "zeroGrob"), grobs)
+  if (length(grobs) == 0L) {
+    return(zeroGrob())
+  }
+  ggname("geom_genetag_labels", gTree(children = do.call(gList, grobs)))
+}
+
+.genetag_label_layout <- function(data,
+                                  label_position = "auto",
+                                  label_direction = "top",
+                                  label_offset_fraction = 0.3,
+                                  collapse_tandem = FALSE,
+                                  exon_height = 0.8,
+                                  panel_width_mm = NULL,
+                                  panel_width_inch = NULL) {
+  labels <- as.character(data$label)
+  keep <- !is.na(labels) & nzchar(labels)
+  empty <- list(inside = data[0, , drop = FALSE], outside = data[0, , drop = FALSE], tandem_anchors = list())
+  if (!any(keep)) {
+    return(empty)
+  }
+
+  data2 <- .genetag_apply_label_defaults(data[keep, , drop = FALSE])
+  labels <- labels[keep]
+  data_range <- diff(range(c(data$xmin, data$xmax), na.rm = TRUE))
+  if (!is.finite(data_range) || data_range <= 0) data_range <- 1
+  panel_mm <- .genetag_panel_mm(panel_width_mm = panel_width_mm, panel_width_inch = panel_width_inch)
+  gene_xmin <- pmin(data2$xmin, data2$xmax)
+  gene_xmax <- pmax(data2$xmin, data2$xmax)
+  tag_width <- gene_xmax - gene_xmin
+  est_width <- .genetag_label_width(labels, data2$label_size, data_range, panel_mm)
+
+  data2$label <- labels
+  data2$gene_xmin <- gene_xmin
+  data2$gene_xmax <- gene_xmax
+  data2$orig_x_mid <- (gene_xmin + gene_xmax) / 2
+  data2$gene_ymin <- data2$y - exon_height / 2
+  data2$gene_ymax <- data2$y + exon_height / 2
+  data2$gene_ymid <- data2$y
+  data2$tag_width <- tag_width
+  data2$est_width <- est_width
+  data2$fits_inside <- is.finite(tag_width) & is.finite(est_width) & est_width <= tag_width
+
+  inside_idx <- switch(
+    label_position,
+    inside = which(data2$fits_inside),
+    auto = which(data2$fits_inside),
+    outside = integer(),
+    none = integer()
+  )
+  outside_idx <- switch(
+    label_position,
+    inside = integer(),
+    auto = which(!data2$fits_inside),
+    outside = seq_len(nrow(data2)),
+    none = integer()
+  )
+
+  inside <- data2[inside_idx, , drop = FALSE]
+  if (nrow(inside) > 0L) {
+    inside <- .genetag_text_data(
+      inside,
+      x = inside$orig_x_mid,
+      y = inside$gene_ymid,
+      vjust = 0.5
+    )
+  }
+
+  outside <- data2[outside_idx, , drop = FALSE]
+  tandem_anchors <- list()
+  if (nrow(outside) > 0L) {
+    outside <- outside[order(.genetag_track_key(outside), outside$orig_x_mid), , drop = FALSE]
+    if (isTRUE(collapse_tandem)) {
+      outside <- .collapse_tandem_labels(outside)
+      tandem_anchors <- attr(outside, "tandem_anchors") %||% list()
+    }
+    outside <- .genetag_outside_label_data(
+      outside,
+      label_direction = label_direction,
+      label_offset = exon_height * (label_offset_fraction %||% 0.3),
+      data_xmin = min(data2$gene_xmin, na.rm = TRUE),
+      data_xmax = max(data2$gene_xmax, na.rm = TRUE),
+      data_range = data_range
+    )
+  }
+
+  list(inside = inside, outside = outside, tandem_anchors = tandem_anchors)
+}
+
+.genetag_text_data <- function(data, x, y, vjust = 0.5) {
+  data$x <- x
+  data$y <- y
+  data$colour <- data$label_colour
+  data$size <- data$label_size
+  data$alpha <- data$label_alpha
+  data$family <- data$label_family
+  data$fontface <- data$label_fontface
+  data$lineheight <- data$label_lineheight
+  data$angle <- 0
+  data$hjust <- 0.5
+  data$vjust <- vjust
+  data
+}
+
+.genetag_track_key <- function(data) {
+  key <- if ("track" %in% names(data)) as.character(data$track) else rep("", nrow(data))
+  key[is.na(key)] <- ""
+  key
+}
+
+.genetag_outside_label_data <- function(data,
+                                        label_direction = "top",
+                                        label_offset = 0.24,
+                                        data_xmin,
+                                        data_xmax,
+                                        data_range) {
+  positions <- .parse_label_positions(label_direction)
+  positions[positions == "center"] <- "top"
+  if (length(positions) == 0L) {
+    positions <- "top"
+  }
+
+  data$label_x <- data$orig_x_mid
+  data$label_pos <- "top"
+  track_key <- .genetag_track_key(data)
+  for (key in unique(track_key)) {
+    idx <- which(track_key == key)
+    pos_idx <- (seq_along(idx) - 1L) %% length(positions) + 1L
+    data$label_pos[idx] <- positions[pos_idx]
+  }
+
+  data$label_y <- data$gene_ymax + label_offset
+  data$anchor_y <- data$gene_ymax
+  data$vjust <- 1
+  for (key in unique(track_key)) {
+    idx <- which(track_key == key)
+    top_y <- max(data$gene_ymax[idx], na.rm = TRUE)
+    bottom_y <- min(data$gene_ymin[idx], na.rm = TRUE)
+    top_idx <- idx[data$label_pos[idx] == "top"]
+    bottom_idx <- idx[data$label_pos[idx] == "bottom"]
+    if (length(top_idx) > 0L) {
+      data$label_y[top_idx] <- top_y + label_offset
+      data$anchor_y[top_idx] <- data$gene_ymax[top_idx]
+      data$vjust[top_idx] <- 1
+    }
+    if (length(bottom_idx) > 0L) {
+      data$label_y[bottom_idx] <- bottom_y - label_offset
+      data$anchor_y[bottom_idx] <- data$gene_ymin[bottom_idx]
+      data$vjust[bottom_idx] <- 0
+    }
+  }
+
+  data <- .genetag_spread_outside_labels(
+    data,
+    data_xmin = data_xmin,
+    data_xmax = data_xmax,
+    data_range = data_range
+  )
+  .genetag_text_data(data, x = data$label_x, y = data$label_y, vjust = data$vjust)
+}
+
+.genetag_spread_outside_labels <- function(data, data_xmin, data_xmax, data_range) {
+  if (nrow(data) <= 1L) {
+    return(.genetag_constrain_label_x(data, data_xmin, data_xmax))
+  }
+  min_gap <- data_range * 0.005
+  group_key <- paste(.genetag_track_key(data), data$label_pos, sep = "\r")
+  for (key in unique(group_key)) {
+    idx <- which(group_key == key)
+    n <- length(idx)
+    if (n <= 1L) next
+    idx <- idx[order(data$label_x[idx])]
+    ideal <- data$label_x[idx]
+    halfw <- data$est_width[idx] / 2
+    dist <- halfw[-n] + halfw[-1L] + min_gap
+    x <- ideal
+    changed <- TRUE
+    iter <- 0L
+    while (changed && iter < 50L) {
+      changed <- FALSE
+      iter <- iter + 1L
+      for (j in 2L:n) {
+        d <- dist[[j - 1L]]
+        if (x[[j]] < x[[j - 1L]] + d) {
+          delta <- (x[[j - 1L]] + d - x[[j]]) / 2
+          x[[j - 1L]] <- x[[j - 1L]] - delta
+          x[[j]] <- x[[j]] + delta
+          changed <- TRUE
+        }
+      }
+      for (j in seq.int(n - 1L, 1L)) {
+        d <- dist[[j]]
+        if (x[[j + 1L]] < x[[j]] + d) {
+          delta <- (x[[j]] + d - x[[j + 1L]]) / 2
+          x[[j]] <- x[[j]] - delta
+          x[[j + 1L]] <- x[[j + 1L]] + delta
+          changed <- TRUE
+        }
+      }
+    }
+    data$label_x[idx] <- x
+  }
+  .genetag_constrain_label_x(data, data_xmin, data_xmax)
+}
+
+.genetag_constrain_label_x <- function(data, data_xmin, data_xmax) {
+  halfw <- data$est_width / 2
+  lower <- data_xmin + halfw
+  upper <- data_xmax - halfw
+  midpoint <- (data_xmin + data_xmax) / 2
+  ok <- is.finite(lower) & is.finite(upper) & lower <= upper
+  data$label_x[ok] <- pmax(data$label_x[ok], lower[ok])
+  data$label_x[ok] <- pmin(data$label_x[ok], upper[ok])
+  data$label_x[!ok] <- midpoint
+  data
+}
+
+.genetag_outside_link_grob <- function(data,
+                                       tandem_anchors = list(),
+                                       panel_params,
+                                       coord,
+                                       label_link_type = "straight") {
+  if (nrow(data) == 0L) {
+    return(zeroGrob())
+  }
+  if (!"tandem_id" %in% names(data)) {
+    data$tandem_id <- NA_integer_
+  }
+  singletons <- data[is.na(data$tandem_id), , drop = FALSE]
+  tandems <- data[!is.na(data$tandem_id), , drop = FALSE]
+  grobs <- list()
+
+  if (nrow(singletons) > 0L) {
+    link_data <- .genetag_link_data(
+      singletons,
+      x = singletons$orig_x_mid,
+      y = singletons$anchor_y,
+      xend = singletons$label_x,
+      yend = singletons$label_y
+    )
+    grobs[[length(grobs) + 1L]] <- .genetag_as_grob(.draw_link_grobs_raw(
+      coord$transform(link_data, panel_params),
+      label_link_type
+    ))
+  }
+
+  if (nrow(tandems) > 0L) {
+    for (i in seq_len(nrow(tandems))) {
+      row <- tandems[i, , drop = FALSE]
+      members <- tandem_anchors[[as.character(row$tandem_id[[1L]])]]
+      if (is.null(members) || nrow(members) < 2L) {
+        link_data <- .genetag_link_data(
+          row,
+          x = row$orig_x_mid,
+          y = row$anchor_y,
+          xend = row$label_x,
+          yend = row$label_y
+        )
+        grobs[[length(grobs) + 1L]] <- .genetag_as_grob(.draw_link_grobs_raw(
+          coord$transform(link_data, panel_params),
+          label_link_type
+        ))
+        next
+      }
+
+      members$anchor_y <- if (identical(row$label_pos[[1L]], "bottom")) {
+        members$gene_ymin
+      } else {
+        members$gene_ymax
+      }
+      bracket_y <- mean(range(members$anchor_y, na.rm = TRUE))
+      bracket <- .genetag_link_data(
+        row,
+        x = min(members$x, na.rm = TRUE),
+        y = bracket_y,
+        xend = max(members$x, na.rm = TRUE),
+        yend = bracket_y
+      )
+      bracket_t <- coord$transform(bracket, panel_params)
+      grobs[[length(grobs) + 1L]] <- segmentsGrob(
+        x0 = bracket_t$x, y0 = bracket_t$y,
+        x1 = bracket_t$xend, y1 = bracket_t$yend,
+        default.units = "native",
+        gp = gpar(
+          col = alpha(bracket_t$colour, bracket_t$alpha),
+          lwd = bracket_t$linewidth,
+          lty = bracket_t$linetype
+        )
+      )
+
+      drop_data <- .genetag_link_data(
+        row[rep(1L, nrow(members)), , drop = FALSE],
+        x = members$x,
+        y = bracket_y,
+        xend = members$x,
+        yend = members$anchor_y
+      )
+      grobs[[length(grobs) + 1L]] <- .draw_link_grobs_raw(
+        coord$transform(drop_data, panel_params),
+        "straight"
+      )
+
+      main_data <- .genetag_link_data(
+        row,
+        x = mean(range(members$x, na.rm = TRUE)),
+        y = bracket_y,
+        xend = row$label_x,
+        yend = row$label_y
+      )
+      grobs[[length(grobs) + 1L]] <- .genetag_as_grob(.draw_link_grobs_raw(
+        coord$transform(main_data, panel_params),
+        label_link_type
+      ))
+    }
+  }
+
+  grobs <- Filter(function(x) !inherits(x, "zeroGrob"), grobs)
+  if (length(grobs) == 0L) {
+    return(zeroGrob())
+  }
+  gTree(children = do.call(gList, lapply(grobs, .genetag_as_grob)))
+}
+
+.genetag_link_data <- function(data, x, y, xend, yend) {
+  data.frame(
+    x = x,
+    y = y,
+    xend = xend,
+    yend = yend,
+    colour = data$label_link_colour,
+    linewidth = data$label_link_linewidth,
+    linetype = data$label_link_linetype,
+    alpha = data$label_link_alpha,
+    stringsAsFactors = FALSE
+  )
+}
+
+.genetag_as_grob <- function(x) {
+  if (inherits(x, "gList")) {
+    return(gTree(children = x))
+  }
+  x
 }
 
 .genetag_polygon_data <- function(data,

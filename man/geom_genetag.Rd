@@ -19,11 +19,23 @@ geom_genetag(
   subset = NULL,
   feature_type = "gene",
   show_label = TRUE,
-  label_size = 3,
-  label_colour = "black",
-  label_family = "sans",
-  label_fontface = 1,
-  label_lineheight = 1.2,
+  label_position = NULL,
+  label_direction = NULL,
+  label_offset_fraction = NULL,
+  label_link = NULL,
+  label_link_type = NULL,
+  collapse_tandem = NULL,
+  check_overlap = FALSE,
+  label_size = NULL,
+  label_colour = NULL,
+  label_alpha = NULL,
+  label_family = NULL,
+  label_fontface = NULL,
+  label_lineheight = NULL,
+  label_link_colour = NULL,
+  label_link_linewidth = NULL,
+  label_link_linetype = NULL,
+  label_link_alpha = NULL,
   panel_width_mm = NULL,
   panel_width_inch = NULL,
   na.rm = FALSE,
@@ -57,9 +69,36 @@ Syn-backed.}
 \item{feature_type}{Feature type passed to \code{\link[=query_features]{query_features()}}. Defaults to
 \code{"gene"}.}
 
-\item{show_label}{Logical; draw gene labels inside tags. Defaults to \code{TRUE}.}
+\item{show_label}{Logical; draw gene labels. Defaults to \code{TRUE}.}
 
-\item{label_size, label_colour, label_family, label_fontface, label_lineheight}{Fixed label styling used when \code{show_label = TRUE}.}
+\item{label_position}{Label placement mode. \code{"auto"} draws labels inside
+tags when they fit and falls back outside otherwise; \code{"inside"} keeps the
+previous inside-only behavior; \code{"outside"} draws all labels outside the
+tag; \code{"none"} suppresses labels.}
+
+\item{label_direction}{Outside label position. Accepts \code{"top"}, \code{"bottom"},
+\code{"center"}, or colon-delimited combinations such as \code{"top:bottom"}.
+Outside fallback treats \code{"center"} labels that do not fit as \code{"top"}.}
+
+\item{label_offset_fraction}{Distance between the tag and outside label line,
+as a fraction of \code{exon_height}.}
+
+\item{label_link}{Logical; draw leader links for outside labels.}
+
+\item{label_link_type}{Leader line style: \code{"straight"}, \code{"elbow"}, or
+\code{"spline"}.}
+
+\item{collapse_tandem}{When \code{TRUE}, consecutive outside labels with the same
+displayed \code{label} in a track are collapsed into one label.}
+
+\item{check_overlap}{Logical passed to text drawing for opt-in label overlap
+suppression.}
+
+\item{label_size, label_colour, label_alpha, label_family, label_fontface, label_lineheight}{Fixed label styling used when \code{show_label = TRUE}. These can also be mapped
+as aesthetics with names such as \code{aes(label_colour = ...)}.}
+
+\item{label_link_colour, label_link_linewidth, label_link_linetype, label_link_alpha}{Fixed leader-link styling for outside labels. These can also be mapped as
+aesthetics with the same names.}
 
 \item{panel_width_mm, panel_width_inch}{Optional panel width for estimating
 whether labels fit inside transformed gene tags.}

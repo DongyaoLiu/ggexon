@@ -60,7 +60,8 @@
   collapsed_rows <- list()
   next_id <- 1L
 
-  for (run in base::split(data2, data2$run_id)) {
+  run_key <- paste(as.character(data2$track), data2$run_id, sep = "\r")
+  for (run in base::split(data2, run_key)) {
     if (nrow(run) == 1L) {
       collapsed_rows[[length(collapsed_rows) + 1L]] <- run
     } else {
