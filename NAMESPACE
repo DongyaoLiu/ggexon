@@ -3,6 +3,7 @@
 S3method(drawDetails,crossPanelSegmentsGrob)
 S3method(drawDetails,genomicTreeSegmentsGrob)
 S3method(drawDetails,ggexonGenomicPiecewiseAxisGrob)
+S3method(drawDetails,ggexonStripScaleXAxisGrob)
 S3method(ggexon,default)
 S3method(ggplot_add,cross_panel_annotation)
 S3method(ggplot_add,ggexon_genomic_tree_spec)

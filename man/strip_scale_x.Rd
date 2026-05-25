@@ -13,7 +13,8 @@ strip_scale_x(
   secondary_homology_ratio = 0.75,
   species_ratio = NULL,
   collapse_contiguous_slot = TRUE,
-  block_align = c("conserved", "left", "center", "right", "none")
+  block_align = c("conserved", "left", "center", "right", "none"),
+  guide = c("range", "none")
 )
 
 strip_scale(...)
@@ -44,6 +45,9 @@ highest-support reference homology block by median center offset, without
 requiring query genes to appear in the same order. \code{"left"}, \code{"center"},
 and \code{"right"} align each local track span to the reference span. \code{"none"}
 leaves level-2 local coordinates untranslated.}
+
+\item{guide}{Strip-scale x-axis guide. \code{"range"} draws a simple per-track
+begin/end genomic bp range guide; \code{"none"} suppresses the custom guide.}
 
 \item{...}{Arguments passed from the compatibility wrapper \code{strip_scale()} to
 \code{strip_scale_x()}.}

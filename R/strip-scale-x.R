@@ -23,6 +23,8 @@
 #'   requiring query genes to appear in the same order. `"left"`, `"center"`,
 #'   and `"right"` align each local track span to the reference span. `"none"`
 #'   leaves level-2 local coordinates untranslated.
+#' @param guide Strip-scale x-axis guide. `"range"` draws a simple per-track
+#'   begin/end genomic bp range guide; `"none"` suppresses the custom guide.
 #' @param ... Arguments passed from the compatibility wrapper `strip_scale()` to
 #'   `strip_scale_x()`.
 #'
@@ -35,9 +37,11 @@ strip_scale_x <- function(gene_gap_ratio = NULL,
                           secondary_homology_ratio = 0.75,
                           species_ratio = NULL,
                           collapse_contiguous_slot = TRUE,
-                          block_align = c("conserved", "left", "center", "right", "none")) {
+                          block_align = c("conserved", "left", "center", "right", "none"),
+                          guide = c("range", "none")) {
   align <- match.arg(align)
   block_align <- match.arg(block_align)
+  guide <- match.arg(guide)
   if (!is.null(species_ratio)) {
     warning("`species_ratio` is deprecated; use `species_specific_ratio`.", call. = FALSE)
     species_specific_ratio <- species_ratio
@@ -86,10 +90,15 @@ strip_scale_x <- function(gene_gap_ratio = NULL,
       species_specific_ratio = as.numeric(species_specific_ratio),
       secondary_homology_ratio = as.numeric(secondary_homology_ratio),
       collapse_contiguous_slot = isTRUE(collapse_contiguous_slot),
-      block_align = block_align
+      block_align = block_align,
+      guide = guide
     ),
     class = "ggexon_strip_scale_x_spec"
   )
+}
+
+strip_scale_x_guide_type <- function(strip_scale_spec) {
+  strip_scale_spec$guide %||% "range"
 }
 
 #' @rdname strip_scale_x
@@ -134,7 +143,11 @@ apply_strip_scale_x <- function(data, layers, strip_scale_spec, layout, plot) {
   data <- strip_scale_x_apply_transforms(data, tag_layers, built$transform)
   layout <- .strip_scale_force_fixed_x(layout, unique(as.character(built$transform$PANEL)))
   layout$strip_scale_x_transform <- built$transform
-  layout$strip_scale_x_axis_data <- built$axis_data
+  layout$strip_scale_x_axis_data <- if (identical(strip_scale_x_guide_type(strip_scale_spec), "range")) {
+    built$axis_data
+  } else {
+    data.frame()
+  }
   layout$strip_scale_x_spec <- strip_scale_spec
   layout$strip_scale_x_conserved_block <- built$conserved_reference_block %||% character()
   list(data = data, layout = layout, transforms = built$transform)
@@ -787,14 +800,56 @@ strip_scale_x_finalize_layout <- function(transform) {
   transform$plot_start <- transform$plot_start + global_offset
   transform$plot_end <- transform$plot_end + global_offset
 
-  axis_data <- transform[transform$region_type == "gene", c(
-    "PANEL", "track", "global_slot_id", "local_slot_id", "gene_key",
-    "label", "slot_type", "visual_class", "reference_gene", "is_anchor",
-    "homology_anchor", "members",
-    "plot_start", "plot_end"
-  ), drop = FALSE]
-  axis_data$plot_mid <- (axis_data$plot_start + axis_data$plot_end) / 2
+  axis_data <- strip_scale_x_range_axis_data(transform)
   list(transform = transform, axis_data = axis_data)
+}
+
+strip_scale_x_range_axis_data <- function(transform) {
+  gene_rows <- transform[transform$region_type == "gene", , drop = FALSE]
+  if (nrow(gene_rows) == 0L) {
+    return(data.frame())
+  }
+
+  groups <- split(gene_rows, paste(gene_rows$PANEL, gene_rows$track, sep = "\r"), drop = TRUE)
+  pieces <- lapply(groups, function(group) {
+    genomic_start <- min(group$genomic_start, na.rm = TRUE)
+    genomic_end <- max(group$genomic_end, na.rm = TRUE)
+    plot_start <- min(group$plot_start, group$plot_end, na.rm = TRUE)
+    plot_end <- max(group$plot_start, group$plot_end, na.rm = TRUE)
+    data.frame(
+      PANEL = group$PANEL[[1L]],
+      track = group$track[[1L]],
+      genomic_start = genomic_start,
+      genomic_end = genomic_end,
+      plot_start = plot_start,
+      plot_end = plot_end,
+      start_label = strip_scale_x_bp_label(genomic_start),
+      end_label = strip_scale_x_bp_label(genomic_end),
+      stringsAsFactors = FALSE
+    )
+  })
+  axis_data <- dplyr::bind_rows(pieces)
+  axis_data <- axis_data[order(axis_data$PANEL, axis_data$track), , drop = FALSE]
+  axis_data$axis_group_index <- ave(
+    seq_len(nrow(axis_data)),
+    axis_data$PANEL,
+    FUN = seq_along
+  )
+  axis_data$axis_group_count <- ave(
+    axis_data$axis_group_index,
+    axis_data$PANEL,
+    FUN = function(x) rep(length(x), length(x))
+  )
+  rownames(axis_data) <- NULL
+  axis_data
+}
+
+strip_scale_x_bp_label <- function(x) {
+  x <- as.numeric(x)
+  if (length(x) != 1L || !is.finite(x)) {
+    return(NA_character_)
+  }
+  format(round(x), big.mark = ",", scientific = FALSE, trim = TRUE)
 }
 
 strip_scale_x_apply_transforms <- function(data, tag_layers, transform) {

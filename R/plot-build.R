@@ -65,7 +65,9 @@ apply_panel_xlim_to_trained_scales <- function(layout) {
 ggplot_build.ggexon <- function(plot, ...) {
   build <- ggexon_build(plot, ...)
   if ((inherits(plot@facet, "FacetGenomicTree") && !is.null(plot@genomic_tree)) ||
-      identical(ggexon_genomic_x_guide_type(plot@genomic_x_scale %||% list(guide = list(type = "genomic"))), "piecewise")) {
+      identical(ggexon_genomic_x_guide_type(plot@genomic_x_scale %||% list(guide = list(type = "genomic"))), "piecewise") ||
+      (inherits(plot@strip_scale, "ggexon_strip_scale_x_spec") &&
+        identical(strip_scale_x_guide_type(plot@strip_scale), "range"))) {
     return(build)
   }
   as_standard_ggplot_built(build)
@@ -267,6 +269,7 @@ S7::method(ggexon_gtable, class_ggexon_built) <- function(data) {
 
   plot_table <- layout$render(geom_grobs, data, theme, labels)
   plot_table <- inject_genomic_piecewise_axis(plot_table, build)
+  plot_table <- inject_strip_scale_x_axis(plot_table, build)
   # Legends
   legend_box <- plot@guides$assemble(theme)
   #plot_table <- table_add_legends(plot_table, legend_box, theme)
@@ -282,6 +285,165 @@ S7::method(ggexon_gtable, class_ggexon_built) <- function(data) {
   attr(plot_table, "alt-label") <- labels$alt
 
   plot_table
+}
+
+inject_strip_scale_x_axis <- function(table, build) {
+  strip_scale_spec <- build@plot@strip_scale
+  axis_data <- build@layout$strip_scale_x_axis_data %||% NULL
+  if (!inherits(strip_scale_spec, "ggexon_strip_scale_x_spec") ||
+      !identical(strip_scale_x_guide_type(strip_scale_spec), "range") ||
+      is.null(axis_data) ||
+      nrow(axis_data) == 0L) {
+    return(table)
+  }
+
+  layout_df <- as.data.frame(build@layout$layout)
+  if (!all(c("PANEL", "COL", "ROW") %in% names(layout_df))) {
+    return(table)
+  }
+
+  text_gp <- ggexon_element_text_gpar(
+    calc_element("axis.text.x", build@plot@theme),
+    default_size = 7
+  )
+  tick_gp <- ggexon_element_line_gpar(
+    calc_element("axis.ticks.x", build@plot@theme),
+    default_colour = "grey45",
+    default_linewidth = 0.25
+  )
+  if (is.null(text_gp) && is.null(tick_gp)) {
+    return(table)
+  }
+
+  max_groups <- max(axis_data$axis_group_count, na.rm = TRUE)
+  axis_height <- grid::unit(max(16, 13 * max_groups + 4), "pt")
+  for (i in seq_len(nrow(layout_df))) {
+    panel_id <- as.integer(layout_df$PANEL[[i]])
+    panel_axis_data <- axis_data[axis_data$PANEL == panel_id, , drop = FALSE]
+    if (nrow(panel_axis_data) == 0L || panel_id > length(build@layout$panel_params)) {
+      next
+    }
+
+    axis_name <- paste0("axis-b-", layout_df$COL[[i]], "-", layout_df$ROW[[i]])
+    axis_idx <- which(table$layout$name == axis_name)
+    if (length(axis_idx) != 1L) {
+      panel_name <- paste0("panel-", layout_df$COL[[i]], "-", layout_df$ROW[[i]])
+      panel_idx <- which(table$layout$name == panel_name)
+      if (length(panel_idx) != 1L && nrow(layout_df) == 1L) {
+        panel_idx <- which(table$layout$name == "panel")
+      }
+      if (length(panel_idx) == 1L) {
+        axis_idx <- which(
+          grepl("^axis-b", table$layout$name) &
+            table$layout$l == table$layout$l[[panel_idx]] &
+            table$layout$r == table$layout$r[[panel_idx]]
+        )
+      }
+    }
+    if (length(axis_idx) != 1L && nrow(layout_df) == 1L) {
+      axis_idx <- which(table$layout$name == "axis-b")
+    }
+    if (length(axis_idx) != 1L) {
+      next
+    }
+
+    x_range <- build@layout$panel_params[[panel_id]]$x$continuous_range %||%
+      build@layout$panel_params[[panel_id]]$x.range
+    table$grobs[[axis_idx]] <- ggexon_strip_scale_x_axis_grob(
+      data = panel_axis_data,
+      x_range = x_range,
+      text_gp = text_gp,
+      tick_gp = tick_gp
+    )
+    table$heights[[table$layout$t[[axis_idx]]]] <- grid::unit.pmax(
+      table$heights[[table$layout$t[[axis_idx]]]],
+      axis_height
+    )
+  }
+
+  table
+}
+
+ggexon_strip_scale_x_axis_grob <- function(data,
+                                           x_range,
+                                           text_gp = NULL,
+                                           tick_gp = NULL,
+                                           name = NULL) {
+  grid::grob(
+    data = data,
+    x_range = x_range,
+    text_gp = text_gp,
+    tick_gp = tick_gp,
+    name = name %||% "ggexon-strip-scale-x-axis",
+    cl = "ggexonStripScaleXAxisGrob"
+  )
+}
+
+#' @export
+drawDetails.ggexonStripScaleXAxisGrob <- function(x, recording = TRUE) {
+  if (is.null(x$data) || nrow(x$data) == 0L || length(x$x_range) < 2L) {
+    return(invisible())
+  }
+
+  x_range <- range(as.numeric(x$x_range), finite = TRUE)
+  if (!all(is.finite(x_range)) || diff(x_range) <= 0) {
+    return(invisible())
+  }
+
+  rel_x <- function(value) {
+    value <- pmin(pmax(as.numeric(value), x_range[[1L]]), x_range[[2L]])
+    scales::rescale(value, from = x_range, to = c(0, 1))
+  }
+
+  group_count <- max(as.integer(x$data$axis_group_count), na.rm = TRUE)
+  if (!is.finite(group_count) || group_count < 1L) {
+    group_count <- 1L
+  }
+
+  ordered_data <- x$data[order(x$data$axis_group_index), , drop = FALSE]
+  for (i in seq_len(nrow(ordered_data))) {
+    row <- ordered_data[i, , drop = FALSE]
+    group_index <- as.integer(row$axis_group_index[[1L]])
+    y <- 1 - (group_index - 0.5) / group_count
+    x0 <- rel_x(row$plot_start[[1L]])
+    x1 <- rel_x(row$plot_end[[1L]])
+    if (!is.finite(x0) || !is.finite(x1)) {
+      next
+    }
+
+    tick_gp <- x$tick_gp %||% grid::gpar(col = "grey45", lwd = 0.25)
+    tick_half_height <- min(0.08, 0.22 / group_count)
+    grid::grid.segments(
+      x0 = grid::unit(c(x0, x1), "npc"),
+      x1 = grid::unit(c(x0, x1), "npc"),
+      y0 = grid::unit(c(y - tick_half_height, y - tick_half_height), "npc"),
+      y1 = grid::unit(c(y + tick_half_height, y + tick_half_height), "npc"),
+      gp = tick_gp
+    )
+
+    if (!is.null(x$text_gp)) {
+      if (!is.na(row$start_label[[1L]]) && nzchar(row$start_label[[1L]])) {
+        grid::grid.text(
+          row$start_label[[1L]],
+          x = grid::unit(x0, "npc"),
+          y = grid::unit(y, "npc"),
+          just = c("left", "center"),
+          gp = x$text_gp
+        )
+      }
+      if (!is.na(row$end_label[[1L]]) && nzchar(row$end_label[[1L]])) {
+        grid::grid.text(
+          row$end_label[[1L]],
+          x = grid::unit(x1, "npc"),
+          y = grid::unit(y, "npc"),
+          just = c("right", "center"),
+          gp = x$text_gp
+        )
+      }
+    }
+  }
+
+  invisible()
 }
 
 inject_genomic_piecewise_axis <- function(table, build) {

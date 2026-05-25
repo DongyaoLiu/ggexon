@@ -4,11 +4,15 @@ test_that("strip_scale_x() returns the new spec and strip_scale() wraps it", {
   expect_identical(spec$gene_gap_ratio, 3)
   expect_identical(spec$species_specific_ratio, 0.5)
   expect_identical(spec$secondary_homology_ratio, 0.75)
+  expect_identical(spec$guide, "range")
   expect_false(spec$homo_active)
 
   wrapped <- strip_scale(gene_gap_ratio = 2)
   expect_s3_class(wrapped, "ggexon_strip_scale_x_spec")
   expect_identical(wrapped$gene_gap_ratio, 2)
+
+  no_guide <- strip_scale_x(guide = "none")
+  expect_identical(no_guide$guide, "none")
 })
 
 test_that("strip_scale_x() validates homology and ratios", {
@@ -19,6 +23,7 @@ test_that("strip_scale_x() validates homology and ratios", {
   expect_error(strip_scale_x(secondary_homology_ratio = 2), "in \\(0, 1\\]")
   expect_error(strip_scale_x(homo_align = TRUE), "explicit reference track")
   expect_error(strip_scale_x(homo_align = c("A", "B")), "single reference")
+  expect_error(strip_scale_x(guide = "ticks"), "should be one of")
 })
 
 test_that("strip_scale_x() requires geom_genetag()", {
@@ -115,6 +120,68 @@ test_that("strip_scale_x() uses row identity for overlapping gene intervals", {
   expect_equal(overlap$xmin, 4)
   expect_equal(overlap$xmax, 7)
   expect_true(all((data$xmax - data$xmin) == 3))
+})
+
+test_that("strip_scale_x() builds a per-track genomic range guide", {
+  gene_tags <- data.frame(
+    track = c("A", "A", "B", "B"),
+    xmin = c(1000, 3000, 10000, 15000),
+    xmax = c(2000, 5000, 12000, 17000),
+    y = 1,
+    strand = "+",
+    gene_key = c("a1", "a2", "b1", "b2"),
+    label = c("a1", "a2", "b1", "b2"),
+    stringsAsFactors = FALSE
+  )
+
+  p <- ggexon() +
+    geom_genetag(data = gene_tags) +
+    strip_scale_x(gene_gap_ratio = 3) +
+    facet_genomics(ggplot2::vars(track), scales = "free_x")
+  built <- ggexon_build(p)
+  axis_data <- built@layout$strip_scale_x_axis_data
+
+  expect_equal(axis_data$track, c("A", "B"))
+  expect_equal(axis_data$start_label, c("1,000", "10,000"))
+  expect_equal(axis_data$end_label, c("5,000", "17,000"))
+  expect_equal(axis_data$plot_start, c(0, 0))
+  expect_equal(axis_data$plot_end, c(7, 7))
+
+  table <- ggplot2::ggplotGrob(p)
+  has_strip_axis <- vapply(
+    table$grobs,
+    function(x) inherits(x, "ggexonStripScaleXAxisGrob"),
+    logical(1)
+  )
+  expect_true(any(has_strip_axis))
+})
+
+test_that("strip_scale_x(guide = 'none') suppresses the custom range guide", {
+  gene_tags <- data.frame(
+    track = "A",
+    xmin = c(1000, 3000),
+    xmax = c(2000, 5000),
+    y = 1,
+    strand = "+",
+    gene_key = c("a1", "a2"),
+    label = c("a1", "a2"),
+    stringsAsFactors = FALSE
+  )
+
+  p <- ggexon() +
+    geom_genetag(data = gene_tags) +
+    strip_scale_x(gene_gap_ratio = 3, guide = "none") +
+    facet_genomics(ggplot2::vars(track), scales = "free_x")
+  built <- ggexon_build(p)
+  expect_equal(nrow(built@layout$strip_scale_x_axis_data), 0L)
+
+  table <- ggplot2::ggplotGrob(p)
+  has_strip_axis <- vapply(
+    table$grobs,
+    function(x) inherits(x, "ggexonStripScaleXAxisGrob"),
+    logical(1)
+  )
+  expect_false(any(has_strip_axis))
 })
 
 test_that("strip_scale_x() translates by the most conserved block", {
