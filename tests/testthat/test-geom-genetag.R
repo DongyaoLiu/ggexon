@@ -79,6 +79,47 @@ test_that("geom_genetag auto labels fall back outside when labels do not fit", {
   expect_equal(nrow(inside_only$outside), 0L)
 })
 
+test_that("geom_genetag outside labels use deterministic lanes", {
+  data <- data.frame(
+    xmin = c(0, 1, 2),
+    xmax = c(0.5, 1.5, 2.5),
+    y = 0.4,
+    strand = "+",
+    label = c("long_gene_a", "long_gene_b", "long_gene_c"),
+    track = "track_a",
+    stringsAsFactors = FALSE
+  )
+
+  layout <- .genetag_label_layout(
+    data,
+    label_position = "outside",
+    exon_height = 0.8,
+    label_max_lanes = 3,
+    panel_width_mm = 20
+  )
+
+  expect_equal(layout$outside$label_lane, c(1L, 2L, 3L))
+  expect_equal(length(unique(layout$outside$y)), 3L)
+  expect_false(isTRUE(attr(layout, "unresolved_collision", exact = TRUE)))
+
+  single_lane <- .genetag_label_layout(
+    data,
+    label_position = "outside",
+    exon_height = 0.8,
+    label_max_lanes = 1,
+    panel_width_mm = 20
+  )
+  expect_true(isTRUE(attr(single_lane, "unresolved_collision", exact = TRUE)))
+  expect_error(
+    .genetag_label_layout(data, label_position = "outside", label_panel_width = -1),
+    "label_panel_width"
+  )
+  expect_error(
+    .genetag_label_layout(data, label_position = "outside", label_max_lanes = 0),
+    "label_max_lanes"
+  )
+})
+
 test_that("geom_genetag supports prefixed label aesthetics", {
   data <- data.frame(
     xmin = c(0, 10),
@@ -138,6 +179,153 @@ test_that("geom_genetag tandem label collapse stays within tracks", {
       collapse_tandem = TRUE
     )
   expect_true(inherits(ggplot2::ggplotGrob(p), "gtable"))
+})
+
+test_that("geom_genetag can select partial labels by gene identifiers", {
+  data <- data.frame(
+    xmin = c(0, 10, 20, 30),
+    xmax = c(6, 16, 26, 36),
+    y = 0.4,
+    strand = "+",
+    label = c("rpl-8", "calf-1", "dhcr-7", "zina-1"),
+    gene = c("rpl-8", "calf-1", "dhcr-7", "zina-1"),
+    gene_id = c("B0250.1", "B0250.2", "B0250.3", "B0250.4"),
+    track = c("N2", "N2", "XZ1516", "XZ1516"),
+    individual = c("N2", "N2", "XZ1516", "XZ1516"),
+    reference_gene = c("rpl-8", "calf-1", NA, "B0250.4"),
+    homology_hit = c(TRUE, TRUE, FALSE, TRUE),
+    homology_anchor = c(TRUE, FALSE, FALSE, NA),
+    visual_class = c(
+      "homologous_anchor",
+      "homologous_offtrack",
+      "species_specific",
+      "homologous_offtrack"
+    ),
+    stringsAsFactors = FALSE
+  )
+
+  exact <- .genetag_label_layout(
+    data,
+    label_position = "outside",
+    label_genes = "B0250.4",
+    label_match_by = "gene_id",
+    panel_width_mm = 80
+  )
+  expect_equal(exact$outside$label, "zina-1")
+
+  regex <- .genetag_label_layout(
+    data,
+    label_position = "outside",
+    label_genes = "^(rpl|calf)",
+    label_match = "regex",
+    panel_width_mm = 80
+  )
+  expect_equal(regex$outside$label, c("rpl-8", "calf-1"))
+
+  per_track <- .genetag_label_layout(
+    data,
+    label_position = "outside",
+    label_genes = list(N2 = "rpl-8", XZ1516 = "B0250.4"),
+    panel_width_mm = 80
+  )
+  expect_equal(per_track$outside$label, c("rpl-8", "zina-1"))
+
+  expect_silent({
+    p <- ggplot2::ggplot(data) +
+      geom_genetag(label_genes = "B0250.4", label_match_by = "gene_id")
+    built <- ggplot2::ggplot_build(p)
+  })
+  expect_true("homology_anchor" %in% names(built$data[[1]]))
+})
+
+test_that("geom_genetag semantic label filters use homology metadata", {
+  data <- data.frame(
+    xmin = c(0, 10, 20, 30),
+    xmax = c(6, 16, 26, 36),
+    y = 0.4,
+    strand = "+",
+    label = c("rpl-8", "calf-1", "dhcr-7", "zina-1"),
+    gene_id = c("B0250.1", "B0250.2", "B0250.3", "B0250.4"),
+    track = c("N2", "N2", "XZ1516", "XZ1516"),
+    homology_hit = c(TRUE, TRUE, FALSE, TRUE),
+    homology_anchor = c(TRUE, FALSE, FALSE, NA),
+    visual_class = c(
+      "homologous_anchor",
+      "homologous_offtrack",
+      "species_specific",
+      "homologous_offtrack"
+    ),
+    stringsAsFactors = FALSE
+  )
+
+  hit <- .genetag_label_layout(
+    data,
+    label_position = "outside",
+    label_filter = "homology_hit",
+    panel_width_mm = 80
+  )
+  expect_equal(hit$outside$label, c("rpl-8", "calf-1", "zina-1"))
+
+  species_specific <- .genetag_label_layout(
+    data,
+    label_position = "outside",
+    label_filter = "species_specific",
+    panel_width_mm = 80
+  )
+  expect_equal(species_specific$outside$label, "dhcr-7")
+
+  strip_filtered <- .genetag_label_layout(
+    data,
+    label_position = "outside",
+    label_filter = c("homology_anchor", "homology_offtrack"),
+    panel_width_mm = 80
+  )
+  expect_equal(strip_filtered$outside$label, c("rpl-8", "calf-1", "zina-1"))
+
+  offtrack_fallback <- .genetag_label_layout(
+    data[setdiff(names(data), "visual_class")],
+    label_position = "outside",
+    label_filter = "homology_offtrack",
+    panel_width_mm = 80
+  )
+  expect_equal(offtrack_fallback$outside$label, c("calf-1", "zina-1"))
+})
+
+test_that("geom_genetag warns for unmatched label selectors and missing strip metadata", {
+  data <- data.frame(
+    xmin = c(0, 10),
+    xmax = c(6, 16),
+    y = 0.4,
+    strand = "+",
+    label = c("rpl-8", "calf-1"),
+    gene_id = c("B0250.1", "B0250.2"),
+    track = "N2",
+    homology_hit = TRUE,
+    stringsAsFactors = FALSE
+  )
+
+  expect_warning(
+    selected <- .genetag_label_layout(
+      data,
+      label_position = "outside",
+      label_genes = c("B0250.1", "missing_gene"),
+      panel_width_mm = 80
+    ),
+    "missing_gene"
+  )
+  expect_equal(selected$outside$label, "rpl-8")
+
+  expect_warning(
+    no_strip <- .genetag_label_layout(
+      data,
+      label_position = "outside",
+      label_filter = "homology_visible",
+      panel_width_mm = 80
+    ),
+    "strip_scale_x"
+  )
+  expect_equal(nrow(no_strip$inside), 0L)
+  expect_equal(nrow(no_strip$outside), 0L)
 })
 
 test_that("gene-tag layout modes can union gaps and feature lengths independently", {

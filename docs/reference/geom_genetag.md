@@ -31,6 +31,12 @@ geom_genetag(
   label_link_type = NULL,
   collapse_tandem = NULL,
   check_overlap = FALSE,
+  label_max_lanes = NULL,
+  label_panel_width = NULL,
+  label_genes = NULL,
+  label_filter = NULL,
+  label_match_by = NULL,
+  label_match = NULL,
   label_size = NULL,
   label_colour = NULL,
   label_alpha = NULL,
@@ -133,6 +139,39 @@ geom_genetag(
 - check_overlap:
 
   Logical passed to text drawing for opt-in label overlap suppression.
+
+- label_max_lanes:
+
+  Maximum number of vertical lanes available for outside labels on each
+  side of a track. Defaults to `3`.
+
+- label_panel_width:
+
+  Panel width used for label layout. The default `"auto"` measures the
+  final panel viewport at draw time. A positive numeric value is
+  interpreted as millimetres.
+
+- label_genes:
+
+  Optional gene selector for partial labeling. A character vector
+  applies globally; a named list applies per track.
+
+- label_filter:
+
+  Semantic label filter. Multiple values are OR-combined. `"all"`
+  preserves the default behavior; `"homology_hit"` and
+  `"species_specific"` use homology table hits; `"homology_anchor"`,
+  `"homology_visible"`, and `"homology_offtrack"` require strip-scale
+  metadata.
+
+- label_match_by:
+
+  Columns used to match `label_genes`. `"auto"` checks common gene and
+  reference-gene identifier columns.
+
+- label_match:
+
+  Matching mode for `label_genes`: `"exact"` or `"regex"`.
 
 - label_size, label_colour, label_alpha, label_family, label_fontface,
   label_lineheight:

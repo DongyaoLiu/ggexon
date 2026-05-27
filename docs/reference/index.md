@@ -80,6 +80,8 @@ links, trees, and protein mutation summaries.
 
 - [`ggexon()`](https://dongyaoliu.github.io/ggexon/reference/ggexon.md)
   : Create a ggexon plot
+- [`ggexon_output_size()`](https://dongyaoliu.github.io/ggexon/reference/ggexon_output_size.md)
+  : Declare the intended output size for a ggexon plot
 - [`geom_exon()`](https://dongyaoliu.github.io/ggexon/reference/geom_exon.md)
   : Draw exon-style genomic features
 - [`geom_exon2()`](https://dongyaoliu.github.io/ggexon/reference/geom_exon2.md)

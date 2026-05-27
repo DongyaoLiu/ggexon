@@ -78,6 +78,7 @@ Collate:
     'grob-null.R'
     'layout.R'
     'odgi.R'
+    'output-size.R'
     'panel-windows.R'
     'plot-build.R'
     'protein-mutation-annotation.R'

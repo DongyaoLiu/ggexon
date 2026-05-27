@@ -28,6 +28,15 @@ as_standard_ggplot_built <- function(build) {
   )
 }
 
+ggexon_apply_output_size_to_layers <- function(layers, output_size = NULL) {
+  for (i in seq_along(layers)) {
+    if (identical(layers[[i]]$geom, GeomGeneTag)) {
+      layers[[i]]$geom_params$ggexon_output_size <- output_size
+    }
+  }
+  layers
+}
+
 apply_panel_xlim_to_trained_scales <- function(layout) {
   layout_df <- layout$layout %||% NULL
   panel_scales_x <- layout$panel_scales_x %||% NULL
@@ -86,6 +95,7 @@ build_ggexon <- S7::method(ggexon_build, class_ggexon) <- function(plot, ...) {
     }
 
     layers <- plot@layers
+    layers <- ggexon_apply_output_size_to_layers(layers, plot@output_size)
     data <- rep(list(NULL), length(layers))
 
     syn_plot_context <- collect_syn_plot_context(layers, plot@data)

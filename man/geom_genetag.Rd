@@ -26,6 +26,12 @@ geom_genetag(
   label_link_type = NULL,
   collapse_tandem = NULL,
   check_overlap = FALSE,
+  label_max_lanes = NULL,
+  label_panel_width = NULL,
+  label_genes = NULL,
+  label_filter = NULL,
+  label_match_by = NULL,
+  label_match = NULL,
   label_size = NULL,
   label_colour = NULL,
   label_alpha = NULL,
@@ -93,6 +99,27 @@ displayed \code{label} in a track are collapsed into one label.}
 
 \item{check_overlap}{Logical passed to text drawing for opt-in label overlap
 suppression.}
+
+\item{label_max_lanes}{Maximum number of vertical lanes available for
+outside labels on each side of a track. Defaults to \code{3}.}
+
+\item{label_panel_width}{Panel width used for label layout. The default
+\code{"auto"} measures the final panel viewport at draw time. A positive
+numeric value is interpreted as millimetres.}
+
+\item{label_genes}{Optional gene selector for partial labeling. A character
+vector applies globally; a named list applies per track.}
+
+\item{label_filter}{Semantic label filter. Multiple values are OR-combined.
+\code{"all"} preserves the default behavior; \code{"homology_hit"} and
+\code{"species_specific"} use homology table hits; \code{"homology_anchor"},
+\code{"homology_visible"}, and \code{"homology_offtrack"} require strip-scale
+metadata.}
+
+\item{label_match_by}{Columns used to match \code{label_genes}. \code{"auto"} checks
+common gene and reference-gene identifier columns.}
+
+\item{label_match}{Matching mode for \code{label_genes}: \code{"exact"} or \code{"regex"}.}
 
 \item{label_size, label_colour, label_alpha, label_family, label_fontface, label_lineheight}{Fixed label styling used when \code{show_label = TRUE}. These can also be mapped
 as aesthetics with names such as \code{aes(label_colour = ...)}.}

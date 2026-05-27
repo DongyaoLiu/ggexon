@@ -64,6 +64,7 @@ reference:
   desc: Start a ggexon plot and draw genomic tracks, gene tags, labels, motifs, links, trees, and protein mutation summaries.
   contents:
   - ggexon
+  - ggexon_output_size
   - geom_exon
   - geom_exon2
   - geom_genetag

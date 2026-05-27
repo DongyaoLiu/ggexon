@@ -1,6 +1,7 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://dongyaoliu.github.io/ggexon/404.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/AGENTS.html</loc></url>
+<url><loc>https://dongyaoliu.github.io/ggexon/CLAUDE.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/LICENSE-text.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/LICENSE.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/articles/ggexon-classes-and-verbs.html</loc></url>
@@ -109,6 +110,7 @@
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/gg_dep.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/ggexon.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/ggexon_build.html</loc></url>
+<url><loc>https://dongyaoliu.github.io/ggexon/reference/ggexon_output_size.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/ggplot2_class_reexports.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/ggplotGrob.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/guide_x_ggexon_piecewise.html</loc></url>

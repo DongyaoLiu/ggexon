@@ -13,6 +13,7 @@ class_ggexon(
   genomic_tree = NULL,
   genomic_x_scale = NULL,
   strip_scale = NULL,
+  output_size = NULL,
   scales = NULL,
   guides = NULL,
   mapping = aes(),
