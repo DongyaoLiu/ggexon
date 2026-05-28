@@ -76,14 +76,16 @@ typically from <code>homology_annotations(synspecies)</code>.</p></dd>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>The input data frame with additional <code>reference_gene</code>,
-<code>reference_gene_name</code>, and <code>homology_hit</code> columns.</p>
+<code>reference_gene_name</code>, <code>homology_hit</code>, <code>homology_query_hit</code>,
+<code>homology_reference_hit</code>, and <code>is_homology_reference_track</code> columns.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>When no homology is available for a track, or when a feature has no
 match, both new columns fall back to the feature's original gene_name
-or gene_id, while <code>homology_hit</code> records whether a real homology table
-match was found.</p>
+or gene_id, while <code>homology_hit</code> and <code>homology_query_hit</code> record whether a
+real query-side homology table match was found. Reference-track rows that
+match visible reference genes are marked with <code>homology_reference_hit</code>.</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

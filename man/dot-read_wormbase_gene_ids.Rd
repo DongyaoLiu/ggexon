@@ -15,6 +15,7 @@ A named character vector.
 \description{
 Parses a file like \code{c_elegans.PRJNA13758.WS285.geneIDs.txt}. Expected
 columns: tax_id, WBGeneID, gene_name, locus_tag, status, type. Returns a
-named vector \verb{locus_tag → gene_name}.
+named vector with both \verb{WBGeneID → gene_name} and \verb{locus_tag → gene_name}
+aliases.
 }
 \keyword{internal}

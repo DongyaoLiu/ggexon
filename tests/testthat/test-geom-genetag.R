@@ -230,6 +230,16 @@ test_that("geom_genetag can select partial labels by gene identifiers", {
   )
   expect_equal(per_track$outside$label, c("rpl-8", "zina-1"))
 
+  expect_silent(
+    panel_track <- .genetag_label_layout(
+      data[data$track == "N2", , drop = FALSE],
+      label_position = "outside",
+      label_genes = list(N2 = "rpl-8", XZ1516 = "B0250.4"),
+      panel_width_mm = 80
+    )
+  )
+  expect_equal(panel_track$outside$label, "rpl-8")
+
   expect_silent({
     p <- ggplot2::ggplot(data) +
       geom_genetag(label_genes = "B0250.4", label_match_by = "gene_id")
@@ -289,6 +299,55 @@ test_that("geom_genetag semantic label filters use homology metadata", {
     panel_width_mm = 80
   )
   expect_equal(offtrack_fallback$outside$label, c("calf-1", "zina-1"))
+})
+
+test_that("geom_genetag homology label filters include reference hits by default", {
+  data <- data.frame(
+    xmin = c(0, 10, 20, 30),
+    xmax = c(6, 16, 26, 36),
+    y = 0.4,
+    strand = "+",
+    label = c("query-hit", "reference-hit", "reference-other", "specific"),
+    gene_id = c("q1", "r1", "r3", "s1"),
+    track = c("query", "ref", "ref", "other"),
+    homology_hit = c(TRUE, FALSE, FALSE, FALSE),
+    homology_query_hit = c(TRUE, FALSE, FALSE, FALSE),
+    homology_reference_hit = c(FALSE, TRUE, FALSE, FALSE),
+    is_homology_reference_track = c(FALSE, TRUE, TRUE, FALSE),
+    stringsAsFactors = FALSE
+  )
+
+  hit <- .genetag_label_layout(
+    data,
+    label_position = "outside",
+    label_filter = "homology_hit",
+    panel_width_mm = 80
+  )
+  expect_equal(hit$outside$label, c("query-hit", "reference-hit"))
+
+  query <- .genetag_label_layout(
+    data,
+    label_position = "outside",
+    label_filter = "homology_query_hit",
+    panel_width_mm = 80
+  )
+  expect_equal(query$outside$label, "query-hit")
+
+  reference <- .genetag_label_layout(
+    data,
+    label_position = "outside",
+    label_filter = "homology_reference_hit",
+    panel_width_mm = 80
+  )
+  expect_equal(reference$outside$label, "reference-hit")
+
+  specific <- .genetag_label_layout(
+    data,
+    label_position = "outside",
+    label_filter = "species_specific",
+    panel_width_mm = 80
+  )
+  expect_equal(specific$outside$label, "specific")
 })
 
 test_that("geom_genetag warns for unmatched label selectors and missing strip metadata", {

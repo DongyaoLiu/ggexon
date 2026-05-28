@@ -111,8 +111,10 @@ numeric value is interpreted as millimetres.}
 vector applies globally; a named list applies per track.}
 
 \item{label_filter}{Semantic label filter. Multiple values are OR-combined.
-\code{"all"} preserves the default behavior; \code{"homology_hit"} and
-\code{"species_specific"} use homology table hits; \code{"homology_anchor"},
+\code{"all"} preserves the default behavior; \code{"homology_hit"} labels both
+query-side hits and matching visible reference genes; \code{"homology_query_hit"}
+and \code{"homology_reference_hit"} label only one side; \code{"species_specific"}
+labels non-homologous non-reference genes; \code{"homology_anchor"},
 \code{"homology_visible"}, and \code{"homology_offtrack"} require strip-scale
 metadata.}
 

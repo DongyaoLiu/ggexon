@@ -31,12 +31,12 @@ theme_ggexon_genomictree(
 - base_size:
 
   Base font size passed to
-  [`ggplot2::theme_minimal()`](https://ggplot2.tidyverse.org/reference/ggtheme.html).
+  [`ggplot2::theme_minimal()`](https://rdrr.io/pkg/ggplot2/man/ggtheme.html).
 
 - base_family:
 
   Base font family passed to
-  [`ggplot2::theme_minimal()`](https://ggplot2.tidyverse.org/reference/ggtheme.html).
+  [`ggplot2::theme_minimal()`](https://rdrr.io/pkg/ggplot2/man/ggtheme.html).
 
 - show_x_axis:
 

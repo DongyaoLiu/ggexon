@@ -14,7 +14,7 @@ A named character vector.
 }
 \description{
 Accepts either a path to a WormBase-style gene ID mapping file (CSV with
-columns \code{gene_name} and \code{locus_tag}) or a named character vector. Returns
-a named lookup vector \verb{locus_tag → gene_name}.
+columns \code{WBGeneID}, \code{gene_name}, and \code{locus_tag}) or a named character
+vector. Returns a named lookup vector from stable aliases to \code{gene_name}.
 }
 \keyword{internal}

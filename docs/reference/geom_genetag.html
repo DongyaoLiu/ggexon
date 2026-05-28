@@ -204,8 +204,10 @@ vector applies globally; a named list applies per track.</p></dd>
 
 <dt id="arg-label-filter">label_filter<a class="anchor" aria-label="anchor" href="#arg-label-filter"></a></dt>
 <dd><p>Semantic label filter. Multiple values are OR-combined.
-<code>"all"</code> preserves the default behavior; <code>"homology_hit"</code> and
-<code>"species_specific"</code> use homology table hits; <code>"homology_anchor"</code>,
+<code>"all"</code> preserves the default behavior; <code>"homology_hit"</code> labels both
+query-side hits and matching visible reference genes; <code>"homology_query_hit"</code>
+and <code>"homology_reference_hit"</code> label only one side; <code>"species_specific"</code>
+labels non-homologous non-reference genes; <code>"homology_anchor"</code>,
 <code>"homology_visible"</code>, and <code>"homology_offtrack"</code> require strip-scale
 metadata.</p></dd>
 

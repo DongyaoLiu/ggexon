@@ -159,10 +159,12 @@ geom_genetag(
 - label_filter:
 
   Semantic label filter. Multiple values are OR-combined. `"all"`
-  preserves the default behavior; `"homology_hit"` and
-  `"species_specific"` use homology table hits; `"homology_anchor"`,
-  `"homology_visible"`, and `"homology_offtrack"` require strip-scale
-  metadata.
+  preserves the default behavior; `"homology_hit"` labels both
+  query-side hits and matching visible reference genes;
+  `"homology_query_hit"` and `"homology_reference_hit"` label only one
+  side; `"species_specific"` labels non-homologous non-reference genes;
+  `"homology_anchor"`, `"homology_visible"`, and `"homology_offtrack"`
+  require strip-scale metadata.
 
 - label_match_by:
 

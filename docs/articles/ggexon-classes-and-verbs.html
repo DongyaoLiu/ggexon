@@ -286,7 +286,7 @@ automatically.</p>
 <span><span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">sp</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_genetag.html">geom_genetag</a></span><span class="op">(</span>chr <span class="op">=</span> <span class="st">"V"</span>, feature_type <span class="op">=</span> <span class="st">"gene"</span>, mapping <span class="op">=</span> <span class="fu">aes</span><span class="op">(</span>fill <span class="op">=</span> <span class="va">gene</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_genelabel.html">geom_genelabel</a></span><span class="op">(</span>chr <span class="op">=</span> <span class="st">"V"</span>, size <span class="op">=</span> <span class="fl">2.4</span><span class="op">)</span> <span class="op">+</span>  <span class="co"># no homology_name — auto-match</span></span>
-<span>  <span class="fu"><a href="../reference/facet_genomictree.html">facet_genomictree</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">track</span><span class="op">)</span>, scales <span class="op">=</span> <span class="st">"free"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/facet_genomictree.html">facet_genomictree</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">track</span><span class="op">)</span>, scales <span class="op">=</span> <span class="st">"free"</span><span class="op">)</span></span></code></pre></div>
 <p>When <code>homology_name</code> is omitted and the
 <code>SynSpecies</code> contains homology annotations, each track
 automatically finds the matching <code>HomologyAnnotation</code> by its
@@ -557,7 +557,7 @@ layout.</p>
 <span>    chr <span class="op">=</span> <span class="st">"RagTag_V"</span>,</span>
 <span>    alignment <span class="op">=</span> <span class="st">"XZ1516_vs_N2"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/facet_genomics.html">facet_genomics</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">track</span><span class="op">)</span>, scales <span class="op">=</span> <span class="st">"free_y"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/facet_genomics.html">facet_genomics</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">track</span><span class="op">)</span>, scales <span class="op">=</span> <span class="st">"free_y"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="facet_genomictree">
@@ -652,7 +652,7 @@ scale bars instead of ordinary genomic ticks.</p>
 <span>  <span class="fu"><a href="../reference/scale_x_ggexon_genomic.html">scale_x_ggexon_genomic</a></span><span class="op">(</span></span>
 <span>    guide <span class="op">=</span> <span class="fu"><a href="../reference/guide_x_ggexon_piecewise.html">guide_x_ggexon_piecewise</a></span><span class="op">(</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/facet_genomics.html">facet_genomics</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">track</span><span class="op">)</span>, scales <span class="op">=</span> <span class="st">"free_y"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/facet_genomics.html">facet_genomics</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">track</span><span class="op">)</span>, scales <span class="op">=</span> <span class="st">"free_y"</span><span class="op">)</span></span></code></pre></div>
 <p>Use this guide when a figure mixes detailed exon-scale interpretation
 with compressed intronic or intergenic distances.</p>
 </div>

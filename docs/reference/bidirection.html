@@ -141,32 +141,32 @@ to the orientation of the layer.</p>
 <code>has_flipped_aes()</code> contains a range of flags for defining what certain
 features in the data correspond to:</p><ul><li><p><code>main_is_orthogonal</code>: This argument controls how the existence of only a <code>x</code>
 or <code>y</code> aesthetic is understood. If <code>TRUE</code> then the existing aesthetic
-would be then secondary axis. This behaviour is present in <code><a href="https://ggplot2.tidyverse.org/reference/geom_violin.html" class="external-link">ggplot2::stat_ydensity()</a></code>
-and <code><a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html" class="external-link">ggplot2::stat_boxplot()</a></code>. If <code>FALSE</code> then the existing aesthetic is the main
-axis as seen in e.g. <code><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html" class="external-link">ggplot2::stat_bin()</a></code>, <code><a href="https://ggplot2.tidyverse.org/reference/geom_count.html" class="external-link">ggplot2::geom_count()</a></code>, and <code><a href="https://ggplot2.tidyverse.org/reference/geom_density.html" class="external-link">ggplot2::stat_density()</a></code>.</p></li>
+would be then secondary axis. This behaviour is present in <code><a href="https://rdrr.io/pkg/ggplot2/man/geom_violin.html" class="external-link">ggplot2::stat_ydensity()</a></code>
+and <code><a href="https://rdrr.io/pkg/ggplot2/man/geom_boxplot.html" class="external-link">ggplot2::stat_boxplot()</a></code>. If <code>FALSE</code> then the existing aesthetic is the main
+axis as seen in e.g. <code><a href="https://rdrr.io/pkg/ggplot2/man/geom_histogram.html" class="external-link">ggplot2::stat_bin()</a></code>, <code><a href="https://rdrr.io/pkg/ggplot2/man/geom_count.html" class="external-link">ggplot2::geom_count()</a></code>, and <code><a href="https://rdrr.io/pkg/ggplot2/man/geom_density.html" class="external-link">ggplot2::stat_density()</a></code>.</p></li>
 <li><p><code>range_is_orthogonal</code>: This argument controls whether the existence of
 range-like aesthetics (e.g. <code>xmin</code> and <code>xmax</code>) represents the main or
 secondary axis. If <code>TRUE</code> then the range is given for the secondary axis as
-seen in e.g. <code><a href="https://ggplot2.tidyverse.org/reference/geom_ribbon.html" class="external-link">ggplot2::geom_ribbon()</a></code> and <code><a href="https://ggplot2.tidyverse.org/reference/geom_linerange.html" class="external-link">ggplot2::geom_linerange()</a></code>.</p></li>
+seen in e.g. <code><a href="https://rdrr.io/pkg/ggplot2/man/geom_ribbon.html" class="external-link">ggplot2::geom_ribbon()</a></code> and <code><a href="https://rdrr.io/pkg/ggplot2/man/geom_linerange.html" class="external-link">ggplot2::geom_linerange()</a></code>.</p></li>
 <li><p><code>group_has_equal</code>: This argument controls whether to test for equality of
 all <code>x</code> and <code>y</code> values inside each group and set the main axis to the one
 where all is equal. This test is only performed if <code>TRUE</code>, and only after
 less computationally heavy tests has come up empty handed. Examples are
-<code><a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html" class="external-link">ggplot2::stat_boxplot()</a></code> and <a href="https://ggplot2.tidyverse.org/reference/geom_violin.html" class="external-link">ggplot2::stat_ydensity</a></p></li>
+<code><a href="https://rdrr.io/pkg/ggplot2/man/geom_boxplot.html" class="external-link">ggplot2::stat_boxplot()</a></code> and <a href="https://rdrr.io/pkg/ggplot2/man/geom_violin.html" class="external-link">ggplot2::stat_ydensity</a></p></li>
 <li><p><code>ambiguous</code>: This argument tells the function that the layer, while
 bidirectional, doesn't treat each axis differently. It will circumvent any
 data based guessing and only take hint from the <code>orientation</code> element in
 <code>params</code>. If this is not present it will fall back to <code>FALSE</code>. Examples are
-<code><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">ggplot2::geom_line()</a></code> and <code><a href="https://ggplot2.tidyverse.org/reference/geom_ribbon.html" class="external-link">ggplot2::geom_area()</a></code></p></li>
+<code><a href="https://rdrr.io/pkg/ggplot2/man/geom_path.html" class="external-link">ggplot2::geom_line()</a></code> and <code><a href="https://rdrr.io/pkg/ggplot2/man/geom_ribbon.html" class="external-link">ggplot2::geom_area()</a></code></p></li>
 <li><p><code>main_is_continuous</code>: This argument controls how the test for discreteness
 in the scales should be interpreted. If <code>TRUE</code> then the main axis will be
 the one which is not discrete-like. Conversely, if <code>FALSE</code> the main axis
-will be the discrete-like one. Examples of <code>TRUE</code> is <code><a href="https://ggplot2.tidyverse.org/reference/geom_density.html" class="external-link">ggplot2::stat_density()</a></code> and
-<code><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html" class="external-link">ggplot2::stat_bin()</a></code>, while examples of <code>FALSE</code> is <code><a href="https://ggplot2.tidyverse.org/reference/geom_violin.html" class="external-link">ggplot2::stat_ydensity()</a></code> and
-<code><a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html" class="external-link">ggplot2::stat_boxplot()</a></code></p></li>
+will be the discrete-like one. Examples of <code>TRUE</code> is <code><a href="https://rdrr.io/pkg/ggplot2/man/geom_density.html" class="external-link">ggplot2::stat_density()</a></code> and
+<code><a href="https://rdrr.io/pkg/ggplot2/man/geom_histogram.html" class="external-link">ggplot2::stat_bin()</a></code>, while examples of <code>FALSE</code> is <code><a href="https://rdrr.io/pkg/ggplot2/man/geom_violin.html" class="external-link">ggplot2::stat_ydensity()</a></code> and
+<code><a href="https://rdrr.io/pkg/ggplot2/man/geom_boxplot.html" class="external-link">ggplot2::stat_boxplot()</a></code></p></li>
 <li><p><code>main_is_optional</code>: This argument controls the rare case of layers were the
 main direction is an optional aesthetic. This is only seen in
-<code><a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html" class="external-link">ggplot2::stat_boxplot()</a></code> where <code>x</code> is set to <code>0</code> if not given. If <code>TRUE</code> there will
+<code><a href="https://rdrr.io/pkg/ggplot2/man/geom_boxplot.html" class="external-link">ggplot2::stat_boxplot()</a></code> where <code>x</code> is set to <code>0</code> if not given. If <code>TRUE</code> there will
 be a check for whether all <code>x</code> or all <code>y</code> are equal to <code>0</code></p></li>
 </ul></div>
 

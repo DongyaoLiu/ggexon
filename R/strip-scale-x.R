@@ -193,8 +193,14 @@ strip_scale_x_collect_genetags <- function(data, tag_layers) {
       gene_key = as.character(df$gene_key),
       label = if ("label" %in% names(df)) as.character(df$label) else as.character(df$gene_key),
       gene_id = if ("gene_id" %in% names(df)) as.character(df$gene_id) else NA_character_,
+      gene_name = if ("gene_name" %in% names(df)) as.character(df$gene_name) else NA_character_,
       gene = if ("gene" %in% names(df)) as.character(df$gene) else NA_character_,
       reference_gene = reference_gene,
+      reference_gene_name = if ("reference_gene_name" %in% names(df)) {
+        as.character(df$reference_gene_name)
+      } else {
+        NA_character_
+      },
       homology_hit = homology_hit,
       genomic_start = start,
       genomic_end = end,
@@ -616,8 +622,11 @@ strip_scale_x_reference_aliases <- function(ref_tags) {
     values <- unique(stats::na.omit(c(
       ref_tags$gene_key[[i]],
       ref_tags$gene_id[[i]],
+      ref_tags$gene_name[[i]],
       ref_tags$gene[[i]],
-      ref_tags$label[[i]]
+      ref_tags$label[[i]],
+      ref_tags$reference_gene[[i]],
+      ref_tags$reference_gene_name[[i]]
     )))
     values <- values[nzchar(values)]
     if (length(values) == 0L) return(NULL)

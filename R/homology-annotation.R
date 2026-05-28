@@ -484,8 +484,8 @@ import_blast_homology <- function(blast_file,
 #' Resolve a gene ID map from a file path or named vector
 #'
 #' Accepts either a path to a WormBase-style gene ID mapping file (CSV with
-#' columns `gene_name` and `locus_tag`) or a named character vector. Returns
-#' a named lookup vector `locus_tag → gene_name`.
+#' columns `WBGeneID`, `gene_name`, and `locus_tag`) or a named character
+#' vector. Returns a named lookup vector from stable aliases to `gene_name`.
 #'
 #' @param gene_id_map A file path or a named character vector.
 #'
@@ -514,7 +514,8 @@ import_blast_homology <- function(blast_file,
 #'
 #' Parses a file like `c_elegans.PRJNA13758.WS285.geneIDs.txt`. Expected
 #' columns: tax_id, WBGeneID, gene_name, locus_tag, status, type. Returns a
-#' named vector `locus_tag → gene_name`.
+#' named vector with both `WBGeneID → gene_name` and `locus_tag → gene_name`
+#' aliases.
 #'
 #' @param path Path to the gene ID file.
 #'
@@ -543,20 +544,24 @@ import_blast_homology <- function(blast_file,
   }
   fields <- fields[valid]
 
-  locus_tags <- trimws(vapply(fields, `[[`, character(1L), 4L))
+  wb_gene_ids <- trimws(vapply(fields, `[[`, character(1L), 2L))
   gene_names <- trimws(vapply(fields, `[[`, character(1L), 3L))
+  locus_tags <- trimws(vapply(fields, `[[`, character(1L), 4L))
 
-  keep <- nzchar(locus_tags) & nzchar(gene_names)
-  locus_tags <- locus_tags[keep]
-  gene_names <- gene_names[keep]
+  aliases <- c(wb_gene_ids, locus_tags)
+  alias_gene_names <- rep(gene_names, 2L)
 
-  dupes <- duplicated(locus_tags)
+  keep <- nzchar(aliases) & nzchar(alias_gene_names)
+  aliases <- aliases[keep]
+  alias_gene_names <- alias_gene_names[keep]
+
+  dupes <- duplicated(aliases)
   if (any(dupes)) {
-    locus_tags <- locus_tags[!dupes]
-    gene_names <- gene_names[!dupes]
+    aliases <- aliases[!dupes]
+    alias_gene_names <- alias_gene_names[!dupes]
   }
 
-  stats::setNames(gene_names, locus_tags)
+  stats::setNames(alias_gene_names, aliases)
 }
 
 #' Translate locus tags to gene names
@@ -652,8 +657,9 @@ import_blast_homology <- function(blast_file,
 #'
 #' When no homology is available for a track, or when a feature has no
 #' match, both new columns fall back to the feature's original gene_name
-#' or gene_id, while `homology_hit` records whether a real homology table
-#' match was found.
+#' or gene_id, while `homology_hit` and `homology_query_hit` record whether a
+#' real query-side homology table match was found. Reference-track rows that
+#' match visible reference genes are marked with `homology_reference_hit`.
 #'
 #' @param df A data frame produced by a `syn_*_df()` function.
 #'   Must contain at least a `track` column and one or more of
@@ -662,7 +668,8 @@ import_blast_homology <- function(blast_file,
 #'   typically from `homology_annotations(synspecies)`.
 #'
 #' @return The input data frame with additional `reference_gene`,
-#'   `reference_gene_name`, and `homology_hit` columns.
+#'   `reference_gene_name`, `homology_hit`, `homology_query_hit`,
+#'   `homology_reference_hit`, and `is_homology_reference_track` columns.
 #' @keywords internal
 .inject_homology_columns <- function(df, homology_list) {
   if (!is.data.frame(df) || nrow(df) == 0L) {
@@ -681,20 +688,64 @@ import_blast_homology <- function(blast_file,
     return(df)
   }
 
-  fallback <- if ("gene_name" %in% colnames(df)) {
-    as.character(df$gene_name)
-  } else if ("gene_id" %in% colnames(df)) {
-    as.character(df$gene_id)
-  } else {
-    rep(NA_character_, nrow(df))
-  }
+  fallback <- .homology_display_fallback(df)
   fallback[is.na(fallback) | !nzchar(fallback)] <- NA_character_
 
   df$reference_gene <- fallback
   df$reference_gene_name <- fallback
   df$homology_hit <- FALSE
+  df$homology_query_hit <- FALSE
+  df$homology_reference_hit <- FALSE
+  df$is_homology_reference_track <- FALSE
 
   tracks <- unique(as.character(df$track))
+
+  for (h in homology_list) {
+    if (!methods::is(h, "HomologyAnnotation")) {
+      next
+    }
+    ref_track <- reference_species(h)
+    ref_rows <- which(vapply(
+      df$track,
+      .homology_same_species,
+      logical(1),
+      y = ref_track
+    ))
+    if (length(ref_rows) == 0L) {
+      next
+    }
+
+    df$is_homology_reference_track[ref_rows] <- TRUE
+
+    ht <- homology_table(h)
+    if (nrow(ht) == 0L) {
+      next
+    }
+
+    ref_gene <- as.character(ht$reference_gene)
+    keep_ref <- !is.na(ref_gene) & nzchar(ref_gene)
+    ref_gene <- unique(ref_gene[keep_ref])
+    if (length(ref_gene) == 0L) {
+      next
+    }
+
+    matched <- .homology_match_reference_rows(
+      df = df,
+      rows = ref_rows,
+      ref_gene = ref_gene,
+      id_columns = id_columns
+    )
+    df$reference_gene[matched$row_mask] <- matched$reference_gene[matched$row_mask]
+    df$reference_gene_name[matched$row_mask] <- matched$reference_gene[matched$row_mask]
+    df$homology_reference_hit[matched$row_mask] <- TRUE
+  }
+
+  native_reference_names <- .homology_display_fallback(df)
+  has_native_reference_name <- df$is_homology_reference_track &
+    !is.na(native_reference_names) &
+    nzchar(native_reference_names)
+  df$reference_gene_name[has_native_reference_name] <-
+    native_reference_names[has_native_reference_name]
 
   for (track_name in tracks) {
     ha <- NULL
@@ -775,9 +826,77 @@ import_blast_homology <- function(blast_file,
     df$reference_gene[matched] <- matched_values[matched]
     df$reference_gene_name[matched] <- matched_values[matched]
     df$homology_hit[matched] <- TRUE
+    df$homology_query_hit[matched] <- TRUE
   }
 
   df
+}
+
+.homology_display_fallback <- function(df) {
+  display_df <- df
+  if ("gene_name" %in% colnames(display_df)) {
+    gene_name <- as.character(display_df$gene_name)
+    display <- .coalesce_character_cols(display_df, c("gene", "label", "Name", "ID"))
+    artificial <- .homology_artificial_gene_name(gene_name, display)
+    gene_name[artificial] <- NA_character_
+    display_df$gene_name <- gene_name
+  }
+  .coalesce_character_cols(
+    display_df,
+    c("gene_name", "gene", "label", "gene_id", "Name", "ID")
+  )
+}
+
+.homology_artificial_gene_name <- function(gene_name, display) {
+  gene_name <- as.character(gene_name)
+  display <- as.character(display)
+  stripped <- sub("^(gene|mRNA|transcript|rna|cds)[:_-]?", "", gene_name, perl = TRUE)
+  !is.na(gene_name) & nzchar(gene_name) &
+    !is.na(display) & nzchar(display) &
+    gene_name != display &
+    stripped == display
+}
+
+.homology_match_reference_rows <- function(df, rows, ref_gene, id_columns) {
+  row_mask <- rep(FALSE, nrow(df))
+  matched_values <- rep(NA_character_, nrow(df))
+  norm_ref <- .normalize_gene_id(ref_gene)
+  keep_ref <- !duplicated(norm_ref) & !is.na(norm_ref) & nzchar(norm_ref)
+  norm_ref <- norm_ref[keep_ref]
+  ref_gene <- ref_gene[keep_ref]
+  if (length(norm_ref) == 0L) {
+    return(list(row_mask = row_mask, reference_gene = matched_values))
+  }
+
+  match_columns <- unique(c(
+    id_columns,
+    intersect(c("gene_name", "gene", "label", "Name", "gene_id", "ID"), colnames(df))
+  ))
+  if (length(match_columns) == 0L) {
+    return(list(row_mask = row_mask, reference_gene = matched_values))
+  }
+
+  for (col in match_columns) {
+    ann_values <- .homology_split_alias_values(df[[col]])
+    norm_ann <- lapply(ann_values, .normalize_gene_id)
+
+    for (i in rows) {
+      if (row_mask[[i]]) next
+
+      ni <- norm_ann[[i]]
+      ni <- ni[!is.na(ni) & nzchar(ni)]
+      if (length(ni) == 0L) next
+
+      hit <- match(ni, norm_ref)
+      hit <- hit[!is.na(hit)]
+      if (length(hit) > 0L) {
+        row_mask[[i]] <- TRUE
+        matched_values[[i]] <- ref_gene[[hit[[1L]]]]
+      }
+    }
+  }
+
+  list(row_mask = row_mask, reference_gene = matched_values)
 }
 
 .homology_split_alias_values <- function(x) {

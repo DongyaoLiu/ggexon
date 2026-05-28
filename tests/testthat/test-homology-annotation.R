@@ -275,6 +275,74 @@ test_that("homology injection matches named query species tracks", {
   expect_identical(out$reference_gene[[2L]], "g2_name")
 })
 
+test_that("homology injection marks matching reference-track genes", {
+  ha <- HomologyAnnotation(
+    name = "query_to_ref",
+    reference_species = "ref",
+    query_species = "query",
+    homology_table = data.frame(
+      query_gene = c("g1", "g2"),
+      reference_gene = c("r1", "r2")
+    )
+  )
+  df <- data.frame(
+    track = c("query", "ref", "ref", "other"),
+    gene_id = c("g1", "gene:r1", "r3", "r2"),
+    gene_name = c("g1_name", "r1_name", "r3_name", "r2_name"),
+    stringsAsFactors = FALSE
+  )
+
+  out <- .inject_homology_columns(df, list(ha))
+
+  expect_equal(out$homology_query_hit, c(TRUE, FALSE, FALSE, FALSE))
+  expect_equal(out$homology_reference_hit, c(FALSE, TRUE, FALSE, FALSE))
+  expect_equal(out$is_homology_reference_track, c(FALSE, TRUE, TRUE, FALSE))
+  expect_equal(out$homology_hit, c(TRUE, FALSE, FALSE, FALSE))
+  expect_identical(out$reference_gene, c("r1", "r1", "r3_name", "r2_name"))
+  expect_identical(out$reference_gene_name, c("r1", "r1_name", "r3_name", "r2_name"))
+})
+
+test_that("WormBase gene ID maps resolve WBGene IDs and locus tags", {
+  map_file <- tempfile(fileext = ".txt")
+  writeLines(
+    c(
+      "6239,WBGene00001406,fce-2,F48F5.5,Live,protein_coding_gene",
+      "6239,WBGene00007121,,B0250.4,Live,pseudogene"
+    ),
+    map_file
+  )
+
+  id_map <- .read_wormbase_gene_ids(map_file)
+
+  expect_identical(unname(id_map[["WBGene00001406"]]), "fce-2")
+  expect_identical(unname(id_map[["F48F5.5"]]), "fce-2")
+  expect_false("WBGene00007121" %in% names(id_map))
+  expect_identical(.translate_locus_tags(c("WBGene00001406", "F48F5.5", "B0250.4"), id_map),
+                   c("fce-2", "fce-2", "B0250.4"))
+})
+
+test_that("homology display names avoid artificial gene prefixes", {
+  ha <- HomologyAnnotation(
+    name = "query_to_ref",
+    reference_species = "ref",
+    query_species = "query",
+    homology_table = data.frame(query_gene = "q1", reference_gene = "calf-1")
+  )
+  df <- data.frame(
+    track = c("ref", "query"),
+    gene_id = c("genecalf-1", "q1"),
+    gene_name = c("genecalf-1", "geneq1"),
+    gene = c("calf-1", "query-label"),
+    stringsAsFactors = FALSE
+  )
+
+  out <- .inject_homology_columns(df, list(ha))
+
+  expect_true(out$homology_reference_hit[[1L]])
+  expect_identical(out$reference_gene_name[[1L]], "calf-1")
+  expect_identical(out$reference_gene_name[[2L]], "calf-1")
+})
+
 test_that("homology injection normalizes GFF and transcript prefixes", {
   ha <- HomologyAnnotation(
     name = "query_to_ref",

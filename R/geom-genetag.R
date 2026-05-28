@@ -230,8 +230,10 @@ ggplot_add.ggtree <- function(object, plot, object_name) {
 #' @param label_genes Optional gene selector for partial labeling. A character
 #'   vector applies globally; a named list applies per track.
 #' @param label_filter Semantic label filter. Multiple values are OR-combined.
-#'   `"all"` preserves the default behavior; `"homology_hit"` and
-#'   `"species_specific"` use homology table hits; `"homology_anchor"`,
+#'   `"all"` preserves the default behavior; `"homology_hit"` labels both
+#'   query-side hits and matching visible reference genes; `"homology_query_hit"`
+#'   and `"homology_reference_hit"` label only one side; `"species_specific"`
+#'   labels non-homologous non-reference genes; `"homology_anchor"`,
 #'   `"homology_visible"`, and `"homology_offtrack"` require strip-scale
 #'   metadata.
 #' @param label_match_by Columns used to match `label_genes`. `"auto"` checks
@@ -371,6 +373,7 @@ GeomGeneTag <- ggproto(
     species = NA_character_,
     gene_key = NA_character_,
     gene_id = NA_character_,
+    gene_name = NA_character_,
     gene = NA_character_,
     Name = NA_character_,
     ID = NA_character_,
@@ -380,6 +383,9 @@ GeomGeneTag <- ggproto(
     reference_gene = NA_character_,
     reference_gene_name = NA_character_,
     homology_hit = NA,
+    homology_query_hit = NA,
+    homology_reference_hit = NA,
+    is_homology_reference_track = NA,
     homology_anchor = NA,
     visual_class = NA_character_,
     slot_type = NA_character_
@@ -541,10 +547,12 @@ GeomGeneTag <- ggproto(
       context = context
     )
   },
-  syn_default_aes = c(
+	syn_default_aes = c(
     "xmin", "xmax", "y", "strand", "track", "individual", "id", "species",
-    "group", "label", "gene_key", "reference_gene", "reference_gene_name",
-    "homology_hit", "homology_anchor", "visual_class", "slot_type", "gene_id", "gene",
+    "group", "label", "gene_key", "gene_name", "reference_gene", "reference_gene_name",
+    "homology_hit", "homology_query_hit", "homology_reference_hit",
+    "is_homology_reference_track", "homology_anchor", "visual_class",
+    "slot_type", "gene_id", "gene",
     "label_colour", "label_size", "label_alpha", "label_family",
     "label_fontface", "label_lineheight", "label_link_colour",
     "label_link_linewidth", "label_link_linetype", "label_link_alpha"
@@ -677,6 +685,7 @@ GeomGeneTag <- ggproto(
 
   meta <- S4Vectors::mcols(gene_gr)
   gene_ids <- .coalesce_character_cols(meta, c("gene_id", "gene_name", "ID", "Name"))
+  gene_names <- .coalesce_character_cols(meta, c("gene_name"))
   gene_labels <- .coalesce_character_cols(meta, c("plot_label", "gene_name", "gene_id", "Name", "ID"))
   gene_ids[is.na(gene_ids) | !nzchar(gene_ids)] <- paste0("gene_", seq_len(length(gene_ids)))[
     is.na(gene_ids) | !nzchar(gene_ids)
@@ -711,6 +720,7 @@ GeomGeneTag <- ggproto(
 	    strand = as.character(BiocGenerics::strand(gene_gr)),
 	    gene_id = gene_ids,
 	    gene_key = gene_ids,
+    gene_name = gene_names,
 		    gene = gene_labels,
 		    label = gene_labels,
     homology_query_aliases = homology_query_aliases,
@@ -911,6 +921,7 @@ syn_to_genetag_df <- function(x,
     strand = character(),
     gene_id = character(),
     gene_key = character(),
+    gene_name = character(),
     gene = character(),
     label = character(),
     homology_query_aliases = character(),
@@ -1031,10 +1042,11 @@ syn_to_genetag_df <- function(x,
   }
     if (is.data.frame(data)) {
     for (col in c(
-      "track", "gene_key", "gene_id", "gene", "Name", "ID", "transcripts",
+      "track", "gene_key", "gene_id", "gene_name", "gene", "Name", "ID", "transcripts",
       "genomic_xmin", "genomic_xmax",
       "individual", "id", "species", "reference_gene", "reference_gene_name",
-      "homology_hit", "homology_anchor", "visual_class", "slot_type",
+      "homology_hit", "homology_query_hit", "homology_reference_hit",
+      "is_homology_reference_track", "homology_anchor", "visual_class", "slot_type",
       .genetag_label_aesthetics()
     )) {
       if (col %in% names(data) && !col %in% names(mapping_exprs)) {
@@ -1050,7 +1062,7 @@ syn_to_genetag_df <- function(x,
 
 .genetag_label_column <- function(data) {
   if (!is.data.frame(data)) return(NULL)
-  for (col in c("label", "gene", "gene_id", "gene_key", "Name", "ID", "transcripts")) {
+  for (col in c("label", "gene", "gene_name", "gene_id", "gene_key", "Name", "ID", "transcripts")) {
     if (col %in% names(data)) return(col)
   }
   NULL
@@ -1109,6 +1121,8 @@ syn_to_genetag_df <- function(x,
   allowed <- c(
     "all",
     "homology_hit",
+    "homology_query_hit",
+    "homology_reference_hit",
     "species_specific",
     "homology_anchor",
     "homology_visible",
@@ -1135,8 +1149,11 @@ syn_to_genetag_df <- function(x,
     out <- out | switch(
       filter,
       all = rep(TRUE, n),
-      homology_hit = .genetag_logical_column(data, "homology_hit"),
-      species_specific = !.genetag_logical_column(data, "homology_hit"),
+      homology_hit = .genetag_homology_hit_mask(data),
+      homology_query_hit = .genetag_homology_query_mask(data),
+      homology_reference_hit = .genetag_homology_reference_mask(data),
+      species_specific = !.genetag_homology_hit_mask(data) &
+        !.genetag_logical_column(data, "is_homology_reference_track"),
       homology_anchor = .genetag_strip_label_filter(data, filter),
       homology_visible = .genetag_strip_label_filter(data, filter),
       homology_offtrack = .genetag_strip_label_filter(data, filter)
@@ -1150,6 +1167,21 @@ syn_to_genetag_df <- function(x,
     return(rep(FALSE, nrow(data)))
   }
   data[[col]] %in% TRUE
+}
+
+.genetag_homology_hit_mask <- function(data) {
+  .genetag_homology_query_mask(data) | .genetag_homology_reference_mask(data)
+}
+
+.genetag_homology_query_mask <- function(data) {
+  if (.genetag_has_label_metadata(data, "homology_query_hit")) {
+    return(.genetag_logical_column(data, "homology_query_hit"))
+  }
+  .genetag_logical_column(data, "homology_hit")
+}
+
+.genetag_homology_reference_mask <- function(data) {
+  .genetag_logical_column(data, "homology_reference_hit")
 }
 
 .genetag_has_label_metadata <- function(data, col) {
@@ -1182,7 +1214,7 @@ syn_to_genetag_df <- function(x,
       return(as.character(data$visual_class) %in% "homologous_offtrack")
     }
     if (.genetag_has_label_metadata(data, "homology_anchor")) {
-      return(.genetag_logical_column(data, "homology_hit") &
+      return(.genetag_homology_query_mask(data) &
         !.genetag_logical_column(data, "homology_anchor"))
     }
     warning(
@@ -1210,7 +1242,7 @@ syn_to_genetag_df <- function(x,
   label_match_by <- as.character(label_match_by)
   if (length(label_match_by) == 1L && identical(label_match_by, "auto")) {
     label_match_by <- c(
-      "gene", "label", "gene_id", "gene_key", "Name", "ID", "transcripts",
+      "gene", "label", "gene_name", "gene_id", "gene_key", "Name", "ID", "transcripts",
       "reference_gene", "reference_gene_name"
     )
   }
@@ -1262,13 +1294,19 @@ syn_to_genetag_df <- function(x,
   out <- rep(FALSE, nrow(data))
   unmatched_tracks <- character()
   unmatched_selectors <- character()
+  warn_unmatched_tracks <- !.genetag_single_visible_track(data)
   for (i in seq_along(label_genes)) {
     track_name <- list_names[[i]]
     rows <- .genetag_label_track_rows(data, track_name)
     selectors <- .genetag_label_selector_values(label_genes[[i]])
     if (length(rows) == 0L) {
-      unmatched_tracks <- c(unmatched_tracks, track_name)
-      unmatched_selectors <- c(unmatched_selectors, .genetag_prefix_label_selectors(track_name, selectors))
+      if (isTRUE(warn_unmatched_tracks)) {
+        unmatched_tracks <- c(unmatched_tracks, track_name)
+        unmatched_selectors <- c(
+          unmatched_selectors,
+          .genetag_prefix_label_selectors(track_name, selectors)
+        )
+      }
       next
     }
     matched <- .genetag_match_rows(data, selectors, columns, label_match, rows = rows)
@@ -1289,6 +1327,20 @@ syn_to_genetag_df <- function(x,
   }
   .genetag_warn_unmatched_label_genes(unmatched_selectors)
   out
+}
+
+.genetag_single_visible_track <- function(data) {
+  track_cols <- intersect(c("track", "individual", "id", "species"), names(data))
+  if (length(track_cols) == 0L || nrow(data) == 0L) {
+    return(FALSE)
+  }
+  keys <- unique(apply(data[track_cols], 1L, function(row) {
+    values <- as.character(row)
+    values <- values[!is.na(values) & nzchar(values)]
+    paste(values, collapse = "\r")
+  }))
+  keys <- keys[nzchar(keys)]
+  length(keys) == 1L
 }
 
 .genetag_prefix_label_selectors <- function(track_name, selectors) {

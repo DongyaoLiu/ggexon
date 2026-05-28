@@ -1,10 +1,10 @@
 # Control aesthetic evaluation
 
-Most [aesthetics](https://ggplot2.tidyverse.org/reference/aes.html) are
-mapped from variables found in the data. Sometimes, however, you want to
-delay the mapping until later in the rendering process. ggplot2 has
-three stages of the data that you can map aesthetics from, and three
-functions to control at which stage aesthetics should be evaluated.
+Most [aesthetics](https://rdrr.io/pkg/ggplot2/man/aes.html) are mapped
+from variables found in the data. Sometimes, however, you want to delay
+the mapping until later in the rendering process. ggplot2 has three
+stages of the data that you can map aesthetics from, and three functions
+to control at which stage aesthetics should be evaluated.
 
 `after_stat()` replaces the old approaches of using either `stat()`,
 e.g. `stat(density)`, or surrounding the variable names with `..`, e.g.
@@ -28,23 +28,23 @@ stage(start = NULL, after_stat = NULL, after_scale = NULL)
 
 - x:
 
-  \<[`data-masking`](https://rlang.r-lib.org/reference/topic-data-mask.html)\>
+  \<[`data-masking`](https://rdrr.io/pkg/rlang/man/topic-data-mask.html)\>
   An aesthetic expression using variables calculated by the stat
   (`after_stat()`) or layer aesthetics (`after_scale()`).
 
 - start:
 
-  \<[`data-masking`](https://rlang.r-lib.org/reference/topic-data-mask.html)\>
+  \<[`data-masking`](https://rdrr.io/pkg/rlang/man/topic-data-mask.html)\>
   An aesthetic expression using variables from the layer data.
 
 - after_stat:
 
-  \<[`data-masking`](https://rlang.r-lib.org/reference/topic-data-mask.html)\>
+  \<[`data-masking`](https://rdrr.io/pkg/rlang/man/topic-data-mask.html)\>
   An aesthetic expression using variables calculated by the stat.
 
 - after_scale:
 
-  \<[`data-masking`](https://rlang.r-lib.org/reference/topic-data-mask.html)\>
+  \<[`data-masking`](https://rdrr.io/pkg/rlang/man/topic-data-mask.html)\>
   An aesthetic expression using layer aesthetics.
 
 ## Staging
@@ -67,10 +67,10 @@ data can be accessed.
 The second stage is after the data has been transformed by the layer
 stat. The most common example of mapping from stat transformed data is
 the height of bars in
-[`ggplot2::geom_histogram()`](https://ggplot2.tidyverse.org/reference/geom_histogram.html):
+[`ggplot2::geom_histogram()`](https://rdrr.io/pkg/ggplot2/man/geom_histogram.html):
 the height does not come from a variable in the underlying data, but is
 instead mapped to the `count` computed by
-[`ggplot2::stat_bin()`](https://ggplot2.tidyverse.org/reference/geom_histogram.html).
+[`ggplot2::stat_bin()`](https://rdrr.io/pkg/ggplot2/man/geom_histogram.html).
 In order to map from stat transformed data you should use the
 `after_stat()` function to flag that evaluation of the aesthetic mapping
 should be postponed until after stat transformation. Evaluation after

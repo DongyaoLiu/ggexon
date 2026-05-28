@@ -2,7 +2,8 @@
 
 Parses a file like `c_elegans.PRJNA13758.WS285.geneIDs.txt`. Expected
 columns: tax_id, WBGeneID, gene_name, locus_tag, status, type. Returns a
-named vector `locus_tag → gene_name`.
+named vector with both `WBGeneID → gene_name` and
+`locus_tag → gene_name` aliases.
 
 ## Usage
 
