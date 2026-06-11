@@ -57,6 +57,7 @@ Collate:
     'cross-panel-annotations.R'
     'facet-genomics.R'
     'facet-genomictree.R'
+    'geom-aa-variant.R'
     'geom-coverage.R'
     'geom-coverageMUT.R'
     'geom-direction.R'

@@ -1131,7 +1131,6 @@ project_domains_to_genome <- function(x,
   }
 
   transcript_meta <- .domain_projection_transcript_meta(target_cds)
-  print(transcript_meta)
   out <- lapply(seq_len(nrow(domain_df)), function(i) {
     .project_one_domain_row(
       domain_row = domain_df[i, , drop = FALSE],
@@ -1156,6 +1155,190 @@ project_domains_to_genome <- function(x,
 
   rownames(out) <- NULL
   out
+}
+
+#' Project amino-acid variants onto genomic coordinates
+#'
+#' Converts protein-coordinate variants (for example `C316H` at residue 316)
+#' into genomic coordinates using a transcript's CDS structure, so amino-acid
+#' variants can be annotated directly on the exon/intron model drawn by
+#' [geom_exon()]. Each variant is treated as a single codon: residue `p` maps to
+#' CDS nucleotides `(p - 1) * 3 + 1 .. p * 3`, walked across CDS segments so a
+#' codon that spans a splice junction yields one genomic row per segment. The
+#' phase of the 5'-most CDS is honoured for 5'-truncated gene models.
+#'
+#' This is the mutation counterpart of [project_domains_to_genome()] and shares
+#' the same coordinate-projection core.
+#'
+#' @param x A `SynIndividual` object.
+#' @param annotation Optional `SynProteinMutationAnnotation` layer name.
+#'   Defaults to the first attached protein-mutation annotation.
+#' @param genes,transcripts Optional identifiers limiting the transcripts that
+#'   variants are projected onto.
+#' @param strains,mutation,event_type,min_sample_count,protein_ranges,ref
+#'   Optional variant filters forwarded to [query_protein_mutations()].
+#' @param chr,start,end Optional genomic window used to clip the projection.
+#'
+#' @return A data frame with one row per (variant, overlapped CDS segment),
+#'   containing the projected `seqnames`, `xmin`, `xmax`, `strand`,
+#'   `transcripts`, and the variant metadata columns (`position`, `ref`, `alt`,
+#'   `mutation`, ...). Returns an empty data frame when nothing projects.
+#' @seealso [project_domains_to_genome()], [geom_aa_variant()]
+#' @export
+project_mutations_to_genome <- function(x,
+                                        annotation = NULL,
+                                        genes = NULL,
+                                        transcripts = NULL,
+                                        strains = NULL,
+                                        mutation = NULL,
+                                        event_type = NULL,
+                                        min_sample_count = NULL,
+                                        protein_ranges = NULL,
+                                        ref = NULL,
+                                        chr = NULL,
+                                        start = NULL,
+                                        end = NULL) {
+  if (!methods::is(x, "SynIndividual")) {
+    stop("`project_mutations_to_genome()` expects a SynIndividual object.", call. = FALSE)
+  }
+
+  if (!is.null(chr)) {
+    chr <- resolve_syn_seqname(x, chr)
+  }
+
+  ann <- resolve_syn_protein_mutation_annotation(x, annotation = annotation)
+  key_col <- ann@keytype
+
+  mut <- query_protein_mutations(
+    x,
+    annotation = annotation,
+    genes = genes,
+    event_type = event_type,
+    min_sample_count = min_sample_count,
+    strains = strains,
+    mutation = mutation,
+    protein_ranges = protein_ranges,
+    ref = ref
+  )
+  if (nrow(mut) == 0L) {
+    return(data.frame())
+  }
+  if (!key_col %in% names(mut)) {
+    stop("The mutation table does not contain the key column: ", key_col, call. = FALSE)
+  }
+  if (!"position" %in% names(mut)) {
+    stop("Variant projection requires a `position` column in the mutation table.", call. = FALSE)
+  }
+
+  key_values <- unique(as.character(mut[[key_col]]))
+  key_values <- key_values[!is.na(key_values) & nzchar(key_values)]
+  if (length(key_values) == 0L) {
+    return(data.frame())
+  }
+
+  # Resolve the transcripts whose CDS to project onto, mirroring the seed-and-CDS
+  # lookup used by project_domains_to_genome().
+  seed_gr <- query_features(
+    x,
+    genes = if (identical(key_col, "gene_id")) key_values else genes,
+    transcripts = if (identical(key_col, "gene_id")) {
+      transcripts
+    } else {
+      unique(c(transcripts, key_values))
+    },
+    chr = chr,
+    start = start,
+    end = end,
+    feature_type = NULL,
+    all = FALSE
+  )
+  if (length(seed_gr) == 0L) {
+    return(data.frame())
+  }
+  transcript_ids <- unique(.annotation_transcript_ids(seed_gr))
+  transcript_ids <- transcript_ids[!is.na(transcript_ids) & nzchar(transcript_ids)]
+  if (length(transcript_ids) == 0L) {
+    return(data.frame())
+  }
+  target_cds <- query_features(x, transcripts = transcript_ids, feature_type = "CDS")
+  if (length(target_cds) == 0L) {
+    return(data.frame())
+  }
+
+  transcript_meta <- .domain_projection_transcript_meta(target_cds)
+  out <- lapply(seq_len(nrow(mut)), function(i) {
+    .project_one_mutation_row(
+      mut_row = mut[i, , drop = FALSE],
+      key_col = key_col,
+      transcript_meta = transcript_meta,
+      cds_gr = target_cds
+    )
+  })
+  out <- dplyr::bind_rows(out)
+  if (nrow(out) == 0L) {
+    return(out)
+  }
+
+  if (!is.null(chr)) {
+    out <- out[out$seqnames == chr, , drop = FALSE]
+  }
+  if (!is.null(start)) {
+    out <- out[out$xmax >= start, , drop = FALSE]
+  }
+  if (!is.null(end)) {
+    out <- out[out$xmin <= end, , drop = FALSE]
+  }
+
+  rownames(out) <- NULL
+  out
+}
+
+.project_one_mutation_row <- function(mut_row, key_col, transcript_meta, cds_gr) {
+  key_value <- as.character(mut_row[[key_col]][[1L]])
+  position <- suppressWarnings(as.integer(mut_row$position[[1L]]))
+  if (is.na(key_value) || !nzchar(key_value) || is.na(position)) {
+    return(data.frame())
+  }
+
+  tx_hits <- transcript_meta$transcript_id[
+    transcript_meta$transcript_id == key_value |
+      transcript_meta$gene_id == key_value |
+      transcript_meta$gene_name == key_value
+  ]
+  tx_hits <- unique(tx_hits[!is.na(tx_hits) & nzchar(tx_hits)])
+  if (length(tx_hits) == 0L) {
+    return(data.frame())
+  }
+
+  # Carry every variant column except those that would clash with the
+  # projection output, so aesthetics like fill = ref or label = mutation work.
+  keep_meta <- setdiff(
+    names(mut_row),
+    c("seqnames", "xmin", "xmax", "strand", "transcripts")
+  )
+
+  dplyr::bind_rows(lapply(tx_hits, function(tx_id) {
+    tx_gr <- cds_gr[.coalesce_character_cols(
+      S4Vectors::mcols(cds_gr),
+      c("transcript_id", "Parent", "ID")
+    ) == tx_id]
+    segs <- .aa_interval_to_genome(tx_gr, aa_start = position, aa_end = position)
+    if (nrow(segs) == 0L) {
+      return(data.frame())
+    }
+    seg_meta <- mut_row[rep(1L, nrow(segs)), keep_meta, drop = FALSE]
+    rownames(seg_meta) <- NULL
+    data.frame(
+      seqnames = segs$seqnames,
+      xmin = segs$xmin,
+      xmax = segs$xmax,
+      strand = segs$strand,
+      transcripts = tx_id,
+      seg_meta,
+      stringsAsFactors = FALSE,
+      check.names = FALSE
+    )
+  }))
 }
 
 .filter_projectable_domains <- function(domain_df,
@@ -1332,15 +1515,23 @@ project_domains_to_genome <- function(x,
   }))
 }
 
-.project_domain_to_transcript <- function(tx_gr,
-                                          aa_start,
-                                          aa_end,
-                                          transcript_id,
-                                          text,
-                                          motif,
-                                          domain_id,
-                                          model) {
+# Map an amino-acid interval onto genomic coordinates using a transcript's CDS
+# structure. Returns one row per CDS segment the interval overlaps, so a codon
+# (or domain) spanning a splice junction yields multiple genomic segments.
+#
+# `cds_phase` accounts for a 5'-truncated coding sequence: it is the GFF phase
+# of the 5'-most CDS segment (the number of bases trimmed before the first
+# complete codon, 0-2). When `NULL` it is read from a `phase`/`frame` metadata
+# column on `tx_gr`, defaulting to 0 -- which leaves complete, phase-0 gene
+# models unchanged. Amino-acid positions are interpreted relative to the protein
+# obtained by translating from the first complete codon.
+.aa_interval_to_genome <- function(tx_gr, aa_start, aa_end, cds_phase = NULL) {
   if (length(tx_gr) == 0L) {
+    return(data.frame())
+  }
+  aa_start <- as.integer(aa_start)
+  aa_end <- as.integer(aa_end)
+  if (is.na(aa_start) || is.na(aa_end) || aa_start > aa_end) {
     return(data.frame())
   }
 
@@ -1358,20 +1549,22 @@ project_domains_to_genome <- function(x,
   }
   tx_gr <- tx_gr[order_idx]
 
+  start_phase <- .resolve_cds_start_phase(tx_gr, cds_phase)
+
   seg_width <- IRanges::width(tx_gr)
   tx_nt_start <- cumsum(c(1L, head(seg_width, -1L)))
   tx_nt_end <- cumsum(seg_width)
-  domain_nt_start <- (aa_start - 1L) * 3L + 1L
-  domain_nt_end <- aa_end * 3L
+  nt_start <- (aa_start - 1L) * 3L + 1L + start_phase
+  nt_end <- aa_end * 3L + start_phase
 
-  overlaps <- pmax(tx_nt_start, domain_nt_start) <= pmin(tx_nt_end, domain_nt_end)
+  overlaps <- pmax(tx_nt_start, nt_start) <= pmin(tx_nt_end, nt_end)
   if (!any(overlaps)) {
     return(data.frame())
   }
 
   out <- lapply(which(overlaps), function(i) {
-    overlap_start <- max(tx_nt_start[[i]], domain_nt_start)
-    overlap_end <- min(tx_nt_end[[i]], domain_nt_end)
+    overlap_start <- max(tx_nt_start[[i]], nt_start)
+    overlap_end <- min(tx_nt_end[[i]], nt_end)
 
     if (strand_value == "-") {
       genome_start <- IRanges::end(tx_gr)[[i]] - (overlap_end - tx_nt_start[[i]])
@@ -1386,16 +1579,55 @@ project_domains_to_genome <- function(x,
       xmin = min(genome_start, genome_end),
       xmax = max(genome_start, genome_end),
       strand = strand_value,
-      transcripts = transcript_id,
-      model = model,
-      motif = motif,
-      domain_id = domain_id,
-      text = text,
       stringsAsFactors = FALSE
     )
   })
 
   dplyr::bind_rows(out)
+}
+
+# Phase of the 5'-most CDS segment (after `tx_gr` is ordered 5'->3'). An explicit
+# `cds_phase` wins; otherwise read a `phase`/`frame` column, treating "." / NA
+# as 0 so complete models behave as before.
+.resolve_cds_start_phase <- function(tx_gr, cds_phase = NULL) {
+  if (!is.null(cds_phase)) {
+    ph <- suppressWarnings(as.integer(cds_phase)[[1L]])
+    return(if (is.na(ph)) 0L else ph %% 3L)
+  }
+  meta <- S4Vectors::mcols(tx_gr)
+  col <- intersect(c("phase", "frame"), colnames(meta))
+  if (length(col) == 0L) {
+    return(0L)
+  }
+  ph <- suppressWarnings(as.integer(meta[[col[[1L]]]][[1L]]))
+  if (is.na(ph)) 0L else ph %% 3L
+}
+
+.project_domain_to_transcript <- function(tx_gr,
+                                          aa_start,
+                                          aa_end,
+                                          transcript_id,
+                                          text,
+                                          motif,
+                                          domain_id,
+                                          model) {
+  segs <- .aa_interval_to_genome(tx_gr, aa_start = aa_start, aa_end = aa_end)
+  if (nrow(segs) == 0L) {
+    return(data.frame())
+  }
+
+  data.frame(
+    seqnames = segs$seqnames,
+    xmin = segs$xmin,
+    xmax = segs$xmax,
+    strand = segs$strand,
+    transcripts = transcript_id,
+    model = model,
+    motif = motif,
+    domain_id = domain_id,
+    text = text,
+    stringsAsFactors = FALSE
+  )
 }
 
 is_comparative_syn_request <- function(species = NULL, reference = NULL) {

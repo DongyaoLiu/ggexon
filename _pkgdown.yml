@@ -72,6 +72,7 @@ reference:
   - geom_genomic_tree
   - geom_motif
   - geom_mutation_label
+  - geom_aa_variant
   - geom_nuclink
   - geom_genelink
   - geom_protein_lollipop
@@ -135,6 +136,7 @@ reference:
   - extract_cds_seq
   - translate_protein
   - project_domains_to_genome
+  - project_mutations_to_genome
   - projected_domains
   - homology_table
   - reference_species
