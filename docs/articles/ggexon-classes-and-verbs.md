@@ -448,6 +448,40 @@ ggexon(sp) +
   )
 ```
 
+### `geom_synteny_link()`
+
+Use
+[`geom_synteny_link()`](https://dongyaoliu.github.io/ggexon/reference/geom_synteny_link.md)
+when links represent gene-level synteny, orthology, or another
+interval-to-interval biological relationship rather than a raw
+nucleotide alignment fragment. The expected table columns are the same
+as
+[`geom_nuclink()`](https://dongyaoliu.github.io/ggexon/reference/geom_nuclink.md):
+target interval columns (`tspecies`, `tchr`, `tstart`, `tend`), query
+interval columns (`qspecies`, `qchr`, `qstart`, `qend`), and `strand`.
+
+``` r
+
+ggexon(sp) +
+  geom_genetag(species = c("human", "macaque"), chr = "HOXA") +
+  geom_synteny_link(
+    data = hoxa_links,
+    aes(fill = orthology_group),
+    alpha = 0.35
+  ) +
+  facet_genomics(ggplot2::vars(track), scales = "free")
+```
+
+Internally,
+[`geom_synteny_link()`](https://dongyaoliu.github.io/ggexon/reference/geom_synteny_link.md)
+uses the same panel-aware polygon renderer as
+[`geom_nuclink()`](https://dongyaoliu.github.io/ggexon/reference/geom_nuclink.md).
+[`facet_genomics()`](https://dongyaoliu.github.io/ggexon/reference/facet_genomics.md)
+creates annotation panels and middle link panels, the link layer turns
+each target/query interval pair into four polygon vertices, and each
+side of the ribbon is transformed against the x scale of its own source
+genomic panel before being drawn in the link panel.
+
 ### `geom_protein_lollipop()`
 
 Use

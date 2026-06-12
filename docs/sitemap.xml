@@ -5,6 +5,7 @@
 <url><loc>https://dongyaoliu.github.io/ggexon/LICENSE.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/articles/ggexon-classes-and-verbs.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/articles/ggexon-workflow.html</loc></url>
+<url><loc>https://dongyaoliu.github.io/ggexon/articles/hoxa-ensembl115-demo.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/articles/index.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/authors.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/index.html</loc></url>
@@ -104,6 +105,7 @@
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/geom_mutation_label.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/geom_nuclink.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/geom_protein_lollipop.html</loc></url>
+<url><loc>https://dongyaoliu.github.io/ggexon/reference/geom_synteny_link.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/get_annotation.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/get_homology_annotation.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/gg_dep.html</loc></url>

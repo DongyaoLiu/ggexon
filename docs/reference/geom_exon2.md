@@ -43,7 +43,7 @@ geom_exon2(
 - mapping:
 
   Set of aesthetic mappings created by
-  [`ggplot2::aes()`](https://rdrr.io/pkg/ggplot2/man/aes.html).
+  [`ggplot2::aes()`](https://ggplot2.tidyverse.org/reference/aes.html).
 
 - data:
 

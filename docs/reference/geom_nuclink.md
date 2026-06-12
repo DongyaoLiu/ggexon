@@ -31,7 +31,7 @@ geom_nuclink(
 - mapping:
 
   Set of aesthetic mappings created by
-  [`ggplot2::aes()`](https://rdrr.io/pkg/ggplot2/man/aes.html).
+  [`ggplot2::aes()`](https://ggplot2.tidyverse.org/reference/aes.html).
   `colour`, `fill`, and `alpha` can be mapped in the standard ggplot2
   way.
 

@@ -98,6 +98,8 @@ links, trees, and protein mutation summaries.
   : Draw mutation labels as a dedicated text layer
 - [`geom_nuclink()`](https://dongyaoliu.github.io/ggexon/reference/geom_nuclink.md)
   : Draw cross-panel nucleotide links
+- [`geom_synteny_link()`](https://dongyaoliu.github.io/ggexon/reference/geom_synteny_link.md)
+  : Draw synteny interval links
 - [`geom_genelink()`](https://dongyaoliu.github.io/ggexon/reference/geom_genelink.md)
   : Draw link lines between pairs of coordinates
 - [`geom_protein_lollipop()`](https://dongyaoliu.github.io/ggexon/reference/geom_protein_lollipop.md)

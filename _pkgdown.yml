@@ -210,6 +210,7 @@ reference:
   - GeomGene
   - GeomCoverage
   - GeomCoverageMUT
+  - GeomAaVariant
   - Layout2
   - create_layout2
   - Splines_link_generate

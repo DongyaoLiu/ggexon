@@ -53,7 +53,7 @@ scale_x_ggexon_genomic(
   Break labels. Use
   [`waiver()`](https://dongyaoliu.github.io/ggexon/reference/waiver.md)
   for
-  [`scales::label_number()`](https://rdrr.io/pkg/scales/man/label_number.html),
+  [`scales::label_number()`](https://scales.r-lib.org/reference/label_number.html),
   `NULL` for no labels, a character vector, or a function applied to
   original genomic break values.
 

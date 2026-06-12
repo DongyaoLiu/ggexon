@@ -97,57 +97,57 @@ what certain features in the data correspond to:
 - `main_is_orthogonal`: This argument controls how the existence of only
   a `x` or `y` aesthetic is understood. If `TRUE` then the existing
   aesthetic would be then secondary axis. This behaviour is present in
-  [`ggplot2::stat_ydensity()`](https://rdrr.io/pkg/ggplot2/man/geom_violin.html)
+  [`ggplot2::stat_ydensity()`](https://ggplot2.tidyverse.org/reference/geom_violin.html)
   and
-  [`ggplot2::stat_boxplot()`](https://rdrr.io/pkg/ggplot2/man/geom_boxplot.html).
+  [`ggplot2::stat_boxplot()`](https://ggplot2.tidyverse.org/reference/geom_boxplot.html).
   If `FALSE` then the existing aesthetic is the main axis as seen in
   e.g.
-  [`ggplot2::stat_bin()`](https://rdrr.io/pkg/ggplot2/man/geom_histogram.html),
-  [`ggplot2::geom_count()`](https://rdrr.io/pkg/ggplot2/man/geom_count.html),
+  [`ggplot2::stat_bin()`](https://ggplot2.tidyverse.org/reference/geom_histogram.html),
+  [`ggplot2::geom_count()`](https://ggplot2.tidyverse.org/reference/geom_count.html),
   and
-  [`ggplot2::stat_density()`](https://rdrr.io/pkg/ggplot2/man/geom_density.html).
+  [`ggplot2::stat_density()`](https://ggplot2.tidyverse.org/reference/geom_density.html).
 
 - `range_is_orthogonal`: This argument controls whether the existence of
   range-like aesthetics (e.g. `xmin` and `xmax`) represents the main or
   secondary axis. If `TRUE` then the range is given for the secondary
   axis as seen in e.g.
-  [`ggplot2::geom_ribbon()`](https://rdrr.io/pkg/ggplot2/man/geom_ribbon.html)
+  [`ggplot2::geom_ribbon()`](https://ggplot2.tidyverse.org/reference/geom_ribbon.html)
   and
-  [`ggplot2::geom_linerange()`](https://rdrr.io/pkg/ggplot2/man/geom_linerange.html).
+  [`ggplot2::geom_linerange()`](https://ggplot2.tidyverse.org/reference/geom_linerange.html).
 
 - `group_has_equal`: This argument controls whether to test for equality
   of all `x` and `y` values inside each group and set the main axis to
   the one where all is equal. This test is only performed if `TRUE`, and
   only after less computationally heavy tests has come up empty handed.
   Examples are
-  [`ggplot2::stat_boxplot()`](https://rdrr.io/pkg/ggplot2/man/geom_boxplot.html)
+  [`ggplot2::stat_boxplot()`](https://ggplot2.tidyverse.org/reference/geom_boxplot.html)
   and
-  [ggplot2::stat_ydensity](https://rdrr.io/pkg/ggplot2/man/geom_violin.html)
+  [ggplot2::stat_ydensity](https://ggplot2.tidyverse.org/reference/geom_violin.html)
 
 - `ambiguous`: This argument tells the function that the layer, while
   bidirectional, doesn't treat each axis differently. It will circumvent
   any data based guessing and only take hint from the `orientation`
   element in `params`. If this is not present it will fall back to
   `FALSE`. Examples are
-  [`ggplot2::geom_line()`](https://rdrr.io/pkg/ggplot2/man/geom_path.html)
+  [`ggplot2::geom_line()`](https://ggplot2.tidyverse.org/reference/geom_path.html)
   and
-  [`ggplot2::geom_area()`](https://rdrr.io/pkg/ggplot2/man/geom_ribbon.html)
+  [`ggplot2::geom_area()`](https://ggplot2.tidyverse.org/reference/geom_ribbon.html)
 
 - `main_is_continuous`: This argument controls how the test for
   discreteness in the scales should be interpreted. If `TRUE` then the
   main axis will be the one which is not discrete-like. Conversely, if
   `FALSE` the main axis will be the discrete-like one. Examples of
   `TRUE` is
-  [`ggplot2::stat_density()`](https://rdrr.io/pkg/ggplot2/man/geom_density.html)
+  [`ggplot2::stat_density()`](https://ggplot2.tidyverse.org/reference/geom_density.html)
   and
-  [`ggplot2::stat_bin()`](https://rdrr.io/pkg/ggplot2/man/geom_histogram.html),
+  [`ggplot2::stat_bin()`](https://ggplot2.tidyverse.org/reference/geom_histogram.html),
   while examples of `FALSE` is
-  [`ggplot2::stat_ydensity()`](https://rdrr.io/pkg/ggplot2/man/geom_violin.html)
+  [`ggplot2::stat_ydensity()`](https://ggplot2.tidyverse.org/reference/geom_violin.html)
   and
-  [`ggplot2::stat_boxplot()`](https://rdrr.io/pkg/ggplot2/man/geom_boxplot.html)
+  [`ggplot2::stat_boxplot()`](https://ggplot2.tidyverse.org/reference/geom_boxplot.html)
 
 - `main_is_optional`: This argument controls the rare case of layers
   were the main direction is an optional aesthetic. This is only seen in
-  [`ggplot2::stat_boxplot()`](https://rdrr.io/pkg/ggplot2/man/geom_boxplot.html)
+  [`ggplot2::stat_boxplot()`](https://ggplot2.tidyverse.org/reference/geom_boxplot.html)
   where `x` is set to `0` if not given. If `TRUE` there will be a check
   for whether all `x` or all `y` are equal to `0`

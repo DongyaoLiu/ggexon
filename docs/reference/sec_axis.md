@@ -70,7 +70,7 @@ derive()
 
   A position guide that will be used to render the axis on the plot.
   Usually this is
-  [`ggplot2::guide_axis()`](https://rdrr.io/pkg/ggplot2/man/guide_axis.html).
+  [`ggplot2::guide_axis()`](https://ggplot2.tidyverse.org/reference/guide_axis.html).
 
 - trans:
 

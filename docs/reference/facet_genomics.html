@@ -24,6 +24,7 @@ intermediate link panels used by geom_nuclink()."></head><body>
       <ul class="navbar-nav me-auto"><li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-tutorials" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Tutorials</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-tutorials"><li><a class="dropdown-item" href="../articles/ggexon-workflow.html">Complete workflow</a></li>
+    <li><a class="dropdown-item" href="../articles/hoxa-ensembl115-demo.html">HOXA synteny demo</a></li>
     <li><a class="dropdown-item" href="../articles/ggexon-classes-and-verbs.html">Classes, geoms, facets, and guides</a></li>
   </ul></li>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
@@ -65,7 +66,9 @@ intermediate link panels used by <code><a href="geom_nuclink.html">geom_nuclink(
 <span>  dir <span class="op">=</span> <span class="st">"h"</span>,</span>
 <span>  strip.position <span class="op">=</span> <span class="st">"top"</span>,</span>
 <span>  axes <span class="op">=</span> <span class="st">"margins"</span>,</span>
-<span>  axis.labels <span class="op">=</span> <span class="st">"all"</span></span>
+<span>  axis.labels <span class="op">=</span> <span class="st">"all"</span>,</span>
+<span>  xlim <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  xlim_chr <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -121,6 +124,22 @@ layouts.</p></dd>
 
 <dt id="arg-axis-labels">axis.labels<a class="anchor" aria-label="anchor" href="#arg-axis-labels"></a></dt>
 <dd><p>Which axis labels to draw.</p></dd>
+
+
+<dt id="arg-xlim">xlim<a class="anchor" aria-label="anchor" href="#arg-xlim"></a></dt>
+<dd><p>Optional panel-specific x limits for Syn-aware annotation panels.
+Supply a named list of numeric length-2 vectors keyed by individual /
+annotation-panel name. If the plot contains only one annotation panel, a
+single numeric length-2 vector is also accepted.</p></dd>
+
+
+<dt id="arg-xlim-chr">xlim_chr<a class="anchor" aria-label="anchor" href="#arg-xlim-chr"></a></dt>
+<dd><p>Optional chromosome / seqname for <code>xlim</code>. Supply one
+character value for a single panel, or a named character vector/list keyed
+by individual when <code>xlim</code> contains multiple panels. When omitted, ggexon
+tries to infer the seqname from attached alignments or single-seqname
+annotations. Link layers can only be filtered by panel limits when the
+seqname can be resolved.</p></dd>
 
 </dl></div>
     <div class="section level2">

@@ -34,10 +34,10 @@ geom_exon(
 - mapping:
 
   Set of aesthetic mappings created by
-  [`ggplot2::aes()`](https://rdrr.io/pkg/ggplot2/man/aes.html). In
-  addition to the required positional aesthetics, Syn-backed exon layers
-  expose canonical identifier columns `transcript_id`, `gene_id`, and
-  `gene_name` for use in aesthetic mappings.
+  [`ggplot2::aes()`](https://ggplot2.tidyverse.org/reference/aes.html).
+  In addition to the required positional aesthetics, Syn-backed exon
+  layers expose canonical identifier columns `transcript_id`, `gene_id`,
+  and `gene_name` for use in aesthetic mappings.
 
 - data:
 
