@@ -28,6 +28,7 @@ geom_genelabel(
   subset = NULL,
   panel_width_mm = NULL,
   panel_width_inch = NULL,
+  force_flat = FALSE,
   inherit.aes = TRUE
 )
 ```

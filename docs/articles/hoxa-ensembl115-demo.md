@@ -22,10 +22,8 @@ library(ggexon)
 #> Loading required package: gtable
 #> Loading required package: ggforce
 #> Loading required package: ggplot2
-#> Warning: package 'ggplot2' was built under R version 4.4.3
 #> Loading required package: ggridges
 #> Loading required package: dplyr
-#> Warning: package 'dplyr' was built under R version 4.4.3
 #> 
 #> Attaching package: 'dplyr'
 #> The following objects are masked from 'package:stats':
@@ -38,11 +36,21 @@ library(ggexon)
 #> Loading required package: GenomicRanges
 #> Loading required package: stats4
 #> Loading required package: BiocGenerics
+#> Loading required package: generics
+#> 
+#> Attaching package: 'generics'
+#> The following object is masked from 'package:dplyr':
+#> 
+#>     explain
+#> The following objects are masked from 'package:base':
+#> 
+#>     as.difftime, as.factor, as.ordered, intersect, is.element, setdiff,
+#>     setequal, union
 #> 
 #> Attaching package: 'BiocGenerics'
-#> The following objects are masked from 'package:dplyr':
+#> The following object is masked from 'package:dplyr':
 #> 
-#>     combine, intersect, setdiff, union
+#>     combine
 #> The following objects are masked from 'package:stats':
 #> 
 #>     IQR, mad, sd, var, xtabs
@@ -50,10 +58,10 @@ library(ggexon)
 #> 
 #>     anyDuplicated, aperm, append, as.data.frame, basename, cbind,
 #>     colnames, dirname, do.call, duplicated, eval, evalq, Filter, Find,
-#>     get, grep, grepl, intersect, is.unsorted, lapply, Map, mapply,
-#>     match, mget, order, paste, pmax, pmax.int, pmin, pmin.int,
-#>     Position, rank, rbind, Reduce, rownames, sapply, saveRDS, setdiff,
-#>     table, tapply, union, unique, unsplit, which.max, which.min
+#>     get, grep, grepl, is.unsorted, lapply, Map, mapply, match, mget,
+#>     order, paste, pmax, pmax.int, pmin, pmin.int, Position, rank,
+#>     rbind, Reduce, rownames, sapply, saveRDS, table, tapply, unique,
+#>     unsplit, which.max, which.min
 #> Loading required package: S4Vectors
 #> 
 #> Attaching package: 'S4Vectors'
@@ -67,17 +75,14 @@ library(ggexon)
 #> 
 #>     expand.grid, I, unname
 #> Loading required package: IRanges
-#> Warning: package 'IRanges' was built under R version 4.4.2
 #> 
 #> Attaching package: 'IRanges'
 #> The following objects are masked from 'package:dplyr':
 #> 
 #>     collapse, desc, slice
-#> Loading required package: GenomeInfoDb
-#> Warning: package 'GenomeInfoDb' was built under R version 4.4.2
+#> Loading required package: Seqinfo
 #> Loading required package: grid
 #> Loading required package: tidyr
-#> Warning: package 'tidyr' was built under R version 4.4.3
 #> 
 #> Attaching package: 'tidyr'
 #> The following object is masked from 'package:S4Vectors':
@@ -91,16 +96,13 @@ library(ggexon)
 #> 
 #>     smiths
 #> Loading required package: rlang
-#> Warning: package 'rlang' was built under R version 4.4.3
 #> Loading required package: vctrs
-#> Warning: package 'vctrs' was built under R version 4.4.3
 #> 
 #> Attaching package: 'vctrs'
 #> The following object is masked from 'package:dplyr':
 #> 
 #>     data_frame
 #> Loading required package: S7
-#> Warning: package 'S7' was built under R version 4.4.3
 #> 
 #> Attaching package: 'ggexon'
 #> The following objects are masked from 'package:ggplot2':

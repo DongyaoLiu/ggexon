@@ -11,6 +11,7 @@
 <url><loc>https://dongyaoliu.github.io/ggexon/index.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/FacetGenomicTree.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/FacetGenomics.html</loc></url>
+<url><loc>https://dongyaoliu.github.io/ggexon/reference/GeomAaVariant.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/GeomCoverage.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/GeomCoverageMUT.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/GeomExon.html</loc></url>
@@ -95,6 +96,7 @@
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/filter_odgi_nodes.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/filter_pairwise_alignment.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/genome_waiver.html</loc></url>
+<url><loc>https://dongyaoliu.github.io/ggexon/reference/geom_aa_variant.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/geom_exon.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/geom_exon2.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/geom_genelabel.html</loc></url>
@@ -138,6 +140,7 @@
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/patch_annotation_from_gff.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/plot_ggtree_genomic_alignment.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/project_domains_to_genome.html</loc></url>
+<url><loc>https://dongyaoliu.github.io/ggexon/reference/project_mutations_to_genome.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/projected_domains.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/protein_lollipop_data.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/protein_mutation_data.html</loc></url>

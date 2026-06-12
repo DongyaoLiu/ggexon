@@ -25,6 +25,7 @@ geom_exon(
   species = NULL,
   chr = NULL,
   breakdata = NULL,
+  force_flat = FALSE,
   inherit.aes = TRUE
 )
 ```

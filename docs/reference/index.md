@@ -96,6 +96,8 @@ links, trees, and protein mutation summaries.
   : Plot protein-domain motifs
 - [`geom_mutation_label()`](https://dongyaoliu.github.io/ggexon/reference/geom_mutation_label.md)
   : Draw mutation labels as a dedicated text layer
+- [`geom_aa_variant()`](https://dongyaoliu.github.io/ggexon/reference/geom_aa_variant.md)
+  : Annotate amino-acid variants on the exon structure
 - [`geom_nuclink()`](https://dongyaoliu.github.io/ggexon/reference/geom_nuclink.md)
   : Draw cross-panel nucleotide links
 - [`geom_synteny_link()`](https://dongyaoliu.github.io/ggexon/reference/geom_synteny_link.md)
@@ -256,6 +258,8 @@ derive sequence or protein-level summaries.
   : Translate CDS sequences to proteins
 - [`project_domains_to_genome()`](https://dongyaoliu.github.io/ggexon/reference/project_domains_to_genome.md)
   : Project protein-domain coordinates onto genomic coordinates
+- [`project_mutations_to_genome()`](https://dongyaoliu.github.io/ggexon/reference/project_mutations_to_genome.md)
+  : Project amino-acid variants onto genomic coordinates
 - [`projected_domains()`](https://dongyaoliu.github.io/ggexon/reference/projected_domains.md)
   : Access stored projected protein-domain tables
 - [`homology_table()`](https://dongyaoliu.github.io/ggexon/reference/homology_table.md)
@@ -453,6 +457,9 @@ and reexports.
 
 - [`GeomCoverageMUT`](https://dongyaoliu.github.io/ggexon/reference/GeomCoverageMUT.md)
   : Coverage-by-mutation geom ggproto
+
+- [`GeomAaVariant`](https://dongyaoliu.github.io/ggexon/reference/GeomAaVariant.md)
+  : Geom implementation for amino-acid variant lollipops
 
 - [`Layout2`](https://dongyaoliu.github.io/ggexon/reference/Layout2.md)
   : ggexon layout runtime with Syn-aware panel setup

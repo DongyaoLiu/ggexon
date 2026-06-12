@@ -497,6 +497,62 @@ ggplot(protein_lollipop_data) +
   )
 ```
 
+### `geom_aa_variant()`
+
+Use
+[`geom_aa_variant()`](https://dongyaoliu.github.io/ggexon/reference/geom_aa_variant.md)
+to annotate amino-acid variants (for example `C316H`) directly on the
+exon/intron model, rather than on the linear protein track that
+[`geom_protein_lollipop()`](https://dongyaoliu.github.io/ggexon/reference/geom_protein_lollipop.md)
+draws. When the plot data is a `SynIndividual` or `SynSpecies`, the
+layer resolves an attached `SynProteinMutationAnnotation`, projects each
+variant onto its transcript’s CDS with
+[`project_mutations_to_genome()`](https://dongyaoliu.github.io/ggexon/reference/project_mutations_to_genome.md),
+and draws a lollipop sitting above the matching exon row. Each variant
+is treated as one codon (residue `p` maps to CDS nucleotides
+`(p - 1) * 3 + 1 .. p * 3`); the projection is strand-aware, places
+codons that cross a splice junction on the correct exonic base, and
+honours the 5’-most CDS phase for 5’-truncated models. It shares this
+projection core with
+[`geom_motif()`](https://dongyaoliu.github.io/ggexon/reference/geom_motif.md).
+
+``` r
+
+# Attach a protein-coordinate variant summary keyed to genes. The mutation
+# column accepts `C#316#H` hash notation or plain `C316H` strings.
+xz <- add_protein_mutation_annotation(
+  xz,
+  mutation_file = "zina_variants.tsv",
+  keytype = "gene_id"
+)
+
+ggexon(xz) +
+  geom_exon(chr = "RagTag_V", subset = c(21574445, 21584356)) +
+  geom_aa_variant(
+    aes(fill = sample_count),
+    chr = "RagTag_V",
+    subset = c(21574445, 21584356)
+  )
+```
+
+Variant metadata columns (`position`, `ref`, `alt`, `mutation`,
+`sample_count`, …) are exposed for aesthetics, and
+[`query_protein_mutations()`](https://dongyaoliu.github.io/ggexon/reference/query_protein_mutations.md)
+filters such as `genes`, `strains`, `event_type`, `min_sample_count`,
+and `protein_ranges` can be passed straight to the layer. `stem_height`
+and `y_offset` adjust where the marker sits relative to the exon row.
+
+To obtain the projected genomic coordinates as a table — to drive a
+custom marker or to export the codon positions — call
+[`project_mutations_to_genome()`](https://dongyaoliu.github.io/ggexon/reference/project_mutations_to_genome.md)
+directly. A codon that straddles an intron returns one row per exonic
+fragment.
+
+``` r
+
+project_mutations_to_genome(xz, chr = "RagTag_V", start = 21574445, end = 21584356)
+```
+
 ## Facets, tree alignment, and guides
 
 `ggexon` uses facet systems to keep genomic panels, alignment links,
@@ -677,8 +733,9 @@ Other data verbs include
 [`query_protein_mutations()`](https://dongyaoliu.github.io/ggexon/reference/query_protein_mutations.md),
 [`extract_cds_seq()`](https://dongyaoliu.github.io/ggexon/reference/extract_cds_seq.md),
 [`translate_protein()`](https://dongyaoliu.github.io/ggexon/reference/translate_protein.md),
+[`project_domains_to_genome()`](https://dongyaoliu.github.io/ggexon/reference/project_domains_to_genome.md),
 and
-[`project_domains_to_genome()`](https://dongyaoliu.github.io/ggexon/reference/project_domains_to_genome.md).
+[`project_mutations_to_genome()`](https://dongyaoliu.github.io/ggexon/reference/project_mutations_to_genome.md).
 
 ### Modify, subset, and curate objects
 

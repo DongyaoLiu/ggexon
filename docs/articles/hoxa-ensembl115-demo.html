@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>HOXA Synteny Demo • ggexon</title>
 <script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_3-0.4.10/font.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_3-0.4.10/font.css" rel="stylesheet">
 <link href="../deps/Source_Code_Pro-0.4.10/font.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
@@ -62,7 +62,7 @@
       <h1>HOXA Synteny Demo</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/DongyaoLiu/ggexon/blob/HEAD/vignettes/hoxa-ensembl115-demo.Rmd" class="external-link"><code>vignettes/hoxa-ensembl115-demo.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/DongyaoLiu/ggexon/blob/main/vignettes/hoxa-ensembl115-demo.Rmd" class="external-link"><code>vignettes/hoxa-ensembl115-demo.Rmd</code></a></small>
       <div class="d-none name"><code>hoxa-ensembl115-demo.Rmd</code></div>
     </div>
 
@@ -85,10 +85,8 @@ coordinates are retained in the TSV files.</p>
 <span><span class="co">#&gt; Loading required package: gtable</span></span>
 <span><span class="co">#&gt; Loading required package: ggforce</span></span>
 <span><span class="co">#&gt; Loading required package: ggplot2</span></span>
-<span><span class="co">#&gt; Warning: package 'ggplot2' was built under R version 4.4.3</span></span>
 <span><span class="co">#&gt; Loading required package: ggridges</span></span>
 <span><span class="co">#&gt; Loading required package: dplyr</span></span>
-<span><span class="co">#&gt; Warning: package 'dplyr' was built under R version 4.4.3</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Attaching package: 'dplyr'</span></span>
 <span><span class="co">#&gt; The following objects are masked from 'package:stats':</span></span>
@@ -101,11 +99,21 @@ coordinates are retained in the TSV files.</p>
 <span><span class="co">#&gt; Loading required package: GenomicRanges</span></span>
 <span><span class="co">#&gt; Loading required package: stats4</span></span>
 <span><span class="co">#&gt; Loading required package: BiocGenerics</span></span>
+<span><span class="co">#&gt; Loading required package: generics</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Attaching package: 'generics'</span></span>
+<span><span class="co">#&gt; The following object is masked from 'package:dplyr':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     explain</span></span>
+<span><span class="co">#&gt; The following objects are masked from 'package:base':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     as.difftime, as.factor, as.ordered, intersect, is.element, setdiff,</span></span>
+<span><span class="co">#&gt;     setequal, union</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Attaching package: 'BiocGenerics'</span></span>
-<span><span class="co">#&gt; The following objects are masked from 'package:dplyr':</span></span>
+<span><span class="co">#&gt; The following object is masked from 'package:dplyr':</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     combine, intersect, setdiff, union</span></span>
+<span><span class="co">#&gt;     combine</span></span>
 <span><span class="co">#&gt; The following objects are masked from 'package:stats':</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     IQR, mad, sd, var, xtabs</span></span>
@@ -113,10 +121,10 @@ coordinates are retained in the TSV files.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     anyDuplicated, aperm, append, as.data.frame, basename, cbind,</span></span>
 <span><span class="co">#&gt;     colnames, dirname, do.call, duplicated, eval, evalq, Filter, Find,</span></span>
-<span><span class="co">#&gt;     get, grep, grepl, intersect, is.unsorted, lapply, Map, mapply,</span></span>
-<span><span class="co">#&gt;     match, mget, order, paste, pmax, pmax.int, pmin, pmin.int,</span></span>
-<span><span class="co">#&gt;     Position, rank, rbind, Reduce, rownames, sapply, saveRDS, setdiff,</span></span>
-<span><span class="co">#&gt;     table, tapply, union, unique, unsplit, which.max, which.min</span></span>
+<span><span class="co">#&gt;     get, grep, grepl, is.unsorted, lapply, Map, mapply, match, mget,</span></span>
+<span><span class="co">#&gt;     order, paste, pmax, pmax.int, pmin, pmin.int, Position, rank,</span></span>
+<span><span class="co">#&gt;     rbind, Reduce, rownames, sapply, saveRDS, table, tapply, unique,</span></span>
+<span><span class="co">#&gt;     unsplit, which.max, which.min</span></span>
 <span><span class="co">#&gt; Loading required package: S4Vectors</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Attaching package: 'S4Vectors'</span></span>
@@ -130,17 +138,14 @@ coordinates are retained in the TSV files.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     expand.grid, I, unname</span></span>
 <span><span class="co">#&gt; Loading required package: IRanges</span></span>
-<span><span class="co">#&gt; Warning: package 'IRanges' was built under R version 4.4.2</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Attaching package: 'IRanges'</span></span>
 <span><span class="co">#&gt; The following objects are masked from 'package:dplyr':</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     collapse, desc, slice</span></span>
-<span><span class="co">#&gt; Loading required package: GenomeInfoDb</span></span>
-<span><span class="co">#&gt; Warning: package 'GenomeInfoDb' was built under R version 4.4.2</span></span>
+<span><span class="co">#&gt; Loading required package: Seqinfo</span></span>
 <span><span class="co">#&gt; Loading required package: grid</span></span>
 <span><span class="co">#&gt; Loading required package: tidyr</span></span>
-<span><span class="co">#&gt; Warning: package 'tidyr' was built under R version 4.4.3</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Attaching package: 'tidyr'</span></span>
 <span><span class="co">#&gt; The following object is masked from 'package:S4Vectors':</span></span>
@@ -154,16 +159,13 @@ coordinates are retained in the TSV files.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     smiths</span></span>
 <span><span class="co">#&gt; Loading required package: rlang</span></span>
-<span><span class="co">#&gt; Warning: package 'rlang' was built under R version 4.4.3</span></span>
 <span><span class="co">#&gt; Loading required package: vctrs</span></span>
-<span><span class="co">#&gt; Warning: package 'vctrs' was built under R version 4.4.3</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Attaching package: 'vctrs'</span></span>
 <span><span class="co">#&gt; The following object is masked from 'package:dplyr':</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     data_frame</span></span>
 <span><span class="co">#&gt; Loading required package: S7</span></span>
-<span><span class="co">#&gt; Warning: package 'S7' was built under R version 4.4.3</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Attaching package: 'ggexon'</span></span>
 <span><span class="co">#&gt; The following objects are masked from 'package:ggplot2':</span></span>
