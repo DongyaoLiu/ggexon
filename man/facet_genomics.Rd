@@ -18,6 +18,9 @@ facet_genomics(
   strip.position = "top",
   axes = "margins",
   axis.labels = "all",
+  link_panel_height = NULL,
+  link_axis = "inherit",
+  link_strip = "inherit",
   xlim = NULL,
   xlim_chr = NULL
 )
@@ -48,6 +51,19 @@ layouts.}
 \item{axes}{Which axes to draw.}
 
 \item{axis.labels}{Which axis labels to draw.}
+
+\item{link_panel_height}{Optional relative height for link panels. Supply a
+single positive number to use a \code{null} unit relative to ordinary panel
+rows, or a single grid unit. When \code{NULL}, link panels keep the default
+ggplot2 facet row height.}
+
+\item{link_axis}{Link-panel axis handling. \code{"inherit"} keeps the axes drawn
+by the facet. \code{"none"} removes both x and y axes from link panels. \code{"x"}
+keeps only x axes, and \code{"y"} keeps only y axes.}
+
+\item{link_strip}{Link-panel strip handling. \code{"inherit"} keeps link-panel
+strips. \code{"blank"} removes link-panel strip grobs and collapses horizontal
+strip rows when they contain only link panels.}
 
 \item{xlim}{Optional panel-specific x limits for Syn-aware annotation panels.
 Supply a named list of numeric length-2 vectors keyed by individual /

@@ -92,3 +92,97 @@ test_that("geom_synteny_link renders manual interval ribbons", {
       link_layout_row$q_panel
   ))
 })
+
+test_that("facet_genomics can compact link panels in the rendered gtable", {
+  track_levels <- c("human", "link_human_macaque", "macaque")
+
+  annotation_df <- data.frame(
+    track = factor(c("human", "macaque"), levels = track_levels),
+    x = c(10, 1000),
+    y = c(1, 1)
+  )
+
+  link_df <- data.frame(
+    track = factor("link_human_macaque", levels = track_levels),
+    tspecies = "human",
+    tchr = "chr7",
+    tstart = 12,
+    tend = 20,
+    strand = "+",
+    qspecies = "macaque",
+    qchr = "chr3",
+    qstart = 1010,
+    qend = 1030,
+    group = 1,
+    hox_group = "HOXA1"
+  )
+
+  built <- ggexon_build(
+    ggexon() +
+      ggplot2::geom_blank(
+        data = annotation_df,
+        mapping = ggplot2::aes(x = x, y = y)
+      ) +
+      geom_synteny_link(
+        data = link_df,
+        mapping = ggplot2::aes(
+          tspecies = tspecies,
+          tchr = tchr,
+          tstart = tstart,
+          tend = tend,
+          strand = strand,
+          qspecies = qspecies,
+          qchr = qchr,
+          qstart = qstart,
+          qend = qend,
+          group = group,
+          fill = hox_group
+        ),
+        inherit.aes = FALSE
+      ) +
+      facet_genomics(
+        ggplot2::vars(track),
+        scales = "free_x",
+        ncol = 1,
+        link_panel_height = 0.25,
+        link_axis = "none",
+        link_strip = "blank"
+      )
+  )
+  table <- ggplot2::ggplot_gtable(built)
+
+  link_panel_idx <- which(table$layout$name == "panel-1-2")
+  annotation_panel_idx <- which(table$layout$name == "panel-1-1")
+  link_axis_idx <- which(table$layout$name == "axis-b-1-2")
+  link_strip_idx <- which(table$layout$name == "strip-t-1-2")
+
+  expect_identical(length(link_panel_idx), 1L)
+  expect_identical(length(annotation_panel_idx), 1L)
+  expect_identical(grid::unitType(table$heights[table$layout$t[[link_panel_idx]]]), "null")
+  expect_equal(as.numeric(table$heights[table$layout$t[[link_panel_idx]]]), 0.25)
+  expect_equal(as.numeric(table$heights[table$layout$t[[annotation_panel_idx]]]), 1)
+
+  expect_s3_class(table$grobs[[link_axis_idx]], "zeroGrob")
+  expect_s3_class(table$grobs[[link_strip_idx]], "zeroGrob")
+  expect_equal(
+    grid::convertHeight(table$heights[table$layout$t[[link_axis_idx]]], "pt", valueOnly = TRUE),
+    0
+  )
+  expect_equal(
+    grid::convertHeight(table$heights[table$layout$t[[link_strip_idx]]], "pt", valueOnly = TRUE),
+    0
+  )
+
+  expect_error(
+    facet_genomics(ggplot2::vars(track), link_panel_height = 0),
+    "link_panel_height"
+  )
+  expect_error(
+    facet_genomics(ggplot2::vars(track), link_axis = "bad"),
+    "link_axis"
+  )
+  expect_error(
+    facet_genomics(ggplot2::vars(track), link_strip = "bad"),
+    "link_strip"
+  )
+})

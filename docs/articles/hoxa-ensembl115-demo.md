@@ -191,6 +191,9 @@ ggexon() +
     vars(track),
     scales = "free_x",
     ncol = 1,
+    link_panel_height = 0.32,
+    link_axis = "none",
+    link_strip = "blank",
     labeller = ggplot2::as_labeller(track_labels)
   ) +
   scale_fill_manual(values = hox_palette, drop = FALSE, name = "HOXA group") +
@@ -232,7 +235,9 @@ are link panels, where each ribbon connects the same HOXA group in the
 two adjacent species. The figure keeps the original chromosome or
 scaffold label in the strip text, but uses oriented plotting coordinates
 so readers can compare gene order rather than mentally reversing
-minus-strand clusters.
+minus-strand clusters. Link panels are compact and do not draw their own
+axes or strip labels, keeping the visual emphasis on the species
+annotations while preserving the orthology/synteny ribbons.
 
 The demo uses Ensembl gene-level intervals, so broad gene spans can
 overlap when transcript models include long introns or UTRs. For

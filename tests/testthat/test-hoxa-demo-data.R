@@ -72,7 +72,14 @@ test_that("HOXA demo data render with geom_synteny_link fill mappings", {
         gene_layout = "nested",
         show_label = FALSE
       ) +
-      facet_genomics(ggplot2::vars(track), scales = "free_x", ncol = 1)
+      facet_genomics(
+        ggplot2::vars(track),
+        scales = "free_x",
+        ncol = 1,
+        link_panel_height = 0.32,
+        link_axis = "none",
+        link_strip = "blank"
+      )
   )
 
   expect_equal(nrow(built@layout$layout), length(track_levels))

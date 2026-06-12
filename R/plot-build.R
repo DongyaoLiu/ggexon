@@ -280,6 +280,7 @@ S7::method(ggexon_gtable, class_ggexon_built) <- function(data) {
   plot_table <- layout$render(geom_grobs, data, theme, labels)
   plot_table <- inject_genomic_piecewise_axis(plot_table, build)
   plot_table <- inject_strip_scale_x_axis(plot_table, build)
+  plot_table <- apply_link_panel_layout(plot_table, build)
   # Legends
   legend_box <- plot@guides$assemble(theme)
   #plot_table <- table_add_legends(plot_table, legend_box, theme)
@@ -295,6 +296,178 @@ S7::method(ggexon_gtable, class_ggexon_built) <- function(data) {
   attr(plot_table, "alt-label") <- labels$alt
 
   plot_table
+}
+
+apply_link_panel_layout <- function(table, build) {
+  params <- build@plot@facet$params %||% list()
+  link_panel_height <- params$link_panel_height %||% NULL
+  link_axis <- params$link_axis %||% "inherit"
+  link_strip <- params$link_strip %||% "inherit"
+
+  if (is.null(link_panel_height) &&
+      identical(link_axis, "inherit") &&
+      identical(link_strip, "inherit")) {
+    return(table)
+  }
+
+  layout_df <- as.data.frame(build@layout$layout)
+  if (!all(c("ROW", "COL") %in% names(layout_df))) {
+    return(table)
+  }
+
+  layout_df$.ggexon_panel_type <- link_panel_type(layout_df)
+  link_rows <- layout_df$.ggexon_panel_type == "link"
+  link_rows[is.na(link_rows)] <- FALSE
+  if (!any(link_rows)) {
+    return(table)
+  }
+
+  height_unit <- link_panel_height_unit(link_panel_height)
+  for (i in which(link_rows)) {
+    panel_row <- ggexon_gtable_index(layout_df$ROW[[i]])
+    panel_col <- ggexon_gtable_index(layout_df$COL[[i]])
+    only_link_row <- layout_row_contains_only_link_panels(layout_df, panel_row)
+
+    panel_idx <- panel_gtable_index(table, panel_col, panel_row, n_panels = nrow(layout_df))
+    if (!is.null(height_unit) && length(panel_idx) == 1L && only_link_row) {
+      panel_height_rows <- seq.int(table$layout$t[[panel_idx]], table$layout$b[[panel_idx]])
+      for (height_row in panel_height_rows) {
+        table$heights[[height_row]] <- height_unit
+      }
+    }
+
+    if (!identical(link_axis, "inherit")) {
+      table <- blank_link_panel_axes(
+        table,
+        panel_col = panel_col,
+        panel_row = panel_row,
+        link_axis = link_axis,
+        collapse_horizontal = only_link_row
+      )
+    }
+
+    if (identical(link_strip, "blank")) {
+      table <- blank_link_panel_strips(
+        table,
+        panel_col = panel_col,
+        panel_row = panel_row,
+        collapse_horizontal = only_link_row
+      )
+    }
+  }
+
+  table
+}
+
+link_panel_height_unit <- function(link_panel_height) {
+  if (is.null(link_panel_height)) {
+    return(NULL)
+  }
+  if (inherits(link_panel_height, "unit")) {
+    return(link_panel_height)
+  }
+  grid::unit(as.numeric(link_panel_height), "null")
+}
+
+link_panel_type <- function(layout_df) {
+  if ("panel_type" %in% names(layout_df)) {
+    panel_type <- as.character(layout_df$panel_type)
+  } else {
+    panel_type <- rep(NA_character_, nrow(layout_df))
+  }
+
+  missing_type <- is.na(panel_type) | !nzchar(panel_type)
+  if (any(missing_type) && "track" %in% names(layout_df)) {
+    track <- as.character(layout_df$track)
+    panel_type[missing_type & grepl("(^|_)link(_|$)", track)] <- "link"
+    still_missing <- is.na(panel_type) | !nzchar(panel_type)
+    panel_type[still_missing] <- "annotation"
+  }
+
+  panel_type
+}
+
+ggexon_gtable_index <- function(x) {
+  if (is.factor(x)) {
+    return(as.integer(as.character(x)))
+  }
+  as.integer(x)
+}
+
+layout_row_contains_only_link_panels <- function(layout_df, panel_row) {
+  same_row <- ggexon_gtable_index(layout_df$ROW) == panel_row
+  panel_type <- layout_df$.ggexon_panel_type %||% link_panel_type(layout_df)
+  any(same_row) && all(panel_type[same_row] == "link", na.rm = FALSE)
+}
+
+panel_gtable_index <- function(table, panel_col, panel_row, n_panels) {
+  panel_name <- paste0("panel-", panel_col, "-", panel_row)
+  idx <- which(table$layout$name == panel_name)
+  if (length(idx) != 1L && n_panels == 1L) {
+    idx <- which(table$layout$name == "panel")
+  }
+  idx
+}
+
+blank_link_panel_axes <- function(table,
+                                  panel_col,
+                                  panel_row,
+                                  link_axis = "none",
+                                  collapse_horizontal = TRUE) {
+  prefixes <- switch(
+    link_axis,
+    none = c("axis-t", "axis-b", "axis-l", "axis-r"),
+    x = c("axis-l", "axis-r"),
+    y = c("axis-t", "axis-b"),
+    character()
+  )
+  if (length(prefixes) == 0L) {
+    return(table)
+  }
+
+  axis_names <- c(
+    `axis-t` = paste0("axis-t-", panel_col, "-", panel_row),
+    `axis-b` = paste0("axis-b-", panel_col, "-", panel_row),
+    `axis-l` = paste0("axis-l-", panel_row, "-", panel_col),
+    `axis-r` = paste0("axis-r-", panel_row, "-", panel_col)
+  )
+  axis_names <- unname(axis_names[names(axis_names) %in% prefixes])
+  axis_idx <- which(table$layout$name %in% axis_names)
+
+  for (idx in axis_idx) {
+    table$grobs[[idx]] <- zeroGrob()
+    if (collapse_horizontal && grepl("^axis-[tb]", table$layout$name[[idx]])) {
+      for (height_row in seq.int(table$layout$t[[idx]], table$layout$b[[idx]])) {
+        table$heights[[height_row]] <- grid::unit(0, "pt")
+      }
+    }
+  }
+
+  table
+}
+
+blank_link_panel_strips <- function(table,
+                                    panel_col,
+                                    panel_row,
+                                    collapse_horizontal = TRUE) {
+  strip_names <- c(
+    paste0("strip-t-", panel_col, "-", panel_row),
+    paste0("strip-b-", panel_col, "-", panel_row),
+    paste0("strip-l-", panel_row, "-", panel_col),
+    paste0("strip-r-", panel_row, "-", panel_col)
+  )
+  strip_idx <- which(table$layout$name %in% strip_names)
+
+  for (idx in strip_idx) {
+    table$grobs[[idx]] <- zeroGrob()
+    if (collapse_horizontal && grepl("^strip-[tb]", table$layout$name[[idx]])) {
+      for (height_row in seq.int(table$layout$t[[idx]], table$layout$b[[idx]])) {
+        table$heights[[height_row]] <- grid::unit(0, "pt")
+      }
+    }
+  }
+
+  table
 }
 
 inject_strip_scale_x_axis <- function(table, build) {

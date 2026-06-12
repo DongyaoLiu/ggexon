@@ -23,6 +23,9 @@ facet_genomics(
   strip.position = "top",
   axes = "margins",
   axis.labels = "all",
+  link_panel_height = NULL,
+  link_axis = "inherit",
+  link_strip = "inherit",
   xlim = NULL,
   xlim_chr = NULL
 )
@@ -78,6 +81,25 @@ facet_genomics(
 - axis.labels:
 
   Which axis labels to draw.
+
+- link_panel_height:
+
+  Optional relative height for link panels. Supply a single positive
+  number to use a `null` unit relative to ordinary panel rows, or a
+  single grid unit. When `NULL`, link panels keep the default ggplot2
+  facet row height.
+
+- link_axis:
+
+  Link-panel axis handling. `"inherit"` keeps the axes drawn by the
+  facet. `"none"` removes both x and y axes from link panels. `"x"`
+  keeps only x axes, and `"y"` keeps only y axes.
+
+- link_strip:
+
+  Link-panel strip handling. `"inherit"` keeps link-panel strips.
+  `"blank"` removes link-panel strip grobs and collapses horizontal
+  strip rows when they contain only link panels.
 
 - xlim:
 

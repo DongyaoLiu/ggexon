@@ -67,6 +67,9 @@ intermediate link panels used by <code><a href="geom_nuclink.html">geom_nuclink(
 <span>  strip.position <span class="op">=</span> <span class="st">"top"</span>,</span>
 <span>  axes <span class="op">=</span> <span class="st">"margins"</span>,</span>
 <span>  axis.labels <span class="op">=</span> <span class="st">"all"</span>,</span>
+<span>  link_panel_height <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  link_axis <span class="op">=</span> <span class="st">"inherit"</span>,</span>
+<span>  link_strip <span class="op">=</span> <span class="st">"inherit"</span>,</span>
 <span>  xlim <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  xlim_chr <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -124,6 +127,25 @@ layouts.</p></dd>
 
 <dt id="arg-axis-labels">axis.labels<a class="anchor" aria-label="anchor" href="#arg-axis-labels"></a></dt>
 <dd><p>Which axis labels to draw.</p></dd>
+
+
+<dt id="arg-link-panel-height">link_panel_height<a class="anchor" aria-label="anchor" href="#arg-link-panel-height"></a></dt>
+<dd><p>Optional relative height for link panels. Supply a
+single positive number to use a <code>null</code> unit relative to ordinary panel
+rows, or a single grid unit. When <code>NULL</code>, link panels keep the default
+ggplot2 facet row height.</p></dd>
+
+
+<dt id="arg-link-axis">link_axis<a class="anchor" aria-label="anchor" href="#arg-link-axis"></a></dt>
+<dd><p>Link-panel axis handling. <code>"inherit"</code> keeps the axes drawn
+by the facet. <code>"none"</code> removes both x and y axes from link panels. <code>"x"</code>
+keeps only x axes, and <code>"y"</code> keeps only y axes.</p></dd>
+
+
+<dt id="arg-link-strip">link_strip<a class="anchor" aria-label="anchor" href="#arg-link-strip"></a></dt>
+<dd><p>Link-panel strip handling. <code>"inherit"</code> keeps link-panel
+strips. <code>"blank"</code> removes link-panel strip grobs and collapses horizontal
+strip rows when they contain only link panels.</p></dd>
 
 
 <dt id="arg-xlim">xlim<a class="anchor" aria-label="anchor" href="#arg-xlim"></a></dt>

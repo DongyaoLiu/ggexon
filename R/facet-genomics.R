@@ -30,6 +30,16 @@
 #' @param strip.position Position of facet strips.
 #' @param axes Which axes to draw.
 #' @param axis.labels Which axis labels to draw.
+#' @param link_panel_height Optional relative height for link panels. Supply a
+#'   single positive number to use a `null` unit relative to ordinary panel
+#'   rows, or a single grid unit. When `NULL`, link panels keep the default
+#'   ggplot2 facet row height.
+#' @param link_axis Link-panel axis handling. `"inherit"` keeps the axes drawn
+#'   by the facet. `"none"` removes both x and y axes from link panels. `"x"`
+#'   keeps only x axes, and `"y"` keeps only y axes.
+#' @param link_strip Link-panel strip handling. `"inherit"` keeps link-panel
+#'   strips. `"blank"` removes link-panel strip grobs and collapses horizontal
+#'   strip rows when they contain only link panels.
 #' @param xlim Optional panel-specific x limits for Syn-aware annotation panels.
 #'   Supply a named list of numeric length-2 vectors keyed by individual /
 #'   annotation-panel name. If the plot contains only one annotation panel, a
@@ -61,9 +71,14 @@ facet_genomics <- function(facets, nrow = NULL, ncol = NULL, scales = "fixed",
                        shrink = TRUE, labeller = "label_value", as.table = TRUE,
                        switch = deprecated(), drop = TRUE, dir = "h",
                        strip.position = 'top', axes = "margins",
-                       axis.labels = "all", xlim = NULL, xlim_chr = NULL) {
+                       axis.labels = "all", link_panel_height = NULL,
+                       link_axis = "inherit", link_strip = "inherit",
+                       xlim = NULL, xlim_chr = NULL) {
   scales <- arg_match0(scales %||% "fixed", c("fixed", "free_x", "free_y", "free"))
   dir <- arg_match0(dir, c("h", "v", "lt", "tl", "lb", "bl", "rt", "tr", "rb", "br"))
+  link_axis <- arg_match0(link_axis %||% "inherit", c("inherit", "none", "x", "y"))
+  link_strip <- arg_match0(link_strip %||% "inherit", c("inherit", "blank"))
+  link_panel_height <- .validate_link_panel_height(link_panel_height)
 
   if (nchar(dir) == 1) {
     dir <- base::switch(
@@ -126,9 +141,30 @@ facet_genomics <- function(facets, nrow = NULL, ncol = NULL, scales = "fixed",
       draw_axes = draw_axes,
       axis_labels = axis_labels,
       panel_xlim = xlim,
-      panel_xlim_chr = xlim_chr
+      panel_xlim_chr = xlim_chr,
+      link_panel_height = link_panel_height,
+      link_axis = link_axis,
+      link_strip = link_strip
     )
   )
+}
+
+.validate_link_panel_height <- function(link_panel_height) {
+  if (is.null(link_panel_height)) {
+    return(NULL)
+  }
+  if (inherits(link_panel_height, "unit")) {
+    if (length(link_panel_height) != 1L) {
+      cli::cli_abort("{.arg link_panel_height} must be a single grid unit.")
+    }
+    return(link_panel_height)
+  }
+
+  value <- suppressWarnings(as.numeric(link_panel_height))
+  if (length(value) != 1L || is.na(value) || !is.finite(value) || value <= 0) {
+    cli::cli_abort("{.arg link_panel_height} must be one positive number or one grid unit.")
+  }
+  value
 }
 
 #' ggproto backend for `facet_genomics()`
