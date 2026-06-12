@@ -31,9 +31,9 @@ GeomCoverage <- ggproto("GeomCoverage", GeomRect,
                         cli::cli_abort(c("Please offer gff or gtf format"))
                       }
 
-                      #' extract the subset coordinates.
+                      # extract the subset coordinates.
                       if (!is.null(params$subset)) {
-                        #' filter base on the subset region.
+                        # filter base on the subset region.
                         start1 = int(params$subset[1])
                         end1 = int(params$subset[2])
                         data = data %>% filter(xmin >= start1, xmax <= end1)
@@ -41,7 +41,7 @@ GeomCoverage <- ggproto("GeomCoverage", GeomRect,
                         print("didn't constrain the visualization region")
                       }
 
-                      #' select transcript data.
+                      # select transcript data.
                       ymin = min(data$ymin) + params$exon_height
                       print(ymin)
                       data = data %>% select(track, PANEL, fill) %>% base::unique()
@@ -55,7 +55,7 @@ GeomCoverage <- ggproto("GeomCoverage", GeomRect,
                       if (length(Chrlist) == 1) {
                         print(paste("The bigwig list is ", params$bigwig, sep = ""))
                         if (length(params$bigwig) == 1) {
-                          #' single track single bigwig
+                          # single track single bigwig
                           print("single track single bigwig")
                           CoverageTable = read_bigwig_region(params$bigwig[[1]], params$ref_chr, start = start1, end = end1, track_name = Chrlist,
                                                              x_threshold = params$x_threshold, y_threshold = params$y_threshold)
@@ -68,7 +68,7 @@ GeomCoverage <- ggproto("GeomCoverage", GeomRect,
                                                                    PANEL = data$PANEL[1],
                                                                    fill = data$fill[1])
                         } else {
-                          #' single track multiple bigwig
+                          # single track multiple bigwig
                           CoverageTableList = list()
 
                           for (i in 1:length(params$bigwig)) {
@@ -96,7 +96,7 @@ GeomCoverage <- ggproto("GeomCoverage", GeomRect,
                         for (i in 1:length(Chrlist)) {
                           track_name_tmp = bigwig_list[[Chrlist[i]]]
                           for (j in 1:length(track_name_tmp)) {
-                            #' multiple track multiple bigwig files.
+                            # multiple track multiple bigwig files.
                             bigwig_file_name = paste(i,j,sep="\t")
                             TmpCoverageTable = read_bigwig_region(track_name_tmp[j], chr, start = start1, end = end1, track_name = Chrlist[i],
                                                                   x_threshold = params$x_threshold, y_threshold = params$y_threshold)
@@ -106,8 +106,8 @@ GeomCoverage <- ggproto("GeomCoverage", GeomRect,
                         }
                         CoverageTable = do.call(rbind, CoverageTableList)
                       }
-                      #' ./R/utilities.R:empty <- function(df) will exam the data at rendering
-                      #' layout$panel_params[[data$PANEL[1]]] this will check the PANEL col
+                      # ./R/utilities.R:empty <- function(df) will exam the data at rendering
+                      # layout$panel_params[[data$PANEL[1]]] this will check the PANEL col
 
 
                       return(CoverageTable)

@@ -4,17 +4,6 @@
 \name{GeomCoverage}
 \alias{GeomCoverage}
 \title{Coverage geom ggproto}
-\usage{
-NULL
-extract the subset coordinates.
-filter base on the subset region.
-select transcript data.
-single track single bigwig
-single track multiple bigwig
-multiple track multiple bigwig files.
-./R/utilities.R:empty <- function(df) will exam the data at rendering
-layout$panel_params[[data$PANEL[1]]] this will check the PANEL col
-}
 \description{
 \code{GeomCoverage} draws coverage rectangles derived from BigWig signal over a
 selected genomic window.

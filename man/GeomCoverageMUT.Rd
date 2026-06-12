@@ -4,16 +4,6 @@
 \name{GeomCoverageMUT}
 \alias{GeomCoverageMUT}
 \title{Coverage-by-mutation geom ggproto}
-\usage{
-NULL
-extract the subset coordinates.
-filter base on the subset region.
-select transcript data.
-single track single bigwig
-single track multiple bigwig
-./R/utilities.R:empty <- function(df) will exam the data at rendering
-layout$panel_params[[data$PANEL[1]]] this will check the PANEL col
-}
 \description{
 \code{GeomCoverageMUT} draws coverage rectangles derived from BigWig signal and
 optionally rescales them by mutation frequencies supplied in a VCF summary
