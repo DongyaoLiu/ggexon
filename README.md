@@ -77,7 +77,7 @@ The public API is organized around a few function families:
 | Load and query data | `load_annotation()`, `load_alignment()`, `import_blast_homology()`, `query_features()`, `query_variants()`, `query_signal()`, `query_domains()` |
 | Derive sequence/protein data | `extract_cds_seq()`, `translate_protein()`, `project_domains_to_genome()` |
 | Subset and curate objects | `subset_species()`, `subset_individual()`, `subset_pairwise_alignment()`, `set_gene_labels()`, `patch_annotation_from_gff()` |
-| Draw genomic layers | `ggexon()`, `geom_exon()`, `geom_genetag()`, `geom_genelabel()`, `geom_nuclink()`, `geom_protein_lollipop()` |
+| Draw genomic layers | `ggexon()`, `geom_exon()`, `geom_genetag()`, `geom_genelabel()`, `geom_nuclink()`, `geom_synteny_link()`, `geom_protein_lollipop()` |
 | Arrange panels and guides | `facet_genomics()`, `facet_genomictree()`, `scale_x_ggexon_genomic()`, `guide_x_ggexon_piecewise()` |
 
 The typical workflow is:

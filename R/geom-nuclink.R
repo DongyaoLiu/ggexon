@@ -81,6 +81,67 @@ geom_nuclink <- function(mapping = NULL, data = NULL,
   )
 }
 
+#' Draw synteny interval links
+#'
+#' `geom_synteny_link()` draws filled interval ribbons between genomic tracks
+#' when the rows represent syntenic blocks, orthologous genes, conserved exons,
+#' or other biologically matched intervals. It is a semantic wrapper around
+#' [geom_nuclink()] for cases where the link is not necessarily a nucleotide
+#' alignment fragment.
+#'
+#' @details
+#' Use this layer when the input table already describes interval-to-interval
+#' relationships. For ordinary data frames the expected columns are the same as
+#' [geom_nuclink()]:
+#'
+#' - `tspecies`, `tchr`, `tstart`, `tend`
+#' - `qspecies`, `qchr`, `qstart`, `qend`
+#' - `strand`
+#'
+#' For `SynSpecies` input, `alignment`, `reference`, `chr`, and `subset` are
+#' forwarded to [geom_nuclink()] so stored pairwise or multiple alignments can
+#' still be resolved lazily.
+#'
+#' Internally, this wrapper creates the same `LayerSyn` and `GeomNucLink` layer
+#' as [geom_nuclink()]. During plot build, [facet_genomics()] creates annotation
+#' panels and middle link panels, then attaches `target_anchor_y`,
+#' `query_anchor_y`, `t_panel`, and `q_panel` metadata. `GeomNucLink` then melts
+#' `tstart`/`tend`/`qstart`/`qend` into four polygon vertices, maps target and
+#' query x coordinates through their source annotation panels, and draws the
+#' filled polygon in the link panel.
+#'
+#' @inheritParams geom_nuclink
+#'
+#' @return A ggplot2 layer using `GeomNucLink`.
+#' @seealso [geom_nuclink()], [facet_genomics()], [geom_genetag()]
+#' @export
+geom_synteny_link <- function(mapping = NULL, data = NULL,
+                              stat = "identity", position = "identity",
+                              ...,
+                              na.rm = FALSE, show.legend = NA,
+                              alignment = NULL,
+                              reference = NULL,
+                              chr = NULL,
+                              subset = NULL,
+                              filter_by_len = NULL,
+                              inherit.aes = TRUE) {
+  geom_nuclink(
+    mapping = mapping,
+    data = data,
+    stat = stat,
+    position = position,
+    ...,
+    na.rm = na.rm,
+    show.legend = show.legend,
+    alignment = alignment,
+    reference = reference,
+    chr = chr,
+    subset = subset,
+    filter_by_len = filter_by_len,
+    inherit.aes = inherit.aes
+  )
+}
+
 GeomNucLink <- ggproto("GeomPanel", Geom,
                              required_aes = c("tspecies", "tchr", "tstart", "tend", "strand",
                                               "qspecies", "qchr", "qstart", "qend"),
@@ -119,14 +180,19 @@ GeomNucLink <- ggproto("GeomPanel", Geom,
 
 
                                # each row are a group will have a same id after melting
-                               data$id = 1:nrow(data)
-	                               id_cols <- intersect(
-	                                 c("id", "strand", "PANEL", "group", "t_panel", "q_panel",
-	                                   "tspecies", "qspecies", "track", "tchr", "qchr"),
-	                                 names(data)
-	                               )
-	                               melt_data = data %>% select(-any_of(c("target_anchor_y", "query_anchor_y"))) %>%
-	                                 melt(id = id_cols, variable.name = "x_variable", value.name = "x") %>%
+                               data$id <- seq_len(nrow(data))
+                               id_cols <- intersect(
+                                 c("id", "strand", "PANEL", "group", "t_panel", "q_panel",
+                                   "tspecies", "qspecies", "track", "tchr", "qchr",
+                                   "fill", "colour", "alpha", "linewidth", "linetype",
+                                   "size", "shape", "stroke"),
+                                 names(data)
+                               )
+                               x_cols <- intersect(c("tstart", "tend", "qstart", "qend"), names(data))
+                               melt_data <- data %>%
+                                 select(any_of(c(id_cols, x_cols))) %>%
+                                 melt(id = id_cols, measure.vars = x_cols,
+                                      variable.name = "x_variable", value.name = "x") %>%
                                  mutate(y_variable = if_else(stringr::str_detect(x_variable,"^t"), "target_anchor_y", "query_anchor_y")) %>%
                                  left_join(link_y_out, join_by(PANEL == PANEL, group == group, y_variable == y_variable)) %>%
                                  mutate(source_panel = if_else(stringr::str_detect(x_variable, "^t"), t_panel, q_panel)) %>%

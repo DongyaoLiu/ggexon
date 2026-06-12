@@ -74,6 +74,7 @@ reference:
   - geom_mutation_label
   - geom_aa_variant
   - geom_nuclink
+  - geom_synteny_link
   - geom_genelink
   - geom_protein_lollipop
 
