@@ -69,6 +69,7 @@ test_that("HOXA demo data render with geom_synteny_link fill mappings", {
       geom_genetag(
         data = genes,
         mapping = ggplot2::aes(fill = hox_group),
+        gene_layout = "nested",
         show_label = FALSE
       ) +
       facet_genomics(ggplot2::vars(track), scales = "free_x", ncol = 1)
@@ -79,4 +80,7 @@ test_that("HOXA demo data render with geom_synteny_link fill mappings", {
   expect_true(nrow(built@data[[1L]]) > 0L)
   expect_true(all(built@data[[1L]]$x_variable %in% c("tstart", "tend", "qstart", "qend")))
   expect_true("fill" %in% names(built@data[[1L]]))
+  gene_data <- built@data[[2L]]
+  chicken_lanes <- gene_data$gene_lane[as.character(gene_data$track) == "chicken"]
+  expect_true(max(chicken_lanes, na.rm = TRUE) > 1L)
 })

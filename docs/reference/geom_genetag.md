@@ -19,6 +19,8 @@ geom_genetag(
   height = NULL,
   arrow_width = NULL,
   arrow_fraction = 0.18,
+  gene_layout = "single",
+  gene_lane_gap = 0.15,
   species = NULL,
   chr = NULL,
   subset = NULL,
@@ -81,6 +83,18 @@ geom_genetag(
 
   Fraction of each gene span used for the terminal triangle when
   `arrow_width` is `NULL`.
+
+- gene_layout:
+
+  Gene-body overlap layout. `"single"` keeps all gene tags on one
+  baseline. `"stack"` assigns overlapping gene spans to separate
+  vertical lanes. `"nested"` also assigns lanes, ordering containing
+  spans before contained spans so embedded genes are visible inside
+  broad gene-level annotations.
+
+- gene_lane_gap:
+
+  Gap between stacked gene-body lanes, as a fraction of `exon_height`.
 
 - species:
 

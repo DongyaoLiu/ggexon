@@ -46,6 +46,53 @@ test_that("geom_genetag renders with data-default aesthetics", {
   expect_true(inherits(ggplot2::ggplotGrob(p), "gtable"))
 })
 
+test_that("geom_genetag can lane overlapping and nested gene bodies", {
+  data <- data.frame(
+    xmin = c(0, 30, 110, 0, 20),
+    xmax = c(100, 60, 140, 100, 50),
+    y = 0.4,
+    strand = "+",
+    label = c("parent", "child", "after", "track_b_parent", "track_b_child"),
+    gene = c("parent", "child", "after", "track_b_parent", "track_b_child"),
+    track = c("track_a", "track_a", "track_a", "track_b", "track_b"),
+    stringsAsFactors = FALSE
+  )
+
+  single <- ggplot2::ggplot_build(
+    ggplot2::ggplot() +
+      geom_genetag(data = data, exon_height = 0.5, gene_layout = "single", show_label = FALSE)
+  )$data[[1L]]
+  nested <- ggplot2::ggplot_build(
+    ggplot2::ggplot() +
+      geom_genetag(data = data, exon_height = 0.5, gene_layout = "nested", gene_lane_gap = 0.2, show_label = FALSE)
+  )$data[[1L]]
+  stack <- ggplot2::ggplot_build(
+    ggplot2::ggplot() +
+      geom_genetag(data = data, exon_height = 0.5, gene_layout = "stack", gene_lane_gap = 0.2, show_label = FALSE)
+  )$data[[1L]]
+
+  expect_equal(unique(single$gene_lane), 1L)
+  expect_equal(nested$gene_lane[nested$gene == "parent"], 1L)
+  expect_equal(nested$gene_lane[nested$gene == "child"], 2L)
+  expect_equal(nested$gene_lane[nested$gene == "after"], 1L)
+  expect_equal(nested$gene_lane[nested$gene == "track_b_parent"], 1L)
+  expect_equal(nested$gene_lane[nested$gene == "track_b_child"], 2L)
+  expect_gt(nested$y[nested$gene == "child"], nested$y[nested$gene == "parent"])
+  expect_equal(unique(nested$gene_lane_count[nested$track == "track_a"]), 2L)
+  expect_true(inherits(ggplot2::ggplotGrob(
+    ggplot2::ggplot() + geom_genetag(data = data, gene_layout = "nested")
+  ), "gtable"))
+  expect_error(
+    ggplot2::ggplot_build(ggplot2::ggplot() + geom_genetag(data = data, gene_lane_gap = -0.1)),
+    "gene_lane_gap"
+  )
+  expect_error(
+    ggplot2::ggplot_build(ggplot2::ggplot() + geom_genetag(data = data, gene_layout = "bad")),
+    "gene_layout"
+  )
+  expect_equal(stack$gene_lane[stack$gene == "child"], 2L)
+})
+
 test_that("geom_genetag auto labels fall back outside when labels do not fit", {
   data <- data.frame(
     xmin = c(0, 10),

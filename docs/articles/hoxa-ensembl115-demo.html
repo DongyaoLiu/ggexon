@@ -73,12 +73,16 @@
 </h2>
 <p>This demo uses a small curated Ensembl release 115 dataset to show
 HOXA/Hoxa gene synteny across human, rhesus macaque, mouse, chicken, and
-green anole. The dataset is bundled as plot-ready TSV files under
-<code>inst/extdata/hoxa_ensembl115</code>.</p>
-<p>The figure uses <code><a href="../reference/geom_genetag.html">geom_genetag()</a></code> for HOXA gene intervals
-and <code><a href="../reference/geom_synteny_link.html">geom_synteny_link()</a></code> for orthology/synteny ribbons
-between adjacent species. The plotted x coordinates are oriented so each
-cluster reads in a comparable HOXA13-to-HOXA1 order. Original Ensembl
+green anole. It is designed as a vertebrate example for
+comparative-genomics users who want to see conserved gene order,
+rearranged genomic coordinates, and cross-species orthology in one
+figure.</p>
+<p>The dataset is bundled as plot-ready TSV files under
+<code>inst/extdata/hoxa_ensembl115</code>. The figure uses
+<code><a href="../reference/geom_genetag.html">geom_genetag()</a></code> for HOXA gene intervals and
+<code><a href="../reference/geom_synteny_link.html">geom_synteny_link()</a></code> for orthology/synteny ribbons between
+adjacent species. The plotted x coordinates are oriented so each cluster
+reads in a comparable HOXA13-to-HOXA1 order. Original Ensembl
 coordinates are retained in the TSV files.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dongyaoliu.github.io/ggexon/">ggexon</a></span><span class="op">)</span></span>
@@ -235,6 +239,8 @@ coordinates are retained in the TSV files.</p>
 <span>    mapping <span class="op">=</span> <span class="fu">aes</span><span class="op">(</span>fill <span class="op">=</span> <span class="va">hox_group</span><span class="op">)</span>,</span>
 <span>    exon_height <span class="op">=</span> <span class="fl">0.58</span>,</span>
 <span>    arrow_fraction <span class="op">=</span> <span class="fl">0.16</span>,</span>
+<span>    gene_layout <span class="op">=</span> <span class="st">"nested"</span>,</span>
+<span>    gene_lane_gap <span class="op">=</span> <span class="fl">0.12</span>,</span>
 <span>    show_label <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>    label_position <span class="op">=</span> <span class="st">"outside"</span>,</span>
 <span>    label_direction <span class="op">=</span> <span class="st">"top:bottom"</span>,</span>
@@ -272,16 +278,83 @@ coordinates are retained in the TSV files.</p>
 <span>    legend.key.width <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">6</span>, <span class="st">"mm"</span><span class="op">)</span>,</span>
 <span>    plot.margin <span class="op">=</span> <span class="fu">margin</span><span class="op">(</span><span class="fl">6</span>, <span class="fl">8</span>, <span class="fl">6</span>, <span class="fl">6</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="hoxa-ensembl115-demo_files/figure-html/hoxa-demo-1.png" class="r-plt" alt="A ggexon HOXA synteny plot with five horizontal species tracks for human, rhesus macaque, mouse, chicken, and green anole, connected by colored orthology ribbons between adjacent species." width="2090"></p>
+<div class="figure">
+<img src="hoxa-ensembl115-demo_files/figure-html/hoxa-demo-1.png" class="r-plt" alt="A ggexon HOXA synteny plot with five horizontal species tracks for human, rhesus macaque, mouse, chicken, and green anole, connected by colored orthology ribbons between adjacent species." width="2090"><p class="caption">
+HOXA/Hoxa gene synteny across five vertebrates. Gene intervals are drawn
+on species tracks and matching HOXA groups are connected by
+orthology/synteny ribbons.
+</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="what-the-plot-shows">What the plot shows<a class="anchor" aria-label="anchor" href="#what-the-plot-shows"></a>
+</h2>
+<p>Each species has one annotation panel. The narrow panels between
+species are link panels, where each ribbon connects the same HOXA group
+in the two adjacent species. The figure keeps the original chromosome or
+scaffold label in the strip text, but uses oriented plotting coordinates
+so readers can compare gene order rather than mentally reversing
+minus-strand clusters.</p>
+<p>The demo uses Ensembl gene-level intervals, so broad gene spans can
+overlap when transcript models include long introns or UTRs. For
+example, chicken <code>HOXA10</code> is nested within the broad
+<code>HOXA9</code> gene span in release 115.
+<code>gene_layout = "nested"</code> assigns overlapping gene bodies to
+sublanes so the annotation structure remains visible instead of hiding
+one gene behind another.</p>
+<p>The input files are deliberately simple:</p>
+<ul>
+<li>
+<code>hoxa_genes.tsv</code> has one row per plotted HOXA/Hoxa gene
+interval.</li>
+<li>
+<code>hoxa_links.tsv</code> has one row per adjacent-species matched
+interval.</li>
+<li>
+<code>hoxa_species.tsv</code> records display names, assemblies,
+source URLs, source seqnames, and source notes.</li>
+</ul>
+</div>
+<div class="section level2">
+<h2 id="how-the-link-layer-runs">How the link layer runs<a class="anchor" aria-label="anchor" href="#how-the-link-layer-runs"></a>
+</h2>
+<p><code><a href="../reference/geom_synteny_link.html">geom_synteny_link()</a></code> is a semantic wrapper around
+<code><a href="../reference/geom_nuclink.html">geom_nuclink()</a></code>. The wrapper is useful when the input
+represents gene-level synteny or orthology intervals rather than
+nucleotide alignment fragments.</p>
+<p>For an ordinary data frame, the link table supplies target and query
+intervals: <code>tspecies</code>, <code>tchr</code>,
+<code>tstart</code>, <code>tend</code>, <code>qspecies</code>,
+<code>qchr</code>, <code>qstart</code>, <code>qend</code>, and
+<code>strand</code>. Additional columns such as <code>hox_group</code>
+can be mapped to aesthetics like <code>fill</code>.</p>
+<p>During plot build, <code><a href="../reference/facet_genomics.html">facet_genomics()</a></code> creates the species
+annotation panels and the middle link panels. It then attaches the
+source-panel metadata needed by the link layer, including
+<code>t_panel</code>, <code>q_panel</code>,
+<code>target_anchor_y</code>, and <code>query_anchor_y</code>.
+<code>GeomNucLink</code> converts each interval pair into four polygon
+vertices by melting <code>tstart</code>, <code>tend</code>,
+<code>qstart</code>, and <code>qend</code>; target x coordinates are
+transformed through the target species panel, and query x coordinates
+are transformed through the query species panel. The result is one
+filled polygon per matched interval.</p>
+<p>This means users can start from a small biological relationship
+table, keep the gene annotation and synteny links separate, and let
+ggexon handle panel layout, coordinate scaling, and ribbon
+construction.</p>
 </div>
 <div class="section level2">
 <h2 id="provenance">Provenance<a class="anchor" aria-label="anchor" href="#provenance"></a>
 </h2>
 <p>The data-preparation script is stored in
-<code>data-raw/hoxa_ensembl115</code> in the source repository. Green
-anole uses the full Ensembl GTF because its HOXA genes are annotated on
-scaffold <code>GL343275.1</code> and are absent from the chromosome-only
-GTF in release 115.</p>
+<code>data-raw/hoxa_ensembl115</code> in the source repository. It
+downloads the Ensembl release 115 GTF files, extracts gene features
+whose normalized gene names match <code>HOXA[0-9]+</code>, orients
+plotting coordinates, and writes the three TSV files used above.</p>
+<p>Green anole uses the full Ensembl GTF because its HOXA genes are
+annotated on scaffold <code>GL343275.1</code> and are absent from the
+chromosome-only GTF in release 115.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

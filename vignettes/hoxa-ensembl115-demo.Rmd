@@ -20,16 +20,19 @@ knitr::opts_chunk$set(
 # Overview
 
 This demo uses a small curated Ensembl release 115 dataset to show HOXA/Hoxa
-gene synteny across human, rhesus macaque, mouse, chicken, and green anole. The
-dataset is bundled as plot-ready TSV files under `inst/extdata/hoxa_ensembl115`.
+gene synteny across human, rhesus macaque, mouse, chicken, and green anole. It
+is designed as a vertebrate example for comparative-genomics users who want to
+see conserved gene order, rearranged genomic coordinates, and cross-species
+orthology in one figure.
 
-The figure uses `geom_genetag()` for HOXA gene intervals and
-`geom_synteny_link()` for orthology/synteny ribbons between adjacent species.
-The plotted x coordinates are oriented so each cluster reads in a comparable
-HOXA13-to-HOXA1 order. Original Ensembl coordinates are retained in the TSV
-files.
+The dataset is bundled as plot-ready TSV files under
+`inst/extdata/hoxa_ensembl115`. The figure uses `geom_genetag()` for HOXA gene
+intervals and `geom_synteny_link()` for orthology/synteny ribbons between
+adjacent species. The plotted x coordinates are oriented so each cluster reads
+in a comparable HOXA13-to-HOXA1 order. Original Ensembl coordinates are retained
+in the TSV files.
 
-```{r hoxa-demo, fig.alt = "A ggexon HOXA synteny plot with five horizontal species tracks for human, rhesus macaque, mouse, chicken, and green anole, connected by colored orthology ribbons between adjacent species."}
+```{r hoxa-demo, fig.alt = "A ggexon HOXA synteny plot with five horizontal species tracks for human, rhesus macaque, mouse, chicken, and green anole, connected by colored orthology ribbons between adjacent species.", fig.cap = "HOXA/Hoxa gene synteny across five vertebrates. Gene intervals are drawn on species tracks and matching HOXA groups are connected by orthology/synteny ribbons."}
 library(ggexon)
 
 demo_dir <- system.file("extdata", "hoxa_ensembl115", package = "ggexon")
@@ -88,6 +91,8 @@ ggexon() +
     mapping = aes(fill = hox_group),
     exon_height = 0.58,
     arrow_fraction = 0.16,
+    gene_layout = "nested",
+    gene_lane_gap = 0.12,
     show_label = TRUE,
     label_position = "outside",
     label_direction = "top:bottom",
@@ -127,9 +132,57 @@ ggexon() +
   )
 ```
 
+# What the plot shows
+
+Each species has one annotation panel. The narrow panels between species are
+link panels, where each ribbon connects the same HOXA group in the two adjacent
+species. The figure keeps the original chromosome or scaffold label in the strip
+text, but uses oriented plotting coordinates so readers can compare gene order
+rather than mentally reversing minus-strand clusters.
+
+The demo uses Ensembl gene-level intervals, so broad gene spans can overlap
+when transcript models include long introns or UTRs. For example, chicken
+`HOXA10` is nested within the broad `HOXA9` gene span in release 115.
+`gene_layout = "nested"` assigns overlapping gene bodies to sublanes so the
+annotation structure remains visible instead of hiding one gene behind another.
+
+The input files are deliberately simple:
+
+- `hoxa_genes.tsv` has one row per plotted HOXA/Hoxa gene interval.
+- `hoxa_links.tsv` has one row per adjacent-species matched interval.
+- `hoxa_species.tsv` records display names, assemblies, source URLs, source
+  seqnames, and source notes.
+
+# How the link layer runs
+
+`geom_synteny_link()` is a semantic wrapper around `geom_nuclink()`. The wrapper
+is useful when the input represents gene-level synteny or orthology intervals
+rather than nucleotide alignment fragments.
+
+For an ordinary data frame, the link table supplies target and query intervals:
+`tspecies`, `tchr`, `tstart`, `tend`, `qspecies`, `qchr`, `qstart`, `qend`, and
+`strand`. Additional columns such as `hox_group` can be mapped to aesthetics
+like `fill`.
+
+During plot build, `facet_genomics()` creates the species annotation panels and
+the middle link panels. It then attaches the source-panel metadata needed by the
+link layer, including `t_panel`, `q_panel`, `target_anchor_y`, and
+`query_anchor_y`. `GeomNucLink` converts each interval pair into four polygon
+vertices by melting `tstart`, `tend`, `qstart`, and `qend`; target x coordinates
+are transformed through the target species panel, and query x coordinates are
+transformed through the query species panel. The result is one filled polygon
+per matched interval.
+
+This means users can start from a small biological relationship table, keep the
+gene annotation and synteny links separate, and let ggexon handle panel layout,
+coordinate scaling, and ribbon construction.
+
 # Provenance
 
 The data-preparation script is stored in `data-raw/hoxa_ensembl115` in the
-source repository. Green anole uses the full Ensembl GTF because its HOXA genes
-are annotated on scaffold `GL343275.1` and are absent from the chromosome-only
-GTF in release 115.
+source repository. It downloads the Ensembl release 115 GTF files, extracts gene
+features whose normalized gene names match `HOXA[0-9]+`, orients plotting
+coordinates, and writes the three TSV files used above.
+
+Green anole uses the full Ensembl GTF because its HOXA genes are annotated on
+scaffold `GL343275.1` and are absent from the chromosome-only GTF in release 115.

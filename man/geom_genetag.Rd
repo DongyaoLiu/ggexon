@@ -14,6 +14,8 @@ geom_genetag(
   height = NULL,
   arrow_width = NULL,
   arrow_fraction = 0.18,
+  gene_layout = "single",
+  gene_lane_gap = 0.15,
   species = NULL,
   chr = NULL,
   subset = NULL,
@@ -63,6 +65,15 @@ When \code{NULL}, width is calculated from \code{arrow_fraction}.}
 
 \item{arrow_fraction}{Fraction of each gene span used for the terminal
 triangle when \code{arrow_width} is \code{NULL}.}
+
+\item{gene_layout}{Gene-body overlap layout. \code{"single"} keeps all gene tags
+on one baseline. \code{"stack"} assigns overlapping gene spans to separate
+vertical lanes. \code{"nested"} also assigns lanes, ordering containing spans
+before contained spans so embedded genes are visible inside broad
+gene-level annotations.}
+
+\item{gene_lane_gap}{Gap between stacked gene-body lanes, as a fraction of
+\code{exon_height}.}
 
 \item{species}{Optional species / individual identifier when \code{data} is a
 \code{SynSpecies}.}

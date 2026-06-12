@@ -20,6 +20,29 @@ If you already think in `ggplot2`, the goal is that genomic coordinates,
 annotation tracks, alignments, and tree-aligned panels can all be
 composed with familiar plotting ideas.
 
+## Flagship HOXA Example
+
+![HOXA synteny across human, rhesus macaque, mouse, chicken, and green
+anole](reference/figures/hoxa-ensembl115-demo.png)
+
+HOXA synteny across human, rhesus macaque, mouse, chicken, and green
+anole
+
+The bundled HOXA demo uses Ensembl release 115 annotations to show how
+ggexon can present a conserved gene cluster across distant vertebrates.
+Gene intervals are drawn with
+[`geom_genetag()`](https://dongyaoliu.github.io/ggexon/reference/geom_genetag.md),
+while orthology/synteny ribbons are drawn with
+[`geom_synteny_link()`](https://dongyaoliu.github.io/ggexon/reference/geom_synteny_link.md).
+The example is intentionally plot-ready, so users can inspect the data
+tables, see the complete code, and adapt the same grammar to their own
+comparative-genomics datasets.
+
+Open
+[`vignette("hoxa-ensembl115-demo", package = "ggexon")`](https://dongyaoliu.github.io/ggexon/articles/hoxa-ensembl115-demo.md)
+for the full example, data provenance, and a short explanation of how
+link panels are built internally.
+
 ## Installation
 
 `ggexon` is currently a development package.

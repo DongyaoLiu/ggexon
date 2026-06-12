@@ -55,7 +55,6 @@ ind <- SynIndividual(
   id = "XZ1516"
 ) |>
   load_annotation()
-#> Error in h(simpleError(msg, call)): error in evaluating the argument 'x' in selecting a method for function 'load_annotation': `annotation_file` must not contain missing or empty paths.
 gr <- annotation_data(ind)
 #> Error in annotation_data(ind): could not find function "annotation_data"
 coords <- paste0(
@@ -69,7 +68,6 @@ coords <- paste0(
 #> Error in h(simpleError(msg, call)): error in evaluating the argument 'x' in selecting a method for function 'seqnames': object 'gr' not found
 
 sp <- SynSpecies(name = "worms") |> add_individual(ind)
-#> Error in h(simpleError(msg, call)): error in evaluating the argument 'individual' in selecting a method for function 'add_individual': object 'ind' not found
 sp_window <- subset_species(sp, coords = coords)
-#> Error in h(simpleError(msg, call)): error in evaluating the argument 'x' in selecting a method for function 'subset_species': object 'sp' not found
+#> Error: object 'coords' not found
 ```

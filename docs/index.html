@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Grammar of genomic annotations, synteny, and associated data • ggexon</title>
 <script src="lightswitch.js"></script><script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="deps/Source_Sans_3-0.4.10/font.css" rel="stylesheet">
+<link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/Source_Sans_3-0.4.10/font.css" rel="stylesheet">
 <link href="deps/Source_Code_Pro-0.4.10/font.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
@@ -68,6 +68,15 @@
 <li>Functions load, query, modify, and draw those classes with a ggplot2-style grammar.</li>
 </ol>
 <p>If you already think in <code>ggplot2</code>, the goal is that genomic coordinates, annotation tracks, alignments, and tree-aligned panels can all be composed with familiar plotting ideas.</p>
+<div class="section level2">
+<h2 id="flagship-hoxa-example">Flagship HOXA Example<a class="anchor" aria-label="anchor" href="#flagship-hoxa-example"></a>
+</h2>
+<div class="float">
+<img src="reference/figures/hoxa-ensembl115-demo.png" alt="HOXA synteny across human, rhesus macaque, mouse, chicken, and green anole"><div class="figcaption">HOXA synteny across human, rhesus macaque, mouse, chicken, and green anole</div>
+</div>
+<p>The bundled HOXA demo uses Ensembl release 115 annotations to show how ggexon can present a conserved gene cluster across distant vertebrates. Gene intervals are drawn with <code><a href="reference/geom_genetag.html">geom_genetag()</a></code>, while orthology/synteny ribbons are drawn with <code><a href="reference/geom_synteny_link.html">geom_synteny_link()</a></code>. The example is intentionally plot-ready, so users can inspect the data tables, see the complete code, and adapt the same grammar to their own comparative-genomics datasets.</p>
+<p>Open <code><a href="articles/hoxa-ensembl115-demo.html">vignette("hoxa-ensembl115-demo", package = "ggexon")</a></code> for the full example, data provenance, and a short explanation of how link panels are built internally.</p>
+</div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>

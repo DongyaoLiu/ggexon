@@ -198,6 +198,13 @@ ggplot_add.ggtree <- function(object, plot, object_name) {
 #'   When `NULL`, width is calculated from `arrow_fraction`.
 #' @param arrow_fraction Fraction of each gene span used for the terminal
 #'   triangle when `arrow_width` is `NULL`.
+#' @param gene_layout Gene-body overlap layout. `"single"` keeps all gene tags
+#'   on one baseline. `"stack"` assigns overlapping gene spans to separate
+#'   vertical lanes. `"nested"` also assigns lanes, ordering containing spans
+#'   before contained spans so embedded genes are visible inside broad
+#'   gene-level annotations.
+#' @param gene_lane_gap Gap between stacked gene-body lanes, as a fraction of
+#'   `exon_height`.
 #' @param species Optional species / individual identifier when `data` is a
 #'   `SynSpecies`.
 #' @param chr Optional chromosome / seqname restriction when `data` is
@@ -256,10 +263,12 @@ geom_genetag <- function(mapping = NULL,
                          position = "identity",
                          ...,
                          exon_height = NULL,
-                         height = NULL,
-                         arrow_width = NULL,
-                         arrow_fraction = 0.18,
-                         species = NULL,
+	                         height = NULL,
+	                         arrow_width = NULL,
+	                         arrow_fraction = 0.18,
+                         gene_layout = "single",
+                         gene_lane_gap = 0.15,
+	                         species = NULL,
 	                         chr = NULL,
 	                         subset = NULL,
 	                         feature_type = "gene",
@@ -296,10 +305,12 @@ geom_genetag <- function(mapping = NULL,
   params <- Filter(Negate(is.null), list(
     ...,
     exon_height = exon_height,
-    height = height,
-    arrow_width = arrow_width,
-    arrow_fraction = arrow_fraction,
-    species = species,
+	    height = height,
+	    arrow_width = arrow_width,
+	    arrow_fraction = arrow_fraction,
+    gene_layout = gene_layout,
+    gene_lane_gap = gene_lane_gap,
+	    species = species,
     chr = chr,
     subset = subset,
     feature_type = feature_type,
@@ -390,9 +401,10 @@ GeomGeneTag <- ggproto(
     visual_class = NA_character_,
     slot_type = NA_character_
 	  ),
-	  extra_params = c(
-	    "na.rm", "exon_height", "height", "arrow_width", "arrow_fraction",
-	    "species", "chr", "subset", "feature_type", "show_label",
+		  extra_params = c(
+		    "na.rm", "exon_height", "height", "arrow_width", "arrow_fraction",
+    "gene_layout", "gene_lane_gap",
+		    "species", "chr", "subset", "feature_type", "show_label",
     "label_position", "label_direction", "label_offset_fraction",
     "label_link", "label_link_type", "collapse_tandem", "check_overlap",
     "label_max_lanes", "label_panel_width", "label_genes", "label_filter",
@@ -402,10 +414,12 @@ GeomGeneTag <- ggproto(
   default_params = function() {
     list(
       exon_height = NULL,
-      height = NULL,
-      arrow_width = NULL,
-      arrow_fraction = 0.18,
-      species = NULL,
+	      height = NULL,
+	      arrow_width = NULL,
+	      arrow_fraction = 0.18,
+      gene_layout = "single",
+      gene_lane_gap = 0.15,
+	      species = NULL,
       chr = NULL,
 	      subset = NULL,
 	      feature_type = "gene",
@@ -430,19 +444,26 @@ GeomGeneTag <- ggproto(
 	    )
 	  },
 	  setup_data = function(data, params) {
-	    exon_height <- params$exon_height %||% 0.8
-    if (!"genomic_xmin" %in% names(data)) data$genomic_xmin <- data$xmin
+		    exon_height <- params$exon_height %||% 0.8
+    gene_layout <- .genetag_gene_layout(params$gene_layout %||% "single")
+    gene_lane_gap <- .genetag_gene_lane_gap(params$gene_lane_gap %||% 0.15)
+	    if (!"genomic_xmin" %in% names(data)) data$genomic_xmin <- data$xmin
     if (!"genomic_xmax" %in% names(data)) data$genomic_xmax <- data$xmax
     if (!"genomic_start" %in% names(data)) data$genomic_start <- data$genomic_xmin
     if (!"genomic_end" %in% names(data)) data$genomic_end <- data$genomic_xmax
     if (!"gene_key" %in% names(data)) data$gene_key <- .genetag_gene_key(data)
     if (!"label" %in% names(data)) data$label <- .genetag_label(data)
-    label_position <- .genetag_label_position(
-      params$label_position %||% "auto",
-      show_label = params$show_label %||% TRUE
+	    label_position <- .genetag_label_position(
+	      params$label_position %||% "auto",
+	      show_label = params$show_label %||% TRUE
+	    )
+    data <- .genetag_apply_gene_lanes(
+      data = data,
+      gene_layout = gene_layout,
+      exon_height = exon_height,
+      gene_lane_gap = gene_lane_gap
     )
-    data$y <- exon_height / 2
-    data$ymin <- data$y - exon_height / 2
+	    data$ymin <- data$y - exon_height / 2
     data$ymax <- data$y + exon_height / 2
     if (!identical(label_position, "none") && !identical(label_position, "inside")) {
       label_space <- .genetag_label_reserved_space(
@@ -479,9 +500,11 @@ GeomGeneTag <- ggproto(
                         flipped_aes = FALSE,
                         exon_height = NULL,
 	                        height = NULL,
-                         arrow_width = NULL,
-	                        arrow_fraction = 0.18,
-                         show_label = TRUE,
+	                         arrow_width = NULL,
+		                        arrow_fraction = 0.18,
+                         gene_layout = "single",
+                         gene_lane_gap = 0.15,
+	                         show_label = TRUE,
                          label_position = "auto",
                          label_direction = "top",
                          label_offset_fraction = 0.3,
@@ -1429,6 +1452,84 @@ syn_to_genetag_df <- function(x,
     label_position <- "auto"
   }
   match.arg(label_position, c("auto", "inside", "outside", "none"))
+}
+
+.genetag_gene_layout <- function(gene_layout = "single") {
+  gene_layout <- gene_layout %||% "single"
+  if (length(gene_layout) != 1L || is.na(gene_layout) || !nzchar(gene_layout)) {
+    gene_layout <- "single"
+  }
+  gene_layout <- as.character(gene_layout)
+  allowed <- c("single", "stack", "nested")
+  if (!gene_layout %in% allowed) {
+    stop(
+      "`gene_layout` must be one of: ",
+      paste(allowed, collapse = ", "),
+      ".",
+      call. = FALSE
+    )
+  }
+  gene_layout
+}
+
+.genetag_gene_lane_gap <- function(gene_lane_gap = 0.15) {
+  gap <- suppressWarnings(as.numeric(gene_lane_gap %||% 0.15))
+  if (length(gap) != 1L || is.na(gap) || !is.finite(gap) || gap < 0) {
+    stop("`gene_lane_gap` must be one non-negative numeric value.", call. = FALSE)
+  }
+  gap
+}
+
+.genetag_apply_gene_lanes <- function(data,
+                                      gene_layout = "single",
+                                      exon_height = 0.8,
+                                      gene_lane_gap = 0.15) {
+  n <- nrow(data)
+  data$gene_lane <- rep(1L, n)
+  data$gene_lane_count <- rep(1L, n)
+  data$gene_layout <- rep(gene_layout, n)
+  if (n == 0L) {
+    data$y <- numeric()
+    return(data)
+  }
+
+  if (identical(gene_layout, "single")) {
+    data$y <- exon_height / 2
+    return(data)
+  }
+
+  xmin <- suppressWarnings(as.numeric(pmin(data$xmin, data$xmax, na.rm = TRUE)))
+  xmax <- suppressWarnings(as.numeric(pmax(data$xmin, data$xmax, na.rm = TRUE)))
+  valid <- is.finite(xmin) & is.finite(xmax)
+  track_key <- .genetag_track_key(data)
+  lane_step <- exon_height * (1 + gene_lane_gap)
+
+  for (key in unique(track_key)) {
+    idx <- which(track_key == key & valid)
+    if (length(idx) == 0L) next
+    width <- xmax[idx] - xmin[idx]
+    ord <- if (identical(gene_layout, "nested")) {
+      idx[order(xmin[idx], -width, xmax[idx], idx)]
+    } else {
+      idx[order(xmin[idx], xmax[idx], idx)]
+    }
+    lane_end <- numeric()
+    for (i in ord) {
+      available <- which(xmin[[i]] > lane_end)
+      if (length(available) > 0L) {
+        lane <- available[[1L]]
+      } else {
+        lane <- length(lane_end) + 1L
+        lane_end[[lane]] <- -Inf
+      }
+      data$gene_lane[[i]] <- lane
+      lane_end[[lane]] <- xmax[[i]]
+    }
+    data$gene_lane_count[idx] <- length(lane_end)
+  }
+
+  data$y <- exon_height / 2 + (data$gene_lane - 1L) * lane_step
+  data
 }
 
 .genetag_label_max_lanes <- function(label_max_lanes = 3L) {
