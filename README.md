@@ -106,6 +106,8 @@ The package site contains the longer cookbook-style documentation:
   model, every geom, facet systems, and the genomic guide.
 - `vignette("ggexon-workflow", package = "ggexon")` for a step-by-step workflow
   using individuals, annotations, alignments, and direct plotting.
+- `vignette("hoxa-ensembl115-demo", package = "ggexon")` for a curated
+  Ensembl 115 HOXA/Hoxa synteny demo using `geom_synteny_link()`.
 - `?ggexon` and the reference index for function-level documentation.
 
 If you use `ggexon` in work, please also cite the preprint:

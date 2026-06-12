@@ -25,6 +25,8 @@ navbar:
       menu:
       - text: Complete workflow
         href: articles/ggexon-workflow.html
+      - text: HOXA synteny demo
+        href: articles/hoxa-ensembl115-demo.html
       - text: Classes, geoms, facets, and guides
         href: articles/ggexon-classes-and-verbs.html
 
@@ -33,6 +35,7 @@ articles:
   navbar: ~
   contents:
   - ggexon-workflow
+  - hoxa-ensembl115-demo
   - ggexon-classes-and-verbs
 
 reference:

@@ -1,2 +1,4 @@
 *
 !.gitignore
+!hoxa_ensembl115/
+!hoxa_ensembl115/**
