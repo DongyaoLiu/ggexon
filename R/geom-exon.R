@@ -5,7 +5,7 @@ GeomExon <- ggproto("GeomExon", Geom,
                       required_aes = c("ymin", "xmin", "xmax", "transcripts","strand", "track", "type"),
                       non_missing_aes = c("linewidth", "shape"),
                       extra_params = c("exon_height", "transcript_backbone_ratio", "na.rm", "x_translation", "subset", "annotation_type",
-                                       "breakdata", "species", "chr"),
+                                       "breakdata", "species", "chr", "force_flat"),
                       default_aes = aes(linewidth = 0, linejoin = "mitre", fill="black",
                         colour = NULL,
                         size = 15,
@@ -46,6 +46,10 @@ GeomExon <- ggproto("GeomExon", Geom,
 
                       if (x_translation != 0){
                         data = data %>% mutate(xmin = xmin + x_translation, xmax =xmax + x_translation)
+                      }
+
+                      if (isTRUE(params$force_flat)) {
+                        data$ymin <- 1
                       }
 
                       rec_data = seq_add_y(data = data,
@@ -171,6 +175,7 @@ geom_exon <- function(mapping = NULL, data = NULL,
                       annotation_type ="exon",
                       species = NULL, chr = NULL,
                       breakdata = NULL,
+                      force_flat = FALSE,
                       inherit.aes = TRUE) {
     params <- Filter(Negate(is.null), c(list(
       ...,
@@ -182,7 +187,8 @@ geom_exon <- function(mapping = NULL, data = NULL,
       annotation_type = annotation_type,
       species = species,
       chr = chr,
-      breakdata = breakdata
+      breakdata = breakdata,
+      force_flat = force_flat
     )))
     layer(
       data = data,

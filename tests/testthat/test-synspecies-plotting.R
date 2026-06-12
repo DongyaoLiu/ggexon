@@ -600,6 +600,123 @@ test_that("stored SynLayout panel x windows seed annotation and link windows", {
   expect_true(all(link_layer$qstart < 20465040 & link_layer$qend > 20456948))
 })
 
+test_that("facet_genomics panel x windows seed annotation and link windows", {
+  xz_genome <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
+  xz_annotation <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+  n2_genome <- system.file(
+    "extdata",
+    "c_elegans.PRJNA13758.WS285.genomic.fa",
+    package = "ggexon"
+  )
+  n2_annotation <- system.file(
+    "extdata",
+    "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
+    package = "ggexon"
+  )
+  paf_path <- system.file("extdata", "V_alginment.paf", package = "ggexon")
+
+  sp <- SynSpecies(name = "Caenorhabditis")
+  sp <- add_individual(
+    sp,
+    test_syn_individual(
+      genome_file = xz_genome,
+      annotation_file = xz_annotation,
+      id = "XZ1516"
+    )
+  )
+  sp <- add_individual(
+    sp,
+    test_syn_individual(
+      genome_file = n2_genome,
+      annotation_file = n2_annotation,
+      id = "N2",
+      annotation_format = "gtf"
+    )
+  )
+  sp <- add_pairwise_alignment(
+    sp,
+    SynPairAlignment(
+      name = "XZ1516_vs_N2",
+      query_individual = "XZ1516",
+      target_individual = "N2",
+      file = paf_path
+    )
+  )
+
+  plot_obj <- ggexon(sp) +
+    geom_gene(species = "XZ1516") +
+    geom_gene(species = "N2") +
+    geom_nuclink(alignment = "XZ1516_vs_N2") +
+    facet_genomics(
+      ggplot2::vars(track),
+      scales = "free",
+      xlim = list(
+        XZ1516 = c(21574445, 21584356),
+        N2 = c(20456948, 20465040)
+      ),
+      xlim_chr = c(XZ1516 = "RagTag_V", N2 = "V")
+    )
+
+  built <- ggexon_build(plot_obj)
+
+  xz_layer <- built@data[[1L]]
+  n2_layer <- built@data[[2L]]
+  link_layer <- built@data[[3L]]
+  windows <- effective_panel_windows(plot_obj)
+
+  expect_true(all(xz_layer$xmin >= 21574445 & xz_layer$xmax <= 21584356))
+  expect_true(all(n2_layer$xmin >= 20456948 & n2_layer$xmax <= 20465040))
+  expect_true(all(link_layer$tstart < 21584356 & link_layer$tend > 21574445))
+  expect_true(all(link_layer$qstart < 20465040 & link_layer$qend > 20456948))
+
+  xz_window <- windows[windows$individual == "XZ1516", , drop = FALSE]
+  n2_window <- windows[windows$individual == "N2", , drop = FALSE]
+  expect_identical(xz_window$start[[1L]], 21574445)
+  expect_identical(xz_window$end[[1L]], 21584356)
+  expect_identical(n2_window$start[[1L]], 20456948)
+  expect_identical(n2_window$end[[1L]], 20465040)
+})
+
+test_that("facet_genomics panel x window works without link panels", {
+  annotation_path <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+
+  sp <- SynSpecies(name = "worms") |>
+    add_individual(
+      SynIndividual(
+        annotation_file = annotation_path,
+        genome_file = genome_waiver(),
+        id = "XZ1516"
+      ) |>
+        load_annotation()
+    )
+
+  plot_obj <- ggexon(sp) +
+    geom_gene(species = "XZ1516") +
+    facet_genomics(
+      ggplot2::vars(track),
+      scales = "free",
+      xlim = c(21574445, 21584356),
+      xlim_chr = "RagTag_V"
+    )
+
+  built <- ggexon_build(plot_obj)
+  gene_layer <- built@data[[1L]]
+  windows <- effective_panel_windows(plot_obj)
+
+  expect_true(all(gene_layer$xmin >= 21574445 & gene_layer$xmax <= 21584356))
+  expect_identical(windows$start[[1L]], 21574445)
+  expect_identical(windows$end[[1L]], 21584356)
+  expect_identical(as.integer(built@layout$layout$SCALE_X[[1L]]), 1L)
+})
+
 test_that("set_panel_xlim can update ggexon plots from subset windows", {
   annotation_path <- system.file(
     "extdata",

@@ -80,7 +80,7 @@ syn_identity_mapping <- function(cols) {
   rlang::inject(ggplot2::aes(!!!exprs))
 }
 
-collect_syn_plot_context <- function(layers, plot_data) {
+collect_syn_plot_context <- function(layers, plot_data, facet = NULL) {
   syn_data <- find_syn_plot_data(layers, plot_data)
   if (is.null(syn_data)) {
     return(NULL)
@@ -99,6 +99,14 @@ collect_syn_plot_context <- function(layers, plot_data) {
   )
 
   windows <- collect_layout_panel_windows(syn_data)
+  windows <- utils::modifyList(
+    windows,
+    collect_facet_panel_windows(
+      syn_data,
+      facet = facet,
+      annotation_species_order = annotation_species_order
+    )
+  )
   windows <- utils::modifyList(
     windows,
     collect_explicit_annotation_windows(annotation_requests, syn_data)
@@ -173,6 +181,48 @@ collect_layout_panel_windows <- function(syn_data) {
   }
 
   out
+}
+
+collect_facet_panel_windows <- function(syn_data,
+                                        facet = NULL,
+                                        annotation_species_order = NULL) {
+  if (!methods::is(syn_data, "SynSpecies") || is.null(facet)) {
+    return(list())
+  }
+
+  params <- facet$params %||% list()
+  if (!.has_facet_panel_xlim(params)) {
+    return(list())
+  }
+
+  layout <- species_layout(syn_data)
+  if (is.null(layout)) {
+    individual <- .facet_panel_xlim_individuals(
+      params,
+      available = annotation_species_order %||% names(individuals(syn_data))
+    )
+    layout <- SynLayout(
+      panels = data.frame(
+        PANEL = seq_along(individual),
+        ROW = seq_along(individual),
+        COL = 1L,
+        track = individual,
+        panel_type = "annotation",
+        species = individual,
+        stringsAsFactors = FALSE
+      ),
+      free = list(x = length(individual) > 1L, y = FALSE)
+    )
+  }
+
+  layout <- .apply_facet_panel_xlim_to_layout(
+    layout,
+    plot_data = syn_data,
+    params = params
+  )
+
+  species_layout(syn_data) <- layout
+  collect_layout_panel_windows(syn_data)
 }
 
 find_syn_plot_data <- function(layers, plot_data) {

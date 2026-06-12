@@ -17,7 +17,9 @@ facet_genomics(
   dir = "h",
   strip.position = "top",
   axes = "margins",
-  axis.labels = "all"
+  axis.labels = "all",
+  xlim = NULL,
+  xlim_chr = NULL
 )
 }
 \arguments{
@@ -46,6 +48,18 @@ layouts.}
 \item{axes}{Which axes to draw.}
 
 \item{axis.labels}{Which axis labels to draw.}
+
+\item{xlim}{Optional panel-specific x limits for Syn-aware annotation panels.
+Supply a named list of numeric length-2 vectors keyed by individual /
+annotation-panel name. If the plot contains only one annotation panel, a
+single numeric length-2 vector is also accepted.}
+
+\item{xlim_chr}{Optional chromosome / seqname for \code{xlim}. Supply one
+character value for a single panel, or a named character vector/list keyed
+by individual when \code{xlim} contains multiple panels. When omitted, ggexon
+tries to infer the seqname from attached alignments or single-seqname
+annotations. Link layers can only be filtered by panel limits when the
+seqname can be resolved.}
 }
 \value{
 A \code{FacetGenomics} ggproto object.

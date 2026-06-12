@@ -111,6 +111,7 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
     "label_direction", "label_offset_fraction",
     "link_type", "collapse_tandem", "show_link",
     "panel_width_mm", "panel_width_inch",
+    "force_flat",
     fontface = 1, lineheight = 1.2
   ),
   default_params = function() {
@@ -569,6 +570,7 @@ geom_genelabel <- function(mapping = NULL, data = NULL,
                            species = NULL, chr = NULL, subset = NULL,
                            panel_width_mm = NULL,
                            panel_width_inch = NULL,
+                           force_flat = FALSE,
                            inherit.aes = TRUE) {
   params <- Filter(Negate(is.null), c(list(
     ...,
@@ -584,7 +586,8 @@ geom_genelabel <- function(mapping = NULL, data = NULL,
     chr = chr,
     subset = subset,
     panel_width_mm = panel_width_mm,
-    panel_width_inch = panel_width_inch
+    panel_width_inch = panel_width_inch,
+    force_flat = force_flat
   )))
   layer(
     data = data,

@@ -98,7 +98,7 @@ build_ggexon <- S7::method(ggexon_build, class_ggexon) <- function(plot, ...) {
     layers <- ggexon_apply_output_size_to_layers(layers, plot@output_size)
     data <- rep(list(NULL), length(layers))
 
-    syn_plot_context <- collect_syn_plot_context(layers, plot@data)
+    syn_plot_context <- collect_syn_plot_context(layers, plot@data, facet = plot@facet)
     if (!is.null(syn_plot_context)) {
       for (i in seq_along(layers)) {
         layers[[i]]$syn_plot_context <- syn_plot_context

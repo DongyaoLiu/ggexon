@@ -30,6 +30,16 @@
 #' @param strip.position Position of facet strips.
 #' @param axes Which axes to draw.
 #' @param axis.labels Which axis labels to draw.
+#' @param xlim Optional panel-specific x limits for Syn-aware annotation panels.
+#'   Supply a named list of numeric length-2 vectors keyed by individual /
+#'   annotation-panel name. If the plot contains only one annotation panel, a
+#'   single numeric length-2 vector is also accepted.
+#' @param xlim_chr Optional chromosome / seqname for `xlim`. Supply one
+#'   character value for a single panel, or a named character vector/list keyed
+#'   by individual when `xlim` contains multiple panels. When omitted, ggexon
+#'   tries to infer the seqname from attached alignments or single-seqname
+#'   annotations. Link layers can only be filtered by panel limits when the
+#'   seqname can be resolved.
 #'
 #' @return A `FacetGenomics` ggproto object.
 #'
@@ -51,7 +61,7 @@ facet_genomics <- function(facets, nrow = NULL, ncol = NULL, scales = "fixed",
                        shrink = TRUE, labeller = "label_value", as.table = TRUE,
                        switch = deprecated(), drop = TRUE, dir = "h",
                        strip.position = 'top', axes = "margins",
-                       axis.labels = "all") {
+                       axis.labels = "all", xlim = NULL, xlim_chr = NULL) {
   scales <- arg_match0(scales %||% "fixed", c("fixed", "free_x", "free_y", "free"))
   dir <- arg_match0(dir, c("h", "v", "lt", "tl", "lb", "bl", "rt", "tr", "rb", "br"))
 
@@ -114,7 +124,9 @@ facet_genomics <- function(facets, nrow = NULL, ncol = NULL, scales = "fixed",
       labeller = labeller,
       dir = dir,
       draw_axes = draw_axes,
-      axis_labels = axis_labels
+      axis_labels = axis_labels,
+      panel_xlim = xlim,
+      panel_xlim_chr = xlim_chr
     )
   )
 }
@@ -184,11 +196,16 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
       if (!is.null(params$layout_override)) {
         # Highest priority: use an explicit layout override attached during
         # build, e.g. from species_layout(sp) or a layer-provided override.
+        finalized <- .finalize_synspecies_layout_scales(
+          params$layout_override,
+          free = params$free
+        )
         return(
           syn_layout_panels(
-            .finalize_synspecies_layout_scales(
-              params$layout_override,
-              free = params$free
+            .apply_facet_panel_xlim_to_layout(
+              finalized,
+              plot_data = params$plot_data,
+              params = params
             )
           )
         )
@@ -201,11 +218,16 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
           annotation_species = .annotation_species_from_layers(data),
           link_pairs = .link_pairs_from_layers(data)
         )
+        finalized <- .finalize_synspecies_layout_scales(
+          stored_layout,
+          free = params$free
+        )
         return(
           syn_layout_panels(
-            .finalize_synspecies_layout_scales(
-              stored_layout,
-              free = params$free
+            .apply_facet_panel_xlim_to_layout(
+              finalized,
+              plot_data = params$plot_data,
+              params = params
             )
           )
         )
@@ -221,10 +243,31 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
         link_pairs = .link_pairs_from_layers(data)
       )
       if (!is.null(plot_layout)) {
-        return(syn_layout_panels(plot_layout))
+        return(
+          syn_layout_panels(
+            .apply_facet_panel_xlim_to_layout(
+              plot_layout,
+              plot_data = params$plot_data,
+              params = params
+            )
+          )
+        )
       }
 
-      return(.compute_standard_genomics_layout(data, params, self))
+      standard_layout <- .compute_standard_genomics_layout(data, params, self)
+      if (.has_facet_panel_xlim(params)) {
+        return(
+          syn_layout_panels(
+            .apply_facet_panel_xlim_to_layout(
+              as_syn_layout(standard_layout, free = params$free),
+              plot_data = params$plot_data,
+              params = params
+            )
+          )
+        )
+      }
+
+      return(standard_layout)
     }
 
     if (length(vars) == 0) {
@@ -365,6 +408,103 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
     data
   }
 )
+
+.has_facet_panel_xlim <- function(params) {
+  !is.null(params$panel_xlim) || !is.null(params$panel_xlim_chr)
+}
+
+.facet_panel_xlim_individuals <- function(params, available = NULL) {
+  xlim <- params$panel_xlim
+  xlim_chr <- params$panel_xlim_chr
+
+  if (is.null(xlim) && !is.null(xlim_chr)) {
+    cli::cli_abort("{.arg xlim} must be supplied when {.arg xlim_chr} is supplied to {.fn facet_genomics}.")
+  }
+
+  named_from_xlim <- if (is.list(xlim)) {
+    names(xlim)
+  } else {
+    character()
+  }
+  named_from_chr <- if (is.list(xlim_chr) || (is.character(xlim_chr) && !is.null(names(xlim_chr)))) {
+    names(xlim_chr)
+  } else {
+    character()
+  }
+  individual <- unique(c(named_from_xlim, named_from_chr))
+  individual <- individual[!is.na(individual) & nzchar(individual)]
+
+  if (length(individual) > 0L) {
+    return(individual)
+  }
+
+  if (is.numeric(xlim) && length(xlim) == 2L) {
+    available <- unique(as.character(available %||% character()))
+    available <- available[!is.na(available) & nzchar(available)]
+    if (length(available) == 1L) {
+      return(available)
+    }
+  }
+
+  cli::cli_abort(
+    c(
+      "{.arg xlim} in {.fn facet_genomics} must name the annotation panel limits by individual.",
+      "i" = "Use a named list such as {.code list(N2 = c(20450000, 20470000), XZ1516 = c(21574000, 21585000))}."
+    )
+  )
+}
+
+.layout_annotation_individuals <- function(layout) {
+  panels <- syn_layout_panels(layout)
+  if (!is.data.frame(panels) || nrow(panels) == 0L) {
+    return(character())
+  }
+
+  annotation_rows <- if ("panel_type" %in% names(panels)) {
+    is.na(panels$panel_type) | panels$panel_type == "annotation"
+  } else {
+    rep(TRUE, nrow(panels))
+  }
+  species_col <- if ("species" %in% names(panels)) {
+    as.character(panels$species)
+  } else {
+    as.character(panels$track)
+  }
+
+  unique(species_col[annotation_rows & !is.na(species_col) & nzchar(species_col)])
+}
+
+.apply_facet_panel_xlim_to_layout <- function(layout, plot_data, params) {
+  if (!.has_facet_panel_xlim(params)) {
+    return(layout)
+  }
+  if (!methods::is(plot_data, "SynSpecies")) {
+    cli::cli_abort("{.arg xlim} in {.fn facet_genomics} currently requires a {.cls SynSpecies} plot.")
+  }
+
+  layout <- as_syn_layout(layout, free = params$free)
+  individual <- .facet_panel_xlim_individuals(
+    params,
+    available = .layout_annotation_individuals(layout)
+  )
+
+  syn_data <- plot_data
+  species_layout(syn_data) <- layout
+  syn_data <- .set_panel_xlim_on_synspecies_or_layout(
+    syn_data,
+    individual = individual,
+    xlim = params$panel_xlim,
+    xlim_chr = params$panel_xlim_chr,
+    seed_other_panels = FALSE
+  )
+
+  updated_layout <- species_layout(syn_data)
+  .finalize_synspecies_layout_scales(
+    updated_layout,
+    free = updated_layout@free,
+    layout_type = updated_layout@layout_type
+  )
+}
 
 .compute_standard_genomics_layout <- function(data, params, facet) {
   vars <- params$facets
