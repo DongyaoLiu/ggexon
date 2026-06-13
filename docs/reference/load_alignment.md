@@ -20,6 +20,36 @@ load_alignment(
   cigar = NULL,
   alignment = NULL
 )
+
+# S4 method for class 'SynPairAlignment'
+load_alignment(
+  x,
+  odgi = NULL,
+  python = NULL,
+  more = NULL,
+  cigar = NULL,
+  alignment = NULL
+)
+
+# S4 method for class 'SynMultiAlignment'
+load_alignment(
+  x,
+  odgi = NULL,
+  python = NULL,
+  more = NULL,
+  cigar = NULL,
+  alignment = NULL
+)
+
+# S4 method for class 'SynSpecies'
+load_alignment(
+  x,
+  odgi = NULL,
+  python = NULL,
+  more = NULL,
+  cigar = NULL,
+  alignment = NULL
+)
 ```
 
 ## Arguments

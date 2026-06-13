@@ -40,7 +40,7 @@ returned object behaves as a self-contained view of the selected region."></head
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Subset a feature annotation layer by genomic window</h1>
-      <small class="dont-index">Source: <a href="https://github.com/DongyaoLiu/ggexon/blob/HEAD/R/SynIndividual-class.R" class="external-link"><code>R/SynIndividual-class.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/DongyaoLiu/ggexon/blob/HEAD/R/SynIndividual-class.R" class="external-link"><code>R/SynIndividual-class.R</code></a>, <a href="https://github.com/DongyaoLiu/ggexon/blob/HEAD/R/SynSpecies-class.R" class="external-link"><code>R/SynSpecies-class.R</code></a></small>
       <div class="d-none name"><code>subset_feature_annotation.Rd</code></div>
     </div>
 
@@ -54,6 +54,45 @@ returned object behaves as a self-contained view of the selected region.</p>
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">subset_feature_annotation</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  annotation <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  individual <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  chr <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  start <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  end <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  coords <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  gene <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  transcript <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S4 method for class 'SynFeatureAnnotation'</span></span>
+<span><span class="fu">subset_feature_annotation</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  annotation <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  individual <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  chr <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  start <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  end <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  coords <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  gene <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  transcript <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S4 method for class 'SynIndividual'</span></span>
+<span><span class="fu">subset_feature_annotation</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  annotation <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  individual <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  chr <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  start <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  end <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  coords <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  gene <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  transcript <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S4 method for class 'SynSpecies'</span></span>
+<span><span class="fu">subset_feature_annotation</span><span class="op">(</span></span>
 <span>  <span class="va">x</span>,</span>
 <span>  annotation <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  individual <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -96,6 +135,14 @@ the annotation.</p></dd>
 <dt id="arg-coords">coords<a class="anchor" aria-label="anchor" href="#arg-coords"></a></dt>
 <dd><p>Optional coordinate string in the form
 <code>"V_RagTag:21559983-21620009"</code>. Use either <code>coords</code> or <code>chr</code>/<code>start</code>/<code>end</code>.</p></dd>
+
+
+<dt id="arg-gene">gene<a class="anchor" aria-label="anchor" href="#arg-gene"></a></dt>
+<dd><p>Optional gene name(s) or identifier(s) to keep.</p></dd>
+
+
+<dt id="arg-transcript">transcript<a class="anchor" aria-label="anchor" href="#arg-transcript"></a></dt>
+<dd><p>Optional transcript identifier(s) to keep.</p></dd>
 
 </dl></div>
     <div class="section level2">

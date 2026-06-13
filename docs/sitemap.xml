@@ -20,7 +20,6 @@
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/HomologyAnnotation-class.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/HomologyAnnotation.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/Layout2.html</loc></url>
-<url><loc>https://dongyaoliu.github.io/ggexon/reference/Splines_link_generate.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/SynAnnotation-class-hierarchy.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/SynAnnotation-class.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/SynAnnotationPatch-class.html</loc></url>
@@ -52,7 +51,6 @@
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/SynVCFAnnotation-class.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/SynVCFAnnotation.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/add_annotation.html</loc></url>
-<url><loc>https://dongyaoliu.github.io/ggexon/reference/add_genetag.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/add_homology_annotation.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/add_individual.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/add_individuals_from_folder.html</loc></url>
@@ -60,8 +58,6 @@
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/add_multiple_alignment.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/add_pairwise_alignment.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/add_protein_mutation_annotation.html</loc></url>
-<url><loc>https://dongyaoliu.github.io/ggexon/reference/add_transcripts_direction.html</loc></url>
-<url><loc>https://dongyaoliu.github.io/ggexon/reference/add_transcripts_seq_line.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/add_tree.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/aes_eval.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/annotate_cross_panel.html</loc></url>
@@ -71,7 +67,6 @@
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/build_feature_index.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/check_device.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/check_syn_files.html</loc></url>
-<url><loc>https://dongyaoliu.github.io/ggexon/reference/class_ggexon.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/class_ggexon_built.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/clear_panel_xlim.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/clear_patches.html</loc></url>
@@ -115,8 +110,10 @@
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/get_homology_annotation.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/gg_dep.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/ggexon-package.html</loc></url>
+<url><loc>https://dongyaoliu.github.io/ggexon/reference/ggexon-show.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/ggexon.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/ggexon_build.html</loc></url>
+<url><loc>https://dongyaoliu.github.io/ggexon/reference/ggexon_gtable.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/ggexon_output_size.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/ggplot2_class_reexports.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/ggplotGrob.html</loc></url>
@@ -128,6 +125,7 @@
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/import_blast_homology.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/index.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/individual_names.html</loc></url>
+<url><loc>https://dongyaoliu.github.io/ggexon/reference/is_ggexon.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/layer_grob.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/link_panels.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/list_patches.html</loc></url>
@@ -163,8 +161,6 @@
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/rename_domain_annotation_ids.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/resolve_syn_individual.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/scale_x_ggexon_genomic.html</loc></url>
-<url><loc>https://dongyaoliu.github.io/ggexon/reference/seq_add_y.html</loc></url>
-<url><loc>https://dongyaoliu.github.io/ggexon/reference/seq_track.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/set_active_annotation.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/set_active_feature_annotation.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/set_gene_labels.html</loc></url>
@@ -185,9 +181,7 @@
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/subsetting_operations.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/syn_gr_to_exon_df.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_track.html</loc></url>
-<url><loc>https://dongyaoliu.github.io/ggexon/reference/transcripts_track.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/translate_protein.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/waiver.html</loc></url>
-<url><loc>https://dongyaoliu.github.io/ggexon/reference/warn_dots_empty.html</loc></url>
 </urlset>
 

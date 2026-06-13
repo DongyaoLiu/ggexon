@@ -56,7 +56,13 @@ multiple alignment to read.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">multiple_alignment_data</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">multiple_alignment_data</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S4 method for class 'SynMultiAlignment'</span></span>
+<span><span class="fu">multiple_alignment_data</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, odgi <span class="op">=</span> <span class="cn">NULL</span>, python <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S4 method for class 'SynSpecies'</span></span>
+<span><span class="fu">multiple_alignment_data</span><span class="op">(</span><span class="va">x</span>, alignment <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span>, odgi <span class="op">=</span> <span class="cn">NULL</span>, python <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -72,12 +78,6 @@ more multiple alignments.</p></dd>
 <dd><p>Reserved for future extensions.</p></dd>
 
 
-<dt id="arg-alignment">alignment<a class="anchor" aria-label="anchor" href="#arg-alignment"></a></dt>
-<dd><p>Optional multiple-alignment name when <code>x</code> is a
-<code><a href="SynSpecies.html">SynSpecies</a></code>. If omitted and exactly one multiple alignment is stored,
-that alignment is used.</p></dd>
-
-
 <dt id="arg-odgi">odgi<a class="anchor" aria-label="anchor" href="#arg-odgi"></a></dt>
 <dd><p>Optional path to the <code>odgi</code> executable. Used when an ODGI
 alignment is backed by a raw <code>.og</code> graph.</p></dd>
@@ -86,6 +86,12 @@ alignment is backed by a raw <code>.og</code> graph.</p></dd>
 <dt id="arg-python">python<a class="anchor" aria-label="anchor" href="#arg-python"></a></dt>
 <dd><p>Optional path to the Python interpreter. Used when an ODGI
 alignment is backed by a raw <code>.og</code> graph.</p></dd>
+
+
+<dt id="arg-alignment">alignment<a class="anchor" aria-label="anchor" href="#arg-alignment"></a></dt>
+<dd><p>Optional multiple-alignment name when <code>x</code> is a
+<code><a href="SynSpecies.html">SynSpecies</a></code>. If omitted and exactly one multiple alignment is stored,
+that alignment is used.</p></dd>
 
 </dl></div>
     <div class="section level2">

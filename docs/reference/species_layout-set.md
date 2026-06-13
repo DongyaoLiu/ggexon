@@ -6,6 +6,9 @@ Store a ggexon panel layout on a `SynSpecies` object
 
 ``` r
 species_layout(x) <- value
+
+# S4 method for class 'SynSpecies'
+species_layout(x) <- value
 ```
 
 ## Arguments

@@ -323,9 +323,6 @@ stored layout information to Syn containers.
 - [`add_multiple_alignment()`](https://dongyaoliu.github.io/ggexon/reference/add_multiple_alignment.md)
   : Add a multiple alignment to a SynSpecies object
 
-- [`add_genetag()`](https://dongyaoliu.github.io/ggexon/reference/add_genetag.md)
-  : prepare the gene_tag ploygons
-
 - [`add_tree()`](https://dongyaoliu.github.io/ggexon/reference/add_tree.md)
   :
 
@@ -527,37 +524,12 @@ Convert Syn and tabular data into shapes consumed by ggexon layers.
 - [`protein_mutation_data()`](https://dongyaoliu.github.io/ggexon/reference/protein_mutation_data.md)
   : Access protein-mutation data
 
-- [`transcripts_track()`](https://dongyaoliu.github.io/ggexon/reference/transcripts_track.md)
-  : calculate the transcripts lines coordinates. tmp_1 extract the joint
-  top of the angle
-
-- [`seq_track()`](https://dongyaoliu.github.io/ggexon/reference/seq_track.md)
-  : calculate the start and end of the sequencing track
-
-- [`seq_add_y()`](https://dongyaoliu.github.io/ggexon/reference/seq_add_y.md)
-  : calculate the exon block y location ymin and ymax is for draw the
-  exon part
-
 - [`syn_gr_to_exon_df()`](https://dongyaoliu.github.io/ggexon/reference/syn_gr_to_exon_df.md)
   :
 
   Convert genomic features to a
   [`geom_exon()`](https://dongyaoliu.github.io/ggexon/reference/geom_exon.md)
   data frame
-
-- [`add_transcripts_direction()`](https://dongyaoliu.github.io/ggexon/reference/add_transcripts_direction.md)
-  : angle is the base angle of isosceles pre: the transcripts dataframe
-  , is the output of add_transcripts, require at least the end point of
-  each transcripts. xend, yend, y_range(the height of exon) and the ID
-  of each transcripts ratio is a para to describe the ratio = the length
-  of base of isosceles triangle / (y_range) prototyep of this function
-  use the ratio to calculate the actual length of triangle. potencial
-  para r1 and r2. be careful about the new columns with the name "x" and
-  "y"
-
-- [`add_transcripts_seq_line()`](https://dongyaoliu.github.io/ggexon/reference/add_transcripts_seq_line.md)
-  : plot seq stick and tri-angle for indicating the direction of the
-  gene.
 
 ## Developer internals
 
@@ -567,14 +539,17 @@ and reexports.
 - [`ggexon_build()`](https://dongyaoliu.github.io/ggexon/reference/ggexon_build.md)
   : Build a ggexon plot
 
+- [`ggexon_gtable()`](https://dongyaoliu.github.io/ggexon/reference/ggexon_gtable.md)
+  : Render a built ggexon plot to a gtable
+
+- [`is_ggexon()`](https://dongyaoliu.github.io/ggexon/reference/is_ggexon.md)
+  : Test whether an object is a ggexon plot
+
 - [`ggplotGrob()`](https://dongyaoliu.github.io/ggexon/reference/ggplotGrob.md)
   : Generate a ggplot2 plot grob.
 
 - [`layer_grob()`](https://dongyaoliu.github.io/ggexon/reference/layer_grob.md)
   : Extract a built grob for a layer
-
-- [`class_ggexon()`](https://dongyaoliu.github.io/ggexon/reference/class_ggexon.md)
-  : The major ggexon object
 
 - [`class_ggexon_built()`](https://dongyaoliu.github.io/ggexon/reference/class_ggexon_built.md)
   : The ggplot built class
@@ -614,9 +589,6 @@ and reexports.
 - [`create_layout2()`](https://dongyaoliu.github.io/ggexon/reference/create_layout2.md)
   : Create the ggexon layout runtime
 
-- [`Splines_link_generate()`](https://dongyaoliu.github.io/ggexon/reference/Splines_link_generate.md)
-  : from ggforce
-
 - [`after_stat()`](https://dongyaoliu.github.io/ggexon/reference/aes_eval.md)
   [`after_scale()`](https://dongyaoliu.github.io/ggexon/reference/aes_eval.md)
   [`stage()`](https://dongyaoliu.github.io/ggexon/reference/aes_eval.md)
@@ -655,9 +627,6 @@ and reexports.
 
 - [`should_stop()`](https://dongyaoliu.github.io/ggexon/reference/should_stop.md)
   : Used in examples to illustrate when errors should occur.
-
-- [`warn_dots_empty()`](https://dongyaoliu.github.io/ggexon/reference/warn_dots_empty.md)
-  : utilities for new S7 class definition
 
 - [`zeroGrob()`](https://dongyaoliu.github.io/ggexon/reference/reexports.md)
   [`unit()`](https://dongyaoliu.github.io/ggexon/reference/reexports.md)

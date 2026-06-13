@@ -10,6 +10,9 @@ present, the accessor falls back to `syn_id()` for those objects.
 
 ``` r
 individual_names(x)
+
+# S4 method for class 'SynSpecies'
+individual_names(x)
 ```
 
 ## Arguments

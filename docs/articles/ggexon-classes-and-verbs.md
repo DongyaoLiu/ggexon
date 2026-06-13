@@ -687,7 +687,7 @@ Common graph-building functions include
 [`add_pairwise_alignment()`](https://dongyaoliu.github.io/ggexon/reference/add_pairwise_alignment.md),
 [`add_multiple_alignment()`](https://dongyaoliu.github.io/ggexon/reference/add_multiple_alignment.md),
 [`add_tree()`](https://dongyaoliu.github.io/ggexon/reference/add_tree.md),
-[`add_genetag()`](https://dongyaoliu.github.io/ggexon/reference/add_genetag.md),
+`add_genetag()`,
 [`store_chain_layout()`](https://dongyaoliu.github.io/ggexon/reference/store_chain_layout.md),
 and
 [`store_projected_domains()`](https://dongyaoliu.github.io/ggexon/reference/store_projected_domains.md).

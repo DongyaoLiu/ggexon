@@ -102,6 +102,11 @@ geom_exon(
 
   Optional break specification passed to `addbreak()`.
 
+- force_flat:
+
+  When `TRUE`, draw every gene on one shared y-row instead of vertically
+  staggering overlapping genes.
+
 - inherit.aes:
 
   If `FALSE`, overrides the default aesthetics rather than combining

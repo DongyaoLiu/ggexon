@@ -116,6 +116,11 @@ geom_genelabel(
   Same as `panel_width_mm` but in inches. When both are provided,
   `panel_width_inch` takes precedence. One inch = 25.4 mm.
 
+- force_flat:
+
+  When `TRUE`, place every gene label on one shared y-row instead of
+  vertically staggering overlapping genes.
+
 ## Value
 
 A ggplot2 layer using the internal `GeomGeneLabel` ggproto.

@@ -9,6 +9,18 @@ consistent metadata columns.
 
 ``` r
 load_annotation(x, annotation = NULL, individual = NULL)
+
+# S4 method for class 'SynFeatureAnnotation'
+load_annotation(x, annotation = NULL, individual = NULL)
+
+# S4 method for class 'SynAnnotation'
+load_annotation(x, annotation = NULL, individual = NULL)
+
+# S4 method for class 'SynIndividual'
+load_annotation(x, annotation = NULL, individual = NULL)
+
+# S4 method for class 'SynSpecies'
+load_annotation(x, annotation = NULL, individual = NULL)
 ```
 
 ## Arguments

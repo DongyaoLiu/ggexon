@@ -6,6 +6,18 @@ Add a multiple alignment to a SynSpecies object
 
 ``` r
 add_multiple_alignment(x, alignment)
+
+# S4 method for class 'SynSpecies,SynMultiAlignment'
+add_multiple_alignment(x, alignment)
+
+# S4 method for class 'SynSpecies,ANY'
+add_multiple_alignment(x, alignment)
+
+# S4 method for class 'ANY,SynMultiAlignment'
+add_multiple_alignment(x, alignment)
+
+# S4 method for class 'ANY,ANY'
+add_multiple_alignment(x, alignment)
 ```
 
 ## Arguments

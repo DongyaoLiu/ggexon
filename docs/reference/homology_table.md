@@ -12,6 +12,12 @@ for each duplicated query is kept.
 ``` r
 homology_table(x)
 
+# S4 method for class 'HomologyAnnotation'
+homology_table(x)
+
+homology_table(x) <- value
+
+# S4 method for class 'HomologyAnnotation'
 homology_table(x) <- value
 ```
 

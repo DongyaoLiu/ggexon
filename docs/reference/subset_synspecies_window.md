@@ -19,6 +19,19 @@ subset_synspecies_window(
   filter_by_len = NULL,
   max_target_gap = NULL
 )
+
+# S4 method for class 'SynSpecies'
+subset_synspecies_window(
+  x,
+  reference_species,
+  chr,
+  start,
+  end,
+  alignment = NULL,
+  selected_species = NULL,
+  filter_by_len = NULL,
+  max_target_gap = NULL
+)
 ```
 
 ## Arguments

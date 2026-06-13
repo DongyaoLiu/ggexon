@@ -6,6 +6,18 @@ Add or replace an annotation layer on a SynIndividual
 
 ``` r
 add_annotation(x, annotation, set_active = FALSE)
+
+# S4 method for class 'SynIndividual,SynAnnotation'
+add_annotation(x, annotation, set_active = FALSE)
+
+# S4 method for class 'SynIndividual,ANY'
+add_annotation(x, annotation, set_active = FALSE)
+
+# S4 method for class 'ANY,SynAnnotation'
+add_annotation(x, annotation, set_active = FALSE)
+
+# S4 method for class 'ANY,ANY'
+add_annotation(x, annotation, set_active = FALSE)
 ```
 
 ## Arguments

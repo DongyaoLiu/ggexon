@@ -6,6 +6,12 @@ Filter a pairwise alignment by minimum PAF alignment length
 
 ``` r
 filter_pairwise_alignment(x, filter = 200, alignment = NULL)
+
+# S4 method for class 'SynPairAlignment'
+filter_pairwise_alignment(x, filter = 200, alignment = NULL)
+
+# S4 method for class 'SynSpecies'
+filter_pairwise_alignment(x, filter = 200, alignment = NULL)
 ```
 
 ## Arguments

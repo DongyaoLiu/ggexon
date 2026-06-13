@@ -12,6 +12,24 @@ add_interproscan_annotation(
   keytype = c("protein_id", "transcript_id", "gene_id"),
   source_db = "InterPro"
 )
+
+# S4 method for class 'SynIndividual'
+add_interproscan_annotation(
+  x,
+  domain_file = system.file("extdata", "InterProScan.tsv", package = "ggexon"),
+  name = "interpro",
+  keytype = c("protein_id", "transcript_id", "gene_id"),
+  source_db = "InterPro"
+)
+
+# S4 method for class 'ANY'
+add_interproscan_annotation(
+  x,
+  domain_file = system.file("extdata", "InterProScan.tsv", package = "ggexon"),
+  name = "interpro",
+  keytype = c("protein_id", "transcript_id", "gene_id"),
+  source_db = "InterPro"
+)
 ```
 
 ## Arguments

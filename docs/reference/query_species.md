@@ -6,6 +6,9 @@ Retrieve the query species from a HomologyAnnotation
 
 ``` r
 query_species(x)
+
+# S4 method for class 'HomologyAnnotation'
+query_species(x)
 ```
 
 ## Arguments

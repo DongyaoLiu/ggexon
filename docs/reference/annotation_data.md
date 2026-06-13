@@ -9,6 +9,12 @@ of a `SynIndividual`, or the `GRanges` stored in a
 
 ``` r
 annotation_data(x)
+
+# S4 method for class 'SynIndividual'
+annotation_data(x)
+
+# S4 method for class 'SynFeatureAnnotation'
+annotation_data(x)
 ```
 
 ## Arguments

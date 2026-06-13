@@ -10,6 +10,12 @@ stored, any previous raw tree object is cleared.
 
 ``` r
 add_tree(x, tree = NULL, tree_file = NULL, tree_plot = NULL, ...)
+
+# S4 method for class 'SynSpecies'
+add_tree(x, tree = NULL, tree_file = NULL, tree_plot = NULL, ...)
+
+# S4 method for class 'ANY'
+add_tree(x, tree = NULL, tree_file = NULL, tree_plot = NULL, ...)
 ```
 
 ## Arguments

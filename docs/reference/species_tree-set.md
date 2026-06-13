@@ -7,6 +7,12 @@ Store tree objects on a `SynSpecies`
 ``` r
 species_tree(x) <- value
 
+# S4 method for class 'SynSpecies'
+species_tree(x) <- value
+
+species_tree_plot(x) <- value
+
+# S4 method for class 'SynSpecies'
 species_tree_plot(x) <- value
 ```
 

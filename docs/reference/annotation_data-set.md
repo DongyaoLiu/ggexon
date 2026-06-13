@@ -6,6 +6,12 @@ Coerce and assign annotation data
 
 ``` r
 annotation_data(x) <- value
+
+# S4 method for class 'SynIndividual'
+annotation_data(x) <- value
+
+# S4 method for class 'SynFeatureAnnotation'
+annotation_data(x) <- value
 ```
 
 ## Arguments

@@ -6,6 +6,12 @@ Subset a pairwise alignment by query/target regions
 
 ``` r
 subset_pairwise_alignment(x, subset, alignment = NULL)
+
+# S4 method for class 'SynPairAlignment'
+subset_pairwise_alignment(x, subset, alignment = NULL)
+
+# S4 method for class 'SynSpecies'
+subset_pairwise_alignment(x, subset, alignment = NULL)
 ```
 
 ## Arguments

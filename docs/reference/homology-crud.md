@@ -13,6 +13,81 @@ add_homology(x, ...)
 delete_homology(x, ...)
 
 replace_homology(x, ...)
+
+# S4 method for class 'HomologyAnnotation'
+add_homology(
+  x,
+  data = NULL,
+  query_gene = NULL,
+  reference_gene = NULL,
+  ...,
+  overwrite = FALSE
+)
+
+# S4 method for class 'HomologyAnnotation'
+replace_homology(
+  x,
+  data = NULL,
+  query_gene = NULL,
+  reference_gene = NULL,
+  ...,
+  add_missing = FALSE
+)
+
+# S4 method for class 'HomologyAnnotation'
+delete_homology(
+  x,
+  data = NULL,
+  query_gene = NULL,
+  reference_gene = NULL,
+  ...,
+  missing = c("error", "warn", "ignore")
+)
+
+# S4 method for class 'ANY'
+add_homology(x, ...)
+
+# S4 method for class 'ANY'
+replace_homology(x, ...)
+
+# S4 method for class 'ANY'
+delete_homology(x, ...)
+
+# S4 method for class 'SynSpecies'
+add_homology(
+  x,
+  data = NULL,
+  query_gene = NULL,
+  reference_gene = NULL,
+  ...,
+  name = NULL,
+  query_species = NULL,
+  overwrite = FALSE
+)
+
+# S4 method for class 'SynSpecies'
+replace_homology(
+  x,
+  data = NULL,
+  query_gene = NULL,
+  reference_gene = NULL,
+  ...,
+  name = NULL,
+  query_species = NULL,
+  add_missing = FALSE
+)
+
+# S4 method for class 'SynSpecies'
+delete_homology(
+  x,
+  data = NULL,
+  query_gene = NULL,
+  reference_gene = NULL,
+  ...,
+  name = NULL,
+  query_species = NULL,
+  missing = c("error", "warn", "ignore")
+)
 ```
 
 ## Arguments

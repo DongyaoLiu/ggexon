@@ -6,6 +6,9 @@ Access protein-mutation data
 
 ``` r
 protein_mutation_data(x)
+
+# S4 method for class 'SynProteinMutationAnnotation'
+protein_mutation_data(x)
 ```
 
 ## Arguments

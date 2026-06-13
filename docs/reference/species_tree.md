@@ -9,6 +9,12 @@
 ``` r
 species_tree(x)
 
+# S4 method for class 'SynSpecies'
+species_tree(x)
+
+species_tree_plot(x)
+
+# S4 method for class 'SynSpecies'
 species_tree_plot(x)
 ```
 

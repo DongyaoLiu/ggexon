@@ -21,6 +21,45 @@ subset_feature_annotation(
   gene = NULL,
   transcript = NULL
 )
+
+# S4 method for class 'SynFeatureAnnotation'
+subset_feature_annotation(
+  x,
+  annotation = NULL,
+  individual = NULL,
+  chr = NULL,
+  start = NULL,
+  end = NULL,
+  coords = NULL,
+  gene = NULL,
+  transcript = NULL
+)
+
+# S4 method for class 'SynIndividual'
+subset_feature_annotation(
+  x,
+  annotation = NULL,
+  individual = NULL,
+  chr = NULL,
+  start = NULL,
+  end = NULL,
+  coords = NULL,
+  gene = NULL,
+  transcript = NULL
+)
+
+# S4 method for class 'SynSpecies'
+subset_feature_annotation(
+  x,
+  annotation = NULL,
+  individual = NULL,
+  chr = NULL,
+  start = NULL,
+  end = NULL,
+  coords = NULL,
+  gene = NULL,
+  transcript = NULL
+)
 ```
 
 ## Arguments
@@ -52,6 +91,14 @@ subset_feature_annotation(
 
   Optional coordinate string in the form `"V_RagTag:21559983-21620009"`.
   Use either `coords` or `chr`/`start`/`end`.
+
+- gene:
+
+  Optional gene name(s) or identifier(s) to keep.
+
+- transcript:
+
+  Optional transcript identifier(s) to keep.
 
 ## Value
 

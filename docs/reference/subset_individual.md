@@ -21,6 +21,28 @@ subset_individual(
   coords = NULL,
   annotations = c("all_feature", "active")
 )
+
+# S4 method for class 'SynIndividual'
+subset_individual(
+  x,
+  individual = NULL,
+  chr = NULL,
+  start = NULL,
+  end = NULL,
+  coords = NULL,
+  annotations = c("all_feature", "active")
+)
+
+# S4 method for class 'SynSpecies'
+subset_individual(
+  x,
+  individual = NULL,
+  chr = NULL,
+  start = NULL,
+  end = NULL,
+  coords = NULL,
+  annotations = c("all_feature", "active")
+)
 ```
 
 ## Arguments

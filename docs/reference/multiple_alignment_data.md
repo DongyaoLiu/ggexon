@@ -12,6 +12,12 @@ graph on disk. When called on a
 
 ``` r
 multiple_alignment_data(x, ...)
+
+# S4 method for class 'SynMultiAlignment'
+multiple_alignment_data(x, ..., odgi = NULL, python = NULL)
+
+# S4 method for class 'SynSpecies'
+multiple_alignment_data(x, alignment = NULL, ..., odgi = NULL, python = NULL)
 ```
 
 ## Arguments
@@ -28,13 +34,6 @@ multiple_alignment_data(x, ...)
 
   Reserved for future extensions.
 
-- alignment:
-
-  Optional multiple-alignment name when `x` is a
-  [`SynSpecies`](https://dongyaoliu.github.io/ggexon/reference/SynSpecies.md).
-  If omitted and exactly one multiple alignment is stored, that
-  alignment is used.
-
 - odgi:
 
   Optional path to the `odgi` executable. Used when an ODGI alignment is
@@ -44,6 +43,13 @@ multiple_alignment_data(x, ...)
 
   Optional path to the Python interpreter. Used when an ODGI alignment
   is backed by a raw `.og` graph.
+
+- alignment:
+
+  Optional multiple-alignment name when `x` is a
+  [`SynSpecies`](https://dongyaoliu.github.io/ggexon/reference/SynSpecies.md).
+  If omitted and exactly one multiple alignment is stored, that
+  alignment is used.
 
 ## Value
 

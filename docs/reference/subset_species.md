@@ -14,6 +14,9 @@ subsetted windows.
 
 ``` r
 subset_species(x, coords, annotations = c("all_feature", "active"))
+
+# S4 method for class 'SynSpecies'
+subset_species(x, coords, annotations = c("all_feature", "active"))
 ```
 
 ## Arguments

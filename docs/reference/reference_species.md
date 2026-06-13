@@ -6,6 +6,9 @@ Retrieve the reference species from a HomologyAnnotation
 
 ``` r
 reference_species(x)
+
+# S4 method for class 'HomologyAnnotation'
+reference_species(x)
 ```
 
 ## Arguments

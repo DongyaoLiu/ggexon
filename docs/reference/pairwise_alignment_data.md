@@ -10,6 +10,12 @@ object.
 
 ``` r
 pairwise_alignment_data(x, ...)
+
+# S4 method for class 'SynPairAlignment'
+pairwise_alignment_data(x, alignment = NULL, ..., odgi = NULL, python = NULL)
+
+# S4 method for class 'SynSpecies'
+pairwise_alignment_data(x, alignment = NULL, ..., odgi = NULL, python = NULL)
 ```
 
 ## Arguments

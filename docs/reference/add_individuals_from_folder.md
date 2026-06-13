@@ -17,6 +17,22 @@ add_individuals_from_folder(
   annotation_format = c("auto", "gff", "gtf"),
   recursive = FALSE
 )
+
+# S4 method for class 'SynSpecies'
+add_individuals_from_folder(
+  x,
+  folder,
+  annotation_format = c("auto", "gff", "gtf"),
+  recursive = FALSE
+)
+
+# S4 method for class 'ANY'
+add_individuals_from_folder(
+  x,
+  folder,
+  annotation_format = c("auto", "gff", "gtf"),
+  recursive = FALSE
+)
 ```
 
 ## Arguments

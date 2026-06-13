@@ -18,6 +18,45 @@ add_protein_mutation_annotation(
   create_missing = TRUE,
   metadata = list()
 )
+
+# S4 method for class 'SynIndividual'
+add_protein_mutation_annotation(
+  x,
+  mutation_file,
+  name = "protein_mutations",
+  keytype = "gene_id",
+  individual = NULL,
+  individual_col = "auto",
+  all = TRUE,
+  create_missing = TRUE,
+  metadata = list()
+)
+
+# S4 method for class 'SynSpecies'
+add_protein_mutation_annotation(
+  x,
+  mutation_file,
+  name = "protein_mutations",
+  keytype = "gene_id",
+  individual = NULL,
+  individual_col = "auto",
+  all = TRUE,
+  create_missing = TRUE,
+  metadata = list()
+)
+
+# S4 method for class 'ANY'
+add_protein_mutation_annotation(
+  x,
+  mutation_file,
+  name = "protein_mutations",
+  keytype = "gene_id",
+  individual = NULL,
+  individual_col = "auto",
+  all = TRUE,
+  create_missing = TRUE,
+  metadata = list()
+)
 ```
 
 ## Arguments
