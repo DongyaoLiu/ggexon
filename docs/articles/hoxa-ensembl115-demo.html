@@ -89,7 +89,6 @@ coordinates are retained in the TSV files.</p>
 <span><span class="co">#&gt; Loading required package: gtable</span></span>
 <span><span class="co">#&gt; Loading required package: ggforce</span></span>
 <span><span class="co">#&gt; Loading required package: ggplot2</span></span>
-<span><span class="co">#&gt; Warning: package 'ggplot2' was built under R version 4.4.3</span></span>
 <span><span class="co">#&gt; Loading required package: dplyr</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Attaching package: 'dplyr'</span></span>
@@ -123,12 +122,12 @@ coordinates are retained in the TSV files.</p>
 <span><span class="co">#&gt;     IQR, mad, sd, var, xtabs</span></span>
 <span><span class="co">#&gt; The following objects are masked from 'package:base':</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     Filter, Find, Map, Position, Reduce, anyDuplicated, aperm, append,</span></span>
-<span><span class="co">#&gt;     as.data.frame, basename, cbind, colnames, dirname, do.call,</span></span>
-<span><span class="co">#&gt;     duplicated, eval, evalq, get, grep, grepl, intersect, is.unsorted,</span></span>
-<span><span class="co">#&gt;     lapply, mapply, match, mget, order, paste, pmax, pmax.int, pmin,</span></span>
-<span><span class="co">#&gt;     pmin.int, rank, rbind, rownames, sapply, saveRDS, setdiff, table,</span></span>
-<span><span class="co">#&gt;     tapply, union, unique, unsplit, which.max, which.min</span></span>
+<span><span class="co">#&gt;     anyDuplicated, aperm, append, as.data.frame, basename, cbind,</span></span>
+<span><span class="co">#&gt;     colnames, dirname, do.call, duplicated, eval, evalq, Filter, Find,</span></span>
+<span><span class="co">#&gt;     get, grep, grepl, is.unsorted, lapply, Map, mapply, match, mget,</span></span>
+<span><span class="co">#&gt;     order, paste, pmax, pmax.int, pmin, pmin.int, Position, rank,</span></span>
+<span><span class="co">#&gt;     rbind, Reduce, rownames, sapply, saveRDS, table, tapply, unique,</span></span>
+<span><span class="co">#&gt;     unsplit, which.max, which.min</span></span>
 <span><span class="co">#&gt; Loading required package: S4Vectors</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Attaching package: 'S4Vectors'</span></span>
@@ -140,7 +139,7 @@ coordinates are retained in the TSV files.</p>
 <span><span class="co">#&gt;     findMatches</span></span>
 <span><span class="co">#&gt; The following objects are masked from 'package:base':</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     I, expand.grid, unname</span></span>
+<span><span class="co">#&gt;     expand.grid, I, unname</span></span>
 <span><span class="co">#&gt; Loading required package: IRanges</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Attaching package: 'IRanges'</span></span>
@@ -175,12 +174,12 @@ coordinates are retained in the TSV files.</p>
 <span><span class="co">#&gt; The following objects are masked from 'package:ggplot2':</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     .expose_data, .ignore_data, after_scale, after_stat, check_device,</span></span>
-<span><span class="co">#&gt;     class_S3_gg, class_coord, class_derive, class_facet, class_ggplot,</span></span>
+<span><span class="co">#&gt;     class_coord, class_derive, class_facet, class_ggplot,</span></span>
 <span><span class="co">#&gt;     class_ggproto, class_guide, class_guides, class_labels,</span></span>
-<span><span class="co">#&gt;     class_layer, class_layout, class_mapping, class_rel, class_scale,</span></span>
-<span><span class="co">#&gt;     class_scales_list, class_theme, class_waiver, class_zero_grob,</span></span>
-<span><span class="co">#&gt;     flip_data, flipped_names, gg_dep, ggplotGrob, has_flipped_aes,</span></span>
-<span><span class="co">#&gt;     remove_missing, should_stop, stage, stat, waiver</span></span>
+<span><span class="co">#&gt;     class_layer, class_layout, class_mapping, class_rel, class_S3_gg,</span></span>
+<span><span class="co">#&gt;     class_scale, class_scales_list, class_theme, class_waiver,</span></span>
+<span><span class="co">#&gt;     class_zero_grob, flip_data, flipped_names, gg_dep, ggplotGrob,</span></span>
+<span><span class="co">#&gt;     has_flipped_aes, remove_missing, should_stop, stage, stat, waiver</span></span>
 <span></span>
 <span><span class="va">demo_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"hoxa_ensembl115"</span>, package <span class="op">=</span> <span class="st">"ggexon"</span><span class="op">)</span></span>
 <span><span class="va">genes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.delim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">demo_dir</span>, <span class="st">"hoxa_genes.tsv"</span><span class="op">)</span>, check.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
