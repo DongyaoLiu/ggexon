@@ -122,14 +122,10 @@ the annotation.</p></dd>
 <span class="r-in"><span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="load_annotation.html">load_annotation</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">gr</span> <span class="op">&lt;-</span> <span class="fu">annotation_data</span><span class="op">(</span><span class="va">ind</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in annotation_data(ind):</span> could not find function "annotation_data"</span>
+<span class="r-in"><span><span class="va">gr</span> <span class="op">&lt;-</span> <span class="fu"><a href="annotation_data.html">annotation_data</a></span><span class="op">(</span><span class="va">ind</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">chr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="fu">GenomeInfoDb</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/GenomeInfoDb/man/seqinfo.html" class="external-link">seqnames</a></span><span class="op">(</span><span class="va">gr</span><span class="op">)</span><span class="op">)</span><span class="op">[[</span><span class="fl">1L</span><span class="op">]</span><span class="op">]</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in h(simpleError(msg, call)):</span> error in evaluating the argument 'x' in selecting a method for function 'seqnames': object 'gr' not found</span>
 <span class="r-in"><span><span class="va">start</span> <span class="op">&lt;-</span> <span class="fu">IRanges</span><span class="fu">::</span><span class="fu">start</span><span class="op">(</span><span class="va">gr</span><span class="op">)</span><span class="op">[[</span><span class="fl">1L</span><span class="op">]</span><span class="op">]</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in h(simpleError(msg, call)):</span> error in evaluating the argument 'x' in selecting a method for function 'start': object 'gr' not found</span>
 <span class="r-in"><span><span class="va">end</span> <span class="op">&lt;-</span> <span class="fu">IRanges</span><span class="fu">::</span><span class="fu">end</span><span class="op">(</span><span class="va">gr</span><span class="op">)</span><span class="op">[[</span><span class="fl">1L</span><span class="op">]</span><span class="op">]</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in h(simpleError(msg, call)):</span> error in evaluating the argument 'x' in selecting a method for function 'end': object 'gr' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">ann_view</span> <span class="op">&lt;-</span> <span class="fu">subset_feature_annotation</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="get_annotation.html">get_annotation</a></span><span class="op">(</span><span class="va">ind</span>, <span class="st">"default"</span><span class="op">)</span>,</span></span>
@@ -137,9 +133,9 @@ the annotation.</p></dd>
 <span class="r-in"><span>  start <span class="op">=</span> <span class="va">start</span>,</span></span>
 <span class="r-in"><span>  end <span class="op">=</span> <span class="va">end</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> `chr` must be a single non-empty character value.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> subset_feature_annotation() kept 8 rows, 1 genes, and 1 transcripts.</span>
 <span class="r-in"><span><span class="va">ind_view</span> <span class="op">&lt;-</span> <span class="fu">subset_feature_annotation</span><span class="op">(</span><span class="va">ind</span>, chr <span class="op">=</span> <span class="va">chr</span>, start <span class="op">=</span> <span class="va">start</span>, end <span class="op">=</span> <span class="va">end</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> `chr` must be a single non-empty character value.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> subset_feature_annotation() kept 8 rows, 1 genes, and 1 transcripts.</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

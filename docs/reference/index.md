@@ -123,10 +123,6 @@ and control genomic x-axis guides.
   : X-only strip scale for gene-tag tracks
 - [`guide_x_ggexon_piecewise()`](https://dongyaoliu.github.io/ggexon/reference/guide_x_ggexon_piecewise.md)
   : Draw representative exon and intron scale bars for genomic x scaling
-- [`sec_axis()`](https://dongyaoliu.github.io/ggexon/reference/sec_axis.md)
-  [`dup_axis()`](https://dongyaoliu.github.io/ggexon/reference/sec_axis.md)
-  [`derive()`](https://dongyaoliu.github.io/ggexon/reference/sec_axis.md)
-  : Specify a secondary axis
 - [`theme_ggexon_track()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_track.md)
   [`theme_ggexon_genomictree()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_track.md)
   : ggexon themes for genomic tracks
@@ -240,6 +236,8 @@ derive sequence or protein-level summaries.
   : Import homology from a BLAST outfmt 6 file
 - [`load_annotation()`](https://dongyaoliu.github.io/ggexon/reference/load_annotation.md)
   : Load annotations into Syn-aware objects
+- [`annotation_data()`](https://dongyaoliu.github.io/ggexon/reference/annotation_data.md)
+  : Access annotation data
 - [`query_features()`](https://dongyaoliu.github.io/ggexon/reference/query_features.md)
   : Query annotation features from a SynIndividual object
 - [`query_variants()`](https://dongyaoliu.github.io/ggexon/reference/query_variants.md)

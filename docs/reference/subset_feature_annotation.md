@@ -79,13 +79,9 @@ ind <- SynIndividual(
   load_annotation()
 
 gr <- annotation_data(ind)
-#> Error in annotation_data(ind): could not find function "annotation_data"
 chr <- as.character(GenomeInfoDb::seqnames(gr))[[1L]]
-#> Error in h(simpleError(msg, call)): error in evaluating the argument 'x' in selecting a method for function 'seqnames': object 'gr' not found
 start <- IRanges::start(gr)[[1L]]
-#> Error in h(simpleError(msg, call)): error in evaluating the argument 'x' in selecting a method for function 'start': object 'gr' not found
 end <- IRanges::end(gr)[[1L]]
-#> Error in h(simpleError(msg, call)): error in evaluating the argument 'x' in selecting a method for function 'end': object 'gr' not found
 
 ann_view <- subset_feature_annotation(
   get_annotation(ind, "default"),
@@ -93,7 +89,7 @@ ann_view <- subset_feature_annotation(
   start = start,
   end = end
 )
-#> Error: `chr` must be a single non-empty character value.
+#> subset_feature_annotation() kept 8 rows, 1 genes, and 1 transcripts.
 ind_view <- subset_feature_annotation(ind, chr = chr, start = start, end = end)
-#> Error: `chr` must be a single non-empty character value.
+#> subset_feature_annotation() kept 8 rows, 1 genes, and 1 transcripts.
 ```

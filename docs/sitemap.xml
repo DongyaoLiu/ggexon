@@ -46,6 +46,7 @@
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/SynProteinMutationAnnotation-class.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/SynProteinMutationAnnotation.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/SynSpeAnnotation-class.html</loc></url>
+<url><loc>https://dongyaoliu.github.io/ggexon/reference/SynSpecies-class-overview.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/SynSpecies-class.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/SynSpecies.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/SynVCFAnnotation-class.html</loc></url>
@@ -65,6 +66,7 @@
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/aes_eval.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/annotate_cross_panel.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/annotation_data-set.html</loc></url>
+<url><loc>https://dongyaoliu.github.io/ggexon/reference/annotation_data.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/bidirection.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/build_feature_index.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/check_device.html</loc></url>
@@ -112,6 +114,7 @@
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/get_annotation.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/get_homology_annotation.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/gg_dep.html</loc></url>
+<url><loc>https://dongyaoliu.github.io/ggexon/reference/ggexon-package.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/ggexon.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/ggexon_build.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/ggexon_output_size.html</loc></url>
@@ -160,7 +163,6 @@
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/rename_domain_annotation_ids.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/resolve_syn_individual.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/scale_x_ggexon_genomic.html</loc></url>
-<url><loc>https://dongyaoliu.github.io/ggexon/reference/sec_axis.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/seq_add_y.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/seq_track.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/set_active_annotation.html</loc></url>

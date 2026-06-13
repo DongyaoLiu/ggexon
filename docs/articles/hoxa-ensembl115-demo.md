@@ -25,7 +25,7 @@ library(ggexon)
 #> Loading required package: gtable
 #> Loading required package: ggforce
 #> Loading required package: ggplot2
-#> Loading required package: ggridges
+#> Warning: package 'ggplot2' was built under R version 4.4.3
 #> Loading required package: dplyr
 #> 
 #> Attaching package: 'dplyr'
@@ -59,12 +59,12 @@ library(ggexon)
 #>     IQR, mad, sd, var, xtabs
 #> The following objects are masked from 'package:base':
 #> 
-#>     anyDuplicated, aperm, append, as.data.frame, basename, cbind,
-#>     colnames, dirname, do.call, duplicated, eval, evalq, Filter, Find,
-#>     get, grep, grepl, is.unsorted, lapply, Map, mapply, match, mget,
-#>     order, paste, pmax, pmax.int, pmin, pmin.int, Position, rank,
-#>     rbind, Reduce, rownames, sapply, saveRDS, table, tapply, unique,
-#>     unsplit, which.max, which.min
+#>     Filter, Find, Map, Position, Reduce, anyDuplicated, aperm, append,
+#>     as.data.frame, basename, cbind, colnames, dirname, do.call,
+#>     duplicated, eval, evalq, get, grep, grepl, intersect, is.unsorted,
+#>     lapply, mapply, match, mget, order, paste, pmax, pmax.int, pmin,
+#>     pmin.int, rank, rbind, rownames, sapply, saveRDS, setdiff, table,
+#>     tapply, union, unique, unsplit, which.max, which.min
 #> Loading required package: S4Vectors
 #> 
 #> Attaching package: 'S4Vectors'
@@ -76,7 +76,7 @@ library(ggexon)
 #>     findMatches
 #> The following objects are masked from 'package:base':
 #> 
-#>     expand.grid, I, unname
+#>     I, expand.grid, unname
 #> Loading required package: IRanges
 #> 
 #> Attaching package: 'IRanges'
@@ -110,14 +110,13 @@ library(ggexon)
 #> Attaching package: 'ggexon'
 #> The following objects are masked from 'package:ggplot2':
 #> 
-#>     .expose_data, .ignore_data, after_scale, after_stat, AxisSecondary,
-#>     check_device, class_coord, class_derive, class_facet, class_ggplot,
+#>     .expose_data, .ignore_data, after_scale, after_stat, check_device,
+#>     class_S3_gg, class_coord, class_derive, class_facet, class_ggplot,
 #>     class_ggproto, class_guide, class_guides, class_labels,
-#>     class_layer, class_layout, class_mapping, class_rel, class_S3_gg,
-#>     class_scale, class_scales_list, class_theme, class_waiver,
-#>     class_zero_grob, derive, dup_axis, flip_data, flipped_names,
-#>     gg_dep, ggplotGrob, has_flipped_aes, remove_missing, sec_axis,
-#>     should_stop, stage, stat, waiver
+#>     class_layer, class_layout, class_mapping, class_rel, class_scale,
+#>     class_scales_list, class_theme, class_waiver, class_zero_grob,
+#>     flip_data, flipped_names, gg_dep, ggplotGrob, has_flipped_aes,
+#>     remove_missing, should_stop, stage, stat, waiver
 
 demo_dir <- system.file("extdata", "hoxa_ensembl115", package = "ggexon")
 genes <- read.delim(file.path(demo_dir, "hoxa_genes.tsv"), check.names = FALSE)

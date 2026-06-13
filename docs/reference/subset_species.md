@@ -56,7 +56,6 @@ ind <- SynIndividual(
 ) |>
   load_annotation()
 gr <- annotation_data(ind)
-#> Error in annotation_data(ind): could not find function "annotation_data"
 coords <- paste0(
   "XZ1516#",
   as.character(GenomeInfoDb::seqnames(gr))[[1L]],
@@ -65,9 +64,8 @@ coords <- paste0(
   "-",
   IRanges::end(gr)[[1L]]
 )
-#> Error in h(simpleError(msg, call)): error in evaluating the argument 'x' in selecting a method for function 'seqnames': object 'gr' not found
 
 sp <- SynSpecies(name = "worms") |> add_individual(ind)
 sp_window <- subset_species(sp, coords = coords)
-#> Error: object 'coords' not found
+#> subset_feature_annotation() kept 8 rows, 1 genes, and 1 transcripts.
 ```
