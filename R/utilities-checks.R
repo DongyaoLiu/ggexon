@@ -1,9 +1,19 @@
 
 # Extra checks in addition to the ones in import-standalone-types-check.R
 
-# Keep ggexon aligned with ggplot2's current scalar whole-number validator
-# without sprinkling `ggplot2:::` calls at use sites.
+# Keep ggexon aligned with ggplot2's current validators and small internal
+# helpers without sprinkling `ggplot2:::` calls at use sites. These objects are
+# part of ggplot2's bundled rlang standalone helpers / internal utilities and
+# are not exported, so we borrow them from ggplot2's namespace once at load.
 check_number_whole <- get("check_number_whole", envir = asNamespace("ggplot2"))
+check_bool         <- get("check_bool",         envir = asNamespace("ggplot2"))
+check_character    <- get("check_character",    envir = asNamespace("ggplot2"))
+check_length       <- get("check_length",       envir = asNamespace("ggplot2"))
+stop_input_type    <- get("stop_input_type",    envir = asNamespace("ggplot2"))
+is_mapped_discrete <- get("is_mapped_discrete",  envir = asNamespace("ggplot2"))
+modify_list        <- get("modify_list",        envir = asNamespace("ggplot2"))
+oxford_comma       <- get("oxford_comma",       envir = asNamespace("ggplot2"))
+try_prop           <- get("try_prop",           envir = asNamespace("ggplot2"))
 
 # Usage:
 # check_object(x, is.data.frame, "a data.frame)

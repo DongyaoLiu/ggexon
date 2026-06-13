@@ -6,3 +6,9 @@
 ^pkgdown$
 ^\.github$
 ^LICENSE\.md$
+^AGENTS\.md$
+^CLAUDE\.md$
+^Rplots\.pdf$
+^codex_output$
+^\.Rhistory$
+^tests/ldy_test\.R$

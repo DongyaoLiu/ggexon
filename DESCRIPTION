@@ -13,11 +13,9 @@ Depends:
     methods,
     gtable,
     ggforce,
-    ggridges,
     dplyr,
     rtracklayer,
     grid,
-    dplyr,
     tidyr,
     scales,
     reshape2,
@@ -25,12 +23,25 @@ Depends:
     vctrs,
     S7
 Imports:
+    BiocGenerics,
     Biostrings,
+    cli,
+    farver,
+    fuzzyjoin,
     GenomeInfoDb,
     GenomicRanges,
     ggplot2,
+    glue,
+    IRanges,
+    lifecycle,
+    readr,
     Rsamtools,
+    S4Vectors,
+    stats,
+    stringr,
     tibble,
+    utils,
+    withr
 Suggests:
     ape,
     ggtree,
@@ -44,7 +55,7 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
-Collate: 
+Collate:
     'SynBioc-unions.R'
     'SynAnnotation-class.R'
     'SynIndividual-class.R'
@@ -52,7 +63,6 @@ Collate:
     'SynSpecies-class.R'
     'aes-evaluation.R'
     'all-classes-S7.R'
-    'axis-secondary.R'
     'coord.R'
     'cross-panel-annotations.R'
     'facet-genomics.R'
@@ -71,6 +81,7 @@ Collate:
     'geom-protein-lollipop.R'
     'geom_genelabel.R'
     'geom_genelink.R'
+    'ggexon-package.R'
     'ggexon.R'
     'ggplot-functions.R'
     'ggplot-global.R'

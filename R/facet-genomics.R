@@ -546,12 +546,12 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
   vars <- params$facets
   ggplot2:::check_facet_vars(names(vars), name = snake_class(facet))
 
-  base <- ggplot2:::combine_vars(data, params$plot_env, vars, drop = params$drop)
+  base <- ggplot2::combine_vars(data, params$plot_env, vars, drop = params$drop)
 
   id <- ggplot2:::id(base, drop = TRUE)
   n <- attr(id, "n")
 
-  dims <- ggplot2:::wrap_dims(n, params$nrow, params$ncol)
+  dims <- ggplot2::wrap_dims(n, params$nrow, params$ncol)
   layout <- ggplot2:::wrap_layout(id, dims, params$dir)
 
   panels <- vec_cbind(layout, base)

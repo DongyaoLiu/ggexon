@@ -2291,6 +2291,17 @@ setGeneric("annotation_format", function(x) standardGeneric("annotation_format")
 setMethod("annotation_format", "SynIndividual", function(x) x@annotation_format)
 setMethod("annotation_format", "SynFeatureAnnotation", function(x) x@annotation_format)
 
+#' Access annotation data
+#'
+#' Return the feature-annotation `GRanges` for the active annotation layer of a
+#' `SynIndividual`, or the `GRanges` stored in a `SynFeatureAnnotation`. This is
+#' the read counterpart to [`annotation_data<-`].
+#'
+#' @param x A `SynIndividual` or `SynFeatureAnnotation` object.
+#'
+#' @return A `GenomicRanges::GRanges` object, or `NULL` when no active
+#'   annotation is present.
+#' @export
 setGeneric("annotation_data", function(x) standardGeneric("annotation_data"))
 setMethod("annotation_data", "SynIndividual", function(x) {
   ann_name <- active_feature_annotation(x)

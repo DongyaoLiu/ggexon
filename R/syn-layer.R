@@ -2354,21 +2354,6 @@ has_syn_annotation_source <- function(individual) {
 #' - `species` does not match any stored individual
 #' - `species` is supplied for a `SynIndividual` but does not match
 #'
-#' @examples
-#' ann_path <- system.file(
-#'   "extdata",
-#'   "gff",
-#'   "caenorhabditis_XZ1516.gff3",
-#'   package = "ggexon"
-#' )
-#'
-#' ind <- SynIndividual(id = "XZ1516", annotation = ann_path)
-#' resolve_syn_individual(ind)
-#' resolve_syn_individual(ind, species = "XZ1516")
-#'
-#' sp <- SynSpecies(name = "worms")
-#' sp <- add_individual(sp, ind)
-#' resolve_syn_individual(sp, species = "XZ1516")
 #' @keywords internal
 resolve_syn_individual <- function(x, species = NULL) {
   if (methods::is(x, "SynIndividual")) {

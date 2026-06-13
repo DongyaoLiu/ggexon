@@ -19,7 +19,6 @@ warn_dots_empty <- function(env = caller_env(), call = caller_env()) {
 #'
 #' ggplot(mpg, aes(displ, hwy)) +
 #'   geom_point(colour = alpha("blue", 0.5))
-#' @importFrom scales alpha
 alpha <- scales::alpha
 
 "%||%" <- function(a, b) {

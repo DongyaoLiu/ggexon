@@ -1,5 +1,3 @@
-#' @include homology-annotation.R
-#'
 #' SynSpecies, SynLayout, and alignment classes
 #'
 #' These classes define the comparative object model used by `ggexon`.
@@ -8,6 +6,7 @@
 #' species-level annotations, and `SynLayout` stores reusable panel-layout
 #' metadata for plotting.
 #'
+#' @include homology-annotation.R
 #' @name SynSpecies-class-overview
 #' @section Class overview:
 #' * `SynPairAlignment`: one pairwise alignment between two individuals
@@ -1715,7 +1714,7 @@ setMethod("add_multiple_alignment", c("ANY", "ANY"), function(x, alignment) {
   if (inherits(tree, c("phylo", "tbl_tree", "treedata"))) {
     return(TRUE)
   }
-  if (methods::isS4(tree) && any(methods::is(tree) %in% c("phylo", "tbl_tree", "treedata"))) {
+  if (isS4(tree) && any(methods::is(tree) %in% c("phylo", "tbl_tree", "treedata"))) {
     return(TRUE)
   }
   FALSE
