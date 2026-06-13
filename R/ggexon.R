@@ -53,9 +53,11 @@ ggexon.default <- function(data = NULL, mapping = aes(), ...,
   return(p)
 }
 
+#' Test whether an object is a ggexon plot
+#'
+#' @param x An object to test.
+#' @return `TRUE` when `x` is a `ggexon` plot object, otherwise `FALSE`.
 #' @export
-#is.ggexon <- function(x) inherits(x, "ggexon")
-#switch to S7
 is_ggexon <- function(x) S7::S7_inherits(x, class_ggexon)
 
 local({

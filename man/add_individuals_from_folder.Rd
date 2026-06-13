@@ -2,9 +2,25 @@
 % Please edit documentation in R/SynSpecies-class.R
 \name{add_individuals_from_folder}
 \alias{add_individuals_from_folder}
+\alias{add_individuals_from_folder,SynSpecies-method}
+\alias{add_individuals_from_folder,ANY-method}
 \title{Add many annotation files from a folder as SynIndividuals}
 \usage{
 add_individuals_from_folder(
+  x,
+  folder,
+  annotation_format = c("auto", "gff", "gtf"),
+  recursive = FALSE
+)
+
+\S4method{add_individuals_from_folder}{SynSpecies}(
+  x,
+  folder,
+  annotation_format = c("auto", "gff", "gtf"),
+  recursive = FALSE
+)
+
+\S4method{add_individuals_from_folder}{ANY}(
   x,
   folder,
   annotation_format = c("auto", "gff", "gtf"),

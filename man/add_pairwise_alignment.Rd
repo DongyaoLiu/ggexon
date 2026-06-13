@@ -2,9 +2,21 @@
 % Please edit documentation in R/SynSpecies-class.R
 \name{add_pairwise_alignment}
 \alias{add_pairwise_alignment}
+\alias{add_pairwise_alignment,SynSpecies,SynPairAlignment-method}
+\alias{add_pairwise_alignment,SynSpecies,ANY-method}
+\alias{add_pairwise_alignment,ANY,SynPairAlignment-method}
+\alias{add_pairwise_alignment,ANY,ANY-method}
 \title{Add a pairwise alignment to a SynSpecies object}
 \usage{
 add_pairwise_alignment(x, alignment)
+
+\S4method{add_pairwise_alignment}{SynSpecies,SynPairAlignment}(x, alignment)
+
+\S4method{add_pairwise_alignment}{SynSpecies,ANY}(x, alignment)
+
+\S4method{add_pairwise_alignment}{ANY,SynPairAlignment}(x, alignment)
+
+\S4method{add_pairwise_alignment}{ANY,ANY}(x, alignment)
 }
 \arguments{
 \item{x}{A \code{SynSpecies} object.}

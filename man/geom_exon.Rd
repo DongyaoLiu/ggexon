@@ -66,6 +66,9 @@ individuals.}
 
 \item{breakdata}{Optional break specification passed to \code{addbreak()}.}
 
+\item{force_flat}{When \code{TRUE}, draw every gene on one shared y-row instead of
+vertically staggering overlapping genes.}
+
 \item{inherit.aes}{If \code{FALSE}, overrides the default aesthetics rather than
 combining with them.}
 }

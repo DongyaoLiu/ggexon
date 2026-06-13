@@ -2,9 +2,39 @@
 % Please edit documentation in R/SynSpecies-class.R
 \name{load_alignment}
 \alias{load_alignment}
+\alias{load_alignment,SynPairAlignment-method}
+\alias{load_alignment,SynMultiAlignment-method}
+\alias{load_alignment,SynSpecies-method}
 \title{Load alignment data into Syn-aware alignment objects}
 \usage{
 load_alignment(
+  x,
+  odgi = NULL,
+  python = NULL,
+  more = NULL,
+  cigar = NULL,
+  alignment = NULL
+)
+
+\S4method{load_alignment}{SynPairAlignment}(
+  x,
+  odgi = NULL,
+  python = NULL,
+  more = NULL,
+  cigar = NULL,
+  alignment = NULL
+)
+
+\S4method{load_alignment}{SynMultiAlignment}(
+  x,
+  odgi = NULL,
+  python = NULL,
+  more = NULL,
+  cigar = NULL,
+  alignment = NULL
+)
+
+\S4method{load_alignment}{SynSpecies}(
   x,
   odgi = NULL,
   python = NULL,

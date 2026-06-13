@@ -2,9 +2,12 @@
 % Please edit documentation in R/SynSpecies-class.R
 \name{species_layout<-}
 \alias{species_layout<-}
+\alias{species_layout<-,SynSpecies-method}
 \title{Store a ggexon panel layout on a \code{SynSpecies} object}
 \usage{
 species_layout(x) <- value
+
+\S4method{species_layout}{SynSpecies}(x) <- value
 }
 \arguments{
 \item{x}{A \code{SynSpecies} object.}

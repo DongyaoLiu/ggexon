@@ -2,9 +2,12 @@
 % Please edit documentation in R/SynSpecies-class.R
 \name{subset_species}
 \alias{subset_species}
+\alias{subset_species,SynSpecies-method}
 \title{Subset one or more individuals in a \code{SynSpecies} by coordinate string}
 \usage{
 subset_species(x, coords, annotations = c("all_feature", "active"))
+
+\S4method{subset_species}{SynSpecies}(x, coords, annotations = c("all_feature", "active"))
 }
 \arguments{
 \item{x}{A \code{SynSpecies} object.}

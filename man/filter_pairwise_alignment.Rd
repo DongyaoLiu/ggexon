@@ -2,9 +2,15 @@
 % Please edit documentation in R/SynSpecies-class.R
 \name{filter_pairwise_alignment}
 \alias{filter_pairwise_alignment}
+\alias{filter_pairwise_alignment,SynPairAlignment-method}
+\alias{filter_pairwise_alignment,SynSpecies-method}
 \title{Filter a pairwise alignment by minimum PAF alignment length}
 \usage{
 filter_pairwise_alignment(x, filter = 200, alignment = NULL)
+
+\S4method{filter_pairwise_alignment}{SynPairAlignment}(x, filter = 200, alignment = NULL)
+
+\S4method{filter_pairwise_alignment}{SynSpecies}(x, filter = 200, alignment = NULL)
 }
 \arguments{
 \item{x}{A \code{SynSpecies} or \code{SynPairAlignment} object.}

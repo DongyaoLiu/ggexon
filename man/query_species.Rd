@@ -2,9 +2,12 @@
 % Please edit documentation in R/homology-annotation.R
 \name{query_species}
 \alias{query_species}
+\alias{query_species,HomologyAnnotation-method}
 \title{Retrieve the query species from a HomologyAnnotation}
 \usage{
 query_species(x)
+
+\S4method{query_species}{HomologyAnnotation}(x)
 }
 \arguments{
 \item{x}{A \code{HomologyAnnotation} object.}

@@ -2,9 +2,15 @@
 % Please edit documentation in R/odgi.R
 \name{multiple_alignment_data}
 \alias{multiple_alignment_data}
+\alias{multiple_alignment_data,SynMultiAlignment-method}
+\alias{multiple_alignment_data,SynSpecies-method}
 \title{Access data stored on a multiple alignment}
 \usage{
 multiple_alignment_data(x, ...)
+
+\S4method{multiple_alignment_data}{SynMultiAlignment}(x, ..., odgi = NULL, python = NULL)
+
+\S4method{multiple_alignment_data}{SynSpecies}(x, alignment = NULL, ..., odgi = NULL, python = NULL)
 }
 \arguments{
 \item{x}{A \code{\link{SynMultiAlignment}} object or a \code{\link{SynSpecies}} containing one or
@@ -12,15 +18,15 @@ more multiple alignments.}
 
 \item{...}{Reserved for future extensions.}
 
-\item{alignment}{Optional multiple-alignment name when \code{x} is a
-\code{\link{SynSpecies}}. If omitted and exactly one multiple alignment is stored,
-that alignment is used.}
-
 \item{odgi}{Optional path to the \code{odgi} executable. Used when an ODGI
 alignment is backed by a raw \code{.og} graph.}
 
 \item{python}{Optional path to the Python interpreter. Used when an ODGI
 alignment is backed by a raw \code{.og} graph.}
+
+\item{alignment}{Optional multiple-alignment name when \code{x} is a
+\code{\link{SynSpecies}}. If omitted and exactly one multiple alignment is stored,
+that alignment is used.}
 }
 \value{
 A data frame containing the parsed multiple-alignment data.

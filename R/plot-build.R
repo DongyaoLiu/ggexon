@@ -254,8 +254,11 @@ build_ggexon <- S7::method(ggexon_build, class_ggexon) <- function(plot, ...) {
     build
 }
 
+#' Render a built ggexon plot to a gtable
+#'
+#' @param data A built `ggexon` plot object.
+#' @return A [gtable::gtable] object ready to draw with [grid::grid.draw()].
 #' @export
-
 ggexon_gtable <- function(data) {
   # Attaching the plot env to be fetched by deprecations etc.
   ggplot2:::attach_plot_env(data@plot@plot_env)

@@ -1240,6 +1240,7 @@ setGeneric("multiple_alignment_data", function(x, ...) standardGeneric("multiple
   multi_list[[alignment]]
 }
 
+#' @rdname multiple_alignment_data
 setMethod("multiple_alignment_data", "SynMultiAlignment", function(x, ..., odgi = NULL, python = NULL) {
   if (!is.null(x@data)) {
     return(x@data)
@@ -1258,6 +1259,7 @@ setMethod("multiple_alignment_data", "SynMultiAlignment", function(x, ..., odgi 
   .read_odgi_alignment_file(alignment_file(x), odgi = odgi, python = python)
 })
 
+#' @rdname multiple_alignment_data
 setMethod("multiple_alignment_data", "SynSpecies", function(x, alignment = NULL, ..., odgi = NULL, python = NULL) {
   multi <- .resolve_multiple_alignment_arg(x = x, alignment = alignment)
   multiple_alignment_data(multi, ..., odgi = odgi, python = python)

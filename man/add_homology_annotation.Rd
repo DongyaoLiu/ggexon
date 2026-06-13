@@ -2,9 +2,21 @@
 % Please edit documentation in R/SynSpecies-class.R
 \name{add_homology_annotation}
 \alias{add_homology_annotation}
+\alias{add_homology_annotation,SynSpecies,HomologyAnnotation-method}
+\alias{add_homology_annotation,SynSpecies,ANY-method}
+\alias{add_homology_annotation,ANY,HomologyAnnotation-method}
+\alias{add_homology_annotation,ANY,ANY-method}
 \title{Add or replace a HomologyAnnotation on a SynSpecies}
 \usage{
 add_homology_annotation(x, homology)
+
+\S4method{add_homology_annotation}{SynSpecies,HomologyAnnotation}(x, homology)
+
+\S4method{add_homology_annotation}{SynSpecies,ANY}(x, homology)
+
+\S4method{add_homology_annotation}{ANY,HomologyAnnotation}(x, homology)
+
+\S4method{add_homology_annotation}{ANY,ANY}(x, homology)
 }
 \arguments{
 \item{x}{A \code{SynSpecies} object.}

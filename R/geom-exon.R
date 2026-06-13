@@ -161,6 +161,8 @@ GeomExon <- ggproto("GeomExon", Geom,
 #'   individuals.
 #' @param chr Optional chromosome / seqname restriction when `data` is Syn-backed.
 #' @param breakdata Optional break specification passed to `addbreak()`.
+#' @param force_flat When `TRUE`, draw every gene on one shared y-row instead of
+#'   vertically staggering overlapping genes.
 #' @param inherit.aes If `FALSE`, overrides the default aesthetics rather than
 #'   combining with them.
 #'

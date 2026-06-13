@@ -665,6 +665,7 @@ SynProteinMutationAnnotation <- function(name,
 }
 
 #' @export
+#' @rdname ggexon-show
 setMethod("show", "SynAnnotation", function(object) {
   cat("An object of class \"", class(object), "\"\n", sep = "")
   cat("  name:", object@name, "\n")

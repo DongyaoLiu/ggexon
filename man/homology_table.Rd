@@ -2,12 +2,18 @@
 % Please edit documentation in R/homology-annotation.R
 \name{homology_table}
 \alias{homology_table}
+\alias{homology_table,HomologyAnnotation-method}
 \alias{homology_table<-}
+\alias{homology_table<-,HomologyAnnotation-method}
 \title{Retrieve or replace the homology table from a HomologyAnnotation}
 \usage{
 homology_table(x)
 
+\S4method{homology_table}{HomologyAnnotation}(x)
+
 homology_table(x) <- value
+
+\S4method{homology_table}{HomologyAnnotation}(x) <- value
 }
 \arguments{
 \item{x}{A \code{HomologyAnnotation} object.}

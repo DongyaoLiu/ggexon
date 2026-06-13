@@ -299,6 +299,7 @@ setGeneric("add_protein_mutation_annotation", function(x,
   standardGeneric("add_protein_mutation_annotation")
 }, signature = "x")
 
+#' @rdname add_protein_mutation_annotation
 setMethod("add_protein_mutation_annotation", "SynIndividual", function(x,
                                                                        mutation_file,
                                                                        name = "protein_mutations",
@@ -345,6 +346,7 @@ setMethod("add_protein_mutation_annotation", "SynIndividual", function(x,
   add_annotation(x, ann, set_active = FALSE)
 })
 
+#' @rdname add_protein_mutation_annotation
 setMethod("add_protein_mutation_annotation", "SynSpecies", function(x,
                                                                     mutation_file,
                                                                     name = "protein_mutations",
@@ -423,6 +425,7 @@ setMethod("add_protein_mutation_annotation", "SynSpecies", function(x,
   x
 })
 
+#' @rdname add_protein_mutation_annotation
 setMethod("add_protein_mutation_annotation", "ANY", function(x,
                                                             mutation_file,
                                                             name = "protein_mutations",
@@ -445,6 +448,7 @@ setMethod("add_protein_mutation_annotation", "ANY", function(x,
 #' @return A normalized mutation `data.frame`.
 #' @export
 setGeneric("protein_mutation_data", function(x) standardGeneric("protein_mutation_data"))
+#' @rdname protein_mutation_data
 setMethod("protein_mutation_data", "SynProteinMutationAnnotation", function(x) {
   if (is.null(x@mutation_data)) {
     mutation_data <- read_protein_mutation_counts(source_file(x))

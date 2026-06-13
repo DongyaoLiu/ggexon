@@ -2,9 +2,21 @@
 % Please edit documentation in R/SynIndividual-class.R
 \name{add_annotation}
 \alias{add_annotation}
+\alias{add_annotation,SynIndividual,SynAnnotation-method}
+\alias{add_annotation,SynIndividual,ANY-method}
+\alias{add_annotation,ANY,SynAnnotation-method}
+\alias{add_annotation,ANY,ANY-method}
 \title{Add or replace an annotation layer on a SynIndividual}
 \usage{
 add_annotation(x, annotation, set_active = FALSE)
+
+\S4method{add_annotation}{SynIndividual,SynAnnotation}(x, annotation, set_active = FALSE)
+
+\S4method{add_annotation}{SynIndividual,ANY}(x, annotation, set_active = FALSE)
+
+\S4method{add_annotation}{ANY,SynAnnotation}(x, annotation, set_active = FALSE)
+
+\S4method{add_annotation}{ANY,ANY}(x, annotation, set_active = FALSE)
 }
 \arguments{
 \item{x}{A \code{SynIndividual} object.}

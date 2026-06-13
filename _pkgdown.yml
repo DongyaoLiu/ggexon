@@ -111,7 +111,6 @@ reference:
   - add_protein_mutation_annotation
   - add_pairwise_alignment
   - add_multiple_alignment
-  - add_genetag
   - add_tree
   - get_annotation
   - get_homology_annotation
@@ -189,20 +188,16 @@ reference:
   contents:
   - protein_lollipop_data
   - protein_mutation_data
-  - transcripts_track
-  - seq_track
-  - seq_add_y
   - syn_gr_to_exon_df
-  - add_transcripts_direction
-  - add_transcripts_seq_line
 
 - title: Developer internals
   desc: Low-level ggplot2 extension objects, build hooks, compatibility helpers, and reexports.
   contents:
   - ggexon_build
+  - ggexon_gtable
+  - is_ggexon
   - ggplotGrob
   - layer_grob
-  - class_ggexon
   - class_ggexon_built
   - FacetGenomics
   - FacetGenomicTree
@@ -213,7 +208,6 @@ reference:
   - GeomAaVariant
   - Layout2
   - create_layout2
-  - Splines_link_generate
   - aes_eval
   - bidirection
   - ignoring_data
@@ -224,6 +218,5 @@ reference:
   - check_syn_files
   - remove_missing
   - should_stop
-  - warn_dots_empty
   - reexports
   - ggplot2_class_reexports

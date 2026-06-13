@@ -2,12 +2,18 @@
 % Please edit documentation in R/SynSpecies-class.R
 \name{species_tree}
 \alias{species_tree}
+\alias{species_tree,SynSpecies-method}
 \alias{species_tree_plot}
+\alias{species_tree_plot,SynSpecies-method}
 \title{Access tree objects stored on a \code{SynSpecies}}
 \usage{
 species_tree(x)
 
+\S4method{species_tree}{SynSpecies}(x)
+
 species_tree_plot(x)
+
+\S4method{species_tree_plot}{SynSpecies}(x)
 }
 \arguments{
 \item{x}{A \code{SynSpecies} object.}

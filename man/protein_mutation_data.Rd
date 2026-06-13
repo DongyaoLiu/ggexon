@@ -2,9 +2,12 @@
 % Please edit documentation in R/protein-mutation-annotation.R
 \name{protein_mutation_data}
 \alias{protein_mutation_data}
+\alias{protein_mutation_data,SynProteinMutationAnnotation-method}
 \title{Access protein-mutation data}
 \usage{
 protein_mutation_data(x)
+
+\S4method{protein_mutation_data}{SynProteinMutationAnnotation}(x)
 }
 \arguments{
 \item{x}{A \code{SynProteinMutationAnnotation} object.}

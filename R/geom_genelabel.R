@@ -554,6 +554,8 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
 #'   Increase this for wide output (e.g. `ggsave(width = 40)`).
 #' @param panel_width_inch Same as `panel_width_mm` but in inches. When both
 #'   are provided, `panel_width_inch` takes precedence. One inch = 25.4 mm.
+#' @param force_flat When `TRUE`, place every gene label on one shared y-row
+#'   instead of vertically staggering overlapping genes.
 #'
 #' @return A ggplot2 layer using the internal `GeomGeneLabel` ggproto.
 #' @export

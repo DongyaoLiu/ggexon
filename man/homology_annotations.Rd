@@ -2,9 +2,12 @@
 % Please edit documentation in R/SynSpecies-class.R
 \name{homology_annotations}
 \alias{homology_annotations}
+\alias{homology_annotations,SynSpecies-method}
 \title{List homology annotations attached to a SynSpecies}
 \usage{
 homology_annotations(x)
+
+\S4method{homology_annotations}{SynSpecies}(x)
 }
 \arguments{
 \item{x}{A \code{SynSpecies} object.}

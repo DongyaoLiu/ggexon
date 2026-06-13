@@ -48,3 +48,16 @@ utils::globalVariables(c(
   "x", "xend", "xmax", "xmin", "y", "y0", "y1", "y3", "y_middle", "y_range",
   "yend", "ymax", "ymin"
 ))
+
+#' Display ggexon S4 objects
+#'
+#' Compact `show()` methods that print a one-screen summary of the major
+#' `ggexon` S4 objects (`SynSpecies`, `SynIndividual`, `SynLayout`,
+#' `SynAnnotation`, and `HomologyAnnotation`).
+#'
+#' @param object A `ggexon` S4 object.
+#' @return `object`, invisibly; called for the side effect of printing a summary.
+#' @name ggexon-show
+#' @rdname ggexon-show
+#' @keywords internal
+NULL

@@ -84,6 +84,9 @@ Increase this for wide output (e.g. \code{ggsave(width = 40)}).}
 
 \item{panel_width_inch}{Same as \code{panel_width_mm} but in inches. When both
 are provided, \code{panel_width_inch} takes precedence. One inch = 25.4 mm.}
+
+\item{force_flat}{When \code{TRUE}, place every gene label on one shared y-row
+instead of vertically staggering overlapping genes.}
 }
 \value{
 A ggplot2 layer using the internal \code{GeomGeneLabel} ggproto.

@@ -2,9 +2,27 @@
 % Please edit documentation in R/SynIndividual-class.R
 \name{add_interproscan_annotation}
 \alias{add_interproscan_annotation}
+\alias{add_interproscan_annotation,SynIndividual-method}
+\alias{add_interproscan_annotation,ANY-method}
 \title{Attach an InterProScan protein-domain layer to a SynIndividual}
 \usage{
 add_interproscan_annotation(
+  x,
+  domain_file = system.file("extdata", "InterProScan.tsv", package = "ggexon"),
+  name = "interpro",
+  keytype = c("protein_id", "transcript_id", "gene_id"),
+  source_db = "InterPro"
+)
+
+\S4method{add_interproscan_annotation}{SynIndividual}(
+  x,
+  domain_file = system.file("extdata", "InterProScan.tsv", package = "ggexon"),
+  name = "interpro",
+  keytype = c("protein_id", "transcript_id", "gene_id"),
+  source_db = "InterPro"
+)
+
+\S4method{add_interproscan_annotation}{ANY}(
   x,
   domain_file = system.file("extdata", "InterProScan.tsv", package = "ggexon"),
   name = "interpro",

@@ -2,9 +2,48 @@
 % Please edit documentation in R/protein-mutation-annotation.R
 \name{add_protein_mutation_annotation}
 \alias{add_protein_mutation_annotation}
+\alias{add_protein_mutation_annotation,SynIndividual-method}
+\alias{add_protein_mutation_annotation,SynSpecies-method}
+\alias{add_protein_mutation_annotation,ANY-method}
 \title{Add protein-mutation annotations}
 \usage{
 add_protein_mutation_annotation(
+  x,
+  mutation_file,
+  name = "protein_mutations",
+  keytype = "gene_id",
+  individual = NULL,
+  individual_col = "auto",
+  all = TRUE,
+  create_missing = TRUE,
+  metadata = list()
+)
+
+\S4method{add_protein_mutation_annotation}{SynIndividual}(
+  x,
+  mutation_file,
+  name = "protein_mutations",
+  keytype = "gene_id",
+  individual = NULL,
+  individual_col = "auto",
+  all = TRUE,
+  create_missing = TRUE,
+  metadata = list()
+)
+
+\S4method{add_protein_mutation_annotation}{SynSpecies}(
+  x,
+  mutation_file,
+  name = "protein_mutations",
+  keytype = "gene_id",
+  individual = NULL,
+  individual_col = "auto",
+  all = TRUE,
+  create_missing = TRUE,
+  metadata = list()
+)
+
+\S4method{add_protein_mutation_annotation}{ANY}(
   x,
   mutation_file,
   name = "protein_mutations",

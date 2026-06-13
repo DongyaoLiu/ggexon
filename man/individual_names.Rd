@@ -2,9 +2,12 @@
 % Please edit documentation in R/SynSpecies-class.R
 \name{individual_names}
 \alias{individual_names}
+\alias{individual_names,SynSpecies-method}
 \title{Return the individual identifiers stored on a \code{SynSpecies}}
 \usage{
 individual_names(x)
+
+\S4method{individual_names}{SynSpecies}(x)
 }
 \arguments{
 \item{x}{A \code{SynSpecies} object.}

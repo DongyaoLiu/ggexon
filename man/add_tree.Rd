@@ -2,9 +2,15 @@
 % Please edit documentation in R/SynSpecies-class.R
 \name{add_tree}
 \alias{add_tree}
+\alias{add_tree,SynSpecies-method}
+\alias{add_tree,ANY-method}
 \title{Add a tree or tree plot to a \code{SynSpecies} object}
 \usage{
 add_tree(x, tree = NULL, tree_file = NULL, tree_plot = NULL, ...)
+
+\S4method{add_tree}{SynSpecies}(x, tree = NULL, tree_file = NULL, tree_plot = NULL, ...)
+
+\S4method{add_tree}{ANY}(x, tree = NULL, tree_file = NULL, tree_plot = NULL, ...)
 }
 \arguments{
 \item{x}{A \code{SynSpecies} object.}

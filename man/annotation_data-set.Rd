@@ -2,9 +2,15 @@
 % Please edit documentation in R/SynIndividual-class.R
 \name{annotation_data<-}
 \alias{annotation_data<-}
+\alias{annotation_data<-,SynIndividual-method}
+\alias{annotation_data<-,SynFeatureAnnotation-method}
 \title{Coerce and assign annotation data}
 \usage{
 annotation_data(x) <- value
+
+\S4method{annotation_data}{SynIndividual}(x) <- value
+
+\S4method{annotation_data}{SynFeatureAnnotation}(x) <- value
 }
 \arguments{
 \item{x}{A \code{SynIndividual} object.}

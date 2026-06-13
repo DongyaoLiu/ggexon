@@ -2,9 +2,12 @@
 % Please edit documentation in R/homology-annotation.R
 \name{reference_species}
 \alias{reference_species}
+\alias{reference_species,HomologyAnnotation-method}
 \title{Retrieve the reference species from a HomologyAnnotation}
 \usage{
 reference_species(x)
+
+\S4method{reference_species}{HomologyAnnotation}(x)
 }
 \arguments{
 \item{x}{A \code{HomologyAnnotation} object.}

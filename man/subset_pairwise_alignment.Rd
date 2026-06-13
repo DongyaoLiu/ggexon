@@ -2,9 +2,15 @@
 % Please edit documentation in R/SynSpecies-class.R
 \name{subset_pairwise_alignment}
 \alias{subset_pairwise_alignment}
+\alias{subset_pairwise_alignment,SynPairAlignment-method}
+\alias{subset_pairwise_alignment,SynSpecies-method}
 \title{Subset a pairwise alignment by query/target regions}
 \usage{
 subset_pairwise_alignment(x, subset, alignment = NULL)
+
+\S4method{subset_pairwise_alignment}{SynPairAlignment}(x, subset, alignment = NULL)
+
+\S4method{subset_pairwise_alignment}{SynSpecies}(x, subset, alignment = NULL)
 }
 \arguments{
 \item{x}{A \code{SynSpecies} or \code{SynPairAlignment} object.}

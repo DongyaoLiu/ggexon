@@ -103,6 +103,7 @@ class_mapping <- ggplot2::class_mapping
 class_ggplot <- ggplot2::class_ggplot
 
 #' The major ggexon object
+#' @noRd
 class_ggexon <- S7::new_class(
   name = "ggexon", parent = class_gg,
   properties = list(

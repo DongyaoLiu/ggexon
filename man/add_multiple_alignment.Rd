@@ -2,9 +2,21 @@
 % Please edit documentation in R/SynSpecies-class.R
 \name{add_multiple_alignment}
 \alias{add_multiple_alignment}
+\alias{add_multiple_alignment,SynSpecies,SynMultiAlignment-method}
+\alias{add_multiple_alignment,SynSpecies,ANY-method}
+\alias{add_multiple_alignment,ANY,SynMultiAlignment-method}
+\alias{add_multiple_alignment,ANY,ANY-method}
 \title{Add a multiple alignment to a SynSpecies object}
 \usage{
 add_multiple_alignment(x, alignment)
+
+\S4method{add_multiple_alignment}{SynSpecies,SynMultiAlignment}(x, alignment)
+
+\S4method{add_multiple_alignment}{SynSpecies,ANY}(x, alignment)
+
+\S4method{add_multiple_alignment}{ANY,SynMultiAlignment}(x, alignment)
+
+\S4method{add_multiple_alignment}{ANY,ANY}(x, alignment)
 }
 \arguments{
 \item{x}{A \code{SynSpecies} object.}

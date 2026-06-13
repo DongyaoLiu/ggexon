@@ -474,6 +474,7 @@ setGeneric("load_annotation", function(x, annotation = NULL, individual = NULL) 
   standardGeneric("load_annotation")
 })
 
+#' @rdname load_annotation
 setMethod("load_annotation", "SynFeatureAnnotation", function(x, annotation = NULL, individual = NULL) {
   if (!is.null(annotation_data(x))) {
     return(x)
@@ -485,6 +486,7 @@ setMethod("load_annotation", "SynFeatureAnnotation", function(x, annotation = NU
   x
 })
 
+#' @rdname load_annotation
 setMethod("load_annotation", "SynAnnotation", function(x, annotation = NULL, individual = NULL) {
   stop(
     "`load_annotation()` currently supports SynFeatureAnnotation objects.",
@@ -492,6 +494,7 @@ setMethod("load_annotation", "SynAnnotation", function(x, annotation = NULL, ind
   )
 })
 
+#' @rdname load_annotation
 setMethod("load_annotation", "SynIndividual", function(x, annotation = NULL, individual = NULL) {
   ann_name <- annotation %||% active_feature_annotation(x)
   ann <- get_annotation(x, ann_name)
@@ -1429,6 +1432,8 @@ query_features <- function(x,
 #'   the annotation.
 #' @param coords Optional coordinate string in the form
 #'   `"V_RagTag:21559983-21620009"`. Use either `coords` or `chr`/`start`/`end`.
+#' @param gene Optional gene name(s) or identifier(s) to keep.
+#' @param transcript Optional transcript identifier(s) to keep.
 #'
 #' @details
 #' This is an S4 generic that dispatches on the class of `x`.
@@ -1589,6 +1594,7 @@ setGeneric("subset_feature_annotation", function(x,
   ann
 }
 
+#' @rdname subset_feature_annotation
 setMethod("subset_feature_annotation", "SynFeatureAnnotation", function(x,
                                                                         annotation = NULL,
                                                                         individual = NULL,
@@ -1601,6 +1607,7 @@ setMethod("subset_feature_annotation", "SynFeatureAnnotation", function(x,
   .subset_feature_annotation_impl(x, annotation, individual, chr, start, end, coords, gene, transcript)
 })
 
+#' @rdname subset_feature_annotation
 setMethod("subset_feature_annotation", "SynIndividual", function(x,
                                                                  annotation = NULL,
                                                                  individual = NULL,
@@ -1774,6 +1781,7 @@ setGeneric("subset_individual", function(x,
   out
 }
 
+#' @rdname subset_individual
 setMethod("subset_individual", "SynIndividual", function(x,
                                                          individual = NULL,
                                                          chr = NULL,
@@ -2254,6 +2262,7 @@ setGeneric("annotation_data<-", function(x, value) {
 }
 
 #' @export
+#' @rdname ggexon-show
 setMethod("show", "SynIndividual", function(object) {
   loaded <- c(
     annotation = !is.null(annotation_data(object)),
@@ -2303,12 +2312,14 @@ setMethod("annotation_format", "SynFeatureAnnotation", function(x) x@annotation_
 #'   annotation is present.
 #' @export
 setGeneric("annotation_data", function(x) standardGeneric("annotation_data"))
+#' @rdname annotation_data
 setMethod("annotation_data", "SynIndividual", function(x) {
   ann_name <- active_feature_annotation(x)
   if (!ann_name %in% names(x@annotations)) return(NULL)
   ann <- get_annotation(x, ann_name)
   annotation_data(ann)
 })
+#' @rdname annotation_data
 setMethod("annotation_data", "SynFeatureAnnotation", function(x) x@annotation)
 
 setGeneric("nucleotide_seq", function(x) standardGeneric("nucleotide_seq"))
@@ -2378,6 +2389,7 @@ setGeneric("add_annotation", function(x, annotation, set_active = FALSE) {
   standardGeneric("add_annotation")
 }, signature = c("x", "annotation"))
 
+#' @rdname add_annotation
 setMethod("add_annotation", c("SynIndividual", "SynAnnotation"), function(x, annotation, set_active = FALSE) {
   annotations <- x@annotations
   annotations[[annotation_name(annotation)]] <- annotation
@@ -2407,14 +2419,17 @@ setMethod("add_annotation", c("SynIndividual", "SynAnnotation"), function(x, ann
   x
 })
 
+#' @rdname add_annotation
 setMethod("add_annotation", c("SynIndividual", "ANY"), function(x, annotation, set_active = FALSE) {
   stop("`annotation` must be a SynAnnotation object.", call. = FALSE)
 })
 
+#' @rdname add_annotation
 setMethod("add_annotation", c("ANY", "SynAnnotation"), function(x, annotation, set_active = FALSE) {
   stop("`add_annotation()` expects a SynIndividual object.", call. = FALSE)
 })
 
+#' @rdname add_annotation
 setMethod("add_annotation", c("ANY", "ANY"), function(x, annotation, set_active = FALSE) {
   stop("`add_annotation()` expects a SynIndividual object.", call. = FALSE)
 })
@@ -2444,6 +2459,7 @@ setGeneric("add_interproscan_annotation", function(x,
   standardGeneric("add_interproscan_annotation")
 }, signature = "x")
 
+#' @rdname add_interproscan_annotation
 setMethod("add_interproscan_annotation", "SynIndividual", function(x,
                                                                   domain_file = system.file(
                                                                     "extdata",
@@ -2477,6 +2493,7 @@ setMethod("add_interproscan_annotation", "SynIndividual", function(x,
   )
 })
 
+#' @rdname add_interproscan_annotation
 setMethod("add_interproscan_annotation", "ANY", function(x,
                                                         domain_file = system.file(
                                                           "extdata",
@@ -2545,6 +2562,7 @@ set_active_feature_annotation <- function(x, name) {
   set_active_annotation(x, name)
 }
 
+#' @rdname annotation_data-set
 setReplaceMethod("annotation_data", "SynIndividual", function(x, value) {
   if (!is.null(value) && !methods::is(value, "GRanges")) {
     stop("`annotation_data<-` expects a GRanges object or NULL.", call. = FALSE)
@@ -2557,6 +2575,7 @@ setReplaceMethod("annotation_data", "SynIndividual", function(x, value) {
   validObject(x)
   x
 })
+#' @rdname annotation_data-set
 setReplaceMethod("annotation_data", "SynFeatureAnnotation", function(x, value) {
   if (!is.null(value) && !methods::is(value, "GRanges")) {
     stop("`annotation_data<-` expects a GRanges object or NULL.", call. = FALSE)

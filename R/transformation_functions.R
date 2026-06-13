@@ -1,7 +1,8 @@
-#'calculate the exon block y location
+#calculate the exon block y location
+# @noRd
 seq_add_y = function(data, track_proportion,
                      exon_proportion, blank_proportion, exon_height, sandwich_ratio){
-  #' ymin and ymax is for draw the exon part
+  # ymin and ymax is for draw the exon part
     data2 = data %>%
     mutate(y_range = exon_height) %>%
     mutate(ymax = ymin + y_range, y_middle = ymin + y_range/2)
@@ -40,7 +41,8 @@ protein_link_prepare = function(data, panel_middle = c(47, 53), annotation_start
   return(data_xy_spline)
 }
 
-#'calculate the start and end of the sequencing track
+#calculate the start and end of the sequencing track
+# @noRd
 seq_track = function(data, start=NULL, end=NULL){
   seq_track_data = data %>% group_by(track_name) %>%
     summarize(min_xmin = min(xmin), max_xmax = max(xmax), y_middle = first(y_middle)) %>%
@@ -64,7 +66,8 @@ seq_track = function(data, start=NULL, end=NULL){
   return(data)
 }
 
-#'calculate the transcripts lines coordinates.
+#calculate the transcripts lines coordinates.
+# @noRd
 transcripts_track = function(data, transcript_data=NULL, between_margin=NULL,
                              Track_Position = "below", joint_x = 0.5,
                              joint_y = 0.2, transcripts_y = 0.1){
@@ -91,8 +94,8 @@ transcripts_track = function(data, transcript_data=NULL, between_margin=NULL,
   intron_ID = rep(1:(nrow(joint_x_data) / 2), each = 2)
   joint_x_data = joint_x_data %>% mutate(intron_ID = intron_ID) %>%
     group_by(intron_ID) %>% mutate(joint_x_position = sum(value) * joint_x) %>% ungroup()
-  #' tmp_1 extract the joint top of the angle
-  #'
+  # tmp_1 extract the joint top of the angle
+  #
   tmp_1 = joint_x_data[ ,c(1:4,7:8)] %>% mutate(attr = rep("point", nrow(joint_x_data)))
   tmp_2 = joint_x_data[ ,c(1:4,7,6)] %>% mutate(attr = rep("bottom", nrow(joint_x_data)))
   colnames(tmp_2) = colnames(tmp_1)
@@ -104,10 +107,11 @@ transcripts_track = function(data, transcript_data=NULL, between_margin=NULL,
 
 
 
-#' plot seq stick and tri-angle for indicating the direction of the gene.
-#'
+# plot seq stick and tri-angle for indicating the direction of the gene.
+#
 
-#' pass either proportion or length.
+# pass either proportion or length.
+# @noRd
 add_transcripts_seq_line = function(data, transcripts_stop_proportion = NULL, transcripts_stop_length = 400){
   data2 = data %>% group_by(transcripts) %>%
     dplyr::summarize(x = min(xmin), max_xmax = max(xmax), y_middle = dplyr::first(y_middle),
@@ -126,7 +130,7 @@ add_transcripts_seq_line = function(data, transcripts_stop_proportion = NULL, tr
                                           x - transcripts_stop_length)) %>%
     mutate(x = if_else(strand == "+", x, max_xmax)) %>%
     mutate(y = y_middle, yend = y_middle)
-  #' determination of transcription direction.
+  # determination of transcription direction.
   return(data2)
 }
 
@@ -147,13 +151,14 @@ add_transcripts_seq_rect = function(data, backbone_ratio = 0.1) {
     )
 }
 
+# @noRd
 add_transcripts_direction = function(data, ratio = 0.25, angle = pi/3, lengthABS = 160, lengthPRO =NULL){
-  #' angle is the base angle of isosceles
-  #' pre: the transcripts dataframe , is the output of add_transcripts, require at least the end point of each transcripts. xend, yend, y_range(the height of exon) and the ID of
-  #' each transcripts
-  #' ratio is a para to describe the ratio = the length of base of isosceles triangle / (y_range)
-  #' prototyep of this function use the ratio to calculate the actual length of triangle.
-  #' potencial para r1 and r2.
+  # angle is the base angle of isosceles
+  # pre: the transcripts dataframe , is the output of add_transcripts, require at least the end point of each transcripts. xend, yend, y_range(the height of exon) and the ID of
+  # each transcripts
+  # ratio is a para to describe the ratio = the length of base of isosceles triangle / (y_range)
+  # prototyep of this function use the ratio to calculate the actual length of triangle.
+  # potencial para r1 and r2.
 
   data = data %>% arrange(transcripts)
   if (!"colour" %in% names(data)) {
@@ -182,7 +187,7 @@ add_transcripts_direction = function(data, ratio = 0.25, angle = pi/3, lengthABS
   data_triangle = data_triangle %>% select(transcripts, b1_x, b1_y, b2_x, b2_y, a_x, a_y)
   data_melt = melt(data_triangle, id=c("transcripts")) %>%
     arrange(transcripts)
-  #' be careful about the new columns with the name "x" and "y"
+  # be careful about the new columns with the name "x" and "y"
   data2= data.frame(
     x = as.numeric(data_melt$value[grep("x",data_melt$variable)]),
     y = as.numeric(data_melt$value[grep("y", data_melt$variable)]),
@@ -196,8 +201,9 @@ add_transcripts_direction = function(data, ratio = 0.25, angle = pi/3, lengthABS
   return(data2)
 }
 
-#' prepare the gene_tag ploygons
+# prepare the gene_tag ploygons
 
+# @noRd
 add_genetag = function(data, tag_height=NULL, tag_width=NULL, tag_angle=NULL, tag_rotate_angle=NULL, point_number = 4){
 
   tag_data = data %>% select(trackname, x, track_y) %>% mutate(track_y_m = track_y/2) %>%
@@ -235,13 +241,14 @@ protein_link_data = data.frame(x = c(0, 100, 30, 40),
                                         rep("transcripts2", 2)),
                                group = c(1,1,1,1))
 
-#' from ggforce
+# from ggforce
 #getSplines <- function(x, y, id, detail, type = "clamped") {
 #  .Call('_ggforce_getSplines', PACKAGE = 'ggforce', x, y, id, detail, type)
 #}
 
 
 
+# @noRd
 Splines_link_generate = function(data, detail = 100){
   withr::with_package("dplyr", {
   link_mins =  data %>% group_by(attr) %>% filter(x == min(x)) %>%

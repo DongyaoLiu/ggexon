@@ -2,9 +2,22 @@
 % Please edit documentation in R/SynSpecies-class.R
 \name{subset_synspecies_window}
 \alias{subset_synspecies_window}
+\alias{subset_synspecies_window,SynSpecies-method}
 \title{Subset a comparative window from a \code{SynSpecies} object}
 \usage{
 subset_synspecies_window(
+  x,
+  reference_species,
+  chr,
+  start,
+  end,
+  alignment = NULL,
+  selected_species = NULL,
+  filter_by_len = NULL,
+  max_target_gap = NULL
+)
+
+\S4method{subset_synspecies_window}{SynSpecies}(
   x,
   reference_species,
   chr,

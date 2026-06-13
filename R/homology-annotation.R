@@ -1102,6 +1102,7 @@ import_blast_homology <- function(blast_file,
 #'   homology metadata columns.
 #' @export
 setGeneric("homology_table", function(x) standardGeneric("homology_table"))
+#' @rdname homology_table
 setMethod("homology_table", "HomologyAnnotation", function(x) x@homology_table)
 
 #' @param x A `HomologyAnnotation` object.
@@ -1113,6 +1114,7 @@ setMethod("homology_table", "HomologyAnnotation", function(x) x@homology_table)
 setGeneric("homology_table<-", function(x, value) {
   standardGeneric("homology_table<-")
 })
+#' @rdname homology_table
 setReplaceMethod("homology_table", "HomologyAnnotation", function(x, value) {
   x@homology_table <- .normalize_homology_table(value)
   x <- .record_homology_edit(x, action = "replace_table", n = nrow(x@homology_table))
@@ -1166,6 +1168,7 @@ setGeneric("delete_homology", function(x, ...) standardGeneric("delete_homology"
 #' @export
 setGeneric("replace_homology", function(x, ...) standardGeneric("replace_homology"))
 
+#' @rdname homology-crud
 setMethod("add_homology", "HomologyAnnotation", function(x,
                                                           data = NULL,
                                                           query_gene = NULL,
@@ -1217,6 +1220,7 @@ setMethod("add_homology", "HomologyAnnotation", function(x,
   x
 })
 
+#' @rdname homology-crud
 setMethod("replace_homology", "HomologyAnnotation", function(x,
                                                               data = NULL,
                                                               query_gene = NULL,
@@ -1241,6 +1245,7 @@ setMethod("replace_homology", "HomologyAnnotation", function(x,
   x
 })
 
+#' @rdname homology-crud
 setMethod("delete_homology", "HomologyAnnotation", function(x,
                                                             data = NULL,
                                                             query_gene = NULL,
@@ -1306,14 +1311,17 @@ setMethod("delete_homology", "HomologyAnnotation", function(x,
   x
 })
 
+#' @rdname homology-crud
 setMethod("add_homology", "ANY", function(x, ...) {
   stop("`add_homology()` expects a HomologyAnnotation or SynSpecies object.", call. = FALSE)
 })
 
+#' @rdname homology-crud
 setMethod("replace_homology", "ANY", function(x, ...) {
   stop("`replace_homology()` expects a HomologyAnnotation or SynSpecies object.", call. = FALSE)
 })
 
+#' @rdname homology-crud
 setMethod("delete_homology", "ANY", function(x, ...) {
   stop("`delete_homology()` expects a HomologyAnnotation or SynSpecies object.", call. = FALSE)
 })
@@ -1325,6 +1333,7 @@ setMethod("delete_homology", "ANY", function(x, ...) {
 #' @return A scalar character value.
 #' @export
 setGeneric("reference_species", function(x) standardGeneric("reference_species"))
+#' @rdname reference_species
 setMethod("reference_species", "HomologyAnnotation", function(x) x@reference_species)
 
 #' Retrieve the query species from a HomologyAnnotation
@@ -1334,9 +1343,11 @@ setMethod("reference_species", "HomologyAnnotation", function(x) x@reference_spe
 #' @return A scalar character value.
 #' @export
 setGeneric("query_species", function(x) standardGeneric("query_species"))
+#' @rdname query_species
 setMethod("query_species", "HomologyAnnotation", function(x) x@query_species)
 
 #' @export
+#' @rdname ggexon-show
 setMethod("show", "HomologyAnnotation", function(object) {
   cat("An object of class \"HomologyAnnotation\"\n")
   cat("  name:", object@name, "\n")

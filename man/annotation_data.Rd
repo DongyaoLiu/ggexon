@@ -2,9 +2,15 @@
 % Please edit documentation in R/SynIndividual-class.R
 \name{annotation_data}
 \alias{annotation_data}
+\alias{annotation_data,SynIndividual-method}
+\alias{annotation_data,SynFeatureAnnotation-method}
 \title{Access annotation data}
 \usage{
 annotation_data(x)
+
+\S4method{annotation_data}{SynIndividual}(x)
+
+\S4method{annotation_data}{SynFeatureAnnotation}(x)
 }
 \arguments{
 \item{x}{A \code{SynIndividual} or \code{SynFeatureAnnotation} object.}

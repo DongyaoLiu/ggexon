@@ -573,6 +573,7 @@ SynSpecies <- function(name = NULL,
 }
 
 #' @export
+#' @rdname ggexon-show
 setMethod("show", "SynSpecies", function(object) {
   cat("An object of class \"SynSpecies\"\n")
   cat("  name:", object@name, "\n")
@@ -585,6 +586,7 @@ setMethod("show", "SynSpecies", function(object) {
 })
 
 #' @export
+#' @rdname ggexon-show
 setMethod("show", "SynLayout", function(object) {
   cat("An object of class \"SynLayout\"\n")
   cat("  layout_type:", object@layout_type, "\n")
@@ -1313,6 +1315,7 @@ setMethod("individuals", "SynSpecies", function(x) x@individuals)
 #' @return A character vector of individual identifiers in stored order.
 #' @export
 setGeneric("individual_names", function(x) standardGeneric("individual_names"))
+#' @rdname individual_names
 setMethod("individual_names", "SynSpecies", function(x) {
   out <- names(x@individuals)
   if (is.null(out)) {
@@ -1343,11 +1346,13 @@ setMethod("multiple_alignments", "SynSpecies", function(x) x@multiple_alignments
 #' @return The stored tree or tree plot object, or `NULL`.
 #' @export
 setGeneric("species_tree", function(x) standardGeneric("species_tree"))
+#' @rdname species_tree
 setMethod("species_tree", "SynSpecies", function(x) x@tree)
 
 #' @rdname species_tree
 #' @export
 setGeneric("species_tree_plot", function(x) standardGeneric("species_tree_plot"))
+#' @rdname species_tree
 setMethod("species_tree_plot", "SynSpecies", function(x) x@tree_plot)
 
 setGeneric("species_layout", function(x) standardGeneric("species_layout"))
@@ -1394,6 +1399,7 @@ setMethod("alignment_individuals", "SynMultiAlignment", function(x) x@individual
 #' @return A `data.frame` containing pairwise alignment rows.
 #' @export
 setGeneric("pairwise_alignment_data", function(x, ...) standardGeneric("pairwise_alignment_data"))
+#' @rdname pairwise_alignment_data
 setMethod("pairwise_alignment_data", "SynPairAlignment", function(x, alignment = NULL, ..., odgi = NULL, python = NULL) {
   .pairwise_alignment_data_impl(
     x = x,
@@ -1403,6 +1409,7 @@ setMethod("pairwise_alignment_data", "SynPairAlignment", function(x, alignment =
     ...
   )
 })
+#' @rdname pairwise_alignment_data
 setMethod("pairwise_alignment_data", "SynSpecies", function(x, alignment = NULL, ..., odgi = NULL, python = NULL) {
   pair <- .resolve_pairwise_alignment_arg(x = x, alignment = alignment)
   .pairwise_alignment_data_impl(
@@ -1468,6 +1475,7 @@ setGeneric("add_individual", function(x, individual, ...) {
   standardGeneric("add_individual")
 }, signature = c("x", "individual"))
 
+#' @rdname add_individual
 setMethod("add_individual", c("SynSpecies", "SynIndividual"), function(x, individual, ...) {
   new_individuals <- c(list(individual), list(...))
   bad_individuals <- !vapply(
@@ -1489,14 +1497,17 @@ setMethod("add_individual", c("SynSpecies", "SynIndividual"), function(x, indivi
   x
 })
 
+#' @rdname add_individual
 setMethod("add_individual", c("SynSpecies", "ANY"), function(x, individual, ...) {
   stop("All inputs after `x` must be SynIndividual objects.", call. = FALSE)
 })
 
+#' @rdname add_individual
 setMethod("add_individual", c("ANY", "SynIndividual"), function(x, individual, ...) {
   stop("`add_individual()` expects a SynSpecies object.", call. = FALSE)
 })
 
+#' @rdname add_individual
 setMethod("add_individual", c("ANY", "ANY"), function(x, individual, ...) {
   stop("`add_individual()` expects a SynSpecies object.", call. = FALSE)
 })
@@ -1535,6 +1546,7 @@ setGeneric("add_individuals_from_folder", function(x,
   standardGeneric("add_individuals_from_folder")
 }, signature = "x")
 
+#' @rdname add_individuals_from_folder
 setMethod("add_individuals_from_folder", "SynSpecies", function(x,
                                                                folder,
                                                                annotation_format = c("auto", "gff", "gtf"),
@@ -1599,6 +1611,7 @@ setMethod("add_individuals_from_folder", "SynSpecies", function(x,
   x
 })
 
+#' @rdname add_individuals_from_folder
 setMethod("add_individuals_from_folder", "ANY", function(x,
                                                          folder,
                                                          annotation_format = c("auto", "gff", "gtf"),
@@ -1617,6 +1630,7 @@ setGeneric("add_pairwise_alignment", function(x, alignment) {
   standardGeneric("add_pairwise_alignment")
 }, signature = c("x", "alignment"))
 
+#' @rdname add_pairwise_alignment
 setMethod("add_pairwise_alignment", c("SynSpecies", "SynPairAlignment"), function(x, alignment) {
 
   missing_species <- setdiff(alignment_individuals(alignment), names(individuals(x)))
@@ -1635,14 +1649,17 @@ setMethod("add_pairwise_alignment", c("SynSpecies", "SynPairAlignment"), functio
   x
 })
 
+#' @rdname add_pairwise_alignment
 setMethod("add_pairwise_alignment", c("SynSpecies", "ANY"), function(x, alignment) {
   stop("`alignment` must be a SynPairAlignment object.", call. = FALSE)
 })
 
+#' @rdname add_pairwise_alignment
 setMethod("add_pairwise_alignment", c("ANY", "SynPairAlignment"), function(x, alignment) {
   stop("`add_pairwise_alignment()` expects a SynSpecies object.", call. = FALSE)
 })
 
+#' @rdname add_pairwise_alignment
 setMethod("add_pairwise_alignment", c("ANY", "ANY"), function(x, alignment) {
   stop("`add_pairwise_alignment()` expects a SynSpecies object.", call. = FALSE)
 })
@@ -1658,6 +1675,7 @@ setGeneric("add_multiple_alignment", function(x, alignment) {
   standardGeneric("add_multiple_alignment")
 }, signature = c("x", "alignment"))
 
+#' @rdname add_multiple_alignment
 setMethod("add_multiple_alignment", c("SynSpecies", "SynMultiAlignment"), function(x, alignment) {
   entries <- x@multiple_alignments
   entries[[alignment_name(alignment)]] <- alignment
@@ -1666,14 +1684,17 @@ setMethod("add_multiple_alignment", c("SynSpecies", "SynMultiAlignment"), functi
   x
 })
 
+#' @rdname add_multiple_alignment
 setMethod("add_multiple_alignment", c("SynSpecies", "ANY"), function(x, alignment) {
   stop("`alignment` must be a SynMultiAlignment object.", call. = FALSE)
 })
 
+#' @rdname add_multiple_alignment
 setMethod("add_multiple_alignment", c("ANY", "SynMultiAlignment"), function(x, alignment) {
   stop("`add_multiple_alignment()` expects a SynSpecies object.", call. = FALSE)
 })
 
+#' @rdname add_multiple_alignment
 setMethod("add_multiple_alignment", c("ANY", "ANY"), function(x, alignment) {
   stop("`add_multiple_alignment()` expects a SynSpecies object.", call. = FALSE)
 })
@@ -1751,6 +1772,7 @@ setGeneric("add_tree", function(x, tree = NULL, tree_file = NULL, tree_plot = NU
   standardGeneric("add_tree")
 })
 
+#' @rdname add_tree
 setMethod("add_tree", "SynSpecies", function(x, tree = NULL, tree_file = NULL, tree_plot = NULL, ...) {
   dots <- list(...)
   if (length(dots) > 0L) {
@@ -1811,6 +1833,7 @@ setMethod("add_tree", "SynSpecies", function(x, tree = NULL, tree_file = NULL, t
   )
 })
 
+#' @rdname add_tree
 setMethod("add_tree", "ANY", function(x, tree = NULL, tree_file = NULL, tree_plot = NULL, ...) {
   stop("`add_tree()` expects a SynSpecies object.", call. = FALSE)
 })
@@ -1823,6 +1846,7 @@ setMethod("add_tree", "ANY", function(x, tree = NULL, tree_file = NULL, tree_plo
 #' @return The updated `SynSpecies` object.
 #' @export
 setGeneric("species_layout<-", function(x, value) standardGeneric("species_layout<-"))
+#' @rdname species_layout-set
 setReplaceMethod("species_layout", "SynSpecies", function(x, value) {
   x@layout <- as_syn_layout(value)
   validObject(x)
@@ -1837,6 +1861,7 @@ setReplaceMethod("species_layout", "SynSpecies", function(x, value) {
 #' @return The updated `SynSpecies` object.
 #' @export
 setGeneric("species_tree<-", function(x, value) standardGeneric("species_tree<-"))
+#' @rdname species_tree-set
 setReplaceMethod("species_tree", "SynSpecies", function(x, value) {
   x@tree <- value
   validObject(x)
@@ -1846,12 +1871,14 @@ setReplaceMethod("species_tree", "SynSpecies", function(x, value) {
 #' @rdname species_tree-set
 #' @export
 setGeneric("species_tree_plot<-", function(x, value) standardGeneric("species_tree_plot<-"))
+#' @rdname species_tree-set
 setReplaceMethod("species_tree_plot", "SynSpecies", function(x, value) {
   x@tree_plot <- value
   validObject(x)
   x
 })
 
+#' @rdname load_annotation
 setMethod("load_annotation", "SynSpecies", function(x, annotation = NULL, individual = NULL) {
   if (!is.null(individual)) {
     individual_obj <- resolve_syn_individual(x, species = individual)
@@ -1872,6 +1899,7 @@ setMethod("load_annotation", "SynSpecies", function(x, annotation = NULL, indivi
   x
 })
 
+#' @rdname subset_feature_annotation
 setMethod("subset_feature_annotation", "SynSpecies", function(x,
                                                               annotation = NULL,
                                                               individual = NULL,
@@ -1884,6 +1912,7 @@ setMethod("subset_feature_annotation", "SynSpecies", function(x,
   .subset_feature_annotation_impl(x, annotation, individual, chr, start, end, coords, gene, transcript)
 })
 
+#' @rdname subset_individual
 setMethod("subset_individual", "SynSpecies", function(x,
                                                       individual = NULL,
                                                       chr = NULL,
@@ -1964,6 +1993,7 @@ setGeneric("subset_species", function(x,
   standardGeneric("subset_species")
 })
 
+#' @rdname subset_species
 setMethod("subset_species", "SynSpecies", function(x,
                                                    coords,
                                                    annotations = c("all_feature", "active")) {
@@ -2027,6 +2057,7 @@ setGeneric("subset_pairwise_alignment", function(x, subset, alignment = NULL) {
   standardGeneric("subset_pairwise_alignment")
 })
 
+#' @rdname subset_pairwise_alignment
 setMethod("subset_pairwise_alignment", "SynPairAlignment", function(x, subset, alignment = NULL) {
   x@data <- pairwise_alignment_data(x, subset = subset)
   x@loaded <- TRUE
@@ -2034,6 +2065,7 @@ setMethod("subset_pairwise_alignment", "SynPairAlignment", function(x, subset, a
   x
 })
 
+#' @rdname subset_pairwise_alignment
 setMethod("subset_pairwise_alignment", "SynSpecies", function(x, subset, alignment = NULL) {
   pair <- .resolve_pairwise_alignment_arg(x = x, alignment = alignment)
   updated <- subset_pairwise_alignment(pair, subset = subset)
@@ -2068,6 +2100,7 @@ setGeneric("filter_pairwise_alignment", function(x, filter = 200, alignment = NU
   standardGeneric("filter_pairwise_alignment")
 })
 
+#' @rdname filter_pairwise_alignment
 setMethod("filter_pairwise_alignment", "SynPairAlignment", function(x, filter = 200, alignment = NULL) {
   x@data <- pairwise_alignment_data(x, filter = filter)
   x@loaded <- TRUE
@@ -2075,6 +2108,7 @@ setMethod("filter_pairwise_alignment", "SynPairAlignment", function(x, filter = 
   x
 })
 
+#' @rdname filter_pairwise_alignment
 setMethod("filter_pairwise_alignment", "SynSpecies", function(x, filter = 200, alignment = NULL) {
   pair <- .resolve_pairwise_alignment_arg(x = x, alignment = alignment)
   updated <- filter_pairwise_alignment(pair, filter = filter)
@@ -2124,6 +2158,7 @@ setGeneric("subset_synspecies_window", function(x,
   standardGeneric("subset_synspecies_window")
 })
 
+#' @rdname subset_synspecies_window
 setMethod("subset_synspecies_window", "SynSpecies", function(x,
                                                              reference_species,
                                                              chr,
@@ -3131,6 +3166,7 @@ setGeneric("load_alignment", function(x, odgi = NULL, python = NULL, more = NULL
   standardGeneric("load_alignment")
 })
 
+#' @rdname load_alignment
 setMethod("load_alignment", "SynPairAlignment", function(x, odgi = NULL, python = NULL, more = NULL, cigar = NULL, alignment = NULL) {
   if (identical(alignment_format(x), "psl")) {
     psl_more <- more
@@ -3176,6 +3212,7 @@ setMethod("load_alignment", "SynPairAlignment", function(x, odgi = NULL, python 
   x
 })
 
+#' @rdname load_alignment
 setMethod("load_alignment", "SynMultiAlignment", function(x, odgi = NULL, python = NULL, more = NULL, cigar = NULL, alignment = NULL) {
   if (is.null(x@data)) {
     if (!identical(alignment_format(x), "odgi")) {
@@ -3197,6 +3234,7 @@ setMethod("load_alignment", "SynMultiAlignment", function(x, odgi = NULL, python
   x
 })
 
+#' @rdname load_alignment
 setMethod("load_alignment", "SynSpecies", function(x, odgi = NULL, python = NULL, more = NULL, cigar = NULL, alignment = NULL) {
   if (!is.null(alignment)) {
     resolved <- .resolve_stored_alignment_arg(x, alignment = alignment)
@@ -3509,6 +3547,7 @@ setMethod("load_alignment", "SynSpecies", function(x, odgi = NULL, python = NULL
 #' @return A named list of `HomologyAnnotation` objects.
 #' @export
 setGeneric("homology_annotations", function(x) standardGeneric("homology_annotations"))
+#' @rdname homology_annotations
 setMethod("homology_annotations", "SynSpecies", function(x) x@homology_annotations)
 
 #' Add or replace a HomologyAnnotation on a SynSpecies
@@ -3520,17 +3559,21 @@ setMethod("homology_annotations", "SynSpecies", function(x) x@homology_annotatio
 setGeneric("add_homology_annotation", function(x, homology) {
   standardGeneric("add_homology_annotation")
 }, signature = c("x", "homology"))
+#' @rdname add_homology_annotation
 setMethod("add_homology_annotation", c("SynSpecies", "HomologyAnnotation"), function(x, homology) {
   x@homology_annotations[[annotation_name(homology)]] <- homology
   validObject(x)
   x
 })
+#' @rdname add_homology_annotation
 setMethod("add_homology_annotation", c("SynSpecies", "ANY"), function(x, homology) {
   stop("`homology` must be a HomologyAnnotation object.", call. = FALSE)
 })
+#' @rdname add_homology_annotation
 setMethod("add_homology_annotation", c("ANY", "HomologyAnnotation"), function(x, homology) {
   stop("`add_homology_annotation()` expects a SynSpecies object.", call. = FALSE)
 })
+#' @rdname add_homology_annotation
 setMethod("add_homology_annotation", c("ANY", "ANY"), function(x, homology) {
   stop("`add_homology_annotation()` expects a SynSpecies object.", call. = FALSE)
 })
@@ -3645,6 +3688,7 @@ get_homology_annotation <- function(x, query_species = NULL, name = NULL) {
   x
 }
 
+#' @rdname homology-crud
 setMethod("add_homology", "SynSpecies", function(x,
                                                   data = NULL,
                                                   query_gene = NULL,
@@ -3669,6 +3713,7 @@ setMethod("add_homology", "SynSpecies", function(x,
   .replace_homology_annotation_for_edit(x, target, homology)
 })
 
+#' @rdname homology-crud
 setMethod("replace_homology", "SynSpecies", function(x,
                                                       data = NULL,
                                                       query_gene = NULL,
@@ -3693,6 +3738,7 @@ setMethod("replace_homology", "SynSpecies", function(x,
   .replace_homology_annotation_for_edit(x, target, homology)
 })
 
+#' @rdname homology-crud
 setMethod("delete_homology", "SynSpecies", function(x,
                                                      data = NULL,
                                                      query_gene = NULL,

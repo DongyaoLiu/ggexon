@@ -1,4 +1,5 @@
 #' utilities for new S7 class definition
+#' @noRd
 warn_dots_empty <- function(env = caller_env(), call = caller_env()) {
   check_dots_empty(
     env = env, call = call,

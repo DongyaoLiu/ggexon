@@ -2,9 +2,21 @@
 % Please edit documentation in R/SynSpecies-class.R
 \name{add_individual}
 \alias{add_individual}
+\alias{add_individual,SynSpecies,SynIndividual-method}
+\alias{add_individual,SynSpecies,ANY-method}
+\alias{add_individual,ANY,SynIndividual-method}
+\alias{add_individual,ANY,ANY-method}
 \title{Add SynIndividual objects to a SynSpecies object}
 \usage{
 add_individual(x, individual, ...)
+
+\S4method{add_individual}{SynSpecies,SynIndividual}(x, individual, ...)
+
+\S4method{add_individual}{SynSpecies,ANY}(x, individual, ...)
+
+\S4method{add_individual}{ANY,SynIndividual}(x, individual, ...)
+
+\S4method{add_individual}{ANY,ANY}(x, individual, ...)
 }
 \arguments{
 \item{x}{A \code{SynSpecies} object.}

@@ -2,9 +2,15 @@
 % Please edit documentation in R/SynSpecies-class.R
 \name{pairwise_alignment_data}
 \alias{pairwise_alignment_data}
+\alias{pairwise_alignment_data,SynPairAlignment-method}
+\alias{pairwise_alignment_data,SynSpecies-method}
 \title{Retrieve pairwise alignment rows}
 \usage{
 pairwise_alignment_data(x, ...)
+
+\S4method{pairwise_alignment_data}{SynPairAlignment}(x, alignment = NULL, ..., odgi = NULL, python = NULL)
+
+\S4method{pairwise_alignment_data}{SynSpecies}(x, alignment = NULL, ..., odgi = NULL, python = NULL)
 }
 \arguments{
 \item{x}{A \code{\link{SynPairAlignment}} or \code{\link{SynSpecies}} object.}
