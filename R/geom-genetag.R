@@ -165,7 +165,7 @@ compile_ggtree_rectangular_segments <- function(tree = NULL,
 }
 
 #' @export
-ggplot_add.ggtree <- function(object, plot, object_name) {
+ggplot_add.ggtree <- function(object, plot, ...) {
   if (!inherits(plot, "ggexon")) {
     stop(
       "Adding a ggtree object with `+` is supported only for `ggexon()` plots. ",

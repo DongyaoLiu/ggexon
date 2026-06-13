@@ -37,7 +37,7 @@
 }
 
 #' @export
-ggplot_add.ggexon_strip_scale_spec <- function(object, plot, object_name) {
+ggplot_add.ggexon_strip_scale_spec <- function(object, plot, ...) {
   if (!is_ggexon(plot)) stop("`strip_scale()` can only be added to a ggexon plot.", call. = FALSE)
   if (!is.null(plot@genomic_x_scale)) stop(
     "`strip_scale()` and `scale_x_ggexon_genomic()` are mutually exclusive.", call. = FALSE)

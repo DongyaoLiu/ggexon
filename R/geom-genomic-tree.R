@@ -43,7 +43,7 @@ geom_genomic_tree <- function(tree = NULL,
 }
 
 #' @export
-ggplot_add.ggexon_genomic_tree_spec <- function(object, plot, object_name) {
+ggplot_add.ggexon_genomic_tree_spec <- function(object, plot, ...) {
   if (!is_ggexon(plot)) {
     stop("`geom_genomic_tree()` can only be added to a ggexon plot.", call. = FALSE)
   }

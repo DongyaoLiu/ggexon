@@ -150,7 +150,7 @@ compact_cross_panel_params <- function(x) {
 }
 
 #' @export
-ggplot_add.cross_panel_annotation <- function(object, plot, object_name) {
+ggplot_add.cross_panel_annotation <- function(object, plot, ...) {
   if (!is_ggexon(plot)) {
     cli::cli_abort(
       "Cross-panel annotations currently support {.cls ggexon} plots only."

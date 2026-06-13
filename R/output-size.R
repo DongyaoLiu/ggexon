@@ -36,7 +36,7 @@ ggexon_output_size <- function(width,
 }
 
 #' @export
-ggplot_add.ggexon_output_size_spec <- function(object, plot, object_name) {
+ggplot_add.ggexon_output_size_spec <- function(object, plot, ...) {
   if (!is_ggexon(plot)) {
     stop("`ggexon_output_size()` can only be added to a ggexon plot.", call. = FALSE)
   }

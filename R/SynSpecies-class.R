@@ -1234,7 +1234,7 @@ set_panel_xlim <- function(x = NULL, individual = NULL, xlim = NULL, xlim_chr = 
 }
 
 #' @export
-ggplot_add.set_panel_xlim_spec <- function(object, plot, object_name) {
+ggplot_add.set_panel_xlim_spec <- function(object, plot, ...) {
   if (!is_ggexon(plot)) {
     cli::cli_abort(
       "{.fn set_panel_xlim} additions currently support {.cls ggexon} plots only."

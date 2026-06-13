@@ -167,7 +167,7 @@ ggexon_genomic_x_guide_type <- function(scale_spec) {
 }
 
 #' @export
-ggplot_add.ggexon_genomic_x_scale_spec <- function(object, plot, object_name) {
+ggplot_add.ggexon_genomic_x_scale_spec <- function(object, plot, ...) {
   if (!is_ggexon(plot)) {
     stop("`scale_x_ggexon_genomic()` can only be added to a ggexon plot.", call. = FALSE)
   }

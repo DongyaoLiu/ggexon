@@ -108,7 +108,7 @@ strip_scale <- function(...) {
 }
 
 #' @export
-ggplot_add.ggexon_strip_scale_x_spec <- function(object, plot, object_name) {
+ggplot_add.ggexon_strip_scale_x_spec <- function(object, plot, ...) {
   if (!is_ggexon(plot)) {
     stop("`strip_scale_x()` can only be added to a ggexon plot.", call. = FALSE)
   }
