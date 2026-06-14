@@ -40,3 +40,21 @@ test_that("theme_ggexon_genomictree renders aligned panels with themed labels", 
   )
   expect_false(any(grepl("^genomic-tree-label-", blank_label_grob$layout$name)))
 })
+
+test_that("theme_ggexon_side_strips styles side strips for horizontal reading", {
+  th_left <- theme_ggexon_side_strips("left")
+  expect_s3_class(th_left, "theme")
+  expect_identical(th_left$strip.placement, "outside")
+  expect_s3_class(th_left$strip.text.y.left, "element_text")
+  expect_equal(th_left$strip.text.y.left$angle, 0)
+  expect_equal(th_left$strip.text.y.left$hjust, 1)
+  expect_s3_class(th_left$strip.background, "element_rect")
+
+  th_right <- theme_ggexon_side_strips("right")
+  expect_s3_class(th_right$strip.text.y.right, "element_text")
+  expect_equal(th_right$strip.text.y.right$angle, 0)
+  expect_equal(th_right$strip.text.y.right$hjust, 0)
+
+  expect_s3_class(theme_ggexon_side_strips("left", background = NA)$strip.background, "element_blank")
+  expect_error(theme_ggexon_side_strips("bad"), "side")
+})

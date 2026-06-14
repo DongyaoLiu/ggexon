@@ -90,6 +90,7 @@ reference:
   - strip_scale
   - guide_x_ggexon_piecewise
   - theme_ggexon_track
+  - theme_ggexon_side_strips
   - annotate_cross_panel
   - link_panels
   - set_panel_xlim

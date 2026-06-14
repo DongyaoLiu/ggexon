@@ -306,10 +306,12 @@ apply_link_panel_layout <- function(table, build) {
   link_panel_height <- params$link_panel_height %||% NULL
   link_axis <- params$link_axis %||% "inherit"
   link_strip <- params$link_strip %||% "inherit"
+  annotation_axis <- params$annotation_axis %||% "all"
 
-  if (is.null(link_panel_height) &&
-      identical(link_axis, "inherit") &&
-      identical(link_strip, "inherit")) {
+  link_active <- !is.null(link_panel_height) ||
+    !identical(link_axis, "inherit") ||
+    !identical(link_strip, "inherit")
+  if (!link_active && identical(annotation_axis, "all")) {
     return(table)
   }
 
@@ -321,12 +323,10 @@ apply_link_panel_layout <- function(table, build) {
   layout_df$.ggexon_panel_type <- link_panel_type(layout_df)
   link_rows <- layout_df$.ggexon_panel_type == "link"
   link_rows[is.na(link_rows)] <- FALSE
-  if (!any(link_rows)) {
-    return(table)
-  }
+  link_iter <- if (link_active) which(link_rows) else integer(0)
 
   height_unit <- link_panel_height_unit(link_panel_height)
-  for (i in which(link_rows)) {
+  for (i in link_iter) {
     panel_row <- ggexon_gtable_index(layout_df$ROW[[i]])
     panel_col <- ggexon_gtable_index(layout_df$COL[[i]])
     only_link_row <- layout_row_contains_only_link_panels(layout_df, panel_row)
@@ -359,6 +359,38 @@ apply_link_panel_layout <- function(table, build) {
     }
   }
 
+  if (identical(annotation_axis, "bottom")) {
+    table <- collapse_interior_annotation_axes(table, layout_df)
+  }
+
+  table
+}
+
+# Keep the annotation x-axis only on the bottom-most annotation panel of each
+# column; blank the interior ones and collapse their reclaimed axis rows so
+# the stacked panels sit compactly (the per-panel free_x scales are kept).
+collapse_interior_annotation_axes <- function(table, layout_df) {
+  ann <- which(layout_df$.ggexon_panel_type == "annotation")
+  if (!length(ann)) {
+    return(table)
+  }
+  cols <- ggexon_gtable_index(layout_df$COL)
+  rows <- ggexon_gtable_index(layout_df$ROW)
+  for (col in unique(cols[ann])) {
+    in_col <- ann[cols[ann] == col]
+    bottom_row <- max(rows[in_col])
+    for (i in in_col) {
+      if (rows[[i]] != bottom_row) {
+        table <- blank_link_panel_axes(
+          table,
+          panel_col = cols[[i]],
+          panel_row = rows[[i]],
+          link_axis = "y",
+          collapse_horizontal = TRUE
+        )
+      }
+    }
+  }
   table
 }
 

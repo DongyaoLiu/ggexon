@@ -40,6 +40,12 @@
 #' @param link_strip Link-panel strip handling. `"inherit"` keeps link-panel
 #'   strips. `"blank"` removes link-panel strip grobs and collapses horizontal
 #'   strip rows when they contain only link panels.
+#' @param annotation_axis Annotation-panel x-axis handling for stacked
+#'   (single-column) genomic layouts. `"all"` (default) keeps the per-panel
+#'   x-axis that `scales = "free_x"` draws on every panel. `"bottom"` keeps the
+#'   x-axis only on the bottom-most annotation panel of each column and blanks
+#'   the interior ones, collapsing the reclaimed axis rows so the panels sit
+#'   compactly. The per-panel free scales are preserved either way.
 #' @param xlim Optional panel-specific x limits for Syn-aware annotation panels.
 #'   Supply a named list of numeric length-2 vectors keyed by individual /
 #'   annotation-panel name. If the plot contains only one annotation panel, a
@@ -73,11 +79,13 @@ facet_genomics <- function(facets, nrow = NULL, ncol = NULL, scales = "fixed",
                        strip.position = 'top', axes = "margins",
                        axis.labels = "all", link_panel_height = NULL,
                        link_axis = "inherit", link_strip = "inherit",
+                       annotation_axis = "all",
                        xlim = NULL, xlim_chr = NULL) {
   scales <- arg_match0(scales %||% "fixed", c("fixed", "free_x", "free_y", "free"))
   dir <- arg_match0(dir, c("h", "v", "lt", "tl", "lb", "bl", "rt", "tr", "rb", "br"))
   link_axis <- arg_match0(link_axis %||% "inherit", c("inherit", "none", "x", "y"))
   link_strip <- arg_match0(link_strip %||% "inherit", c("inherit", "blank"))
+  annotation_axis <- arg_match0(annotation_axis %||% "all", c("all", "bottom"))
   link_panel_height <- .validate_link_panel_height(link_panel_height)
 
   if (nchar(dir) == 1) {
@@ -144,7 +152,8 @@ facet_genomics <- function(facets, nrow = NULL, ncol = NULL, scales = "fixed",
       panel_xlim_chr = xlim_chr,
       link_panel_height = link_panel_height,
       link_axis = link_axis,
-      link_strip = link_strip
+      link_strip = link_strip,
+      annotation_axis = annotation_axis
     )
   )
 }

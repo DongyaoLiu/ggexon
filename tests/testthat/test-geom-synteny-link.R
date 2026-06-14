@@ -186,3 +186,55 @@ test_that("facet_genomics can compact link panels in the rendered gtable", {
     "link_strip"
   )
 })
+
+test_that("facet_genomics(annotation_axis = 'bottom') keeps the x-axis only on the bottom annotation panel", {
+  track_levels <- c("human", "link_human_macaque", "macaque")
+  annotation_df <- data.frame(
+    track = factor(c("human", "macaque"), levels = track_levels),
+    x = c(10, 1000), y = c(1, 1)
+  )
+  link_df <- data.frame(
+    track = factor("link_human_macaque", levels = track_levels),
+    tspecies = "human", tchr = "chr7", tstart = 12, tend = 20, strand = "+",
+    qspecies = "macaque", qchr = "chr3", qstart = 1010, qend = 1030,
+    group = 1, hox_group = "HOXA1"
+  )
+  make_table <- function(annotation_axis) {
+    built <- ggexon_build(
+      ggexon() +
+        ggplot2::geom_blank(data = annotation_df, mapping = ggplot2::aes(x = x, y = y)) +
+        geom_synteny_link(
+          data = link_df,
+          mapping = ggplot2::aes(
+            tspecies = tspecies, tchr = tchr, tstart = tstart, tend = tend, strand = strand,
+            qspecies = qspecies, qchr = qchr, qstart = qstart, qend = qend,
+            group = group, fill = hox_group
+          ),
+          inherit.aes = FALSE
+        ) +
+        facet_genomics(
+          ggplot2::vars(track), scales = "free_x", ncol = 1,
+          link_axis = "none", annotation_axis = annotation_axis
+        )
+    )
+    ggplot2::ggplot_gtable(built)
+  }
+
+  # default keeps the per-panel x-axis on both annotation panels
+  tab_all <- make_table("all")
+  expect_false(inherits(tab_all$grobs[[which(tab_all$layout$name == "axis-b-1-1")]], "zeroGrob"))
+  expect_false(inherits(tab_all$grobs[[which(tab_all$layout$name == "axis-b-1-3")]], "zeroGrob"))
+
+  # 'bottom' blanks the interior (top) annotation axis and keeps the bottom one
+  tab_bottom <- make_table("bottom")
+  top_axis <- which(tab_bottom$layout$name == "axis-b-1-1")
+  bot_axis <- which(tab_bottom$layout$name == "axis-b-1-3")
+  expect_s3_class(tab_bottom$grobs[[top_axis]], "zeroGrob")
+  expect_false(inherits(tab_bottom$grobs[[bot_axis]], "zeroGrob"))
+  expect_equal(
+    grid::convertHeight(tab_bottom$heights[tab_bottom$layout$t[[top_axis]]], "pt", valueOnly = TRUE),
+    0
+  )
+
+  expect_error(facet_genomics(ggplot2::vars(track), annotation_axis = "bad"), "annotation_axis")
+})

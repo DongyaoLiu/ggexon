@@ -21,6 +21,7 @@ facet_genomics(
   link_panel_height = NULL,
   link_axis = "inherit",
   link_strip = "inherit",
+  annotation_axis = "all",
   xlim = NULL,
   xlim_chr = NULL
 )
@@ -64,6 +65,13 @@ keeps only x axes, and \code{"y"} keeps only y axes.}
 \item{link_strip}{Link-panel strip handling. \code{"inherit"} keeps link-panel
 strips. \code{"blank"} removes link-panel strip grobs and collapses horizontal
 strip rows when they contain only link panels.}
+
+\item{annotation_axis}{Annotation-panel x-axis handling for stacked
+(single-column) genomic layouts. \code{"all"} (default) keeps the per-panel
+x-axis that \code{scales = "free_x"} draws on every panel. \code{"bottom"} keeps the
+x-axis only on the bottom-most annotation panel of each column and blanks
+the interior ones, collapsing the reclaimed axis rows so the panels sit
+compactly. The per-panel free scales are preserved either way.}
 
 \item{xlim}{Optional panel-specific x limits for Syn-aware annotation panels.
 Supply a named list of numeric length-2 vectors keyed by individual /

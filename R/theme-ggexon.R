@@ -104,6 +104,59 @@ theme_ggexon_genomictree <- function(base_size = 8,
     )
 }
 
+#' Place ggexon facet strips on the side
+#'
+#' A theme helper for putting facet strip labels (e.g. species tracks) on the
+#' left or right of the panels instead of stacked on top, which reclaims the
+#' vertical row a top strip would otherwise occupy. This styles the side-strip
+#' text so labels read horizontally and sit just outside the panels.
+#'
+#' The actual strip *position* is set by the facet, so pair this with
+#' `facet_genomics(strip.position = "<side>")` using the same `side`.
+#'
+#' @param side `"right"` or `"left"`. Must match the `strip.position` passed to
+#'   [facet_genomics()].
+#' @param base_size Base font size for the strip text.
+#' @param face Font face for the strip text (e.g. `"bold"`).
+#' @param background Strip-background fill colour, or `NA`/`"none"` for none.
+#'
+#' @return A ggplot2 theme object to add to a ggexon plot.
+#'
+#' @examples
+#' p <- ggplot2::ggplot(mtcars, ggplot2::aes(wt, mpg)) +
+#'   ggplot2::geom_point() +
+#'   ggplot2::facet_wrap(ggplot2::vars(cyl), ncol = 1, strip.position = "left")
+#' p + theme_ggexon_side_strips("left")
+#' @seealso [theme_ggexon_track()], [facet_genomics()]
+#' @export
+theme_ggexon_side_strips <- function(side = c("right", "left"),
+                                     base_size = 8,
+                                     face = "bold",
+                                     background = "grey96") {
+  side <- arg_match0(side, c("right", "left"))
+  strip_text <- ggplot2::element_text(
+    size = base_size,
+    face = face,
+    colour = "grey20",
+    angle = 0,
+    hjust = if (side == "left") 1 else 0,
+    margin = ggplot2::margin(l = 3, r = 3)
+  )
+  strip_bg <- if (length(background) != 1L || is.na(background) ||
+                  identical(background, "none")) {
+    ggplot2::element_blank()
+  } else {
+    ggplot2::element_rect(fill = background, colour = NA)
+  }
+  args <- list(
+    strip.placement = "outside",
+    strip.text.y = strip_text,
+    strip.background = strip_bg
+  )
+  args[[if (side == "left") "strip.text.y.left" else "strip.text.y.right"]] <- strip_text
+  do.call(ggplot2::theme, args)
+}
+
 ggexon_element_text_gpar <- function(element, default_size = 8) {
   if (is.null(element) || inherits(element, "element_blank")) {
     return(NULL)
