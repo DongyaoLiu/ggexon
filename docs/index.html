@@ -74,7 +74,7 @@
 <div class="float">
 <img src="reference/figures/hoxa-ensembl115-demo.png" alt="HOXA synteny across human, rhesus macaque, mouse, chicken, and green anole"><div class="figcaption">HOXA synteny across human, rhesus macaque, mouse, chicken, and green anole</div>
 </div>
-<p>The bundled HOXA demo uses Ensembl release 115 annotations to show how ggexon can present a conserved gene cluster across distant vertebrates. Gene intervals are drawn with <code><a href="reference/geom_genetag.html">geom_genetag()</a></code>, while orthology/synteny ribbons are drawn with <code><a href="reference/geom_synteny_link.html">geom_synteny_link()</a></code>. The example is intentionally plot-ready, so users can inspect the data tables, see the complete code, and adapt the same grammar to their own comparative-genomics datasets.</p>
+<p>The bundled HOXA demo uses Ensembl release 115 annotations to show how ggexon can present a conserved gene cluster across distant vertebrates. Gene intervals are drawn with <code><a href="reference/geom_genetag.html">geom_genetag()</a></code>, while orthology/synteny ribbons are drawn with <code><a href="reference/geom_synteny_link.html">geom_synteny_link()</a></code>. The example is intentionally plot-ready, so users can inspect the data tables, see the complete code, and adapt the same grammar to their own comparative-genomics datasets. It also demonstrates two layout problems that appear in real genome annotations: compact multi-panel synteny links and overlapping or nested gene spans.</p>
 <p>Open <code><a href="articles/hoxa-ensembl115-demo.html">vignette("hoxa-ensembl115-demo", package = "ggexon")</a></code> for the full example, data provenance, and a short explanation of how link panels are built internally.</p>
 </div>
 <div class="section level2">
@@ -83,11 +83,11 @@
 <p><code>ggexon</code> is currently a development package.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"DongyaoLiu/ggexon"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"DongyaoLiu/ggexon"</span><span class="op">)</span></span></code></pre></div>
 <p>Some dependencies are from Bioconductor. If your R installation cannot resolve them automatically, install them first:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span></span>
-<span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu">install</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://bioconductor.github.io/BiocManager/reference/install.html" class="external-link">install</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>  <span class="st">"Biostrings"</span>,</span>
 <span>  <span class="st">"GenomeInfoDb"</span>,</span>
 <span>  <span class="st">"GenomicRanges"</span>,</span>

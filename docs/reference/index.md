@@ -126,6 +126,8 @@ and control genomic x-axis guides.
 - [`theme_ggexon_track()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_track.md)
   [`theme_ggexon_genomictree()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_track.md)
   : ggexon themes for genomic tracks
+- [`theme_ggexon_side_strips()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_side_strips.md)
+  : Place ggexon facet strips on the side
 - [`annotate_cross_panel()`](https://dongyaoliu.github.io/ggexon/reference/annotate_cross_panel.md)
   : Cross-panel annotation specification
 - [`link_panels()`](https://dongyaoliu.github.io/ggexon/reference/link_panels.md)

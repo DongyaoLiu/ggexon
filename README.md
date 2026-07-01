@@ -27,7 +27,9 @@ can present a conserved gene cluster across distant vertebrates. Gene intervals
 are drawn with `geom_genetag()`, while orthology/synteny ribbons are drawn with
 `geom_synteny_link()`. The example is intentionally plot-ready, so users can
 inspect the data tables, see the complete code, and adapt the same grammar to
-their own comparative-genomics datasets.
+their own comparative-genomics datasets. It also demonstrates two layout
+problems that appear in real genome annotations: compact multi-panel synteny
+links and overlapping or nested gene spans.
 
 Open `vignette("hoxa-ensembl115-demo", package = "ggexon")` for the full
 example, data provenance, and a short explanation of how link panels are built

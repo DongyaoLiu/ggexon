@@ -26,6 +26,7 @@ facet_genomics(
   link_panel_height = NULL,
   link_axis = "inherit",
   link_strip = "inherit",
+  annotation_axis = "all",
   xlim = NULL,
   xlim_chr = NULL
 )
@@ -100,6 +101,15 @@ facet_genomics(
   Link-panel strip handling. `"inherit"` keeps link-panel strips.
   `"blank"` removes link-panel strip grobs and collapses horizontal
   strip rows when they contain only link panels.
+
+- annotation_axis:
+
+  Annotation-panel x-axis handling for stacked (single-column) genomic
+  layouts. `"all"` (default) keeps the per-panel x-axis that
+  `scales = "free_x"` draws on every panel. `"bottom"` keeps the x-axis
+  only on the bottom-most annotation panel of each column and blanks the
+  interior ones, collapsing the reclaimed axis rows so the panels sit
+  compactly. The per-panel free scales are preserved either way.
 
 - xlim:
 

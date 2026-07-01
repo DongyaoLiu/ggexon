@@ -36,7 +36,9 @@ while orthology/synteny ribbons are drawn with
 [`geom_synteny_link()`](https://dongyaoliu.github.io/ggexon/reference/geom_synteny_link.md).
 The example is intentionally plot-ready, so users can inspect the data
 tables, see the complete code, and adapt the same grammar to their own
-comparative-genomics datasets.
+comparative-genomics datasets. It also demonstrates two layout problems
+that appear in real genome annotations: compact multi-panel synteny
+links and overlapping or nested gene spans.
 
 Open
 [`vignette("hoxa-ensembl115-demo", package = "ggexon")`](https://dongyaoliu.github.io/ggexon/articles/hoxa-ensembl115-demo.md)

@@ -70,6 +70,7 @@ intermediate link panels used by <code><a href="geom_nuclink.html">geom_nuclink(
 <span>  link_panel_height <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  link_axis <span class="op">=</span> <span class="st">"inherit"</span>,</span>
 <span>  link_strip <span class="op">=</span> <span class="st">"inherit"</span>,</span>
+<span>  annotation_axis <span class="op">=</span> <span class="st">"all"</span>,</span>
 <span>  xlim <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  xlim_chr <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -146,6 +147,15 @@ keeps only x axes, and <code>"y"</code> keeps only y axes.</p></dd>
 <dd><p>Link-panel strip handling. <code>"inherit"</code> keeps link-panel
 strips. <code>"blank"</code> removes link-panel strip grobs and collapses horizontal
 strip rows when they contain only link panels.</p></dd>
+
+
+<dt id="arg-annotation-axis">annotation_axis<a class="anchor" aria-label="anchor" href="#arg-annotation-axis"></a></dt>
+<dd><p>Annotation-panel x-axis handling for stacked
+(single-column) genomic layouts. <code>"all"</code> (default) keeps the per-panel
+x-axis that <code>scales = "free_x"</code> draws on every panel. <code>"bottom"</code> keeps the
+x-axis only on the bottom-most annotation panel of each column and blanks
+the interior ones, collapsing the reclaimed axis rows so the panels sit
+compactly. The per-panel free scales are preserved either way.</p></dd>
 
 
 <dt id="arg-xlim">xlim<a class="anchor" aria-label="anchor" href="#arg-xlim"></a></dt>

@@ -39,11 +39,10 @@ test_that("HOXA demo data render with geom_synteny_link fill mappings", {
   links <- read.delim(file.path(demo_dir, "hoxa_links.tsv"), check.names = FALSE)
   species <- read.delim(file.path(demo_dir, "hoxa_species.tsv"), check.names = FALSE)
 
-  track_levels <- as.vector(rbind(
-    species$species[-nrow(species)],
-    paste0("link_", species$species[-nrow(species)], "_", species$species[-1])
-  ))
-  track_levels <- c(track_levels, species$species[nrow(species)])
+  species_tracks <- species$species
+  link_tracks <- paste0("link_", head(species_tracks, -1), "_", tail(species_tracks, -1))
+  track_levels <- as.vector(rbind(head(species_tracks, -1), link_tracks))
+  track_levels <- c(track_levels, tail(species_tracks, 1))
   genes$track <- factor(genes$track, levels = track_levels)
   links$track <- factor(links$track, levels = track_levels)
 

@@ -22,121 +22,29 @@ TSV files.
 ``` r
 
 library(ggexon)
-#> Loading required package: gtable
-#> Loading required package: ggforce
-#> Loading required package: ggplot2
-#> Loading required package: dplyr
-#> 
-#> Attaching package: 'dplyr'
-#> The following objects are masked from 'package:stats':
-#> 
-#>     filter, lag
-#> The following objects are masked from 'package:base':
-#> 
-#>     intersect, setdiff, setequal, union
-#> Loading required package: rtracklayer
-#> Loading required package: GenomicRanges
-#> Loading required package: stats4
-#> Loading required package: BiocGenerics
-#> Loading required package: generics
-#> 
-#> Attaching package: 'generics'
-#> The following object is masked from 'package:dplyr':
-#> 
-#>     explain
-#> The following objects are masked from 'package:base':
-#> 
-#>     as.difftime, as.factor, as.ordered, intersect, is.element, setdiff,
-#>     setequal, union
-#> 
-#> Attaching package: 'BiocGenerics'
-#> The following object is masked from 'package:dplyr':
-#> 
-#>     combine
-#> The following objects are masked from 'package:stats':
-#> 
-#>     IQR, mad, sd, var, xtabs
-#> The following objects are masked from 'package:base':
-#> 
-#>     anyDuplicated, aperm, append, as.data.frame, basename, cbind,
-#>     colnames, dirname, do.call, duplicated, eval, evalq, Filter, Find,
-#>     get, grep, grepl, is.unsorted, lapply, Map, mapply, match, mget,
-#>     order, paste, pmax, pmax.int, pmin, pmin.int, Position, rank,
-#>     rbind, Reduce, rownames, sapply, saveRDS, table, tapply, unique,
-#>     unsplit, which.max, which.min
-#> Loading required package: S4Vectors
-#> 
-#> Attaching package: 'S4Vectors'
-#> The following objects are masked from 'package:dplyr':
-#> 
-#>     first, rename
-#> The following object is masked from 'package:utils':
-#> 
-#>     findMatches
-#> The following objects are masked from 'package:base':
-#> 
-#>     expand.grid, I, unname
-#> Loading required package: IRanges
-#> 
-#> Attaching package: 'IRanges'
-#> The following objects are masked from 'package:dplyr':
-#> 
-#>     collapse, desc, slice
-#> Loading required package: Seqinfo
-#> Loading required package: grid
-#> Loading required package: tidyr
-#> 
-#> Attaching package: 'tidyr'
-#> The following object is masked from 'package:S4Vectors':
-#> 
-#>     expand
-#> Loading required package: scales
-#> Loading required package: reshape2
-#> 
-#> Attaching package: 'reshape2'
-#> The following object is masked from 'package:tidyr':
-#> 
-#>     smiths
-#> Loading required package: rlang
-#> Loading required package: vctrs
-#> 
-#> Attaching package: 'vctrs'
-#> The following object is masked from 'package:dplyr':
-#> 
-#>     data_frame
-#> Loading required package: S7
-#> 
-#> Attaching package: 'ggexon'
-#> The following objects are masked from 'package:ggplot2':
-#> 
-#>     .expose_data, .ignore_data, after_scale, after_stat, check_device,
-#>     class_coord, class_derive, class_facet, class_ggplot,
-#>     class_ggproto, class_guide, class_guides, class_labels,
-#>     class_layer, class_layout, class_mapping, class_rel, class_S3_gg,
-#>     class_scale, class_scales_list, class_theme, class_waiver,
-#>     class_zero_grob, flip_data, flipped_names, gg_dep, ggplotGrob,
-#>     has_flipped_aes, remove_missing, should_stop, stage, stat, waiver
 
 demo_dir <- system.file("extdata", "hoxa_ensembl115", package = "ggexon")
 genes <- read.delim(file.path(demo_dir, "hoxa_genes.tsv"), check.names = FALSE)
 links <- read.delim(file.path(demo_dir, "hoxa_links.tsv"), check.names = FALSE)
 species <- read.delim(file.path(demo_dir, "hoxa_species.tsv"), check.names = FALSE)
 
-track_levels <- as.vector(rbind(
-  species$species[-nrow(species)],
-  paste0("link_", species$species[-nrow(species)], "_", species$species[-1])
-))
-track_levels <- c(track_levels, species$species[nrow(species)])
+# Insert one ribbon-only panel between every adjacent pair of species tracks.
+species_tracks <- species$species
+link_tracks <- paste0("link_", head(species_tracks, -1), "_", tail(species_tracks, -1))
+track_levels <- as.vector(rbind(head(species_tracks, -1), link_tracks))
+track_levels <- c(track_levels, tail(species_tracks, 1))
 
 track_labels <- setNames(track_levels, track_levels)
-track_labels[species$species] <- paste0(
+track_labels[species_tracks] <- sprintf(
+  "%s (%s)",
   species$display_name,
-  " (",
-  species$source_seqname,
-  ")"
+  species$source_seqname
 )
 
-hox_levels <- paste0("HOXA", c(13, 11, 10, 9, 7, 6, 5, 4, 3, 2, 1))
+hox_levels <- unique(genes$hox_group)
+hox_levels <- hox_levels[
+  order(as.integer(sub("^HOXA", "", hox_levels)), decreasing = TRUE)
+]
 hox_palette <- setNames(
   grDevices::hcl.colors(length(hox_levels), "Dark 3"),
   hox_levels
@@ -192,6 +100,8 @@ ggexon() +
     link_panel_height = 0.32,
     link_axis = "none",
     link_strip = "blank",
+    annotation_axis = "bottom",
+    strip.position = "left",
     labeller = ggplot2::as_labeller(track_labels)
   ) +
   scale_fill_manual(values = hox_palette, drop = FALSE, name = "HOXA group") +
@@ -208,13 +118,12 @@ ggexon() +
   ) +
   theme(
     panel.spacing.y = grid::unit(0.05, "lines"),
-    strip.text.y = element_text(angle = 0, hjust = 0, face = "bold", size = 7.5),
-    strip.background = element_rect(fill = "grey96", colour = "grey82", linewidth = 0.25),
     legend.position = "bottom",
     legend.key.height = grid::unit(3, "mm"),
     legend.key.width = grid::unit(6, "mm"),
     plot.margin = margin(6, 8, 6, 6)
-  )
+  ) +
+  theme_ggexon_side_strips("left", base_size = 7.5)
 ```
 
 ![A ggexon HOXA synteny plot with five horizontal species tracks for
@@ -250,6 +159,13 @@ The input files are deliberately simple:
 - `hoxa_links.tsv` has one row per adjacent-species matched interval.
 - `hoxa_species.tsv` records display names, assemblies, source URLs,
   source seqnames, and source notes.
+
+The plotting recipe mirrors those tables. First, the species order
+defines the annotation tracks. Second, synthetic `link_*` tracks are
+inserted between adjacent species so ribbons have their own compact
+panels. Third, HOXA group names are ordered by their numeric suffix,
+which keeps the legend and colors in the same HOXA13-to-HOXA1 direction
+as the oriented genomic windows.
 
 ## How the link layer runs
 
