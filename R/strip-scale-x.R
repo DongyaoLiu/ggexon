@@ -5,6 +5,11 @@
 #' species-specific local runs and translate tracks to align the most conserved
 #' block against an explicit reference track.
 #'
+#' Once genomic x distances are stripped, gene-body overlap lanes are collapsed
+#' to a single baseline per gene-tag layer. Outside labels remain coordinated
+#' independently, so label lanes can still alternate above and below the shared
+#' gene-body line.
+#'
 #' @param gene_gap_ratio Ratio of full gene visual width to intergenic gap
 #'   visual width. When `NULL`, the ratio is estimated from the densest track.
 #' @param align Alignment for level-1, non-homology tracks with fewer genes than
@@ -166,6 +171,7 @@ apply_strip_scale_x <- function(data, layers, strip_scale_spec, layout, plot) {
   }
 
   data <- strip_scale_x_apply_transforms(data, tag_layers, built$transform)
+  data <- strip_scale_x_flatten_genetag_lanes(data, layers, tag_layers)
   layout <- .strip_scale_force_fixed_x(layout, unique(as.character(built$transform$PANEL)))
   layout$strip_scale_x_transform <- built$transform
   layout$strip_scale_x_axis_data <- if (identical(strip_scale_x_guide_type(strip_scale_spec), "range")) {
@@ -964,6 +970,49 @@ strip_scale_x_apply_transforms <- function(data, tag_layers, transform) {
     }
     data[[layer_i]] <- df
   }
+  data
+}
+
+strip_scale_x_flatten_genetag_lanes <- function(data, layers, tag_layers) {
+  for (layer_i in tag_layers) {
+    df <- data[[layer_i]]
+    if (!is.data.frame(df) || nrow(df) == 0L) next
+
+    params <- syn_layer_params(layers[[layer_i]])
+    exon_height <- .genetag_effective_height(
+      exon_height = params$exon_height,
+      height = params$height
+    )
+    label_position <- .genetag_label_position(
+      params$label_position %||% "auto",
+      show_label = params$show_label %||% TRUE
+    )
+
+    df$y <- exon_height / 2
+    df$ymin <- df$y - exon_height / 2
+    df$ymax <- df$y + exon_height / 2
+    df$gene_lane <- 1L
+    df$gene_lane_count <- 1L
+    df$gene_layout <- "single"
+
+    if (!identical(label_position, "none") && !identical(label_position, "inside")) {
+      label_space <- .genetag_label_reserved_space(
+        exon_height = exon_height,
+        label_offset_fraction = params$label_offset_fraction %||% 0.3,
+        label_max_lanes = params$label_max_lanes %||% 3L
+      )
+      positions <- .parse_label_positions(params$label_direction %||% "top")
+      if ("top" %in% positions || "center" %in% positions) {
+        df$ymax <- df$ymax + label_space
+      }
+      if ("bottom" %in% positions) {
+        df$ymin <- df$ymin - label_space
+      }
+    }
+
+    data[[layer_i]] <- df
+  }
+
   data
 }
 

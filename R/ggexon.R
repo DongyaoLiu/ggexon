@@ -73,7 +73,6 @@ local({
         list(),
         getNamespace("ggexon")
       )
-      print("using ggexon build")
       data <- ggexon_build(x)
 
       gtable <- ggplot2::ggplot_gtable(data)

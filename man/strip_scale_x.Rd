@@ -72,3 +72,9 @@ gaps occupy predictable visual widths. In homology mode, it can compress
 species-specific local runs and translate tracks to align the most conserved
 block against an explicit reference track.
 }
+\details{
+Once genomic x distances are stripped, gene-body overlap lanes are collapsed
+to a single baseline per gene-tag layer. Outside labels remain coordinated
+independently, so label lanes can still alternate above and below the shared
+gene-body line.
+}

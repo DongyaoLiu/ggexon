@@ -95,3 +95,10 @@ strip_scale(...)
 ## Value
 
 A ggexon strip-scale-x specification, added to a plot with `+`.
+
+## Details
+
+Once genomic x distances are stripped, gene-body overlap lanes are
+collapsed to a single baseline per gene-tag layer. Outside labels remain
+coordinated independently, so label lanes can still alternate above and
+below the shared gene-body line.

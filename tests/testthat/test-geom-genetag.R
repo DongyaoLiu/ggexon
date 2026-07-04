@@ -167,7 +167,7 @@ test_that("geom_genetag outside labels use deterministic lanes", {
   )
 })
 
-test_that("ggexon coordinates gene-tag labels after nested lanes and strip scale", {
+test_that("ggexon flattens gene-tag body lanes after strip scale", {
   gene_tags <- data.frame(
     track = c("ref", "ref", "qry", "qry"),
     xmin = c(0, 50, 0, 10),
@@ -206,10 +206,13 @@ test_that("ggexon coordinates gene-tag labels after nested lanes and strip scale
   ) %in% names(data)))
   expect_true(isTRUE(parent$genetag_label_precomputed[[1L]]))
   expect_equal(parent$gene_lane, 1L)
-  expect_equal(child$gene_lane, 2L)
+  expect_equal(child$gene_lane, 1L)
+  expect_equal(parent$y, child$y)
+  expect_equal(parent$genetag_label_gene_ymax, child$genetag_label_gene_ymax)
   expect_equal(parent$genetag_label_pos, "top")
   expect_equal(child$genetag_label_pos, "bottom")
-  expect_equal(parent$genetag_label_y, child$genetag_label_gene_ymax + 0.15)
+  expect_equal(parent$genetag_label_y, parent$genetag_label_gene_ymax + 0.15)
+  expect_equal(child$genetag_label_y, child$genetag_label_gene_ymin - 0.15)
   expect_true(!is.null(built@layout$genetag_label_layouts[[1L]]))
   expect_true(inherits(ggplot2::ggplot_gtable(built), "gtable"))
 })
