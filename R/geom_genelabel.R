@@ -13,7 +13,7 @@
     return(c("top"))
   }
   parts <- strsplit(as.character(label_direction), ":")[[1L]]
-  parts <- trimws(parts)
+  parts <- to_lower_ascii(trimws(parts))
   parts <- parts[nzchar(parts)]
   valid <- c("top", "bottom", "center")
   bad <- setdiff(parts, valid)
@@ -92,6 +92,68 @@
   data2
 }
 
+.genelabel_positive_number <- function(x, name, default = NULL) {
+  if (is.null(x)) {
+    if (is.null(default)) {
+      stop("`", name, "` must be one positive numeric value.", call. = FALSE)
+    }
+    return(default)
+  }
+  if (!is.numeric(x) || length(x) != 1L || is.na(x) || !is.finite(x) || x <= 0) {
+    stop("`", name, "` must be one positive numeric value.", call. = FALSE)
+  }
+  as.numeric(x)
+}
+
+.genelabel_non_negative_number <- function(x, name, default = NULL) {
+  if (is.null(x)) {
+    if (is.null(default)) {
+      stop("`", name, "` must be one non-negative numeric value.", call. = FALSE)
+    }
+    return(default)
+  }
+  if (!is.numeric(x) || length(x) != 1L || is.na(x) || !is.finite(x) || x < 0) {
+    stop("`", name, "` must be one non-negative numeric value.", call. = FALSE)
+  }
+  as.numeric(x)
+}
+
+.genelabel_scalar_logical <- function(x, name, default = NULL) {
+  if (is.null(x)) {
+    if (is.null(default)) {
+      stop("`", name, "` must be `TRUE` or `FALSE`.", call. = FALSE)
+    }
+    return(default)
+  }
+  if (!is.logical(x) || length(x) != 1L || is.na(x)) {
+    stop("`", name, "` must be `TRUE` or `FALSE`.", call. = FALSE)
+  }
+  x
+}
+
+.genelabel_panel_mm <- function(panel_width_mm = NULL, panel_width_inch = NULL) {
+  if (!is.null(panel_width_inch)) {
+    return(.genelabel_positive_number(panel_width_inch, "panel_width_inch") * 25.4)
+  }
+  .genelabel_positive_number(panel_width_mm, "panel_width_mm", default = 300)
+}
+
+.genelabel_label_offset <- function(exon_height = 0.8, label_offset_fraction = 0.3) {
+  .genelabel_positive_number(exon_height, "exon_height", default = 0.8) *
+    .genelabel_non_negative_number(
+      label_offset_fraction,
+      "label_offset_fraction",
+      default = 0.3
+    )
+}
+
+.genelabel_as_grob <- function(x) {
+  if (inherits(x, "gList")) {
+    return(gTree(children = x))
+  }
+  x
+}
+
 
 GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
   required_aes = c("ymin", "xmin", "xmax", "transcripts", "strand", "track", "label"),
@@ -111,8 +173,8 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
     "label_direction", "label_offset_fraction",
     "link_type", "collapse_tandem", "show_link",
     "panel_width_mm", "panel_width_inch",
-    "force_flat",
-    fontface = 1, lineheight = 1.2
+    "force_flat", "check_overlap",
+    "fontface", "lineheight"
   ),
   default_params = function() {
     list(
@@ -126,15 +188,17 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
       link_type = "straight",
       collapse_tandem = FALSE,
       show_link = TRUE,
+      check_overlap = FALSE,
       panel_width_mm = NULL,
       panel_width_inch = NULL
     )
   },
   setup_data = function(data, params) {
     data <- GeomExon$setup_data(data, params)
-    exon_height <- params$exon_height %||% 0.8
-    label_offset <- exon_height *
-      (params$label_offset_fraction %||% 0.3)
+    label_offset <- .genelabel_label_offset(
+      exon_height = params$exon_height %||% 0.8,
+      label_offset_fraction = params$label_offset_fraction %||% 0.3
+    )
     label_direction <- params$label_direction %||% "top"
     positions <- .parse_label_positions(label_direction)
 
@@ -159,15 +223,21 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
                          panel_width_mm = NULL,
                          panel_width_inch = NULL) {
     link_type <- match.arg(link_type, c("straight", "elbow", "spline"))
-    label_offset <- exon_height * label_offset_fraction
+    show_link <- .genelabel_scalar_logical(show_link, "show_link", default = TRUE)
+    collapse_tandem <- .genelabel_scalar_logical(collapse_tandem, "collapse_tandem", default = FALSE)
+    check_overlap <- .genelabel_scalar_logical(check_overlap, "check_overlap", default = FALSE)
+    label_offset <- .genelabel_label_offset(
+      exon_height = exon_height,
+      label_offset_fraction = label_offset_fraction
+    )
     positions <- .parse_label_positions(label_direction)
 
     genomic_range <- diff(range(c(data$xmin, data$xmax), na.rm = TRUE))
-    if (genomic_range <= 0) genomic_range <- 1
+    if (!is.finite(genomic_range) || genomic_range <= 0) genomic_range <- 1
 
     # Collapse one row per gene (transcript)
     data2 <- data %>%
-      group_by(.data$transcripts) %>%
+      group_by(.data$track, .data$transcripts) %>%
       mutate(
         gene_xmin = min(.data$xmin),
         gene_xmax = max(.data$xmax),
@@ -178,8 +248,14 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
       ) %>%
       dplyr::slice(1) %>%
       ungroup() %>%
-      arrange(.data$orig_x_mid)
+      arrange(.data$track, .data$orig_x_mid)
 
+    if (nrow(data2) == 0L) {
+      return(zeroGrob())
+    }
+    label_values <- as.character(data2$label)
+    keep_labels <- !is.na(label_values) & nzchar(label_values)
+    data2 <- data2[keep_labels, , drop = FALSE]
     if (nrow(data2) == 0L) {
       return(zeroGrob())
     }
@@ -189,8 +265,10 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
     #   text_width_mm    = nchar × 0.5 × size
     # → est_width = nchar × 0.5 × size × genomic_range / panel_width_mm
     # panel_width_inch overrides panel_width_mm when both are provided.
-    panel_mm <- if (!is.null(panel_width_inch)) panel_width_inch * 25.4 else panel_width_mm %||% 300
-    if (!is.numeric(panel_mm) || panel_mm <= 0) panel_mm <- 300
+    panel_mm <- .genelabel_panel_mm(
+      panel_width_mm = panel_width_mm,
+      panel_width_inch = panel_width_inch
+    )
     data2 <- data2 %>%
       mutate(
         est_nchar = nchar(as.character(.data$label)),
@@ -446,18 +524,20 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
 
           # Main vertical leader from bracket centre to label
           bracket_mid_x <- mean(range(members$x))
-          label_point <- data2[i, , drop = FALSE]
-          label_point$x <- label_point$label_x
-          label_point$y <- label_point$label_y
-          label_point_t <- coord$transform(label_point, panel_params)
-
-          leader_grobs[[length(leader_grobs) + 1L]] <- segmentsGrob(
-            x0 = grid::unit(bracket_mid_x, "native"),
-            y0 = bracket_df_t$y[[1L]],
-            x1 = label_point_t$x,
-            y1 = label_point_t$y,
-            default.units = "native",
-            gp = gpar(col = "grey60", lwd = 0.5)
+          main_link <- data.frame(
+            x = bracket_mid_x,
+            y = bracket_y,
+            xend = data2$label_x[[i]],
+            yend = data2$label_y[[i]],
+            colour = "grey60",
+            linewidth = 0.5,
+            linetype = "solid",
+            alpha = NA_real_,
+            stringsAsFactors = FALSE
+          )
+          leader_grobs[[length(leader_grobs) + 1L]] <- .draw_link_grobs_raw(
+            coord$transform(main_link, panel_params),
+            link_type
           )
         }
       }
@@ -465,9 +545,9 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
       if (length(leader_grobs) == 0L) {
         lg <- zeroGrob()
       } else if (length(leader_grobs) == 1L) {
-        lg <- leader_grobs[[1L]]
+        lg <- .genelabel_as_grob(leader_grobs[[1L]])
       } else {
-        lg <- do.call(gList, leader_grobs)
+        lg <- gTree(children = do.call(gList, lapply(leader_grobs, .genelabel_as_grob)))
       }
     }
 
@@ -486,7 +566,10 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
       check.overlap = check_overlap
     )
 
-    gList(lg, tg)
+    ggname("geom_genelabel", gTree(children = gList(
+      .genelabel_as_grob(lg),
+      .genelabel_as_grob(tg)
+    )))
   },
   syn_data = function(x, layer) {
     params <- syn_layer_params(layer)
@@ -543,6 +626,8 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
 #' @param show_link When `TRUE` (the default), leader lines are drawn between
 #'   gene bodies and labels. Set to `FALSE` to suppress all leader lines
 #'   (only the text labels are rendered).
+#' @param check_overlap Logical; passed to grid text drawing to suppress
+#'   overlapping labels at draw time.
 #' @param species Optional species / individual identifier when `data` is a
 #'   `SynSpecies`.
 #' @param chr Optional chromosome / seqname restriction when `data` is
@@ -569,11 +654,41 @@ geom_genelabel <- function(mapping = NULL, data = NULL,
                            link_type = NULL,
                            collapse_tandem = NULL,
                            show_link = NULL,
+                           check_overlap = FALSE,
                            species = NULL, chr = NULL, subset = NULL,
                            panel_width_mm = NULL,
                            panel_width_inch = NULL,
                            force_flat = FALSE,
                            inherit.aes = TRUE) {
+  if (!is.null(label_direction)) {
+    label_direction <- paste(.parse_label_positions(label_direction), collapse = ":")
+  }
+  if (!is.null(link_type)) {
+    link_type <- match.arg(link_type, c("straight", "elbow", "spline"))
+  }
+  if (!is.null(exon_height)) {
+    exon_height <- .genelabel_positive_number(exon_height, "exon_height")
+  }
+  if (!is.null(label_offset_fraction)) {
+    label_offset_fraction <- .genelabel_non_negative_number(
+      label_offset_fraction,
+      "label_offset_fraction"
+    )
+  }
+  if (!is.null(panel_width_mm)) {
+    panel_width_mm <- .genelabel_positive_number(panel_width_mm, "panel_width_mm")
+  }
+  if (!is.null(panel_width_inch)) {
+    panel_width_inch <- .genelabel_positive_number(panel_width_inch, "panel_width_inch")
+  }
+  if (!is.null(collapse_tandem)) {
+    collapse_tandem <- .genelabel_scalar_logical(collapse_tandem, "collapse_tandem")
+  }
+  if (!is.null(show_link)) {
+    show_link <- .genelabel_scalar_logical(show_link, "show_link")
+  }
+  check_overlap <- .genelabel_scalar_logical(check_overlap, "check_overlap")
+  force_flat <- .genelabel_scalar_logical(force_flat, "force_flat")
   params <- Filter(Negate(is.null), c(list(
     ...,
     na.rm = na.rm,
@@ -584,6 +699,7 @@ geom_genelabel <- function(mapping = NULL, data = NULL,
     link_type = link_type,
     collapse_tandem = collapse_tandem,
     show_link = show_link,
+    check_overlap = check_overlap,
     species = species,
     chr = chr,
     subset = subset,

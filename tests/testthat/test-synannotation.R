@@ -716,6 +716,27 @@ test_that("set_gene_labels stores plot labels without replacing stable IDs", {
   expect_identical(as.character(label_map(ann2)$label), "unc-1")
 })
 
+test_that("set_gene_labels normalizes and validates mapping inputs", {
+  mapping <- .normalize_label_mapping(data.frame(
+    ignored = c("x", "y"),
+    gene_name = c("unc-1", "rpl-8"),
+    gene_id = c("WBGene00000001", "WBGene00000002"),
+    stringsAsFactors = FALSE
+  ))
+
+  expect_identical(
+    as.character(mapping$feature_id),
+    c("WBGene00000001", "WBGene00000002")
+  )
+  expect_identical(as.character(mapping$label), c("unc-1", "rpl-8"))
+  expect_error(.normalize_label_mapping(c(g1 = "one", g1 = "two")), "unique")
+  expect_error(.normalize_label_mapping(stats::setNames("missing", "")), "feature IDs")
+  expect_error(
+    .normalize_label_mapping(data.frame(gene_id = "g1", label = "")),
+    "labels"
+  )
+})
+
 test_that("geom_genelabel uses Syn annotation plot labels with syn-aware defaults", {
   genome_path <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
   annotation_path <- system.file(

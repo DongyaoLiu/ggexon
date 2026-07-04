@@ -68,6 +68,7 @@ modulo assignment.</p>
 <span>  link_type <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  collapse_tandem <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  show_link <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  check_overlap <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  species <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  chr <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  subset <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -132,6 +133,11 @@ by a bracket-style connector. Default <code>FALSE</code>.</p></dd>
 <dd><p>When <code>TRUE</code> (the default), leader lines are drawn between
 gene bodies and labels. Set to <code>FALSE</code> to suppress all leader lines
 (only the text labels are rendered).</p></dd>
+
+
+<dt id="arg-check-overlap">check_overlap<a class="anchor" aria-label="anchor" href="#arg-check-overlap"></a></dt>
+<dd><p>Logical; passed to grid text drawing to suppress
+overlapping labels at draw time.</p></dd>
 
 
 <dt id="arg-species">species<a class="anchor" aria-label="anchor" href="#arg-species"></a></dt>

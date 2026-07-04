@@ -245,6 +245,9 @@ build_ggexon <- S7::method(ggexon_build, class_ggexon) <- function(plot, ...) {
 
     # Let Layout modify data before rendering
     data <- layout$finish_data(data)
+    coordinated <- coordinate_ggexon_layers(data, layers)
+    data <- coordinated$data
+    layout$genetag_label_layouts <- coordinated$genetag_label_layouts
 
     # Consolidate alt-text
     plot@labels$alt <- get_alt_text(plot)
@@ -252,6 +255,21 @@ build_ggexon <- S7::method(ggexon_build, class_ggexon) <- function(plot, ...) {
     build <- class_ggexon_built(data = data, layout = layout, plot = plot)
     class(build) = union(c("ggexon_built", "ggplot2::ggplot_built"), class(build))
     build
+}
+
+coordinate_ggexon_layers <- function(data, layers) {
+  genetag_label_layouts <- vector("list", length(data))
+  for (i in seq_along(layers)) {
+    if (!identical(layers[[i]]$geom, GeomGeneTag)) next
+    prepared <- prepare_genetag_label_layer(data[[i]], syn_layer_params(layers[[i]]))
+    data[[i]] <- prepared$data
+    genetag_label_layouts[[i]] <- prepared$layout
+  }
+
+  list(
+    data = data,
+    genetag_label_layouts = genetag_label_layouts
+  )
 }
 
 #' Render a built ggexon plot to a gtable

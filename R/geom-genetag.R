@@ -1682,6 +1682,127 @@ syn_to_genetag_df <- function(x,
   )
 }
 
+prepare_genetag_label_layer <- function(data, params = list()) {
+  data <- .genetag_init_label_layer_columns(data)
+  empty <- list(data = data, layout = NULL)
+  if (!is.data.frame(data) || nrow(data) == 0L) {
+    return(empty)
+  }
+
+  label_position <- .genetag_label_position(
+    params$label_position %||% "auto",
+    show_label = params$show_label %||% TRUE
+  )
+  if (identical(label_position, "none") || !"label" %in% names(data)) {
+    return(empty)
+  }
+  if (!.genetag_can_precompute_label_layout(params)) {
+    return(empty)
+  }
+
+  source_col <- ".ggexon_genetag_source_row"
+  layout_data <- data
+  layout_data[[source_col]] <- seq_len(nrow(layout_data))
+  label_layout <- .genetag_label_layout(
+    data = layout_data,
+    label_position = label_position,
+    label_direction = params$label_direction %||% "top",
+    label_offset_fraction = params$label_offset_fraction %||% 0.3,
+    collapse_tandem = params$collapse_tandem %||% FALSE,
+    exon_height = .genetag_effective_height(
+      exon_height = params$exon_height,
+      height = params$height
+    ),
+    label_max_lanes = params$label_max_lanes %||% 3L,
+    label_panel_width = params$label_panel_width %||% "auto",
+    label_genes = params$label_genes,
+    label_filter = params$label_filter %||% "all",
+    label_match_by = params$label_match_by %||% "auto",
+    label_match = params$label_match %||% "exact",
+    panel_width_mm = params$panel_width_mm,
+    panel_width_inch = params$panel_width_inch,
+    ggexon_output_size = params$ggexon_output_size
+  )
+
+  data$genetag_label_precomputed <- TRUE
+  data <- .genetag_write_label_layer_columns(data, label_layout, source_col = source_col)
+  list(data = data, layout = label_layout)
+}
+
+.genetag_can_precompute_label_layout <- function(params = list()) {
+  if (isTRUE(params$collapse_tandem)) {
+    return(FALSE)
+  }
+  label_panel_width <- params$label_panel_width %||% "auto"
+  is.numeric(label_panel_width) ||
+    !is.null(params$panel_width_mm) ||
+    !is.null(params$panel_width_inch) ||
+    inherits(params$ggexon_output_size, "ggexon_output_size_spec")
+}
+
+.genetag_init_label_layer_columns <- function(data) {
+  if (!is.data.frame(data)) {
+    return(data)
+  }
+  n <- nrow(data)
+  data$genetag_label_precomputed <- rep(FALSE, n)
+  data$genetag_label_draw <- rep(FALSE, n)
+  data$genetag_label_kind <- rep(NA_character_, n)
+  data$genetag_label_x <- rep(NA_real_, n)
+  data$genetag_label_y <- rep(NA_real_, n)
+  data$genetag_label_anchor_y <- rep(NA_real_, n)
+  data$genetag_label_orig_x_mid <- rep(NA_real_, n)
+  data$genetag_label_gene_xmin <- rep(NA_real_, n)
+  data$genetag_label_gene_xmax <- rep(NA_real_, n)
+  data$genetag_label_gene_ymin <- rep(NA_real_, n)
+  data$genetag_label_gene_ymax <- rep(NA_real_, n)
+  data$genetag_label_pos <- rep(NA_character_, n)
+  data$genetag_label_lane <- rep(NA_integer_, n)
+  data$genetag_label_vjust <- rep(NA_real_, n)
+  data$genetag_label_tandem_id <- rep(NA_integer_, n)
+  data$genetag_label_unresolved_collision <- rep(FALSE, n)
+  data
+}
+
+.genetag_write_label_layer_columns <- function(data, label_layout, source_col) {
+  unresolved <- isTRUE(attr(label_layout, "unresolved_collision", exact = TRUE))
+  data$genetag_label_unresolved_collision <- unresolved
+  data <- .genetag_write_one_label_set(data, label_layout$inside, "inside", source_col)
+  data <- .genetag_write_one_label_set(data, label_layout$outside, "outside", source_col)
+  data
+}
+
+.genetag_write_one_label_set <- function(data, labels, kind, source_col) {
+  if (!is.data.frame(labels) || nrow(labels) == 0L || !source_col %in% names(labels)) {
+    return(data)
+  }
+  rows <- as.integer(labels[[source_col]])
+  keep <- is.finite(rows) & rows >= 1L & rows <= nrow(data)
+  if (!any(keep)) {
+    return(data)
+  }
+
+  rows <- rows[keep]
+  labels <- labels[keep, , drop = FALSE]
+  data$genetag_label_draw[rows] <- TRUE
+  data$genetag_label_kind[rows] <- kind
+  data$genetag_label_x[rows] <- labels$label_x %||% labels$x
+  data$genetag_label_y[rows] <- labels$label_y %||% labels$y
+  data$genetag_label_anchor_y[rows] <- labels$anchor_y %||% labels$gene_ymid
+  data$genetag_label_orig_x_mid[rows] <- labels$orig_x_mid %||% labels$x
+  data$genetag_label_gene_xmin[rows] <- labels$gene_xmin %||% NA_real_
+  data$genetag_label_gene_xmax[rows] <- labels$gene_xmax %||% NA_real_
+  data$genetag_label_gene_ymin[rows] <- labels$gene_ymin %||% NA_real_
+  data$genetag_label_gene_ymax[rows] <- labels$gene_ymax %||% NA_real_
+  data$genetag_label_pos[rows] <- labels$label_pos %||% kind
+  data$genetag_label_lane[rows] <- labels$label_lane %||% NA_integer_
+  data$genetag_label_vjust[rows] <- labels$vjust %||% 0.5
+  if ("tandem_id" %in% names(labels)) {
+    data$genetag_label_tandem_id[rows] <- labels$tandem_id
+  }
+  data
+}
+
 ggexon_genetag_label_grob <- function(data,
                                       panel_params,
                                       coord,
@@ -1731,34 +1852,37 @@ ggexon_genetag_label_grob <- function(data,
 
 #' @export
 drawDetails.ggexonGenetagLabelGrob <- function(x, recording = TRUE) {
-  viewport_width_mm <- suppressWarnings(
-    grid::convertWidth(grid::unit(1, "npc"), "mm", valueOnly = TRUE)
-  )
-  if (length(viewport_width_mm) != 1L || is.na(viewport_width_mm) ||
-      !is.finite(viewport_width_mm) || viewport_width_mm <= 0) {
-    viewport_width_mm <- NULL
+  label_layout <- .genetag_precomputed_label_layout(x$data)
+  if (is.null(label_layout)) {
+    viewport_width_mm <- suppressWarnings(
+      grid::convertWidth(grid::unit(1, "npc"), "mm", valueOnly = TRUE)
+    )
+    if (length(viewport_width_mm) != 1L || is.na(viewport_width_mm) ||
+        !is.finite(viewport_width_mm) || viewport_width_mm <= 0) {
+      viewport_width_mm <- NULL
+    }
+    panel_mm <- .genetag_panel_mm(
+      panel_width_mm = x$panel_width_mm,
+      panel_width_inch = x$panel_width_inch,
+      label_panel_width = x$label_panel_width,
+      viewport_width_mm = viewport_width_mm,
+      ggexon_output_size = x$ggexon_output_size
+    )
+    label_layout <- .genetag_label_layout(
+      data = x$data,
+      label_position = x$label_position,
+      label_direction = x$label_direction,
+      label_offset_fraction = x$label_offset_fraction,
+      collapse_tandem = x$collapse_tandem,
+      exon_height = x$exon_height,
+      label_max_lanes = x$label_max_lanes,
+      label_genes = x$label_genes,
+      label_filter = x$label_filter,
+      label_match_by = x$label_match_by,
+      label_match = x$label_match,
+      panel_width_mm = panel_mm
+    )
   }
-  panel_mm <- .genetag_panel_mm(
-    panel_width_mm = x$panel_width_mm,
-    panel_width_inch = x$panel_width_inch,
-    label_panel_width = x$label_panel_width,
-    viewport_width_mm = viewport_width_mm,
-    ggexon_output_size = x$ggexon_output_size
-  )
-  label_layout <- .genetag_label_layout(
-    data = x$data,
-    label_position = x$label_position,
-    label_direction = x$label_direction,
-    label_offset_fraction = x$label_offset_fraction,
-    collapse_tandem = x$collapse_tandem,
-    exon_height = x$exon_height,
-    label_max_lanes = x$label_max_lanes,
-    label_genes = x$label_genes,
-    label_filter = x$label_filter,
-    label_match_by = x$label_match_by,
-    label_match = x$label_match,
-    panel_width_mm = panel_mm
-  )
 
   if (isTRUE(attr(label_layout, "unresolved_collision", exact = TRUE))) {
     warning(
@@ -1802,6 +1926,79 @@ drawDetails.ggexonGenetagLabelGrob <- function(x, recording = TRUE) {
   }
   grid::grid.draw(gTree(children = do.call(gList, grobs)))
   invisible()
+}
+
+.genetag_precomputed_label_layout <- function(data) {
+  required <- c(
+    "genetag_label_precomputed", "genetag_label_draw", "genetag_label_kind",
+    "genetag_label_x", "genetag_label_y"
+  )
+  if (!is.data.frame(data) || !all(required %in% names(data))) {
+    return(NULL)
+  }
+
+  precomputed <- isTRUE(any(data$genetag_label_precomputed, na.rm = TRUE))
+  if (!precomputed) {
+    return(NULL)
+  }
+
+  empty <- list(
+    inside = data[0, , drop = FALSE],
+    outside = data[0, , drop = FALSE],
+    tandem_anchors = list()
+  )
+
+  draw <- data$genetag_label_draw &
+    is.finite(data$genetag_label_x) &
+    is.finite(data$genetag_label_y)
+  if (!any(draw, na.rm = TRUE)) {
+    attr(empty, "unresolved_collision") <- isTRUE(any(
+      data$genetag_label_unresolved_collision %||% FALSE,
+      na.rm = TRUE
+    ))
+    return(empty)
+  }
+
+  labels <- data[draw, , drop = FALSE]
+  labels$label_x <- labels$genetag_label_x
+  labels$label_y <- labels$genetag_label_y
+  labels$anchor_y <- labels$genetag_label_anchor_y
+  labels$orig_x_mid <- labels$genetag_label_orig_x_mid
+  labels$gene_xmin <- labels$genetag_label_gene_xmin
+  labels$gene_xmax <- labels$genetag_label_gene_xmax
+  labels$gene_ymin <- labels$genetag_label_gene_ymin
+  labels$gene_ymax <- labels$genetag_label_gene_ymax
+  labels$label_pos <- labels$genetag_label_pos
+  labels$label_lane <- labels$genetag_label_lane
+  labels$tandem_id <- labels$genetag_label_tandem_id
+
+  label_kind <- as.character(labels$genetag_label_kind)
+  label_kind[is.na(label_kind)] <- ""
+  inside <- labels[label_kind == "inside", , drop = FALSE]
+  outside <- labels[label_kind == "outside", , drop = FALSE]
+  if (nrow(inside) > 0L) {
+    inside <- .genetag_text_data(
+      inside,
+      x = inside$label_x,
+      y = inside$label_y,
+      vjust = inside$genetag_label_vjust
+    )
+  }
+  if (nrow(outside) > 0L) {
+    outside <- .genetag_text_data(
+      outside,
+      x = outside$label_x,
+      y = outside$label_y,
+      vjust = outside$genetag_label_vjust
+    )
+  }
+
+  out <- list(inside = inside, outside = outside, tandem_anchors = list())
+  attr(out, "unresolved_collision") <- isTRUE(any(
+    data$genetag_label_unresolved_collision %||% FALSE,
+    na.rm = TRUE
+  ))
+  out
 }
 
 .genetag_label_layout <- function(data,

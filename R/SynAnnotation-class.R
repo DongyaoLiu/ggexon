@@ -978,30 +978,78 @@ patch_annotation_from_gff <- function(x,
 
 .normalize_label_mapping <- function(mapping) {
   if (is.character(mapping) && !is.null(names(mapping))) {
-    return(
-      S4Vectors::DataFrame(
-        feature_id = names(mapping),
-        label = unname(as.character(mapping))
-      )
-    )
+    return(.label_mapping_df(names(mapping), unname(as.character(mapping))))
   }
 
   if (is.data.frame(mapping) || methods::is(mapping, "DataFrame")) {
     if (ncol(mapping) < 2L) {
       stop("`mapping` data frame must contain at least two columns.", call. = FALSE)
     }
-    return(
-      S4Vectors::DataFrame(
-        feature_id = as.character(mapping[[1L]]),
-        label = as.character(mapping[[2L]])
-      )
+    mapping <- as.data.frame(mapping)
+    id_col <- .label_mapping_column(
+      mapping,
+      candidates = c("feature_id", "gene_id", "ID", "id", "feature", "gene"),
+      fallback = 1L
     )
+    label_col <- .label_mapping_column(
+      mapping,
+      candidates = c("label", "plot_label", "gene_label", "gene_name", "name"),
+      fallback = seq_len(ncol(mapping)),
+      exclude = id_col
+    )
+    return(.label_mapping_df(mapping[[id_col]], mapping[[label_col]]))
   }
 
   stop(
     "`mapping` must be a named character vector or a two-column data frame.",
     call. = FALSE
   )
+}
+
+.label_mapping_column <- function(mapping,
+                                  candidates,
+                                  fallback,
+                                  exclude = integer()) {
+  nms <- names(mapping)
+  if (!is.null(nms)) {
+    candidate_idx <- match(to_lower_ascii(candidates), to_lower_ascii(nms))
+    candidate_idx <- candidate_idx[!is.na(candidate_idx)]
+    candidate_idx <- setdiff(candidate_idx, exclude)
+    if (length(candidate_idx) > 0L) {
+      return(candidate_idx[[1L]])
+    }
+  }
+  fallback <- fallback[fallback %in% seq_len(ncol(mapping))]
+  fallback <- setdiff(fallback, exclude)
+  if (length(fallback) > 0L) {
+    return(fallback[[1L]])
+  }
+  stop("`mapping` data frame must contain distinct ID and label columns.", call. = FALSE)
+}
+
+.label_mapping_df <- function(feature_id, label) {
+  feature_id <- as.character(feature_id)
+  label <- as.character(label)
+  if (length(feature_id) != length(label)) {
+    stop("`mapping` feature IDs and labels must have the same length.", call. = FALSE)
+  }
+  invalid_id <- is.na(feature_id) | !nzchar(feature_id)
+  if (any(invalid_id)) {
+    stop("`mapping` feature IDs must be non-empty and non-missing.", call. = FALSE)
+  }
+  invalid_label <- is.na(label) | !nzchar(label)
+  if (any(invalid_label)) {
+    stop("`mapping` labels must be non-empty and non-missing.", call. = FALSE)
+  }
+  duplicated_id <- unique(feature_id[duplicated(feature_id)])
+  if (length(duplicated_id) > 0L) {
+    stop(
+      "`mapping` feature IDs must be unique: ",
+      paste(utils::head(duplicated_id, 5L), collapse = ", "),
+      call. = FALSE
+    )
+  }
+  S4Vectors::DataFrame(feature_id = feature_id, label = label)
 }
 
 .apply_label_mapping <- function(gr, mapping) {

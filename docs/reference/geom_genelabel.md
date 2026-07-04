@@ -23,6 +23,7 @@ geom_genelabel(
   link_type = NULL,
   collapse_tandem = NULL,
   show_link = NULL,
+  check_overlap = FALSE,
   species = NULL,
   chr = NULL,
   subset = NULL,
@@ -90,6 +91,11 @@ geom_genelabel(
   When `TRUE` (the default), leader lines are drawn between gene bodies
   and labels. Set to `FALSE` to suppress all leader lines (only the text
   labels are rendered).
+
+- check_overlap:
+
+  Logical; passed to grid text drawing to suppress overlapping labels at
+  draw time.
 
 - species:
 

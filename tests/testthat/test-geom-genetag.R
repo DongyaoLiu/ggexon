@@ -167,6 +167,53 @@ test_that("geom_genetag outside labels use deterministic lanes", {
   )
 })
 
+test_that("ggexon coordinates gene-tag labels after nested lanes and strip scale", {
+  gene_tags <- data.frame(
+    track = c("ref", "ref", "qry", "qry"),
+    xmin = c(0, 50, 0, 10),
+    xmax = c(40, 60, 40, 20),
+    y = 1,
+    strand = "+",
+    gene_key = c("ref_a", "ref_b", "qry_parent", "qry_child"),
+    label = c("ref_a", "ref_b", "qry_parent", "qry_child"),
+    reference_gene = c("ref_a", "ref_b", "ref_a", "ref_b"),
+    homology_hit = TRUE,
+    stringsAsFactors = FALSE
+  )
+
+  p <- ggexon() +
+    geom_genetag(
+      data = gene_tags,
+      exon_height = 0.5,
+      gene_layout = "nested",
+      gene_lane_gap = 0.2,
+      label_position = "outside",
+      label_direction = "top:bottom",
+      label_panel_width = 100,
+      label_max_lanes = 2
+    ) +
+    strip_scale_x(reference_track = "ref", gene_order = "reference", guide = "none") +
+    facet_genomics(ggplot2::vars(track), scales = "free_x")
+  built <- ggexon_build(p)
+  data <- built@data[[1L]]
+  query <- data[as.character(data$track) == "qry", , drop = FALSE]
+  parent <- query[query$gene_key == "qry_parent", , drop = FALSE]
+  child <- query[query$gene_key == "qry_child", , drop = FALSE]
+
+  expect_true(all(c(
+    "genetag_label_x", "genetag_label_y", "genetag_label_gene_ymax",
+    "genetag_label_precomputed"
+  ) %in% names(data)))
+  expect_true(isTRUE(parent$genetag_label_precomputed[[1L]]))
+  expect_equal(parent$gene_lane, 1L)
+  expect_equal(child$gene_lane, 2L)
+  expect_equal(parent$genetag_label_pos, "top")
+  expect_equal(child$genetag_label_pos, "bottom")
+  expect_equal(parent$genetag_label_y, child$genetag_label_gene_ymax + 0.15)
+  expect_true(!is.null(built@layout$genetag_label_layouts[[1L]]))
+  expect_true(inherits(ggplot2::ggplot_gtable(built), "gtable"))
+})
+
 test_that("geom_genetag supports prefixed label aesthetics", {
   data <- data.frame(
     xmin = c(0, 10),
