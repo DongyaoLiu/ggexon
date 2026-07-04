@@ -267,12 +267,99 @@ build_links <- function(genes, species_order) {
   out
 }
 
+build_homology <- function(genes, reference_species = "human") {
+  ref <- genes[genes$species == reference_species, , drop = FALSE]
+  query <- genes[genes$species != reference_species, , drop = FALSE]
+  query <- query[query$hox_group %in% ref$hox_group, , drop = FALSE]
+  ref_idx <- match(query$hox_group, ref$hox_group)
+
+  out <- data.frame(
+    reference_species = reference_species,
+    query_species = query$species,
+    query_gene = query$gene_id,
+    query_gene_name = query$gene_name,
+    reference_gene = query$hox_group,
+    reference_gene_id = ref$gene_id[ref_idx],
+    reference_gene_name = ref$gene_name[ref_idx],
+    hox_group = query$hox_group,
+    hox_number = query$hox_number,
+    stringsAsFactors = FALSE
+  )
+  out[order(match(out$query_species, species$species), out$hox_number), , drop = FALSE]
+}
+
+gff3_escape <- function(x) {
+  x <- as.character(x)
+  x[is.na(x)] <- ""
+  utils::URLencode(x, reserved = TRUE)
+}
+
+gff3_attributes <- function(...) {
+  attrs <- list(...)
+  paste(paste0(names(attrs), "=", vapply(attrs, gff3_escape, character(1))), collapse = ";")
+}
+
+write_hoxa_gff3 <- function(genes, out_dir) {
+  annotation_dir <- file.path(out_dir, "annotations")
+  dir.create(annotation_dir, showWarnings = FALSE, recursive = TRUE)
+
+  for (sp in species$species) {
+    df <- genes[genes$species == sp, , drop = FALSE]
+    df <- df[order(df$genomic_start, df$genomic_end), , drop = FALSE]
+    seqname <- unique(df$seqname)[[1L]]
+    lines <- c(
+      "##gff-version 3",
+      sprintf(
+        "##sequence-region %s %d %d",
+        seqname,
+        min(df$genomic_start),
+        max(df$genomic_end)
+      )
+    )
+
+    feature_lines <- vapply(seq_len(nrow(df)), function(i) {
+      row <- df[i, , drop = FALSE]
+      attrs <- gff3_attributes(
+        ID = row$gene_id,
+        Name = row$gene_name,
+        gene_id = row$gene_id,
+        gene_name = row$gene_name,
+        hox_group = row$hox_group,
+        hox_number = row$hox_number,
+        reference_gene = row$reference_gene,
+        display_xmin = row$xmin,
+        display_xmax = row$xmax,
+        display_orientation = row$display_orientation
+      )
+      paste(
+        row$seqname,
+        row$source,
+        "gene",
+        row$genomic_start,
+        row$genomic_end,
+        row$score,
+        row$genomic_strand,
+        row$phase,
+        attrs,
+        sep = "\t"
+      )
+    }, character(1))
+
+    writeLines(c(lines, feature_lines), file.path(annotation_dir, paste0(sp, ".gff3")))
+  }
+
+  annotation_dir
+}
+
 gtf_paths <- vapply(species$source_url, download_gtf, character(1), cache_dir = cache_dir)
 gene_rows <- do.call(rbind, lapply(seq_len(nrow(species)), function(i) {
   read_hoxa_gene_rows(gtf_paths[[i]], species[i, , drop = FALSE])
 }))
 genes <- orient_gene_coordinates(gene_rows, padding = 100000L)
+genes$reference_gene <- genes$hox_group
 links <- build_links(genes, species$species)
+homology <- build_homology(genes, reference_species = "human")
+annotation_dir <- write_hoxa_gff3(genes, out_dir)
 
 species_out <- species
 species_out$source_seqname <- vapply(species_out$species, function(sp) {
@@ -306,8 +393,17 @@ utils::write.table(
   quote = FALSE,
   row.names = FALSE
 )
+utils::write.table(
+  homology,
+  file = file.path(out_dir, "hoxa_homology.tsv"),
+  sep = "\t",
+  quote = FALSE,
+  row.names = FALSE
+)
 
 message("Wrote:")
 message("  ", file.path(out_dir, "hoxa_genes.tsv"))
 message("  ", file.path(out_dir, "hoxa_links.tsv"))
 message("  ", file.path(out_dir, "hoxa_species.tsv"))
+message("  ", file.path(out_dir, "hoxa_homology.tsv"))
+message("  ", annotation_dir)

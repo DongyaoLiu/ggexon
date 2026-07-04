@@ -4,8 +4,14 @@ test_that("strip_scale_x() returns the new spec and strip_scale() wraps it", {
   expect_identical(spec$gene_gap_ratio, 3)
   expect_identical(spec$species_specific_ratio, 0.5)
   expect_identical(spec$secondary_homology_ratio, 0.75)
+  expect_identical(spec$gene_order, "genomic")
   expect_identical(spec$guide, "range")
   expect_false(spec$homo_active)
+
+  ref_spec <- strip_scale_x(gene_gap_ratio = 3, reference_track = "ref")
+  expect_true(ref_spec$homo_active)
+  expect_identical(ref_spec$reference_track, "ref")
+  expect_identical(ref_spec$homo_align, "ref")
 
   wrapped <- strip_scale(gene_gap_ratio = 2)
   expect_s3_class(wrapped, "ggexon_strip_scale_x_spec")
@@ -23,6 +29,9 @@ test_that("strip_scale_x() validates homology and ratios", {
   expect_error(strip_scale_x(secondary_homology_ratio = 2), "in \\(0, 1\\]")
   expect_error(strip_scale_x(homo_align = TRUE), "explicit reference track")
   expect_error(strip_scale_x(homo_align = c("A", "B")), "single reference")
+  expect_error(strip_scale_x(reference_track = c("A", "B")), "single non-empty")
+  expect_error(strip_scale_x(reference_track = "ref", homo_align = "ref"), "only one")
+  expect_error(strip_scale_x(gene_order = "reference"), "requires")
   expect_error(strip_scale_x(guide = "ticks"), "should be one of")
 })
 
@@ -309,6 +318,70 @@ test_that("strip_scale_x() treats duplicate reference mappings as secondary homo
   expect_equal(qry_genes$slot_type, qry_genes$visual_class)
   expect_equal(qry_genes$members[[2L]], "A2")
   expect_equal(qry_genes$plot_end[[2L]] - qry_genes$plot_start[[2L]], 2.25)
+})
+
+test_that("strip_scale_x(gene_order = 'reference') orders query genes by reference", {
+  gene_tags <- data.frame(
+    track = c("ref", "ref", "ref", "qry", "qry", "qry", "qry"),
+    xmin = c(1, 10, 20, 1, 4, 10, 20),
+    xmax = c(2, 11, 21, 2, 5, 11, 21),
+    genomic_xmin = c(1, 10, 20, 1, 4, 10, 20),
+    genomic_xmax = c(2, 11, 21, 2, 5, 11, 21),
+    y = 1,
+    strand = "+",
+    gene_key = c("A", "B", "C", "C1", "x", "B1", "A1"),
+    label = c("A", "B", "C", "C1", "x", "B1", "A1"),
+    reference_gene = c(NA, NA, NA, "C", NA, "B", "A"),
+    stringsAsFactors = FALSE
+  )
+
+  p <- ggexon() +
+    geom_genetag(data = gene_tags) +
+    strip_scale_x(gene_gap_ratio = 3, reference_track = "ref", gene_order = "reference") +
+    facet_genomics(ggplot2::vars(track), scales = "free_x")
+  built <- ggexon_build(p)
+  transform <- built@layout$strip_scale_x_transform
+  qry_genes <- transform[transform$track == "qry" & transform$region_type == "gene", , drop = FALSE]
+
+  expect_equal(qry_genes$members, c("A1", "B1", "x", "C1"))
+  expect_equal(qry_genes$slot_type, c(
+    "homologous_visible_primary",
+    "homologous_visible_primary",
+    "species_specific_run",
+    "homologous_visible_primary"
+  ))
+})
+
+test_that("strip_scale_x(gene_order = 'reference') groups duplicate homologs", {
+  gene_tags <- data.frame(
+    track = c("ref", "ref", "qry", "qry", "qry", "qry"),
+    xmin = c(1, 10, 1, 4, 10, 20),
+    xmax = c(2, 11, 2, 5, 11, 21),
+    genomic_xmin = c(1, 10, 1, 4, 10, 20),
+    genomic_xmax = c(2, 11, 2, 5, 11, 21),
+    y = 1,
+    strand = "+",
+    gene_key = c("A", "B", "A1", "x", "A2", "B1"),
+    label = c("A", "B", "A1", "x", "A2", "B1"),
+    reference_gene = c(NA, NA, "A", NA, "A", "B"),
+    stringsAsFactors = FALSE
+  )
+
+  p <- ggexon() +
+    geom_genetag(data = gene_tags) +
+    strip_scale_x(gene_gap_ratio = 3, reference_track = "ref", gene_order = "reference") +
+    facet_genomics(ggplot2::vars(track), scales = "free_x")
+  built <- ggexon_build(p)
+  transform <- built@layout$strip_scale_x_transform
+  qry_genes <- transform[transform$track == "qry" & transform$region_type == "gene", , drop = FALSE]
+
+  expect_equal(qry_genes$members, c("A1", "A2", "x", "B1"))
+  expect_equal(qry_genes$visual_class, c(
+    "homologous_visible_primary",
+    "homologous_visible_duplicate",
+    "species_specific",
+    "homologous_visible_primary"
+  ))
 })
 
 test_that("strip_scale_x() keeps offtrack homologs out of species-specific collapse", {

@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>HOXA Synteny Demo • ggexon</title>
 <script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_3-0.4.10/font.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_3-0.4.10/font.css" rel="stylesheet">
 <link href="../deps/Source_Code_Pro-0.4.10/font.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
@@ -62,7 +62,7 @@
       <h1>HOXA Synteny Demo</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/DongyaoLiu/ggexon/blob/main/vignettes/hoxa-ensembl115-demo.Rmd" class="external-link"><code>vignettes/hoxa-ensembl115-demo.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/DongyaoLiu/ggexon/blob/HEAD/vignettes/hoxa-ensembl115-demo.Rmd" class="external-link"><code>vignettes/hoxa-ensembl115-demo.Rmd</code></a></small>
       <div class="d-none name"><code>hoxa-ensembl115-demo.Rmd</code></div>
     </div>
 
@@ -91,6 +91,7 @@ coordinates are retained in the TSV files.</p>
 <span><span class="va">genes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.delim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">demo_dir</span>, <span class="st">"hoxa_genes.tsv"</span><span class="op">)</span>, check.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="va">links</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.delim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">demo_dir</span>, <span class="st">"hoxa_links.tsv"</span><span class="op">)</span>, check.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="va">species</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.delim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">demo_dir</span>, <span class="st">"hoxa_species.tsv"</span><span class="op">)</span>, check.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">homology</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.delim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">demo_dir</span>, <span class="st">"hoxa_homology.tsv"</span><span class="op">)</span>, check.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Insert one ribbon-only panel between every adjacent pair of species tracks.</span></span>
 <span><span class="va">species_tracks</span> <span class="op">&lt;-</span> <span class="va">species</span><span class="op">$</span><span class="va">species</span></span>
@@ -225,6 +226,13 @@ interval.</li>
 <li>
 <code>hoxa_species.tsv</code> records display names, assemblies,
 source URLs, source seqnames, and source notes.</li>
+<li>
+<code>hoxa_homology.tsv</code> maps non-human Ensembl gene IDs to
+human HOXA reference genes for <code><a href="../reference/HomologyAnnotation.html">HomologyAnnotation()</a></code>.</li>
+<li>
+<code>annotations/*.gff3</code> contains tiny original-coordinate
+GFF3 files for building a <code>SynSpecies</code> object without
+downloading the full Ensembl GTFs.</li>
 </ul>
 <p>The plotting recipe mirrors those tables. First, the species order
 defines the annotation tracks. Second, synthetic <code>link_*</code>
@@ -263,13 +271,123 @@ ggexon handle panel layout, coordinate scaling, and ribbon
 construction.</p>
 </div>
 <div class="section level2">
+<h2 id="strip-scale-homology-view">Strip-scale homology view<a class="anchor" aria-label="anchor" href="#strip-scale-homology-view"></a>
+</h2>
+<p>The same dataset can also be used as a real Syn-backed example. Here
+the small GFF3 files keep the original Ensembl coordinates, while
+<code>hoxa_homology.tsv</code> populates <code>SynSpecies</code>
+homology annotations. <code><a href="../reference/strip_scale_x.html">strip_scale_x()</a></code> then removes genomic
+scale from the gene tracks and uses human as the reference track for
+homology-aware gene-block alignment.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">annotation_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">demo_dir</span>, <span class="st">"annotations"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">hoxa_syn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SynSpecies.html">SynSpecies</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"HOXA Ensembl 115"</span><span class="op">)</span></span>
+<span><span class="kw">for</span> <span class="op">(</span><span class="va">species_id</span> <span class="kw">in</span> <span class="va">species</span><span class="op">$</span><span class="va">species</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">hoxa_syn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_individual.html">add_individual</a></span><span class="op">(</span></span>
+<span>    <span class="va">hoxa_syn</span>,</span>
+<span>    <span class="fu"><a href="../reference/SynIndividual.html">SynIndividual</a></span><span class="op">(</span></span>
+<span>      annotation_file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">annotation_dir</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">species_id</span>, <span class="st">".gff3"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>      genome_file <span class="op">=</span> <span class="fu"><a href="../reference/genome_waiver.html">genome_waiver</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>      id <span class="op">=</span> <span class="va">species_id</span>,</span>
+<span>      annotation_format <span class="op">=</span> <span class="st">"gff"</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="kw">for</span> <span class="op">(</span><span class="va">query_species</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">homology</span><span class="op">$</span><span class="va">query_species</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">rows</span> <span class="op">&lt;-</span> <span class="va">homology</span><span class="op">[</span><span class="va">homology</span><span class="op">$</span><span class="va">query_species</span> <span class="op">==</span> <span class="va">query_species</span>, , drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">]</span></span>
+<span>  <span class="va">hoxa_syn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_homology_annotation.html">add_homology_annotation</a></span><span class="op">(</span></span>
+<span>    <span class="va">hoxa_syn</span>,</span>
+<span>    <span class="fu"><a href="../reference/HomologyAnnotation.html">HomologyAnnotation</a></span><span class="op">(</span></span>
+<span>      name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">query_species</span>, <span class="st">"_to_human"</span><span class="op">)</span>,</span>
+<span>      reference_species <span class="op">=</span> <span class="st">"human"</span>,</span>
+<span>      query_species <span class="op">=</span> <span class="va">query_species</span>,</span>
+<span>      homology_table <span class="op">=</span> <span class="va">rows</span><span class="op">[</span></span>
+<span>        <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"query_gene"</span>, <span class="st">"reference_gene"</span>, <span class="st">"hox_group"</span>, <span class="st">"reference_gene_id"</span><span class="op">)</span></span>
+<span>      <span class="op">]</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="va">syn_track_labels</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/setNames.html" class="external-link">setNames</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"%s (%s)"</span>, <span class="va">species</span><span class="op">$</span><span class="va">display_name</span>, <span class="va">species</span><span class="op">$</span><span class="va">source_seqname</span><span class="op">)</span>,</span>
+<span>  <span class="va">species</span><span class="op">$</span><span class="va">species</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">strip_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">hoxa_syn</span><span class="op">)</span></span>
+<span><span class="kw">for</span> <span class="op">(</span><span class="va">species_id</span> <span class="kw">in</span> <span class="va">species</span><span class="op">$</span><span class="va">species</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">strip_plot</span> <span class="op">&lt;-</span> <span class="va">strip_plot</span> <span class="op">+</span></span>
+<span>    <span class="fu"><a href="../reference/geom_genetag.html">geom_genetag</a></span><span class="op">(</span></span>
+<span>      species <span class="op">=</span> <span class="va">species_id</span>,</span>
+<span>      feature_type <span class="op">=</span> <span class="st">"gene"</span>,</span>
+<span>      mapping <span class="op">=</span> <span class="fu">aes</span><span class="op">(</span>fill <span class="op">=</span> <span class="va">reference_gene</span><span class="op">)</span>,</span>
+<span>      exon_height <span class="op">=</span> <span class="fl">0.58</span>,</span>
+<span>      arrow_fraction <span class="op">=</span> <span class="fl">0.16</span>,</span>
+<span>      gene_layout <span class="op">=</span> <span class="st">"nested"</span>,</span>
+<span>      gene_lane_gap <span class="op">=</span> <span class="fl">0.12</span>,</span>
+<span>      show_label <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>      label_filter <span class="op">=</span> <span class="st">"homology_hit"</span>,</span>
+<span>      label_position <span class="op">=</span> <span class="st">"outside"</span>,</span>
+<span>      label_direction <span class="op">=</span> <span class="st">"top:bottom"</span>,</span>
+<span>      label_size <span class="op">=</span> <span class="fl">2.15</span>,</span>
+<span>      label_link <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>      label_max_lanes <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>      label_panel_width <span class="op">=</span> <span class="fl">175</span>,</span>
+<span>      linewidth <span class="op">=</span> <span class="fl">0.18</span>,</span>
+<span>      colour <span class="op">=</span> <span class="st">"grey20"</span></span>
+<span>    <span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="va">strip_plot</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/strip_scale_x.html">strip_scale_x</a></span><span class="op">(</span></span>
+<span>    reference_track <span class="op">=</span> <span class="st">"human"</span>,</span>
+<span>    gene_order <span class="op">=</span> <span class="st">"reference"</span>,</span>
+<span>    guide <span class="op">=</span> <span class="st">"none"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/facet_genomics.html">facet_genomics</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">track</span><span class="op">)</span>,</span>
+<span>    scales <span class="op">=</span> <span class="st">"free_x"</span>,</span>
+<span>    ncol <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>    annotation_axis <span class="op">=</span> <span class="st">"bottom"</span>,</span>
+<span>    strip.position <span class="op">=</span> <span class="st">"left"</span>,</span>
+<span>    labeller <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/as_labeller.html" class="external-link">as_labeller</a></span><span class="op">(</span><span class="va">syn_track_labels</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">scale_fill_manual</span><span class="op">(</span>values <span class="op">=</span> <span class="va">hox_palette</span>, drop <span class="op">=</span> <span class="cn">FALSE</span>, name <span class="op">=</span> <span class="st">"Human HOXA reference"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">scale_x_continuous</span><span class="op">(</span>expand <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/expansion.html" class="external-link">expansion</a></span><span class="op">(</span>mult <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.015</span>, <span class="fl">0.015</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span>x <span class="op">=</span> <span class="cn">NULL</span>, y <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/theme_ggexon_track.html">theme_ggexon_track</a></span><span class="op">(</span></span>
+<span>    base_size <span class="op">=</span> <span class="fl">8</span>,</span>
+<span>    show_x_axis <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>    show_x_grid <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>    show_legend <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">theme</span><span class="op">(</span></span>
+<span>    panel.spacing.y <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">0.05</span>, <span class="st">"lines"</span><span class="op">)</span>,</span>
+<span>    legend.position <span class="op">=</span> <span class="st">"bottom"</span>,</span>
+<span>    legend.key.height <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">3</span>, <span class="st">"mm"</span><span class="op">)</span>,</span>
+<span>    legend.key.width <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">6</span>, <span class="st">"mm"</span><span class="op">)</span>,</span>
+<span>    plot.margin <span class="op">=</span> <span class="fu">margin</span><span class="op">(</span><span class="fl">6</span>, <span class="fl">8</span>, <span class="fl">6</span>, <span class="fl">6</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/theme_ggexon_side_strips.html">theme_ggexon_side_strips</a></span><span class="op">(</span><span class="st">"left"</span>, base_size <span class="op">=</span> <span class="fl">7.5</span><span class="op">)</span></span></code></pre></div>
+<div class="figure">
+<img src="hoxa-ensembl115-demo_files/figure-html/hoxa-strip-scale-1.png" class="r-plt" alt="A ggexon strip-scale HOXA plot with five species tracks and no ribbons. Gene blocks are aligned by human HOXA reference homology, with x-axis scale hidden." width="2090"><p class="caption">
+Scale-stripped HOXA/Hoxa gene blocks aligned by human reference
+homology. The plot uses original-coordinate GFF3 inputs and stored
+HomologyAnnotation mappings, but no synteny ribbons.
+</p>
+</div>
+</div>
+<div class="section level2">
 <h2 id="provenance">Provenance<a class="anchor" aria-label="anchor" href="#provenance"></a>
 </h2>
 <p>The data-preparation script is stored in
 <code>data-raw/hoxa_ensembl115</code> in the source repository. It
 downloads the Ensembl release 115 GTF files, extracts gene features
 whose normalized gene names match <code>HOXA[0-9]+</code>, orients
-plotting coordinates, and writes the three TSV files used above.</p>
+plotting coordinates for the ribbon example, writes original-coordinate
+GFF3 files for Syn-backed examples, and exports the homology table used
+above.</p>
 <p>Green anole uses the full Ensembl GTF because its HOXA genes are
 annotated on scaffold <code>GL343275.1</code> and are absent from the
 chromosome-only GTF in release 115.</p>

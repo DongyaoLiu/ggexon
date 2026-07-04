@@ -27,6 +27,7 @@ demo_dir <- system.file("extdata", "hoxa_ensembl115", package = "ggexon")
 genes <- read.delim(file.path(demo_dir, "hoxa_genes.tsv"), check.names = FALSE)
 links <- read.delim(file.path(demo_dir, "hoxa_links.tsv"), check.names = FALSE)
 species <- read.delim(file.path(demo_dir, "hoxa_species.tsv"), check.names = FALSE)
+homology <- read.delim(file.path(demo_dir, "hoxa_homology.tsv"), check.names = FALSE)
 
 # Insert one ribbon-only panel between every adjacent pair of species tracks.
 species_tracks <- species$species
@@ -159,6 +160,12 @@ The input files are deliberately simple:
 - `hoxa_links.tsv` has one row per adjacent-species matched interval.
 - `hoxa_species.tsv` records display names, assemblies, source URLs,
   source seqnames, and source notes.
+- `hoxa_homology.tsv` maps non-human Ensembl gene IDs to human HOXA
+  reference genes for
+  [`HomologyAnnotation()`](https://dongyaoliu.github.io/ggexon/reference/HomologyAnnotation.md).
+- `annotations/*.gff3` contains tiny original-coordinate GFF3 files for
+  building a `SynSpecies` object without downloading the full Ensembl
+  GTFs.
 
 The plotting recipe mirrors those tables. First, the species order
 defines the annotation tracks. Second, synthetic `link_*` tracks are
@@ -195,12 +202,126 @@ This means users can start from a small biological relationship table,
 keep the gene annotation and synteny links separate, and let ggexon
 handle panel layout, coordinate scaling, and ribbon construction.
 
+## Strip-scale homology view
+
+The same dataset can also be used as a real Syn-backed example. Here the
+small GFF3 files keep the original Ensembl coordinates, while
+`hoxa_homology.tsv` populates `SynSpecies` homology annotations.
+[`strip_scale_x()`](https://dongyaoliu.github.io/ggexon/reference/strip_scale_x.md)
+then removes genomic scale from the gene tracks and uses human as the
+reference track for homology-aware gene-block alignment.
+
+``` r
+
+annotation_dir <- file.path(demo_dir, "annotations")
+
+hoxa_syn <- SynSpecies(name = "HOXA Ensembl 115")
+for (species_id in species$species) {
+  hoxa_syn <- add_individual(
+    hoxa_syn,
+    SynIndividual(
+      annotation_file = file.path(annotation_dir, paste0(species_id, ".gff3")),
+      genome_file = genome_waiver(),
+      id = species_id,
+      annotation_format = "gff"
+    )
+  )
+}
+
+for (query_species in unique(homology$query_species)) {
+  rows <- homology[homology$query_species == query_species, , drop = FALSE]
+  hoxa_syn <- add_homology_annotation(
+    hoxa_syn,
+    HomologyAnnotation(
+      name = paste0(query_species, "_to_human"),
+      reference_species = "human",
+      query_species = query_species,
+      homology_table = rows[
+        c("query_gene", "reference_gene", "hox_group", "reference_gene_id")
+      ]
+    )
+  )
+}
+
+syn_track_labels <- setNames(
+  sprintf("%s (%s)", species$display_name, species$source_seqname),
+  species$species
+)
+
+strip_plot <- ggexon(hoxa_syn)
+for (species_id in species$species) {
+  strip_plot <- strip_plot +
+    geom_genetag(
+      species = species_id,
+      feature_type = "gene",
+      mapping = aes(fill = reference_gene),
+      exon_height = 0.58,
+      arrow_fraction = 0.16,
+      gene_layout = "nested",
+      gene_lane_gap = 0.12,
+      show_label = TRUE,
+      label_filter = "homology_hit",
+      label_position = "outside",
+      label_direction = "top:bottom",
+      label_size = 2.15,
+      label_link = FALSE,
+      label_max_lanes = 2,
+      label_panel_width = 175,
+      linewidth = 0.18,
+      colour = "grey20"
+    )
+}
+
+strip_plot +
+  strip_scale_x(
+    reference_track = "human",
+    gene_order = "reference",
+    guide = "none"
+  ) +
+  facet_genomics(
+    vars(track),
+    scales = "free_x",
+    ncol = 1,
+    annotation_axis = "bottom",
+    strip.position = "left",
+    labeller = ggplot2::as_labeller(syn_track_labels)
+  ) +
+  scale_fill_manual(values = hox_palette, drop = FALSE, name = "Human HOXA reference") +
+  scale_x_continuous(expand = ggplot2::expansion(mult = c(0.015, 0.015))) +
+  labs(x = NULL, y = NULL) +
+  theme_ggexon_track(
+    base_size = 8,
+    show_x_axis = FALSE,
+    show_x_grid = FALSE,
+    show_legend = TRUE
+  ) +
+  theme(
+    panel.spacing.y = grid::unit(0.05, "lines"),
+    legend.position = "bottom",
+    legend.key.height = grid::unit(3, "mm"),
+    legend.key.width = grid::unit(6, "mm"),
+    plot.margin = margin(6, 8, 6, 6)
+  ) +
+  theme_ggexon_side_strips("left", base_size = 7.5)
+```
+
+![A ggexon strip-scale HOXA plot with five species tracks and no
+ribbons. Gene blocks are aligned by human HOXA reference homology, with
+x-axis scale
+hidden.](hoxa-ensembl115-demo_files/figure-html/hoxa-strip-scale-1.png)
+
+Scale-stripped HOXA/Hoxa gene blocks aligned by human reference
+homology. The plot uses original-coordinate GFF3 inputs and stored
+HomologyAnnotation mappings, but no synteny ribbons.
+
 ## Provenance
 
 The data-preparation script is stored in `data-raw/hoxa_ensembl115` in
 the source repository. It downloads the Ensembl release 115 GTF files,
 extracts gene features whose normalized gene names match `HOXA[0-9]+`,
-orients plotting coordinates, and writes the three TSV files used above.
+orients plotting coordinates for the ribbon example, writes
+original-coordinate GFF3 files for Syn-backed examples, and exports the
+homology table used above.
 
 Green anole uses the full Ensembl GTF because its HOXA genes are
 annotated on scaffold `GL343275.1` and are absent from the

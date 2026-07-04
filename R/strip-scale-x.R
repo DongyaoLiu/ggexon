@@ -9,8 +9,15 @@
 #'   visual width. When `NULL`, the ratio is estimated from the densest track.
 #' @param align Alignment for level-1, non-homology tracks with fewer genes than
 #'   the widest track.
+#' @param reference_track Optional single reference track name for homology-aware
+#'   layout. This is the preferred alias for `homo_align`.
 #' @param homo_align `FALSE` for level-1 layout only, or a single character
 #'   reference track name for homology-aware layout. `TRUE` is not supported.
+#'   Prefer `reference_track` for new code.
+#' @param gene_order Gene ordering strategy. `"genomic"` keeps each track in its
+#'   native genomic order. `"reference"` orders query tracks by the resolved
+#'   homolog order in `reference_track`, keeping unmapped local runs between the
+#'   nearest surrounding reference-ordered homologs.
 #' @param species_specific_ratio Visual width of a species-specific gene or
 #'   collapsed run relative to a homologous gene.
 #' @param secondary_homology_ratio Visual width of a homologous off-track or
@@ -32,7 +39,9 @@
 #' @export
 strip_scale_x <- function(gene_gap_ratio = NULL,
                           align = c("left", "right", "center"),
+                          reference_track = NULL,
                           homo_align = FALSE,
+                          gene_order = c("genomic", "reference"),
                           species_specific_ratio = 0.5,
                           secondary_homology_ratio = 0.75,
                           species_ratio = NULL,
@@ -40,8 +49,19 @@ strip_scale_x <- function(gene_gap_ratio = NULL,
                           block_align = c("conserved", "left", "center", "right", "none"),
                           guide = c("range", "none")) {
   align <- match.arg(align)
+  gene_order <- match.arg(gene_order)
   block_align <- match.arg(block_align)
   guide <- match.arg(guide)
+  if (!is.null(reference_track)) {
+    if (!is.character(reference_track) || length(reference_track) != 1L ||
+        is.na(reference_track) || !nzchar(reference_track)) {
+      stop("`reference_track` must be `NULL` or a single non-empty track name.", call. = FALSE)
+    }
+    if (!identical(homo_align, FALSE)) {
+      stop("Supply only one of `reference_track` or `homo_align`.", call. = FALSE)
+    }
+    homo_align <- reference_track
+  }
   if (!is.null(species_ratio)) {
     warning("`species_ratio` is deprecated; use `species_specific_ratio`.", call. = FALSE)
     species_specific_ratio <- species_ratio
@@ -68,7 +88,7 @@ strip_scale_x <- function(gene_gap_ratio = NULL,
   if (isTRUE(homo_align)) {
     stop(
       "`homo_align = TRUE` is no longer supported because homology alignment ",
-      "requires an explicit reference track. Use `homo_align = \"<reference track>\"`.",
+      "requires an explicit reference track. Use `reference_track = \"<reference track>\"`.",
       call. = FALSE
     )
   }
@@ -77,16 +97,21 @@ strip_scale_x <- function(gene_gap_ratio = NULL,
   if (!identical(homo_align, FALSE) && !homo_active) {
     stop("`homo_align` must be `FALSE` or a single reference track name.", call. = FALSE)
   }
+  if (identical(gene_order, "reference") && !homo_active) {
+    stop("`gene_order = \"reference\"` requires `reference_track` or `homo_align`.", call. = FALSE)
+  }
   if (!homo_active && !identical(block_align, "conserved")) {
-    warning("`block_align` is ignored unless `homo_align` is set.", call. = FALSE)
+    warning("`block_align` is ignored unless `reference_track` or `homo_align` is set.", call. = FALSE)
   }
 
   structure(
     list(
       gene_gap_ratio = gene_gap_ratio,
       align = align,
+      reference_track = if (homo_active) homo_align else NULL,
       homo_align = homo_align,
       homo_active = homo_active,
+      gene_order = gene_order,
       species_specific_ratio = as.numeric(species_specific_ratio),
       secondary_homology_ratio = as.numeric(secondary_homology_ratio),
       collapse_contiguous_slot = isTRUE(collapse_contiguous_slot),
@@ -334,6 +359,14 @@ strip_scale_x_build_homology_layout <- function(tags, ratio, spec) {
     if (length(track_name) != 1L || identical(track_name, reference_track)) next
     group <- group[order(group$genomic_start, group$genomic_end, group$row), , drop = FALSE]
     resolved <- strip_scale_x_resolve_group_reference_gene(group, ref_alias)
+    ordered <- strip_scale_x_order_homology_group(
+      group = group,
+      resolved_reference = resolved,
+      reference_centers = reference_centers,
+      gene_order = spec$gene_order %||% "genomic"
+    )
+    group <- ordered$group
+    resolved <- ordered$resolved_reference
     class <- strip_scale_x_homology_class(group, resolved)
     transforms[[length(transforms) + 1L]] <- strip_scale_x_homology_track_layout(
       group = group,
@@ -356,6 +389,57 @@ strip_scale_x_build_homology_layout <- function(tags, ratio, spec) {
   built <- strip_scale_x_finalize_layout(transform)
   built$conserved_reference_block <- conserved_reference_block
   built
+}
+
+strip_scale_x_order_homology_group <- function(group,
+                                               resolved_reference,
+                                               reference_centers,
+                                               gene_order = "genomic") {
+  if (!identical(gene_order, "reference") || nrow(group) <= 1L) {
+    return(list(group = group, resolved_reference = resolved_reference))
+  }
+
+  ref_rank <- match(resolved_reference, reference_centers$gene_key)
+  if (!any(!is.na(ref_rank))) {
+    return(list(group = group, resolved_reference = resolved_reference))
+  }
+
+  order_key <- as.numeric(ref_rank)
+  native_index <- seq_len(nrow(group))
+  unmapped <- is.na(ref_rank)
+
+  if (any(unmapped)) {
+    run_ids <- cumsum(c(TRUE, diff(unmapped) != 0L))
+    for (run_id in unique(run_ids[unmapped])) {
+      run_idx <- which(run_ids == run_id)
+      prev_candidates <- which(!unmapped & native_index < min(run_idx))
+      next_candidates <- which(!unmapped & native_index > max(run_idx))
+
+      has_prev <- length(prev_candidates) > 0L
+      has_next <- length(next_candidates) > 0L
+      if (has_prev && has_next) {
+        prev_idx <- max(prev_candidates)
+        next_idx <- min(next_candidates)
+        base <- min(ref_rank[[prev_idx]], ref_rank[[next_idx]]) + 0.5
+      } else if (has_prev) {
+        prev_idx <- max(prev_candidates)
+        base <- ref_rank[[prev_idx]] + 0.5
+      } else if (has_next) {
+        next_idx <- min(next_candidates)
+        base <- ref_rank[[next_idx]] - 0.5
+      } else {
+        base <- max(ref_rank, na.rm = TRUE) + 0.5
+      }
+
+      order_key[run_idx] <- base
+    }
+  }
+
+  order_idx <- order(order_key, native_index, na.last = TRUE)
+  list(
+    group = group[order_idx, , drop = FALSE],
+    resolved_reference = resolved_reference[order_idx]
+  )
 }
 
 strip_scale_x_homology_class <- function(group, resolved_reference) {

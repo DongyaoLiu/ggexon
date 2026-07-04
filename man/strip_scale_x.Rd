@@ -8,7 +8,9 @@
 strip_scale_x(
   gene_gap_ratio = NULL,
   align = c("left", "right", "center"),
+  reference_track = NULL,
   homo_align = FALSE,
+  gene_order = c("genomic", "reference"),
   species_specific_ratio = 0.5,
   secondary_homology_ratio = 0.75,
   species_ratio = NULL,
@@ -26,8 +28,17 @@ visual width. When \code{NULL}, the ratio is estimated from the densest track.}
 \item{align}{Alignment for level-1, non-homology tracks with fewer genes than
 the widest track.}
 
+\item{reference_track}{Optional single reference track name for homology-aware
+layout. This is the preferred alias for \code{homo_align}.}
+
 \item{homo_align}{\code{FALSE} for level-1 layout only, or a single character
-reference track name for homology-aware layout. \code{TRUE} is not supported.}
+reference track name for homology-aware layout. \code{TRUE} is not supported.
+Prefer \code{reference_track} for new code.}
+
+\item{gene_order}{Gene ordering strategy. \code{"genomic"} keeps each track in its
+native genomic order. \code{"reference"} orders query tracks by the resolved
+homolog order in \code{reference_track}, keeping unmapped local runs between the
+nearest surrounding reference-ordered homologs.}
 
 \item{species_specific_ratio}{Visual width of a species-specific gene or
 collapsed run relative to a homologous gene.}

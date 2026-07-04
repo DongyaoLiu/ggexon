@@ -11,7 +11,9 @@ the most conserved block against an explicit reference track.
 strip_scale_x(
   gene_gap_ratio = NULL,
   align = c("left", "right", "center"),
+  reference_track = NULL,
   homo_align = FALSE,
+  gene_order = c("genomic", "reference"),
   species_specific_ratio = 0.5,
   secondary_homology_ratio = 0.75,
   species_ratio = NULL,
@@ -35,10 +37,23 @@ strip_scale(...)
   Alignment for level-1, non-homology tracks with fewer genes than the
   widest track.
 
+- reference_track:
+
+  Optional single reference track name for homology-aware layout. This
+  is the preferred alias for `homo_align`.
+
 - homo_align:
 
   `FALSE` for level-1 layout only, or a single character reference track
-  name for homology-aware layout. `TRUE` is not supported.
+  name for homology-aware layout. `TRUE` is not supported. Prefer
+  `reference_track` for new code.
+
+- gene_order:
+
+  Gene ordering strategy. `"genomic"` keeps each track in its native
+  genomic order. `"reference"` orders query tracks by the resolved
+  homolog order in `reference_track`, keeping unmapped local runs
+  between the nearest surrounding reference-ordered homologs.
 
 - species_specific_ratio:
 
