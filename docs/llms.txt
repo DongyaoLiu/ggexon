@@ -50,7 +50,6 @@ link panels are built internally.
 `ggexon` is currently a development package.
 
 ``` r
-
 install.packages("remotes")
 remotes::install_github("DongyaoLiu/ggexon")
 ```
@@ -59,7 +58,6 @@ Some dependencies are from Bioconductor. If your R installation cannot
 resolve them automatically, install them first:
 
 ``` r
-
 install.packages("BiocManager")
 BiocManager::install(c(
   "Biostrings",
@@ -112,7 +110,6 @@ The public API is organized around a few function families:
 The typical workflow is:
 
 ``` r
-
 library(ggexon)
 
 x <- SynIndividual(
@@ -667,5 +664,7 @@ and reexports.
   Workflow](https://dongyaoliu.github.io/ggexon/articles/ggexon-workflow.md):
 - [HOXA Synteny
   Demo](https://dongyaoliu.github.io/ggexon/articles/hoxa-ensembl115-demo.md):
+- [CD44 Splice Variant Alignment
+  Demo](https://dongyaoliu.github.io/ggexon/articles/cd44-splice-variants-demo.md):
 - [ggexon Classes, Geoms, Facets, and
   Guides](https://dongyaoliu.github.io/ggexon/articles/ggexon-classes-and-verbs.md):

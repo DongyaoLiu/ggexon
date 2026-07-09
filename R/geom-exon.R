@@ -4,7 +4,8 @@
 GeomExon <- ggproto("GeomExon", Geom,
                       required_aes = c("ymin", "xmin", "xmax", "transcripts","strand", "track", "type"),
                       non_missing_aes = c("linewidth", "shape"),
-                      extra_params = c("exon_height", "transcript_backbone_ratio", "na.rm", "x_translation", "subset", "annotation_type",
+                      extra_params = c("exon_height", "transcript_backbone_ratio", "transcript_backbone_fill",
+                                       "transcript_backbone_colour", "na.rm", "x_translation", "subset", "annotation_type",
                                        "breakdata", "species", "chr", "force_flat"),
                       default_aes = aes(linewidth = 0, linejoin = "mitre", fill="black",
                         colour = NULL,
@@ -62,7 +63,9 @@ GeomExon <- ggproto("GeomExon", Geom,
                     },
 
                       draw_panel = function(data, panel_params, coord, flipped_aes = FALSE,
-                                            transcript_backbone_ratio = 0.1){
+                                            transcript_backbone_ratio = 0.1,
+                                            transcript_backbone_fill = NULL,
+                                            transcript_backbone_colour = NULL){
                         blank_flags <- if ("blank_panel" %in% names(data)) {
                           isTRUE(data$blank_panel) | (data$blank_panel %in% TRUE)
                         } else {
@@ -77,9 +80,19 @@ GeomExon <- ggproto("GeomExon", Geom,
                           track_data,
                           backbone_ratio = transcript_backbone_ratio %||% 0.1
                         )
+                        track_rect_data <- .apply_transcript_backbone_aes(
+                          track_rect_data,
+                          fill = transcript_backbone_fill,
+                          colour = transcript_backbone_colour
+                        )
                         transcripts_line_Grob = ggplot2::GeomRect$draw_panel(track_rect_data, panel_params, coord)
                         tri_data = add_transcripts_direction(track_data)
                         tri_data$linewidth = 0
+                        tri_data <- .apply_transcript_backbone_aes(
+                          tri_data,
+                          fill = transcript_backbone_fill,
+                          colour = transcript_backbone_colour
+                        )
                         transcripts_tri_Grob = GeomPolygon$draw_panel(tri_data, panel_params, coord)
                         #print(getAnywhere("GeomRect"))
                         exon_Grob = ggplot2::GeomRect$draw_panel(visible_data, panel_params, coord)
@@ -95,6 +108,8 @@ GeomExon <- ggproto("GeomExon", Geom,
                       list(
                         exon_height = 0.8,
                         transcript_backbone_ratio = 0.1,
+                        transcript_backbone_fill = NULL,
+                        transcript_backbone_colour = NULL,
                         x_translation = 0,
                         subset = NULL,
                         annotation_type = "exon",
@@ -118,6 +133,22 @@ GeomExon <- ggproto("GeomExon", Geom,
                     },
                     syn_default_aes = c("xmin", "xmax", "ymin", "transcripts", "strand", "track", "type", "group")
 )
+
+.apply_transcript_backbone_aes <- function(data, fill = NULL, colour = NULL,
+                                           use_fill_as_colour = FALSE) {
+  if (nrow(data) == 0L) {
+    return(data)
+  }
+  if (!is.null(fill)) {
+    data$fill <- fill
+  }
+  if (!is.null(colour)) {
+    data$colour <- colour
+  } else if (isTRUE(use_fill_as_colour) && !is.null(fill)) {
+    data$colour <- fill
+  }
+  data
+}
 
 
 #' Draw exon-style genomic features
@@ -152,6 +183,10 @@ GeomExon <- ggproto("GeomExon", Geom,
 #' @param exon_height Optional exon rectangle height.
 #' @param transcript_backbone_ratio Relative backbone height as a fraction of
 #'   `exon_height`. Defaults to `0.1`.
+#' @param transcript_backbone_fill,transcript_backbone_colour Optional fixed
+#'   fill and outline for transcript backbones and direction indicators. When
+#'   `NULL`, ggexon preserves the existing inherited/default backbone
+#'   aesthetics for backwards compatibility.
 #' @param x_translation Optional x offset applied before drawing.
 #' @param subset Optional numeric length-2 genomic window to keep. When omitted
 #'   for Syn-backed data, the full annotation range is used.
@@ -173,6 +208,8 @@ geom_exon <- function(mapping = NULL, data = NULL,
                       ..., na.rm = FALSE, show.legend = NA,
                       transcripts_track_ratio = NULL, exon_height = NULL,
                       transcript_backbone_ratio = NULL,
+                      transcript_backbone_fill = NULL,
+                      transcript_backbone_colour = NULL,
                       x_translation = NULL, subset = NULL,
                       annotation_type ="exon",
                       species = NULL, chr = NULL,
@@ -184,6 +221,8 @@ geom_exon <- function(mapping = NULL, data = NULL,
       na.rm = na.rm,
       exon_height = exon_height,
       transcript_backbone_ratio = transcript_backbone_ratio,
+      transcript_backbone_fill = transcript_backbone_fill,
+      transcript_backbone_colour = transcript_backbone_colour,
       x_translation = x_translation,
       subset = subset,
       annotation_type = annotation_type,
@@ -209,7 +248,8 @@ GeomExon2 <- ggproto("GeomExon2", GeomExon,
     "exon_height", "na.rm", "x_translation", "subset",
     "annotation_type", "breakdata", "species", "chr", "compress_introns",
     "intron_width", "intron_shape", "utr_height", "cds_height",
-    "intron_peak", "chevron_direction", "arrow_width"
+    "intron_peak", "chevron_direction", "arrow_width",
+    "transcript_backbone_fill", "transcript_backbone_colour"
   ),
   default_aes = aes(
     linewidth = 0.4,
@@ -244,7 +284,9 @@ GeomExon2 <- ggproto("GeomExon2", GeomExon,
       arrow_width = params$arrow_width %||% NULL
     )
   },
-  draw_panel = function(data, panel_params, coord, flipped_aes = FALSE) {
+  draw_panel = function(data, panel_params, coord, flipped_aes = FALSE,
+                        transcript_backbone_fill = NULL,
+                        transcript_backbone_colour = NULL) {
     blank_flags <- if ("blank_panel" %in% names(data)) {
       isTRUE(data$blank_panel) | (data$blank_panel %in% TRUE)
     } else {
@@ -262,6 +304,18 @@ GeomExon2 <- ggproto("GeomExon2", GeomExon,
       peak = unique(data$intron_peak %||% 0.35)[1L]
     )
     arrow_data <- .exon2_arrow_data(visible_data)
+    intron_data <- .apply_transcript_backbone_aes(
+      intron_data,
+      fill = transcript_backbone_fill,
+      colour = transcript_backbone_colour,
+      use_fill_as_colour = TRUE
+    )
+    arrow_data <- .apply_transcript_backbone_aes(
+      arrow_data,
+      fill = transcript_backbone_fill,
+      colour = transcript_backbone_colour,
+      use_fill_as_colour = TRUE
+    )
     exon_data <- .exon2_trim_terminal_rects(visible_data)
     exon_grob <- ggplot2::GeomRect$draw_panel(exon_data, panel_params, coord)
     intron_grob <- if (nrow(intron_data) > 0L) {
@@ -297,7 +351,9 @@ GeomExon2 <- ggproto("GeomExon2", GeomExon,
       utr_height = 0.45,
       cds_height = 1,
       intron_peak = 0.35,
-      arrow_width = NULL
+      arrow_width = NULL,
+      transcript_backbone_fill = NULL,
+      transcript_backbone_colour = NULL
     )
   },
   draw_key = draw_key_polygon,
@@ -348,6 +404,10 @@ GeomExon2 <- ggproto("GeomExon2", GeomExon,
 #' @param intron_peak Relative height of the chevron peak.
 #' @param arrow_width Width of the terminal strand-direction triangle. When
 #'   `NULL`, ggexon derives a width from the terminal exon block.
+#' @param transcript_backbone_fill,transcript_backbone_colour Optional fixed
+#'   fill and line/outline colour for intron connectors and terminal direction
+#'   arrows. When `NULL`, ggexon preserves the existing inherited/default
+#'   aesthetics for backwards compatibility.
 #' @param inherit.aes If `FALSE`, overrides inherited aesthetics.
 #'
 #' @return A ggplot2 layer using `GeomExon2`.
@@ -364,6 +424,8 @@ geom_exon2 <- function(mapping = NULL, data = NULL,
                        chevron_direction = c("up", "down"),
                        utr_height = 0.45, cds_height = 1,
                        intron_peak = 0.35, arrow_width = NULL,
+                       transcript_backbone_fill = NULL,
+                       transcript_backbone_colour = NULL,
                        inherit.aes = TRUE) {
   intron_shape <- match.arg(intron_shape)
   chevron_direction <- match.arg(chevron_direction)
@@ -384,7 +446,9 @@ geom_exon2 <- function(mapping = NULL, data = NULL,
     utr_height = utr_height,
     cds_height = cds_height,
     intron_peak = intron_peak,
-    arrow_width = arrow_width
+    arrow_width = arrow_width,
+    transcript_backbone_fill = transcript_backbone_fill,
+    transcript_backbone_colour = transcript_backbone_colour
   )))
   layer(
     data = data,

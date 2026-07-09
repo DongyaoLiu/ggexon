@@ -198,6 +198,9 @@ ggplot_add.ggtree <- function(object, plot, ...) {
 #'   When `NULL`, width is calculated from `arrow_fraction`.
 #' @param arrow_fraction Fraction of each gene span used for the terminal
 #'   triangle when `arrow_width` is `NULL`.
+#' @param tag_arrow_fill,tag_arrow_colour Optional fixed fill and outline for
+#'   the terminal strand-direction triangle. When `NULL`, the triangle uses the
+#'   same inherited aesthetics as the gene tag body.
 #' @param gene_layout Gene-body overlap layout. `"single"` keeps all gene tags
 #'   on one baseline. `"stack"` assigns overlapping gene spans to separate
 #'   vertical lanes. `"nested"` also assigns lanes, ordering containing spans
@@ -266,6 +269,8 @@ geom_genetag <- function(mapping = NULL,
 	                         height = NULL,
 	                         arrow_width = NULL,
 	                         arrow_fraction = 0.18,
+                         tag_arrow_fill = NULL,
+                         tag_arrow_colour = NULL,
                          gene_layout = "single",
                          gene_lane_gap = 0.15,
 	                         species = NULL,
@@ -308,6 +313,8 @@ geom_genetag <- function(mapping = NULL,
 	    height = height,
 	    arrow_width = arrow_width,
 	    arrow_fraction = arrow_fraction,
+    tag_arrow_fill = tag_arrow_fill,
+    tag_arrow_colour = tag_arrow_colour,
     gene_layout = gene_layout,
     gene_lane_gap = gene_lane_gap,
 	    species = species,
@@ -403,6 +410,7 @@ GeomGeneTag <- ggproto(
 	  ),
 		  extra_params = c(
 		    "na.rm", "exon_height", "height", "arrow_width", "arrow_fraction",
+    "tag_arrow_fill", "tag_arrow_colour",
     "gene_layout", "gene_lane_gap",
 		    "species", "chr", "subset", "feature_type", "show_label",
     "label_position", "label_direction", "label_offset_fraction",
@@ -417,6 +425,8 @@ GeomGeneTag <- ggproto(
 	      height = NULL,
 	      arrow_width = NULL,
 	      arrow_fraction = 0.18,
+      tag_arrow_fill = NULL,
+      tag_arrow_colour = NULL,
       gene_layout = "single",
       gene_lane_gap = 0.15,
 	      species = NULL,
@@ -499,9 +509,11 @@ GeomGeneTag <- ggproto(
                         coord,
                         flipped_aes = FALSE,
                         exon_height = NULL,
-	                        height = NULL,
+	                         height = NULL,
 	                         arrow_width = NULL,
 		                        arrow_fraction = 0.18,
+                         tag_arrow_fill = NULL,
+                         tag_arrow_colour = NULL,
                          gene_layout = "single",
                          gene_lane_gap = 0.15,
 	                         show_label = TRUE,
@@ -532,6 +544,26 @@ GeomGeneTag <- ggproto(
 	      arrow_fraction = arrow_fraction
 	    )
     tag_grob <- GeomPolygon$draw_panel(tag_data, panel_params, coord)
+    arrow_data <- if (!is.null(tag_arrow_fill) || !is.null(tag_arrow_colour)) {
+      .genetag_arrow_polygon_data(
+        data = data,
+        exon_height = exon_height,
+        height = height,
+        arrow_width = arrow_width,
+        arrow_fraction = arrow_fraction
+      ) |>
+        .apply_transcript_backbone_aes(
+          fill = tag_arrow_fill,
+          colour = tag_arrow_colour
+        )
+    } else {
+      data.frame()
+    }
+    arrow_grob <- if (nrow(arrow_data) > 0L) {
+      GeomPolygon$draw_panel(arrow_data, panel_params, coord)
+    } else {
+      zeroGrob()
+    }
     label_grob <- .genetag_label_grob(
       data = data,
       panel_params = panel_params,
@@ -555,7 +587,7 @@ GeomGeneTag <- ggproto(
       panel_width_inch = panel_width_inch,
       ggexon_output_size = ggexon_output_size
     )
-	    ggname("geom_genetag", gTree(children = gList(tag_grob, label_grob)))
+	    ggname("geom_genetag", gTree(children = gList(tag_grob, arrow_grob, label_grob)))
 	  },
   draw_key = draw_key_polygon,
   syn_data = function(x, layer) {
@@ -2491,6 +2523,68 @@ drawDetails.ggexonGenetagLabelGrob <- function(x, recording = TRUE) {
     pieces[[i]] <- row
   }
 
+  out <- do.call(rbind, pieces)
+  rownames(out) <- NULL
+  out
+}
+
+.genetag_arrow_polygon_data <- function(data,
+                                        exon_height = NULL,
+                                        height = NULL,
+                                        arrow_width = NULL,
+                                        arrow_fraction = 0.18) {
+  exon_height <- .genetag_effective_height(exon_height = exon_height, height = height)
+  arrow_fraction <- .genetag_positive_number(arrow_fraction, "arrow_fraction")
+  if (arrow_fraction > 0.5) {
+    stop("`arrow_fraction` must be no larger than 0.5.", call. = FALSE)
+  }
+  if (!is.null(arrow_width) && !is.na(arrow_width)) {
+    arrow_width <- .genetag_positive_number(arrow_width, "arrow_width")
+  } else {
+    arrow_width <- NULL
+  }
+
+  pieces <- vector("list", nrow(data))
+  for (i in seq_len(nrow(data))) {
+    xmin <- min(data$xmin[[i]], data$xmax[[i]])
+    xmax <- max(data$xmin[[i]], data$xmax[[i]])
+    y <- data$y[[i]]
+    strand <- .genetag_normalize_strand(data$strand[[i]])
+    if (!strand %in% c("+", "-")) {
+      next
+    }
+    width <- xmax - xmin
+    head_width <- if (is.null(arrow_width)) {
+      width * arrow_fraction
+    } else {
+      min(arrow_width, width)
+    }
+    y_min <- y - exon_height / 2
+    y_max <- y + exon_height / 2
+
+    coords <- switch(
+      strand,
+      "+" = data.frame(
+        x = c(xmax - head_width, xmax, xmax - head_width),
+        y = c(y_min, y, y_max)
+      ),
+      "-" = data.frame(
+        x = c(xmin + head_width, xmin, xmin + head_width),
+        y = c(y_min, y, y_max)
+      )
+    )
+
+    row <- data[rep(i, nrow(coords)), , drop = FALSE]
+    row$x <- coords$x
+    row$y <- coords$y
+    row$group <- i
+    pieces[[i]] <- row
+  }
+
+  pieces <- Filter(Negate(is.null), pieces)
+  if (length(pieces) == 0L) {
+    return(data.frame())
+  }
   out <- do.call(rbind, pieces)
   rownames(out) <- NULL
   out

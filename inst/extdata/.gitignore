@@ -2,3 +2,5 @@
 !.gitignore
 !hoxa_ensembl115/
 !hoxa_ensembl115/**
+!cd44_pairwise_ensembl116/
+!cd44_pairwise_ensembl116/**

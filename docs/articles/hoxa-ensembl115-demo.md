@@ -20,7 +20,6 @@ HOXA13-to-HOXA1 order. Original Ensembl coordinates are retained in the
 TSV files.
 
 ``` r
-
 library(ggexon)
 
 demo_dir <- system.file("extdata", "hoxa_ensembl115", package = "ggexon")
@@ -212,7 +211,6 @@ then removes genomic scale from the gene tracks and uses human as the
 reference track for homology-aware gene-block alignment.
 
 ``` r
-
 annotation_dir <- file.path(demo_dir, "annotations")
 
 hoxa_syn <- SynSpecies(name = "HOXA Ensembl 115")

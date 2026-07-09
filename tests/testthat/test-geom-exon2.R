@@ -161,6 +161,83 @@ test_that("geom_exon2 arrow points to transcript strand direction", {
   expect_equal(minus_arrow$x[1L], min(minus_arrow$x))
 })
 
+test_that("geom_exon2 can fix structural intron and arrow aesthetics", {
+  exon_df <- data.frame(
+    xmin = c(1, 1000),
+    xmax = c(100, 1100),
+    ymin = c(2, 2),
+    transcripts = c("tx1", "tx1"),
+    strand = "+",
+    track = "gene1",
+    type = "exon",
+    group = 1,
+    exon_role = c("common", "variable"),
+    stringsAsFactors = FALSE
+  )
+
+  built <- ggplot2::ggplot_build(
+    ggexon(
+      exon_df,
+      ggplot2::aes(
+        xmin = xmin,
+        xmax = xmax,
+        ymin = ymin,
+        transcripts = transcripts,
+        strand = strand,
+        track = track,
+        type = type,
+        group = group,
+        fill = exon_role
+      )
+    ) +
+      geom_exon2(
+        intron_width = 20,
+        transcript_backbone_fill = "grey82",
+        transcript_backbone_colour = "grey70"
+      )
+  )
+
+  intron_data <- ggexon:::.exon2_intron_data(built$data[[1L]])
+  arrow_data <- ggexon:::.exon2_arrow_data(built$data[[1L]])
+  fixed_intron <- ggexon:::.apply_transcript_backbone_aes(
+    intron_data,
+    fill = "grey82",
+    colour = "grey70",
+    use_fill_as_colour = TRUE
+  )
+  fixed_arrow <- ggexon:::.apply_transcript_backbone_aes(
+    arrow_data,
+    fill = "grey82",
+    colour = "grey70",
+    use_fill_as_colour = TRUE
+  )
+
+  expect_true(inherits(ggplot2::ggplotGrob(
+    ggexon(
+      exon_df,
+      ggplot2::aes(
+        xmin = xmin,
+        xmax = xmax,
+        ymin = ymin,
+        transcripts = transcripts,
+        strand = strand,
+        track = track,
+        type = type,
+        group = group,
+        fill = exon_role
+      )
+    ) +
+      geom_exon2(
+        intron_width = 20,
+        transcript_backbone_fill = "grey82",
+        transcript_backbone_colour = "grey70"
+      )
+  ), "gtable"))
+  expect_equal(fixed_intron$colour, rep("grey70", nrow(fixed_intron)))
+  expect_equal(fixed_arrow$fill, rep("grey82", nrow(fixed_arrow)))
+  expect_equal(fixed_arrow$colour, rep("grey70", nrow(fixed_arrow)))
+})
+
 test_that("geom_exon2 terminal rectangles are trimmed before arrow caps", {
   exon_df <- data.frame(
     xmin = c(1, 1000),

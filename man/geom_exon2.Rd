@@ -28,6 +28,8 @@ geom_exon2(
   cds_height = 1,
   intron_peak = 0.35,
   arrow_width = NULL,
+  transcript_backbone_fill = NULL,
+  transcript_backbone_colour = NULL,
   inherit.aes = TRUE
 )
 }
@@ -85,6 +87,11 @@ height when no explicit UTR/CDS distinction is present.}
 
 \item{arrow_width}{Width of the terminal strand-direction triangle. When
 \code{NULL}, ggexon derives a width from the terminal exon block.}
+
+\item{transcript_backbone_fill, transcript_backbone_colour}{Optional fixed
+fill and line/outline colour for intron connectors and terminal direction
+arrows. When \code{NULL}, ggexon preserves the existing inherited/default
+aesthetics for backwards compatibility.}
 
 \item{inherit.aes}{If \code{FALSE}, overrides inherited aesthetics.}
 }

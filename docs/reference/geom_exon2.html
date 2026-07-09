@@ -25,6 +25,7 @@ and uses thinner boxes for UTR features when UTR/CDS rows are available."></head
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-tutorials" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Tutorials</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-tutorials"><li><a class="dropdown-item" href="../articles/ggexon-workflow.html">Complete workflow</a></li>
     <li><a class="dropdown-item" href="../articles/hoxa-ensembl115-demo.html">HOXA synteny demo</a></li>
+    <li><a class="dropdown-item" href="../articles/cd44-splice-variants-demo.html">CD44 splice variant alignment</a></li>
     <li><a class="dropdown-item" href="../articles/ggexon-classes-and-verbs.html">Classes, geoms, facets, and guides</a></li>
   </ul></li>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
@@ -77,6 +78,8 @@ and uses thinner boxes for UTR features when UTR/CDS rows are available.</p>
 <span>  cds_height <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  intron_peak <span class="op">=</span> <span class="fl">0.35</span>,</span>
 <span>  arrow_width <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  transcript_backbone_fill <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  transcript_backbone_colour <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  inherit.aes <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -181,6 +184,13 @@ height when no explicit UTR/CDS distinction is present.</p></dd>
 <dt id="arg-arrow-width">arrow_width<a class="anchor" aria-label="anchor" href="#arg-arrow-width"></a></dt>
 <dd><p>Width of the terminal strand-direction triangle. When
 <code>NULL</code>, ggexon derives a width from the terminal exon block.</p></dd>
+
+
+<dt id="arg-transcript-backbone-fill-transcript-backbone-colour">transcript_backbone_fill, transcript_backbone_colour<a class="anchor" aria-label="anchor" href="#arg-transcript-backbone-fill-transcript-backbone-colour"></a></dt>
+<dd><p>Optional fixed
+fill and line/outline colour for intron connectors and terminal direction
+arrows. When <code>NULL</code>, ggexon preserves the existing inherited/default
+aesthetics for backwards compatibility.</p></dd>
 
 
 <dt id="arg-inherit-aes">inherit.aes<a class="anchor" aria-label="anchor" href="#arg-inherit-aes"></a></dt>

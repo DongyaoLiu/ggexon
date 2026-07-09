@@ -19,3 +19,35 @@ test_that("transcript backbone rectangles use exon height ratio", {
   expect_true(all(is.na(rect_df$colour)))
   expect_true(all(rect_df$linewidth == 0))
 })
+
+test_that("transcript backbone aesthetics can be fixed independently", {
+  backbone_df <- data.frame(
+    fill = c("red", "blue"),
+    colour = c("red", "blue"),
+    stringsAsFactors = FALSE
+  )
+
+  inherited_df <- ggexon:::.apply_transcript_backbone_aes(backbone_df)
+  fixed_df <- ggexon:::.apply_transcript_backbone_aes(
+    backbone_df,
+    fill = "grey82",
+    colour = NA
+  )
+  line_df <- ggexon:::.apply_transcript_backbone_aes(
+    backbone_df,
+    fill = "grey82",
+    use_fill_as_colour = TRUE
+  )
+  empty_df <- ggexon:::.apply_transcript_backbone_aes(
+    backbone_df[0L, ],
+    fill = "grey82",
+    colour = NA
+  )
+
+  expect_identical(inherited_df, backbone_df)
+  expect_equal(fixed_df$fill, c("grey82", "grey82"))
+  expect_true(all(is.na(fixed_df$colour)))
+  expect_equal(line_df$fill, c("grey82", "grey82"))
+  expect_equal(line_df$colour, c("grey82", "grey82"))
+  expect_equal(nrow(empty_df), 0L)
+})

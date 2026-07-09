@@ -15,6 +15,8 @@ geom_exon(
   transcripts_track_ratio = NULL,
   exon_height = NULL,
   transcript_backbone_ratio = NULL,
+  transcript_backbone_fill = NULL,
+  transcript_backbone_colour = NULL,
   x_translation = NULL,
   subset = NULL,
   annotation_type = "exon",
@@ -50,6 +52,11 @@ ggexon layout helpers.}
 
 \item{transcript_backbone_ratio}{Relative backbone height as a fraction of
 \code{exon_height}. Defaults to \code{0.1}.}
+
+\item{transcript_backbone_fill, transcript_backbone_colour}{Optional fixed
+fill and outline for transcript backbones and direction indicators. When
+\code{NULL}, ggexon preserves the existing inherited/default backbone
+aesthetics for backwards compatibility.}
 
 \item{x_translation}{Optional x offset applied before drawing.}
 

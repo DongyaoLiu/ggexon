@@ -25,6 +25,7 @@ including ggtree side panels generated with ggtree::facet_plot()."></head><body>
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-tutorials" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Tutorials</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-tutorials"><li><a class="dropdown-item" href="../articles/ggexon-workflow.html">Complete workflow</a></li>
     <li><a class="dropdown-item" href="../articles/hoxa-ensembl115-demo.html">HOXA synteny demo</a></li>
+    <li><a class="dropdown-item" href="../articles/cd44-splice-variants-demo.html">CD44 splice variant alignment</a></li>
     <li><a class="dropdown-item" href="../articles/ggexon-classes-and-verbs.html">Classes, geoms, facets, and guides</a></li>
   </ul></li>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
@@ -63,6 +64,8 @@ including ggtree side panels generated with <code><a href="https://rdrr.io/pkg/g
 <span>  height <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  arrow_width <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  arrow_fraction <span class="op">=</span> <span class="fl">0.18</span>,</span>
+<span>  tag_arrow_fill <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  tag_arrow_colour <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  gene_layout <span class="op">=</span> <span class="st">"single"</span>,</span>
 <span>  gene_lane_gap <span class="op">=</span> <span class="fl">0.15</span>,</span>
 <span>  species <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -127,6 +130,12 @@ When <code>NULL</code>, width is calculated from <code>arrow_fraction</code>.</p
 <dt id="arg-arrow-fraction">arrow_fraction<a class="anchor" aria-label="anchor" href="#arg-arrow-fraction"></a></dt>
 <dd><p>Fraction of each gene span used for the terminal
 triangle when <code>arrow_width</code> is <code>NULL</code>.</p></dd>
+
+
+<dt id="arg-tag-arrow-fill-tag-arrow-colour">tag_arrow_fill, tag_arrow_colour<a class="anchor" aria-label="anchor" href="#arg-tag-arrow-fill-tag-arrow-colour"></a></dt>
+<dd><p>Optional fixed fill and outline for
+the terminal strand-direction triangle. When <code>NULL</code>, the triangle uses the
+same inherited aesthetics as the gene tag body.</p></dd>
 
 
 <dt id="arg-gene-layout">gene_layout<a class="anchor" aria-label="anchor" href="#arg-gene-layout"></a></dt>

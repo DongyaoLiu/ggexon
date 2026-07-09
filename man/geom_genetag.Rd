@@ -14,6 +14,8 @@ geom_genetag(
   height = NULL,
   arrow_width = NULL,
   arrow_fraction = 0.18,
+  tag_arrow_fill = NULL,
+  tag_arrow_colour = NULL,
   gene_layout = "single",
   gene_lane_gap = 0.15,
   species = NULL,
@@ -65,6 +67,10 @@ When \code{NULL}, width is calculated from \code{arrow_fraction}.}
 
 \item{arrow_fraction}{Fraction of each gene span used for the terminal
 triangle when \code{arrow_width} is \code{NULL}.}
+
+\item{tag_arrow_fill, tag_arrow_colour}{Optional fixed fill and outline for
+the terminal strand-direction triangle. When \code{NULL}, the triangle uses the
+same inherited aesthetics as the gene tag body.}
 
 \item{gene_layout}{Gene-body overlap layout. \code{"single"} keeps all gene tags
 on one baseline. \code{"stack"} assigns overlapping gene spans to separate

@@ -31,6 +31,45 @@ test_that("geom_genetag polygon data uses exon bodies with strand triangles", {
   expect_equal(range(alias_poly$y), c(0.8, 1.2))
 })
 
+test_that("geom_genetag can fix terminal arrow aesthetics independently", {
+  data <- data.frame(
+    xmin = c(0, 10),
+    xmax = c(10, 20),
+    y = c(1, 2),
+    strand = c("+", "-"),
+    gene = c("g1", "g2"),
+    PANEL = 1L,
+    group = 1:2,
+    colour = "black",
+    fill = c("red", "blue"),
+    linewidth = 0.25,
+    linetype = 1,
+    alpha = NA_real_,
+    stringsAsFactors = FALSE
+  )
+
+  arrow <- .genetag_arrow_polygon_data(data, exon_height = 0.5, arrow_fraction = 0.2)
+  fixed_arrow <- ggexon:::.apply_transcript_backbone_aes(
+    arrow,
+    fill = "grey82",
+    colour = NA
+  )
+
+  expect_identical(nrow(arrow), 6L)
+  expect_equal(fixed_arrow$fill, rep("grey82", nrow(fixed_arrow)))
+  expect_true(all(is.na(fixed_arrow$colour)))
+  expect_true(inherits(ggplot2::ggplotGrob(
+    ggplot2::ggplot() +
+      geom_genetag(
+        data = data,
+        ggplot2::aes(fill = gene),
+        tag_arrow_fill = "grey82",
+        tag_arrow_colour = NA,
+        show_label = FALSE
+      )
+  ), "gtable"))
+})
+
 test_that("geom_genetag renders with data-default aesthetics", {
   data <- data.frame(
     xmin = c(1, 5),

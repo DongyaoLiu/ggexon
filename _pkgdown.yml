@@ -27,6 +27,8 @@ navbar:
         href: articles/ggexon-workflow.html
       - text: HOXA synteny demo
         href: articles/hoxa-ensembl115-demo.html
+      - text: CD44 splice variant alignment
+        href: articles/cd44-splice-variants-demo.html
       - text: Classes, geoms, facets, and guides
         href: articles/ggexon-classes-and-verbs.html
 
@@ -36,6 +38,7 @@ articles:
   contents:
   - ggexon-workflow
   - hoxa-ensembl115-demo
+  - cd44-splice-variants-demo
   - ggexon-classes-and-verbs
 
 reference:
