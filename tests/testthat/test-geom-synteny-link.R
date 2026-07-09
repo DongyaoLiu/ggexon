@@ -93,6 +93,109 @@ test_that("geom_synteny_link renders manual interval ribbons", {
   ))
 })
 
+test_that("facet_genomics(reverse_x) reverses selected annotation panels and source-link x transforms", {
+  track_levels <- c("human", "link_human_mouse", "mouse")
+
+  annotation_df <- data.frame(
+    track = factor(
+      c("human", "human", "mouse", "mouse"),
+      levels = track_levels
+    ),
+    x = c(0, 100, 1000, 1100),
+    y = 1
+  )
+  link_df <- data.frame(
+    track = factor("link_human_mouse", levels = track_levels),
+    tspecies = "human",
+    tchr = "chr11",
+    tstart = 10,
+    tend = 30,
+    strand = "+",
+    qspecies = "mouse",
+    qchr = "chr2",
+    qstart = 1010,
+    qend = 1030,
+    group = 1
+  )
+
+  built <- ggexon_build(
+    ggexon() +
+      ggplot2::geom_blank(
+        data = annotation_df,
+        mapping = ggplot2::aes(x = x, y = y)
+      ) +
+      geom_synteny_link(
+        data = link_df,
+        mapping = ggplot2::aes(
+          tspecies = tspecies,
+          tchr = tchr,
+          tstart = tstart,
+          tend = tend,
+          strand = strand,
+          qspecies = qspecies,
+          qchr = qchr,
+          qstart = qstart,
+          qend = qend,
+          group = group
+        ),
+        inherit.aes = FALSE
+      ) +
+      facet_genomics(
+        ggplot2::vars(track),
+        scales = "free_x",
+        reverse_x = "mouse",
+        reverse_x_match_by = "track"
+      )
+  )
+
+  layout_df <- as.data.frame(built@layout$layout)
+  human_panel <- as.integer(layout_df$PANEL[layout_df$track == "human"][[1L]])
+  mouse_panel <- as.integer(layout_df$PANEL[layout_df$track == "mouse"][[1L]])
+
+  expect_identical(built@layout$panel_params[[human_panel]]$reverse, "none")
+  expect_identical(built@layout$panel_params[[mouse_panel]]$reverse, "x")
+  expect_identical(built@layout$ggexon_reverse_x_panels, mouse_panel)
+
+  link_data <- built@data[[2L]]
+  transformed <- .transform_link_x_by_source_panel(
+    link_data,
+    built@layout$panel_params,
+    built@plot@coordinates
+  )
+
+  transformed_x <- stats::setNames(transformed$x, transformed$x_variable)
+
+  expect_true(transformed_x[["tstart"]] < transformed_x[["tend"]])
+  expect_true(transformed_x[["qstart"]] > transformed_x[["qend"]])
+})
+
+test_that("facet_genomics(reverse_x) validates matches", {
+  expect_error(
+    facet_genomics(ggplot2::vars(track), reverse_x = NA),
+    "reverse_x"
+  )
+
+  track_df <- data.frame(
+    track = c("human", "mouse"),
+    x = c(1, 2),
+    y = c(1, 1)
+  )
+
+  expect_error(
+    ggplot2::ggplot_build(
+      ggexon(track_df, ggplot2::aes(x = x, y = y)) +
+        ggplot2::geom_point() +
+        facet_genomics(
+          ggplot2::vars(track),
+          scales = "free_x",
+          reverse_x = "rat",
+          reverse_x_match_by = "track"
+        )
+    ),
+    "reverse_x"
+  )
+})
+
 test_that("facet_genomics can compact link panels in the rendered gtable", {
   track_levels <- c("human", "link_human_macaque", "macaque")
 

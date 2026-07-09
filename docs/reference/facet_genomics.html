@@ -72,6 +72,8 @@ intermediate link panels used by <code><a href="geom_nuclink.html">geom_nuclink(
 <span>  link_axis <span class="op">=</span> <span class="st">"inherit"</span>,</span>
 <span>  link_strip <span class="op">=</span> <span class="st">"inherit"</span>,</span>
 <span>  annotation_axis <span class="op">=</span> <span class="st">"all"</span>,</span>
+<span>  reverse_x <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  reverse_x_match_by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"auto"</span>, <span class="st">"species"</span>, <span class="st">"strain"</span>, <span class="st">"id"</span>, <span class="st">"track"</span><span class="op">)</span>,</span>
 <span>  xlim <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  xlim_chr <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -157,6 +159,21 @@ x-axis that <code>scales = "free_x"</code> draws on every panel. <code>"bottom"<
 x-axis only on the bottom-most annotation panel of each column and blanks
 the interior ones, collapsing the reclaimed axis rows so the panels sit
 compactly. The per-panel free scales are preserved either way.</p></dd>
+
+
+<dt id="arg-reverse-x">reverse_x<a class="anchor" aria-label="anchor" href="#arg-reverse-x"></a></dt>
+<dd><p>Annotation panels whose x axis should be drawn in reverse.
+Use <code>NULL</code> or <code>FALSE</code> for no panel reversal, <code>TRUE</code> to reverse all
+annotation panels, or a character vector matched against panel layout
+columns such as <code>track</code>, <code>species</code>, <code>strain</code>, or <code>id</code>. Link panels are not
+reversed directly; link x positions inherit the transform from their source
+annotation panels.</p></dd>
+
+
+<dt id="arg-reverse-x-match-by">reverse_x_match_by<a class="anchor" aria-label="anchor" href="#arg-reverse-x-match-by"></a></dt>
+<dd><p>Panel-layout column used to match <code>reverse_x</code>
+character values. <code>"auto"</code> checks common layout columns such as <code>species</code>,
+<code>strain</code>, <code>id</code>, and <code>track</code>.</p></dd>
 
 
 <dt id="arg-xlim">xlim<a class="anchor" aria-label="anchor" href="#arg-xlim"></a></dt>

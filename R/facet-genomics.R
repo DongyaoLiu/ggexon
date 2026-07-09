@@ -46,6 +46,15 @@
 #'   x-axis only on the bottom-most annotation panel of each column and blanks
 #'   the interior ones, collapsing the reclaimed axis rows so the panels sit
 #'   compactly. The per-panel free scales are preserved either way.
+#' @param reverse_x Annotation panels whose x axis should be drawn in reverse.
+#'   Use `NULL` or `FALSE` for no panel reversal, `TRUE` to reverse all
+#'   annotation panels, or a character vector matched against panel layout
+#'   columns such as `track`, `species`, `strain`, or `id`. Link panels are not
+#'   reversed directly; link x positions inherit the transform from their source
+#'   annotation panels.
+#' @param reverse_x_match_by Panel-layout column used to match `reverse_x`
+#'   character values. `"auto"` checks common layout columns such as `species`,
+#'   `strain`, `id`, and `track`.
 #' @param xlim Optional panel-specific x limits for Syn-aware annotation panels.
 #'   Supply a named list of numeric length-2 vectors keyed by individual /
 #'   annotation-panel name. If the plot contains only one annotation panel, a
@@ -80,12 +89,16 @@ facet_genomics <- function(facets, nrow = NULL, ncol = NULL, scales = "fixed",
                        axis.labels = "all", link_panel_height = NULL,
                        link_axis = "inherit", link_strip = "inherit",
                        annotation_axis = "all",
+                       reverse_x = NULL,
+                       reverse_x_match_by = c("auto", "species", "strain", "id", "track"),
                        xlim = NULL, xlim_chr = NULL) {
   scales <- arg_match0(scales %||% "fixed", c("fixed", "free_x", "free_y", "free"))
   dir <- arg_match0(dir, c("h", "v", "lt", "tl", "lb", "bl", "rt", "tr", "rb", "br"))
   link_axis <- arg_match0(link_axis %||% "inherit", c("inherit", "none", "x", "y"))
   link_strip <- arg_match0(link_strip %||% "inherit", c("inherit", "blank"))
   annotation_axis <- arg_match0(annotation_axis %||% "all", c("all", "bottom"))
+  reverse_x <- .validate_facet_reverse_x(reverse_x)
+  reverse_x_match_by <- match.arg(reverse_x_match_by)
   link_panel_height <- .validate_link_panel_height(link_panel_height)
 
   if (nchar(dir) == 1) {
@@ -153,9 +166,37 @@ facet_genomics <- function(facets, nrow = NULL, ncol = NULL, scales = "fixed",
       link_panel_height = link_panel_height,
       link_axis = link_axis,
       link_strip = link_strip,
-      annotation_axis = annotation_axis
+      annotation_axis = annotation_axis,
+      reverse_x = reverse_x,
+      reverse_x_match_by = reverse_x_match_by
     )
   )
+}
+
+.validate_facet_reverse_x <- function(reverse_x) {
+  if (is.null(reverse_x)) {
+    return(NULL)
+  }
+
+  if (is.logical(reverse_x)) {
+    if (length(reverse_x) != 1L || is.na(reverse_x)) {
+      cli::cli_abort("{.arg reverse_x} must be {.code NULL}, one logical value, or a character vector.")
+    }
+    return(if (isTRUE(reverse_x)) TRUE else NULL)
+  }
+
+  if (is.factor(reverse_x)) {
+    reverse_x <- as.character(reverse_x)
+  }
+  if (is.character(reverse_x)) {
+    reverse_x <- unique(reverse_x[!is.na(reverse_x) & nzchar(reverse_x)])
+    if (length(reverse_x) == 0L) {
+      return(NULL)
+    }
+    return(reverse_x)
+  }
+
+  cli::cli_abort("{.arg reverse_x} must be {.code NULL}, one logical value, or a character vector.")
 }
 
 .validate_link_panel_height <- function(link_panel_height) {

@@ -94,8 +94,8 @@ that species.</li>
 <code>inst/extdata/cd44_pairwise_ensembl116</code>. Coordinates remain
 in their original genome assemblies: human GRCh38 <code>chr11</code> and
 mouse GRCm39 <code>chr2</code>. The mouse <code>Cd44</code> gene is on
-the reverse strand, so this first view keeps true genomic orientation
-rather than flipping the mouse annotation.</p>
+the reverse strand, so the plot below reverses the mouse panel at draw
+time while keeping tick labels in original genomic coordinates.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dongyaoliu.github.io/ggexon/">ggexon</a></span><span class="op">)</span></span>
 <span></span>
@@ -266,6 +266,8 @@ transcript backbone is drawn in neutral grey with
 <span>    link_axis <span class="op">=</span> <span class="st">"none"</span>,</span>
 <span>    link_strip <span class="op">=</span> <span class="st">"blank"</span>,</span>
 <span>    annotation_axis <span class="op">=</span> <span class="st">"bottom"</span>,</span>
+<span>    reverse_x <span class="op">=</span> <span class="st">"mouse"</span>,</span>
+<span>    reverse_x_match_by <span class="op">=</span> <span class="st">"track"</span>,</span>
 <span>    strip.position <span class="op">=</span> <span class="st">"left"</span>,</span>
 <span>    labeller <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/as_labeller.html" class="external-link">as_labeller</a></span><span class="op">(</span><span class="va">track_labels</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
@@ -274,7 +276,7 @@ transcript backbone is drawn in neutral grey with
 <span>    labels <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">x</span> <span class="op">/</span> <span class="fl">1000</span><span class="op">)</span>, <span class="st">" kb"</span><span class="op">)</span>,</span>
 <span>    expand <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/expansion.html" class="external-link">expansion</a></span><span class="op">(</span>mult <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.01</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">labs</span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Genomic coordinate"</span>, y <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Genomic coordinate (mouse panel reversed)"</span>, y <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/theme_ggexon_track.html">theme_ggexon_track</a></span><span class="op">(</span></span>
 <span>    base_size <span class="op">=</span> <span class="fl">8</span>,</span>
 <span>    show_x_axis <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -290,11 +292,11 @@ transcript backbone is drawn in neutral grey with
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/theme_ggexon_side_strips.html">theme_ggexon_side_strips</a></span><span class="op">(</span><span class="st">"left"</span>, base_size <span class="op">=</span> <span class="fl">7.5</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
-<img src="cd44-splice-variants-demo_files/figure-html/cd44-plot-1.png" class="r-plt" alt="A ggexon pairwise CD44 splice variant plot with four human isoform rows above a nucleotide-link panel and four mouse isoform rows below it. Common exons are green, variable exons are orange, transcript backbones are grey, and blue ribbons connect LASTZ genomic alignment blocks." width="2090"><p class="caption">
-Selected human CD44 and mouse Cd44 splice variants. Exons present in
-every selected isoform are green; variable splice exons are orange.
-LASTZ genomic DNA alignment blocks are drawn as nucleotide links in the
-middle panel.
+<img src="cd44-splice-variants-demo_files/figure-html/cd44-plot-1.png" class="r-plt" alt="A ggexon pairwise CD44 splice variant plot with four human isoform rows above a nucleotide-link panel and four mouse isoform rows below it. The mouse x axis is reversed. Common exons are green, variable exons are orange, transcript backbones are grey, and blue ribbons connect LASTZ genomic alignment blocks." width="2090"><p class="caption">
+Selected human CD44 and mouse Cd44 splice variants with the mouse panel
+reversed. Exons present in every selected isoform are green; variable
+splice exons are orange. LASTZ genomic DNA alignment blocks are drawn as
+nucleotide links in the middle panel.
 </p>
 </div>
 </div>

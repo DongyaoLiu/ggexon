@@ -22,6 +22,8 @@ facet_genomics(
   link_axis = "inherit",
   link_strip = "inherit",
   annotation_axis = "all",
+  reverse_x = NULL,
+  reverse_x_match_by = c("auto", "species", "strain", "id", "track"),
   xlim = NULL,
   xlim_chr = NULL
 )
@@ -72,6 +74,17 @@ x-axis that \code{scales = "free_x"} draws on every panel. \code{"bottom"} keeps
 x-axis only on the bottom-most annotation panel of each column and blanks
 the interior ones, collapsing the reclaimed axis rows so the panels sit
 compactly. The per-panel free scales are preserved either way.}
+
+\item{reverse_x}{Annotation panels whose x axis should be drawn in reverse.
+Use \code{NULL} or \code{FALSE} for no panel reversal, \code{TRUE} to reverse all
+annotation panels, or a character vector matched against panel layout
+columns such as \code{track}, \code{species}, \code{strain}, or \code{id}. Link panels are not
+reversed directly; link x positions inherit the transform from their source
+annotation panels.}
+
+\item{reverse_x_match_by}{Panel-layout column used to match \code{reverse_x}
+character values. \code{"auto"} checks common layout columns such as \code{species},
+\code{strain}, \code{id}, and \code{track}.}
 
 \item{xlim}{Optional panel-specific x limits for Syn-aware annotation panels.
 Supply a named list of numeric length-2 vectors keyed by individual /

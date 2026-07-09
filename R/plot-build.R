@@ -70,6 +70,120 @@ apply_panel_xlim_to_trained_scales <- function(layout) {
   layout
 }
 
+apply_facet_reverse_x <- function(layout, params = list()) {
+  reverse_x <- params$reverse_x %||% NULL
+  if (is.null(reverse_x)) {
+    return(layout)
+  }
+  if (is.null(layout$panel_params) || length(layout$panel_params) == 0L) {
+    return(layout)
+  }
+
+  layout_df <- as.data.frame(layout$layout)
+  if (!is.data.frame(layout_df) || nrow(layout_df) == 0L || !"PANEL" %in% names(layout_df)) {
+    return(layout)
+  }
+
+  panel_type <- link_panel_type(layout_df)
+  annotation_rows <- panel_type == "annotation"
+  annotation_rows[is.na(annotation_rows)] <- FALSE
+  if (!any(annotation_rows)) {
+    return(layout)
+  }
+
+  reverse_rows <- if (isTRUE(reverse_x)) {
+    annotation_rows
+  } else {
+    .facet_reverse_x_matched_rows(
+      layout_df = layout_df,
+      annotation_rows = annotation_rows,
+      selected = reverse_x,
+      match_by = params$reverse_x_match_by %||% "auto"
+    )
+  }
+
+  panel_ids <- ggexon_gtable_index(layout_df$PANEL[reverse_rows])
+  panel_ids <- unique(panel_ids[!is.na(panel_ids)])
+  if (length(panel_ids) == 0L) {
+    return(layout)
+  }
+
+  for (panel_id in panel_ids) {
+    if (panel_id < 1L || panel_id > length(layout$panel_params)) {
+      next
+    }
+    current <- layout$panel_params[[panel_id]]$reverse %||% "none"
+    layout$panel_params[[panel_id]]$reverse <- .facet_add_x_reverse(current)
+  }
+  layout$ggexon_reverse_x_panels <- panel_ids
+
+  layout
+}
+
+.facet_reverse_x_matched_rows <- function(layout_df,
+                                          annotation_rows,
+                                          selected,
+                                          match_by = "auto") {
+  if (!is.character(selected) || length(selected) == 0L) {
+    return(rep(FALSE, nrow(layout_df)))
+  }
+
+  match_columns <- .facet_reverse_x_match_columns(layout_df, match_by)
+  available <- unique(unlist(lapply(match_columns, function(col) {
+    as.character(layout_df[[col]][annotation_rows])
+  }), use.names = FALSE))
+  available <- available[!is.na(available) & nzchar(available)]
+  unmatched <- setdiff(selected, available)
+  if (length(unmatched) == length(selected)) {
+    cli::cli_abort(c(
+      "{.arg reverse_x} did not match any annotation panel layout values.",
+      "i" = "Available values: {.val {available}}."
+    ))
+  }
+  if (length(unmatched) > 0L) {
+    cli::cli_warn(c(
+      "{.arg reverse_x} values not found in annotation panel layout: {.val {unmatched}}."
+    ))
+  }
+
+  keep <- rep(FALSE, nrow(layout_df))
+  for (col in match_columns) {
+    keep <- keep | as.character(layout_df[[col]]) %in% selected
+  }
+  keep & annotation_rows
+}
+
+.facet_reverse_x_match_columns <- function(layout_df, match_by = "auto") {
+  match_by <- match.arg(match_by, c("auto", "species", "strain", "id", "track"))
+  candidates <- switch(
+    match_by,
+    auto = c("species", "strain", "strains", "id", "individual", "track"),
+    strain = c("strain", "strains"),
+    species = "species",
+    id = "id",
+    track = "track"
+  )
+  match_columns <- intersect(candidates, names(layout_df))
+  if (length(match_columns) == 0L) {
+    cli::cli_abort(
+      "{.arg reverse_x_match_by} = {.val {match_by}} did not find a matching column in the panel layout."
+    )
+  }
+  match_columns
+}
+
+.facet_add_x_reverse <- function(reverse) {
+  reverse <- reverse %||% "none"
+  switch(
+    reverse,
+    none = "x",
+    x = "x",
+    y = "xy",
+    xy = "xy",
+    "x"
+  )
+}
+
 #' @export
 ggplot_build.ggexon <- function(plot, ...) {
   build <- ggexon_build(plot, ...)
@@ -215,6 +329,7 @@ build_ggexon <- S7::method(ggexon_build, class_ggexon) <- function(plot, ...) {
     layout <- apply_panel_xlim_to_trained_scales(layout)
     layout$setup_panel_params()
     layout <- apply_ggexon_genomic_x_axis(layout, plot@genomic_x_scale)
+    layout <- apply_facet_reverse_x(layout, plot@facet$params %||% list())
     data <- layout$map_position(data)
 
     # Hand off position guides to layout

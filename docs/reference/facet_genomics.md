@@ -27,6 +27,8 @@ facet_genomics(
   link_axis = "inherit",
   link_strip = "inherit",
   annotation_axis = "all",
+  reverse_x = NULL,
+  reverse_x_match_by = c("auto", "species", "strain", "id", "track"),
   xlim = NULL,
   xlim_chr = NULL
 )
@@ -110,6 +112,21 @@ facet_genomics(
   only on the bottom-most annotation panel of each column and blanks the
   interior ones, collapsing the reclaimed axis rows so the panels sit
   compactly. The per-panel free scales are preserved either way.
+
+- reverse_x:
+
+  Annotation panels whose x axis should be drawn in reverse. Use `NULL`
+  or `FALSE` for no panel reversal, `TRUE` to reverse all annotation
+  panels, or a character vector matched against panel layout columns
+  such as `track`, `species`, `strain`, or `id`. Link panels are not
+  reversed directly; link x positions inherit the transform from their
+  source annotation panels.
+
+- reverse_x_match_by:
+
+  Panel-layout column used to match `reverse_x` character values.
+  `"auto"` checks common layout columns such as `species`, `strain`,
+  `id`, and `track`.
 
 - xlim:
 

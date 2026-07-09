@@ -22,10 +22,11 @@ classified as:
 The data are bundled under `inst/extdata/cd44_pairwise_ensembl116`.
 Coordinates remain in their original genome assemblies: human GRCh38
 `chr11` and mouse GRCm39 `chr2`. The mouse `Cd44` gene is on the reverse
-strand, so this first view keeps true genomic orientation rather than
-flipping the mouse annotation.
+strand, so the plot below reverses the mouse panel at draw time while
+keeping tick labels in original genomic coordinates.
 
 ``` r
+
 library(ggexon)
 
 demo_dir <- system.file("extdata", "cd44_pairwise_ensembl116", package = "ggexon")
@@ -60,6 +61,7 @@ The fill maps to the exon-level splice role, while the transcript
 backbone is drawn in neutral grey with `transcript_backbone_fill`.
 
 ``` r
+
 exons <- read.delim(file.path(demo_dir, "cd44_selected_exons.tsv"), check.names = FALSE)
 links <- read.delim(file.path(demo_dir, "cd44_nuclinks_lastz.tsv"), check.names = FALSE)
 
@@ -124,6 +126,8 @@ ggexon() +
     link_axis = "none",
     link_strip = "blank",
     annotation_axis = "bottom",
+    reverse_x = "mouse",
+    reverse_x_match_by = "track",
     strip.position = "left",
     labeller = ggplot2::as_labeller(track_labels)
   ) +
@@ -132,7 +136,7 @@ ggexon() +
     labels = function(x) paste0(round(x / 1000), " kb"),
     expand = ggplot2::expansion(mult = c(0.01, 0.01))
   ) +
-  labs(x = "Genomic coordinate", y = NULL) +
+  labs(x = "Genomic coordinate (mouse panel reversed)", y = NULL) +
   theme_ggexon_track(
     base_size = 8,
     show_x_axis = TRUE,
@@ -151,14 +155,15 @@ ggexon() +
 
 ![A ggexon pairwise CD44 splice variant plot with four human isoform
 rows above a nucleotide-link panel and four mouse isoform rows below it.
-Common exons are green, variable exons are orange, transcript backbones
-are grey, and blue ribbons connect LASTZ genomic alignment
+The mouse x axis is reversed. Common exons are green, variable exons are
+orange, transcript backbones are grey, and blue ribbons connect LASTZ
+genomic alignment
 blocks.](cd44-splice-variants-demo_files/figure-html/cd44-plot-1.png)
 
-Selected human CD44 and mouse Cd44 splice variants. Exons present in
-every selected isoform are green; variable splice exons are orange.
-LASTZ genomic DNA alignment blocks are drawn as nucleotide links in the
-middle panel.
+Selected human CD44 and mouse Cd44 splice variants with the mouse panel
+reversed. Exons present in every selected isoform are green; variable
+splice exons are orange. LASTZ genomic DNA alignment blocks are drawn as
+nucleotide links in the middle panel.
 
 ## What the alignment layer contributes
 
@@ -177,6 +182,7 @@ exon annotation rows:
   needs.
 
 ``` r
+
 homology_candidates <- read.delim(
   file.path(demo_dir, "cd44_exon_homology_ranked.tsv"),
   check.names = FALSE
