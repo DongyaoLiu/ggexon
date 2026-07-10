@@ -22,7 +22,8 @@ knitr::opts_chunk$set(
 This tutorial compares selected human `CD44` and mouse `Cd44` protein-coding
 splice variants in one pairwise genomic view. The example uses two annotation
 tracks, one middle `geom_nuclink()` panel, and genomic DNA alignments produced
-with LASTZ from the same windows used for plotting.
+with LASTZ from windows that include the gene plus a strand-aware 20 kb
+promoter-side flank and 10 kb 3-prime-side flank.
 
 The point is not to draw every transcript. `CD44` has many Ensembl isoforms, so
 the bundled dataset keeps a small representative subset: the RefSeq-backed
@@ -57,11 +58,11 @@ knitr::kable(isoform_table)
 
 The plotting table has one row per exon per selected isoform. The y-position is
 assigned by `selection_order`, which keeps the four selected isoforms visible
-instead of overplotting them on one baseline. The fill maps to the exon-level
-splice role, while the transcript backbone is drawn in neutral grey with
-`transcript_backbone_fill`.
+instead of overplotting them on one baseline. Exon fill maps to exon-level splice
+role, while link fill maps to binned LASTZ percent identity. The transcript
+backbone is drawn in neutral grey with `transcript_backbone_fill`.
 
-```{r cd44-plot, message = FALSE, warning = FALSE, fig.alt = "A ggexon pairwise CD44 splice variant plot with four human isoform rows above a nucleotide-link panel and four mouse isoform rows below it. The mouse x axis is reversed. Common exons are green, variable exons are orange, transcript backbones are grey, and blue ribbons connect LASTZ genomic alignment blocks.", fig.cap = "Selected human CD44 and mouse Cd44 splice variants with the mouse panel reversed. Exons present in every selected isoform are green; variable splice exons are orange. LASTZ genomic DNA alignment blocks are drawn as nucleotide links in the middle panel."}
+```{r cd44-plot, message = FALSE, warning = FALSE, fig.alt = "A ggexon pairwise CD44 splice variant plot with four human isoform rows above a nucleotide-link panel and four mouse isoform rows below it. The mouse x axis is reversed. Common exons are green, variable exons are orange, transcript backbones are grey, and nucleotide-link ribbons are colored from pale to dark blue by LASTZ identity range.", fig.cap = "Selected human CD44 and mouse Cd44 splice variants with the mouse panel reversed. Exons present in every selected isoform are green; variable splice exons are orange. LASTZ genomic DNA alignment blocks are drawn as nucleotide links and colored by percent-identity range."}
 exons <- read.delim(file.path(demo_dir, "cd44_selected_exons.tsv"), check.names = FALSE)
 links <- read.delim(file.path(demo_dir, "cd44_nuclinks_lastz.tsv"), check.names = FALSE)
 
@@ -75,8 +76,22 @@ track_labels <- c(
 exons$track <- factor(exons$track, levels = track_levels)
 links$track <- factor(links$track, levels = track_levels)
 exons$exon_role <- factor(exons$exon_role, levels = c("common", "variable"))
+panel_xlim <- stats::setNames(
+  lapply(seq_len(nrow(species)), function(i) c(species$window_start[[i]], species$window_end[[i]])),
+  species$species
+)
+panel_xlim_chr <- stats::setNames(species$chr, species$species)
+identity_levels <- c("50-55%", "55-60%", "60-65%", "65-70%", ">=70%")
+links$identity_bin <- factor(links$identity_bin, levels = identity_levels)
 
 splice_palette <- c(common = "#246B5A", variable = "#D88A3D")
+identity_palette <- c(
+  "50-55%" = "#D5E3F0",
+  "55-60%" = "#A8C7DD",
+  "60-65%" = "#6FA6C8",
+  "65-70%" = "#2F7FAA",
+  ">=70%" = "#0E557A"
+)
 
 ggexon() +
   geom_nuclink(
@@ -91,13 +106,12 @@ ggexon() +
       qstart = qstart,
       qend = qend,
       strand = strand,
-      group = group
+      group = group,
+      fill = identity_bin
     ),
-    fill = "#6A8FB8",
     colour = NA,
-    alpha = 0.32,
-    inherit.aes = FALSE,
-    show.legend = FALSE
+    alpha = 0.38,
+    inherit.aes = FALSE
   ) +
   geom_exon(
     data = exons,
@@ -113,6 +127,8 @@ ggexon() +
     ),
     exon_height = 0.5,
     transcript_backbone_ratio = 0.08,
+    transcript_arrow_ratio = 0.5,
+    transcript_arrow_length = 700,
     transcript_backbone_fill = "grey82",
     transcript_backbone_colour = NA,
     colour = "grey25",
@@ -129,9 +145,16 @@ ggexon() +
     reverse_x = "mouse",
     reverse_x_match_by = "track",
     strip.position = "left",
-    labeller = ggplot2::as_labeller(track_labels)
+    labeller = ggplot2::as_labeller(track_labels),
+    xlim = panel_xlim,
+    xlim_chr = panel_xlim_chr
   ) +
-  scale_fill_manual(values = splice_palette, drop = FALSE, name = "Selected exons") +
+  scale_fill_manual(
+    values = c(splice_palette, identity_palette),
+    breaks = c("common", "variable", identity_levels),
+    drop = FALSE,
+    name = "Exon role / LASTZ identity"
+  ) +
   scale_x_continuous(
     labels = function(x) paste0(round(x / 1000), " kb"),
     expand = ggplot2::expansion(mult = c(0.01, 0.01))
@@ -150,6 +173,9 @@ ggexon() +
     legend.key.width = grid::unit(6, "mm"),
     plot.margin = margin(6, 8, 6, 6)
   ) +
+  ggplot2::guides(
+    fill = ggplot2::guide_legend(nrow = 2, byrow = TRUE, override.aes = list(alpha = 1))
+  ) +
   theme_ggexon_side_strips("left", base_size = 7.5)
 ```
 
@@ -157,11 +183,15 @@ ggexon() +
 
 `geom_nuclink()` uses a table of target/query genomic intervals. Here those
 intervals come from LASTZ alignments of genomic DNA windows spanning the human
-and mouse gene loci. The link rows are deliberately kept separate from the exon
+and mouse gene loci plus 20 kb promoter-side and 10 kb 3-prime-side flanks. The
+demo keeps blocks with alignment length at least 80 bp and identity at least
+50%, so lower-identity central genomic matches remain visible instead of being
+filtered out. The link rows are deliberately kept separate from the exon
 annotation rows:
 
 - annotation rows describe selected transcript structures and exon membership;
-- link rows describe nucleotide-level genomic alignment blocks;
+- link rows describe nucleotide-level genomic alignment blocks and identity
+  ranges;
 - `facet_genomics()` creates the middle panel and injects the source-panel
   coordinates that `geom_nuclink()` needs.
 
@@ -190,6 +220,63 @@ summary_table <- data.frame(
 knitr::kable(summary_table)
 ```
 
+The identity bins in the plot show each retained LASTZ block. To summarize
+conservation across broad gene parts, the table below clips each retained block
+to three human-side regions and computes a target-bp-weighted identity. The
+middle region is the longest consecutive run of variable selected exons.
+
+```{r cd44-regional-identity, message = FALSE, warning = FALSE}
+unique_exons <- read.delim(
+  file.path(demo_dir, "cd44_selected_unique_exons.tsv"),
+  check.names = FALSE
+)
+
+human_exons <- unique_exons[unique_exons$species == "human", ]
+human_exons <- human_exons[order(human_exons$start, human_exons$end), ]
+run_id <- cumsum(c(
+  TRUE,
+  human_exons$exon_role[-1L] != human_exons$exon_role[-nrow(human_exons)]
+))
+variable_runs <- do.call(rbind, lapply(split(human_exons, run_id), function(run) {
+  data.frame(
+    role = run$exon_role[[1L]],
+    start = min(run$start),
+    end = max(run$end),
+    exon_count = nrow(run),
+    width = sum(run$end - run$start + 1L)
+  )
+}))
+variable_runs <- variable_runs[variable_runs$role == "variable", ]
+middle <- variable_runs[order(-variable_runs$exon_count, -variable_runs$width), ][1L, ]
+human_gene <- species[species$species == "human", ]
+regions <- data.frame(
+  Region = c("5' side", "variable exon-rich middle", "3' side"),
+  start = c(human_gene$gene_start, middle$start, middle$end + 1L),
+  end = c(middle$start - 1L, middle$end, human_gene$gene_end),
+  check.names = FALSE
+)
+
+region_summary <- do.call(rbind, lapply(seq_len(nrow(regions)), function(i) {
+  region <- regions[i, ]
+  overlap_bp <- pmax(
+    0L,
+    pmin(links$tend, region$end) - pmax(links$tstart, region$start) + 1L
+  )
+  keep <- overlap_bp > 0L
+  data.frame(
+    Region = region$Region,
+    `Retained blocks` = sum(keep),
+    `Human bp covered` = sum(overlap_bp[keep]),
+    `Weighted identity (%)` = round(
+      stats::weighted.mean(links$identity[keep], overlap_bp[keep]),
+      1
+    ),
+    check.names = FALSE
+  )
+}))
+knitr::kable(region_summary)
+```
+
 # Reusing the pattern
 
 For splice-variant comparisons, keep the biological feature colors on the exon
@@ -201,5 +288,6 @@ that means setting `transcript_backbone_fill` and
 
 The reproducible data-preparation script is stored in
 `data-raw/cd44_pairwise_ensembl116/build-cd44-demo.R`. It records the Ensembl
-release, source URLs, UCSC sequence windows, LASTZ command, selected isoforms,
-common-exon calls, and exon-homology candidate tables.
+release, source URLs, strand-aware flank sizes, UCSC sequence windows, LASTZ
+command, selected isoforms, common-exon calls, and exon-homology candidate
+tables.

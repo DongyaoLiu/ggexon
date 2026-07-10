@@ -76,7 +76,8 @@
 <code>Cd44</code> protein-coding splice variants in one pairwise genomic
 view. The example uses two annotation tracks, one middle
 <code><a href="../reference/geom_nuclink.html">geom_nuclink()</a></code> panel, and genomic DNA alignments produced
-with LASTZ from the same windows used for plotting.</p>
+with LASTZ from windows that include the gene plus a strand-aware 20 kb
+promoter-side flank and 10 kb 3-prime-side flank.</p>
 <p>The point is not to draw every transcript. <code>CD44</code> has many
 Ensembl isoforms, so the bundled dataset keeps a small representative
 subset: the RefSeq-backed canonical transcript, a short isoform, an
@@ -198,9 +199,9 @@ time while keeping tick labels in original genomic coordinates.</p>
 <p>The plotting table has one row per exon per selected isoform. The
 y-position is assigned by <code>selection_order</code>, which keeps the
 four selected isoforms visible instead of overplotting them on one
-baseline. The fill maps to the exon-level splice role, while the
-transcript backbone is drawn in neutral grey with
-<code>transcript_backbone_fill</code>.</p>
+baseline. Exon fill maps to exon-level splice role, while link fill maps
+to binned LASTZ percent identity. The transcript backbone is drawn in
+neutral grey with <code>transcript_backbone_fill</code>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">exons</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.delim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">demo_dir</span>, <span class="st">"cd44_selected_exons.tsv"</span><span class="op">)</span>, check.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="va">links</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.delim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">demo_dir</span>, <span class="st">"cd44_nuclinks_lastz.tsv"</span><span class="op">)</span>, check.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
@@ -215,8 +216,22 @@ transcript backbone is drawn in neutral grey with
 <span><span class="va">exons</span><span class="op">$</span><span class="va">track</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">exons</span><span class="op">$</span><span class="va">track</span>, levels <span class="op">=</span> <span class="va">track_levels</span><span class="op">)</span></span>
 <span><span class="va">links</span><span class="op">$</span><span class="va">track</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">links</span><span class="op">$</span><span class="va">track</span>, levels <span class="op">=</span> <span class="va">track_levels</span><span class="op">)</span></span>
 <span><span class="va">exons</span><span class="op">$</span><span class="va">exon_role</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">exons</span><span class="op">$</span><span class="va">exon_role</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"common"</span>, <span class="st">"variable"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">panel_xlim</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/setNames.html" class="external-link">setNames</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">species</span><span class="op">)</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">species</span><span class="op">$</span><span class="va">window_start</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span>, <span class="va">species</span><span class="op">$</span><span class="va">window_end</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  <span class="va">species</span><span class="op">$</span><span class="va">species</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">panel_xlim_chr</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/setNames.html" class="external-link">setNames</a></span><span class="op">(</span><span class="va">species</span><span class="op">$</span><span class="va">chr</span>, <span class="va">species</span><span class="op">$</span><span class="va">species</span><span class="op">)</span></span>
+<span><span class="va">identity_levels</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"50-55%"</span>, <span class="st">"55-60%"</span>, <span class="st">"60-65%"</span>, <span class="st">"65-70%"</span>, <span class="st">"&gt;=70%"</span><span class="op">)</span></span>
+<span><span class="va">links</span><span class="op">$</span><span class="va">identity_bin</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">links</span><span class="op">$</span><span class="va">identity_bin</span>, levels <span class="op">=</span> <span class="va">identity_levels</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">splice_palette</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>common <span class="op">=</span> <span class="st">"#246B5A"</span>, variable <span class="op">=</span> <span class="st">"#D88A3D"</span><span class="op">)</span></span>
+<span><span class="va">identity_palette</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>  <span class="st">"50-55%"</span> <span class="op">=</span> <span class="st">"#D5E3F0"</span>,</span>
+<span>  <span class="st">"55-60%"</span> <span class="op">=</span> <span class="st">"#A8C7DD"</span>,</span>
+<span>  <span class="st">"60-65%"</span> <span class="op">=</span> <span class="st">"#6FA6C8"</span>,</span>
+<span>  <span class="st">"65-70%"</span> <span class="op">=</span> <span class="st">"#2F7FAA"</span>,</span>
+<span>  <span class="st">"&gt;=70%"</span> <span class="op">=</span> <span class="st">"#0E557A"</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_nuclink.html">geom_nuclink</a></span><span class="op">(</span></span>
@@ -231,13 +246,12 @@ transcript backbone is drawn in neutral grey with
 <span>      qstart <span class="op">=</span> <span class="va">qstart</span>,</span>
 <span>      qend <span class="op">=</span> <span class="va">qend</span>,</span>
 <span>      strand <span class="op">=</span> <span class="va">strand</span>,</span>
-<span>      group <span class="op">=</span> <span class="va">group</span></span>
+<span>      group <span class="op">=</span> <span class="va">group</span>,</span>
+<span>      fill <span class="op">=</span> <span class="va">identity_bin</span></span>
 <span>    <span class="op">)</span>,</span>
-<span>    fill <span class="op">=</span> <span class="st">"#6A8FB8"</span>,</span>
 <span>    colour <span class="op">=</span> <span class="cn">NA</span>,</span>
-<span>    alpha <span class="op">=</span> <span class="fl">0.32</span>,</span>
-<span>    inherit.aes <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>    show.legend <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>    alpha <span class="op">=</span> <span class="fl">0.38</span>,</span>
+<span>    inherit.aes <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_exon.html">geom_exon</a></span><span class="op">(</span></span>
 <span>    data <span class="op">=</span> <span class="va">exons</span>,</span>
@@ -253,6 +267,8 @@ transcript backbone is drawn in neutral grey with
 <span>    <span class="op">)</span>,</span>
 <span>    exon_height <span class="op">=</span> <span class="fl">0.5</span>,</span>
 <span>    transcript_backbone_ratio <span class="op">=</span> <span class="fl">0.08</span>,</span>
+<span>    transcript_arrow_ratio <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>    transcript_arrow_length <span class="op">=</span> <span class="fl">700</span>,</span>
 <span>    transcript_backbone_fill <span class="op">=</span> <span class="st">"grey82"</span>,</span>
 <span>    transcript_backbone_colour <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>    colour <span class="op">=</span> <span class="st">"grey25"</span>,</span>
@@ -269,9 +285,16 @@ transcript backbone is drawn in neutral grey with
 <span>    reverse_x <span class="op">=</span> <span class="st">"mouse"</span>,</span>
 <span>    reverse_x_match_by <span class="op">=</span> <span class="st">"track"</span>,</span>
 <span>    strip.position <span class="op">=</span> <span class="st">"left"</span>,</span>
-<span>    labeller <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/as_labeller.html" class="external-link">as_labeller</a></span><span class="op">(</span><span class="va">track_labels</span><span class="op">)</span></span>
+<span>    labeller <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/as_labeller.html" class="external-link">as_labeller</a></span><span class="op">(</span><span class="va">track_labels</span><span class="op">)</span>,</span>
+<span>    xlim <span class="op">=</span> <span class="va">panel_xlim</span>,</span>
+<span>    xlim_chr <span class="op">=</span> <span class="va">panel_xlim_chr</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">scale_fill_manual</span><span class="op">(</span>values <span class="op">=</span> <span class="va">splice_palette</span>, drop <span class="op">=</span> <span class="cn">FALSE</span>, name <span class="op">=</span> <span class="st">"Selected exons"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">scale_fill_manual</span><span class="op">(</span></span>
+<span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">splice_palette</span>, <span class="va">identity_palette</span><span class="op">)</span>,</span>
+<span>    breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"common"</span>, <span class="st">"variable"</span>, <span class="va">identity_levels</span><span class="op">)</span>,</span>
+<span>    drop <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>    name <span class="op">=</span> <span class="st">"Exon role / LASTZ identity"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">scale_x_continuous</span><span class="op">(</span></span>
 <span>    labels <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">x</span> <span class="op">/</span> <span class="fl">1000</span><span class="op">)</span>, <span class="st">" kb"</span><span class="op">)</span>,</span>
 <span>    expand <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/expansion.html" class="external-link">expansion</a></span><span class="op">(</span>mult <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.01</span><span class="op">)</span><span class="op">)</span></span>
@@ -290,13 +313,16 @@ transcript backbone is drawn in neutral grey with
 <span>    legend.key.width <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">6</span>, <span class="st">"mm"</span><span class="op">)</span>,</span>
 <span>    plot.margin <span class="op">=</span> <span class="fu">margin</span><span class="op">(</span><span class="fl">6</span>, <span class="fl">8</span>, <span class="fl">6</span>, <span class="fl">6</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guides.html" class="external-link">guides</a></span><span class="op">(</span></span>
+<span>    fill <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html" class="external-link">guide_legend</a></span><span class="op">(</span>nrow <span class="op">=</span> <span class="fl">2</span>, byrow <span class="op">=</span> <span class="cn">TRUE</span>, override.aes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/theme_ggexon_side_strips.html">theme_ggexon_side_strips</a></span><span class="op">(</span><span class="st">"left"</span>, base_size <span class="op">=</span> <span class="fl">7.5</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
-<img src="cd44-splice-variants-demo_files/figure-html/cd44-plot-1.png" class="r-plt" alt="A ggexon pairwise CD44 splice variant plot with four human isoform rows above a nucleotide-link panel and four mouse isoform rows below it. The mouse x axis is reversed. Common exons are green, variable exons are orange, transcript backbones are grey, and blue ribbons connect LASTZ genomic alignment blocks." width="2090"><p class="caption">
+<img src="cd44-splice-variants-demo_files/figure-html/cd44-plot-1.png" class="r-plt" alt="A ggexon pairwise CD44 splice variant plot with four human isoform rows above a nucleotide-link panel and four mouse isoform rows below it. The mouse x axis is reversed. Common exons are green, variable exons are orange, transcript backbones are grey, and nucleotide-link ribbons are colored from pale to dark blue by LASTZ identity range." width="2090"><p class="caption">
 Selected human CD44 and mouse Cd44 splice variants with the mouse panel
 reversed. Exons present in every selected isoform are green; variable
 splice exons are orange. LASTZ genomic DNA alignment blocks are drawn as
-nucleotide links in the middle panel.
+nucleotide links and colored by percent-identity range.
 </p>
 </div>
 </div>
@@ -305,12 +331,17 @@ nucleotide links in the middle panel.
 </h2>
 <p><code><a href="../reference/geom_nuclink.html">geom_nuclink()</a></code> uses a table of target/query genomic
 intervals. Here those intervals come from LASTZ alignments of genomic
-DNA windows spanning the human and mouse gene loci. The link rows are
-deliberately kept separate from the exon annotation rows:</p>
+DNA windows spanning the human and mouse gene loci plus 20 kb
+promoter-side and 10 kb 3-prime-side flanks. The demo keeps blocks with
+alignment length at least 80 bp and identity at least 50%, so
+lower-identity central genomic matches remain visible instead of being
+filtered out. The link rows are deliberately kept separate from the exon
+annotation rows:</p>
 <ul>
 <li>annotation rows describe selected transcript structures and exon
 membership;</li>
-<li>link rows describe nucleotide-level genomic alignment blocks;</li>
+<li>link rows describe nucleotide-level genomic alignment blocks and
+identity ranges;</li>
 <li>
 <code><a href="../reference/facet_genomics.html">facet_genomics()</a></code> creates the middle panel and injects
 the source-panel coordinates that <code><a href="../reference/geom_nuclink.html">geom_nuclink()</a></code>
@@ -355,15 +386,104 @@ needs.</li>
 </tr>
 <tr class="odd">
 <td align="left">LASTZ link blocks retained</td>
-<td align="right">18</td>
+<td align="right">25</td>
 </tr>
 <tr class="even">
 <td align="left">Ranked exon-pair candidates</td>
-<td align="right">12</td>
+<td align="right">106</td>
 </tr>
 <tr class="odd">
 <td align="left">Reciprocal-best exon-pair candidates</td>
+<td align="right">6</td>
+</tr>
+</tbody>
+</table>
+<p>The identity bins in the plot show each retained LASTZ block. To
+summarize conservation across broad gene parts, the table below clips
+each retained block to three human-side regions and computes a
+target-bp-weighted identity. The middle region is the longest
+consecutive run of variable selected exons.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">unique_exons</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.delim</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">demo_dir</span>, <span class="st">"cd44_selected_unique_exons.tsv"</span><span class="op">)</span>,</span>
+<span>  check.names <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">human_exons</span> <span class="op">&lt;-</span> <span class="va">unique_exons</span><span class="op">[</span><span class="va">unique_exons</span><span class="op">$</span><span class="va">species</span> <span class="op">==</span> <span class="st">"human"</span>, <span class="op">]</span></span>
+<span><span class="va">human_exons</span> <span class="op">&lt;-</span> <span class="va">human_exons</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="va">human_exons</span><span class="op">$</span><span class="va">start</span>, <span class="va">human_exons</span><span class="op">$</span><span class="va">end</span><span class="op">)</span>, <span class="op">]</span></span>
+<span><span class="va">run_id</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cumsum.html" class="external-link">cumsum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>  <span class="cn">TRUE</span>,</span>
+<span>  <span class="va">human_exons</span><span class="op">$</span><span class="va">exon_role</span><span class="op">[</span><span class="op">-</span><span class="fl">1L</span><span class="op">]</span> <span class="op">!=</span> <span class="va">human_exons</span><span class="op">$</span><span class="va">exon_role</span><span class="op">[</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">human_exons</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">variable_runs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">rbind</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/split.html" class="external-link">split</a></span><span class="op">(</span><span class="va">human_exons</span>, <span class="va">run_id</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">run</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>    role <span class="op">=</span> <span class="va">run</span><span class="op">$</span><span class="va">exon_role</span><span class="op">[[</span><span class="fl">1L</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>    start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">run</span><span class="op">$</span><span class="va">start</span><span class="op">)</span>,</span>
+<span>    end <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">run</span><span class="op">$</span><span class="va">end</span><span class="op">)</span>,</span>
+<span>    exon_count <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">run</span><span class="op">)</span>,</span>
+<span>    width <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">run</span><span class="op">$</span><span class="va">end</span> <span class="op">-</span> <span class="va">run</span><span class="op">$</span><span class="va">start</span> <span class="op">+</span> <span class="fl">1L</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">variable_runs</span> <span class="op">&lt;-</span> <span class="va">variable_runs</span><span class="op">[</span><span class="va">variable_runs</span><span class="op">$</span><span class="va">role</span> <span class="op">==</span> <span class="st">"variable"</span>, <span class="op">]</span></span>
+<span><span class="va">middle</span> <span class="op">&lt;-</span> <span class="va">variable_runs</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="op">-</span><span class="va">variable_runs</span><span class="op">$</span><span class="va">exon_count</span>, <span class="op">-</span><span class="va">variable_runs</span><span class="op">$</span><span class="va">width</span><span class="op">)</span>, <span class="op">]</span><span class="op">[</span><span class="fl">1L</span>, <span class="op">]</span></span>
+<span><span class="va">human_gene</span> <span class="op">&lt;-</span> <span class="va">species</span><span class="op">[</span><span class="va">species</span><span class="op">$</span><span class="va">species</span> <span class="op">==</span> <span class="st">"human"</span>, <span class="op">]</span></span>
+<span><span class="va">regions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  Region <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"5' side"</span>, <span class="st">"variable exon-rich middle"</span>, <span class="st">"3' side"</span><span class="op">)</span>,</span>
+<span>  start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">human_gene</span><span class="op">$</span><span class="va">gene_start</span>, <span class="va">middle</span><span class="op">$</span><span class="va">start</span>, <span class="va">middle</span><span class="op">$</span><span class="va">end</span> <span class="op">+</span> <span class="fl">1L</span><span class="op">)</span>,</span>
+<span>  end <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">middle</span><span class="op">$</span><span class="va">start</span> <span class="op">-</span> <span class="fl">1L</span>, <span class="va">middle</span><span class="op">$</span><span class="va">end</span>, <span class="va">human_gene</span><span class="op">$</span><span class="va">gene_end</span><span class="op">)</span>,</span>
+<span>  check.names <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">region_summary</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">rbind</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">regions</span><span class="op">)</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">region</span> <span class="op">&lt;-</span> <span class="va">regions</span><span class="op">[</span><span class="va">i</span>, <span class="op">]</span></span>
+<span>  <span class="va">overlap_bp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmax</a></span><span class="op">(</span></span>
+<span>    <span class="fl">0L</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmin</a></span><span class="op">(</span><span class="va">links</span><span class="op">$</span><span class="va">tend</span>, <span class="va">region</span><span class="op">$</span><span class="va">end</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmax</a></span><span class="op">(</span><span class="va">links</span><span class="op">$</span><span class="va">tstart</span>, <span class="va">region</span><span class="op">$</span><span class="va">start</span><span class="op">)</span> <span class="op">+</span> <span class="fl">1L</span></span>
+<span>  <span class="op">)</span></span>
+<span>  <span class="va">keep</span> <span class="op">&lt;-</span> <span class="va">overlap_bp</span> <span class="op">&gt;</span> <span class="fl">0L</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>    Region <span class="op">=</span> <span class="va">region</span><span class="op">$</span><span class="va">Region</span>,</span>
+<span>    `Retained blocks` <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">keep</span><span class="op">)</span>,</span>
+<span>    `Human bp covered` <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">overlap_bp</span><span class="op">[</span><span class="va">keep</span><span class="op">]</span><span class="op">)</span>,</span>
+<span>    `Weighted identity (%)` <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span></span>
+<span>      <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/weighted.mean.html" class="external-link">weighted.mean</a></span><span class="op">(</span><span class="va">links</span><span class="op">$</span><span class="va">identity</span><span class="op">[</span><span class="va">keep</span><span class="op">]</span>, <span class="va">overlap_bp</span><span class="op">[</span><span class="va">keep</span><span class="op">]</span><span class="op">)</span>,</span>
+<span>      <span class="fl">1</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    check.names <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">region_summary</span><span class="op">)</span></span></code></pre></div>
+<table style="width:100%;" class="table">
+<colgroup>
+<col width="32%">
+<col width="19%">
+<col width="20%">
+<col width="27%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">Region</th>
+<th align="right">Retained blocks</th>
+<th align="right">Human bp covered</th>
+<th align="right">Weighted identity (%)</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">5’ side</td>
+<td align="right">15</td>
+<td align="right">52737</td>
+<td align="right">55.0</td>
+</tr>
+<tr class="even">
+<td align="left">variable exon-rich middle</td>
 <td align="right">3</td>
+<td align="right">14714</td>
+<td align="right">55.4</td>
+</tr>
+<tr class="odd">
+<td align="left">3’ side</td>
+<td align="right">5</td>
+<td align="right">16851</td>
+<td align="right">56.4</td>
 </tr>
 </tbody>
 </table>
@@ -381,9 +501,9 @@ controls, and for <code><a href="../reference/geom_genetag.html">geom_genetag()<
 <code>tag_arrow_fill</code> and <code>tag_arrow_colour</code>.</p>
 <p>The reproducible data-preparation script is stored in
 <code>data-raw/cd44_pairwise_ensembl116/build-cd44-demo.R</code>. It
-records the Ensembl release, source URLs, UCSC sequence windows, LASTZ
-command, selected isoforms, common-exon calls, and exon-homology
-candidate tables.</p>
+records the Ensembl release, source URLs, strand-aware flank sizes, UCSC
+sequence windows, LASTZ command, selected isoforms, common-exon calls,
+and exon-homology candidate tables.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

@@ -38,9 +38,15 @@ rscript_bin <- normalizePath(file.path(R.home("bin"), "Rscript"), mustWork = FAL
 
 ensembl_base <- "https://rest.ensembl.org"
 ucsc_base <- "https://api.genome.ucsc.edu"
-window_padding <- 5000L
+promoter_flank_bp <- 20000L
+three_prime_flank_bp <- 10000L
 isoform_y_step <- 0.72
 isoform_y_start <- 0.2
+lastz_min_len <- 80L
+lastz_min_identity <- 50
+lastz_identity_breaks <- c(50, 55, 60, 65, 70, Inf)
+lastz_identity_labels <- c("50-55%", "55-60%", "60-65%", "65-70%", ">=70%")
+cd44_region_labels <- c("5' side", "variable exon-rich middle", "3' side")
 
 species <- data.frame(
   species = c("human", "mouse"),
@@ -76,16 +82,16 @@ selection_anchors <- data.frame(
   stringsAsFactors = FALSE
 )
 
-download_file_once <- function(url, dest) {
-  if (!file.exists(dest) || file.info(dest)$size == 0L) {
+download_file_once <- function(url, dest, force = FALSE) {
+  if (isTRUE(force) || !file.exists(dest) || file.info(dest)$size == 0L) {
     message("Downloading ", url)
     utils::download.file(url, dest, mode = "wb", quiet = TRUE)
   }
   dest
 }
 
-read_json_url <- function(url, dest) {
-  download_file_once(url, dest)
+read_json_url <- function(url, dest, force = FALSE) {
+  download_file_once(url, dest, force = force)
   jsonlite::read_json(dest, simplifyVector = FALSE)
 }
 
@@ -349,9 +355,53 @@ make_common_exons <- function(selected, exons) {
     dplyr::arrange(.data$species, .data$start, .data$end)
 }
 
-fetch_ucsc_sequence <- function(species_row, gene_row, padding) {
-  start0 <- max(0L, gene_row$start - 1L - padding)
-  end0 <- gene_row$end + padding
+gene_window_bounds <- function(gene_row,
+                               promoter_bp = promoter_flank_bp,
+                               three_prime_bp = three_prime_flank_bp) {
+  if (nrow(gene_row) != 1L) {
+    stop("Expected one gene row.", call. = FALSE)
+  }
+
+  if (gene_row$strand >= 0L) {
+    start0 <- max(0L, gene_row$start - 1L - promoter_bp)
+    end0 <- gene_row$end + three_prime_bp
+    promoter_start <- start0 + 1L
+    promoter_end <- gene_row$start - 1L
+    three_prime_start <- gene_row$end + 1L
+    three_prime_end <- end0
+  } else {
+    start0 <- max(0L, gene_row$start - 1L - three_prime_bp)
+    end0 <- gene_row$end + promoter_bp
+    promoter_start <- gene_row$end + 1L
+    promoter_end <- end0
+    three_prime_start <- start0 + 1L
+    three_prime_end <- gene_row$start - 1L
+  }
+
+  data.frame(
+    window_start0 = start0,
+    window_end0 = end0,
+    promoter_flank_bp = promoter_bp,
+    three_prime_flank_bp = three_prime_bp,
+    promoter_start = promoter_start,
+    promoter_end = promoter_end,
+    three_prime_start = three_prime_start,
+    three_prime_end = three_prime_end,
+    stringsAsFactors = FALSE
+  )
+}
+
+fetch_ucsc_sequence <- function(species_row,
+                                gene_row,
+                                promoter_bp = promoter_flank_bp,
+                                three_prime_bp = three_prime_flank_bp) {
+  bounds <- gene_window_bounds(
+    gene_row,
+    promoter_bp = promoter_bp,
+    three_prime_bp = three_prime_bp
+  )
+  start0 <- bounds$window_start0[[1L]]
+  end0 <- bounds$window_end0[[1L]]
   url <- paste0(
     ucsc_base, "/getData/sequence?genome=", species_row$ucsc_genome,
     ";chrom=", species_row$ucsc_chrom,
@@ -359,7 +409,7 @@ fetch_ucsc_sequence <- function(species_row, gene_row, padding) {
     ";end=", end0
   )
   dest <- file.path(raw_dir, paste0(species_row$species, "_", species_row$gene_symbol, "_sequence.json"))
-  seq_json <- read_json_url(url, dest)
+  seq_json <- read_json_url(url, dest, force = TRUE)
   dna <- toupper(seq_json$dna)
   if (!is.character(dna) || !nzchar(dna)) {
     stop("No DNA returned for ", species_row$species, call. = FALSE)
@@ -375,6 +425,12 @@ fetch_ucsc_sequence <- function(species_row, gene_row, padding) {
     window_end = end0,
     window_start0 = start0,
     window_end0 = end0,
+    promoter_flank_bp = bounds$promoter_flank_bp,
+    three_prime_flank_bp = bounds$three_prime_flank_bp,
+    promoter_start = bounds$promoter_start,
+    promoter_end = bounds$promoter_end,
+    three_prime_start = bounds$three_prime_start,
+    three_prime_end = bounds$three_prime_end,
     fasta_name = fasta_name,
     fasta_file = file.path("sequences", basename(fasta_path)),
     length_bp = nchar(dna),
@@ -406,7 +462,16 @@ parse_paf <- function(path) {
   paf
 }
 
-run_lastz <- function(windows, min_len = 80L, min_identity = 55) {
+classify_lastz_identity <- function(identity) {
+  as.character(cut(
+    identity,
+    breaks = lastz_identity_breaks,
+    labels = lastz_identity_labels,
+    right = FALSE
+  ))
+}
+
+run_lastz <- function(windows, min_len = lastz_min_len, min_identity = lastz_min_identity) {
   target <- windows[windows$species == "human", , drop = FALSE]
   query <- windows[windows$species == "mouse", , drop = FALSE]
   paf_path <- file.path(out_dir, "cd44_lastz.paf")
@@ -467,13 +532,56 @@ make_nuclinks <- function(paf, windows) {
       group = paste0("lastz_", dplyr::row_number()),
       score = .data$nmatch,
       alignment_length = .data$alen,
-      identity = round(.data$identity, 3)
+      identity = round(.data$identity, 3),
+      identity_bin = classify_lastz_identity(.data$identity)
     ) |>
     dplyr::select(
       "track", "tspecies", "tchr", "tstart", "tend",
       "qspecies", "qchr", "qstart", "qend", "strand",
-      "group", "score", "alignment_length", "identity"
+      "group", "score", "alignment_length", "identity", "identity_bin"
     )
+}
+
+find_longest_role_run <- function(exons, role) {
+  if (nrow(exons) == 0L) {
+    return(NULL)
+  }
+  exons <- exons[order(exons$start, exons$end), , drop = FALSE]
+  run_id <- cumsum(c(TRUE, exons$exon_role[-1L] != exons$exon_role[-nrow(exons)]))
+  run_summary <- dplyr::bind_rows(lapply(split(exons, run_id), function(run) {
+    data.frame(
+      role = run$exon_role[[1L]],
+      start = min(run$start),
+      end = max(run$end),
+      exon_count = nrow(run),
+      width = sum(run$end - run$start + 1L),
+      stringsAsFactors = FALSE
+    )
+  }))
+  run_summary <- run_summary[run_summary$role == role, , drop = FALSE]
+  if (nrow(run_summary) == 0L) {
+    return(NULL)
+  }
+  run_summary[order(-run_summary$exon_count, -run_summary$width), , drop = FALSE][1L, , drop = FALSE]
+}
+
+annotate_link_regions <- function(links, unique_exons) {
+  if (nrow(links) == 0L) {
+    return(links)
+  }
+  human_exons <- unique_exons[unique_exons$species == "human", , drop = FALSE]
+  variable_run <- find_longest_role_run(human_exons, "variable")
+  if (is.null(variable_run)) {
+    links$human_gene_region <- NA_character_
+    return(links)
+  }
+
+  links$human_gene_region <- ifelse(
+    links$tend < variable_run$start[[1L]],
+    cd44_region_labels[[1L]],
+    ifelse(links$tstart <= variable_run$end[[1L]], cd44_region_labels[[2L]], cd44_region_labels[[3L]])
+  )
+  links
 }
 
 overlap_bp <- function(a_start, a_end, b_start, b_end) {
@@ -662,11 +770,17 @@ selected_unique_exons <- selected_unique_exons |>
 windows <- dplyr::bind_rows(lapply(seq_len(nrow(species)), function(i) {
   row <- species[i, , drop = FALSE]
   gene_row <- genes[genes$species == row$species, , drop = FALSE]
-  fetch_ucsc_sequence(row, gene_row, window_padding)
+  fetch_ucsc_sequence(
+    row,
+    gene_row,
+    promoter_bp = promoter_flank_bp,
+    three_prime_bp = three_prime_flank_bp
+  )
 }))
 
 alignment <- run_lastz(windows)
 nuclinks <- make_nuclinks(alignment$paf, windows)
+nuclinks <- annotate_link_regions(nuclinks, selected_unique_exons)
 exon_homology <- make_exon_homology_candidates(nuclinks, selected_unique_exons)
 exon_homology_ranked <- rank_exon_homology_candidates(exon_homology)
 if (nrow(exon_homology_ranked) > 0L) {
@@ -730,8 +844,12 @@ provenance <- data.frame(
     "ensembl_human_lookup",
     "ensembl_mouse_lookup",
     "ensembl_homology",
+    "promoter_flank_bp",
+    "three_prime_flank_bp",
     "ucsc_human_sequence",
     "ucsc_mouse_sequence",
+    "lastz_min_alignment_length",
+    "lastz_min_identity",
     "lastz_binary",
     "lastz_command",
     "rscript"
@@ -741,8 +859,12 @@ provenance <- data.frame(
     paste0(ensembl_base, "/lookup/id/ENSG00000026508?expand=1;content-type=application/json"),
     paste0(ensembl_base, "/lookup/id/ENSMUSG00000005087?expand=1;content-type=application/json"),
     paste0(ensembl_base, "/homology/id/human/ENSG00000026508?target_species=mouse;type=orthologues;content-type=application/json"),
+    as.character(promoter_flank_bp),
+    as.character(three_prime_flank_bp),
     paste0(ucsc_base, "/getData/sequence?genome=hg38;chrom=chr11;start=", windows$window_start0[windows$species == "human"], ";end=", windows$window_end0[windows$species == "human"]),
     paste0(ucsc_base, "/getData/sequence?genome=mm39;chrom=chr2;start=", windows$window_start0[windows$species == "mouse"], ";end=", windows$window_end0[windows$species == "mouse"]),
+    as.character(lastz_min_len),
+    as.character(lastz_min_identity),
     lastz_bin,
     alignment$command %||% NA_character_,
     rscript_bin
@@ -755,6 +877,11 @@ readme <- c(
   "# CD44/Cd44 Pairwise Isoform Demo Candidate",
   "",
   paste0("Generated from Ensembl REST release ", ensembl_release, " and UCSC sequence API."),
+  paste0(
+    "Genomic DNA windows include a strand-aware ", promoter_flank_bp / 1000,
+    " kb promoter-side flank and ", three_prime_flank_bp / 1000,
+    " kb 3-prime-side flank around each gene model."
+  ),
   "",
   "This dataset supports a pairwise ggexon tutorial with two annotation tracks",
   "and one middle `geom_nuclink()` panel. The selected isoforms are chosen by",
@@ -768,7 +895,11 @@ readme <- c(
   "- `cd44_selected_exons.tsv`: plot-ready exon intervals for those isoforms.",
   "- `cd44_selected_unique_exons.tsv`: unique exon intervals in the selected isoforms.",
   "- `cd44_common_exons.tsv`: exons present in all selected isoforms per species.",
-  "- `cd44_nuclinks_lastz.tsv`: LASTZ-derived genomic interval links.",
+  paste0(
+    "- `cd44_nuclinks_lastz.tsv`: LASTZ-derived genomic interval links retained at ",
+    "alignment length >= ", lastz_min_len, " bp and identity >= ", lastz_min_identity,
+    "%, with identity bins and human gene-region labels."
+  ),
   "- `cd44_exon_homology_candidates.tsv`: exon-homology candidates from overlaps",
   "  between LASTZ blocks and Ensembl exons.",
   "- `cd44_exon_homology_ranked.tsv`: one row per exon-pair candidate with",

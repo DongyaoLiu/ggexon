@@ -86,10 +86,10 @@ annotation panels.}
 character values. \code{"auto"} checks common layout columns such as \code{species},
 \code{strain}, \code{id}, and \code{track}.}
 
-\item{xlim}{Optional panel-specific x limits for Syn-aware annotation panels.
-Supply a named list of numeric length-2 vectors keyed by individual /
-annotation-panel name. If the plot contains only one annotation panel, a
-single numeric length-2 vector is also accepted.}
+\item{xlim}{Optional panel-specific x limits for annotation panels. Supply a
+named list of numeric length-2 vectors keyed by individual / annotation-panel
+name. If the plot contains only one annotation panel, a single numeric
+length-2 vector is also accepted.}
 
 \item{xlim_chr}{Optional chromosome / seqname for \code{xlim}. Supply one
 character value for a single panel, or a named character vector/list keyed

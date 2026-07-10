@@ -43,12 +43,13 @@ apply_panel_xlim_to_trained_scales <- function(layout) {
   if (!is.data.frame(layout_df) || is.null(panel_scales_x) || length(panel_scales_x) == 0L) {
     return(layout)
   }
-  required_cols <- c("panel_type", "SCALE_X", "xlim_min", "xlim_max")
+  required_cols <- c("SCALE_X", "xlim_min", "xlim_max")
   if (!all(required_cols %in% names(layout_df))) {
     return(layout)
   }
 
-  annotation_rows <- layout_df$panel_type == "annotation" &
+  panel_type <- link_panel_type(layout_df)
+  annotation_rows <- panel_type == "annotation" &
     !is.na(layout_df$xlim_min) &
     !is.na(layout_df$xlim_max)
   if (!any(annotation_rows)) {
@@ -67,6 +68,42 @@ apply_panel_xlim_to_trained_scales <- function(layout) {
   }
 
   layout$panel_scales_x <- panel_scales_x
+  layout
+}
+
+apply_link_panel_y_range <- function(layout, y_range = c(0, 1)) {
+  if (is.null(layout$panel_params) || length(layout$panel_params) == 0L) {
+    return(layout)
+  }
+
+  layout_df <- layout$layout %||% NULL
+  if (!is.data.frame(layout_df) || nrow(layout_df) == 0L || !"PANEL" %in% names(layout_df)) {
+    return(layout)
+  }
+
+  panel_type <- link_panel_type(as.data.frame(layout_df))
+  link_rows <- panel_type == "link"
+  link_rows[is.na(link_rows)] <- FALSE
+  if (!any(link_rows)) {
+    return(layout)
+  }
+
+  panel_ids <- unique(ggexon_gtable_index(layout_df$PANEL[link_rows]))
+  panel_ids <- panel_ids[!is.na(panel_ids)]
+  for (panel_id in panel_ids) {
+    if (panel_id < 1L || panel_id > length(layout$panel_params)) {
+      next
+    }
+
+    layout$panel_params[[panel_id]]$y.range <- y_range
+    if (!is.null(layout$panel_params[[panel_id]]$y$continuous_range)) {
+      layout$panel_params[[panel_id]]$y$continuous_range <- y_range
+    }
+    if (!is.null(layout$panel_params[[panel_id]]$y.sec$continuous_range)) {
+      layout$panel_params[[panel_id]]$y.sec$continuous_range <- y_range
+    }
+  }
+
   layout
 }
 
@@ -328,6 +365,7 @@ build_ggexon <- S7::method(ggexon_build, class_ggexon) <- function(plot, ...) {
     layout$train_position(data, scale_x(), scale_y())
     layout <- apply_panel_xlim_to_trained_scales(layout)
     layout$setup_panel_params()
+    layout <- apply_link_panel_y_range(layout)
     layout <- apply_ggexon_genomic_x_axis(layout, plot@genomic_x_scale)
     layout <- apply_facet_reverse_x(layout, plot@facet$params %||% list())
     data <- layout$map_position(data)

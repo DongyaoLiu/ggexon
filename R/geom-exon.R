@@ -4,7 +4,8 @@
 GeomExon <- ggproto("GeomExon", Geom,
                       required_aes = c("ymin", "xmin", "xmax", "transcripts","strand", "track", "type"),
                       non_missing_aes = c("linewidth", "shape"),
-                      extra_params = c("exon_height", "transcript_backbone_ratio", "transcript_backbone_fill",
+                      extra_params = c("exon_height", "transcript_backbone_ratio", "transcript_arrow_ratio",
+                                       "transcript_arrow_length", "transcript_backbone_fill",
                                        "transcript_backbone_colour", "na.rm", "x_translation", "subset", "annotation_type",
                                        "breakdata", "species", "chr", "force_flat"),
                       default_aes = aes(linewidth = 0, linejoin = "mitre", fill="black",
@@ -64,6 +65,8 @@ GeomExon <- ggproto("GeomExon", Geom,
 
                       draw_panel = function(data, panel_params, coord, flipped_aes = FALSE,
                                             transcript_backbone_ratio = 0.1,
+                                            transcript_arrow_ratio = 0.25,
+                                            transcript_arrow_length = 160,
                                             transcript_backbone_fill = NULL,
                                             transcript_backbone_colour = NULL){
                         blank_flags <- if ("blank_panel" %in% names(data)) {
@@ -86,7 +89,11 @@ GeomExon <- ggproto("GeomExon", Geom,
                           colour = transcript_backbone_colour
                         )
                         transcripts_line_Grob = ggplot2::GeomRect$draw_panel(track_rect_data, panel_params, coord)
-                        tri_data = add_transcripts_direction(track_data)
+                        tri_data = add_transcripts_direction(
+                          track_data,
+                          ratio = transcript_arrow_ratio %||% 0.25,
+                          lengthABS = transcript_arrow_length %||% 160
+                        )
                         tri_data$linewidth = 0
                         tri_data <- .apply_transcript_backbone_aes(
                           tri_data,
@@ -108,6 +115,8 @@ GeomExon <- ggproto("GeomExon", Geom,
                       list(
                         exon_height = 0.8,
                         transcript_backbone_ratio = 0.1,
+                        transcript_arrow_ratio = 0.25,
+                        transcript_arrow_length = 160,
                         transcript_backbone_fill = NULL,
                         transcript_backbone_colour = NULL,
                         x_translation = 0,
@@ -183,6 +192,10 @@ GeomExon <- ggproto("GeomExon", Geom,
 #' @param exon_height Optional exon rectangle height.
 #' @param transcript_backbone_ratio Relative backbone height as a fraction of
 #'   `exon_height`. Defaults to `0.1`.
+#' @param transcript_arrow_ratio Relative height of the terminal transcript
+#'   direction triangle as a fraction of `exon_height`. Defaults to `0.25`.
+#' @param transcript_arrow_length Length of the terminal transcript direction
+#'   triangle in x-axis coordinate units. Defaults to `160`.
 #' @param transcript_backbone_fill,transcript_backbone_colour Optional fixed
 #'   fill and outline for transcript backbones and direction indicators. When
 #'   `NULL`, ggexon preserves the existing inherited/default backbone
@@ -208,6 +221,8 @@ geom_exon <- function(mapping = NULL, data = NULL,
                       ..., na.rm = FALSE, show.legend = NA,
                       transcripts_track_ratio = NULL, exon_height = NULL,
                       transcript_backbone_ratio = NULL,
+                      transcript_arrow_ratio = NULL,
+                      transcript_arrow_length = NULL,
                       transcript_backbone_fill = NULL,
                       transcript_backbone_colour = NULL,
                       x_translation = NULL, subset = NULL,
@@ -221,6 +236,8 @@ geom_exon <- function(mapping = NULL, data = NULL,
       na.rm = na.rm,
       exon_height = exon_height,
       transcript_backbone_ratio = transcript_backbone_ratio,
+      transcript_arrow_ratio = transcript_arrow_ratio,
+      transcript_arrow_length = transcript_arrow_length,
       transcript_backbone_fill = transcript_backbone_fill,
       transcript_backbone_colour = transcript_backbone_colour,
       x_translation = x_translation,

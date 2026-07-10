@@ -19,6 +19,8 @@ geom_exon(
   transcripts_track_ratio = NULL,
   exon_height = NULL,
   transcript_backbone_ratio = NULL,
+  transcript_arrow_ratio = NULL,
+  transcript_arrow_length = NULL,
   transcript_backbone_fill = NULL,
   transcript_backbone_colour = NULL,
   x_translation = NULL,
@@ -76,6 +78,16 @@ geom_exon(
 
   Relative backbone height as a fraction of `exon_height`. Defaults to
   `0.1`.
+
+- transcript_arrow_ratio:
+
+  Relative height of the terminal transcript direction triangle as a
+  fraction of `exon_height`. Defaults to `0.25`.
+
+- transcript_arrow_length:
+
+  Length of the terminal transcript direction triangle in x-axis
+  coordinate units. Defaults to `160`.
 
 - transcript_backbone_fill, transcript_backbone_colour:
 

@@ -17,6 +17,23 @@ test_that("geom_synteny_link delegates to the panel link geom", {
   expect_identical(layer$geom_params$filter_by_len, "> 10")
 })
 
+test_that("geom_nuclink uses a polygon legend key", {
+  key <- GeomNucLink$draw_key(
+    data.frame(
+      fill = "#123456",
+      colour = NA_character_,
+      alpha = 1,
+      linewidth = 0.5,
+      linetype = 1
+    ),
+    list(),
+    5
+  )
+
+  expect_s3_class(key, "rect")
+  expect_identical(key$gp$fill, "#123456FF")
+})
+
 test_that("geom_synteny_link renders manual interval ribbons", {
   track_levels <- c("human", "link_human_macaque", "macaque")
 
@@ -72,10 +89,16 @@ test_that("geom_synteny_link renders manual interval ribbons", {
     ,
     drop = FALSE
   ]
+  link_panel <- as.integer(link_layout_row$PANEL[[1L]])
   link_data <- built@data[[2L]]
 
   expect_identical(nrow(link_layout_row), 1L)
   expect_identical(nrow(link_data), 4L)
+  expect_equal(built@layout$panel_params[[link_panel]]$y.range, c(0, 1))
+  expect_equal(
+    built@layout$panel_params[[link_panel]]$y$continuous_range,
+    c(0, 1)
+  )
   expect_setequal(unique(link_data$x_variable), c("tstart", "tend", "qstart", "qend"))
   expect_false(anyNA(link_data$fill))
   expect_length(unique(link_data$fill), 1L)
@@ -91,6 +114,72 @@ test_that("geom_synteny_link renders manual interval ribbons", {
     as.integer(link_data$source_panel[link_data$x_variable %in% c("qstart", "qend")]) ==
       link_layout_row$q_panel
   ))
+})
+
+test_that("facet_genomics(xlim) trains manual annotation panels beyond observed features", {
+  track_levels <- c("human", "link_human_macaque", "macaque")
+
+  annotation_df <- data.frame(
+    track = factor(c("human", "macaque"), levels = track_levels),
+    x = c(10, 1010),
+    y = c(1, 1)
+  )
+
+  link_df <- data.frame(
+    track = factor("link_human_macaque", levels = track_levels),
+    tspecies = "human",
+    tchr = "chr7",
+    tstart = 12,
+    tend = 20,
+    strand = "+",
+    qspecies = "macaque",
+    qchr = "chr3",
+    qstart = 1010,
+    qend = 1030,
+    group = 1
+  )
+
+  built <- ggexon_build(
+    ggexon() +
+      ggplot2::geom_blank(
+        data = annotation_df,
+        mapping = ggplot2::aes(x = x, y = y)
+      ) +
+      geom_synteny_link(
+        data = link_df,
+        mapping = ggplot2::aes(
+          tspecies = tspecies,
+          tchr = tchr,
+          tstart = tstart,
+          tend = tend,
+          strand = strand,
+          qspecies = qspecies,
+          qchr = qchr,
+          qstart = qstart,
+          qend = qend,
+          group = group
+        ),
+        inherit.aes = FALSE
+      ) +
+      facet_genomics(
+        ggplot2::vars(track),
+        scales = "free_x",
+        xlim = list(
+          human = c(0, 100),
+          macaque = c(1000, 1200)
+        )
+      ) +
+      ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = 0))
+  )
+
+  layout_df <- as.data.frame(built@layout$layout)
+  human_panel <- as.integer(layout_df$PANEL[layout_df$track == "human"][[1L]])
+  macaque_panel <- as.integer(layout_df$PANEL[layout_df$track == "macaque"][[1L]])
+
+  expect_equal(built@layout$panel_params[[human_panel]]$x.range, c(0, 100))
+  expect_equal(built@layout$panel_params[[macaque_panel]]$x.range, c(1000, 1200))
+  expect_equal(layout_df$xlim_min[layout_df$track == "human"], 0)
+  expect_equal(layout_df$xlim_max[layout_df$track == "macaque"], 1200)
 })
 
 test_that("facet_genomics(reverse_x) reverses selected annotation panels and source-link x transforms", {

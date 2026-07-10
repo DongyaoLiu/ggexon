@@ -65,6 +65,8 @@ lazily during plot build.</p>
 <span>  transcripts_track_ratio <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  exon_height <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  transcript_backbone_ratio <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  transcript_arrow_ratio <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  transcript_arrow_length <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  transcript_backbone_fill <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  transcript_backbone_colour <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  x_translation <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -123,6 +125,16 @@ ggexon layout helpers.</p></dd>
 <dt id="arg-transcript-backbone-ratio">transcript_backbone_ratio<a class="anchor" aria-label="anchor" href="#arg-transcript-backbone-ratio"></a></dt>
 <dd><p>Relative backbone height as a fraction of
 <code>exon_height</code>. Defaults to <code>0.1</code>.</p></dd>
+
+
+<dt id="arg-transcript-arrow-ratio">transcript_arrow_ratio<a class="anchor" aria-label="anchor" href="#arg-transcript-arrow-ratio"></a></dt>
+<dd><p>Relative height of the terminal transcript
+direction triangle as a fraction of <code>exon_height</code>. Defaults to <code>0.25</code>.</p></dd>
+
+
+<dt id="arg-transcript-arrow-length">transcript_arrow_length<a class="anchor" aria-label="anchor" href="#arg-transcript-arrow-length"></a></dt>
+<dd><p>Length of the terminal transcript direction
+triangle in x-axis coordinate units. Defaults to <code>160</code>.</p></dd>
 
 
 <dt id="arg-transcript-backbone-fill-transcript-backbone-colour">transcript_backbone_fill, transcript_backbone_colour<a class="anchor" aria-label="anchor" href="#arg-transcript-backbone-fill-transcript-backbone-colour"></a></dt>

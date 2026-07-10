@@ -55,10 +55,10 @@
 #' @param reverse_x_match_by Panel-layout column used to match `reverse_x`
 #'   character values. `"auto"` checks common layout columns such as `species`,
 #'   `strain`, `id`, and `track`.
-#' @param xlim Optional panel-specific x limits for Syn-aware annotation panels.
-#'   Supply a named list of numeric length-2 vectors keyed by individual /
-#'   annotation-panel name. If the plot contains only one annotation panel, a
-#'   single numeric length-2 vector is also accepted.
+#' @param xlim Optional panel-specific x limits for annotation panels. Supply a
+#'   named list of numeric length-2 vectors keyed by individual / annotation-panel
+#'   name. If the plot contains only one annotation panel, a single numeric
+#'   length-2 vector is also accepted.
 #' @param xlim_chr Optional chromosome / seqname for `xlim`. Supply one
 #'   character value for a single panel, or a named character vector/list keyed
 #'   by individual when `xlim` contains multiple panels. When omitted, ggexon
@@ -359,7 +359,8 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
     if (length(vars) == 0) {
       return(layout_null())
     }
-    .compute_standard_genomics_layout(data, params, self)
+    standard_layout <- .compute_standard_genomics_layout(data, params, self)
+    .apply_manual_facet_panel_xlim_to_layout(standard_layout, params)
   },
 
   # ggexon-specific post-processing step: reorder link panels so they sit
@@ -590,6 +591,96 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
     free = updated_layout@free,
     layout_type = updated_layout@layout_type
   )
+}
+
+.apply_manual_facet_panel_xlim_to_layout <- function(layout, params) {
+  if (!.has_facet_panel_xlim(params)) {
+    return(layout)
+  }
+  if (!is.data.frame(layout) || nrow(layout) == 0L || !"track" %in% names(layout)) {
+    return(layout)
+  }
+
+  panel_type <- link_panel_type(layout)
+  annotation_rows <- panel_type == "annotation"
+  annotation_rows[is.na(annotation_rows)] <- FALSE
+  available <- unique(as.character(layout$track[annotation_rows]))
+  available <- available[!is.na(available) & nzchar(available)]
+  individual <- .facet_panel_xlim_individuals(params, available = available)
+
+  xlim_map <- .facet_panel_xlim_map(individual, params$panel_xlim)
+  xlim_chr_map <- .facet_panel_xlim_chr_map(individual, params$panel_xlim_chr)
+
+  if (!"xlim_chr" %in% names(layout)) {
+    layout$xlim_chr <- NA_character_
+  }
+  if (!"xlim_min" %in% names(layout)) {
+    layout$xlim_min <- NA_real_
+  }
+  if (!"xlim_max" %in% names(layout)) {
+    layout$xlim_max <- NA_real_
+  }
+
+  for (name in names(xlim_map)) {
+    hit <- annotation_rows & as.character(layout$track) == name
+    if (!any(hit)) {
+      cli::cli_abort("{.arg xlim} names must match annotation panel names in {.fn facet_genomics}.")
+    }
+    limits <- xlim_map[[name]]
+    layout$xlim_min[hit] <- min(limits)
+    layout$xlim_max[hit] <- max(limits)
+    layout$xlim_chr[hit] <- xlim_chr_map[[name]] %||% NA_character_
+  }
+
+  layout
+}
+
+.facet_panel_xlim_map <- function(individual, xlim) {
+  if (is.numeric(xlim) && length(xlim) == 2L && length(individual) == 1L) {
+    xlim <- stats::setNames(list(as.numeric(xlim)), individual)
+  }
+  if (!is.list(xlim) || is.null(names(xlim))) {
+    cli::cli_abort(
+      c(
+        "{.arg xlim} in {.fn facet_genomics} must name the annotation panel limits by individual.",
+        "i" = "Use a named list such as {.code list(human = c(1, 100), mouse = c(500, 900))}."
+      )
+    )
+  }
+  if (!all(names(xlim) %in% individual)) {
+    cli::cli_abort("{.arg xlim} contains names that do not match annotation panels.")
+  }
+
+  lapply(xlim, function(limits) {
+    if (!is.numeric(limits) || length(limits) != 2L || anyNA(limits)) {
+      cli::cli_abort("Each {.arg xlim} entry must be a numeric vector of length 2.")
+    }
+    as.numeric(limits)
+  })
+}
+
+.facet_panel_xlim_chr_map <- function(individual, xlim_chr) {
+  if (is.null(xlim_chr)) {
+    return(stats::setNames(as.list(rep(NA_character_, length(individual))), individual))
+  }
+  if (is.character(xlim_chr) && length(xlim_chr) == 1L && is.null(names(xlim_chr)) && length(individual) == 1L) {
+    return(stats::setNames(list(xlim_chr), individual))
+  }
+  if (is.character(xlim_chr) && !is.null(names(xlim_chr))) {
+    xlim_chr <- as.list(xlim_chr)
+  }
+  if (!is.list(xlim_chr) || is.null(names(xlim_chr)) || !all(names(xlim_chr) %in% individual)) {
+    cli::cli_abort("{.arg xlim_chr} must be NULL, one character value for one panel, or a named vector/list keyed by annotation panel.")
+  }
+  out <- stats::setNames(as.list(rep(NA_character_, length(individual))), individual)
+  for (name in names(xlim_chr)) {
+    value <- xlim_chr[[name]]
+    if (!is.character(value) || length(value) != 1L || is.na(value) || !nzchar(value)) {
+      cli::cli_abort("Each {.arg xlim_chr} entry must be one non-empty character value.")
+    }
+    out[[name]] <- value
+  }
+  out
 }
 
 .compute_standard_genomics_layout <- function(data, params, facet) {
