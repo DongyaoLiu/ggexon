@@ -165,19 +165,28 @@ collect_layout_panel_windows <- function(syn_data) {
 
   panels <- panels[complete_rows, , drop = FALSE]
   species_col <- species_col[complete_rows]
+  track_col <- as.character(panels$track)
   out <- list()
   for (i in seq_len(nrow(panels))) {
     species_name <- species_col[[i]]
+    track_name <- track_col[[i]]
+    if (is.na(track_name) || !nzchar(track_name)) {
+      track_name <- species_name
+    }
     individual <- individuals(syn_data)[[species_name]]
-    out[[species_name]] <- list(
+    window <- list(
       chr = if (methods::is(individual, "SynIndividual")) {
         resolve_syn_seqname(individual, as.character(panels$xlim_chr[[i]]))
       } else {
         as.character(panels$xlim_chr[[i]])
       },
       start = as.numeric(panels$xlim_min[[i]]),
-      end = as.numeric(panels$xlim_max[[i]])
+      end = as.numeric(panels$xlim_max[[i]]),
+      individual = species_name,
+      species = species_name,
+      track = track_name
     )
+    out[[track_name]] <- window
   }
 
   out
@@ -438,6 +447,22 @@ resolve_context_species_params <- function(x, species = NULL, context = NULL) {
     return(character())
   }
 
+  context_windows <- context$windows %||% list()
+  context_species <- names(context_windows)
+  context_species <- context_species[!is.na(context_species) & nzchar(context_species)]
+  context_species <- unique(context_species)
+  if (length(context_species) > 0L) {
+    context_individual <- vapply(context_species, function(name) {
+      window <- context_windows[[name]]
+      as.character((window$individual %||% window$species %||% name)[[1L]])
+    }, character(1))
+    is_panel_track <- !(context_species %in% names(individuals(x))) |
+      (!is.na(context_individual) & nzchar(context_individual) & context_individual != context_species)
+    if (any(is_panel_track)) {
+      return(context_species)
+    }
+  }
+
   annotation_species <- context$annotation_species_order %||% character()
   annotation_species <- annotation_species[annotation_species %in% names(individuals(x))]
   annotation_species <- unique(annotation_species)
@@ -445,15 +470,52 @@ resolve_context_species_params <- function(x, species = NULL, context = NULL) {
     return(annotation_species)
   }
 
-  context_windows <- context$windows %||% list()
-  context_species <- names(context_windows)
-  context_species <- context_species[!is.na(context_species) & nzchar(context_species)]
-  context_species <- unique(context_species)
   if (length(context_species) > 0L) {
     return(context_species)
   }
 
   names(individuals(x))
+}
+
+.context_window_for_track <- function(context, species) {
+  if (is.null(context)) {
+    return(NULL)
+  }
+  windows <- context$windows %||% list()
+  windows[[species]] %||% NULL
+}
+
+.context_individual_for_track <- function(x, species, context = NULL) {
+  if (!methods::is(x, "SynSpecies")) {
+    return(species)
+  }
+  if (species %in% names(individuals(x))) {
+    return(species)
+  }
+
+  window <- .context_window_for_track(context, species)
+  if (!is.null(window)) {
+    individual <- window$individual %||% window$species %||% NULL
+    if (!is.null(individual) && length(individual) == 1L && !is.na(individual) && nzchar(individual)) {
+      return(as.character(individual))
+    }
+  }
+
+  layout <- species_layout(x)
+  if (!is.null(layout)) {
+    panels <- syn_layout_panels(layout)
+    if (is.data.frame(panels) && all(c("track", "species") %in% names(panels))) {
+      hit <- which(as.character(panels$track) == species)
+      if (length(hit) == 1L) {
+        individual <- as.character(panels$species[[hit]])
+        if (!is.na(individual) && nzchar(individual)) {
+          return(individual)
+        }
+      }
+    }
+  }
+
+  species
 }
 
 resolve_plot_alignment_name <- function(x, alignment = NULL) {
@@ -807,7 +869,8 @@ normalize_syn_window_request <- function(x,
                                          allow_missing_subset = TRUE,
                                          context = NULL,
                                          geom = "annotation") {
-  individual <- resolve_syn_individual(x, species = species)
+  individual_name <- .context_individual_for_track(x, species, context = context)
+  individual <- resolve_syn_individual(x, species = individual_name)
 
   if (!is.null(subset)) {
     if (is.null(chr)) {
@@ -826,7 +889,8 @@ normalize_syn_window_request <- function(x,
     ))
   }
 
-  derived_window <- context$windows[[species]] %||% NULL
+  derived_window <- .context_window_for_track(context, species) %||%
+    .context_window_for_track(context, individual_name)
   if (!is.null(derived_window)) {
     if (!is.null(chr)) {
       requested_chr <- resolve_syn_seqname_or_raw(individual, chr)
@@ -1903,20 +1967,22 @@ syn_to_exon_df <- function(x,
     })))
   }
 
-  individual <- if (methods::is(x, "SynSpecies") && !species %in% names(individuals(x))) {
+  individual_name <- .context_individual_for_track(x, species, context = context)
+  individual <- if (methods::is(x, "SynSpecies") && !individual_name %in% names(individuals(x))) {
     NULL
   } else {
-    resolve_syn_individual(x, species = species)
+    resolve_syn_individual(x, species = individual_name)
   }
 
   if (is.null(individual)) {
-    blank_window <- context$windows[[species]] %||% NULL
+    blank_window <- .context_window_for_track(context, species)
     return(blank_syn_exon_df(track = species, window = blank_window, annotation_type = annotation_type))
   }
   if (!has_syn_annotation_source(individual)) {
-    blank_window <- context$windows[[syn_id(individual)]] %||% NULL
+    blank_window <- .context_window_for_track(context, species) %||%
+      .context_window_for_track(context, syn_id(individual))
     return(blank_syn_exon_df(
-      track = syn_id(individual),
+      track = species,
       window = blank_window,
       annotation_type = annotation_type
     ))
@@ -1924,7 +1990,7 @@ syn_to_exon_df <- function(x,
 
   window <- normalize_syn_window_request(
     x = x,
-    species = syn_id(individual),
+    species = species,
     chr = chr,
     subset = subset,
     allow_missing_subset = TRUE,
@@ -1955,7 +2021,7 @@ syn_to_exon_df <- function(x,
 
   result <- syn_gr_to_exon_df(
     feature_gr = feature_gr,
-    track = syn_id(individual),
+    track = species,
     annotation_type = annotation_type
   )
   if (methods::is(x, "SynSpecies")) {
@@ -2142,13 +2208,14 @@ syn_to_gene_df <- function(x,
     })))
   }
 
-  individual <- resolve_syn_individual(x, species = species)
+  individual_name <- .context_individual_for_track(x, species, context = context)
+  individual <- resolve_syn_individual(x, species = individual_name)
   if (!has_syn_annotation_source(individual)) {
     return(data.frame())
   }
   window <- normalize_syn_window_request(
     x = x,
-    species = syn_id(individual),
+    species = species,
     chr = chr,
     subset = subset,
     allow_missing_subset = TRUE,
@@ -2171,7 +2238,7 @@ syn_to_gene_df <- function(x,
 
   result <- syn_gr_to_gene_df(
     feature_gr = feature_gr,
-    track = syn_id(individual)
+    track = species
   )
   if (methods::is(x, "SynSpecies")) {
     result <- .inject_homology_columns(result, homology_annotations(x))

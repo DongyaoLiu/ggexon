@@ -33,6 +33,9 @@ syn-aware plot building.}
 
 \item{\code{homology_annotations}}{Named list of \code{HomologyAnnotation} objects
 storing cross-species gene homology mappings.}
+
+\item{\code{locus_sets}}{Named list of \code{SynLocusSet} objects storing comparable
+locus windows for multi-locus grid layouts.}
 }}
 
 \section{Prototype defaults}{
@@ -42,6 +45,7 @@ storing cross-species gene homology mappings.}
 \item \code{pairwise_alignments = list()}
 \item \code{multiple_alignments = list()}
 \item \code{homology_annotations = list()}
+\item \code{locus_sets = list()}
 \item \code{tree = NULL}
 \item \code{tree_plot = NULL}
 \item \code{metadata = list()}
@@ -57,6 +61,7 @@ storing cross-species gene homology mappings.}
 \item \code{pairwise_alignments} must contain only \code{SynPairAlignment} objects.
 \item \code{multiple_alignments} must contain only \code{SynMultiAlignment} objects.
 \item \code{homology_annotations} must contain only \code{HomologyAnnotation} objects.
+\item \code{locus_sets} must contain only \code{SynLocusSet} objects.
 \item \code{layout} must be either \code{NULL} or a \code{SynLayout}.
 }
 }

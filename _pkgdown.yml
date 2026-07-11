@@ -57,6 +57,7 @@ reference:
   - SynPairAlignment
   - SynMultiAlignment
   - SynLayout
+  - SynLocusSet
 
 - title: Class hierarchy and slot details
   desc: Slot-level reference pages for ggexon's S4 object hierarchy.
@@ -115,9 +116,16 @@ reference:
   - add_protein_mutation_annotation
   - add_pairwise_alignment
   - add_multiple_alignment
+  - add_locus_set
   - add_tree
   - get_annotation
   - get_homology_annotation
+  - get_locus_set
+  - locus_sets
+  - locus_table
+  - infer_locus_windows
+  - locus_grid_layout
+  - use_locus_grid
   - set_active_annotation
   - set_active_feature_annotation
   - individual_names

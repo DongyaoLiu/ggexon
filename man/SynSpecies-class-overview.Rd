@@ -15,6 +15,7 @@ metadata for plotting.
 \itemize{
 \item \code{SynPairAlignment}: one pairwise alignment between two individuals
 \item \code{SynMultiAlignment}: one multiple alignment covering several individuals
+\item \code{SynLocusSet}: one table of comparable locus windows for grid layouts
 \item \code{SynLayout}: panel layout plus shared layout-scoped plotting defaults
 \item \code{SynSpecies}: top-level container that binds individuals, alignments, and
 an optional stored layout

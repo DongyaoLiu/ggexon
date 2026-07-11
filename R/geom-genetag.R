@@ -811,10 +811,11 @@ syn_to_genetag_df <- function(x,
     })))
   }
 
-  individual <- if (methods::is(x, "SynSpecies") && !species %in% names(individuals(x))) {
+  individual_name <- .context_individual_for_track(x, species, context = context)
+  individual <- if (methods::is(x, "SynSpecies") && !individual_name %in% names(individuals(x))) {
     NULL
   } else {
-    resolve_syn_individual(x, species = species)
+    resolve_syn_individual(x, species = individual_name)
   }
   if (is.null(individual) || !has_syn_annotation_source(individual)) {
     return(data.frame())
@@ -822,7 +823,7 @@ syn_to_genetag_df <- function(x,
 
   window <- normalize_syn_window_request(
     x = x,
-    species = syn_id(individual),
+    species = species,
     chr = chr,
     subset = subset,
     allow_missing_subset = TRUE,
@@ -853,7 +854,7 @@ syn_to_genetag_df <- function(x,
 
   out <- .genetag_gr_to_df(
     gene_gr = gene_gr,
-    id = syn_id(individual),
+    id = species,
     individual = syn_id(individual),
     tree_node = NA_integer_,
     tree_x = NA_real_,
@@ -861,6 +862,7 @@ syn_to_genetag_df <- function(x,
     include_y = TRUE,
     homology_query_aliases = homology_query_aliases
   )
+  out$track <- species
   if (methods::is(x, "SynSpecies")) {
     out <- .inject_homology_columns(out, homology_annotations(x))
   }

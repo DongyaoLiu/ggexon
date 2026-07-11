@@ -6,11 +6,12 @@
 #' species-level annotations, and `SynLayout` stores reusable panel-layout
 #' metadata for plotting.
 #'
-#' @include homology-annotation.R
+#' @include homology-annotation.R locus-set.R
 #' @name SynSpecies-class-overview
 #' @section Class overview:
 #' * `SynPairAlignment`: one pairwise alignment between two individuals
 #' * `SynMultiAlignment`: one multiple alignment covering several individuals
+#' * `SynLocusSet`: one table of comparable locus windows for grid layouts
 #' * `SynLayout`: panel layout plus shared layout-scoped plotting defaults
 #' * `SynSpecies`: top-level container that binds individuals, alignments, and
 #'   an optional stored layout
@@ -329,12 +330,15 @@ setClassUnion("NULLOrSynLayout", c("NULL", "SynLayout"))
 #'   syn-aware plot building.
 #' @slot homology_annotations Named list of `HomologyAnnotation` objects
 #'   storing cross-species gene homology mappings.
+#' @slot locus_sets Named list of `SynLocusSet` objects storing comparable
+#'   locus windows for multi-locus grid layouts.
 #'
 #' @section Prototype defaults:
 #' * `individuals = list()`
 #' * `pairwise_alignments = list()`
 #' * `multiple_alignments = list()`
 #' * `homology_annotations = list()`
+#' * `locus_sets = list()`
 #' * `tree = NULL`
 #' * `tree_plot = NULL`
 #' * `metadata = list()`
@@ -346,6 +350,7 @@ setClassUnion("NULLOrSynLayout", c("NULL", "SynLayout"))
 #' * `pairwise_alignments` must contain only `SynPairAlignment` objects.
 #' * `multiple_alignments` must contain only `SynMultiAlignment` objects.
 #' * `homology_annotations` must contain only `HomologyAnnotation` objects.
+#' * `locus_sets` must contain only `SynLocusSet` objects.
 #' * `layout` must be either `NULL` or a `SynLayout`.
 #'
 #' @exportClass SynSpecies
@@ -357,6 +362,7 @@ setClass(
     pairwise_alignments = "list",
     multiple_alignments = "list",
     homology_annotations = "list",
+    locus_sets = "list",
     tree = "ANY",
     tree_plot = "ANY",
     metadata = "list",
@@ -368,6 +374,7 @@ setClass(
     pairwise_alignments = list(),
     multiple_alignments = list(),
     homology_annotations = list(),
+    locus_sets = list(),
     tree = NULL,
     tree_plot = NULL,
     metadata = list(),
@@ -400,6 +407,12 @@ setClass(
       bad_homology <- !vapply(object@homology_annotations, methods::is, logical(1), class2 = "HomologyAnnotation")
       if (any(bad_homology)) {
         problems <- c(problems, "`homology_annotations` must be a list of HomologyAnnotation objects.")
+      }
+    }
+    if (length(object@locus_sets) > 0L) {
+      bad_locus_sets <- !vapply(object@locus_sets, methods::is, logical(1), class2 = "SynLocusSet")
+      if (any(bad_locus_sets)) {
+        problems <- c(problems, "`locus_sets` must be a list of SynLocusSet objects.")
       }
     }
     if (!is.null(object@layout) && !methods::is(object@layout, "SynLayout")) {
@@ -581,6 +594,7 @@ setMethod("show", "SynSpecies", function(object) {
   cat("  pairwise_alignments:", length(object@pairwise_alignments), "\n")
   cat("  multiple_alignments:", length(object@multiple_alignments), "\n")
   cat("  homology_annotations:", length(object@homology_annotations), "\n")
+  cat("  locus_sets:", length(object@locus_sets), "\n")
   cat("  tree:", !is.null(object@tree), "\n")
   cat("  tree_plot:", !is.null(object@tree_plot), "\n")
 })
@@ -1336,6 +1350,16 @@ setMethod("pairwise_alignments", "SynSpecies", function(x) x@pairwise_alignments
 setGeneric("multiple_alignments", function(x) standardGeneric("multiple_alignments"))
 setMethod("multiple_alignments", "SynSpecies", function(x) x@multiple_alignments)
 
+#' List locus sets attached to a SynSpecies
+#'
+#' @param x A `SynSpecies` object.
+#'
+#' @return A named list of `SynLocusSet` objects.
+#' @export
+setGeneric("locus_sets", function(x) standardGeneric("locus_sets"))
+#' @rdname locus_sets
+setMethod("locus_sets", "SynSpecies", function(x) x@locus_sets)
+
 #' Access tree objects stored on a `SynSpecies`
 #'
 #' `species_tree()` returns the stored raw tree object, such as an `ape::phylo`.
@@ -1698,6 +1722,67 @@ setMethod("add_multiple_alignment", c("ANY", "SynMultiAlignment"), function(x, a
 setMethod("add_multiple_alignment", c("ANY", "ANY"), function(x, alignment) {
   stop("`add_multiple_alignment()` expects a SynSpecies object.", call. = FALSE)
 })
+
+#' Add a locus set to a SynSpecies object
+#'
+#' @param x A `SynSpecies` object.
+#' @param locus_set A `SynLocusSet` object.
+#'
+#' @return An updated `SynSpecies` object.
+#' @export
+setGeneric("add_locus_set", function(x, locus_set) {
+  standardGeneric("add_locus_set")
+}, signature = c("x", "locus_set"))
+
+#' @rdname add_locus_set
+setMethod("add_locus_set", c("SynSpecies", "SynLocusSet"), function(x, locus_set) {
+  x@locus_sets[[annotation_name(locus_set)]] <- locus_set
+  validObject(x)
+  x
+})
+
+#' @rdname add_locus_set
+setMethod("add_locus_set", c("SynSpecies", "ANY"), function(x, locus_set) {
+  stop("`locus_set` must be a SynLocusSet object.", call. = FALSE)
+})
+
+#' @rdname add_locus_set
+setMethod("add_locus_set", c("ANY", "SynLocusSet"), function(x, locus_set) {
+  stop("`add_locus_set()` expects a SynSpecies object.", call. = FALSE)
+})
+
+#' @rdname add_locus_set
+setMethod("add_locus_set", c("ANY", "ANY"), function(x, locus_set) {
+  stop("`add_locus_set()` expects a SynSpecies object.", call. = FALSE)
+})
+
+#' Retrieve a locus set from a SynSpecies
+#'
+#' @param x A `SynSpecies` object.
+#' @param name Optional locus-set name. If omitted and exactly one locus set is
+#'   attached, that set is returned.
+#'
+#' @return A `SynLocusSet` object, or `NULL` when `name` is supplied and absent.
+#' @export
+get_locus_set <- function(x, name = NULL) {
+  if (!methods::is(x, "SynSpecies")) {
+    stop("`get_locus_set()` expects a SynSpecies object.", call. = FALSE)
+  }
+  sets <- locus_sets(x)
+  if (!is.null(name)) {
+    if (!is.character(name) || length(name) != 1L || is.na(name) || !nzchar(name)) {
+      stop("`name` must be a single non-empty character value.", call. = FALSE)
+    }
+    return(sets[[name]])
+  }
+  if (length(sets) == 1L) {
+    return(sets[[1L]])
+  }
+  if (length(sets) == 0L) {
+    return(NULL)
+  }
+  stop("Provide `name` when multiple SynLocusSet objects are attached.", call. = FALSE)
+}
 
 .validate_synspecies_tree_file <- function(tree_file) {
   if (!is.character(tree_file) || length(tree_file) != 1L || is.na(tree_file) || !nzchar(tree_file)) {
