@@ -13,6 +13,8 @@ reusable panel-layout metadata for plotting.
 - `SynMultiAlignment`: one multiple alignment covering several
   individuals
 
+- `SynLocusSet`: one table of comparable locus windows for grid layouts
+
 - `SynLayout`: panel layout plus shared layout-scoped plotting defaults
 
 - `SynSpecies`: top-level container that binds individuals, alignments,
