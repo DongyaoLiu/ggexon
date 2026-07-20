@@ -29,6 +29,8 @@ alignments, homology maps, and reusable layout state.
   : Constructor for SynMultiAlignment
 - [`SynLayout()`](https://dongyaoliu.github.io/ggexon/reference/SynLayout.md)
   : Constructor for SynLayout
+- [`SynLocusSet()`](https://dongyaoliu.github.io/ggexon/reference/SynLocusSet.md)
+  : Construct a locus-window set
 
 ## Class hierarchy and slot details
 
@@ -52,6 +54,8 @@ Slot-level reference pages for ggexon’s S4 object hierarchy.
   : SynIndividual class
 - [`SynLayout-class`](https://dongyaoliu.github.io/ggexon/reference/SynLayout-class.md)
   : SynLayout class
+- [`SynLocusSet-class`](https://dongyaoliu.github.io/ggexon/reference/SynLocusSet-class.md)
+  : SynLocusSet class
 - [`SynMultiAlignment-class`](https://dongyaoliu.github.io/ggexon/reference/SynMultiAlignment-class.md)
   : SynMultiAlignment class
 - [`SynPairAlignment-class`](https://dongyaoliu.github.io/ggexon/reference/SynPairAlignment-class.md)
@@ -88,6 +92,10 @@ links, trees, and protein mutation summaries.
   : Draw WormWeb-style exon-intron schematics
 - [`geom_genetag()`](https://dongyaoliu.github.io/ggexon/reference/geom_genetag.md)
   : Draw gene tags as exon bodies with strand-direction triangles
+- [`geom_genebox()`](https://dongyaoliu.github.io/ggexon/reference/geom_genebox.md)
+  : Draw fixed-size gene boxes with internal strand arrows
+- [`GeomGeneBox`](https://dongyaoliu.github.io/ggexon/reference/GeomGeneBox.md)
+  : Gene-box geom
 - [`geom_genelabel()`](https://dongyaoliu.github.io/ggexon/reference/geom_genelabel.md)
   : Draw gene labels on exon tracks
 - [`geom_genomic_tree()`](https://dongyaoliu.github.io/ggexon/reference/geom_genomic_tree.md)
@@ -120,7 +128,7 @@ and control genomic x-axis guides.
   : Compress introns while keeping genomic x-axis labels
 - [`strip_scale_x()`](https://dongyaoliu.github.io/ggexon/reference/strip_scale_x.md)
   [`strip_scale()`](https://dongyaoliu.github.io/ggexon/reference/strip_scale_x.md)
-  : X-only strip scale for gene-tag tracks
+  : X-only strip scale for gene tracks
 - [`guide_x_ggexon_piecewise()`](https://dongyaoliu.github.io/ggexon/reference/guide_x_ggexon_piecewise.md)
   : Draw representative exon and intron scale bars for genomic x scaling
 - [`theme_ggexon_track()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_track.md)
@@ -176,6 +184,9 @@ stored layout information to Syn containers.
 - [`add_multiple_alignment()`](https://dongyaoliu.github.io/ggexon/reference/add_multiple_alignment.md)
   : Add a multiple alignment to a SynSpecies object
 
+- [`add_locus_set()`](https://dongyaoliu.github.io/ggexon/reference/add_locus_set.md)
+  : Add a locus set to a SynSpecies object
+
 - [`add_tree()`](https://dongyaoliu.github.io/ggexon/reference/add_tree.md)
   :
 
@@ -186,6 +197,24 @@ stored layout information to Syn containers.
 
 - [`get_homology_annotation()`](https://dongyaoliu.github.io/ggexon/reference/get_homology_annotation.md)
   : Retrieve a HomologyAnnotation from a SynSpecies by query species
+
+- [`get_locus_set()`](https://dongyaoliu.github.io/ggexon/reference/get_locus_set.md)
+  : Retrieve a locus set from a SynSpecies
+
+- [`locus_sets()`](https://dongyaoliu.github.io/ggexon/reference/locus_sets.md)
+  : List locus sets attached to a SynSpecies
+
+- [`locus_table()`](https://dongyaoliu.github.io/ggexon/reference/locus_table.md)
+  : Retrieve the locus table from a SynLocusSet
+
+- [`infer_locus_windows()`](https://dongyaoliu.github.io/ggexon/reference/infer_locus_windows.md)
+  : Infer comparable locus windows from Syn annotations
+
+- [`locus_grid_layout()`](https://dongyaoliu.github.io/ggexon/reference/locus_grid_layout.md)
+  : Build a grid SynLayout from a locus set
+
+- [`use_locus_grid()`](https://dongyaoliu.github.io/ggexon/reference/use_locus_grid.md)
+  : Store a locus-grid layout on a SynSpecies
 
 - [`set_active_annotation()`](https://dongyaoliu.github.io/ggexon/reference/set_active_annotation.md)
   : Set the active annotation layer on a SynIndividual

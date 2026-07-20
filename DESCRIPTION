@@ -74,6 +74,7 @@ Collate:
     'geom-direction.R'
     'geom-exon.R'
     'geom-gene.R'
+    'geom-genebox.R'
     'geom-genetag.R'
     'geom-genomic-tree.R'
     'geom-motif.R'

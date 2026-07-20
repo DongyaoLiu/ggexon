@@ -39,7 +39,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-tutorials" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Tutorials</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-tutorials">
 <li><a class="dropdown-item" href="articles/ggexon-workflow.html">Complete workflow</a></li>
-    <li><a class="dropdown-item" href="articles/hoxa-ensembl115-demo.html">HOXA synteny demo</a></li>
+    <li><a class="dropdown-item" href="articles/hox-cluster-expansion-demo.html">HOX cluster expansion</a></li>
     <li><a class="dropdown-item" href="articles/cd44-splice-variants-demo.html">CD44 splice variant alignment</a></li>
     <li><a class="dropdown-item" href="articles/ggexon-classes-and-verbs.html">Classes, geoms, facets, and guides</a></li>
   </ul>
@@ -70,13 +70,14 @@
 </ol>
 <p>If you already think in <code>ggplot2</code>, the goal is that genomic coordinates, annotation tracks, alignments, and tree-aligned panels can all be composed with familiar plotting ideas.</p>
 <div class="section level2">
-<h2 id="flagship-hoxa-example">Flagship HOXA Example<a class="anchor" aria-label="anchor" href="#flagship-hoxa-example"></a>
+<h2 id="flagship-hox-cluster-expansion-example">Flagship HOX Cluster Expansion Example<a class="anchor" aria-label="anchor" href="#flagship-hox-cluster-expansion-example"></a>
 </h2>
 <div class="float">
-<img src="reference/figures/hoxa-ensembl115-demo.png" alt="HOXA synteny across human, rhesus macaque, mouse, chicken, and green anole"><div class="figcaption">HOXA synteny across human, rhesus macaque, mouse, chicken, and green anole</div>
+<img src="reference/figures/hox-cluster-expansion-demo.png" alt="A seven-row by four-column HOX matrix with equal-width HOXA-to-HOXD columns, the ancestral amphioxus cluster displayed under HOXA, Hox15-to-Hox1 gene squares, grey not-applicable cells, and a marked zebrafish HOXDB cluster-not-retained cell"><div class="figcaption">A seven-row by four-column HOX matrix with equal-width HOXA-to-HOXD columns, the ancestral amphioxus cluster displayed under HOXA, Hox15-to-Hox1 gene squares, grey not-applicable cells, and a marked zebrafish HOXDB cluster-not-retained cell</div>
 </div>
-<p>The bundled HOXA demo uses Ensembl release 115 annotations to show how ggexon can present a conserved gene cluster across distant vertebrates. Gene intervals are drawn with <code><a href="reference/geom_genetag.html">geom_genetag()</a></code>, while orthology/synteny ribbons are drawn with <code><a href="reference/geom_synteny_link.html">geom_synteny_link()</a></code>. The example is intentionally plot-ready, so users can inspect the data tables, see the complete code, and adapt the same grammar to their own comparative-genomics datasets. It also demonstrates two layout problems that appear in real genome annotations: compact multi-panel synteny links and overlapping or nested gene spans.</p>
-<p>Open <code><a href="articles/hoxa-ensembl115-demo.html">vignette("hoxa-ensembl115-demo", package = "ggexon")</a></code> for the full example, data provenance, and a short explanation of how link panels are built internally.</p>
+<p>The bundled HOX cluster-expansion tutorial compares six chordate species in a seven-row by four-column matrix. HOXA through HOXD show the four vertebrate cluster families and the duplicated zebrafish <code>a</code> and <code>b</code> rows. The single ancestral amphioxus cluster is displayed under HOXA only as a compact layout anchor; this placement does not assign it specifically to HOXA. Its HOXB–HOXD cells are structural blanks. A not-retained zebrafish HOXDB cluster and unoccupied gene slots within retained clusters remain visually distinct.</p>
+<p>Genes are drawn with <code><a href="reference/geom_genebox.html">geom_genebox()</a></code> as fixed-size squares containing strand-direction arrows. <code>strip_scale_x(slot_order = ...)</code> aligns every gene to a shared Hox15-to-Hox1 template, so genes assigned to the same curated Hox-number slot occupy exactly the same x coordinate. Box position represents that paralog-slot alignment, whereas the arrow independently represents transcription direction; amphioxus therefore retains its left-pointing arrows without breaking homolog-slot alignment. Unoccupied positions remain visible and do not by themselves imply gene loss. The tutorial removes nucleotide and synteny links, and also demonstrates initiation, genomic coding-midpoint, and stop anchor modes on the human HOXA cluster, with any terminal-CDS positional proxies flagged in the bundled data. Its annotations are pinned to Ensembl release 116 for vertebrates and Ensembl Metazoa release 63 for amphioxus.</p>
+<p>Open <code><a href="articles/hox-cluster-expansion-demo.html">vignette("hox-cluster-expansion-demo", package = "ggexon")</a></code> for the full example, selected-transcript provenance, and source audit trail.</p>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -206,7 +207,7 @@
 <tr>
 <td>Draw genomic layers</td>
 <td>
-<code><a href="reference/ggexon.html">ggexon()</a></code>, <code><a href="reference/geom_exon.html">geom_exon()</a></code>, <code><a href="reference/geom_genetag.html">geom_genetag()</a></code>, <code><a href="reference/geom_genelabel.html">geom_genelabel()</a></code>, <code><a href="reference/geom_nuclink.html">geom_nuclink()</a></code>, <code><a href="reference/geom_synteny_link.html">geom_synteny_link()</a></code>, <code><a href="reference/geom_protein_lollipop.html">geom_protein_lollipop()</a></code>
+<code><a href="reference/ggexon.html">ggexon()</a></code>, <code><a href="reference/geom_exon.html">geom_exon()</a></code>, <code><a href="reference/geom_genetag.html">geom_genetag()</a></code>, <code><a href="reference/geom_genebox.html">geom_genebox()</a></code>, <code><a href="reference/geom_genelabel.html">geom_genelabel()</a></code>, <code><a href="reference/geom_nuclink.html">geom_nuclink()</a></code>, <code><a href="reference/geom_synteny_link.html">geom_synteny_link()</a></code>, <code><a href="reference/geom_protein_lollipop.html">geom_protein_lollipop()</a></code>
 </td>
 </tr>
 <tr>
@@ -244,7 +245,7 @@
 <li>
 <code><a href="articles/ggexon-workflow.html">vignette("ggexon-workflow", package = "ggexon")</a></code> for a step-by-step workflow using individuals, annotations, alignments, and direct plotting.</li>
 <li>
-<code><a href="articles/hoxa-ensembl115-demo.html">vignette("hoxa-ensembl115-demo", package = "ggexon")</a></code> for a curated Ensembl 115 HOXA/Hoxa synteny demo using <code><a href="reference/geom_synteny_link.html">geom_synteny_link()</a></code>.</li>
+<code><a href="articles/hox-cluster-expansion-demo.html">vignette("hox-cluster-expansion-demo", package = "ggexon")</a></code> for the Ensembl-pinned HOX cluster matrix, exact curated Hox-number slots, and <code><a href="reference/geom_genebox.html">geom_genebox()</a></code> anchor modes.</li>
 <li>
 <code><a href="reference/ggexon.html">?ggexon</a></code> and the reference index for function-level documentation.</li>
 </ul>

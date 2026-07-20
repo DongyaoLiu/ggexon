@@ -6,7 +6,7 @@
 <url><loc>https://dongyaoliu.github.io/ggexon/articles/cd44-splice-variants-demo.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/articles/ggexon-classes-and-verbs.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/articles/ggexon-workflow.html</loc></url>
-<url><loc>https://dongyaoliu.github.io/ggexon/articles/hoxa-ensembl115-demo.html</loc></url>
+<url><loc>https://dongyaoliu.github.io/ggexon/articles/hox-cluster-expansion-demo.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/articles/index.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/authors.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/index.html</loc></url>
@@ -17,6 +17,7 @@
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/GeomCoverageMUT.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/GeomExon.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/GeomGene.html</loc></url>
+<url><loc>https://dongyaoliu.github.io/ggexon/reference/GeomGeneBox.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/HomologyAnnotation-class.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/HomologyAnnotation.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/Layout2.html</loc></url>
@@ -35,6 +36,8 @@
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/SynIndividual.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/SynLayout-class.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/SynLayout.html</loc></url>
+<url><loc>https://dongyaoliu.github.io/ggexon/reference/SynLocusSet-class.html</loc></url>
+<url><loc>https://dongyaoliu.github.io/ggexon/reference/SynLocusSet.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/SynMultiAlignment-class.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/SynMultiAlignment.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/SynPairAlignment-class.html</loc></url>
@@ -55,6 +58,7 @@
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/add_individual.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/add_individuals_from_folder.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/add_interproscan_annotation.html</loc></url>
+<url><loc>https://dongyaoliu.github.io/ggexon/reference/add_locus_set.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/add_multiple_alignment.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/add_pairwise_alignment.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/add_protein_mutation_annotation.html</loc></url>
@@ -97,6 +101,7 @@
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/geom_aa_variant.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/geom_exon.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/geom_exon2.html</loc></url>
+<url><loc>https://dongyaoliu.github.io/ggexon/reference/geom_genebox.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/geom_genelabel.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/geom_genelink.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/geom_genetag.html</loc></url>
@@ -108,6 +113,7 @@
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/geom_synteny_link.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/get_annotation.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/get_homology_annotation.html</loc></url>
+<url><loc>https://dongyaoliu.github.io/ggexon/reference/get_locus_set.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/gg_dep.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/ggexon-package.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/ggexon-show.html</loc></url>
@@ -125,12 +131,16 @@
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/import_blast_homology.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/index.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/individual_names.html</loc></url>
+<url><loc>https://dongyaoliu.github.io/ggexon/reference/infer_locus_windows.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/is_ggexon.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/layer_grob.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/link_panels.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/list_patches.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/load_alignment.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/load_annotation.html</loc></url>
+<url><loc>https://dongyaoliu.github.io/ggexon/reference/locus_grid_layout.html</loc></url>
+<url><loc>https://dongyaoliu.github.io/ggexon/reference/locus_sets.html</loc></url>
+<url><loc>https://dongyaoliu.github.io/ggexon/reference/locus_table.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/multiple_alignment_data.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/odgi_multi_alignment.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/odgi_node_table.html</loc></url>
@@ -180,9 +190,11 @@
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/subset_synspecies_window.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/subsetting_operations.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/syn_gr_to_exon_df.html</loc></url>
+<url><loc>https://dongyaoliu.github.io/ggexon/reference/syn_to_genebox_df.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_side_strips.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_track.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/translate_protein.html</loc></url>
+<url><loc>https://dongyaoliu.github.io/ggexon/reference/use_locus_grid.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/waiver.html</loc></url>
 </urlset>
 

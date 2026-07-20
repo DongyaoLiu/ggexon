@@ -3,7 +3,7 @@
 \name{strip_scale_x}
 \alias{strip_scale_x}
 \alias{strip_scale}
-\title{X-only strip scale for gene-tag tracks}
+\title{X-only strip scale for gene tracks}
 \usage{
 strip_scale_x(
   gene_gap_ratio = NULL,
@@ -16,14 +16,16 @@ strip_scale_x(
   species_ratio = NULL,
   collapse_contiguous_slot = TRUE,
   block_align = c("conserved", "left", "center", "right", "none"),
-  guide = c("range", "none")
+  guide = c("range", "none"),
+  slot_order = NULL
 )
 
 strip_scale(...)
 }
 \arguments{
 \item{gene_gap_ratio}{Ratio of full gene visual width to intergenic gap
-visual width. When \code{NULL}, the ratio is estimated from the densest track.}
+visual width. When \code{NULL}, the ratio is estimated from the densest track.
+It is not used when \code{slot_order} is supplied.}
 
 \item{align}{Alignment for level-1, non-homology tracks with fewer genes than
 the widest track.}
@@ -38,7 +40,8 @@ Prefer \code{reference_track} for new code.}
 \item{gene_order}{Gene ordering strategy. \code{"genomic"} keeps each track in its
 native genomic order. \code{"reference"} orders query tracks by the resolved
 homolog order in \code{reference_track}, keeping unmapped local runs between the
-nearest surrounding reference-ordered homologs.}
+nearest surrounding reference-ordered homologs. When \code{slot_order} is
+supplied, that exact order governs the layout regardless of this setting.}
 
 \item{species_specific_ratio}{Visual width of a species-specific gene or
 collapsed run relative to a homologous gene.}
@@ -58,7 +61,18 @@ and \code{"right"} align each local track span to the reference span. \code{"non
 leaves level-2 local coordinates untranslated.}
 
 \item{guide}{Strip-scale x-axis guide. \code{"range"} draws a simple per-track
-begin/end genomic bp range guide; \code{"none"} suppresses the custom guide.}
+begin/end genomic bp range guide using the panel window when one is
+available, and otherwise the visible gene range; \code{"none"} suppresses the
+custom guide.}
+
+\item{slot_order}{Optional character vector defining exact shared comparison
+slots from left to right. Gene rows are matched through \code{slot}, falling
+back to \code{reference_gene} and then \code{gene_key}. The selected genomic anchor
+of every matching row is mapped to the center of its slot, so unoccupied
+template positions remain visible. Slot membership is supplied metadata,
+not an inference of one-to-one homology or evolutionary loss. This
+synthetic-template mode does not require, and cannot be combined with,
+\code{reference_track}.}
 
 \item{...}{Arguments passed from the compatibility wrapper \code{strip_scale()} to
 \code{strip_scale_x()}.}
@@ -67,14 +81,23 @@ begin/end genomic bp range guide; \code{"none"} suppresses the custom guide.}
 A ggexon strip-scale-x specification, added to a plot with \code{+}.
 }
 \description{
-\code{strip_scale_x()} normalizes gene-tag x coordinates so genes and intergenic
-gaps occupy predictable visual widths. In homology mode, it can compress
-species-specific local runs and translate tracks to align the most conserved
-block against an explicit reference track.
+\code{strip_scale_x()} normalizes gene-tag or gene-box x coordinates. Its default
+layout gives genes and intergenic gaps predictable visual widths. Homology
+mode can compress species-specific local runs and translate tracks to align
+the most conserved block against an explicit reference track. Exact-template
+mode maps gene anchors to a complete synthetic \code{slot_order}, independently
+of the raw genomic distances between genes.
 }
 \details{
 Once genomic x distances are stripped, gene-body overlap lanes are collapsed
 to a single baseline per gene-tag layer. Outside labels remain coordinated
 independently, so label lanes can still alternate above and below the shared
 gene-body line.
+
+In exact-template mode, visible gene-box direction is inferred separately for
+each panel and track from the rank correlation between genomic anchors and
+template-slot positions. A track needs at least two distinct genomic anchors
+in at least two distinct slots and a non-zero rank correlation. Otherwise
+\code{strip_scale_x()} warns once per build and uses \code{+1} (no template-driven
+direction reversal) for every underdetermined track.
 }
