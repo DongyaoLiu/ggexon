@@ -36,7 +36,9 @@
 #'   and `"right"` align each local track span to the reference span. `"none"`
 #'   leaves level-2 local coordinates untranslated.
 #' @param guide Strip-scale x-axis guide. `"range"` draws a simple per-track
-#'   begin/end genomic bp range guide; `"none"` suppresses the custom guide.
+#'   begin/end genomic bp range guide using the panel window when one is
+#'   available, and otherwise the visible gene range; `"none"` suppresses the
+#'   custom guide.
 #' @param ... Arguments passed from the compatibility wrapper `strip_scale()` to
 #'   `strip_scale_x()`.
 #'
@@ -175,7 +177,7 @@ apply_strip_scale_x <- function(data, layers, strip_scale_spec, layout, plot) {
   layout <- .strip_scale_force_fixed_x(layout, unique(as.character(built$transform$PANEL)))
   layout$strip_scale_x_transform <- built$transform
   layout$strip_scale_x_axis_data <- if (identical(strip_scale_x_guide_type(strip_scale_spec), "range")) {
-    built$axis_data
+    strip_scale_x_range_axis_data(built$transform, layout = layout)
   } else {
     data.frame()
   }
@@ -903,16 +905,23 @@ strip_scale_x_finalize_layout <- function(transform) {
   list(transform = transform, axis_data = axis_data)
 }
 
-strip_scale_x_range_axis_data <- function(transform) {
+strip_scale_x_range_axis_data <- function(transform, layout = NULL) {
   gene_rows <- transform[transform$region_type == "gene", , drop = FALSE]
   if (nrow(gene_rows) == 0L) {
     return(data.frame())
   }
 
+  panel_windows <- strip_scale_x_panel_windows(layout)
   groups <- split(gene_rows, paste(gene_rows$PANEL, gene_rows$track, sep = "\r"), drop = TRUE)
   pieces <- lapply(groups, function(group) {
-    genomic_start <- min(group$genomic_start, na.rm = TRUE)
-    genomic_end <- max(group$genomic_end, na.rm = TRUE)
+    window <- panel_windows[panel_windows$PANEL == group$PANEL[[1L]], , drop = FALSE]
+    if (nrow(window) == 1L) {
+      genomic_start <- window$genomic_start[[1L]]
+      genomic_end <- window$genomic_end[[1L]]
+    } else {
+      genomic_start <- min(group$genomic_start, na.rm = TRUE)
+      genomic_end <- max(group$genomic_end, na.rm = TRUE)
+    }
     plot_start <- min(group$plot_start, group$plot_end, na.rm = TRUE)
     plot_end <- max(group$plot_start, group$plot_end, na.rm = TRUE)
     data.frame(
@@ -941,6 +950,31 @@ strip_scale_x_range_axis_data <- function(transform) {
   )
   rownames(axis_data) <- NULL
   axis_data
+}
+
+strip_scale_x_panel_windows <- function(layout) {
+  layout_df <- if (!is.null(layout)) layout$layout else NULL
+  required <- c("PANEL", "xlim_min", "xlim_max")
+  if (!is.data.frame(layout_df) || !all(required %in% names(layout_df))) {
+    return(data.frame(
+      PANEL = integer(),
+      genomic_start = numeric(),
+      genomic_end = numeric(),
+      stringsAsFactors = FALSE
+    ))
+  }
+
+  out <- data.frame(
+    PANEL = ggexon_panel_id(layout_df$PANEL),
+    genomic_start = pmin(as.numeric(layout_df$xlim_min), as.numeric(layout_df$xlim_max)),
+    genomic_end = pmax(as.numeric(layout_df$xlim_min), as.numeric(layout_df$xlim_max)),
+    stringsAsFactors = FALSE
+  )
+  keep <- is.finite(out$PANEL) & is.finite(out$genomic_start) &
+    is.finite(out$genomic_end) & out$genomic_end > out$genomic_start
+  out <- out[keep & !duplicated(out$PANEL), , drop = FALSE]
+  rownames(out) <- NULL
+  out
 }
 
 strip_scale_x_bp_label <- function(x) {

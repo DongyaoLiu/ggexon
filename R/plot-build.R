@@ -38,6 +38,15 @@ ggexon_apply_output_size_to_layers <- function(layers, output_size = NULL) {
 }
 
 apply_panel_xlim_to_trained_scales <- function(layout) {
+  # A strip-scale transform replaces genomic x coordinates with visual slot
+  # coordinates after the first position-training pass.  Reapplying the raw
+  # panel window here would train the transformed data against genomic values,
+  # which collapses the custom strip-scale guide and can turn the gene tags
+  # into NAs during the final position mapping.
+  if (!is.null(layout$strip_scale_x_transform)) {
+    return(layout)
+  }
+
   layout_df <- layout$layout %||% NULL
   panel_scales_x <- layout$panel_scales_x %||% NULL
   if (!is.data.frame(layout_df) || is.null(panel_scales_x) || length(panel_scales_x) == 0L) {

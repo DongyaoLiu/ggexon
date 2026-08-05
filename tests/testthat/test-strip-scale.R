@@ -165,6 +165,41 @@ test_that("strip_scale_x() builds a per-track genomic range guide", {
   expect_true(any(has_strip_axis))
 })
 
+test_that("strip_scale_x() labels explicit panel-window endpoints", {
+  gene_tags <- data.frame(
+    track = c("A", "A", "B", "B"),
+    xmin = c(1000, 3000, 10000, 15000),
+    xmax = c(2000, 5000, 12000, 17000),
+    y = 1,
+    strand = "+",
+    gene_key = c("a1", "a2", "b1", "b2"),
+    label = c("a1", "a2", "b1", "b2"),
+    stringsAsFactors = FALSE
+  )
+
+  p <- ggexon() +
+    geom_genetag(data = gene_tags) +
+    strip_scale_x(gene_gap_ratio = 3) +
+    facet_genomics(
+      ggplot2::vars(track),
+      scales = "free_x",
+      xlim = list(A = c(0, 10000), B = c(5000, 20000))
+    )
+  built <- ggexon_build(p)
+  axis_data <- built@layout$strip_scale_x_axis_data
+
+  expect_equal(axis_data$start_label, c("0", "5,000"))
+  expect_equal(axis_data$end_label, c("10,000", "20,000"))
+  expect_equal(axis_data$plot_start, c(0, 0))
+  expect_equal(axis_data$plot_end, c(7, 7))
+  expect_false(anyNA(built@data[[1L]]$xmin))
+  expect_false(anyNA(built@data[[1L]]$xmax))
+  expect_equal(
+    lapply(built@layout$panel_params, function(panel) panel$x.range),
+    list(c(-0.35, 7.35), c(-0.35, 7.35))
+  )
+})
+
 test_that("strip_scale_x(guide = 'none') suppresses the custom range guide", {
   gene_tags <- data.frame(
     track = "A",

@@ -58,7 +58,9 @@ and \code{"right"} align each local track span to the reference span. \code{"non
 leaves level-2 local coordinates untranslated.}
 
 \item{guide}{Strip-scale x-axis guide. \code{"range"} draws a simple per-track
-begin/end genomic bp range guide; \code{"none"} suppresses the custom guide.}
+begin/end genomic bp range guide using the panel window when one is
+available, and otherwise the visible gene range; \code{"none"} suppresses the
+custom guide.}
 
 \item{...}{Arguments passed from the compatibility wrapper \code{strip_scale()} to
 \code{strip_scale_x()}.}
