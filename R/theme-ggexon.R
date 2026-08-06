@@ -1,12 +1,54 @@
+#' Shared background-free theme for ggexon plots
+#'
+#' `theme_ggexon_base()` is the common foundation for ggexon's specialized
+#' themes. It uses [ggplot2::theme_minimal()] typography and coordinate grids
+#' while removing decorative plot, panel, strip, border, and legend
+#' backgrounds. Strip text, axes, and grid lines remain available for derived
+#' themes to style.
+#'
+#' @param base_size Base font size passed to [ggplot2::theme_minimal()].
+#' @param base_family Base font family passed to [ggplot2::theme_minimal()].
+#'
+#' @return A ggplot2 theme object.
+#'
+#' @examples
+#' ggplot2::ggplot(mtcars, ggplot2::aes(wt, mpg)) +
+#'   ggplot2::geom_point() +
+#'   theme_ggexon_base()
+#'
+#' @seealso [theme_ggexon_track()], [theme_ggexon_side_strips()],
+#'   [theme_ggexon_pairwise()]
+#' @export
+theme_ggexon_base <- function(base_size = 8, base_family = "") {
+  ggplot2::theme_minimal(
+    base_size = base_size,
+    base_family = base_family
+  ) +
+    .theme_ggexon_backgrounds()
+}
+
+.theme_ggexon_backgrounds <- function() {
+  ggplot2::theme(
+    plot.background = ggplot2::element_blank(),
+    panel.background = ggplot2::element_blank(),
+    panel.border = ggplot2::element_blank(),
+    strip.background = ggplot2::element_blank(),
+    legend.background = ggplot2::element_blank(),
+    legend.key = ggplot2::element_blank()
+  )
+}
+
 #' ggexon themes for genomic tracks
 #'
 #' `theme_ggexon_track()` provides compact defaults for genomic tracks. It keeps
 #' the x axis visible, hides the y axis used only for track geometry, and removes
-#' visual noise from minor grids and legends.
+#' visual noise from minor grids and legends. It inherits its background-free
+#' foundation from [theme_ggexon_base()].
 #'
 #' `theme_ggexon_genomictree()` builds on `theme_ggexon_track()` for stacked
 #' tree-aligned genomic panels. The tree-tip labels use `strip.text.y`, and the
-#' custom tree branch-length axis reuses the x-axis text styling.
+#' custom tree branch-length axis reuses the x-axis text styling. It inherits
+#' the shared background contract through the track theme.
 #'
 #' @param base_size Base font size passed to [ggplot2::theme_minimal()].
 #' @param base_family Base font family passed to [ggplot2::theme_minimal()].
@@ -51,7 +93,7 @@ theme_ggexon_track <- function(base_size = 8,
     ggplot2::element_blank()
   }
 
-  ggplot2::theme_minimal(base_size = base_size, base_family = base_family) +
+  theme_ggexon_base(base_size = base_size, base_family = base_family) +
     ggplot2::theme(
       panel.grid.major.x = if (isTRUE(show_x_grid)) {
         ggplot2::element_line(colour = "grey90", linewidth = 0.25)
@@ -109,7 +151,9 @@ theme_ggexon_genomictree <- function(base_size = 8,
 #' A theme helper for putting facet strip labels (e.g. species tracks) on the
 #' left or right of the panels instead of stacked on top, which reclaims the
 #' vertical row a top strip would otherwise occupy. This styles the side-strip
-#' text so labels read horizontally and sit just outside the panels.
+#' text so labels read horizontally and sit just outside the panels. The helper
+#' shares [theme_ggexon_base()]'s blank backgrounds without replacing axes or
+#' grids supplied by an existing complete theme.
 #'
 #' The actual strip *position* is set by the facet, so pair this with
 #' `facet_genomics(strip.position = "<side>")` using the same `side`.
@@ -118,7 +162,9 @@ theme_ggexon_genomictree <- function(base_size = 8,
 #'   [facet_genomics()].
 #' @param base_size Base font size for the strip text.
 #' @param face Font face for the strip text (e.g. `"bold"`).
-#' @param background Strip-background fill colour, or `NA`/`"none"` for none.
+#' @param background Strip-background fill colour. `NA` (the default) or
+#'   `"none"` draws no strip rectangle. A colour explicitly overrides the
+#'   shared background-free default.
 #'
 #' @return A ggplot2 theme object to add to a ggexon plot.
 #'
@@ -127,12 +173,12 @@ theme_ggexon_genomictree <- function(base_size = 8,
 #'   ggplot2::geom_point() +
 #'   ggplot2::facet_wrap(ggplot2::vars(cyl), ncol = 1, strip.position = "left")
 #' p + theme_ggexon_side_strips("left")
-#' @seealso [theme_ggexon_track()], [facet_genomics()]
+#' @seealso [theme_ggexon_base()], [theme_ggexon_track()], [facet_genomics()]
 #' @export
 theme_ggexon_side_strips <- function(side = c("right", "left"),
                                      base_size = 8,
                                      face = "bold",
-                                     background = "grey96") {
+                                     background = NA) {
   side <- arg_match0(side, c("right", "left"))
   strip_text <- ggplot2::element_text(
     size = base_size,
@@ -154,7 +200,85 @@ theme_ggexon_side_strips <- function(side = c("right", "left"),
     strip.background = strip_bg
   )
   args[[if (side == "left") "strip.text.y.left" else "strip.text.y.right"]] <- strip_text
-  do.call(ggplot2::theme, args)
+  .theme_ggexon_backgrounds() + do.call(ggplot2::theme, args)
+}
+
+#' Theme for pairwise genomic alignments
+#'
+#' `theme_ggexon_pairwise()` provides compact styling for a top annotation
+#' panel, a middle linkage panel, and a bottom annotation panel. It hides the
+#' annotation y axes and places horizontal facet-label styling on the left
+#' without drawing strip-background bars. It inherits the shared background
+#' contract through [theme_ggexon_track()].
+#'
+#' The facet controls the actual strip position and annotation alignment. Pair
+#' this theme with
+#' `facet_genomics(strip.position = "left", vertical = "center")`.
+#'
+#' @inheritParams theme_ggexon_track
+#'
+#' @return A ggplot2 theme object.
+#'
+#' @examples
+#' tracks <- c("human", "link_human_mouse", "mouse")
+#' genes <- data.frame(
+#'   track = factor(c("human", "mouse"), levels = tracks),
+#'   xmin = c(10, 1010),
+#'   xmax = c(80, 1080),
+#'   y = 1,
+#'   strand = "+",
+#'   gene = c("GENE1", "Gene1")
+#' )
+#' links <- data.frame(
+#'   track = factor("link_human_mouse", levels = tracks),
+#'   tspecies = "human", tchr = "chr1", tstart = 20, tend = 60,
+#'   strand = "+",
+#'   qspecies = "mouse", qchr = "chr1", qstart = 1020, qend = 1060,
+#'   group = 1
+#' )
+#'
+#' ggexon() +
+#'   geom_genetag(data = genes, label_position = "outside") +
+#'   geom_synteny_link(
+#'     data = links,
+#'     ggplot2::aes(
+#'       tspecies = tspecies, tchr = tchr, tstart = tstart, tend = tend,
+#'       strand = strand,
+#'       qspecies = qspecies, qchr = qchr, qstart = qstart, qend = qend,
+#'       group = group
+#'     ),
+#'     inherit.aes = FALSE
+#'   ) +
+#'   facet_genomics(
+#'     ggplot2::vars(track),
+#'     ncol = 1,
+#'     scales = "free_x",
+#'     strip.position = "left",
+#'     link_axis = "none",
+#'     link_strip = "blank",
+#'     annotation_axis = "bottom",
+#'     vertical = "center"
+#'   ) +
+#'   theme_ggexon_pairwise()
+#'
+#' @seealso [theme_ggexon_base()], [theme_ggexon_track()],
+#'   [theme_ggexon_side_strips()],
+#'   [facet_genomics()]
+#' @export
+theme_ggexon_pairwise <- function(base_size = 8,
+                                  base_family = "",
+                                  show_x_axis = TRUE,
+                                  show_x_grid = TRUE,
+                                  show_legend = FALSE) {
+  theme_ggexon_track(
+    base_size = base_size,
+    base_family = base_family,
+    show_x_axis = show_x_axis,
+    show_y_axis = FALSE,
+    show_x_grid = show_x_grid,
+    show_legend = show_legend
+  ) +
+    theme_ggexon_side_strips(side = "left", base_size = base_size)
 }
 
 ggexon_element_text_gpar <- function(element, default_size = 8) {

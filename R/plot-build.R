@@ -116,6 +116,119 @@ apply_link_panel_y_range <- function(layout, y_range = c(0, 1)) {
   layout
 }
 
+annotation_panel_body_centers <- function(data, annotation_panel_ids) {
+  annotation_panel_ids <- unique(as.integer(annotation_panel_ids))
+  annotation_panel_ids <- annotation_panel_ids[!is.na(annotation_panel_ids)]
+  if (length(annotation_panel_ids) == 0L || !is.list(data)) {
+    return(stats::setNames(numeric(), character()))
+  }
+
+  centers <- lapply(data, function(layer_data) {
+    if (!is.data.frame(layer_data) || nrow(layer_data) == 0L ||
+        !"PANEL" %in% names(layer_data)) {
+      return(NULL)
+    }
+
+    panel_id <- ggexon_gtable_index(layer_data$PANEL)
+    keep <- !is.na(panel_id) & panel_id %in% annotation_panel_ids
+    if (!any(keep)) {
+      return(NULL)
+    }
+
+    body_center <- rep(NA_real_, nrow(layer_data))
+    if ("y_middle" %in% names(layer_data)) {
+      candidate <- suppressWarnings(as.numeric(as.character(layer_data$y_middle)))
+      body_center[is.finite(candidate)] <- candidate[is.finite(candidate)]
+    }
+    if ("y" %in% names(layer_data)) {
+      candidate <- suppressWarnings(as.numeric(as.character(layer_data$y)))
+      fill <- !is.finite(body_center) & is.finite(candidate)
+      body_center[fill] <- candidate[fill]
+    }
+    if (all(c("ymin", "ymax") %in% names(layer_data))) {
+      ymin <- suppressWarnings(as.numeric(as.character(layer_data$ymin)))
+      ymax <- suppressWarnings(as.numeric(as.character(layer_data$ymax)))
+      candidate <- (ymin + ymax) / 2
+      fill <- !is.finite(body_center) & is.finite(candidate)
+      body_center[fill] <- candidate[fill]
+    }
+
+    keep <- keep & is.finite(body_center)
+    if (!any(keep)) {
+      return(NULL)
+    }
+    data.frame(
+      panel_id = panel_id[keep],
+      body_center = body_center[keep]
+    )
+  })
+  centers <- Filter(Negate(is.null), centers)
+  if (length(centers) == 0L) {
+    return(stats::setNames(numeric(), character()))
+  }
+
+  centers <- do.call(rbind, centers)
+  by_panel <- split(centers$body_center, centers$panel_id)
+  vapply(by_panel, function(x) mean(range(x)), numeric(1))
+}
+
+apply_facet_vertical <- function(layout, data, params = list()) {
+  if (!identical(params$vertical %||% "default", "center")) {
+    return(layout)
+  }
+  if (is.null(layout$panel_params) || length(layout$panel_params) == 0L) {
+    return(layout)
+  }
+
+  layout_df <- layout$layout %||% NULL
+  if (!is.data.frame(layout_df) || nrow(layout_df) == 0L ||
+      !"PANEL" %in% names(layout_df)) {
+    return(layout)
+  }
+
+  panel_type <- link_panel_type(as.data.frame(layout_df))
+  annotation_rows <- panel_type == "annotation"
+  annotation_rows[is.na(annotation_rows)] <- FALSE
+  annotation_panel_ids <- unique(ggexon_gtable_index(
+    layout_df$PANEL[annotation_rows]
+  ))
+  annotation_panel_ids <- annotation_panel_ids[!is.na(annotation_panel_ids)]
+  centers <- annotation_panel_body_centers(data, annotation_panel_ids)
+  if (length(centers) == 0L) {
+    return(layout)
+  }
+
+  for (panel_id in annotation_panel_ids) {
+    if (panel_id < 1L || panel_id > length(layout$panel_params)) {
+      next
+    }
+    body_center <- unname(centers[[as.character(panel_id)]])
+    current_range <- layout$panel_params[[panel_id]]$y.range %||% numeric()
+    if (length(body_center) != 1L || !is.finite(body_center) ||
+        length(current_range) != 2L || !all(is.finite(current_range))) {
+      next
+    }
+
+    half_range <- max(
+      body_center - current_range[[1L]],
+      current_range[[2L]] - body_center
+    )
+    if (!is.finite(half_range) || half_range < 0) {
+      next
+    }
+    centered_range <- body_center + c(-half_range, half_range)
+    layout$panel_params[[panel_id]]$y.range <- centered_range
+    if (!is.null(layout$panel_params[[panel_id]]$y$continuous_range)) {
+      layout$panel_params[[panel_id]]$y$continuous_range <- centered_range
+    }
+    if (!is.null(layout$panel_params[[panel_id]]$y.sec$continuous_range)) {
+      layout$panel_params[[panel_id]]$y.sec$continuous_range <- centered_range
+    }
+  }
+
+  layout
+}
+
 apply_facet_reverse_x <- function(layout, params = list()) {
   reverse_x <- params$reverse_x %||% NULL
   if (is.null(reverse_x)) {
@@ -375,6 +488,7 @@ build_ggexon <- S7::method(ggexon_build, class_ggexon) <- function(plot, ...) {
     layout <- apply_panel_xlim_to_trained_scales(layout)
     layout$setup_panel_params()
     layout <- apply_link_panel_y_range(layout)
+    layout <- apply_facet_vertical(layout, data, plot@facet$params %||% list())
     layout <- apply_ggexon_genomic_x_axis(layout, plot@genomic_x_scale)
     layout <- apply_facet_reverse_x(layout, plot@facet$params %||% list())
     data <- layout$map_position(data)
@@ -491,9 +605,6 @@ apply_link_panel_layout <- function(table, build) {
   link_active <- !is.null(link_panel_height) ||
     !identical(link_axis, "inherit") ||
     !identical(link_strip, "inherit")
-  if (!link_active && identical(annotation_axis, "all")) {
-    return(table)
-  }
 
   layout_df <- as.data.frame(build@layout$layout)
   if (!all(c("ROW", "COL") %in% names(layout_df))) {
@@ -503,6 +614,9 @@ apply_link_panel_layout <- function(table, build) {
   layout_df$.ggexon_panel_type <- link_panel_type(layout_df)
   link_rows <- layout_df$.ggexon_panel_type == "link"
   link_rows[is.na(link_rows)] <- FALSE
+  if (!any(link_rows) && identical(annotation_axis, "all")) {
+    return(table)
+  }
   link_iter <- if (link_active) which(link_rows) else integer(0)
 
   height_unit <- link_panel_height_unit(link_panel_height)
@@ -538,6 +652,8 @@ apply_link_panel_layout <- function(table, build) {
       )
     }
   }
+
+  table <- collapse_link_panel_spacers(table, layout_df)
 
   if (identical(annotation_axis, "bottom")) {
     table <- collapse_interior_annotation_axes(table, layout_df)
@@ -613,6 +729,92 @@ layout_row_contains_only_link_panels <- function(layout_df, panel_row) {
   same_row <- ggexon_gtable_index(layout_df$ROW) == panel_row
   panel_type <- layout_df$.ggexon_panel_type %||% link_panel_type(layout_df)
   any(same_row) && all(panel_type[same_row] == "link", na.rm = FALSE)
+}
+
+collapse_link_panel_spacers <- function(table, layout_df) {
+  facet_rows <- sort(unique(ggexon_gtable_index(layout_df$ROW)))
+  link_only <- vapply(
+    facet_rows,
+    function(panel_row) layout_row_contains_only_link_panels(layout_df, panel_row),
+    logical(1)
+  )
+  if (!any(link_only)) {
+    return(table)
+  }
+
+  panel_bounds <- t(vapply(facet_rows, function(panel_row) {
+    cells <- which(ggexon_gtable_index(layout_df$ROW) == panel_row)
+    panel_idx <- unique(unlist(lapply(cells, function(i) {
+      panel_gtable_index(
+        table,
+        panel_col = ggexon_gtable_index(layout_df$COL[[i]]),
+        panel_row = panel_row,
+        n_panels = nrow(layout_df)
+      )
+    })))
+    panel_idx <- panel_idx[!is.na(panel_idx)]
+    if (length(panel_idx) == 0L) {
+      return(c(top = NA_integer_, bottom = NA_integer_))
+    }
+    c(
+      top = min(table$layout$t[panel_idx]),
+      bottom = max(table$layout$b[panel_idx])
+    )
+  }, numeric(2)))
+
+  horizontal_structure <- grepl(
+    "^(panel($|-)|axis-[tb]($|-)|strip-[tb]($|-))",
+    table$layout$name
+  )
+  occupied_rows <- unique(unlist(Map(
+    seq.int,
+    table$layout$t[horizontal_structure],
+    table$layout$b[horizontal_structure]
+  )))
+
+  rows_between <- function(upper_bottom, lower_top) {
+    first <- upper_bottom + 1L
+    last <- lower_top - 1L
+    if (!is.finite(first) || !is.finite(last) || first > last) {
+      return(integer())
+    }
+    seq.int(first, last)
+  }
+
+  spacer_rows <- integer()
+  for (position in which(link_only)) {
+    if (position > 1L &&
+        all(is.finite(panel_bounds[c(position - 1L, position), ]))) {
+      spacer_rows <- c(
+        spacer_rows,
+        setdiff(
+          rows_between(
+            panel_bounds[position - 1L, "bottom"],
+            panel_bounds[position, "top"]
+          ),
+          occupied_rows
+        )
+      )
+    }
+    if (position < length(facet_rows) &&
+        all(is.finite(panel_bounds[c(position, position + 1L), ]))) {
+      spacer_rows <- c(
+        spacer_rows,
+        setdiff(
+          rows_between(
+            panel_bounds[position, "bottom"],
+            panel_bounds[position + 1L, "top"]
+          ),
+          occupied_rows
+        )
+      )
+    }
+  }
+
+  for (row in unique(spacer_rows)) {
+    table$heights[[row]] <- grid::unit(0, "pt")
+  }
+  table
 }
 
 panel_gtable_index <- function(table, panel_col, panel_row, n_panels) {

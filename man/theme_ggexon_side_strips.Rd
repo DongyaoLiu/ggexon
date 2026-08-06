@@ -8,7 +8,7 @@ theme_ggexon_side_strips(
   side = c("right", "left"),
   base_size = 8,
   face = "bold",
-  background = "grey96"
+  background = NA
 )
 }
 \arguments{
@@ -19,7 +19,9 @@ theme_ggexon_side_strips(
 
 \item{face}{Font face for the strip text (e.g. \code{"bold"}).}
 
-\item{background}{Strip-background fill colour, or \code{NA}/\code{"none"} for none.}
+\item{background}{Strip-background fill colour. \code{NA} (the default) or
+\code{"none"} draws no strip rectangle. A colour explicitly overrides the
+shared background-free default.}
 }
 \value{
 A ggplot2 theme object to add to a ggexon plot.
@@ -28,7 +30,9 @@ A ggplot2 theme object to add to a ggexon plot.
 A theme helper for putting facet strip labels (e.g. species tracks) on the
 left or right of the panels instead of stacked on top, which reclaims the
 vertical row a top strip would otherwise occupy. This styles the side-strip
-text so labels read horizontally and sit just outside the panels.
+text so labels read horizontally and sit just outside the panels. The helper
+shares \code{\link[=theme_ggexon_base]{theme_ggexon_base()}}'s blank backgrounds without replacing axes or
+grids supplied by an existing complete theme.
 }
 \details{
 The actual strip \emph{position} is set by the facet, so pair this with
@@ -41,5 +45,5 @@ p <- ggplot2::ggplot(mtcars, ggplot2::aes(wt, mpg)) +
 p + theme_ggexon_side_strips("left")
 }
 \seealso{
-\code{\link[=theme_ggexon_track]{theme_ggexon_track()}}, \code{\link[=facet_genomics]{facet_genomics()}}
+\code{\link[=theme_ggexon_base]{theme_ggexon_base()}}, \code{\link[=theme_ggexon_track]{theme_ggexon_track()}}, \code{\link[=facet_genomics]{facet_genomics()}}
 }

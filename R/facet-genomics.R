@@ -46,6 +46,10 @@
 #'   x-axis only on the bottom-most annotation panel of each column and blanks
 #'   the interior ones, collapsing the reclaimed axis rows so the panels sit
 #'   compactly. The per-panel free scales are preserved either way.
+#' @param vertical Annotation-panel vertical alignment. `"default"` preserves
+#'   the trained y-ranges. `"center"` symmetrizes each annotation panel's
+#'   y-range around its visible annotation bodies. Link panels keep their fixed
+#'   vertical range in either mode.
 #' @param reverse_x Annotation panels whose x axis should be drawn in reverse.
 #'   Use `NULL` or `FALSE` for no panel reversal, `TRUE` to reverse all
 #'   annotation panels, or a character vector matched against panel layout
@@ -89,6 +93,7 @@ facet_genomics <- function(facets, nrow = NULL, ncol = NULL, scales = "fixed",
                        axis.labels = "all", link_panel_height = NULL,
                        link_axis = "inherit", link_strip = "inherit",
                        annotation_axis = "all",
+                       vertical = c("default", "center"),
                        reverse_x = NULL,
                        reverse_x_match_by = c("auto", "species", "strain", "id", "track"),
                        xlim = NULL, xlim_chr = NULL) {
@@ -97,6 +102,7 @@ facet_genomics <- function(facets, nrow = NULL, ncol = NULL, scales = "fixed",
   link_axis <- arg_match0(link_axis %||% "inherit", c("inherit", "none", "x", "y"))
   link_strip <- arg_match0(link_strip %||% "inherit", c("inherit", "blank"))
   annotation_axis <- arg_match0(annotation_axis %||% "all", c("all", "bottom"))
+  vertical <- arg_match0(vertical %||% "default", c("default", "center"))
   reverse_x <- .validate_facet_reverse_x(reverse_x)
   reverse_x_match_by <- match.arg(reverse_x_match_by)
   link_panel_height <- .validate_link_panel_height(link_panel_height)
@@ -167,6 +173,7 @@ facet_genomics <- function(facets, nrow = NULL, ncol = NULL, scales = "fixed",
       link_axis = link_axis,
       link_strip = link_strip,
       annotation_axis = annotation_axis,
+      vertical = vertical,
       reverse_x = reverse_x,
       reverse_x_match_by = reverse_x_match_by
     )

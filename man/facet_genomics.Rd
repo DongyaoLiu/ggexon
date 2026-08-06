@@ -22,6 +22,7 @@ facet_genomics(
   link_axis = "inherit",
   link_strip = "inherit",
   annotation_axis = "all",
+  vertical = c("default", "center"),
   reverse_x = NULL,
   reverse_x_match_by = c("auto", "species", "strain", "id", "track"),
   xlim = NULL,
@@ -74,6 +75,11 @@ x-axis that \code{scales = "free_x"} draws on every panel. \code{"bottom"} keeps
 x-axis only on the bottom-most annotation panel of each column and blanks
 the interior ones, collapsing the reclaimed axis rows so the panels sit
 compactly. The per-panel free scales are preserved either way.}
+
+\item{vertical}{Annotation-panel vertical alignment. \code{"default"} preserves
+the trained y-ranges. \code{"center"} symmetrizes each annotation panel's
+y-range around its visible annotation bodies. Link panels keep their fixed
+vertical range in either mode.}
 
 \item{reverse_x}{Annotation panels whose x axis should be drawn in reverse.
 Use \code{NULL} or \code{FALSE} for no panel reversal, \code{TRUE} to reverse all

@@ -43,10 +43,12 @@ A ggplot2 theme object.
 \description{
 \code{theme_ggexon_track()} provides compact defaults for genomic tracks. It keeps
 the x axis visible, hides the y axis used only for track geometry, and removes
-visual noise from minor grids and legends.
+visual noise from minor grids and legends. It inherits its background-free
+foundation from \code{\link[=theme_ggexon_base]{theme_ggexon_base()}}.
 }
 \details{
 \code{theme_ggexon_genomictree()} builds on \code{theme_ggexon_track()} for stacked
 tree-aligned genomic panels. The tree-tip labels use \code{strip.text.y}, and the
-custom tree branch-length axis reuses the x-axis text styling.
+custom tree branch-length axis reuses the x-axis text styling. It inherits
+the shared background contract through the track theme.
 }

@@ -93,7 +93,9 @@ reference:
   - scale_x_ggexon_genomic
   - strip_scale
   - guide_x_ggexon_piecewise
+  - theme_ggexon_base
   - theme_ggexon_track
+  - theme_ggexon_pairwise
   - theme_ggexon_side_strips
   - annotate_cross_panel
   - link_panels

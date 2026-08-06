@@ -116,6 +116,124 @@ test_that("geom_synteny_link renders manual interval ribbons", {
   ))
 })
 
+test_that("facet_genomics centers annotation bodies without changing linkage ranges", {
+  track_levels <- c("human", "link_human_macaque", "macaque")
+  annotation_df <- data.frame(
+    track = factor(c("human", "macaque"), levels = track_levels),
+    xmin = c(10, 1010),
+    xmax = c(80, 1080),
+    y = 1,
+    strand = "+",
+    gene = c("human_gene", "macaque_gene"),
+    label = c("LONG_HUMAN_GENE_LABEL", "LONG_MACAQUE_GENE_LABEL"),
+    stringsAsFactors = FALSE
+  )
+  link_df <- data.frame(
+    track = factor("link_human_macaque", levels = track_levels),
+    tspecies = "human",
+    tchr = "chr7",
+    tstart = 20,
+    tend = 60,
+    strand = "+",
+    qspecies = "macaque",
+    qchr = "chr3",
+    qstart = 1020,
+    qend = 1060,
+    group = 1,
+    stringsAsFactors = FALSE
+  )
+
+  build_pairwise <- function(vertical = NULL) {
+    facet_args <- list(
+      facets = ggplot2::vars(track),
+      scales = "free_x"
+    )
+    if (!is.null(vertical)) {
+      facet_args$vertical <- vertical
+    }
+
+    ggexon_build(
+      ggexon() +
+        geom_genetag(
+          data = annotation_df,
+          exon_height = 0.8,
+          label_position = "outside",
+          label_direction = "top"
+        ) +
+        geom_synteny_link(
+          data = link_df,
+          mapping = ggplot2::aes(
+            tspecies = tspecies,
+            tchr = tchr,
+            tstart = tstart,
+            tend = tend,
+            strand = strand,
+            qspecies = qspecies,
+            qchr = qchr,
+            qstart = qstart,
+            qend = qend,
+            group = group
+          ),
+          inherit.aes = FALSE
+        ) +
+        do.call(facet_genomics, facet_args)
+    )
+  }
+
+  centered <- build_pairwise("center")
+  default_explicit <- build_pairwise("default")
+  default_implicit <- build_pairwise()
+  layout_df <- as.data.frame(centered@layout$layout)
+  panel_for <- function(track) {
+    as.integer(layout_df$PANEL[as.character(layout_df$track) == track][[1L]])
+  }
+  human_panel <- panel_for("human")
+  link_panel <- panel_for("link_human_macaque")
+  macaque_panel <- panel_for("macaque")
+  panel_range <- function(build, panel_id) {
+    build@layout$panel_params[[panel_id]]$y.range
+  }
+
+  expect_identical(centered@plot@facet$params$vertical, "center")
+  expect_equal(mean(panel_range(centered, human_panel)), 0.4)
+  expect_equal(mean(panel_range(centered, macaque_panel)), 0.4)
+  expect_equal(panel_range(centered, link_panel), c(0, 1))
+  expect_equal(
+    panel_range(default_explicit, human_panel),
+    panel_range(default_implicit, human_panel)
+  )
+  expect_false(isTRUE(all.equal(
+    mean(panel_range(default_implicit, human_panel)),
+    0.4
+  )))
+  expect_error(
+    facet_genomics(ggplot2::vars(track), vertical = "top"),
+    "vertical"
+  )
+})
+
+test_that("annotation panel centers prefer body coordinates over label bounds", {
+  layer_data <- list(
+    data.frame(
+      PANEL = factor(c("1", "1", "2")),
+      y_middle = c(0.2, NA, 0.7),
+      y = c(9, 0.6, 0.8),
+      ymin = c(-5, -5, -5),
+      ymax = c(5, 5, 5)
+    ),
+    data.frame(
+      PANEL = 3L,
+      ymin = -1,
+      ymax = 1
+    )
+  )
+
+  centers <- annotation_panel_body_centers(layer_data, c(1L, 3L))
+
+  expect_equal(unname(centers[c("1", "3")]), c(0.4, 0))
+  expect_false("2" %in% names(centers))
+})
+
 test_that("facet_genomics(xlim) trains manual annotation panels beyond observed features", {
   track_levels <- c("human", "link_human_macaque", "macaque")
 
@@ -339,7 +457,8 @@ test_that("facet_genomics can compact link panels in the rendered gtable", {
         link_panel_height = 0.25,
         link_axis = "none",
         link_strip = "blank"
-      )
+      ) +
+      ggplot2::theme(panel.spacing.y = grid::unit(9, "pt"))
   )
   table <- ggplot2::ggplot_gtable(built)
 
@@ -353,6 +472,36 @@ test_that("facet_genomics can compact link panels in the rendered gtable", {
   expect_identical(grid::unitType(table$heights[table$layout$t[[link_panel_idx]]]), "null")
   expect_equal(as.numeric(table$heights[table$layout$t[[link_panel_idx]]]), 0.25)
   expect_equal(as.numeric(table$heights[table$layout$t[[annotation_panel_idx]]]), 1)
+
+  horizontal_structure <- grepl(
+    "^(panel($|-)|axis-[tb]($|-)|strip-[tb]($|-))",
+    table$layout$name
+  )
+  occupied_rows <- unique(unlist(Map(
+    seq.int,
+    table$layout$t[horizontal_structure],
+    table$layout$b[horizontal_structure]
+  )))
+  panel_bounds <- function(name) {
+    idx <- which(table$layout$name == name)
+    c(top = table$layout$t[[idx]], bottom = table$layout$b[[idx]])
+  }
+  upper <- panel_bounds("panel-1-1")
+  link <- panel_bounds("panel-1-2")
+  lower <- panel_bounds("panel-1-3")
+  upper_buffer <- setdiff(
+    seq.int(upper[["bottom"]] + 1L, link[["top"]] - 1L),
+    occupied_rows
+  )
+  lower_buffer <- setdiff(
+    seq.int(link[["bottom"]] + 1L, lower[["top"]] - 1L),
+    occupied_rows
+  )
+
+  expect_length(upper_buffer, 1L)
+  expect_length(lower_buffer, 1L)
+  expect_equal(as.numeric(table$heights[upper_buffer]), 0)
+  expect_equal(as.numeric(table$heights[lower_buffer]), 0)
 
   expect_s3_class(table$grobs[[link_axis_idx]], "zeroGrob")
   expect_s3_class(table$grobs[[link_strip_idx]], "zeroGrob")
