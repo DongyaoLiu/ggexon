@@ -127,9 +127,13 @@ and control genomic x-axis guides.
   : X-only strip scale for gene-tag tracks
 - [`guide_x_ggexon_piecewise()`](https://dongyaoliu.github.io/ggexon/reference/guide_x_ggexon_piecewise.md)
   : Draw representative exon and intron scale bars for genomic x scaling
+- [`theme_ggexon_base()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_base.md)
+  : Shared background-free theme for ggexon plots
 - [`theme_ggexon_track()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_track.md)
   [`theme_ggexon_genomictree()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_track.md)
   : ggexon themes for genomic tracks
+- [`theme_ggexon_pairwise()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_pairwise.md)
+  : Theme for pairwise genomic alignments
 - [`theme_ggexon_side_strips()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_side_strips.md)
   : Place ggexon facet strips on the side
 - [`annotate_cross_panel()`](https://dongyaoliu.github.io/ggexon/reference/annotate_cross_panel.md)

@@ -27,6 +27,7 @@ facet_genomics(
   link_axis = "inherit",
   link_strip = "inherit",
   annotation_axis = "all",
+  vertical = c("default", "center"),
   reverse_x = NULL,
   reverse_x_match_by = c("auto", "species", "strain", "id", "track"),
   xlim = NULL,
@@ -112,6 +113,13 @@ facet_genomics(
   only on the bottom-most annotation panel of each column and blanks the
   interior ones, collapsing the reclaimed axis rows so the panels sit
   compactly. The per-panel free scales are preserved either way.
+
+- vertical:
+
+  Annotation-panel vertical alignment. `"default"` preserves the trained
+  y-ranges. `"center"` symmetrizes each annotation panel's y-range
+  around its visible annotation bodies. Link panels keep their fixed
+  vertical range in either mode.
 
 - reverse_x:
 

@@ -4,7 +4,10 @@ A theme helper for putting facet strip labels (e.g. species tracks) on
 the left or right of the panels instead of stacked on top, which
 reclaims the vertical row a top strip would otherwise occupy. This
 styles the side-strip text so labels read horizontally and sit just
-outside the panels.
+outside the panels. The helper shares
+[`theme_ggexon_base()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_base.md)'s
+blank backgrounds without replacing axes or grids supplied by an
+existing complete theme.
 
 ## Usage
 
@@ -13,7 +16,7 @@ theme_ggexon_side_strips(
   side = c("right", "left"),
   base_size = 8,
   face = "bold",
-  background = "grey96"
+  background = NA
 )
 ```
 
@@ -34,7 +37,9 @@ theme_ggexon_side_strips(
 
 - background:
 
-  Strip-background fill colour, or `NA`/`"none"` for none.
+  Strip-background fill colour. `NA` (the default) or `"none"` draws no
+  strip rectangle. A colour explicitly overrides the shared
+  background-free default.
 
 ## Value
 
@@ -47,6 +52,7 @@ The actual strip *position* is set by the facet, so pair this with
 
 ## See also
 
+[`theme_ggexon_base()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_base.md),
 [`theme_ggexon_track()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_track.md),
 [`facet_genomics()`](https://dongyaoliu.github.io/ggexon/reference/facet_genomics.md)
 
