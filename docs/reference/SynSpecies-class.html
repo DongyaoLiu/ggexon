@@ -96,6 +96,11 @@ syn-aware plot building.</p></dd>
 storing cross-species gene homology mappings.</p></dd>
 
 
+<dt><code>locus_sets</code></dt>
+<dd><p>Named list of <code>SynLocusSet</code> objects storing comparable
+locus windows for multi-locus grid layouts.</p></dd>
+
+
 </dl></div>
     <div class="section level2">
     <h2 id="prototype-defaults">Prototype defaults<a class="anchor" aria-label="anchor" href="#prototype-defaults"></a></h2>
@@ -105,6 +110,7 @@ storing cross-species gene homology mappings.</p></dd>
 <li><p><code>pairwise_alignments = list()</code></p></li>
 <li><p><code>multiple_alignments = list()</code></p></li>
 <li><p><code>homology_annotations = list()</code></p></li>
+<li><p><code>locus_sets = list()</code></p></li>
 <li><p><code>tree = NULL</code></p></li>
 <li><p><code>tree_plot = NULL</code></p></li>
 <li><p><code>metadata = list()</code></p></li>
@@ -119,6 +125,7 @@ storing cross-species gene homology mappings.</p></dd>
 <li><p><code>pairwise_alignments</code> must contain only <code>SynPairAlignment</code> objects.</p></li>
 <li><p><code>multiple_alignments</code> must contain only <code>SynMultiAlignment</code> objects.</p></li>
 <li><p><code>homology_annotations</code> must contain only <code>HomologyAnnotation</code> objects.</p></li>
+<li><p><code>locus_sets</code> must contain only <code>SynLocusSet</code> objects.</p></li>
 <li><p><code>layout</code> must be either <code>NULL</code> or a <code>SynLayout</code>.</p></li>
 </ul></div>
 
