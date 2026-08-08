@@ -398,6 +398,7 @@ GeomGeneTag <- ggproto(
     transcripts = NA_character_,
     genomic_xmin = NA_real_,
     genomic_xmax = NA_real_,
+    slot = NA_character_,
     reference_gene = NA_character_,
     reference_gene_name = NA_character_,
     homology_hit = NA,
@@ -604,7 +605,7 @@ GeomGeneTag <- ggproto(
   },
 	syn_default_aes = c(
     "xmin", "xmax", "y", "strand", "track", "individual", "id", "species",
-    "group", "label", "gene_key", "gene_name", "reference_gene", "reference_gene_name",
+    "group", "label", "gene_key", "gene_name", "slot", "reference_gene", "reference_gene_name",
     "homology_hit", "homology_query_hit", "homology_reference_hit",
     "is_homology_reference_track", "homology_anchor", "visual_class",
     "slot_type", "gene_id", "gene",
@@ -1100,6 +1101,7 @@ syn_to_genetag_df <- function(x,
     if (is.data.frame(data)) {
     for (col in c(
       "track", "gene_key", "gene_id", "gene_name", "gene", "Name", "ID", "transcripts",
+      "slot",
       "genomic_xmin", "genomic_xmax",
       "individual", "id", "species", "reference_gene", "reference_gene_name",
       "homology_hit", "homology_query_hit", "homology_reference_hit",

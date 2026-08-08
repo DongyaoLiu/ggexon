@@ -25,8 +25,8 @@ navbar:
       menu:
       - text: Complete workflow
         href: articles/ggexon-workflow.html
-      - text: HOXA synteny demo
-        href: articles/hoxa-ensembl115-demo.html
+      - text: HOX cluster expansion
+        href: articles/hox-cluster-expansion-demo.html
       - text: CD44 splice variant alignment
         href: articles/cd44-splice-variants-demo.html
       - text: Classes, geoms, facets, and guides
@@ -37,8 +37,9 @@ articles:
   navbar: ~
   contents:
   - ggexon-workflow
-  - hoxa-ensembl115-demo
+  - hox-cluster-expansion-demo
   - cd44-splice-variants-demo
+  - cox1-yeast-demo
   - ggexon-classes-and-verbs
 
 reference:
@@ -75,6 +76,8 @@ reference:
   - geom_exon
   - geom_exon2
   - geom_genetag
+  - geom_genebox
+  - GeomGeneBox
   - geom_genelabel
   - geom_genomic_tree
   - geom_motif

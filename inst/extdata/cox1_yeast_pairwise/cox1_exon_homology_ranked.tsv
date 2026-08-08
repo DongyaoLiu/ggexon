@@ -1,0 +1,8 @@
+fission_exon_id	fission_exon_rank	fission_start	fission_end	budding_exon_id	budding_exon_rank	budding_start	budding_end	link_count	max_fission_overlap_bp	max_budding_overlap_bp	max_min_overlap_bp	max_link_identity	strands	fission_pair_rank	budding_pair_rank	reciprocal_best
+SPMIT.01.1:exon:1	1	4885	5288	Q0045.cds1	1	13818	13986	1	213	169	169	59.036	+	1	1	TRUE
+SPMIT.01.1:exon:2	2	6499	6843	Q0045.cds4	4	20508	20984	1	344	333	333	57.11	+	1	1	TRUE
+SPMIT.01.1:exon:2	2	6499	6843	Q0045.cds5	5	21995	22246	1	344	252	252	57.11	+	2	1	FALSE
+SPMIT.01.1:exon:3	3	7925	8792	Q0045.cds4	4	20508	20984	1	255	333	255	57.11	+	2	2	FALSE
+SPMIT.01.1:exon:3	3	7925	8792	Q0045.cds5	5	21995	22246	1	255	252	252	57.11	+	3	2	FALSE
+SPMIT.01.1:exon:3	3	7925	8792	Q0045.cds6	6	23612	23746	1	134	123	123	74.627	+	4	1	FALSE
+SPMIT.01.1:exon:3	3	7925	8792	Q0045.cds8	8	26229	26701	1	464	473	464	64.351	+	1	1	TRUE

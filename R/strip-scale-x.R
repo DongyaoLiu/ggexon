@@ -1,28 +1,47 @@
-#' X-only strip scale for gene-tag tracks
+#' X-only strip scale for gene tracks
 #'
-#' `strip_scale_x()` normalizes gene-tag x coordinates so genes and intergenic
-#' gaps occupy predictable visual widths. In homology mode, it can compress
-#' species-specific local runs and translate tracks to align the most conserved
-#' block against an explicit reference track.
+#' `strip_scale_x()` normalizes gene-tag or gene-box x coordinates. Its default
+#' layout gives genes and intergenic gaps predictable visual widths. Homology
+#' mode can compress species-specific local runs and translate tracks to align
+#' the most conserved block against an explicit reference track. Exact-template
+#' mode maps gene anchors to a complete synthetic `slot_order`, independently
+#' of the raw genomic distances between genes.
 #'
 #' Once genomic x distances are stripped, gene-body overlap lanes are collapsed
 #' to a single baseline per gene-tag layer. Outside labels remain coordinated
 #' independently, so label lanes can still alternate above and below the shared
 #' gene-body line.
 #'
+#' In exact-template mode, visible gene-box direction is inferred separately for
+#' each panel and track from the rank correlation between genomic anchors and
+#' template-slot positions. A track needs at least two distinct genomic anchors
+#' in at least two distinct slots and a non-zero rank correlation. Otherwise
+#' `strip_scale_x()` warns once per build and uses `+1` (no template-driven
+#' direction reversal) for every underdetermined track.
+#'
 #' @param gene_gap_ratio Ratio of full gene visual width to intergenic gap
 #'   visual width. When `NULL`, the ratio is estimated from the densest track.
+#'   It is not used when `slot_order` is supplied.
 #' @param align Alignment for level-1, non-homology tracks with fewer genes than
 #'   the widest track.
 #' @param reference_track Optional single reference track name for homology-aware
 #'   layout. This is the preferred alias for `homo_align`.
+#' @param slot_order Optional character vector defining exact shared comparison
+#'   slots from left to right. Gene rows are matched through `slot`, falling
+#'   back to `reference_gene` and then `gene_key`. The selected genomic anchor
+#'   of every matching row is mapped to the center of its slot, so unoccupied
+#'   template positions remain visible. Slot membership is supplied metadata,
+#'   not an inference of one-to-one homology or evolutionary loss. This
+#'   synthetic-template mode does not require, and cannot be combined with,
+#'   `reference_track`.
 #' @param homo_align `FALSE` for level-1 layout only, or a single character
 #'   reference track name for homology-aware layout. `TRUE` is not supported.
 #'   Prefer `reference_track` for new code.
 #' @param gene_order Gene ordering strategy. `"genomic"` keeps each track in its
 #'   native genomic order. `"reference"` orders query tracks by the resolved
 #'   homolog order in `reference_track`, keeping unmapped local runs between the
-#'   nearest surrounding reference-ordered homologs.
+#'   nearest surrounding reference-ordered homologs. When `slot_order` is
+#'   supplied, that exact order governs the layout regardless of this setting.
 #' @param species_specific_ratio Visual width of a species-specific gene or
 #'   collapsed run relative to a homologous gene.
 #' @param secondary_homology_ratio Visual width of a homologous off-track or
@@ -54,11 +73,23 @@ strip_scale_x <- function(gene_gap_ratio = NULL,
                           species_ratio = NULL,
                           collapse_contiguous_slot = TRUE,
                           block_align = c("conserved", "left", "center", "right", "none"),
-                          guide = c("range", "none")) {
+                          guide = c("range", "none"),
+                          slot_order = NULL) {
   align <- match.arg(align)
   gene_order <- match.arg(gene_order)
   block_align <- match.arg(block_align)
   guide <- match.arg(guide)
+  if (!is.null(slot_order)) {
+    if (!is.character(slot_order) || length(slot_order) == 0L ||
+        anyNA(slot_order) || any(!nzchar(slot_order)) ||
+        anyDuplicated(slot_order)) {
+      stop(
+        "`slot_order` must be `NULL` or a unique character vector of non-empty keys.",
+        call. = FALSE
+      )
+    }
+    slot_order <- as.character(slot_order)
+  }
   if (!is.null(reference_track)) {
     if (!is.character(reference_track) || length(reference_track) != 1L ||
         is.na(reference_track) || !nzchar(reference_track)) {
@@ -104,11 +135,21 @@ strip_scale_x <- function(gene_gap_ratio = NULL,
   if (!identical(homo_align, FALSE) && !homo_active) {
     stop("`homo_align` must be `FALSE` or a single reference track name.", call. = FALSE)
   }
-  if (identical(gene_order, "reference") && !homo_active) {
-    stop("`gene_order = \"reference\"` requires `reference_track` or `homo_align`.", call. = FALSE)
+  template_active <- !is.null(slot_order)
+  if (template_active && homo_active) {
+    stop("Supply only one of `slot_order` and `reference_track` / `homo_align`.", call. = FALSE)
   }
-  if (!homo_active && !identical(block_align, "conserved")) {
+  if (identical(gene_order, "reference") && !homo_active && !template_active) {
+    stop(
+      "`gene_order = \"reference\"` requires `slot_order`, `reference_track`, or `homo_align`.",
+      call. = FALSE
+    )
+  }
+  if (!homo_active && !template_active && !identical(block_align, "conserved")) {
     warning("`block_align` is ignored unless `reference_track` or `homo_align` is set.", call. = FALSE)
+  }
+  if (template_active && !identical(block_align, "conserved")) {
+    warning("`block_align` is ignored when `slot_order` is supplied.", call. = FALSE)
   }
 
   structure(
@@ -116,6 +157,8 @@ strip_scale_x <- function(gene_gap_ratio = NULL,
       gene_gap_ratio = gene_gap_ratio,
       align = align,
       reference_track = if (homo_active) homo_align else NULL,
+      slot_order = slot_order,
+      template_active = template_active,
       homo_align = homo_align,
       homo_active = homo_active,
       gene_order = gene_order,
@@ -155,27 +198,38 @@ ggplot_add.ggexon_strip_scale_x_spec <- function(object, plot, ...) {
 }
 
 apply_strip_scale_x <- function(data, layers, strip_scale_spec, layout, plot) {
+  gene_layers <- strip_scale_x_gene_layers(layers)
   tag_layers <- strip_scale_x_genetag_layers(layers)
-  if (length(tag_layers) == 0L) {
-    stop("`strip_scale_x()` requires at least one `geom_genetag()` layer.", call. = FALSE)
+  if (length(gene_layers) == 0L) {
+    stop(
+      "`strip_scale_x()` requires at least one `geom_genetag()` or `geom_genebox()` layer.",
+      call. = FALSE
+    )
   }
 
-  tags <- strip_scale_x_collect_genetags(data, tag_layers)
+  tags <- strip_scale_x_collect_genetags(data, gene_layers)
   if (nrow(tags) == 0L) {
-    stop("`strip_scale_x()` found no gene-tag rows.", call. = FALSE)
+    stop("`strip_scale_x()` found no gene rows.", call. = FALSE)
   }
-  ratio <- strip_scale_x_resolve_ratio(tags, strip_scale_spec$gene_gap_ratio)
+  ratio <- if (isTRUE(strip_scale_spec$template_active)) {
+    1
+  } else {
+    strip_scale_x_resolve_ratio(tags, strip_scale_spec$gene_gap_ratio)
+  }
 
-  built <- if (isTRUE(strip_scale_spec$homo_active)) {
+  built <- if (isTRUE(strip_scale_spec$template_active)) {
+    strip_scale_x_build_template_layout(tags, strip_scale_spec)
+  } else if (isTRUE(strip_scale_spec$homo_active)) {
     strip_scale_x_build_homology_layout(tags, ratio, strip_scale_spec)
   } else {
     strip_scale_x_build_level1_layout(tags, ratio, strip_scale_spec$align)
   }
 
-  data <- strip_scale_x_apply_transforms(data, tag_layers, built$transform)
+  data <- strip_scale_x_apply_transforms(data, gene_layers, built$transform)
   data <- strip_scale_x_flatten_genetag_lanes(data, layers, tag_layers)
   layout <- .strip_scale_force_fixed_x(layout, unique(as.character(built$transform$PANEL)))
   layout$strip_scale_x_transform <- built$transform
+  layout$strip_scale_x_limits <- built$limits %||% NULL
   layout$strip_scale_x_axis_data <- if (identical(strip_scale_x_guide_type(strip_scale_spec), "range")) {
     strip_scale_x_range_axis_data(built$transform, layout = layout)
   } else {
@@ -186,8 +240,21 @@ apply_strip_scale_x <- function(data, layers, strip_scale_spec, layout, plot) {
   list(data = data, layout = layout, transforms = built$transform)
 }
 
+strip_scale_x_gene_layers <- function(layers) {
+  unique(c(
+    strip_scale_x_genetag_layers(layers),
+    strip_scale_x_genebox_layers(layers)
+  ))
+}
+
 strip_scale_x_genetag_layers <- function(layers) {
   which(vapply(layers, function(l) identical(l$geom, GeomGeneTag), logical(1)))
+}
+
+strip_scale_x_genebox_layers <- function(layers) {
+  if (!exists("GeomGeneBox", inherits = TRUE)) return(integer())
+  geom <- get("GeomGeneBox", inherits = TRUE)
+  which(vapply(layers, function(l) identical(l$geom, geom), logical(1)))
 }
 
 strip_scale_x_collect_genetags <- function(data, tag_layers) {
@@ -196,11 +263,22 @@ strip_scale_x_collect_genetags <- function(data, tag_layers) {
     df <- data[[layer_i]]
     if (!is.data.frame(df) || nrow(df) == 0L) next
     if (!"track" %in% names(df)) {
-      stop("`strip_scale_x()` requires `geom_genetag()` data with a `track` column.", call. = FALSE)
+      stop("`strip_scale_x()` requires gene-layer data with a `track` column.", call. = FALSE)
     }
-    if (!all(c("PANEL", "xmin", "xmax") %in% names(df))) next
-    if (!"genomic_xmin" %in% names(df)) df$genomic_xmin <- df$xmin
-    if (!"genomic_xmax" %in% names(df)) df$genomic_xmax <- df$xmax
+    if (!"PANEL" %in% names(df)) next
+    if (!"genomic_xmin" %in% names(df) && "xmin" %in% names(df)) {
+      df$genomic_xmin <- df$xmin
+    }
+    if (!"genomic_xmax" %in% names(df) && "xmax" %in% names(df)) {
+      df$genomic_xmax <- df$xmax
+    }
+    if ((!"genomic_xmin" %in% names(df) || !"genomic_xmax" %in% names(df)) &&
+        "x" %in% names(df)) {
+      point_x <- if ("genomic_x" %in% names(df)) df$genomic_x else df$x
+      df$genomic_xmin <- as.numeric(point_x) - 0.5
+      df$genomic_xmax <- as.numeric(point_x) + 0.5
+    }
+    if (!all(c("genomic_xmin", "genomic_xmax") %in% names(df))) next
     if (!"gene_key" %in% names(df)) df$gene_key <- .genetag_gene_key(df)
 
     reference_gene <- if ("reference_gene" %in% names(df)) {
@@ -218,6 +296,31 @@ strip_scale_x_collect_genetags <- function(data, tag_layers) {
 
     start <- pmin(as.numeric(df$genomic_xmin), as.numeric(df$genomic_xmax))
     end <- pmax(as.numeric(df$genomic_xmin), as.numeric(df$genomic_xmax))
+    genomic_anchor <- if ("genomic_x" %in% names(df)) {
+      as.numeric(df$genomic_x)
+    } else if ("x" %in% names(df) && !all(is.na(df$x))) {
+      as.numeric(df$x)
+    } else {
+      (start + end) / 2
+    }
+    raw_start <- strip_scale_x_raw_coordinate(
+      df,
+      genomic_column = "genomic_xmin",
+      position_column = "xmin",
+      fallback = start
+    )
+    raw_end <- strip_scale_x_raw_coordinate(
+      df,
+      genomic_column = "genomic_xmax",
+      position_column = "xmax",
+      fallback = end
+    )
+    raw_anchor <- strip_scale_x_raw_coordinate(
+      df,
+      genomic_column = "genomic_x",
+      position_column = "x",
+      fallback = (pmin(raw_start, raw_end) + pmax(raw_start, raw_end)) / 2
+    )
     out <- data.frame(
       layer = layer_i,
       row = seq_len(nrow(df)),
@@ -234,31 +337,126 @@ strip_scale_x_collect_genetags <- function(data, tag_layers) {
       } else {
         NA_character_
       },
+      slot = if ("slot" %in% names(df)) as.character(df$slot) else NA_character_,
+      anchor_mode = if ("anchor_mode" %in% names(df)) {
+        as.character(df$anchor_mode)
+      } else {
+        NA_character_
+      },
       homology_hit = homology_hit,
       genomic_start = start,
       genomic_end = end,
+      genomic_anchor = genomic_anchor,
+      direction_anchor = raw_anchor,
+      source_keys = paste(layer_i, seq_len(nrow(df)), sep = ":"),
       stringsAsFactors = FALSE
     )
     keep <- is.finite(out$genomic_start) & is.finite(out$genomic_end) &
       out$genomic_end > out$genomic_start &
+      is.finite(out$genomic_anchor) &
       !is.na(out$track) & nzchar(out$track) &
       !is.na(out$gene_key) & nzchar(out$gene_key)
     if (any(!keep)) {
-      warning("`strip_scale_x()` dropped invalid gene-tag row(s).", call. = FALSE)
+      warning("`strip_scale_x()` dropped invalid gene row(s).", call. = FALSE)
     }
     out <- out[keep, , drop = FALSE]
     if (nrow(out) > 0L) pieces[[length(pieces) + 1L]] <- out
   }
   if (length(pieces) == 0L) return(data.frame())
   out <- dplyr::bind_rows(pieces)
+  out <- strip_scale_x_consolidate_gene_inventory(out)
   out <- out[order(out$PANEL, out$track, out$genomic_start, out$genomic_end, out$row), , drop = FALSE]
   rownames(out) <- NULL
   out
 }
 
+strip_scale_x_raw_coordinate <- function(df,
+                                         genomic_column,
+                                         position_column,
+                                         fallback) {
+  fallback <- as.numeric(fallback)
+  genomic_marker <- .strip_scale_raw_marker(genomic_column)
+  position_marker <- .strip_scale_raw_marker(position_column)
+  if (genomic_marker %in% names(df)) {
+    out <- as.numeric(df[[genomic_marker]])
+    if (position_marker %in% names(df)) {
+      missing <- !is.finite(out)
+      out[missing] <- as.numeric(df[[position_marker]][missing])
+    }
+    missing <- !is.finite(out)
+    out[missing] <- fallback[missing]
+    return(out)
+  }
+  if (position_marker %in% names(df)) {
+    out <- as.numeric(df[[position_marker]])
+    missing <- !is.finite(out)
+    out[missing] <- fallback[missing]
+    return(out)
+  }
+  fallback
+}
+
+strip_scale_x_consolidate_gene_inventory <- function(tags) {
+  if (nrow(tags) < 2L) return(tags)
+
+  ordering <- order(
+    tags$PANEL,
+    tags$track,
+    tags$gene_key,
+    tags$layer,
+    tags$genomic_start,
+    tags$genomic_end,
+    tags$row
+  )
+  tags <- tags[ordering, , drop = FALSE]
+  within_layer_key <- paste(
+    tags$PANEL,
+    tags$track,
+    tags$gene_key,
+    tags$layer,
+    sep = "\r"
+  )
+  occurrence <- ave(seq_len(nrow(tags)), within_layer_key, FUN = seq_along)
+  inventory_key <- paste(
+    tags$PANEL,
+    tags$track,
+    tags$gene_key,
+    occurrence,
+    sep = "\r"
+  )
+  groups <- split(seq_len(nrow(tags)), inventory_key, drop = TRUE)
+  character_metadata <- c(
+    "label", "gene_id", "gene_name", "gene", "reference_gene",
+    "reference_gene_name", "slot", "anchor_mode"
+  )
+
+  pieces <- lapply(groups, function(rows) {
+    candidates <- tags[rows, , drop = FALSE]
+    if (nrow(candidates) == 1L) return(candidates)
+
+    widths <- candidates$genomic_end - candidates$genomic_start
+    primary <- which.max(widths)
+    out <- candidates[primary, , drop = FALSE]
+    out$source_keys <- paste(unique(candidates$source_keys), collapse = ",")
+    for (column in intersect(character_metadata, names(candidates))) {
+      current <- as.character(out[[column]])
+      if (!is.na(current) && nzchar(current)) next
+      values <- as.character(candidates[[column]])
+      values <- values[!is.na(values) & nzchar(values)]
+      if (length(values) > 0L) out[[column]] <- values[[1L]]
+    }
+    if ("homology_hit" %in% names(candidates)) {
+      values <- candidates$homology_hit[!is.na(candidates$homology_hit)]
+      out$homology_hit <- if (length(values) == 0L) NA else any(values)
+    }
+    out
+  })
+  dplyr::bind_rows(pieces)
+}
+
 strip_scale_x_logical_or_na <- function(x) {
   if (is.logical(x)) return(x)
-  x_chr <- tolower(as.character(x))
+  x_chr <- base::tolower(as.character(x))
   out <- rep(NA, length(x_chr))
   out[x_chr %in% c("true", "t", "1", "yes", "y")] <- TRUE
   out[x_chr %in% c("false", "f", "0", "no", "n")] <- FALSE
@@ -282,6 +480,149 @@ strip_scale_x_resolve_ratio <- function(tags, gene_gap_ratio = NULL) {
   if (!is.finite(med_gene) || med_gene <= 0) return(3)
   if (!is.finite(med_gap) || med_gap <= 0) return(max(med_gene / 1000, 3))
   max(med_gene / med_gap, 0.1)
+}
+
+strip_scale_x_build_template_layout <- function(tags, spec) {
+  slot_order <- as.character(spec$slot_order)
+  resolved_slot <- strip_scale_x_resolve_template_slot(tags)
+
+  missing_slot <- is.na(resolved_slot) | !nzchar(resolved_slot)
+  if (any(missing_slot)) {
+    bad <- unique(tags$gene_key[missing_slot])
+    stop(
+      "`strip_scale_x(slot_order = ...)` could not resolve a slot for gene row(s): ",
+      paste(utils::head(bad, 8L), collapse = ", "),
+      if (length(bad) > 8L) ", ..." else "",
+      ". Supply `slot`, `reference_gene`, or a matching `gene_key`.",
+      call. = FALSE
+    )
+  }
+
+  unknown <- unique(resolved_slot[!resolved_slot %in% slot_order])
+  if (length(unknown) > 0L) {
+    stop(
+      "Gene row slot(s) are absent from `slot_order`: ",
+      paste(utils::head(unknown, 8L), collapse = ", "),
+      if (length(unknown) > 8L) ", ..." else "",
+      ".",
+      call. = FALSE
+    )
+  }
+
+  slot_index <- match(resolved_slot, slot_order)
+  plot_anchor <- as.numeric(slot_index)
+  genomic_width <- tags$genomic_end - tags$genomic_start
+  # The point-like gene box is positioned directly at `plot_anchor`. This
+  # compact interval mapping is retained so geom_genetag() can also participate
+  # without allowing its body to close an empty template slot.
+  visual_width <- 0.4
+  slope <- visual_width / genomic_width
+  plot_start <- plot_anchor + (tags$genomic_start - tags$genomic_anchor) * slope
+  plot_end <- plot_anchor + (tags$genomic_end - tags$genomic_anchor) * slope
+
+  transform <- dplyr::bind_rows(lapply(seq_len(nrow(tags)), function(i) {
+    strip_scale_x_transform_row(
+      PANEL = tags$PANEL[[i]],
+      track = tags$track[[i]],
+      local_slot_id = slot_index[[i]],
+      global_slot_id = resolved_slot[[i]],
+      slot_type = "template_slot",
+      visual_class = "template_slot",
+      gene_key = tags$gene_key[[i]],
+      label = tags$label[[i]],
+      reference_gene = resolved_slot[[i]],
+      is_anchor = TRUE,
+      homology_anchor = TRUE,
+      members = tags$gene_key[[i]],
+      source_keys = tags$source_keys[[i]],
+      genomic_start = tags$genomic_start[[i]],
+      genomic_end = tags$genomic_end[[i]],
+      plot_start_raw = plot_start[[i]],
+      plot_end_raw = plot_end[[i]],
+      region_type = "gene",
+      genomic_anchor = tags$genomic_anchor[[i]],
+      plot_anchor_raw = plot_anchor[[i]],
+      slot = resolved_slot[[i]]
+    )
+  }))
+  transform <- strip_scale_x_template_directions(
+    transform,
+    genomic_anchor = tags$direction_anchor
+  )
+
+  built <- strip_scale_x_finalize_layout(transform)
+  built$limits <- c(0.5, length(slot_order) + 0.5)
+  built$template <- data.frame(
+    slot = slot_order,
+    slot_index = seq_along(slot_order),
+    plot_anchor = seq_along(slot_order),
+    stringsAsFactors = FALSE
+  )
+  built
+}
+
+strip_scale_x_template_directions <- function(transform,
+                                              genomic_anchor = transform$genomic_anchor) {
+  transform$strip_x_direction <- 1
+  groups <- split(
+    seq_len(nrow(transform)),
+    paste(transform$PANEL, transform$track, sep = "\r"),
+    drop = TRUE
+  )
+  underdetermined <- character()
+  for (group_name in names(groups)) {
+    idx <- groups[[group_name]]
+    genomic <- genomic_anchor[idx]
+    plotted <- transform$plot_anchor_raw[idx]
+    usable <- is.finite(genomic) & is.finite(plotted)
+    genomic <- genomic[usable]
+    plotted <- plotted[usable]
+    direction <- 1
+    reason <- NULL
+    if (length(unique(genomic)) < 2L || length(unique(plotted)) < 2L) {
+      reason <- "fewer than two distinct anchors or slots"
+    } else {
+      correlation <- suppressWarnings(stats::cor(genomic, plotted, method = "spearman"))
+      if (!is.finite(correlation) || abs(correlation) <= sqrt(.Machine$double.eps)) {
+        reason <- "zero or undefined rank correlation"
+      } else {
+        direction <- sign(correlation)
+      }
+    }
+    if (!is.null(reason)) {
+      track <- as.character(transform$track[idx[[1L]]])
+      panel <- as.character(transform$PANEL[idx[[1L]]])
+      underdetermined <- c(
+        underdetermined,
+        paste0("'", track, "' (panel ", panel, ": ", reason, ")")
+      )
+    }
+    transform$strip_x_direction[idx] <- direction
+  }
+  if (length(underdetermined) > 0L) {
+    shown <- utils::head(underdetermined, 8L)
+    warning(
+      "`strip_scale_x(slot_order = ...)` could not infer template direction for ",
+      length(underdetermined), " panel/track group(s): ",
+      paste(shown, collapse = ", "),
+      if (length(underdetermined) > length(shown)) ", ..." else "",
+      ". Using +1 (no template-driven direction reversal) for those groups.",
+      call. = FALSE
+    )
+  }
+  transform
+}
+
+strip_scale_x_resolve_template_slot <- function(tags) {
+  out <- rep(NA_character_, nrow(tags))
+  for (column in c("slot", "reference_gene", "gene_key")) {
+    if (!column %in% names(tags)) next
+    unresolved <- is.na(out) | !nzchar(out)
+    candidate <- as.character(tags[[column]])
+    use <- unresolved & !is.na(candidate) & nzchar(candidate)
+    out[use] <- candidate[use]
+  }
+  out
 }
 
 strip_scale_x_build_level1_layout <- function(tags, ratio, align = "left") {
@@ -617,7 +958,7 @@ strip_scale_x_slots_to_transform <- function(group, slots, gap_width, start_offs
       is_anchor = slot$is_anchor,
       homology_anchor = slot$homology_anchor %||% slot$is_anchor,
       members = paste(group$gene_key[slot$rows], collapse = ","),
-      source_keys = paste(group$layer[slot$rows], group$row[slot$rows], sep = ":", collapse = ","),
+      source_keys = paste(group$source_keys[slot$rows], collapse = ","),
       genomic_start = slot$genomic_start,
       genomic_end = slot$genomic_end,
       plot_start_raw = current,
@@ -677,8 +1018,18 @@ strip_scale_x_transform_row <- function(PANEL,
                                         genomic_end,
                                         plot_start_raw,
                                         plot_end_raw,
-                                        region_type) {
+                                        region_type,
+                                        genomic_anchor = NULL,
+                                        plot_anchor_raw = NULL,
+                                        slot = NA_character_,
+                                        strip_x_direction = 1) {
   width <- genomic_end - genomic_start
+  if (is.null(genomic_anchor)) genomic_anchor <- (genomic_start + genomic_end) / 2
+  if (is.null(plot_anchor_raw)) {
+    plot_anchor_raw <- plot_start_raw +
+      (genomic_anchor - genomic_start) *
+      if (is.finite(width) && width > 0) (plot_end_raw - plot_start_raw) / width else 0
+  }
   data.frame(
     PANEL = PANEL,
     track = track,
@@ -695,6 +1046,11 @@ strip_scale_x_transform_row <- function(PANEL,
     source_keys = source_keys,
     genomic_start = genomic_start,
     genomic_end = genomic_end,
+    genomic_anchor = genomic_anchor,
+    plot_anchor_raw = plot_anchor_raw,
+    plot_anchor = plot_anchor_raw,
+    slot = slot,
+    strip_x_direction = strip_x_direction,
     plot_start_raw = plot_start_raw,
     plot_end_raw = plot_end_raw,
     slope = if (is.finite(width) && width > 0) (plot_end_raw - plot_start_raw) / width else NA_real_,
@@ -895,11 +1251,17 @@ strip_scale_x_finalize_layout <- function(transform) {
   }
   transform$plot_start <- transform$plot_start_raw + transform$track_offset
   transform$plot_end <- transform$plot_end_raw + transform$track_offset
+  if ("plot_anchor_raw" %in% names(transform)) {
+    transform$plot_anchor <- transform$plot_anchor_raw + transform$track_offset
+  }
   min_x <- min(transform$plot_start, transform$plot_end, na.rm = TRUE)
   global_offset <- if (is.finite(min_x) && min_x < 0) -min_x else 0
   transform$global_offset <- global_offset
   transform$plot_start <- transform$plot_start + global_offset
   transform$plot_end <- transform$plot_end + global_offset
+  if ("plot_anchor" %in% names(transform)) {
+    transform$plot_anchor <- transform$plot_anchor + global_offset
+  }
 
   axis_data <- strip_scale_x_range_axis_data(transform)
   list(transform = transform, axis_data = axis_data)
@@ -990,9 +1352,16 @@ strip_scale_x_apply_transforms <- function(data, tag_layers, transform) {
   for (layer_i in tag_layers) {
     df <- data[[layer_i]]
     if (!is.data.frame(df) || nrow(df) == 0L) next
-    if (!all(c("PANEL", "track", "xmin", "xmax") %in% names(df))) next
-    if (!"genomic_xmin" %in% names(df)) df$genomic_xmin <- df$xmin
-    if (!"genomic_xmax" %in% names(df)) df$genomic_xmax <- df$xmax
+    if (!all(c("PANEL", "track") %in% names(df))) next
+    if ("xmin" %in% names(df) && !"genomic_xmin" %in% names(df)) {
+      df$genomic_xmin <- df$xmin
+    }
+    if ("xmax" %in% names(df) && !"genomic_xmax" %in% names(df)) {
+      df$genomic_xmax <- df$xmax
+    }
+    if ("x" %in% names(df) && !"genomic_x" %in% names(df)) {
+      df$genomic_x <- df$x
+    }
     panel_ids <- ggexon_panel_id(df$PANEL)
     keys <- paste(panel_ids, as.character(df$track), sep = "\r")
     for (key in unique(keys)) {
@@ -1058,14 +1427,29 @@ strip_scale_x_apply_layer_coordinates <- function(df, layer_i, idx, transform) {
 
   if (any(has_source)) {
     rows <- transform[transform_idx[has_source], , drop = FALSE]
-    df$xmin[idx[has_source]] <- strip_scale_x_map_with_rows(df$genomic_xmin[idx[has_source]], rows)
-    df$xmax[idx[has_source]] <- strip_scale_x_map_with_rows(df$genomic_xmax[idx[has_source]], rows)
+    matched <- idx[has_source]
+    if (all(c("xmin", "genomic_xmin") %in% names(df))) {
+      df$xmin[matched] <- strip_scale_x_map_with_rows(df$genomic_xmin[matched], rows)
+    }
+    if (all(c("xmax", "genomic_xmax") %in% names(df))) {
+      df$xmax[matched] <- strip_scale_x_map_with_rows(df$genomic_xmax[matched], rows)
+    }
+    if (all(c("x", "genomic_x") %in% names(df))) {
+      df$x[matched] <- strip_scale_x_map_with_rows(df$genomic_x[matched], rows)
+    }
   }
 
   if (any(!has_source)) {
     fallback <- idx[!has_source]
-    df$xmin[fallback] <- strip_scale_to_plot_x(df$genomic_xmin[fallback], transform)
-    df$xmax[fallback] <- strip_scale_to_plot_x(df$genomic_xmax[fallback], transform)
+    if (all(c("xmin", "genomic_xmin") %in% names(df))) {
+      df$xmin[fallback] <- strip_scale_to_plot_x(df$genomic_xmin[fallback], transform)
+    }
+    if (all(c("xmax", "genomic_xmax") %in% names(df))) {
+      df$xmax[fallback] <- strip_scale_to_plot_x(df$genomic_xmax[fallback], transform)
+    }
+    if (all(c("x", "genomic_x") %in% names(df))) {
+      df$x[fallback] <- strip_scale_to_plot_x(df$genomic_x[fallback], transform)
+    }
   }
 
   df
@@ -1099,12 +1483,13 @@ strip_scale_x_map_with_rows <- function(x, rows) {
     value <- as.numeric(x[[i]])
     if (!is.finite(value)) return(value)
     row <- rows[i, , drop = FALSE]
-    if (!is.finite(row$slope[[1L]]) ||
-        !is.finite(row$genomic_start[[1L]]) ||
-        !is.finite(row$plot_start[[1L]])) {
+    has_anchor <- all(c("genomic_anchor", "plot_anchor") %in% names(row)) &&
+      is.finite(row$genomic_anchor[[1L]]) &&
+      is.finite(row$plot_anchor[[1L]])
+    if (!is.finite(row$slope[[1L]]) || !has_anchor) {
       return(value)
     }
-    row$plot_start[[1L]] + (value - row$genomic_start[[1L]]) * row$slope[[1L]]
+    row$plot_anchor[[1L]] + (value - row$genomic_anchor[[1L]]) * row$slope[[1L]]
   }, numeric(1))
 }
 
@@ -1118,6 +1503,7 @@ strip_scale_x_apply_row_metadata <- function(df, layer_i, idx, transform) {
   for (col in c("homology_anchor", "is_anchor")) {
     if (!col %in% names(df)) df[[col]] <- FALSE
   }
+  if (!"strip_x_direction" %in% names(df)) df$strip_x_direction <- 1
 
   row_keys <- paste(layer_i, seq_len(nrow(df)), sep = ":")
   for (i in seq_len(nrow(gene_rows))) {
@@ -1128,6 +1514,7 @@ strip_scale_x_apply_row_metadata <- function(df, layer_i, idx, transform) {
     df$slot_type[matched] <- gene_rows$slot_type[[i]]
     df$homology_anchor[matched] <- isTRUE(gene_rows$homology_anchor[[i]])
     df$is_anchor[matched] <- isTRUE(gene_rows$is_anchor[[i]])
+    df$strip_x_direction[matched] <- gene_rows$strip_x_direction[[i]] %||% 1
   }
   df
 }

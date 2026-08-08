@@ -1,0 +1,5 @@
+##gff-version 3
+mitochondrial	PomBase	mRNA	4885	8792	.	+	.	ID=SPMIT.01.1;Parent=SPMIT.01;gene_id=SPMIT.01;gene_name=cox1;transcript_id=SPMIT.01.1;transcript_name=cox1
+mitochondrial	PomBase	CDS	4885	5288	.	+	.	ID=SPMIT.01.1:exon:1;Parent=SPMIT.01.1;gene_id=SPMIT.01;gene_name=cox1;transcript_id=SPMIT.01.1;transcript_name=cox1;rank=1
+mitochondrial	PomBase	CDS	6499	6843	.	+	.	ID=SPMIT.01.1:exon:2;Parent=SPMIT.01.1;gene_id=SPMIT.01;gene_name=cox1;transcript_id=SPMIT.01.1;transcript_name=cox1;rank=2
+mitochondrial	PomBase	CDS	7925	8792	.	+	.	ID=SPMIT.01.1:exon:3;Parent=SPMIT.01.1;gene_id=SPMIT.01;gene_name=cox1;transcript_id=SPMIT.01.1;transcript_name=cox1;rank=3

@@ -1,0 +1,29 @@
+matrix_row	matrix_column	species	cluster	cell_status	annotated_gene_count	expected_functional_member_count	annotation_gap_count	missing_hox_slots	annotation_gap_hox_slots	empty_hox_slots_excluding_annotation_gaps	biologically_not_retained_hox_slots	unresolved_expected_hox_slots	panel_note	display_reverse
+human	A	human	A	retained	11	11	0	15,14,12,8		15,14,12,8	15,14,12,8			TRUE
+human	B	human	B	retained	10	10	0	15,14,12,11,10		15,14,12,11,10	15,14,12,11,10			TRUE
+human	C	human	C	retained	9	9	0	15,14,7,3,2,1		15,14,7,3,2,1	15,14,7,3,2,1			FALSE
+human	D	human	D	retained	9	9	0	15,14,7,6,5,2		15,14,7,6,5,2	15,14,7,6,5,2			FALSE
+mouse	A	mouse	A	retained	11	11	0	15,14,12,8		15,14,12,8	15,14,12,8			TRUE
+mouse	B	mouse	B	retained	10	10	0	15,14,12,11,10		15,14,12,11,10	15,14,12,11,10			FALSE
+mouse	C	mouse	C	retained	9	9	0	15,14,7,3,2,1		15,14,7,3,2,1	15,14,7,3,2,1			FALSE
+mouse	D	mouse	D	retained	9	9	0	15,14,7,6,5,2		15,14,7,6,5,2	15,14,7,6,5,2			FALSE
+chicken	A	chicken	A	retained	11	11	0	15,14,12,8		15,14,12,8	15,14,12,8			TRUE
+chicken	B	chicken	B	retained	10	10	0	15,14,12,11,10		15,14,12,11,10	15,14,12,11,10			FALSE
+chicken	C	chicken	C	retained	6	9	3	15,14,7,6,5,4,3,2,1	6,5,4	15,14,7,3,2,1	15,14,7,3,2,1		The published 39-gene complement expects the listed annotation-gap slots; Ensembl 116 GRCg7b supplies no safe protein-coding model for them.	TRUE
+chicken	D	chicken	D	retained	8	9	1	15,14,7,6,5,2,1	1	15,14,7,6,5,2	15,14,7,6,5,2		The published 39-gene complement expects the listed annotation-gap slots; Ensembl 116 GRCg7b supplies no safe protein-coding model for them.	TRUE
+gar	A	gar	A	retained	6	11	5	15,14,12,9,8,7,6,4,2	9,7,6,4,2	15,14,12,8	15,14,12,8		HoxA14 is the ancestral bony-vertebrate member absent from gar. Expected functional members without a safe Ensembl model are annotation gaps.	TRUE
+gar	B	gar	B	retained	9	11	2	15,14,12,11,4,2	4,2	15,14,12,11	15,14,12,11			TRUE
+gar	C	gar	C	retained	6	11	5	15,14,10,9,8,7,6,2,1	10,9,8,6,1	15,14,7,2	15,14,7,2			FALSE
+gar	D	gar	D	retained	10	10	0	15,14,7,6,5		15,14,7,6,5	15,14,7,6,5		Gar HoxD14 is a recognizable pseudogene and is excluded from the 43-protein-coding-gene complement and from gene boxes.	TRUE
+zebrafish_a	A	zebrafish	AA	retained	7	7	0	15,14,12,10,8,7,6,2		15,14,12,10,8,7,6,2	15,14,12,10,8,7,6,2			FALSE
+zebrafish_a	B	zebrafish	BA	retained	11	11	0	15,14,12,11		15,14,12,11	15,14,12,11			FALSE
+zebrafish_a	C	zebrafish	CA	retained	11	11	0	15,14,7,2		15,14,7,2	15,14,7,2			FALSE
+zebrafish_a	D	zebrafish	DA	retained	7	7	0	15,14,8,7,6,5,2,1		15,14,8,7,6,5,2,1	15,14,8,7,6,5,2,1			TRUE
+zebrafish_b	A	zebrafish	AB	retained	5	5	0	15,14,12,8,7,6,5,4,3,1		15,14,12,8,7,6,5,4,3,1	15,14,12,8,7,6,5,4,3,1			FALSE
+zebrafish_b	B	zebrafish	BB	retained	4	4	0	15,14,13,12,11,10,9,7,4,3,2		15,14,13,12,11,10,9,7,4,3,2	15,14,13,12,11,10,9,7,4,3,2			FALSE
+zebrafish_b	C	zebrafish	CB	retained	4	4	0	15,14,10,9,8,7,5,4,3,2,1		15,14,10,9,8,7,5,4,3,2,1	15,14,10,9,8,7,5,4,3,2,1			FALSE
+zebrafish_b	D	zebrafish	DB	cluster_not_retained	0	0	0						HoxDb is not retained in the Ensembl 116 zebrafish complement.	
+amphioxus	A	amphioxus	ancestral	retained	14	15	1	13	13				The ancestral amphioxus cluster is displayed under HOXA for layout only; Hox13 is a documented BraLan2 annotation gap and is not interpreted as biological absence.	FALSE
+amphioxus	B	amphioxus		structural_blank	0	0	0							
+amphioxus	C	amphioxus		structural_blank	0	0	0							
+amphioxus	D	amphioxus		structural_blank	0	0	0							

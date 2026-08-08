@@ -19,7 +19,7 @@ if (!dir.exists(file.path(repo_root, "inst"))) {
   repo_root <- normalizePath(getwd(), mustWork = TRUE)
 }
 
-required_packages <- c("jsonlite", "dplyr", "readr", "stringr")
+required_packages <- c("jsonlite", "dplyr", "readr", "stringr", "Biostrings")
 missing_packages <- required_packages[!vapply(required_packages, requireNamespace, logical(1), quietly = TRUE)]
 if (length(missing_packages) > 0L) {
   stop("Missing required R packages: ", paste(missing_packages, collapse = ", "), call. = FALSE)
@@ -95,6 +95,20 @@ read_json_url <- function(url, dest, force = FALSE) {
   jsonlite::read_json(dest, simplifyVector = FALSE)
 }
 
+nullable_character <- function(x) {
+  if (is.null(x) || length(x) == 0L || is.na(x[[1L]])) {
+    return(NA_character_)
+  }
+  as.character(x[[1L]])
+}
+
+nullable_integer <- function(x) {
+  if (is.null(x) || length(x) == 0L || is.na(x[[1L]])) {
+    return(NA_integer_)
+  }
+  as.integer(x[[1L]])
+}
+
 write_fasta <- function(name, sequence, path, width = 80L) {
   con <- file(path, open = "wt")
   on.exit(close(con), add = TRUE)
@@ -118,6 +132,7 @@ parse_ensembl_gene <- function(gene, species_row) {
 
   for (tx in transcripts) {
     exons <- tx$Exon %||% list()
+    translation <- tx$Translation %||% list()
     exon_ids <- vapply(exons, function(exon) exon$id %||% NA_character_, character(1))
     exon_ids <- exon_ids[!is.na(exon_ids)]
     exon_signature <- paste(exon_ids, collapse = "|")
@@ -139,6 +154,10 @@ parse_ensembl_gene <- function(gene, species_row) {
       transcript_end = as.integer(tx$end),
       strand = as.integer(tx$strand),
       exon_count = length(exons),
+      translation_id = nullable_character(translation$id),
+      protein_length = nullable_integer(translation$length),
+      translation_start = nullable_integer(translation$start),
+      translation_end = nullable_integer(translation$end),
       exon_signature = exon_signature,
       stringsAsFactors = FALSE
     )
@@ -584,6 +603,296 @@ annotate_link_regions <- function(links, unique_exons) {
   links
 }
 
+read_window_sequences <- function(windows) {
+  sequences <- lapply(seq_len(nrow(windows)), function(i) {
+    path <- file.path(out_dir, windows$fasta_file[[i]])
+    as.character(Biostrings::readDNAStringSet(path)[[1L]])
+  })
+  stats::setNames(sequences, windows$species)
+}
+
+extract_window_sequence <- function(sequence, window_start, start, end) {
+  rel_start <- as.integer(start - window_start + 1L)
+  rel_end <- as.integer(end - window_start + 1L)
+  if (rel_start < 1L || rel_end > nchar(sequence) || rel_start > rel_end) {
+    stop("Requested interval falls outside the downloaded genomic window.", call. = FALSE)
+  }
+  substring(sequence, rel_start, rel_end)
+}
+
+translate_codons <- function(codons) {
+  if (length(codons) == 0L) {
+    return(character())
+  }
+  as.character(Biostrings::translate(
+    Biostrings::DNAStringSet(codons),
+    if.fuzzy.codon = "X"
+  ))
+}
+
+make_transcript_exon_peptides <- function(tx_row, tx_exons, windows, window_sequences) {
+  protein_length <- tx_row$protein_length[[1L]]
+  if (is.na(protein_length) || protein_length <= 0L ||
+      is.na(tx_row$translation_start[[1L]]) || is.na(tx_row$translation_end[[1L]]) ||
+      nrow(tx_exons) == 0L) {
+    return(data.frame())
+  }
+
+  species_id <- tx_row$species[[1L]]
+  window <- windows[windows$species == species_id, , drop = FALSE]
+  if (nrow(window) != 1L || is.null(window_sequences[[species_id]])) {
+    stop("Missing downloaded sequence window for ", species_id, call. = FALSE)
+  }
+
+  strand <- tx_row$strand[[1L]]
+  cds_start <- min(tx_row$translation_start[[1L]], tx_row$translation_end[[1L]])
+  cds_end <- max(tx_row$translation_start[[1L]], tx_row$translation_end[[1L]])
+  if (strand >= 0L) {
+    tx_exons <- tx_exons[order(tx_exons$start, tx_exons$end), , drop = FALSE]
+  } else {
+    tx_exons <- tx_exons[order(-tx_exons$end, -tx_exons$start), , drop = FALSE]
+  }
+
+  bases <- character()
+  base_exon_id <- character()
+  base_exon_rank <- integer()
+  for (i in seq_len(nrow(tx_exons))) {
+    exon <- tx_exons[i, , drop = FALSE]
+    seg_start <- max(exon$start[[1L]], cds_start)
+    seg_end <- min(exon$end[[1L]], cds_end)
+    if (seg_start > seg_end) {
+      next
+    }
+
+    segment <- extract_window_sequence(
+      window_sequences[[species_id]],
+      window$window_start[[1L]],
+      seg_start,
+      seg_end
+    )
+    if (strand < 0L) {
+      segment <- reverse_complement(segment)
+    }
+    segment_bases <- strsplit(segment, "", fixed = TRUE)[[1L]]
+    bases <- c(bases, segment_bases)
+    base_exon_id <- c(base_exon_id, rep(exon$exon_id[[1L]], length(segment_bases)))
+    base_exon_rank <- c(base_exon_rank, rep(exon$exon_rank[[1L]], length(segment_bases)))
+  }
+
+  coding_nt <- min(length(bases), protein_length * 3L)
+  codon_count <- min(floor(coding_nt / 3L), protein_length)
+  if (codon_count == 0L) {
+    return(data.frame())
+  }
+
+  keep <- seq_len(codon_count * 3L)
+  bases <- bases[keep]
+  base_exon_id <- base_exon_id[keep]
+  base_exon_rank <- base_exon_rank[keep]
+  codon_starts <- seq.int(1L, length(bases), by = 3L)
+  codons <- vapply(codon_starts, function(i) {
+    paste0(bases[i:(i + 2L)], collapse = "")
+  }, character(1))
+  amino_acids <- translate_codons(codons)
+
+  codon_table <- data.frame(
+    exon_id = base_exon_id[codon_starts],
+    exon_rank = base_exon_rank[codon_starts],
+    aa_position = seq_along(amino_acids),
+    aa = amino_acids,
+    stringsAsFactors = FALSE
+  )
+
+  rows <- lapply(split(codon_table, codon_table$exon_id), function(df) {
+    data.frame(
+      species = species_id,
+      transcript_id = tx_row$transcript_id[[1L]],
+      transcript_name = tx_row$transcript_name[[1L]],
+      translation_id = tx_row$translation_id[[1L]],
+      protein_length = protein_length,
+      exon_id = df$exon_id[[1L]],
+      exon_rank = df$exon_rank[[1L]],
+      peptide_start_aa = min(df$aa_position),
+      peptide_end_aa = max(df$aa_position),
+      peptide_length_aa = nrow(df),
+      peptide = paste0(df$aa, collapse = ""),
+      stringsAsFactors = FALSE
+    )
+  })
+
+  out <- dplyr::bind_rows(rows)
+  exon_meta <- tx_exons |>
+    dplyr::select(
+      "species", "transcript_id", "exon_id", "seqname", "start", "end", "strand",
+      "selection_order", "exon_role", "present_in_all_selected_isoforms"
+    ) |>
+    dplyr::distinct()
+  out |>
+    dplyr::left_join(exon_meta, by = c("species", "transcript_id", "exon_id")) |>
+    dplyr::arrange(.data$species, .data$selection_order, .data$exon_rank)
+}
+
+make_exon_peptides <- function(selected, selected_exons, windows) {
+  window_sequences <- read_window_sequences(windows)
+  rows <- lapply(seq_len(nrow(selected)), function(i) {
+    tx <- selected[i, , drop = FALSE]
+    tx_exons <- selected_exons[
+      selected_exons$species == tx$species[[1L]] &
+        selected_exons$transcript_id == tx$transcript_id[[1L]],
+      ,
+      drop = FALSE
+    ]
+    make_transcript_exon_peptides(tx, tx_exons, windows, window_sequences)
+  })
+  dplyr::bind_rows(rows)
+}
+
+make_unique_exon_peptides <- function(exon_peptides, selected_unique_exons) {
+  unique_meta <- selected_unique_exons |>
+    dplyr::select(
+      "species", "gene_id", "gene_symbol", "exon_id", "seqname", "start", "end",
+      "strand", "genomic_exon_index", "exon_role", "present_in_all_selected_isoforms"
+    )
+  if (nrow(exon_peptides) == 0L) {
+    unique_meta$selected_coding_transcript_count <- 0L
+    unique_meta$peptide_variant_count <- 0L
+    unique_meta$peptide_length_aa <- NA_integer_
+    unique_meta$peptide <- NA_character_
+    return(unique_meta)
+  }
+
+  rows <- lapply(split(exon_peptides, paste(exon_peptides$species, exon_peptides$exon_id, sep = "\r")), function(df) {
+    peptide_values <- unique(df$peptide[!is.na(df$peptide) & nzchar(df$peptide)])
+    if (length(peptide_values) == 0L) {
+      representative <- NA_character_
+    } else {
+      representative <- peptide_values[order(-nchar(peptide_values), peptide_values)][[1L]]
+    }
+    data.frame(
+      species = df$species[[1L]],
+      exon_id = df$exon_id[[1L]],
+      selected_coding_transcript_count = length(unique(df$transcript_id)),
+      peptide_variant_count = length(peptide_values),
+      peptide_length_aa = ifelse(is.na(representative), NA_integer_, nchar(representative)),
+      peptide = representative,
+      stringsAsFactors = FALSE
+    )
+  })
+
+  dplyr::left_join(unique_meta, dplyr::bind_rows(rows), by = c("species", "exon_id")) |>
+    dplyr::mutate(
+      selected_coding_transcript_count = dplyr::coalesce(.data$selected_coding_transcript_count, 0L),
+      peptide_variant_count = dplyr::coalesce(.data$peptide_variant_count, 0L)
+    )
+}
+
+align_peptide_identity <- function(a, b) {
+  if (is.na(a) || is.na(b) || !nzchar(a) || !nzchar(b)) {
+    return(data.frame(
+      protein_aligned_aa = NA_integer_,
+      protein_identical_aa = NA_integer_,
+      protein_gap_aa = NA_integer_,
+      protein_identity = NA_real_
+    ))
+  }
+
+  a <- strsplit(a, "", fixed = TRUE)[[1L]]
+  b <- strsplit(b, "", fixed = TRUE)[[1L]]
+  n <- length(a)
+  m <- length(b)
+  score <- matrix(0L, nrow = n + 1L, ncol = m + 1L)
+  if (n > 0L) {
+    score[seq_len(n) + 1L, 1L] <- -seq_len(n)
+  }
+  if (m > 0L) {
+    score[1L, seq_len(m) + 1L] <- -seq_len(m)
+  }
+
+  for (i in seq_len(n)) {
+    for (j in seq_len(m)) {
+      diag_score <- score[i, j] + ifelse(a[[i]] == b[[j]], 1L, 0L)
+      up_score <- score[i, j + 1L] - 1L
+      left_score <- score[i + 1L, j] - 1L
+      score[i + 1L, j + 1L] <- max(diag_score, up_score, left_score)
+    }
+  }
+
+  i <- n
+  j <- m
+  aligned <- 0L
+  identical <- 0L
+  gaps <- 0L
+  while (i > 0L || j > 0L) {
+    if (i > 0L && j > 0L &&
+        score[i + 1L, j + 1L] == score[i, j] + ifelse(a[[i]] == b[[j]], 1L, 0L)) {
+      aligned <- aligned + 1L
+      identical <- identical + as.integer(a[[i]] == b[[j]])
+      i <- i - 1L
+      j <- j - 1L
+    } else if (i > 0L && score[i + 1L, j + 1L] == score[i, j + 1L] - 1L) {
+      aligned <- aligned + 1L
+      gaps <- gaps + 1L
+      i <- i - 1L
+    } else {
+      aligned <- aligned + 1L
+      gaps <- gaps + 1L
+      j <- j - 1L
+    }
+  }
+
+  data.frame(
+    protein_aligned_aa = aligned,
+    protein_identical_aa = identical,
+    protein_gap_aa = gaps,
+    protein_identity = round(100 * identical / aligned, 1),
+    stringsAsFactors = FALSE
+  )
+}
+
+make_exon_protein_identity <- function(exon_homology_ranked, unique_exon_peptides) {
+  if (nrow(exon_homology_ranked) == 0L || nrow(unique_exon_peptides) == 0L) {
+    return(data.frame())
+  }
+
+  human_peptides <- unique_exon_peptides |>
+    dplyr::filter(.data$species == "human") |>
+    dplyr::select(
+      human_exon_id = "exon_id",
+      human_peptide_length_aa = "peptide_length_aa",
+      human_peptide_variant_count = "peptide_variant_count",
+      human_coding_transcript_count = "selected_coding_transcript_count",
+      human_peptide = "peptide"
+    )
+  mouse_peptides <- unique_exon_peptides |>
+    dplyr::filter(.data$species == "mouse") |>
+    dplyr::select(
+      mouse_exon_id = "exon_id",
+      mouse_peptide_length_aa = "peptide_length_aa",
+      mouse_peptide_variant_count = "peptide_variant_count",
+      mouse_coding_transcript_count = "selected_coding_transcript_count",
+      mouse_peptide = "peptide"
+    )
+
+  out <- exon_homology_ranked |>
+    dplyr::left_join(human_peptides, by = "human_exon_id") |>
+    dplyr::left_join(mouse_peptides, by = "mouse_exon_id")
+  alignments <- dplyr::bind_rows(lapply(seq_len(nrow(out)), function(i) {
+    align_peptide_identity(out$human_peptide[[i]], out$mouse_peptide[[i]])
+  }))
+
+  dplyr::bind_cols(out, alignments) |>
+    dplyr::select(
+      "human_exon_id", "human_exon_index", "human_start", "human_end",
+      "mouse_exon_id", "mouse_exon_index", "mouse_start", "mouse_end",
+      "reciprocal_best", "human_exon_role", "mouse_exon_role",
+      "max_link_identity", "human_peptide_length_aa", "mouse_peptide_length_aa",
+      "protein_aligned_aa", "protein_identical_aa", "protein_gap_aa",
+      "protein_identity", "human_peptide_variant_count", "mouse_peptide_variant_count",
+      "human_coding_transcript_count", "mouse_coding_transcript_count",
+      "human_peptide", "mouse_peptide"
+    )
+}
+
 overlap_bp <- function(a_start, a_end, b_start, b_end) {
   pmax(0L, pmin(a_end, b_end) - pmax(a_start, b_start) + 1L)
 }
@@ -777,6 +1086,8 @@ windows <- dplyr::bind_rows(lapply(seq_len(nrow(species)), function(i) {
     three_prime_bp = three_prime_flank_bp
   )
 }))
+exon_peptides <- make_exon_peptides(selected, selected_exons, windows)
+unique_exon_peptides <- make_unique_exon_peptides(exon_peptides, selected_unique_exons)
 
 alignment <- run_lastz(windows)
 nuclinks <- make_nuclinks(alignment$paf, windows)
@@ -806,6 +1117,7 @@ if (nrow(exon_homology_ranked) > 0L) {
       by = "mouse_exon_id"
     )
 }
+exon_protein_identity <- make_exon_protein_identity(exon_homology_ranked, unique_exon_peptides)
 
 genes_meta <- genes |>
   dplyr::select(
@@ -831,9 +1143,12 @@ readr::write_tsv(selected, file.path(out_dir, "cd44_selected_isoforms.tsv"))
 readr::write_tsv(selected_exons, file.path(out_dir, "cd44_selected_exons.tsv"))
 readr::write_tsv(selected_unique_exons, file.path(out_dir, "cd44_selected_unique_exons.tsv"))
 readr::write_tsv(common_exons, file.path(out_dir, "cd44_common_exons.tsv"))
+readr::write_tsv(exon_peptides, file.path(out_dir, "cd44_exon_peptides.tsv"))
+readr::write_tsv(unique_exon_peptides, file.path(out_dir, "cd44_unique_exon_peptides.tsv"))
 readr::write_tsv(nuclinks, file.path(out_dir, "cd44_nuclinks_lastz.tsv"))
 readr::write_tsv(exon_homology, file.path(out_dir, "cd44_exon_homology_candidates.tsv"))
 readr::write_tsv(exon_homology_ranked, file.path(out_dir, "cd44_exon_homology_ranked.tsv"))
+readr::write_tsv(exon_protein_identity, file.path(out_dir, "cd44_exon_protein_identity.tsv"))
 
 write_selected_gff3(selected_exons, "human", file.path(out_dir, "annotations", "human.gff3"))
 write_selected_gff3(selected_exons, "mouse", file.path(out_dir, "annotations", "mouse.gff3"))
@@ -895,6 +1210,10 @@ readme <- c(
   "- `cd44_selected_exons.tsv`: plot-ready exon intervals for those isoforms.",
   "- `cd44_selected_unique_exons.tsv`: unique exon intervals in the selected isoforms.",
   "- `cd44_common_exons.tsv`: exons present in all selected isoforms per species.",
+  "- `cd44_exon_peptides.tsv`: translated peptide fragments assigned to selected",
+  "  transcript exons by coding-frame codon start.",
+  "- `cd44_unique_exon_peptides.tsv`: representative peptide fragment per selected",
+  "  unique exon.",
   paste0(
     "- `cd44_nuclinks_lastz.tsv`: LASTZ-derived genomic interval links retained at ",
     "alignment length >= ", lastz_min_len, " bp and identity >= ", lastz_min_identity,
@@ -904,6 +1223,8 @@ readme <- c(
   "  between LASTZ blocks and Ensembl exons.",
   "- `cd44_exon_homology_ranked.tsv`: one row per exon-pair candidate with",
   "  reciprocal-best ranks and common/variable exon flags.",
+  "- `cd44_exon_protein_identity.tsv`: per-exon peptide identity for the ranked",
+  "  exon-pair candidates.",
   "- `annotations/*.gff3`: compact selected-transcript GFF3 files.",
   "- `sequences/*.fa`: genomic DNA windows used for LASTZ.",
   "- `cd44_provenance.tsv`: source URLs and local command provenance."

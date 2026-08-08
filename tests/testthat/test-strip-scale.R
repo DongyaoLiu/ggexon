@@ -19,6 +19,10 @@ test_that("strip_scale_x() returns the new spec and strip_scale() wraps it", {
 
   no_guide <- strip_scale_x(guide = "none")
   expect_identical(no_guide$guide, "none")
+
+  template <- strip_scale_x(slot_order = c("Hox3", "Hox2", "Hox1"))
+  expect_true(template$template_active)
+  expect_identical(template$slot_order, c("Hox3", "Hox2", "Hox1"))
 })
 
 test_that("strip_scale_x() validates homology and ratios", {
@@ -31,8 +35,252 @@ test_that("strip_scale_x() validates homology and ratios", {
   expect_error(strip_scale_x(homo_align = c("A", "B")), "single reference")
   expect_error(strip_scale_x(reference_track = c("A", "B")), "single non-empty")
   expect_error(strip_scale_x(reference_track = "ref", homo_align = "ref"), "only one")
+  expect_error(strip_scale_x(slot_order = character()), "slot_order")
+  expect_error(strip_scale_x(slot_order = c("A", "A")), "slot_order")
+  expect_error(strip_scale_x(slot_order = c("A", NA_character_)), "slot_order")
+  expect_error(strip_scale_x(slot_order = "A", reference_track = "ref"), "only one")
   expect_error(strip_scale_x(gene_order = "reference"), "requires")
   expect_error(strip_scale_x(guide = "ticks"), "should be one of")
+})
+
+test_that("strip_scale_x() maps gene-box anchors to exact synthetic slots", {
+  genes <- data.frame(
+    track = c("A", "A", "B", "B", "B"),
+    species = factor(c("A", "A", "B", "B", "B"), levels = c("A", "B")),
+    cluster = factor("cluster", levels = "cluster"),
+    x = c(100, 900, 20, 40, 500),
+    y = 1,
+    strand = "+",
+    gene_key = c("a15", "a1", "b13a", "b13b", "b1"),
+    slot = c("Hox15", "Hox1", "Hox13", "Hox13", "Hox1"),
+    stringsAsFactors = FALSE
+  )
+  slot_order <- c("Hox15", "Hox14", "Hox13", "Hox1")
+
+  p <- ggexon() +
+    geom_genebox(data = genes) +
+    strip_scale_x(slot_order = slot_order, guide = "none") +
+    ggplot2::facet_grid(
+      rows = ggplot2::vars(species),
+      cols = ggplot2::vars(cluster),
+      drop = FALSE
+    )
+  built <- ggexon_build(p)
+  transform <- built@layout$strip_scale_x_transform
+  plotted <- built@data[[1L]]
+
+  expect_equal(transform$plot_anchor, match(transform$slot, slot_order))
+  expect_equal(plotted$x, match(plotted$slot, slot_order))
+  expect_equal(plotted$genomic_x, genes$x)
+  expect_equal(unique(plotted$x[plotted$slot == "Hox13"]), 3)
+  expect_false(any(transform$slot == "Hox14"))
+  expect_equal(built@layout$strip_scale_x_limits, c(0.5, 4.5))
+  expect_s3_class(ggplot2::ggplotGrob(p), "gtable")
+})
+
+test_that("strip_scale_x() shares one inventory across overlaid gene layers", {
+  genes <- data.frame(
+    track = "A",
+    xmin = c(100, 300),
+    xmax = c(200, 400),
+    x = c(150, 350),
+    y = 1,
+    strand = "+",
+    gene_key = c("g1", "g2"),
+    label = c("g1", "g2"),
+    stringsAsFactors = FALSE
+  )
+
+  p <- ggexon() +
+    geom_genetag(data = genes, show_label = FALSE) +
+    geom_genebox(data = genes) +
+    strip_scale_x(gene_gap_ratio = 3, guide = "none") +
+    facet_genomics(ggplot2::vars(track), scales = "free_x")
+  built <- ggexon_build(p)
+  transform <- built@layout$strip_scale_x_transform
+  gene_transform <- transform[transform$region_type == "gene", , drop = FALSE]
+
+  expect_equal(gene_transform$gene_key, c("g1", "g2"))
+  expect_equal(gene_transform$plot_end - gene_transform$plot_start, c(3, 3))
+  expect_equal(lengths(strsplit(gene_transform$source_keys, ",", fixed = TRUE)), c(2L, 2L))
+  expect_equal(
+    (built@data[[1L]]$xmin + built@data[[1L]]$xmax) / 2,
+    built@data[[2L]]$x
+  )
+})
+
+test_that("exact template mode preserves raw genomic provenance across x transforms", {
+  genes <- data.frame(
+    track = "scaled",
+    x = c(100, 1000),
+    genomic_x = c(101, NA_real_),
+    y = 1,
+    strand = "+",
+    gene_key = c("scaled_hox2", "scaled_hox1"),
+    slot = c("Hox2", "Hox1"),
+    stringsAsFactors = FALSE
+  )
+
+  p <- ggexon() +
+    geom_genebox(data = genes) +
+    strip_scale_x(slot_order = c("Hox2", "Hox1"), guide = "none") +
+    facet_genomics(ggplot2::vars(track), scales = "free_x") +
+    ggplot2::scale_x_log10()
+  built <- ggexon_build(p)
+
+  expect_equal(built@data[[1L]]$x, c(1, 2))
+  expect_equal(built@data[[1L]]$genomic_x, c(101, 1000))
+  expect_equal(
+    built@layout$strip_scale_x_transform$genomic_anchor,
+    log10(genes$x)
+  )
+  expect_false(any(startsWith(
+    names(built@data[[1L]]),
+    .strip_scale_raw_marker_prefix
+  )))
+})
+
+test_that("exact template direction is independent of x-scale reversal", {
+  genes <- data.frame(
+    track = "A",
+    x = c(100, 900),
+    y = 1,
+    strand = "+",
+    gene_key = c("g2", "g1"),
+    slot = c("Hox2", "Hox1"),
+    stringsAsFactors = FALSE
+  )
+
+  make_plot <- function(reverse = FALSE) {
+    p <- ggexon() +
+      geom_genebox(data = genes) +
+      strip_scale_x(slot_order = c("Hox2", "Hox1"), guide = "none") +
+      facet_genomics(ggplot2::vars(track), scales = "free_x")
+    if (isTRUE(reverse)) p <- p + ggplot2::scale_x_reverse()
+    p
+  }
+  normal <- ggexon_build(make_plot())
+  reversed <- ggexon_build(make_plot(TRUE))
+
+  expect_equal(
+    reversed@data[[1L]]$strip_x_direction,
+    normal@data[[1L]]$strip_x_direction
+  )
+  expect_equal(unique(reversed@data[[1L]]$strip_x_direction), 1)
+  expect_equal(
+    .genebox_x_orientation(
+      reversed@layout$panel_params[[1L]],
+      reversed@layout$coord
+    ) * reversed@data[[1L]]$strip_x_direction,
+    c(-1, -1)
+  )
+})
+
+test_that("exact template mode passes slot through geom_genetag", {
+  gene_tags <- data.frame(
+    track = "tag_track",
+    xmin = c(100, 300),
+    xmax = c(200, 400),
+    y = 1,
+    strand = "+",
+    gene_key = c("tag_hox2", "tag_hox1"),
+    slot = c("Hox2", "Hox1"),
+    stringsAsFactors = FALSE
+  )
+  tag_layer <- geom_genetag(data = gene_tags, show_label = FALSE)
+
+  expect_true("slot" %in% names(tag_layer$mapping))
+  expect_true("slot" %in% GeomGeneTag$syn_default_aes)
+
+  p <- ggexon() +
+    tag_layer +
+    strip_scale_x(slot_order = c("Hox2", "Hox1"), guide = "none") +
+    facet_genomics(ggplot2::vars(track), scales = "free_x")
+  built <- ggexon_build(p)
+  plotted <- built@data[[1L]]
+
+  expect_equal(plotted$slot, gene_tags$slot)
+  expect_equal((plotted$xmin + plotted$xmax) / 2, c(1, 2))
+})
+
+test_that("exact template direction warns once for underdetermined tracks", {
+  genes <- data.frame(
+    track = c("single", rep("zero_correlation", 3)),
+    x = c(100, 10, 20, 30),
+    y = 1,
+    strand = "+",
+    gene_key = c("single", "zero_a", "zero_b", "zero_c"),
+    slot = c("Hox1", "Hox1", "Hox2", "Hox1"),
+    stringsAsFactors = FALSE
+  )
+  p <- ggexon() +
+    geom_genebox(data = genes) +
+    strip_scale_x(slot_order = c("Hox1", "Hox2"), guide = "none") +
+    facet_genomics(ggplot2::vars(track), scales = "free_x")
+
+  warnings <- character()
+  built <- withCallingHandlers(
+    ggexon_build(p),
+    warning = function(cnd) {
+      warnings <<- c(warnings, conditionMessage(cnd))
+      invokeRestart("muffleWarning")
+    }
+  )
+
+  expect_length(warnings, 1L)
+  expect_match(warnings, "could not infer template direction")
+  expect_match(warnings, "fewer than two distinct anchors or slots")
+  expect_match(warnings, "zero or undefined rank correlation")
+  expect_equal(unique(built@data[[1L]]$strip_x_direction), 1)
+})
+
+test_that("exact template slots are independent of selected genomic anchor", {
+  anchors <- data.frame(
+    track = c("start", "middle", "end"),
+    x = c(101, 250, 399),
+    y = 1,
+    strand = "+",
+    gene_key = c("g_start", "g_middle", "g_end"),
+    slot = "Hox1",
+    anchor_mode = c("start", "middle", "end"),
+    stringsAsFactors = FALSE
+  )
+  p <- ggexon() +
+    geom_genebox(data = anchors) +
+    strip_scale_x(slot_order = c("Hox2", "Hox1"), guide = "none") +
+    facet_genomics(ggplot2::vars(track), scales = "free_x")
+  built <- NULL
+  expect_warning(
+    built <- ggexon_build(p),
+    "could not infer template direction for 3 panel/track group"
+  )
+
+  expect_equal(built@data[[1L]]$x, rep(2, 3))
+  expect_equal(built@data[[1L]]$genomic_x, anchors$x)
+
+  reverse_track <- data.frame(
+    track = "reverse",
+    x = c(900, 100),
+    y = 1,
+    strand = "+",
+    gene_key = c("reverse_hox2", "reverse_hox1"),
+    slot = c("Hox2", "Hox1"),
+    stringsAsFactors = FALSE
+  )
+  reverse_plot <- ggexon() +
+    geom_genebox(data = reverse_track) +
+    strip_scale_x(slot_order = c("Hox2", "Hox1"), guide = "none") +
+    facet_genomics(ggplot2::vars(track), scales = "free_x")
+  reverse_built <- ggexon_build(reverse_plot)
+  expect_equal(reverse_built@data[[1L]]$strip_x_direction, c(-1, -1))
+
+  bad <- anchors[1L, , drop = FALSE]
+  bad$slot <- "Hox9"
+  bad_plot <- ggexon() +
+    geom_genebox(data = bad) +
+    strip_scale_x(slot_order = c("Hox2", "Hox1"), guide = "none") +
+    facet_genomics(ggplot2::vars(track), scales = "free_x")
+  expect_error(ggexon_build(bad_plot), "absent from `slot_order`")
 })
 
 test_that("strip_scale_x() requires geom_genetag()", {
@@ -419,7 +667,7 @@ test_that("strip_scale_x(gene_order = 'reference') groups duplicate homologs", {
   ))
 })
 
-test_that("strip_scale_x() keeps offtrack homologs out of species-specific collapse", {
+test_that("strip_scale_x() accepts character homology_hit for offtrack homologs", {
   gene_tags <- data.frame(
     track = c("ref", "ref", "qry", "qry", "qry"),
     xmin = c(1, 10, 1, 4, 10),
@@ -431,7 +679,7 @@ test_that("strip_scale_x() keeps offtrack homologs out of species-specific colla
     gene_key = c("A", "B", "s1", "off", "s2"),
     label = c("A", "B", "s1", "off", "s2"),
     reference_gene = c(NA, NA, NA, "Z", NA),
-    homology_hit = c(FALSE, FALSE, FALSE, TRUE, FALSE),
+    homology_hit = c("FALSE", "FALSE", "FALSE", "TRUE", "FALSE"),
     stringsAsFactors = FALSE
   )
 

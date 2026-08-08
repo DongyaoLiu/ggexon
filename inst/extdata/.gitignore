@@ -1,6 +1,8 @@
 *
 !.gitignore
-!hoxa_ensembl115/
-!hoxa_ensembl115/**
 !cd44_pairwise_ensembl116/
 !cd44_pairwise_ensembl116/**
+!hox_cluster_expansion/
+!hox_cluster_expansion/**
+!cox1_yeast_pairwise/
+!cox1_yeast_pairwise/**

@@ -44,6 +44,21 @@ apply_panel_xlim_to_trained_scales <- function(layout) {
   # which collapses the custom strip-scale guide and can turn the gene tags
   # into NAs during the final position mapping.
   if (!is.null(layout$strip_scale_x_transform)) {
+    limits <- layout$strip_scale_x_limits %||% NULL
+    if (is.numeric(limits) && length(limits) == 2L && all(is.finite(limits)) &&
+        !is.null(layout$panel_scales_x) && length(layout$panel_scales_x) > 0L) {
+      scale_ids <- if (is.data.frame(layout$layout) && "SCALE_X" %in% names(layout$layout)) {
+        unique(as.integer(layout$layout$SCALE_X))
+      } else {
+        seq_along(layout$panel_scales_x)
+      }
+      scale_ids <- scale_ids[is.finite(scale_ids) & scale_ids >= 1L &
+        scale_ids <= length(layout$panel_scales_x)]
+      for (scale_id in scale_ids) {
+        current <- layout$panel_scales_x[[scale_id]]$range$range %||% numeric()
+        layout$panel_scales_x[[scale_id]]$range$range <- range(c(current, limits), na.rm = TRUE)
+      }
+    }
     return(layout)
   }
 
@@ -425,6 +440,15 @@ build_ggexon <- S7::method(ggexon_build, class_ggexon) <- function(plot, ...) {
     plot@labels <- ggplot2:::setup_plot_labels(plot, layers, data)
     data <- .ignore_data(data)
 
+    exact_strip_template <- inherits(plot@strip_scale, "ggexon_strip_scale_x_spec") &&
+      isTRUE(plot@strip_scale$template_active)
+    if (exact_strip_template) {
+      # Keep an unscaled audit copy separate from the transformed-coordinate
+      # markers saved below. Scale transformations must still affect the x
+      # values restored for geom setup and strip-layout calculations.
+      data <- .strip_scale_save_raw_genomic_x(data)
+    }
+
     # Transform all data table in the list 'data', globally not layer specific. I should learn this project ggnewscale
     data <- lapply(data, scales$transform_df)
 
@@ -475,6 +499,9 @@ build_ggexon <- S7::method(ggexon_build, class_ggexon) <- function(plot, ...) {
       }
       data <- strip_scaled$data
       layout <- strip_scaled$layout
+      if (exact_strip_template) {
+        data <- .strip_scale_restore_raw_genomic_x(data)
+      }
     }
     # Apply position adjustments
     data <- by_layer(function(l, d) l$compute_position(d, layout), layers, data, "computing position")
@@ -1852,6 +1879,35 @@ layer_grob <- get_layer_grob
     df
   })
 }
+
+.strip_scale_raw_marker_prefix <- "..ggexon_strip_raw__"
+
+.strip_scale_raw_marker <- function(column) {
+  paste0(.strip_scale_raw_marker_prefix, column)
+}
+
+# Save raw position/provenance columns before ggplot2 applies scale
+# transformations. These deliberately use non-aesthetic marker names so an x
+# scale cannot transform them along with x/xmin/xmax.
+.strip_scale_save_raw_genomic_x <- function(data) {
+  x_cols <- c("xmin", "xmax", "x", "xend", "xintercept")
+  provenance_cols <- paste0("genomic_", x_cols)
+  lapply(data, function(df) {
+    if (!is.data.frame(df)) return(df)
+    for (col in intersect(c(x_cols, provenance_cols), names(df))) {
+      marker <- .strip_scale_raw_marker(col)
+      if (marker %in% names(df)) {
+        stop(
+          "Internal strip-scale marker column already exists: `", marker, "`.",
+          call. = FALSE
+        )
+      }
+      df[[marker]] <- df[[col]]
+    }
+    df
+  })
+}
+
 .strip_scale_restore_genomic_x <- function(data) {
   x_cols <- c("xmin", "xmax", "x", "xend", "xintercept")
   lapply(data, function(df) {
@@ -1867,6 +1923,39 @@ layer_grob <- get_layer_grob
         df[[gcol]] <- NULL
       }
     }
+    df
+  })
+}
+
+# Exact-template output should expose raw genomic provenance even when its x
+# scale has a transformation. Prefer an explicitly supplied genomic_* column;
+# otherwise derive provenance from the corresponding raw position aesthetic.
+# The regular .gx_* restore above remains responsible for transformed x values.
+.strip_scale_restore_raw_genomic_x <- function(data) {
+  x_cols <- c("xmin", "xmax", "x", "xend", "xintercept")
+  lapply(data, function(df) {
+    if (!is.data.frame(df)) return(df)
+    for (col in x_cols) {
+      genomic_col <- paste0("genomic_", col)
+      if (!genomic_col %in% names(df)) next
+      genomic_marker <- .strip_scale_raw_marker(genomic_col)
+      position_marker <- .strip_scale_raw_marker(col)
+      if (genomic_marker %in% names(df)) {
+        raw_genomic <- df[[genomic_marker]]
+        if (position_marker %in% names(df)) {
+          use_position <- is.na(raw_genomic)
+          if (is.numeric(raw_genomic)) {
+            use_position <- use_position | !is.finite(raw_genomic)
+          }
+          raw_genomic[use_position] <- df[[position_marker]][use_position]
+        }
+        df[[genomic_col]] <- raw_genomic
+      } else if (position_marker %in% names(df)) {
+        df[[genomic_col]] <- df[[position_marker]]
+      }
+    }
+    marker_cols <- startsWith(names(df), .strip_scale_raw_marker_prefix)
+    df[marker_cols] <- NULL
     df
   })
 }

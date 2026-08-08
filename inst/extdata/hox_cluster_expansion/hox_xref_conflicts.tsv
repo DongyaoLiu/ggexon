@@ -1,0 +1,2 @@
+species	gene_id	transcript_id	protein_id	xref_conflict_flag	conflicting_xref_database	conflicting_xref_id	conflicting_xref_label	retained_assignment	retained_assignment_support	xref_conflict_note
+gar	ENSLOCG00000011801	ENSLOCT00000014553	ENSLOCP00000014524	TRUE	UniProt/TrEMBL	W5N1L5.67	Homeobox A4a	HoxA3	Ensembl_gene_and_transcript;ZFIN;RefSeq;cluster_collinearity;Hox3_like_homeodomain	Ensembl gene/transcript, ZFIN, RefSeq, cluster position, and a Hox3-like homeodomain support HoxA3a; UniProt/TrEMBL W5N1L5.67 conflicts by labelling the same translation Homeobox A4a.

@@ -1,0 +1,23 @@
+key	value
+pombase_gff3	https://www.pombase.org/data/genome_sequence_and_features/gff3/Schizosaccharomyces_pombe_all_chromosomes.gff3.gz
+pombase_sequence	https://www.pombase.org/data/genome_sequence_and_features/genome_sequence/Schizosaccharomyces_pombe_all_chromosomes.fa.gz
+pombase_orthologs	https://www.pombase.org/data/orthologs/pombe-cerevisiae-orthologs.tsv
+sgd_features	https://downloads.yeastgenome.org/curation/chromosomal_feature/SGD_features.tab
+sgd_mitochondrial_sequence	https://downloads.yeastgenome.org/sequence/S288C_reference/chromosomes/fasta/chrmt.fsa
+pombase_gff3_md5	f5a0d20c5cadb6bea40e75baeb0b70bc
+pombase_sequence_md5	c8c2dc8a938bbb696a7dc278fa3a7036
+pombase_orthologs_md5	7ee23734c98d56f4be51fa825e9c6a60
+sgd_features_md5	b47ebb0c7b434cbfdc5018a22612e3d9
+sgd_mitochondrial_sequence_md5	18ec53fa2d1ba4fd1d4fd78381f11b2c
+pombase_gff3_retrieved_on	2026-07-09
+pombase_sequence_retrieved_on	2026-07-09
+pombase_orthologs_retrieved_on	2026-07-09
+sgd_features_retrieved_on	2026-07-09
+sgd_mitochondrial_sequence_retrieved_on	2026-07-09
+ortholog_mapping	SPMIT.01 -> Q0045
+window_padding_bp	500
+lastz_min_alignment_length	40
+lastz_min_identity	50
+lastz_binary	lastz
+lastz_command	lastz fission_yeast_cox1_window.fa budding_yeast_cox1_window.fa --strand=both --chain --format=paf:minimap2 --output=cox1_lastz.paf
+rscript	R 4.4.1
