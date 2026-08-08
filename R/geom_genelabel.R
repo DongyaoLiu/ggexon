@@ -156,6 +156,7 @@
 
 
 GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
+  ggexon_panel_role = "annotation",
   required_aes = c("ymin", "xmin", "xmax", "transcripts", "strand", "track", "label"),
   non_missing_aes = "angle",
   default_aes = aes(

@@ -120,6 +120,11 @@ xz <- add_annotation(
 )
 ```
 
+`SynBigWigAnnotation` keeps the BigWig path as an attached annotation
+layer; the signal is queried only when a genomic region is requested.
+This keeps queries immutable: asking for signal returns ranges and does
+not modify the attached object.
+
 ### Alignment, homology, and layout classes
 
 Comparative relationships and cross-species gene mappings are stored at
@@ -726,7 +731,32 @@ links <- pairwise_alignment_data(
 )
 ```
 
+For an attached BigWig layer,
+[`query_annotation()`](https://dongyaoliu.github.io/ggexon/reference/query_annotation.md)
+is the generic region-query interface and takes a length-one `GRanges`.
+[`query_signal()`](https://dongyaoliu.github.io/ggexon/reference/query_signal.md)
+is the typed shortcut that accepts chromosome and coordinates. Both
+calls return the same interval-native signal ranges with raw `score`
+metadata; they do not alter the annotation object or expand intervals to
+per-base rows.
+
+``` r
+
+region <- GenomicRanges::GRanges(
+  "I",
+  IRanges::IRanges(2332338L, 2373985L)
+)
+query_annotation(get_annotation(xz, "coverage"), region)
+query_signal(
+  get_annotation(xz, "coverage"),
+  chr = "I",
+  start = 2332338L,
+  end = 2373985L
+)
+```
+
 Other data verbs include
+[`query_annotation()`](https://dongyaoliu.github.io/ggexon/reference/query_annotation.md),
 [`query_variants()`](https://dongyaoliu.github.io/ggexon/reference/query_variants.md),
 [`query_signal()`](https://dongyaoliu.github.io/ggexon/reference/query_signal.md),
 [`query_domains()`](https://dongyaoliu.github.io/ggexon/reference/query_domains.md),

@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>CD44 Splice Variant Alignment Demo • ggexon</title>
 <script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_3-0.4.10/font.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_3-0.4.10/font.css" rel="stylesheet">
 <link href="../deps/Source_Code_Pro-0.4.10/font.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
@@ -35,8 +35,9 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-tutorials" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Tutorials</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-tutorials">
 <li><a class="dropdown-item" href="../articles/ggexon-workflow.html">Complete workflow</a></li>
-    <li><a class="dropdown-item" href="../articles/hoxa-ensembl115-demo.html">HOXA synteny demo</a></li>
+    <li><a class="dropdown-item" href="../articles/hox-cluster-expansion-demo.html">HOX cluster expansion</a></li>
     <li><a class="dropdown-item" href="../articles/cd44-splice-variants-demo.html">CD44 splice variant alignment</a></li>
+    <li><a class="dropdown-item" href="../articles/bigwig-coverage-demo.html">PEEL-1 raw BigWig coverage</a></li>
     <li><a class="dropdown-item" href="../articles/ggexon-classes-and-verbs.html">Classes, geoms, facets, and guides</a></li>
   </ul>
 </li>
@@ -63,7 +64,7 @@
       <h1>CD44 Splice Variant Alignment Demo</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/DongyaoLiu/ggexon/blob/main/vignettes/cd44-splice-variants-demo.Rmd" class="external-link"><code>vignettes/cd44-splice-variants-demo.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/DongyaoLiu/ggexon/blob/HEAD/vignettes/cd44-splice-variants-demo.Rmd" class="external-link"><code>vignettes/cd44-splice-variants-demo.Rmd</code></a></small>
       <div class="d-none name"><code>cd44-splice-variants-demo.Rmd</code></div>
     </div>
 
@@ -487,6 +488,145 @@ consecutive run of variable selected exons.</p>
 </tr>
 </tbody>
 </table>
+<p>The same exon-pair candidates can be summarized at the protein level.
+Peptide fragments are reconstructed from selected transcript CDS codons
+and assigned to the exon containing each codon start. Protein identity
+below uses a global peptide alignment; the denominator is aligned
+amino-acid columns, including gap columns.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">protein_identity</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.delim</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">demo_dir</span>, <span class="st">"cd44_exon_protein_identity.tsv"</span><span class="op">)</span>,</span>
+<span>  check.names <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">protein_identity_table</span> <span class="op">&lt;-</span> <span class="va">protein_identity</span><span class="op">[</span></span>
+<span>  <span class="va">protein_identity</span><span class="op">$</span><span class="va">reciprocal_best</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    <span class="st">"human_exon_index"</span>, <span class="st">"mouse_exon_index"</span>,</span>
+<span>    <span class="st">"human_exon_role"</span>, <span class="st">"mouse_exon_role"</span>,</span>
+<span>    <span class="st">"max_link_identity"</span>,</span>
+<span>    <span class="st">"human_peptide_length_aa"</span>, <span class="st">"mouse_peptide_length_aa"</span>,</span>
+<span>    <span class="st">"protein_identical_aa"</span>, <span class="st">"protein_aligned_aa"</span>, <span class="st">"protein_gap_aa"</span>,</span>
+<span>    <span class="st">"protein_identity"</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">]</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">protein_identity_table</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>  <span class="st">"Human exon"</span>, <span class="st">"Mouse exon"</span>,</span>
+<span>  <span class="st">"Human role"</span>, <span class="st">"Mouse role"</span>,</span>
+<span>  <span class="st">"Genomic identity (%)"</span>,</span>
+<span>  <span class="st">"Human peptide aa"</span>, <span class="st">"Mouse peptide aa"</span>,</span>
+<span>  <span class="st">"Identical aa"</span>, <span class="st">"Aligned aa"</span>, <span class="st">"Gap aa"</span>,</span>
+<span>  <span class="st">"Protein identity (%)"</span></span>
+<span><span class="op">)</span></span>
+<span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">protein_identity_table</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<table class="table">
+<colgroup>
+<col width="7%">
+<col width="7%">
+<col width="7%">
+<col width="7%">
+<col width="13%">
+<col width="11%">
+<col width="11%">
+<col width="8%">
+<col width="7%">
+<col width="4%">
+<col width="13%">
+</colgroup>
+<thead><tr class="header">
+<th align="right">Human exon</th>
+<th align="right">Mouse exon</th>
+<th align="left">Human role</th>
+<th align="left">Mouse role</th>
+<th align="right">Genomic identity (%)</th>
+<th align="right">Human peptide aa</th>
+<th align="right">Mouse peptide aa</th>
+<th align="right">Identical aa</th>
+<th align="right">Aligned aa</th>
+<th align="right">Gap aa</th>
+<th align="right">Protein identity (%)</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">19</td>
+<td align="left">variable</td>
+<td align="left">common</td>
+<td align="right">56.099</td>
+<td align="right">23</td>
+<td align="right">27</td>
+<td align="right">20</td>
+<td align="right">27</td>
+<td align="right">4</td>
+<td align="right">74.1</td>
+</tr>
+<tr class="even">
+<td align="right">3</td>
+<td align="right">18</td>
+<td align="left">common</td>
+<td align="left">common</td>
+<td align="right">54.681</td>
+<td align="right">55</td>
+<td align="right">55</td>
+<td align="right">47</td>
+<td align="right">55</td>
+<td align="right">0</td>
+<td align="right">85.5</td>
+</tr>
+<tr class="odd">
+<td align="right">6</td>
+<td align="right">15</td>
+<td align="left">common</td>
+<td align="left">common</td>
+<td align="right">53.681</td>
+<td align="right">77</td>
+<td align="right">74</td>
+<td align="right">42</td>
+<td align="right">78</td>
+<td align="right">5</td>
+<td align="right">53.8</td>
+</tr>
+<tr class="even">
+<td align="right">16</td>
+<td align="right">5</td>
+<td align="left">variable</td>
+<td align="left">variable</td>
+<td align="right">59.102</td>
+<td align="right">68</td>
+<td align="right">69</td>
+<td align="right">32</td>
+<td align="right">69</td>
+<td align="right">1</td>
+<td align="right">46.4</td>
+</tr>
+<tr class="odd">
+<td align="right">19</td>
+<td align="right">2</td>
+<td align="left">common</td>
+<td align="left">common</td>
+<td align="right">53.880</td>
+<td align="right">26</td>
+<td align="right">26</td>
+<td align="right">25</td>
+<td align="right">26</td>
+<td align="right">0</td>
+<td align="right">96.2</td>
+</tr>
+<tr class="even">
+<td align="right">20</td>
+<td align="right">1</td>
+<td align="left">common</td>
+<td align="left">common</td>
+<td align="right">59.770</td>
+<td align="right">67</td>
+<td align="right">67</td>
+<td align="right">60</td>
+<td align="right">67</td>
+<td align="right">0</td>
+<td align="right">89.6</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section level2">
 <h2 id="reusing-the-pattern">Reusing the pattern<a class="anchor" aria-label="anchor" href="#reusing-the-pattern"></a>
@@ -516,7 +656,7 @@ and exon-homology candidate tables.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

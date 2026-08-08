@@ -5,7 +5,7 @@
 \alias{GeomGeneBox}
 \title{Gene-box geom}
 \format{
-An object of class \code{GeomGeneBox} (inherits from \code{Geom}, \code{ggproto}, \code{gg}) of length 11.
+An object of class \code{GeomGeneBox} (inherits from \code{Geom}, \code{ggproto}, \code{gg}) of length 12.
 }
 \usage{
 GeomGeneBox

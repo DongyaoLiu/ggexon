@@ -311,6 +311,50 @@ knitr::kable(region_summary)
 | variable exon-rich middle | 3 | 14714 | 55.4 |
 | 3’ side | 5 | 16851 | 56.4 |
 
+The same exon-pair candidates can be summarized at the protein level.
+Peptide fragments are reconstructed from selected transcript CDS codons
+and assigned to the exon containing each codon start. Protein identity
+below uses a global peptide alignment; the denominator is aligned
+amino-acid columns, including gap columns.
+
+``` r
+
+protein_identity <- read.delim(
+  file.path(demo_dir, "cd44_exon_protein_identity.tsv"),
+  check.names = FALSE
+)
+
+protein_identity_table <- protein_identity[
+  protein_identity$reciprocal_best,
+  c(
+    "human_exon_index", "mouse_exon_index",
+    "human_exon_role", "mouse_exon_role",
+    "max_link_identity",
+    "human_peptide_length_aa", "mouse_peptide_length_aa",
+    "protein_identical_aa", "protein_aligned_aa", "protein_gap_aa",
+    "protein_identity"
+  )
+]
+names(protein_identity_table) <- c(
+  "Human exon", "Mouse exon",
+  "Human role", "Mouse role",
+  "Genomic identity (%)",
+  "Human peptide aa", "Mouse peptide aa",
+  "Identical aa", "Aligned aa", "Gap aa",
+  "Protein identity (%)"
+)
+knitr::kable(protein_identity_table, row.names = FALSE)
+```
+
+| Human exon | Mouse exon | Human role | Mouse role | Genomic identity (%) | Human peptide aa | Mouse peptide aa | Identical aa | Aligned aa | Gap aa | Protein identity (%) |
+|---:|---:|:---|:---|---:|---:|---:|---:|---:|---:|---:|
+| 1 | 19 | variable | common | 56.099 | 23 | 27 | 20 | 27 | 4 | 74.1 |
+| 3 | 18 | common | common | 54.681 | 55 | 55 | 47 | 55 | 0 | 85.5 |
+| 6 | 15 | common | common | 53.681 | 77 | 74 | 42 | 78 | 5 | 53.8 |
+| 16 | 5 | variable | variable | 59.102 | 68 | 69 | 32 | 69 | 1 | 46.4 |
+| 19 | 2 | common | common | 53.880 | 26 | 26 | 25 | 26 | 0 | 96.2 |
+| 20 | 1 | common | common | 59.770 | 67 | 67 | 60 | 67 | 0 | 89.6 |
+
 ## Reusing the pattern
 
 For splice-variant comparisons, keep the biological feature colors on

@@ -1394,6 +1394,8 @@ strip_scale_x_flatten_genetag_lanes <- function(data, layers, tag_layers) {
     df$y <- exon_height / 2
     df$ymin <- df$y - exon_height / 2
     df$ymax <- df$y + exon_height / 2
+    df$.ggexon_body_ymin <- df$ymin
+    df$.ggexon_body_ymax <- df$ymax
     df$gene_lane <- 1L
     df$gene_lane_count <- 1L
     df$gene_layout <- "single"

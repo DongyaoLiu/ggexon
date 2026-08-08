@@ -333,7 +333,8 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
         vars = vars,
         free = params$free,
         annotation_species = .annotation_species_from_layers(data),
-        link_pairs = .link_pairs_from_layers(data)
+        link_pairs = .link_pairs_from_layers(data),
+        allow_annotation_only = .has_coverage_layer_data(data)
       )
       if (!is.null(plot_layout)) {
         return(
@@ -726,7 +727,8 @@ synspecies_chain_layout <- function(x,
                                     vars,
                                     free,
                                     annotation_species = NULL,
-                                    link_pairs = NULL) {
+                                    link_pairs = NULL,
+                                    allow_annotation_only = FALSE) {
   if (!methods::is(x, "SynSpecies")) {
     cli::cli_abort("Expected a {.cls SynSpecies} object.")
   }
@@ -753,7 +755,8 @@ synspecies_chain_layout <- function(x,
       x = x,
       annotation_species = annotation_species,
       link_pairs = link_pairs,
-      free = free
+      free = free,
+      allow_annotation_only = allow_annotation_only
     ))
   }
 
@@ -823,6 +826,15 @@ synspecies_chain_layout <- function(x,
   })))
   tracks <- tracks[!is.na(tracks) & nzchar(tracks)]
   unique(tracks)
+}
+
+.has_coverage_layer_data <- function(data) {
+  any(vapply(data, function(df) {
+    is.data.frame(df) &&
+      ".ggexon_panel_role" %in% names(df) &&
+      (identical(attr(df, "ggexon_panel_role", exact = TRUE), "coverage") ||
+        any(df$.ggexon_panel_role == "coverage", na.rm = TRUE))
+  }, logical(1)))
 }
 
 .link_pairs_from_layers <- function(data) {
@@ -954,7 +966,8 @@ synspecies_chain_layout <- function(x,
 .synspecies_chain_layout_from_layers <- function(x,
                                                  annotation_species,
                                                  link_pairs,
-                                                 free) {
+                                                 free,
+                                                 allow_annotation_only = FALSE) {
   annotation_species <- unique(as.character(annotation_species %||% character()))
   if (!is.null(link_pairs) && nrow(link_pairs) > 0L) {
     annotation_species <- unique(c(
@@ -969,10 +982,18 @@ synspecies_chain_layout <- function(x,
   }
 
   if (is.null(link_pairs) || nrow(link_pairs) == 0L) {
-    return(NULL)
+    if (!isTRUE(allow_annotation_only)) {
+      return(NULL)
+    }
+    link_pairs <- data.frame(
+      track = character(),
+      tspecies = character(),
+      qspecies = character(),
+      stringsAsFactors = FALSE
+    )
+  } else {
+    link_pairs <- unique(link_pairs[, c("track", "tspecies", "qspecies"), drop = FALSE])
   }
-
-  link_pairs <- unique(link_pairs[, c("track", "tspecies", "qspecies"), drop = FALSE])
   panel_rows <- vector("list", length(annotation_species) + nrow(link_pairs))
   panel_index <- 1L
   used_links <- rep(FALSE, nrow(link_pairs))

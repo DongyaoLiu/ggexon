@@ -365,6 +365,7 @@ geom_genetag <- function(mapping = NULL,
 GeomGeneTag <- ggproto(
   "GeomGeneTag",
   Geom,
+  ggexon_panel_role = "annotation",
   required_aes = c("xmin", "xmax", "y", "strand"),
 	  default_aes = aes(
 	    colour = "black",
@@ -456,6 +457,10 @@ GeomGeneTag <- ggproto(
 	  },
 	  setup_data = function(data, params) {
 		    exon_height <- params$exon_height %||% 0.8
+    body_height <- .genetag_effective_height(
+      exon_height = params$exon_height,
+      height = params$height
+    )
     gene_layout <- .genetag_gene_layout(params$gene_layout %||% "single")
     gene_lane_gap <- .genetag_gene_lane_gap(params$gene_lane_gap %||% 0.15)
 	    if (!"genomic_xmin" %in% names(data)) data$genomic_xmin <- data$xmin
@@ -476,6 +481,8 @@ GeomGeneTag <- ggproto(
     )
 	    data$ymin <- data$y - exon_height / 2
     data$ymax <- data$y + exon_height / 2
+    data$.ggexon_body_ymin <- data$y - body_height / 2
+    data$.ggexon_body_ymax <- data$y + body_height / 2
     if (!identical(label_position, "none") && !identical(label_position, "inside")) {
       label_space <- .genetag_label_reserved_space(
         exon_height = exon_height,
@@ -2088,8 +2095,9 @@ drawDetails.ggexonGenetagLabelGrob <- function(x, recording = TRUE) {
   data2$gene_xmin <- gene_xmin
   data2$gene_xmax <- gene_xmax
   data2$orig_x_mid <- (gene_xmin + gene_xmax) / 2
-  data2$gene_ymin <- data2$y - exon_height / 2
-  data2$gene_ymax <- data2$y + exon_height / 2
+  body_bounds <- .genetag_body_y_bounds(data2, exon_height)
+  data2$gene_ymin <- body_bounds$ymin
+  data2$gene_ymax <- body_bounds$ymax
   data2$gene_ymid <- data2$y
   data2$tag_width <- tag_width
   data2$est_width <- est_width
@@ -2128,11 +2136,12 @@ drawDetails.ggexonGenetagLabelGrob <- function(x, recording = TRUE) {
       outside <- .collapse_tandem_labels(outside)
       tandem_anchors <- attr(outside, "tandem_anchors") %||% list()
     }
+    body_height <- abs(outside$gene_ymax - outside$gene_ymin)
     outside <- .genetag_outside_label_data(
       outside,
       label_direction = label_direction,
-      label_offset = .genetag_label_offset(exon_height, label_offset_fraction),
-      lane_step = .genetag_label_lane_step(exon_height, label_offset_fraction),
+      label_offset = body_height * .genetag_label_offset(1, label_offset_fraction),
+      lane_step = body_height * .genetag_label_lane_step(1, label_offset_fraction),
       label_max_lanes = label_max_lanes,
       data_xmin = min(data2$gene_xmin, na.rm = TRUE),
       data_xmax = max(data2$gene_xmax, na.rm = TRUE),
@@ -2206,12 +2215,14 @@ drawDetails.ggexonGenetagLabelGrob <- function(x, recording = TRUE) {
     top_idx <- idx[data$label_pos[idx] == "top"]
     bottom_idx <- idx[data$label_pos[idx] == "bottom"]
     if (length(top_idx) > 0L) {
-      data$label_y[top_idx] <- top_y + label_offset + (data$label_lane[top_idx] - 1L) * lane_step
+      data$label_y[top_idx] <- top_y + label_offset[top_idx] +
+        (data$label_lane[top_idx] - 1L) * lane_step[top_idx]
       data$anchor_y[top_idx] <- data$gene_ymax[top_idx]
       data$vjust[top_idx] <- 1
     }
     if (length(bottom_idx) > 0L) {
-      data$label_y[bottom_idx] <- bottom_y - label_offset - (data$label_lane[bottom_idx] - 1L) * lane_step
+      data$label_y[bottom_idx] <- bottom_y - label_offset[bottom_idx] -
+        (data$label_lane[bottom_idx] - 1L) * lane_step[bottom_idx]
       data$anchor_y[bottom_idx] <- data$gene_ymin[bottom_idx]
       data$vjust[bottom_idx] <- 0
     }
@@ -2489,6 +2500,7 @@ drawDetails.ggexonGenetagLabelGrob <- function(x, recording = TRUE) {
     arrow_width <- NULL
   }
 
+  body_bounds <- .genetag_body_y_bounds(data, exon_height)
   pieces <- vector("list", nrow(data))
   for (i in seq_len(nrow(data))) {
     xmin <- min(data$xmin[[i]], data$xmax[[i]])
@@ -2501,8 +2513,8 @@ drawDetails.ggexonGenetagLabelGrob <- function(x, recording = TRUE) {
     } else {
       min(arrow_width, width)
     }
-    y_min <- y - exon_height / 2
-    y_max <- y + exon_height / 2
+    y_min <- body_bounds$ymin[[i]]
+    y_max <- body_bounds$ymax[[i]]
 
     coords <- switch(
       strand,
@@ -2548,6 +2560,7 @@ drawDetails.ggexonGenetagLabelGrob <- function(x, recording = TRUE) {
     arrow_width <- NULL
   }
 
+  body_bounds <- .genetag_body_y_bounds(data, exon_height)
   pieces <- vector("list", nrow(data))
   for (i in seq_len(nrow(data))) {
     xmin <- min(data$xmin[[i]], data$xmax[[i]])
@@ -2563,8 +2576,8 @@ drawDetails.ggexonGenetagLabelGrob <- function(x, recording = TRUE) {
     } else {
       min(arrow_width, width)
     }
-    y_min <- y - exon_height / 2
-    y_max <- y + exon_height / 2
+    y_min <- body_bounds$ymin[[i]]
+    y_max <- body_bounds$ymax[[i]]
 
     coords <- switch(
       strand,
@@ -2592,6 +2605,27 @@ drawDetails.ggexonGenetagLabelGrob <- function(x, recording = TRUE) {
   out <- do.call(rbind, pieces)
   rownames(out) <- NULL
   out
+}
+
+.genetag_body_y_bounds <- function(data, exon_height) {
+  ymin <- data$y - exon_height / 2
+  ymax <- data$y + exon_height / 2
+  body_columns <- c(".ggexon_body_ymin", ".ggexon_body_ymax")
+  if (all(body_columns %in% names(data))) {
+    body_ymin <- suppressWarnings(as.numeric(data$.ggexon_body_ymin))
+    body_ymax <- suppressWarnings(as.numeric(data$.ggexon_body_ymax))
+    body_center <- (body_ymin + body_ymax) / 2
+    center_tolerance <- sqrt(.Machine$double.eps) * pmax(
+      1,
+      abs(body_center),
+      abs(data$y)
+    )
+    use_body <- is.finite(body_ymin) & is.finite(body_ymax) &
+      is.finite(data$y) & abs(body_center - data$y) <= center_tolerance
+    ymin[use_body] <- body_ymin[use_body]
+    ymax[use_body] <- body_ymax[use_body]
+  }
+  data.frame(ymin = ymin, ymax = ymax)
 }
 
 .genetag_effective_height <- function(exon_height = NULL, height = NULL) {

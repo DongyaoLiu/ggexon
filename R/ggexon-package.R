@@ -53,7 +53,7 @@ utils::globalVariables(c(
 #'
 #' Compact `show()` methods that print a one-screen summary of the major
 #' `ggexon` S4 objects (`SynSpecies`, `SynIndividual`, `SynLayout`,
-#' `SynAnnotation`, and `HomologyAnnotation`).
+#' `SynLocusSet`, `SynAnnotation`, and `HomologyAnnotation`).
 #'
 #' @param object A `ggexon` S4 object.
 #' @return `object`, invisibly; called for the side effect of printing a summary.

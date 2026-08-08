@@ -17,15 +17,18 @@ In addition to the slots listed below, the class inherits `name`,
 
 - `signal`:
 
-  Optional cached parsed signal data.
+  Compatibility slot for serialized cached signal data. Queries do not
+  populate or update this slot.
 
 - `seqinfo`:
 
-  Optional cached `Seqinfo` describing available sequences.
+  Compatibility slot for serialized `Seqinfo` data. Queries do not
+  populate or update this slot.
 
 - `window_cache`:
 
-  Cache of previously queried genomic windows.
+  Compatibility slot for serialized queried windows. Queries do not
+  populate or update this slot.
 
 ## Prototype defaults
 

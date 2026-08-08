@@ -117,13 +117,68 @@ collect_syn_plot_context <- function(layers, plot_data, facet = NULL) {
     link_requests,
     annotation_species_order = annotation_species_order
   )
+  coverage_tracks <- collect_requested_coverage_tracks(
+    layers = layers,
+    syn_data = syn_data,
+    plot_data = plot_data,
+    windows = windows,
+    annotation_species_order = annotation_species_order
+  )
 
   list(
     syn_data = syn_data,
     annotation_requests = annotation_requests,
     link_requests = link_requests,
     windows = windows,
-    annotation_species_order = annotation_species_order
+    annotation_species_order = annotation_species_order,
+    coverage_tracks = coverage_tracks,
+    query_cache = new.env(parent = emptyenv())
+  )
+}
+
+collect_requested_coverage_tracks <- function(layers,
+                                              syn_data,
+                                              plot_data,
+                                              windows = list(),
+                                              annotation_species_order = NULL) {
+  coverage_layers <- Filter(function(layer) {
+    identical(layer$geom, GeomCoverage) && is_syn_layer_input(layer, plot_data)
+  }, layers)
+  if (length(coverage_layers) == 0L) {
+    return(character())
+  }
+
+  tracks <- unlist(lapply(coverage_layers, function(layer) {
+    species <- syn_layer_params(layer)$species %||% NULL
+    if (!is.null(species)) {
+      return(resolve_plot_species_params(syn_data, species))
+    }
+    window_tracks <- names(windows)
+    window_tracks <- window_tracks[!is.na(window_tracks) & nzchar(window_tracks)]
+    if (length(window_tracks) > 0L) {
+      return(window_tracks)
+    }
+    annotation_species_order
+  }), use.names = FALSE)
+  unique(as.character(tracks[!is.na(tracks) & nzchar(tracks)]))
+}
+
+compact_syn_plot_context <- function(context) {
+  if (is.null(context)) {
+    return(NULL)
+  }
+  keep_window_fields <- c(
+    "chr", "start", "end", "individual", "species", "track"
+  )
+  windows <- lapply(context$windows %||% list(), function(window) {
+    window[intersect(keep_window_fields, names(window))]
+  })
+  list(
+    windows = windows,
+    annotation_species_order = as.character(
+      context$annotation_species_order %||% character()
+    ),
+    coverage_tracks = as.character(context$coverage_tracks %||% character())
   )
 }
 
@@ -255,7 +310,8 @@ collect_syn_annotation_requests <- function(layer, syn_data, plot_data) {
         identical(layer$geom, GeomGeneLabel) ||
         identical(layer$geom, GeomGeneBox) ||
         identical(layer$geom, GeomGeneTag) ||
-        identical(layer$geom, GeomMotif))) {
+        identical(layer$geom, GeomMotif) ||
+        identical(layer$geom, GeomCoverage))) {
     return(list())
   }
   if (!is_syn_layer_input(layer, plot_data)) {
@@ -974,6 +1030,175 @@ resolve_syn_domain_annotation <- function(x, annotation = NULL, allow_missing = 
 
   cli::cli_abort(
     "No {.cls SynProteinDomainAnnotation} layer is attached to this {.cls SynIndividual}."
+  )
+}
+
+resolve_syn_bigwig_annotation <- function(x,
+                                          annotation = NULL,
+                                          allow_missing = FALSE) {
+  if (!methods::is(x, "SynIndividual")) {
+    cli::cli_abort("Coverage plotting requires a {.cls SynIndividual} object.")
+  }
+
+  individual_id <- syn_id(x)
+  if (!is.null(annotation)) {
+    if (!is.character(annotation) || length(annotation) != 1L ||
+        is.na(annotation) || !nzchar(annotation)) {
+      cli::cli_abort(
+        "Coverage annotation for individual {.val {individual_id}} must be one non-empty layer name."
+      )
+    }
+    if (!annotation %in% annotation_names(x)) {
+      if (allow_missing) {
+        return(NULL)
+      }
+      cli::cli_abort(
+        "Individual {.val {individual_id}} has no annotation layer {.val {annotation}}."
+      )
+    }
+    ann <- get_annotation(x, annotation)
+    if (!methods::is(ann, "SynBigWigAnnotation")) {
+      if (allow_missing) {
+        return(NULL)
+      }
+      cli::cli_abort(
+        "Annotation layer {.val {annotation}} on individual {.val {individual_id}} is not a {.cls SynBigWigAnnotation}."
+      )
+    }
+    return(ann)
+  }
+
+  matches <- lapply(annotation_names(x), function(ann_name) {
+    ann <- get_annotation(x, ann_name)
+    if (methods::is(ann, "SynBigWigAnnotation")) ann else NULL
+  })
+  matches <- Filter(Negate(is.null), matches)
+
+  if (length(matches) == 1L) {
+    return(matches[[1L]])
+  }
+  if (allow_missing) {
+    return(NULL)
+  }
+  if (length(matches) == 0L) {
+    cli::cli_abort(
+      "Individual {.val {individual_id}} has no attached {.cls SynBigWigAnnotation} layer."
+    )
+  }
+  cli::cli_abort(
+    "Individual {.val {individual_id}} has multiple attached {.cls SynBigWigAnnotation} layers; supply {.arg annotation}."
+  )
+}
+
+query_syn_bigwig_window <- function(annotation, window, context = NULL) {
+  path <- normalizePath(source_file(annotation), mustWork = FALSE)
+  key <- paste(path, window$chr, window$start, window$end, sep = "::")
+  cache <- context$query_cache %||% NULL
+  if (is.environment(cache) && exists(key, envir = cache, inherits = FALSE)) {
+    return(get(key, envir = cache, inherits = FALSE))
+  }
+
+  region <- GenomicRanges::GRanges(
+    window$chr,
+    IRanges::IRanges(window$start, window$end)
+  )
+  result <- query_annotation(annotation, region)
+  if (is.environment(cache)) {
+    assign(key, result, envir = cache)
+  }
+  result
+}
+
+.empty_syn_coverage_df <- function() {
+  out <- data.frame(
+    track = character(),
+    individual = character(),
+    species = character(),
+    chr = character(),
+    interval_start = integer(),
+    interval_end = integer(),
+    genomic_xmin = integer(),
+    genomic_xmax = integer(),
+    xmin = numeric(),
+    xmax = numeric(),
+    coverage = numeric(),
+    group = integer(),
+    .ggexon_panel_role = character(),
+    stringsAsFactors = FALSE
+  )
+  attr(out, "ggexon_panel_role") <- "coverage"
+  out
+}
+
+syn_to_coverage_df <- function(x,
+                               species = NULL,
+                               annotation = NULL,
+                               context = NULL) {
+  species <- resolve_context_species_params(x, species, context)
+
+  if (methods::is(x, "SynSpecies") && length(species %||% character()) > 1L) {
+    species <- unique(as.character(species))
+    out <- dplyr::bind_rows(lapply(species, function(species_name) {
+      syn_to_coverage_df(
+        x = x,
+        species = species_name,
+        annotation = annotation,
+        context = context
+      )
+    }))
+    if (nrow(out) == 0L) {
+      attr(out, "ggexon_panel_role") <- "coverage"
+    }
+    return(out)
+  }
+
+  individual_name <- if (length(species %||% character()) == 0L) {
+    NULL
+  } else {
+    as.character(species[[1L]])
+  }
+  individual <- resolve_syn_individual(
+    x,
+    species = .context_individual_for_track(x, individual_name, context = context)
+  )
+  ann <- resolve_syn_bigwig_annotation(
+    individual,
+    annotation = annotation
+  )
+  window <- normalize_syn_window_request(
+    x = x,
+    species = individual_name %||% syn_id(individual),
+    allow_missing_subset = FALSE,
+    context = context,
+    geom = "geom_coverage"
+  )
+  signal <- query_syn_bigwig_window(ann, window, context = context)
+
+  if (length(signal) == 0L) {
+    return(.empty_syn_coverage_df())
+  }
+
+  interval_start <- BiocGenerics::start(signal)
+  interval_end <- BiocGenerics::end(signal)
+  track_name <- as.character(
+    window$track %||% individual_name %||% syn_id(individual)
+  )
+
+  data.frame(
+    track = track_name,
+    individual = syn_id(individual),
+    species = syn_id(individual),
+    chr = as.character(GenomeInfoDb::seqnames(signal)),
+    interval_start = interval_start,
+    interval_end = interval_end,
+    genomic_xmin = interval_start,
+    genomic_xmax = interval_end,
+    xmin = interval_start - 0.5,
+    xmax = interval_end + 0.5,
+    coverage = as.numeric(S4Vectors::mcols(signal)$score),
+    group = seq_along(signal),
+    .ggexon_panel_role = "coverage",
+    stringsAsFactors = FALSE
   )
 }
 

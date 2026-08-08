@@ -1,9 +1,12 @@
-# X-only strip scale for gene-tag tracks
+# X-only strip scale for gene tracks
 
-`strip_scale_x()` normalizes gene-tag x coordinates so genes and
-intergenic gaps occupy predictable visual widths. In homology mode, it
-can compress species-specific local runs and translate tracks to align
-the most conserved block against an explicit reference track.
+`strip_scale_x()` normalizes gene-tag or gene-box x coordinates. Its
+default layout gives genes and intergenic gaps predictable visual
+widths. Homology mode can compress species-specific local runs and
+translate tracks to align the most conserved block against an explicit
+reference track. Exact-template mode maps gene anchors to a complete
+synthetic `slot_order`, independently of the raw genomic distances
+between genes.
 
 ## Usage
 
@@ -19,7 +22,8 @@ strip_scale_x(
   species_ratio = NULL,
   collapse_contiguous_slot = TRUE,
   block_align = c("conserved", "left", "center", "right", "none"),
-  guide = c("range", "none")
+  guide = c("range", "none"),
+  slot_order = NULL
 )
 
 strip_scale(...)
@@ -30,7 +34,8 @@ strip_scale(...)
 - gene_gap_ratio:
 
   Ratio of full gene visual width to intergenic gap visual width. When
-  `NULL`, the ratio is estimated from the densest track.
+  `NULL`, the ratio is estimated from the densest track. It is not used
+  when `slot_order` is supplied.
 
 - align:
 
@@ -53,7 +58,9 @@ strip_scale(...)
   Gene ordering strategy. `"genomic"` keeps each track in its native
   genomic order. `"reference"` orders query tracks by the resolved
   homolog order in `reference_track`, keeping unmapped local runs
-  between the nearest surrounding reference-ordered homologs.
+  between the nearest surrounding reference-ordered homologs. When
+  `slot_order` is supplied, that exact order governs the layout
+  regardless of this setting.
 
 - species_specific_ratio:
 
@@ -89,6 +96,17 @@ strip_scale(...)
   and otherwise the visible gene range; `"none"` suppresses the custom
   guide.
 
+- slot_order:
+
+  Optional character vector defining exact shared comparison slots from
+  left to right. Gene rows are matched through `slot`, falling back to
+  `reference_gene` and then `gene_key`. The selected genomic anchor of
+  every matching row is mapped to the center of its slot, so unoccupied
+  template positions remain visible. Slot membership is supplied
+  metadata, not an inference of one-to-one homology or evolutionary
+  loss. This synthetic-template mode does not require, and cannot be
+  combined with, `reference_track`.
+
 - ...:
 
   Arguments passed from the compatibility wrapper `strip_scale()` to
@@ -104,3 +122,11 @@ Once genomic x distances are stripped, gene-body overlap lanes are
 collapsed to a single baseline per gene-tag layer. Outside labels remain
 coordinated independently, so label lanes can still alternate above and
 below the shared gene-body line.
+
+In exact-template mode, visible gene-box direction is inferred
+separately for each panel and track from the rank correlation between
+genomic anchors and template-slot positions. A track needs at least two
+distinct genomic anchors in at least two distinct slots and a non-zero
+rank correlation. Otherwise `strip_scale_x()` warns once per build and
+uses `+1` (no template-driven direction reversal) for every
+underdetermined track.

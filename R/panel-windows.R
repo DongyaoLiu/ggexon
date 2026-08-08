@@ -132,5 +132,33 @@ effective_panel_windows <- function(x) {
     by = c("PANEL", "track")
   )
 
+  context_windows <- list()
+  for (layer in built@plot@layers) {
+    windows <- layer$syn_plot_context$windows %||% NULL
+    if (!is.null(windows) && length(windows) > 0L) {
+      context_windows <- windows
+      break
+    }
+  }
+  if (length(context_windows) > 0L) {
+    for (i in seq_len(nrow(out))) {
+      window <- context_windows[[out$track[[i]]]] %||%
+        context_windows[[out$individual[[i]]]] %||%
+        NULL
+      if (is.null(window)) {
+        next
+      }
+      if (length(window$chr) == 1L) {
+        out$chr[[i]] <- as.character(window$chr)
+      }
+      if (length(window$start) == 1L) {
+        out$start[[i]] <- as.numeric(window$start)
+      }
+      if (length(window$end) == 1L) {
+        out$end[[i]] <- as.numeric(window$end)
+      }
+    }
+  }
+
   out
 }

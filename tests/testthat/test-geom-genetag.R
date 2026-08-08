@@ -31,6 +31,32 @@ test_that("geom_genetag polygon data uses exon bodies with strand triangles", {
   expect_equal(range(alias_poly$y), c(0.8, 1.2))
 })
 
+test_that("geom_genetag height alias controls the rendered body", {
+  plot <- ggplot2::ggplot() +
+    geom_genetag(
+      data = data.frame(xmin = 0, xmax = 10, y = 0.4, strand = "+"),
+      height = 0.4,
+      show_label = FALSE
+    )
+  built <- ggplot2::ggplot_build(plot)
+  panel_grob <- built$plot$layers[[1L]]$draw_geom(
+    built$data[[1L]],
+    built$layout
+  )[[1L]]
+  body_grobs <- Filter(
+    function(x) inherits(x, "polygon"),
+    as.list(panel_grob$children)
+  )
+  expect_length(body_grobs, 1L)
+
+  rendered_y <- range(as.numeric(body_grobs[[1L]]$y))
+  expected_y <- range(built$plot$coordinates$transform(
+    data.frame(x = 5, y = c(0.2, 0.6)),
+    built$layout$panel_params[[1L]]
+  )$y)
+  expect_equal(rendered_y, expected_y)
+})
+
 test_that("geom_genetag can fix terminal arrow aesthetics independently", {
   data <- data.frame(
     xmin = c(0, 10),

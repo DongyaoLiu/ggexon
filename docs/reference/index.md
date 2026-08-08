@@ -90,8 +90,14 @@ links, trees, and protein mutation summaries.
   : Draw exon-style genomic features
 - [`geom_exon2()`](https://dongyaoliu.github.io/ggexon/reference/geom_exon2.md)
   : Draw WormWeb-style exon-intron schematics
+- [`geom_coverage()`](https://dongyaoliu.github.io/ggexon/reference/geom_coverage.md)
+  : Plot interval-native BigWig coverage
 - [`geom_genetag()`](https://dongyaoliu.github.io/ggexon/reference/geom_genetag.md)
   : Draw gene tags as exon bodies with strand-direction triangles
+- [`geom_genebox()`](https://dongyaoliu.github.io/ggexon/reference/geom_genebox.md)
+  : Draw fixed-size gene boxes with internal strand arrows
+- [`GeomGeneBox`](https://dongyaoliu.github.io/ggexon/reference/GeomGeneBox.md)
+  : Gene-box geom
 - [`geom_genelabel()`](https://dongyaoliu.github.io/ggexon/reference/geom_genelabel.md)
   : Draw gene labels on exon tracks
 - [`geom_genomic_tree()`](https://dongyaoliu.github.io/ggexon/reference/geom_genomic_tree.md)
@@ -124,7 +130,7 @@ and control genomic x-axis guides.
   : Compress introns while keeping genomic x-axis labels
 - [`strip_scale_x()`](https://dongyaoliu.github.io/ggexon/reference/strip_scale_x.md)
   [`strip_scale()`](https://dongyaoliu.github.io/ggexon/reference/strip_scale_x.md)
-  : X-only strip scale for gene-tag tracks
+  : X-only strip scale for gene tracks
 - [`guide_x_ggexon_piecewise()`](https://dongyaoliu.github.io/ggexon/reference/guide_x_ggexon_piecewise.md)
   : Draw representative exon and intron scale bars for genomic x scaling
 - [`theme_ggexon_base()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_base.md)
@@ -270,8 +276,10 @@ derive sequence or protein-level summaries.
   : Query annotation features from a SynIndividual object
 - [`query_variants()`](https://dongyaoliu.github.io/ggexon/reference/query_variants.md)
   : Query variants from a SynVCFAnnotation
+- [`query_annotation()`](https://dongyaoliu.github.io/ggexon/reference/query_annotation.md)
+  : Query a region-backed annotation
 - [`query_signal()`](https://dongyaoliu.github.io/ggexon/reference/query_signal.md)
-  : Query signal from a SynBigWigAnnotation
+  : Query BigWig signal
 - [`query_domains()`](https://dongyaoliu.github.io/ggexon/reference/query_domains.md)
   : Query protein-domain annotations
 - [`query_protein_mutations()`](https://dongyaoliu.github.io/ggexon/reference/query_protein_mutations.md)

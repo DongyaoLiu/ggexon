@@ -1,12 +1,14 @@
-pandoc: 3.8.3
-pkgdown: 2.2.1
+pandoc: 3.9.0.2
+pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
+  bigwig-coverage-demo: bigwig-coverage-demo.html
   cd44-splice-variants-demo: cd44-splice-variants-demo.html
+  cox1-yeast-demo: cox1-yeast-demo.html
   ggexon-classes-and-verbs: ggexon-classes-and-verbs.html
   ggexon-workflow: ggexon-workflow.html
-  hoxa-ensembl115-demo: hoxa-ensembl115-demo.html
-last_built: 2026-08-07T08:12Z
+  hox-cluster-expansion-demo: hox-cluster-expansion-demo.html
+last_built: 2026-08-08T06:10Z
 urls:
   reference: https://dongyaoliu.github.io/ggexon/reference
   article: https://dongyaoliu.github.io/ggexon/articles

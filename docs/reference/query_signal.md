@@ -1,11 +1,11 @@
-# Query signal from a SynBigWigAnnotation
+# Query BigWig signal
 
-Query signal from a SynBigWigAnnotation
+Query BigWig signal
 
 ## Usage
 
 ``` r
-query_signal(x, chr, start, end)
+query_signal(x, chr, start, end, ...)
 ```
 
 ## Arguments
@@ -26,6 +26,13 @@ query_signal(x, chr, start, end)
 
   End coordinate.
 
+- ...:
+
+  Additional arguments passed to
+  [`query_annotation()`](https://dongyaoliu.github.io/ggexon/reference/query_annotation.md).
+
 ## Value
 
-A `GRanges` object with the overlapping signal records.
+A
+[`GenomicRanges::GRanges`](https://rdrr.io/pkg/GenomicRanges/man/GRanges-class.html)
+object with overlapping signal records.

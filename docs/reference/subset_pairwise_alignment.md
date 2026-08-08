@@ -50,7 +50,5 @@ pair <- SynPairAlignment(
   target_individual = "N2",
   file = paf_path
 )
-#> Error in validObject(.Object): invalid class “SynPairAlignment” object: `source_file` must be a non-empty character vector with no empty entries.
 pair <- subset_pairwise_alignment(pair, subset = c(XZ1516 = "RagTag_V"))
-#> Error in h(simpleError(msg, call)): error in evaluating the argument 'x' in selecting a method for function 'subset_pairwise_alignment': object 'pair' not found
 ```

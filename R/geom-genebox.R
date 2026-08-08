@@ -110,6 +110,7 @@ geom_genebox <- function(mapping = NULL,
 GeomGeneBox <- ggproto(
   "GeomGeneBox",
   Geom,
+  ggexon_panel_role = "annotation",
   required_aes = c("x", "y", "strand"),
   default_aes = aes(
     colour = "black",
@@ -210,7 +211,14 @@ GeomGeneBox <- ggproto(
 
     stack_offset <- .genebox_stack_offsets(data$x, data$y, box_size = box_size)
     x_unit <- grid::unit(coords$x, "native")
-    y_unit <- grid::unit(coords$y, "native") + grid::unit(stack_offset, "mm")
+    y_unit <- .genebox_clamped_y_units(
+      data = data,
+      coords = coords,
+      panel_params = panel_params,
+      coord = coord,
+      stack_offset = stack_offset,
+      box_size = box_size
+    )
     fill <- scales::alpha(data$fill, data$alpha)
     colour <- scales::alpha(data$colour, data$alpha)
 
@@ -367,6 +375,50 @@ GeomGeneBox <- ggproto(
     }
   }
   out
+}
+
+.genebox_clamped_y_units <- function(data,
+                                     coords,
+                                     panel_params,
+                                     coord,
+                                     stack_offset,
+                                     box_size) {
+  centers <- grid::unit(coords$y, "native") +
+    grid::unit(stack_offset, "mm")
+  band_columns <- c(".ggexon_band_ymin", ".ggexon_band_ymax")
+  if (!all(band_columns %in% names(data))) {
+    return(centers)
+  }
+
+  band_ymin <- suppressWarnings(as.numeric(data$.ggexon_band_ymin))
+  band_ymax <- suppressWarnings(as.numeric(data$.ggexon_band_ymax))
+  valid <- is.finite(band_ymin) & is.finite(band_ymax)
+  if (!any(valid)) {
+    return(centers)
+  }
+
+  lower <- coord$transform(
+    data.frame(x = data$x[valid], y = band_ymin[valid]),
+    panel_params
+  )$y
+  upper <- coord$transform(
+    data.frame(x = data$x[valid], y = band_ymax[valid]),
+    panel_params
+  )$y
+  lower_native <- pmin(lower, upper)
+  upper_native <- pmax(lower, upper)
+  half_height <- grid::unit(box_size / 2, "mm")
+  valid_rows <- which(valid)
+  for (i in seq_along(valid_rows)) {
+    row <- valid_rows[[i]]
+    inset_lower <- grid::unit(lower_native[[i]], "native") + half_height
+    inset_upper <- grid::unit(upper_native[[i]], "native") - half_height
+    centers[row] <- grid::unit.pmin(
+      grid::unit.pmax(centers[row], inset_lower),
+      inset_upper
+    )
+  }
+  centers
 }
 
 .genebox_x_orientation <- function(panel_params, coord) {

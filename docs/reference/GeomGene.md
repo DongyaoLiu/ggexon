@@ -13,4 +13,4 @@ GeomGene
 ## Format
 
 An object of class `GeomGene` (inherits from `Geom`, `ggproto`, `gg`) of
-length 11.
+length 12.

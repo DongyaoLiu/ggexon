@@ -67,8 +67,9 @@ uses the middle nucleotide of a complete annotated initiation codon,
 \code{anchor = "end"} uses the middle nucleotide of a complete annotated stop
 codon, and \code{anchor = "middle"} uses the genomic midpoint between those two
 anchors. Associated \code{start_codon} or \code{stop_codon} records are complete only
-when their total feature width is exactly three nucleotides. Otherwise, the
-middle position of the corresponding terminal CDS triplet is used as a
+when their total feature width is exactly three nucleotides and every piece
+matches the selected transcript's seqname, strand, and bounds. Otherwise,
+the middle position of the corresponding terminal CDS triplet is used as a
 positional proxy; this fallback does not verify an ATG or stop-codon sequence.
 
 Unknown strands (\code{NA}, \code{"*"}, or values other than \code{"+"} and \code{"-"}) retain

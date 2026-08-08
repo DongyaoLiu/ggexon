@@ -29,6 +29,8 @@ navbar:
         href: articles/hox-cluster-expansion-demo.html
       - text: CD44 splice variant alignment
         href: articles/cd44-splice-variants-demo.html
+      - text: PEEL-1 raw BigWig coverage
+        href: articles/bigwig-coverage-demo.html
       - text: Classes, geoms, facets, and guides
         href: articles/ggexon-classes-and-verbs.html
 
@@ -39,6 +41,7 @@ articles:
   - ggexon-workflow
   - hox-cluster-expansion-demo
   - cd44-splice-variants-demo
+  - bigwig-coverage-demo
   - cox1-yeast-demo
   - ggexon-classes-and-verbs
 
@@ -75,6 +78,7 @@ reference:
   - ggexon_output_size
   - geom_exon
   - geom_exon2
+  - geom_coverage
   - geom_genetag
   - geom_genebox
   - GeomGeneBox
@@ -149,6 +153,7 @@ reference:
   - annotation_data
   - query_features
   - query_variants
+  - query_annotation
   - query_signal
   - query_domains
   - query_protein_mutations

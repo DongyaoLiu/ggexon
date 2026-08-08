@@ -12,4 +12,4 @@ GeomExon
 ## Format
 
 An object of class `GeomExon` (inherits from `Geom`, `ggproto`, `gg`) of
-length 11.
+length 12.

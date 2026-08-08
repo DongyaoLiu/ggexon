@@ -2,6 +2,7 @@
 #'
 #' Internal ggproto used by [`geom_exon()`].
 GeomExon <- ggproto("GeomExon", Geom,
+                      ggexon_panel_role = "annotation",
                       required_aes = c("ymin", "xmin", "xmax", "transcripts","strand", "track", "type"),
                       non_missing_aes = c("linewidth", "shape"),
                       extra_params = c("exon_height", "transcript_backbone_ratio", "transcript_arrow_ratio",

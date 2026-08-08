@@ -184,6 +184,8 @@ setGeneric("locus_table", function(x) standardGeneric("locus_table"))
 #' @rdname locus_table
 setMethod("locus_table", "SynLocusSet", function(x) x@locus_table)
 
+#' @export
+#' @rdname ggexon-show
 setMethod("show", "SynLocusSet", function(object) {
   cat("An object of class \"SynLocusSet\"\n")
   cat("  name:", annotation_name(object), "\n")

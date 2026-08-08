@@ -343,9 +343,12 @@ setClass(
 #' `plot_cache` from `SynAnnotation`.
 #'
 #' @slot data_format Signal file format label. Currently `"bigwig"`.
-#' @slot signal Optional cached parsed signal data.
-#' @slot seqinfo Optional cached `Seqinfo` describing available sequences.
-#' @slot window_cache Cache of previously queried genomic windows.
+#' @slot signal Compatibility slot for serialized cached signal data. Queries do
+#'   not populate or update this slot.
+#' @slot seqinfo Compatibility slot for serialized `Seqinfo` data. Queries do
+#'   not populate or update this slot.
+#' @slot window_cache Compatibility slot for serialized queried windows. Queries
+#'   do not populate or update this slot.
 #'
 #' @section Prototype defaults:
 #' * `data_format = "bigwig"`
@@ -587,6 +590,14 @@ SynBigWigAnnotation <- function(name,
                                 bigwig_file,
                                 metadata = list(),
                                 lazy = TRUE) {
+  if (!is.character(name) || length(name) != 1L || is.na(name) || !nzchar(name)) {
+    cli::cli_abort("{.arg name} must be one non-empty label.")
+  }
+  if (!is.character(bigwig_file) || length(bigwig_file) != 1L ||
+      is.na(bigwig_file) || !nzchar(bigwig_file)) {
+    cli::cli_abort("{.arg bigwig_file} must be one non-empty path.")
+  }
+
   new(
     "SynBigWigAnnotation",
     name = name,
@@ -1256,40 +1267,6 @@ query_variants <- function(x, chr, start, end) {
   x@region_cache[[cache_key]] <- result
   x@loaded <- TRUE
   result
-}
-
-#' Query signal from a SynBigWigAnnotation
-#'
-#' @param x A `SynBigWigAnnotation` object.
-#' @param chr Chromosome name.
-#' @param start Start coordinate.
-#' @param end End coordinate.
-#'
-#' @return A `GRanges` object with the overlapping signal records.
-#' @export
-query_signal <- function(x, chr, start, end) {
-  if (!methods::is(x, "SynBigWigAnnotation")) {
-    stop("`query_signal()` expects a SynBigWigAnnotation object.", call. = FALSE)
-  }
-
-  cache_key <- paste(chr, start, end, sep = ":")
-  if (cache_key %in% names(x@window_cache)) {
-    return(x@window_cache[[cache_key]])
-  }
-
-  region <- GenomicRanges::GRanges(
-    seqnames = chr,
-    ranges = IRanges::IRanges(start = start, end = end)
-  )
-  signal <- rtracklayer::import.bw(source_file(x), which = region, as = "GRanges")
-
-  x@window_cache[[cache_key]] <- signal
-  x@signal <- signal
-  x@loaded <- TRUE
-  if (is.null(x@seqinfo) && length(signal) > 0L) {
-    x@seqinfo <- GenomeInfoDb::seqinfo(signal)
-  }
-  signal
 }
 
 #' Query protein-domain annotations

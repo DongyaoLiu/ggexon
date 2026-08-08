@@ -187,6 +187,261 @@ annotation_panel_body_centers <- function(data, annotation_panel_ids) {
   vapply(by_panel, function(x) mean(range(x)), numeric(1))
 }
 
+ggexon_layer_panel_role <- function(layer) {
+  layer$geom$ggexon_panel_role %||%
+    if (identical(layer$geom, GeomNucLink)) "link" else "other"
+}
+
+requested_coverage_panel_ids <- function(layers, coverage_layers, layout = NULL) {
+  layout_df <- layout$layout %||% NULL
+  if (!is.data.frame(layout_df) || nrow(layout_df) == 0L ||
+      !"PANEL" %in% names(layout_df)) {
+    return(integer())
+  }
+  requested <- unique(unlist(lapply(coverage_layers, function(i) {
+    layers[[i]]$syn_plot_context$coverage_tracks %||% character()
+  }), use.names = FALSE))
+  requested <- as.character(requested[!is.na(requested) & nzchar(requested)])
+  if (length(requested) == 0L) {
+    return(integer())
+  }
+
+  identity_columns <- intersect(
+    c("track", "individual", "species", "id", "strain", "strains"),
+    names(layout_df)
+  )
+  if (length(identity_columns) == 0L) {
+    return(integer())
+  }
+  requested_rows <- rep(FALSE, nrow(layout_df))
+  for (column in identity_columns) {
+    requested_rows <- requested_rows |
+      as.character(layout_df[[column]]) %in% requested
+  }
+  panel_ids <- ggexon_gtable_index(layout_df$PANEL[requested_rows])
+  sort(unique(as.integer(panel_ids[is.finite(panel_ids)])))
+}
+
+apply_coverage_panel_bands <- function(data,
+                                       layers,
+                                       fraction = 0.25,
+                                       layout = NULL) {
+  roles <- vapply(layers, ggexon_layer_panel_role, character(1))
+  coverage_layers <- which(roles == "coverage")
+  training_max <- 1
+  annotation_depth <- training_max * fraction
+
+  if (length(coverage_layers) == 0L) {
+    return(list(
+      data = data,
+      composite_panels = integer(),
+      coverage_max = 0,
+      training_max = training_max,
+      annotation_depth = annotation_depth
+    ))
+  }
+
+  coverage_values <- unlist(lapply(coverage_layers, function(i) {
+    layer_data <- data[[i]]
+    if (!is.data.frame(layer_data) || !"coverage" %in% names(layer_data)) {
+      return(numeric())
+    }
+    suppressWarnings(as.numeric(as.character(layer_data$coverage)))
+  }), use.names = FALSE)
+  coverage_values <- coverage_values[is.finite(coverage_values)]
+  coverage_max <- if (length(coverage_values) > 0L) max(coverage_values) else 0
+  training_max <- max(coverage_max, 1)
+  annotation_depth <- training_max * fraction
+
+  realized_panels <- unique(unlist(lapply(coverage_layers, function(i) {
+    layer_data <- data[[i]]
+    if (!is.data.frame(layer_data) || nrow(layer_data) == 0L ||
+        !"PANEL" %in% names(layer_data)) {
+      return(integer())
+    }
+    ggexon_gtable_index(layer_data$PANEL)
+  }), use.names = FALSE))
+  requested_panels <- requested_coverage_panel_ids(
+    layers,
+    coverage_layers,
+    layout = layout
+  )
+  composite_panels <- union(realized_panels, requested_panels)
+  composite_panels <- sort(as.integer(composite_panels[is.finite(composite_panels)]))
+
+  for (i in coverage_layers) {
+    layer_data <- data[[i]]
+    if (!is.data.frame(layer_data) || !"coverage" %in% names(layer_data)) {
+      next
+    }
+    layer_data$ymin <- rep(0, nrow(layer_data))
+    layer_data$ymax <- layer_data$coverage
+    data[[i]] <- layer_data
+  }
+
+  annotation_layers <- which(roles == "annotation")
+  y_columns <- c(
+    "y", "ymin", "ymax", "yend", "y_middle", "y_base",
+    ".ggexon_body_ymin", ".ggexon_body_ymax"
+  )
+  panel_ranges <- stats::setNames(vector("list", length(composite_panels)), composite_panels)
+  for (panel_id in composite_panels) {
+    panel_values <- unlist(lapply(annotation_layers, function(i) {
+      layer_data <- data[[i]]
+      if (!is.data.frame(layer_data) || nrow(layer_data) == 0L ||
+          !"PANEL" %in% names(layer_data)) {
+        return(numeric())
+      }
+      panel <- ggexon_gtable_index(layer_data$PANEL)
+      rows <- !is.na(panel) & panel == panel_id
+      columns <- intersect(y_columns, names(layer_data))
+      if (!any(rows) || length(columns) == 0L) {
+        return(numeric())
+      }
+      unlist(lapply(layer_data[rows, columns, drop = FALSE], function(x) {
+        suppressWarnings(as.numeric(as.character(x)))
+      }), use.names = FALSE)
+    }), use.names = FALSE)
+    panel_values <- panel_values[is.finite(panel_values)]
+    if (length(panel_values) > 0L) {
+      panel_ranges[[as.character(panel_id)]] <- range(panel_values)
+    }
+  }
+
+  for (i in annotation_layers) {
+    layer_data <- data[[i]]
+    if (!is.data.frame(layer_data) || nrow(layer_data) == 0L ||
+        !"PANEL" %in% names(layer_data)) {
+      next
+    }
+    panel <- ggexon_gtable_index(layer_data$PANEL)
+    columns <- intersect(y_columns, names(layer_data))
+    if (!".ggexon_band_ymin" %in% names(layer_data)) {
+      layer_data$.ggexon_band_ymin <- NA_real_
+    }
+    if (!".ggexon_band_ymax" %in% names(layer_data)) {
+      layer_data$.ggexon_band_ymax <- NA_real_
+    }
+    composite_rows <- !is.na(panel) & panel %in% composite_panels
+    layer_data$.ggexon_band_ymin[composite_rows] <- -annotation_depth
+    layer_data$.ggexon_band_ymax[composite_rows] <- 0
+    for (panel_id in composite_panels) {
+      source_range <- panel_ranges[[as.character(panel_id)]]
+      rows <- !is.na(panel) & panel == panel_id
+      if (is.null(source_range) || !any(rows)) {
+        next
+      }
+      for (column in columns) {
+        values <- suppressWarnings(as.numeric(as.character(layer_data[[column]])))
+        finite_rows <- rows & is.finite(values)
+        if (!any(finite_rows)) {
+          next
+        }
+        if (source_range[[1L]] == source_range[[2L]]) {
+          values[finite_rows] <- -annotation_depth / 2
+        } else {
+          values[finite_rows] <- -annotation_depth +
+            (values[finite_rows] - source_range[[1L]]) /
+              diff(source_range) * annotation_depth
+        }
+        layer_data[[column]] <- values
+      }
+    }
+    if (all(c("y_range", "ymin", "ymax") %in% names(layer_data))) {
+      composite_rows <- !is.na(panel) & panel %in% composite_panels
+      transformed_range <- abs(layer_data$ymax - layer_data$ymin)
+      finite_rows <- composite_rows & is.finite(transformed_range)
+      layer_data$y_range[finite_rows] <- transformed_range[finite_rows]
+    }
+    data[[i]] <- layer_data
+  }
+
+  list(
+    data = data,
+    composite_panels = composite_panels,
+    coverage_max = coverage_max,
+    training_max = training_max,
+    annotation_depth = annotation_depth
+  )
+}
+
+share_composite_coverage_y_scale <- function(layout, composite_panels) {
+  layout_df <- layout$layout %||% NULL
+  if (!is.data.frame(layout_df) || nrow(layout_df) == 0L ||
+      !all(c("PANEL", "SCALE_Y") %in% names(layout_df)) ||
+      length(composite_panels) == 0L) {
+    return(layout)
+  }
+
+  panel_type <- link_panel_type(layout_df)
+  layout_df$panel_type <- panel_type
+  panel_id <- ggexon_gtable_index(layout_df$PANEL)
+  composite_rows <- panel_type == "annotation" & panel_id %in% composite_panels
+  composite_rows[is.na(composite_rows)] <- FALSE
+  if (any(composite_rows)) {
+    layout_df$SCALE_Y[composite_rows] <- min(layout_df$SCALE_Y[composite_rows])
+  }
+  layout$layout <- layout_df
+  layout
+}
+
+train_composite_coverage_y_scales <- function(layout,
+                                              composite_panels,
+                                              training_max) {
+  layout_df <- layout$layout %||% NULL
+  panel_scales_y <- layout$panel_scales_y %||% NULL
+  if (!is.data.frame(layout_df) || nrow(layout_df) == 0L ||
+      !all(c("PANEL", "SCALE_Y") %in% names(layout_df)) ||
+      is.null(panel_scales_y) || length(panel_scales_y) == 0L ||
+      length(composite_panels) == 0L ||
+      !is.numeric(training_max) || length(training_max) != 1L ||
+      !is.finite(training_max) || training_max <= 0) {
+    return(layout)
+  }
+
+  panel_id <- ggexon_gtable_index(layout_df$PANEL)
+  scale_ids <- unique(as.integer(
+    layout_df$SCALE_Y[!is.na(panel_id) & panel_id %in% composite_panels]
+  ))
+  scale_ids <- scale_ids[
+    is.finite(scale_ids) & scale_ids >= 1L & scale_ids <= length(panel_scales_y)
+  ]
+  for (scale_id in scale_ids) {
+    panel_scales_y[[scale_id]]$train(c(0, training_max))
+  }
+  layout$panel_scales_y <- panel_scales_y
+  layout
+}
+
+filter_composite_coverage_y_breaks <- function(layout) {
+  panel_ids <- unique(as.integer(
+    layout$ggexon_composite_coverage_panels %||% integer()
+  ))
+  panel_ids <- panel_ids[!is.na(panel_ids)]
+  if (length(panel_ids) == 0L || is.null(layout$panel_params)) {
+    return(layout)
+  }
+
+  for (panel_id in panel_ids) {
+    if (panel_id < 1L || panel_id > length(layout$panel_params)) {
+      next
+    }
+    y_view <- layout$panel_params[[panel_id]]$y %||% NULL
+    breaks <- y_view$breaks %||% NULL
+    if (is.null(y_view) || is.null(breaks)) {
+      next
+    }
+    keep <- !(is.finite(breaks) & breaks < 0)
+    y_view$breaks <- breaks[keep]
+    if (!is.null(y_view$labels) && length(y_view$labels) == length(breaks)) {
+      y_view$labels <- y_view$labels[keep]
+    }
+    layout$panel_params[[panel_id]]$y <- y_view
+  }
+
+  layout
+}
+
 apply_facet_vertical <- function(layout, data, params = list()) {
   if (!identical(params$vertical %||% "default", "center")) {
     return(layout)
@@ -208,6 +463,10 @@ apply_facet_vertical <- function(layout, data, params = list()) {
     layout_df$PANEL[annotation_rows]
   ))
   annotation_panel_ids <- annotation_panel_ids[!is.na(annotation_panel_ids)]
+  composite_panel_ids <- unique(as.integer(
+    layout$ggexon_composite_coverage_panels %||% integer()
+  ))
+  annotation_panel_ids <- setdiff(annotation_panel_ids, composite_panel_ids)
   centers <- annotation_panel_body_centers(data, annotation_panel_ids)
   if (length(centers) == 0L) {
     return(layout)
@@ -382,8 +641,15 @@ build_ggexon <- S7::method(ggexon_build, class_ggexon) <- function(plot, ...) {
       plot <- plot + geom_blank()
     }
 
-    layers <- plot@layers
+    layers <- lapply(plot@layers, function(layer) {
+      if (inherits(layer, "ggproto")) {
+        ggplot2::ggproto(NULL, layer)
+      } else {
+        layer
+      }
+    })
     layers <- ggexon_apply_output_size_to_layers(layers, plot@output_size)
+    plot@layers <- layers
     data <- rep(list(NULL), length(layers))
 
     syn_plot_context <- collect_syn_plot_context(layers, plot@data, facet = plot@facet)
@@ -506,16 +772,32 @@ build_ggexon <- S7::method(ggexon_build, class_ggexon) <- function(plot, ...) {
     # Apply position adjustments
     data <- by_layer(function(l, d) l$compute_position(d, layout), layers, data, "computing position")
 
+    coverage_bands <- apply_coverage_panel_bands(data, layers, layout = layout)
+    data <- coverage_bands$data
+    layout$ggexon_composite_coverage_panels <- coverage_bands$composite_panels
+    layout$ggexon_coverage_max <- coverage_bands$coverage_max
+    layout$ggexon_coverage_training_max <- coverage_bands$training_max
+    layout <- share_composite_coverage_y_scale(
+      layout,
+      coverage_bands$composite_panels
+    )
+
     # Reset position scales, then re-train and map.  This ensures that facets
     # have control over the range of a plot: is it generated from what is
     # displayed, or does it include the range of underlying data
     data <- .ignore_data(data)
     layout$reset_scales()
     layout$train_position(data, scale_x(), scale_y())
+    layout <- train_composite_coverage_y_scales(
+      layout,
+      coverage_bands$composite_panels,
+      coverage_bands$training_max
+    )
     layout <- apply_panel_xlim_to_trained_scales(layout)
     layout$setup_panel_params()
     layout <- apply_link_panel_y_range(layout)
     layout <- apply_facet_vertical(layout, data, plot@facet$params %||% list())
+    layout <- filter_composite_coverage_y_breaks(layout)
     layout <- apply_ggexon_genomic_x_axis(layout, plot@genomic_x_scale)
     layout <- apply_facet_reverse_x(layout, plot@facet$params %||% list())
     data <- layout$map_position(data)
@@ -554,6 +836,14 @@ build_ggexon <- S7::method(ggexon_build, class_ggexon) <- function(plot, ...) {
 
     # Consolidate alt-text
     plot@labels$alt <- get_alt_text(plot)
+
+    if (!is.null(syn_plot_context)) {
+      compact_context <- compact_syn_plot_context(syn_plot_context)
+      for (i in seq_along(layers)) {
+        layers[[i]]$syn_plot_context <- compact_context
+      }
+      plot@layers <- layers
+    }
 
     build <- class_ggexon_built(data = data, layout = layout, plot = plot)
     class(build) = union(c("ggexon_built", "ggplot2::ggplot_built"), class(build))

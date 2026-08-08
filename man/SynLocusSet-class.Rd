@@ -17,3 +17,4 @@ syntenic window.
 Required columns are \code{locus_id}, \code{individual}, \code{seqname}, \code{start}, \code{end},
 \code{row_group}, \code{col_group}, and \code{track}.}
 }}
+

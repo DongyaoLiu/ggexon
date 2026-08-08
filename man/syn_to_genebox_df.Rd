@@ -32,8 +32,9 @@ CDS anchors.}
 }
 \value{
 A data frame with one selected protein-coding transcript per gene.
-Per-end source and fallback columns distinguish complete, exactly
-three-nucleotide codon features from terminal-CDS positional proxies.
+Per-end source and fallback columns distinguish complete,
+transcript-consistent three-nucleotide codon features from terminal-CDS
+positional proxies.
 }
 \description{
 \code{syn_to_genebox_df()} is the data compiler used by \code{\link[=geom_genebox]{geom_genebox()}} for

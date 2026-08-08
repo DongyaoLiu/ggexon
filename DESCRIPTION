@@ -64,6 +64,7 @@ Collate:
     'SynSpecies-class.R'
     'aes-evaluation.R'
     'all-classes-S7.R'
+    'bigwig-annotation.R'
     'coord.R'
     'cross-panel-annotations.R'
     'facet-genomics.R'
