@@ -18,11 +18,14 @@ In addition to the slots listed below, the class inherits \code{name},
 \describe{
 \item{\code{data_format}}{Signal file format label. Currently \code{"bigwig"}.}
 
-\item{\code{signal}}{Optional cached parsed signal data.}
+\item{\code{signal}}{Compatibility slot for serialized cached signal data. Queries do
+not populate or update this slot.}
 
-\item{\code{seqinfo}}{Optional cached \code{Seqinfo} describing available sequences.}
+\item{\code{seqinfo}}{Compatibility slot for serialized \code{Seqinfo} data. Queries do
+not populate or update this slot.}
 
-\item{\code{window_cache}}{Cache of previously queried genomic windows.}
+\item{\code{window_cache}}{Compatibility slot for serialized queried windows. Queries
+do not populate or update this slot.}
 }}
 
 \section{Prototype defaults}{

@@ -130,6 +130,11 @@ xz <- add_annotation(
 )
 ```
 
+`SynBigWigAnnotation` keeps the BigWig path as an attached annotation layer;
+the signal is queried only when a genomic region is requested.  This keeps
+queries immutable: asking for signal returns ranges and does not modify the
+attached object.
+
 ## Alignment, homology, and layout classes
 
 Comparative relationships and cross-species gene mappings are stored at the
@@ -654,8 +659,28 @@ links <- pairwise_alignment_data(
 )
 ```
 
-Other data verbs include `query_variants()`, `query_signal()`,
-`query_domains()`, `query_protein_mutations()`, `extract_cds_seq()`,
+For an attached BigWig layer, `query_annotation()` is the generic
+region-query interface and takes a length-one `GRanges`.  `query_signal()` is
+the typed shortcut that accepts chromosome and coordinates.  Both calls return
+the same interval-native signal ranges with raw `score` metadata; they do not
+alter the annotation object or expand intervals to per-base rows.
+
+```{r eval = FALSE}
+region <- GenomicRanges::GRanges(
+  "I",
+  IRanges::IRanges(2332338L, 2373985L)
+)
+query_annotation(get_annotation(xz, "coverage"), region)
+query_signal(
+  get_annotation(xz, "coverage"),
+  chr = "I",
+  start = 2332338L,
+  end = 2373985L
+)
+```
+
+Other data verbs include `query_annotation()`, `query_variants()`,
+`query_signal()`, `query_domains()`, `query_protein_mutations()`, `extract_cds_seq()`,
 `translate_protein()`, `project_domains_to_genome()`, and
 `project_mutations_to_genome()`.
 

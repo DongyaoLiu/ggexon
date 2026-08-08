@@ -1,0 +1,5 @@
+strain	source_bam	bigwig	chr	start	end	bin_size	normalization	bamCoverage_region	bamCoverage_version	checksum
+XZ1516	/Users/liudongyao/Downloads/repository/TA_tmp/sept2_absent_igv_bams/bams/XZ1516.ChrI.ChrIII.ChrV.bam	XZ1516.raw.bw	I	2332338	2373985	1	None	I:2332337:2373985	bamCoverage 3.5.6	3e76b0ba8d503f2489c8cd59450701f8
+ECA2091	/Users/liudongyao/Downloads/repository/TA_tmp/sept2_absent_igv_bams/bams/ECA2091.ChrI.ChrIII.ChrV.bam	ECA2091.raw.bw	I	2332338	2373985	1	None	I:2332337:2373985	bamCoverage 3.5.6	5a0be0290ed8404defda4782db43745b
+ECA701	/Users/liudongyao/Downloads/repository/TA_tmp/sept2_absent_igv_bams/bams/ECA701.ChrI.ChrIII.ChrV.bam	ECA701.raw.bw	I	2332338	2373985	1	None	I:2332337:2373985	bamCoverage 3.5.6	93550565a1bbc61cb6667dd66ce1fa70
+ECA2191	/Users/liudongyao/Downloads/repository/TA_tmp/sept2_absent_igv_bams/bams/ECA2191.ChrI.ChrIII.ChrV.bam	ECA2191.raw.bw	I	2332338	2373985	1	None	I:2332337:2373985	bamCoverage 3.5.6	6ff0ddc16be5a81bacc66586dd12d1b7

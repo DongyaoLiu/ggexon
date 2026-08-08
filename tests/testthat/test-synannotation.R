@@ -78,6 +78,98 @@ test_that("SynAnnotation subclasses can be attached to SynIndividual", {
   expect_identical(active_feature_annotation(x), "altpred")
 })
 
+test_that("BigWig queries dispatch generically without mutating their object", {
+  bw_path <- tempfile(fileext = ".bw")
+  bw_gr <- GenomicRanges::GRanges(
+    "chr1",
+    IRanges::IRanges(c(1L, 21L), c(10L, 30L)),
+    score = c(5, 8)
+  )
+  GenomeInfoDb::seqinfo(bw_gr) <- GenomeInfoDb::Seqinfo(
+    "chr1",
+    seqlengths = 100L
+  )
+  rtracklayer::export.bw(bw_gr, bw_path)
+
+  annotation <- SynBigWigAnnotation("coverage", bw_path)
+  before <- serialize(annotation, NULL)
+  region <- GenomicRanges::GRanges(
+    "chr1",
+    IRanges::IRanges(5L, 22L)
+  )
+
+  generic_hits <- query_annotation(annotation, region)
+  typed_hits <- query_signal(annotation, "chr1", 5L, 22L)
+
+  expect_s4_class(generic_hits, "GRanges")
+  expect_identical(generic_hits, typed_hits)
+  expect_identical(as.numeric(S4Vectors::mcols(generic_hits)$score), c(5, 8))
+  expect_lt(length(generic_hits), sum(BiocGenerics::width(generic_hits)))
+  expect_identical(serialize(annotation, NULL), before)
+  expect_error(
+    query_annotation(
+      annotation,
+      GenomicRanges::GRanges("chr2", IRanges::IRanges(1L, 10L))
+    ),
+    "absent"
+  )
+})
+
+test_that("BigWig query validation reports specific failures", {
+  expect_error(SynBigWigAnnotation("coverage", ""), "non-empty")
+  annotation <- SynBigWigAnnotation("coverage", "missing.bw")
+  region <- GenomicRanges::GRanges("chr1", IRanges::IRanges(1L, 10L))
+  expect_error(query_annotation(annotation, region), "missing.bw")
+  expect_error(
+    query_annotation(annotation, c(region, region)),
+    "length-one"
+  )
+})
+
+test_that("query_signal validates chromosome and whole-number coordinates before coercion", {
+  annotation <- SynBigWigAnnotation("coverage", "missing.bw")
+
+  expect_error(
+    query_signal(annotation, "", 1, 10),
+    "non-empty.*chromosome|chromosome.*non-empty"
+  )
+  expect_error(
+    query_signal(annotation, c("chr1", "chr2"), 1, 10),
+    "one non-empty.*chromosome|chromosome.*scalar"
+  )
+  expect_error(
+    query_signal(annotation, "chr1", 1.5, 10),
+    "whole-number"
+  )
+  expect_error(
+    query_signal(annotation, "chr1", 1, Inf),
+    "finite"
+  )
+  expect_error(
+    query_signal(annotation, "chr1", 20, 10),
+    "end.*start|start.*end"
+  )
+})
+
+test_that("BigWig inspection failures retain annotation path and window context", {
+  bad_path <- tempfile(fileext = ".bw")
+  writeLines("not a BigWig", bad_path)
+  annotation <- SynBigWigAnnotation("broken coverage", bad_path)
+  region <- GenomicRanges::GRanges(
+    "chr1",
+    IRanges::IRanges(1L, 10L)
+  )
+
+  message <- tryCatch(
+    query_annotation(annotation, region),
+    error = conditionMessage
+  )
+  expect_match(message, "broken coverage", fixed = TRUE)
+  expect_match(message, basename(bad_path), fixed = TRUE)
+  expect_match(message, "chr1:1-10", fixed = TRUE)
+  expect_match(message, "open|inspect|import", ignore.case = TRUE)
+})
+
 test_that("type-specific annotation verbs query their data sources", {
   vcf_path <- system.file(
     "extdata",

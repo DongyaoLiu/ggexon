@@ -12,3 +12,4 @@
 ^codex_output$
 ^\.Rhistory$
 ^tests/ldy_test\.R$
+^\.superpowers$

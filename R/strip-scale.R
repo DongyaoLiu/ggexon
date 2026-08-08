@@ -730,6 +730,13 @@ strip_scale_to_plot_x <- function(x, transform) {
 .strip_scale_force_fixed_x <- function(layout, transform_panels) {
   layout_df <- layout$layout
   if (!is.data.frame(layout_df) || !"PANEL" %in% names(layout_df)) return(layout)
+  # A fixed FacetGrid already shares one x scale. Mutating its axis-label
+  # bookkeeping is redundant and breaks axis attachment in ggplot2 4.0.0.
+  if (inherits(layout$facet, "FacetGrid") &&
+      length(unique(as.integer(layout_df$SCALE_X))) == 1L &&
+      !isTRUE(layout$facet$params$free$x)) {
+    return(layout)
+  }
   panel_ids <- as.character(unique(layout_df$PANEL))
   target_panels <- intersect(panel_ids, transform_panels)
   if (length(target_panels) == 0L) return(layout)

@@ -212,6 +212,92 @@ test_that("facet_genomics centers annotation bodies without changing linkage ran
   )
 })
 
+test_that("facet vertical centering skips composed coverage panels and link ranges", {
+  track_levels <- c("human", "link_human_macaque", "macaque")
+  coverage_df <- data.frame(
+    track = factor(c("human", "human", "macaque", "macaque"), levels = track_levels),
+    xmin = c(10, 40, 1010, 1040),
+    xmax = c(30, 60, 1030, 1060),
+    coverage = c(0, 20, 0, 10)
+  )
+  annotation_df <- data.frame(
+    track = factor(c("human", "macaque"), levels = track_levels),
+    xmin = c(10, 1010),
+    xmax = c(80, 1080),
+    y = 1,
+    strand = "+",
+    gene = c("human_gene", "macaque_gene"),
+    label = c("HUMAN", "MACAQUE"),
+    stringsAsFactors = FALSE
+  )
+  link_df <- data.frame(
+    track = factor("link_human_macaque", levels = track_levels),
+    tspecies = "human",
+    tchr = "chr7",
+    tstart = 20,
+    tend = 60,
+    strand = "+",
+    qspecies = "macaque",
+    qchr = "chr3",
+    qstart = 1020,
+    qend = 1060,
+    group = 1,
+    stringsAsFactors = FALSE
+  )
+
+  built <- ggexon_build(
+    ggexon() +
+      geom_coverage(
+        data = coverage_df,
+        mapping = ggplot2::aes(
+          xmin = xmin,
+          xmax = xmax,
+          coverage = coverage,
+          track = track
+        ),
+        inherit.aes = FALSE
+      ) +
+      geom_genetag(
+        data = annotation_df,
+        exon_height = 0.8,
+        label_position = "none"
+      ) +
+      geom_synteny_link(
+        data = link_df,
+        mapping = ggplot2::aes(
+          tspecies = tspecies,
+          tchr = tchr,
+          tstart = tstart,
+          tend = tend,
+          strand = strand,
+          qspecies = qspecies,
+          qchr = qchr,
+          qstart = qstart,
+          qend = qend,
+          group = group
+        ),
+        inherit.aes = FALSE
+      ) +
+      facet_genomics(
+        ggplot2::vars(track),
+        scales = "free_y",
+        vertical = "center"
+      )
+  )
+
+  layout <- as.data.frame(built@layout$layout)
+  link_panel <- as.integer(layout$PANEL[layout$panel_type == "link"][[1L]])
+  coverage_data <- built@data[[1L]]
+  gene_data <- built@data[[2L]]
+
+  expect_true(all(coverage_data$ymin == 0))
+  expect_identical(coverage_data$ymax, coverage_data$coverage)
+  expect_equal(max(coverage_data$coverage), 20)
+  expect_true(all(gene_data$y < 0))
+  expect_true(all(gene_data$ymax <= 0))
+  expect_equal(built@layout$panel_params[[link_panel]]$y.range, c(0, 1))
+})
+
 test_that("annotation panel centers prefer body coordinates over label bounds", {
   layer_data <- list(
     data.frame(

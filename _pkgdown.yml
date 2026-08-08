@@ -25,10 +25,12 @@ navbar:
       menu:
       - text: Complete workflow
         href: articles/ggexon-workflow.html
-      - text: HOXA synteny demo
-        href: articles/hoxa-ensembl115-demo.html
+      - text: HOX cluster expansion
+        href: articles/hox-cluster-expansion-demo.html
       - text: CD44 splice variant alignment
         href: articles/cd44-splice-variants-demo.html
+      - text: PEEL-1 raw BigWig coverage
+        href: articles/bigwig-coverage-demo.html
       - text: Classes, geoms, facets, and guides
         href: articles/ggexon-classes-and-verbs.html
 
@@ -37,8 +39,11 @@ articles:
   navbar: ~
   contents:
   - ggexon-workflow
+  - hox-cluster-expansion-demo
   - hoxa-ensembl115-demo
   - cd44-splice-variants-demo
+  - bigwig-coverage-demo
+  - cox1-yeast-demo
   - ggexon-classes-and-verbs
 
 reference:
@@ -74,7 +79,10 @@ reference:
   - ggexon_output_size
   - geom_exon
   - geom_exon2
+  - geom_coverage
   - geom_genetag
+  - geom_genebox
+  - GeomGeneBox
   - geom_genelabel
   - geom_genomic_tree
   - geom_motif
@@ -146,6 +154,7 @@ reference:
   - annotation_data
   - query_features
   - query_variants
+  - query_annotation
   - query_signal
   - query_domains
   - query_protein_mutations

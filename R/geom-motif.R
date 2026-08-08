@@ -1,4 +1,5 @@
 GeomMotif <- ggproto("GeomMotif", Geom,
+                    ggexon_panel_role = "annotation",
                     required_aes = c("ymin", "xmin", "xmax", "transcripts", "strand", "track", "text"),
                     extra_params = c(
                       "exon_height", "na.rm", "x_translation",

@@ -5,7 +5,9 @@
 \alias{GeomCoverage}
 \title{Coverage geom ggproto}
 \description{
-\code{GeomCoverage} draws coverage rectangles derived from BigWig signal over a
-selected genomic window.
+\code{GeomCoverage} draws interval-native coverage rectangles. For Syn object
+input, signal intervals are queried from an attached
+\code{SynBigWigAnnotation}; plain data frames can supply the required aesthetics
+directly.
 }
 \keyword{datasets}

@@ -4,3 +4,9 @@
 !hoxa_ensembl115/**
 !cd44_pairwise_ensembl116/
 !cd44_pairwise_ensembl116/**
+!peel1_coverage/
+!peel1_coverage/**
+!hox_cluster_expansion/
+!hox_cluster_expansion/**
+!cox1_yeast_pairwise/
+!cox1_yeast_pairwise/**
