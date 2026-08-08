@@ -1,0 +1,8 @@
+link_group	strand	fission_exon_id	fission_exon_rank	fission_start	fission_end	fission_overlap_bp	budding_exon_id	budding_exon_rank	budding_start	budding_end	budding_overlap_bp	link_identity	min_overlap_bp
+lastz_1	+	SPMIT.01.1:exon:1	1	4885	5288	213	Q0045.cds1	1	13818	13986	169	59.036	169
+lastz_2	+	SPMIT.01.1:exon:2	2	6499	6843	344	Q0045.cds4	4	20508	20984	333	57.11	333
+lastz_2	+	SPMIT.01.1:exon:2	2	6499	6843	344	Q0045.cds5	5	21995	22246	252	57.11	252
+lastz_2	+	SPMIT.01.1:exon:3	3	7925	8792	255	Q0045.cds4	4	20508	20984	333	57.11	255
+lastz_2	+	SPMIT.01.1:exon:3	3	7925	8792	255	Q0045.cds5	5	21995	22246	252	57.11	252
+lastz_3	+	SPMIT.01.1:exon:3	3	7925	8792	134	Q0045.cds6	6	23612	23746	123	74.627	123
+lastz_4	+	SPMIT.01.1:exon:3	3	7925	8792	464	Q0045.cds8	8	26229	26701	473	64.351	464

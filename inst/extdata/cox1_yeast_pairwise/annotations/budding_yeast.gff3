@@ -1,0 +1,10 @@
+##gff-version 3
+chrmt	SGD	mRNA	13818	26701	.	+	.	ID=Q0045.mRNA;Parent=Q0045;gene_id=Q0045;gene_name=COX1;transcript_id=Q0045.mRNA;transcript_name=COX1
+chrmt	SGD	CDS	13818	13986	.	+	.	ID=Q0045.cds1;Parent=Q0045.mRNA;gene_id=Q0045;gene_name=COX1;transcript_id=Q0045.mRNA;transcript_name=COX1;rank=1
+chrmt	SGD	CDS	16435	16470	.	+	.	ID=Q0045.cds2;Parent=Q0045.mRNA;gene_id=Q0045;gene_name=COX1;transcript_id=Q0045.mRNA;transcript_name=COX1;rank=2
+chrmt	SGD	CDS	18954	18991	.	+	.	ID=Q0045.cds3;Parent=Q0045.mRNA;gene_id=Q0045;gene_name=COX1;transcript_id=Q0045.mRNA;transcript_name=COX1;rank=3
+chrmt	SGD	CDS	20508	20984	.	+	.	ID=Q0045.cds4;Parent=Q0045.mRNA;gene_id=Q0045;gene_name=COX1;transcript_id=Q0045.mRNA;transcript_name=COX1;rank=4
+chrmt	SGD	CDS	21995	22246	.	+	.	ID=Q0045.cds5;Parent=Q0045.mRNA;gene_id=Q0045;gene_name=COX1;transcript_id=Q0045.mRNA;transcript_name=COX1;rank=5
+chrmt	SGD	CDS	23612	23746	.	+	.	ID=Q0045.cds6;Parent=Q0045.mRNA;gene_id=Q0045;gene_name=COX1;transcript_id=Q0045.mRNA;transcript_name=COX1;rank=6
+chrmt	SGD	CDS	25318	25342	.	+	.	ID=Q0045.cds7;Parent=Q0045.mRNA;gene_id=Q0045;gene_name=COX1;transcript_id=Q0045.mRNA;transcript_name=COX1;rank=7
+chrmt	SGD	CDS	26229	26701	.	+	.	ID=Q0045.cds8;Parent=Q0045.mRNA;gene_id=Q0045;gene_name=COX1;transcript_id=Q0045.mRNA;transcript_name=COX1;rank=8

@@ -85,7 +85,9 @@ strip_scale(...)
 - guide:
 
   Strip-scale x-axis guide. `"range"` draws a simple per-track begin/end
-  genomic bp range guide; `"none"` suppresses the custom guide.
+  genomic bp range guide using the panel window when one is available,
+  and otherwise the visible gene range; `"none"` suppresses the custom
+  guide.
 
 - ...:
 

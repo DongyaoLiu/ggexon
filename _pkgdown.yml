@@ -40,7 +40,6 @@ articles:
   contents:
   - ggexon-workflow
   - hox-cluster-expansion-demo
-  - hoxa-ensembl115-demo
   - cd44-splice-variants-demo
   - bigwig-coverage-demo
   - cox1-yeast-demo

@@ -15,11 +15,17 @@ Key files:
 - `cd44_selected_exons.tsv`: plot-ready exon intervals for those isoforms.
 - `cd44_selected_unique_exons.tsv`: unique exon intervals in the selected isoforms.
 - `cd44_common_exons.tsv`: exons present in all selected isoforms per species.
+- `cd44_exon_peptides.tsv`: translated peptide fragments assigned to selected
+  transcript exons by coding-frame codon start.
+- `cd44_unique_exon_peptides.tsv`: representative peptide fragment per selected
+  unique exon.
 - `cd44_nuclinks_lastz.tsv`: LASTZ-derived genomic interval links retained at alignment length >= 80 bp and identity >= 50%, with identity bins and human gene-region labels.
 - `cd44_exon_homology_candidates.tsv`: exon-homology candidates from overlaps
   between LASTZ blocks and Ensembl exons.
 - `cd44_exon_homology_ranked.tsv`: one row per exon-pair candidate with
   reciprocal-best ranks and common/variable exon flags.
+- `cd44_exon_protein_identity.tsv`: per-exon peptide identity for the ranked
+  exon-pair candidates.
 - `annotations/*.gff3`: compact selected-transcript GFF3 files.
 - `sequences/*.fa`: genomic DNA windows used for LASTZ.
 - `cd44_provenance.tsv`: source URLs and local command provenance.

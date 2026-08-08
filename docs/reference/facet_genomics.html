@@ -72,6 +72,7 @@ intermediate link panels used by <code><a href="geom_nuclink.html">geom_nuclink(
 <span>  link_axis <span class="op">=</span> <span class="st">"inherit"</span>,</span>
 <span>  link_strip <span class="op">=</span> <span class="st">"inherit"</span>,</span>
 <span>  annotation_axis <span class="op">=</span> <span class="st">"all"</span>,</span>
+<span>  vertical <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"default"</span>, <span class="st">"center"</span><span class="op">)</span>,</span>
 <span>  reverse_x <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  reverse_x_match_by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"auto"</span>, <span class="st">"species"</span>, <span class="st">"strain"</span>, <span class="st">"id"</span>, <span class="st">"track"</span><span class="op">)</span>,</span>
 <span>  xlim <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -159,6 +160,13 @@ x-axis that <code>scales = "free_x"</code> draws on every panel. <code>"bottom"<
 x-axis only on the bottom-most annotation panel of each column and blanks
 the interior ones, collapsing the reclaimed axis rows so the panels sit
 compactly. The per-panel free scales are preserved either way.</p></dd>
+
+
+<dt id="arg-vertical">vertical<a class="anchor" aria-label="anchor" href="#arg-vertical"></a></dt>
+<dd><p>Annotation-panel vertical alignment. <code>"default"</code> preserves
+the trained y-ranges. <code>"center"</code> symmetrizes each annotation panel's
+y-range around its visible annotation bodies. Link panels keep their fixed
+vertical range in either mode.</p></dd>
 
 
 <dt id="arg-reverse-x">reverse_x<a class="anchor" aria-label="anchor" href="#arg-reverse-x"></a></dt>

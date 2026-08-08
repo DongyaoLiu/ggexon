@@ -47,6 +47,11 @@ metadata, and an optional reusable `SynLayout`.
   Named list of `HomologyAnnotation` objects storing cross-species gene
   homology mappings.
 
+- `locus_sets`:
+
+  Named list of `SynLocusSet` objects storing comparable locus windows
+  for multi-locus grid layouts.
+
 ## Prototype defaults
 
 - `individuals = list()`
@@ -56,6 +61,8 @@ metadata, and an optional reusable `SynLayout`.
 - `multiple_alignments = list()`
 
 - `homology_annotations = list()`
+
+- `locus_sets = list()`
 
 - `tree = NULL`
 
@@ -76,5 +83,7 @@ metadata, and an optional reusable `SynLayout`.
 - `multiple_alignments` must contain only `SynMultiAlignment` objects.
 
 - `homology_annotations` must contain only `HomologyAnnotation` objects.
+
+- `locus_sets` must contain only `SynLocusSet` objects.
 
 - `layout` must be either `NULL` or a `SynLayout`.

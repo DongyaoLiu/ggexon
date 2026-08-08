@@ -277,6 +277,40 @@ region_summary <- do.call(rbind, lapply(seq_len(nrow(regions)), function(i) {
 knitr::kable(region_summary)
 ```
 
+The same exon-pair candidates can be summarized at the protein level. Peptide
+fragments are reconstructed from selected transcript CDS codons and assigned to
+the exon containing each codon start. Protein identity below uses a global
+peptide alignment; the denominator is aligned amino-acid columns, including
+gap columns.
+
+```{r cd44-exon-protein-identity, message = FALSE, warning = FALSE}
+protein_identity <- read.delim(
+  file.path(demo_dir, "cd44_exon_protein_identity.tsv"),
+  check.names = FALSE
+)
+
+protein_identity_table <- protein_identity[
+  protein_identity$reciprocal_best,
+  c(
+    "human_exon_index", "mouse_exon_index",
+    "human_exon_role", "mouse_exon_role",
+    "max_link_identity",
+    "human_peptide_length_aa", "mouse_peptide_length_aa",
+    "protein_identical_aa", "protein_aligned_aa", "protein_gap_aa",
+    "protein_identity"
+  )
+]
+names(protein_identity_table) <- c(
+  "Human exon", "Mouse exon",
+  "Human role", "Mouse role",
+  "Genomic identity (%)",
+  "Human peptide aa", "Mouse peptide aa",
+  "Identical aa", "Aligned aa", "Gap aa",
+  "Protein identity (%)"
+)
+knitr::kable(protein_identity_table, row.names = FALSE)
+```
+
 # Reusing the pattern
 
 For splice-variant comparisons, keep the biological feature colors on the exon

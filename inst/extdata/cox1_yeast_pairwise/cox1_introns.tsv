@@ -1,0 +1,10 @@
+species	gene_id	gene_symbol	transcript_id	transcript_name	intron_rank	intron_id	seqname	chr	start	end	strand	source_database
+fission_yeast	SPMIT.01	cox1	SPMIT.01.1	cox1	1	SPMIT.01.1:intron:1	mitochondrial	mitochondrial	5289	6498	1	PomBase
+fission_yeast	SPMIT.01	cox1	SPMIT.01.1	cox1	2	SPMIT.01.1:intron:2	mitochondrial	mitochondrial	6844	7924	1	PomBase
+budding_yeast	Q0045	COX1	Q0045.mRNA	COX1	1	Q0045.intron1	17	chrmt	13987	16434	1	SGD
+budding_yeast	Q0045	COX1	Q0045.mRNA	COX1	2	Q0045.intron2	17	chrmt	16471	18953	1	SGD
+budding_yeast	Q0045	COX1	Q0045.mRNA	COX1	3	Q0045.intron3	17	chrmt	18992	20507	1	SGD
+budding_yeast	Q0045	COX1	Q0045.mRNA	COX1	4	Q0045.intron4	17	chrmt	20985	21994	1	SGD
+budding_yeast	Q0045	COX1	Q0045.mRNA	COX1	5	Q0045.intron5	17	chrmt	22247	23611	1	SGD
+budding_yeast	Q0045	COX1	Q0045.mRNA	COX1	6	Q0045.intron6	17	chrmt	23747	25317	1	SGD
+budding_yeast	Q0045	COX1	Q0045.mRNA	COX1	7	Q0045.intron7	17	chrmt	25343	26228	1	SGD

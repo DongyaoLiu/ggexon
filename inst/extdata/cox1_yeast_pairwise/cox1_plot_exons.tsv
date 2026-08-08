@@ -1,0 +1,12 @@
+species	gene_id	gene_symbol	transcript_id	transcript_name	transcript_biotype	is_canonical	exon_rank	exon_id	seqname	chr	start	end	strand	source_database	gene_start	gene_end	xmin	xmax	y	ymin	track	individual	gene	transcript	transcripts	feature	type	exon_role
+budding_yeast	Q0045	COX1	Q0045.mRNA	COX1	protein_coding	1	1	Q0045.cds1	17	chrmt	13818	13986	+	SGD	13818	26701	13818	13986	1	0.2	budding_yeast	budding_yeast	COX1	COX1	COX1	CDS	exon	CDS
+budding_yeast	Q0045	COX1	Q0045.mRNA	COX1	protein_coding	1	2	Q0045.cds2	17	chrmt	16435	16470	+	SGD	13818	26701	16435	16470	1	0.2	budding_yeast	budding_yeast	COX1	COX1	COX1	CDS	exon	CDS
+budding_yeast	Q0045	COX1	Q0045.mRNA	COX1	protein_coding	1	3	Q0045.cds3	17	chrmt	18954	18991	+	SGD	13818	26701	18954	18991	1	0.2	budding_yeast	budding_yeast	COX1	COX1	COX1	CDS	exon	CDS
+budding_yeast	Q0045	COX1	Q0045.mRNA	COX1	protein_coding	1	4	Q0045.cds4	17	chrmt	20508	20984	+	SGD	13818	26701	20508	20984	1	0.2	budding_yeast	budding_yeast	COX1	COX1	COX1	CDS	exon	CDS
+budding_yeast	Q0045	COX1	Q0045.mRNA	COX1	protein_coding	1	5	Q0045.cds5	17	chrmt	21995	22246	+	SGD	13818	26701	21995	22246	1	0.2	budding_yeast	budding_yeast	COX1	COX1	COX1	CDS	exon	CDS
+budding_yeast	Q0045	COX1	Q0045.mRNA	COX1	protein_coding	1	6	Q0045.cds6	17	chrmt	23612	23746	+	SGD	13818	26701	23612	23746	1	0.2	budding_yeast	budding_yeast	COX1	COX1	COX1	CDS	exon	CDS
+budding_yeast	Q0045	COX1	Q0045.mRNA	COX1	protein_coding	1	7	Q0045.cds7	17	chrmt	25318	25342	+	SGD	13818	26701	25318	25342	1	0.2	budding_yeast	budding_yeast	COX1	COX1	COX1	CDS	exon	CDS
+budding_yeast	Q0045	COX1	Q0045.mRNA	COX1	protein_coding	1	8	Q0045.cds8	17	chrmt	26229	26701	+	SGD	13818	26701	26229	26701	1	0.2	budding_yeast	budding_yeast	COX1	COX1	COX1	CDS	exon	CDS
+fission_yeast	SPMIT.01	cox1	SPMIT.01.1	cox1	protein_coding	1	1	SPMIT.01.1:exon:1	mitochondrial	mitochondrial	4885	5288	+	PomBase	4885	8817	4885	5288	1	0.2	fission_yeast	fission_yeast	cox1	cox1	cox1	CDS	exon	CDS
+fission_yeast	SPMIT.01	cox1	SPMIT.01.1	cox1	protein_coding	1	2	SPMIT.01.1:exon:2	mitochondrial	mitochondrial	6499	6843	+	PomBase	4885	8817	6499	6843	1	0.2	fission_yeast	fission_yeast	cox1	cox1	cox1	CDS	exon	CDS
+fission_yeast	SPMIT.01	cox1	SPMIT.01.1	cox1	protein_coding	1	3	SPMIT.01.1:exon:3	mitochondrial	mitochondrial	7925	8792	+	PomBase	4885	8817	7925	8792	1	0.2	fission_yeast	fission_yeast	cox1	cox1	cox1	CDS	exon	CDS

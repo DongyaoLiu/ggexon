@@ -1,0 +1,361 @@
+species	matrix_row	matrix_column	cluster	hox_number	slot	slot_state	expected_functional_member	gene_symbol	gene_id	transcript_id	state_note
+human	human	A	A	15	Hox15	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+human	human	A	A	14	Hox14	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+human	human	A	A	13	Hox13	plotted_gene_model	TRUE	HOXA13	ENSG00000106031	ENST00000649031	
+human	human	A	A	12	Hox12	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+human	human	A	A	11	Hox11	plotted_gene_model	TRUE	HOXA11	ENSG00000005073	ENST00001135396	
+human	human	A	A	10	Hox10	plotted_gene_model	TRUE	HOXA10	ENSG00000253293	ENST00000396344	
+human	human	A	A	9	Hox9	plotted_gene_model	TRUE	HOXA9	ENSG00000078399	ENST00001143300	
+human	human	A	A	8	Hox8	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+human	human	A	A	7	Hox7	plotted_gene_model	TRUE	HOXA7	ENSG00000122592	ENST00001136817	
+human	human	A	A	6	Hox6	plotted_gene_model	TRUE	HOXA6	ENSG00000106006	ENST00001140137	
+human	human	A	A	5	Hox5	plotted_gene_model	TRUE	HOXA5	ENSG00000106004	ENST00001138441	
+human	human	A	A	4	Hox4	plotted_gene_model	TRUE	HOXA4	ENSG00000197576	ENST00000610970	
+human	human	A	A	3	Hox3	plotted_gene_model	TRUE	HOXA3	ENSG00000105997	ENST00000851228	
+human	human	A	A	2	Hox2	plotted_gene_model	TRUE	HOXA2	ENSG00000105996	ENST00001141882	
+human	human	A	A	1	Hox1	plotted_gene_model	TRUE	HOXA1	ENSG00000105991	ENST00000643460	
+human	human	B	B	15	Hox15	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+human	human	B	B	14	Hox14	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+human	human	B	B	13	Hox13	plotted_gene_model	TRUE	HOXB13	ENSG00000159184	ENST00001143312	
+human	human	B	B	12	Hox12	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+human	human	B	B	11	Hox11	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+human	human	B	B	10	Hox10	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+human	human	B	B	9	Hox9	plotted_gene_model	TRUE	HOXB9	ENSG00000170689	ENST00001142771	
+human	human	B	B	8	Hox8	plotted_gene_model	TRUE	HOXB8	ENSG00000120068	ENST00000884865	
+human	human	B	B	7	Hox7	plotted_gene_model	TRUE	HOXB7	ENSG00000260027	ENST00001137302	
+human	human	B	B	6	Hox6	plotted_gene_model	TRUE	HOXB6	ENSG00000108511	ENST00000484302	
+human	human	B	B	5	Hox5	plotted_gene_model	TRUE	HOXB5	ENSG00000120075	ENST00001143579	
+human	human	B	B	4	Hox4	plotted_gene_model	TRUE	HOXB4	ENSG00000182742	ENST00001143498	
+human	human	B	B	3	Hox3	plotted_gene_model	TRUE	HOXB3	ENSG00000120093	ENST00000866120	
+human	human	B	B	2	Hox2	plotted_gene_model	TRUE	HOXB2	ENSG00000173917	ENST00001136010	
+human	human	B	B	1	Hox1	plotted_gene_model	TRUE	HOXB1	ENSG00000120094	ENST00000239174	
+human	human	C	C	15	Hox15	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+human	human	C	C	14	Hox14	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+human	human	C	C	13	Hox13	plotted_gene_model	TRUE	HOXC13	ENSG00000123364	ENST00001142801	
+human	human	C	C	12	Hox12	plotted_gene_model	TRUE	HOXC12	ENSG00000123407	ENST00000243103	
+human	human	C	C	11	Hox11	plotted_gene_model	TRUE	HOXC11	ENSG00000123388	ENST00000546378	
+human	human	C	C	10	Hox10	plotted_gene_model	TRUE	HOXC10	ENSG00000180818	ENST00001125459	
+human	human	C	C	9	Hox9	plotted_gene_model	TRUE	HOXC9	ENSG00000180806	ENST00000508190	
+human	human	C	C	8	Hox8	plotted_gene_model	TRUE	HOXC8	ENSG00000037965	ENST00001141970	
+human	human	C	C	7	Hox7	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+human	human	C	C	6	Hox6	plotted_gene_model	TRUE	HOXC6	ENSG00000197757	ENST00000504315	
+human	human	C	C	5	Hox5	plotted_gene_model	TRUE	HOXC5	ENSG00000172789	ENST00001142737	
+human	human	C	C	4	Hox4	plotted_gene_model	TRUE	HOXC4	ENSG00000198353	ENST00000303406	
+human	human	C	C	3	Hox3	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+human	human	C	C	2	Hox2	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+human	human	C	C	1	Hox1	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+human	human	D	D	15	Hox15	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+human	human	D	D	14	Hox14	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+human	human	D	D	13	Hox13	plotted_gene_model	TRUE	HOXD13	ENSG00000128714	ENST00001144981	
+human	human	D	D	12	Hox12	plotted_gene_model	TRUE	HOXD12	ENSG00000170178	ENST00000406506	
+human	human	D	D	11	Hox11	plotted_gene_model	TRUE	HOXD11	ENSG00000128713	ENST00001140783	
+human	human	D	D	10	Hox10	plotted_gene_model	TRUE	HOXD10	ENSG00000128710	ENST00001144475	
+human	human	D	D	9	Hox9	plotted_gene_model	TRUE	HOXD9	ENSG00000128709	ENST00001141605	
+human	human	D	D	8	Hox8	plotted_gene_model	TRUE	HOXD8	ENSG00000175879	ENST00000429017	
+human	human	D	D	7	Hox7	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+human	human	D	D	6	Hox6	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+human	human	D	D	5	Hox5	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+human	human	D	D	4	Hox4	plotted_gene_model	TRUE	HOXD4	ENSG00000170166	ENST00001121748	
+human	human	D	D	3	Hox3	plotted_gene_model	TRUE	HOXD3	ENSG00000128652	ENST00000963805	
+human	human	D	D	2	Hox2	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+human	human	D	D	1	Hox1	plotted_gene_model	TRUE	HOXD1	ENSG00000128645	ENST00001046781	
+mouse	mouse	A	A	15	Hox15	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+mouse	mouse	A	A	14	Hox14	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+mouse	mouse	A	A	13	Hox13	plotted_gene_model	TRUE	Hoxa13	ENSMUSG00000038203	ENSMUST00000147595	
+mouse	mouse	A	A	12	Hox12	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+mouse	mouse	A	A	11	Hox11	plotted_gene_model	TRUE	Hoxa11	ENSMUSG00000038210	ENSMUST00000048026	
+mouse	mouse	A	A	10	Hox10	plotted_gene_model	TRUE	Hoxa10	ENSMUSG00000000938	ENSMUST00000121043	
+mouse	mouse	A	A	9	Hox9	plotted_gene_model	TRUE	Hoxa9	ENSMUSG00000038227	ENSMUST00000048680	
+mouse	mouse	A	A	8	Hox8	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+mouse	mouse	A	A	7	Hox7	plotted_gene_model	TRUE	Hoxa7	ENSMUSG00000038236	ENSMUST00000150041	
+mouse	mouse	A	A	6	Hox6	plotted_gene_model	TRUE	Hoxa6	ENSMUSG00000043219	ENSMUST00000062829	
+mouse	mouse	A	A	5	Hox5	plotted_gene_model	TRUE	Hoxa5	ENSMUSG00000038253	ENSMUST00000048794	
+mouse	mouse	A	A	4	Hox4	plotted_gene_model	TRUE	Hoxa4	ENSMUSG00000000942	ENSMUST00000101395	
+mouse	mouse	A	A	3	Hox3	plotted_gene_model	TRUE	Hoxa3	ENSMUSG00000079560	ENSMUST00000114434	
+mouse	mouse	A	A	2	Hox2	plotted_gene_model	TRUE	Hoxa2	ENSMUSG00000014704	ENSMUST00000014848	
+mouse	mouse	A	A	1	Hox1	plotted_gene_model	TRUE	Hoxa1	ENSMUSG00000029844	ENSMUST00000000964	
+mouse	mouse	B	B	15	Hox15	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+mouse	mouse	B	B	14	Hox14	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+mouse	mouse	B	B	13	Hox13	plotted_gene_model	TRUE	Hoxb13	ENSMUSG00000049604	ENSMUST00000062709	
+mouse	mouse	B	B	12	Hox12	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+mouse	mouse	B	B	11	Hox11	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+mouse	mouse	B	B	10	Hox10	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+mouse	mouse	B	B	9	Hox9	plotted_gene_model	TRUE	Hoxb9	ENSMUSG00000020875	ENSMUST00000000010	
+mouse	mouse	B	B	8	Hox8	plotted_gene_model	TRUE	Hoxb8	ENSMUSG00000056648	ENSMUST00000438744	
+mouse	mouse	B	B	7	Hox7	plotted_gene_model	TRUE	Hoxb7	ENSMUSG00000038721	ENSMUST00000049352	
+mouse	mouse	B	B	6	Hox6	plotted_gene_model	TRUE	Hoxb6	ENSMUSG00000000690	ENSMUST00000173432	
+mouse	mouse	B	B	5	Hox5	plotted_gene_model	TRUE	Hoxb5	ENSMUSG00000038700	ENSMUST00000049272	
+mouse	mouse	B	B	4	Hox4	plotted_gene_model	TRUE	Hoxb4	ENSMUSG00000038692	ENSMUST00000049241	
+mouse	mouse	B	B	3	Hox3	plotted_gene_model	TRUE	Hoxb3	ENSMUSG00000048763	ENSMUST00000093944	
+mouse	mouse	B	B	2	Hox2	plotted_gene_model	TRUE	Hoxb2	ENSMUSG00000075588	ENSMUST00000100523	
+mouse	mouse	B	B	1	Hox1	plotted_gene_model	TRUE	Hoxb1	ENSMUSG00000018973	ENSMUST00000019117	
+mouse	mouse	C	C	15	Hox15	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+mouse	mouse	C	C	14	Hox14	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+mouse	mouse	C	C	13	Hox13	plotted_gene_model	TRUE	Hoxc13	ENSMUSG00000001655	ENSMUST00000001700	
+mouse	mouse	C	C	12	Hox12	plotted_gene_model	TRUE	Hoxc12	ENSMUSG00000050328	ENSMUST00000055562	
+mouse	mouse	C	C	11	Hox11	plotted_gene_model	TRUE	Hoxc11	ENSMUSG00000001656	ENSMUST00000001701	
+mouse	mouse	C	C	10	Hox10	plotted_gene_model	TRUE	Hoxc10	ENSMUSG00000022484	ENSMUST00000001699	
+mouse	mouse	C	C	9	Hox9	plotted_gene_model	TRUE	Hoxc9	ENSMUSG00000036139	ENSMUST00000403677	
+mouse	mouse	C	C	8	Hox8	plotted_gene_model	TRUE	Hoxc8	ENSMUSG00000001657	ENSMUST00000001703	
+mouse	mouse	C	C	7	Hox7	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+mouse	mouse	C	C	6	Hox6	plotted_gene_model	TRUE	Hoxc6	ENSMUSG00000001661	ENSMUST00000001711	
+mouse	mouse	C	C	5	Hox5	plotted_gene_model	TRUE	Hoxc5	ENSMUSG00000022485	ENSMUST00000001709	
+mouse	mouse	C	C	4	Hox4	plotted_gene_model	TRUE	Hoxc4	ENSMUSG00000075394	ENSMUST00000165375	
+mouse	mouse	C	C	3	Hox3	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+mouse	mouse	C	C	2	Hox2	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+mouse	mouse	C	C	1	Hox1	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+mouse	mouse	D	D	15	Hox15	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+mouse	mouse	D	D	14	Hox14	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+mouse	mouse	D	D	13	Hox13	plotted_gene_model	TRUE	Hoxd13	ENSMUSG00000001819	ENSMUST00000001872	
+mouse	mouse	D	D	12	Hox12	plotted_gene_model	TRUE	Hoxd12	ENSMUSG00000001823	ENSMUST00000001878	
+mouse	mouse	D	D	11	Hox11	plotted_gene_model	TRUE	Hoxd11	ENSMUSG00000042499	ENSMUST00000142312	
+mouse	mouse	D	D	10	Hox10	plotted_gene_model	TRUE	Hoxd10	ENSMUSG00000050368	ENSMUST00000061745	
+mouse	mouse	D	D	9	Hox9	plotted_gene_model	TRUE	Hoxd9	ENSMUSG00000043342	ENSMUST00000059272	
+mouse	mouse	D	D	8	Hox8	plotted_gene_model	TRUE	Hoxd8	ENSMUSG00000027102	ENSMUST00000019749	
+mouse	mouse	D	D	7	Hox7	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+mouse	mouse	D	D	6	Hox6	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+mouse	mouse	D	D	5	Hox5	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+mouse	mouse	D	D	4	Hox4	plotted_gene_model	TRUE	Hoxd4	ENSMUSG00000101174	ENSMUST00000047904	
+mouse	mouse	D	D	3	Hox3	plotted_gene_model	TRUE	Hoxd3	ENSMUSG00000079277	ENSMUST00000111983	
+mouse	mouse	D	D	2	Hox2	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+mouse	mouse	D	D	1	Hox1	plotted_gene_model	TRUE	Hoxd1	ENSMUSG00000042448	ENSMUST00000047793	
+chicken	chicken	A	A	15	Hox15	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+chicken	chicken	A	A	14	Hox14	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+chicken	chicken	A	A	13	Hox13	plotted_gene_model	TRUE	HOXA13	ENSGALG00010001321	ENSGALT00010003054	
+chicken	chicken	A	A	12	Hox12	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+chicken	chicken	A	A	11	Hox11	plotted_gene_model	TRUE	HOXA11	ENSGALG00010001848	ENSGALT00010004201	
+chicken	chicken	A	A	10	Hox10	plotted_gene_model	TRUE	HOXA10	ENSGALG00010001844	ENSGALT00010004197	
+chicken	chicken	A	A	9	Hox9	plotted_gene_model	TRUE	HOXA9	ENSGALG00010001840	ENSGALT00010004190	
+chicken	chicken	A	A	8	Hox8	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+chicken	chicken	A	A	7	Hox7	plotted_gene_model	TRUE	HOXA7	ENSGALG00010001826	ENSGALT00010004159	
+chicken	chicken	A	A	6	Hox6	plotted_gene_model	TRUE	HOXA6	ENSGALG00010001819	ENSGALT00010004135	
+chicken	chicken	A	A	5	Hox5	plotted_gene_model	TRUE	HOXA5	ENSGALG00010001813	ENSGALT00010004128	
+chicken	chicken	A	A	4	Hox4	plotted_gene_model	TRUE	HOXA4	ENSGALG00010001808	ENSGALT00010004119	
+chicken	chicken	A	A	3	Hox3	plotted_gene_model	TRUE	HOXA3	ENSGALG00010001801	ENSGALT00010004101	
+chicken	chicken	A	A	2	Hox2	plotted_gene_model	TRUE	HOXA2	ENSGALG00010001790	ENSGALT00010004079	
+chicken	chicken	A	A	1	Hox1	plotted_gene_model	TRUE	HOXA1	ENSGALG00010001788	ENSGALT00010004070	
+chicken	chicken	B	B	15	Hox15	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+chicken	chicken	B	B	14	Hox14	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+chicken	chicken	B	B	13	Hox13	plotted_gene_model	TRUE	HOXB13	ENSGALG00010026052	ENSGALT00010063516	
+chicken	chicken	B	B	12	Hox12	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+chicken	chicken	B	B	11	Hox11	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+chicken	chicken	B	B	10	Hox10	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+chicken	chicken	B	B	9	Hox9	plotted_gene_model	TRUE	HOXB9	ENSGALG00010026782	ENSGALT00010064966	
+chicken	chicken	B	B	8	Hox8	plotted_gene_model	TRUE	HOXB8	ENSGALG00010021446	ENSGALT00010052000	
+chicken	chicken	B	B	7	Hox7	plotted_gene_model	TRUE	HOXB7	ENSGALG00010023381	ENSGALT00010056984	
+chicken	chicken	B	B	6	Hox6	plotted_gene_model	TRUE	HOXB6	ENSGALG00010023383	ENSGALT00010056993	
+chicken	chicken	B	B	5	Hox5	plotted_gene_model	TRUE	HOXB5	ENSGALG00010023394	ENSGALT00010057020	
+chicken	chicken	B	B	4	Hox4	plotted_gene_model	TRUE	HOXB4	ENSGALG00010023415	ENSGALT00010057082	
+chicken	chicken	B	B	3	Hox3	plotted_gene_model	TRUE	HOXB3	ENSGALG00010023428	ENSGALT00010057098	
+chicken	chicken	B	B	2	Hox2	plotted_gene_model	TRUE	HOXB2	ENSGALG00010023438	ENSGALT00010057108	
+chicken	chicken	B	B	1	Hox1	plotted_gene_model	TRUE	HOXB1	ENSGALG00010023454	ENSGALT00010057143	
+chicken	chicken	C	C	15	Hox15	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+chicken	chicken	C	C	14	Hox14	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+chicken	chicken	C	C	13	Hox13	plotted_gene_model	TRUE	HOXC13	ENSGALG00010025397	ENSGALT00010062008	
+chicken	chicken	C	C	12	Hox12	plotted_gene_model	TRUE	HOXC12	ENSGALG00010025552	ENSGALT00010062330	
+chicken	chicken	C	C	11	Hox11	plotted_gene_model	TRUE	HOXC11	ENSGALG00010025719	ENSGALT00010062760	
+chicken	chicken	C	C	10	Hox10	plotted_gene_model	TRUE	HOXC10	ENSGALG00010025964	ENSGALT00010063303	
+chicken	chicken	C	C	9	Hox9	plotted_gene_model	TRUE	HOXC9	ENSGALG00010025958	ENSGALT00010063289	
+chicken	chicken	C	C	8	Hox8	plotted_gene_model	TRUE	HOXC8	ENSGALG00010025708	ENSGALT00010062742	
+chicken	chicken	C	C	7	Hox7	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+chicken	chicken	C	C	6	Hox6	annotation_gap_expected_functional_member	TRUE	HOXC6			The published 39-gene avian complement expects this slot, but the Ensembl-116 GRCg7b locus has no protein-coding gene model for it.
+chicken	chicken	C	C	5	Hox5	annotation_gap_expected_functional_member	TRUE	HOXC5			The published 39-gene avian complement expects this slot, but the Ensembl-116 GRCg7b locus has no protein-coding gene model for it.
+chicken	chicken	C	C	4	Hox4	annotation_gap_expected_functional_member	TRUE	HOXC4			The published 39-gene avian complement expects this slot, but the Ensembl-116 GRCg7b locus has no protein-coding gene model for it.
+chicken	chicken	C	C	3	Hox3	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+chicken	chicken	C	C	2	Hox2	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+chicken	chicken	C	C	1	Hox1	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+chicken	chicken	D	D	15	Hox15	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+chicken	chicken	D	D	14	Hox14	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+chicken	chicken	D	D	13	Hox13	plotted_gene_model	TRUE	HOXD13	ENSGALG00010024790	ENSGALT00010060513	
+chicken	chicken	D	D	12	Hox12	plotted_gene_model	TRUE	HOXD12	ENSGALG00010024782	ENSGALT00010060498	
+chicken	chicken	D	D	11	Hox11	plotted_gene_model	TRUE	HOXD11	ENSGALG00010024780	ENSGALT00010060493	
+chicken	chicken	D	D	10	Hox10	plotted_gene_model	TRUE	HOXD10	ENSGALG00010026746	ENSGALT00010064884	
+chicken	chicken	D	D	9	Hox9	plotted_gene_model	TRUE	HOXD9	ENSGALG00010024763	ENSGALT00010060450	
+chicken	chicken	D	D	8	Hox8	plotted_gene_model	TRUE	HOXD8	ENSGALG00010024753	ENSGALT00010060426	
+chicken	chicken	D	D	7	Hox7	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+chicken	chicken	D	D	6	Hox6	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+chicken	chicken	D	D	5	Hox5	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+chicken	chicken	D	D	4	Hox4	plotted_gene_model	TRUE	HOXD4	ENSGALG00010024746	ENSGALT00010060408	
+chicken	chicken	D	D	3	Hox3	plotted_gene_model	TRUE	HOXD3	ENSGALG00010024724	ENSGALT00010060354	
+chicken	chicken	D	D	2	Hox2	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+chicken	chicken	D	D	1	Hox1	annotation_gap_expected_functional_member	TRUE	HOXD1			The published 39-gene avian complement expects this slot, but the Ensembl-116 GRCg7b locus has no protein-coding gene model for it.
+gar	gar	A	A	15	Hox15	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+gar	gar	A	A	14	Hox14	lineage_absence	FALSE				HoxA14 is the only ancestral bony-vertebrate Hox member absent from the gar lineage in Braasch et al. (2016).
+gar	gar	A	A	13	Hox13	plotted_gene_model	TRUE	hoxa13b	ENSLOCG00000011842	ENSLOCT00000014591	
+gar	gar	A	A	12	Hox12	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+gar	gar	A	A	11	Hox11	plotted_gene_model	TRUE	hoxa11a	ENSLOCG00000011836	ENSLOCT00000014583	
+gar	gar	A	A	10	Hox10	plotted_gene_model	TRUE	hoxa10b	ENSLOCG00000011830	ENSLOCT00000014576	
+gar	gar	A	A	9	Hox9	annotation_gap_expected_functional_member	TRUE	hoxa9			Braasch et al. (2016) expect this functional HoxA member. Nearby ENSLOCG00000011824 is a 13-CDS, 673-aa chimeric prediction spanning several expected positions and is not safely assignable to one slot.
+gar	gar	A	A	8	Hox8	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+gar	gar	A	A	7	Hox7	annotation_gap_expected_functional_member	TRUE	hoxa7			Braasch et al. (2016) expect this functional HoxA member. Nearby ENSLOCG00000011824 is a 13-CDS, 673-aa chimeric prediction spanning several expected positions and is not safely assignable to one slot.
+gar	gar	A	A	6	Hox6	annotation_gap_expected_functional_member	TRUE	hoxa6			Braasch et al. (2016) expect this functional HoxA member. Nearby ENSLOCG00000011824 is a 13-CDS, 673-aa chimeric prediction spanning several expected positions and is not safely assignable to one slot.
+gar	gar	A	A	5	Hox5	plotted_gene_model	TRUE	hoxa5a	ENSLOCG00000011819	ENSLOCT00000014559	
+gar	gar	A	A	4	Hox4	annotation_gap_expected_functional_member	TRUE	hoxa4			Braasch et al. (2016) expect this Hox4 member. The longest source transcript (ENSLOCT00000014539; ENSLOCP00000014510) merges Hox4-like, Hox3-like, and Hox2-like homeodomains and cannot supply separate Hox2/Hox4 boxes. A shorter coherent isoform from the same source gene is used only for Hox3.
+gar	gar	A	A	3	Hox3	plotted_gene_model	TRUE	hoxa3a	ENSLOCG00000011801	ENSLOCT00000014553	
+gar	gar	A	A	2	Hox2	annotation_gap_expected_functional_member	TRUE	hoxa2			Braasch et al. (2016) expect this Hox2 member. The longest source transcript (ENSLOCT00000014539; ENSLOCP00000014510) merges Hox4-like, Hox3-like, and Hox2-like homeodomains and cannot supply separate Hox2/Hox4 boxes. A shorter coherent isoform from the same source gene is used only for Hox3.
+gar	gar	A	A	1	Hox1	plotted_gene_model	TRUE	hoxa1a	ENSLOCG00000011798	ENSLOCT00000014534	
+gar	gar	B	B	15	Hox15	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+gar	gar	B	B	14	Hox14	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+gar	gar	B	B	13	Hox13	plotted_gene_model	TRUE	hoxb13a	ENSLOCG00000013457	ENSLOCT00000016621	
+gar	gar	B	B	12	Hox12	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+gar	gar	B	B	11	Hox11	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+gar	gar	B	B	10	Hox10	plotted_gene_model	TRUE	hoxb10a	ENSLOCG00000013455	ENSLOCT00000016617	
+gar	gar	B	B	9	Hox9	plotted_gene_model	TRUE	hoxb9a	ENSLOCG00000013453	ENSLOCT00000016614	
+gar	gar	B	B	8	Hox8	plotted_gene_model	TRUE	hoxb8b	ENSLOCG00000013451	ENSLOCT00000016611	
+gar	gar	B	B	7	Hox7	plotted_gene_model	TRUE	hoxb7a	ENSLOCG00000013448	ENSLOCT00000016609	
+gar	gar	B	B	6	Hox6	plotted_gene_model	TRUE	hoxb6a	ENSLOCG00000013443	ENSLOCT00000016606	
+gar	gar	B	B	5	Hox5	plotted_gene_model	TRUE	hoxb5a	ENSLOCG00000013440	ENSLOCT00000016601	
+gar	gar	B	B	4	Hox4	annotation_gap_expected_functional_member	TRUE	hoxb4			Braasch et al. (2016) expect this Hox4 member. The longest source transcript (ENSLOCT00000016594; ENSLOCP00000016564) merges Hox4-like, Hox3-like, and Hox2-like homeodomains and cannot supply separate Hox2/Hox4 boxes. A shorter coherent isoform from the same source gene is used only for Hox3.
+gar	gar	B	B	3	Hox3	plotted_gene_model	TRUE	hoxb3a	ENSLOCG00000013436	ENSLOCT00000016597	
+gar	gar	B	B	2	Hox2	annotation_gap_expected_functional_member	TRUE	hoxb2			Braasch et al. (2016) expect this Hox2 member. The longest source transcript (ENSLOCT00000016594; ENSLOCP00000016564) merges Hox4-like, Hox3-like, and Hox2-like homeodomains and cannot supply separate Hox2/Hox4 boxes. A shorter coherent isoform from the same source gene is used only for Hox3.
+gar	gar	B	B	1	Hox1	plotted_gene_model	TRUE	HOXB1	ENSLOCG00000013432	ENSLOCT00000016589	
+gar	gar	C	C	15	Hox15	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+gar	gar	C	C	14	Hox14	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+gar	gar	C	C	13	Hox13	plotted_gene_model	TRUE	hoxc13b	ENSLOCG00000006295	ENSLOCT00000007611	
+gar	gar	C	C	12	Hox12	plotted_gene_model	TRUE	hoxc12a	ENSLOCG00000006304	ENSLOCT00000007621	
+gar	gar	C	C	11	Hox11	plotted_gene_model	TRUE	hoxc11a	ENSLOCG00000006316	ENSLOCT00000007649	
+gar	gar	C	C	10	Hox10	annotation_gap_expected_functional_member	TRUE	hoxc10			Braasch et al. (2016) expect this member in the 43-gene gar complement, but Ensembl-116 LepOcu1 has no safe protein-coding Hox model assignable to the slot.
+gar	gar	C	C	9	Hox9	annotation_gap_expected_functional_member	TRUE	hoxc9			Braasch et al. (2016) expect this HoxC9 member. The only source transcript (ENSLOCT00000007673; ENSLOCP00000007664) merges HoxC9-like and HoxC6-like homeodomains. It is excluded, leaving both slots as annotation gaps.
+gar	gar	C	C	8	Hox8	annotation_gap_expected_functional_member	TRUE	hoxc8			Braasch et al. (2016) expect this member in the 43-gene gar complement, but Ensembl-116 LepOcu1 has no safe protein-coding Hox model assignable to the slot.
+gar	gar	C	C	7	Hox7	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+gar	gar	C	C	6	Hox6	annotation_gap_expected_functional_member	TRUE	hoxc6a			Hox family and number parsed from the Ensembl GTF gene_name. No coherent alternative transcript remains after excluding: 469-aa, 4-CDS merged prediction with HoxC9-like and HoxC6-like homeodomains; no coherent alternative transcript is available.
+gar	gar	C	C	5	Hox5	plotted_gene_model	TRUE	hoxc5a	ENSLOCG00000006365	ENSLOCT00000007689	
+gar	gar	C	C	4	Hox4	plotted_gene_model	TRUE	hoxc4a	ENSLOCG00000006379	ENSLOCT00000007709	
+gar	gar	C	C	3	Hox3	plotted_gene_model	TRUE	hoxc3	ENSLOCG00000006407	ENSLOCT00000007748	
+gar	gar	C	C	2	Hox2	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+gar	gar	C	C	1	Hox1	annotation_gap_expected_functional_member	TRUE	hoxc1			Braasch et al. (2016) expect this member in the 43-gene gar complement, but Ensembl-116 LepOcu1 has no safe protein-coding Hox model assignable to the slot.
+gar	gar	D	D	15	Hox15	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+gar	gar	D	D	14	Hox14	recognizable_pseudogene_not_plotted	FALSE				A recognizable gar HoxD14 pseudogene is present but is excluded from the 43 protein-coding members and from gene boxes.
+gar	gar	D	D	13	Hox13	plotted_gene_model	TRUE	HOXD13	ENSLOCG00000007161	ENSLOCT00000008672	
+gar	gar	D	D	12	Hox12	plotted_gene_model	TRUE	hoxd12a	ENSLOCG00000007146	ENSLOCT00000008661	
+gar	gar	D	D	11	Hox11	plotted_gene_model	TRUE	hoxd11a	ENSLOCG00000007133	ENSLOCT00000008642	
+gar	gar	D	D	10	Hox10	plotted_gene_model	TRUE	hoxd10a	ENSLOCG00000007118	ENSLOCT00000008627	
+gar	gar	D	D	9	Hox9	plotted_gene_model	TRUE	hoxd9a	ENSLOCG00000007106	ENSLOCT00000008613	
+gar	gar	D	D	8	Hox8	plotted_gene_model	TRUE	hoxd8	ENSLOCG00000007085	ENSLOCT00000008589	
+gar	gar	D	D	7	Hox7	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+gar	gar	D	D	6	Hox6	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+gar	gar	D	D	5	Hox5	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+gar	gar	D	D	4	Hox4	plotted_gene_model	TRUE	hoxd4a	ENSLOCG00000007074	ENSLOCT00000008571	
+gar	gar	D	D	3	Hox3	plotted_gene_model	TRUE	hoxd3a	ENSLOCG00000007043	ENSLOCT00000008533	
+gar	gar	D	D	2	Hox2	plotted_gene_model	TRUE	hoxd2	ENSLOCG00000007028	ENSLOCT00000008519	
+gar	gar	D	D	1	Hox1	plotted_gene_model	TRUE	hoxd1	ENSLOCG00000007019	ENSLOCT00000008504	
+zebrafish	zebrafish_a	A	AA	15	Hox15	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_a	A	AA	14	Hox14	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_a	A	AA	13	Hox13	plotted_gene_model	TRUE	hoxa13a	ENSDARG00000100312	ENSDART00000171610	
+zebrafish	zebrafish_a	A	AA	12	Hox12	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_a	A	AA	11	Hox11	plotted_gene_model	TRUE	hoxa11a	ENSDARG00000104162	ENSDART00000160283	
+zebrafish	zebrafish_a	A	AA	10	Hox10	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_a	A	AA	9	Hox9	plotted_gene_model	TRUE	hoxa9a	ENSDARG00000105013	ENSDART00000166129	
+zebrafish	zebrafish_a	A	AA	8	Hox8	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_a	A	AA	7	Hox7	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_a	A	AA	6	Hox6	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_a	A	AA	5	Hox5	plotted_gene_model	TRUE	hoxa5a	ENSDARG00000102501	ENSDART00000169480	
+zebrafish	zebrafish_a	A	AA	4	Hox4	plotted_gene_model	TRUE	hoxa4a	ENSDARG00000100358	ENSDART00000170697	
+zebrafish	zebrafish_a	A	AA	3	Hox3	plotted_gene_model	TRUE	hoxa3a	ENSDARG00000103862	ENSDART00000167606	
+zebrafish	zebrafish_a	A	AA	2	Hox2	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_a	A	AA	1	Hox1	plotted_gene_model	TRUE	hoxa1a	ENSDARG00000104307	ENSDART00000167757	
+zebrafish	zebrafish_a	B	BA	15	Hox15	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_a	B	BA	14	Hox14	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_a	B	BA	13	Hox13	plotted_gene_model	TRUE	hoxb13a	ENSDARG00000056015	ENSDART00000078428	
+zebrafish	zebrafish_a	B	BA	12	Hox12	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_a	B	BA	11	Hox11	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_a	B	BA	10	Hox10	plotted_gene_model	TRUE	hoxb10a	ENSDARG00000011579	ENSDART00000111227	
+zebrafish	zebrafish_a	B	BA	9	Hox9	plotted_gene_model	TRUE	hoxb9a	ENSDARG00000056023	ENSDART00000023674	
+zebrafish	zebrafish_a	B	BA	8	Hox8	plotted_gene_model	TRUE	hoxb8a	ENSDARG00000056027	ENSDART00000046638	
+zebrafish	zebrafish_a	B	BA	7	Hox7	plotted_gene_model	TRUE	hoxb7a	ENSDARG00000056030	ENSDART00000078453	
+zebrafish	zebrafish_a	B	BA	6	Hox6	plotted_gene_model	TRUE	hoxb6a	ENSDARG00000010630	ENSDART00000024256	
+zebrafish	zebrafish_a	B	BA	5	Hox5	plotted_gene_model	TRUE	hoxb5a	ENSDARG00000013057	ENSDART00000025449	
+zebrafish	zebrafish_a	B	BA	4	Hox4	plotted_gene_model	TRUE	hoxb4a	ENSDARG00000013533	ENSDART00000151584	
+zebrafish	zebrafish_a	B	BA	3	Hox3	plotted_gene_model	TRUE	hoxb3a	ENSDARG00000029263	ENSDART00000184299	
+zebrafish	zebrafish_a	B	BA	2	Hox2	plotted_gene_model	TRUE	hoxb2a	ENSDARG00000000175	ENSDART00000146636	
+zebrafish	zebrafish_a	B	BA	1	Hox1	plotted_gene_model	TRUE	hoxb1a	ENSDARG00000008174	ENSDART00000110682	
+zebrafish	zebrafish_a	C	CA	15	Hox15	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_a	C	CA	14	Hox14	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_a	C	CA	13	Hox13	plotted_gene_model	TRUE	hoxc13a	ENSDARG00000070353	ENSDART00000103149	
+zebrafish	zebrafish_a	C	CA	12	Hox12	plotted_gene_model	TRUE	hoxc12a	ENSDARG00000070352	ENSDART00000103147	
+zebrafish	zebrafish_a	C	CA	11	Hox11	plotted_gene_model	TRUE	hoxc11a	ENSDARG00000070351	ENSDART00000133760	
+zebrafish	zebrafish_a	C	CA	10	Hox10	plotted_gene_model	TRUE	hoxc10a	ENSDARG00000070348	ENSDART00000184107	
+zebrafish	zebrafish_a	C	CA	9	Hox9	plotted_gene_model	TRUE	hoxc9a	ENSDARG00000092809	ENSDART00000127384	
+zebrafish	zebrafish_a	C	CA	8	Hox8	plotted_gene_model	TRUE	hoxc8a	ENSDARG00000070346	ENSDART00000103139	
+zebrafish	zebrafish_a	C	CA	7	Hox7	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_a	C	CA	6	Hox6	plotted_gene_model	TRUE	hoxc6a	ENSDARG00000070343	ENSDART00000130090	
+zebrafish	zebrafish_a	C	CA	5	Hox5	plotted_gene_model	TRUE	hoxc5a	ENSDARG00000070340	ENSDART00000139319	
+zebrafish	zebrafish_a	C	CA	4	Hox4	plotted_gene_model	TRUE	hoxc4a	ENSDARG00000070338	ENSDART00000103132	
+zebrafish	zebrafish_a	C	CA	3	Hox3	plotted_gene_model	TRUE	hoxc3a	ENSDARG00000070339	ENSDART00000154825	
+zebrafish	zebrafish_a	C	CA	2	Hox2	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_a	C	CA	1	Hox1	plotted_gene_model	TRUE	hoxc1a	ENSDARG00000070337	ENSDART00000103131	
+zebrafish	zebrafish_a	D	DA	15	Hox15	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_a	D	DA	14	Hox14	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_a	D	DA	13	Hox13	plotted_gene_model	TRUE	hoxd13a	ENSDARG00000059256	ENSDART00000082332	
+zebrafish	zebrafish_a	D	DA	12	Hox12	plotted_gene_model	TRUE	hoxd12a	ENSDARG00000059263	ENSDART00000142842	
+zebrafish	zebrafish_a	D	DA	11	Hox11	plotted_gene_model	TRUE	hoxd11a	ENSDARG00000059267	ENSDART00000082344	
+zebrafish	zebrafish_a	D	DA	10	Hox10	plotted_gene_model	TRUE	hoxd10a	ENSDARG00000057859	ENSDART00000080608	
+zebrafish	zebrafish_a	D	DA	9	Hox9	plotted_gene_model	TRUE	hoxd9a	ENSDARG00000059274	ENSDART00000082354	
+zebrafish	zebrafish_a	D	DA	8	Hox8	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_a	D	DA	7	Hox7	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_a	D	DA	6	Hox6	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_a	D	DA	5	Hox5	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_a	D	DA	4	Hox4	plotted_gene_model	TRUE	hoxd4a	ENSDARG00000059276	ENSDART00000082355	
+zebrafish	zebrafish_a	D	DA	3	Hox3	plotted_gene_model	TRUE	hoxd3a	ENSDARG00000059280	ENSDART00000082359	
+zebrafish	zebrafish_a	D	DA	2	Hox2	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_a	D	DA	1	Hox1	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_b	A	AB	15	Hox15	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_b	A	AB	14	Hox14	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_b	A	AB	13	Hox13	plotted_gene_model	TRUE	hoxa13b	ENSDARG00000036254	ENSDART00000052662	
+zebrafish	zebrafish_b	A	AB	12	Hox12	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_b	A	AB	11	Hox11	plotted_gene_model	TRUE	hoxa11b	ENSDARG00000007009	ENSDART00000006043	
+zebrafish	zebrafish_b	A	AB	10	Hox10	plotted_gene_model	TRUE	hoxa10b	ENSDARG00000031337	ENSDART00000046766	
+zebrafish	zebrafish_b	A	AB	9	Hox9	plotted_gene_model	TRUE	hoxa9b	ENSDARG00000056819	ENSDART00000079383	
+zebrafish	zebrafish_b	A	AB	8	Hox8	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_b	A	AB	7	Hox7	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_b	A	AB	6	Hox6	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_b	A	AB	5	Hox5	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_b	A	AB	4	Hox4	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_b	A	AB	3	Hox3	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_b	A	AB	2	Hox2	plotted_gene_model	TRUE	hoxa2b	ENSDARG00000023031	ENSDART00000009827	
+zebrafish	zebrafish_b	A	AB	1	Hox1	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_b	B	BB	15	Hox15	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_b	B	BB	14	Hox14	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_b	B	BB	13	Hox13	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_b	B	BB	12	Hox12	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_b	B	BB	11	Hox11	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_b	B	BB	10	Hox10	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_b	B	BB	9	Hox9	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_b	B	BB	8	Hox8	plotted_gene_model	TRUE	hoxb8b	ENSDARG00000054025	ENSDART00000076154	
+zebrafish	zebrafish_b	B	BB	7	Hox7	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_b	B	BB	6	Hox6	plotted_gene_model	TRUE	hoxb6b	ENSDARG00000026513	ENSDART00000025966	
+zebrafish	zebrafish_b	B	BB	5	Hox5	plotted_gene_model	TRUE	hoxb5b	ENSDARG00000054030	ENSDART00000076161	
+zebrafish	zebrafish_b	B	BB	4	Hox4	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_b	B	BB	3	Hox3	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_b	B	BB	2	Hox2	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_b	B	BB	1	Hox1	plotted_gene_model	TRUE	hoxb1b	ENSDARG00000054033	ENSDART00000136415	
+zebrafish	zebrafish_b	C	CB	15	Hox15	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_b	C	CB	14	Hox14	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_b	C	CB	13	Hox13	plotted_gene_model	TRUE	hoxc13b	ENSDARG00000113877	ENSDART00000182896	
+zebrafish	zebrafish_b	C	CB	12	Hox12	plotted_gene_model	TRUE	hoxc12b	ENSDARG00000103133	ENSDART00000170593	
+zebrafish	zebrafish_b	C	CB	11	Hox11	plotted_gene_model	TRUE	hoxc11b	ENSDARG00000102631	ENSDART00000186854	
+zebrafish	zebrafish_b	C	CB	10	Hox10	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_b	C	CB	9	Hox9	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_b	C	CB	8	Hox8	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_b	C	CB	7	Hox7	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_b	C	CB	6	Hox6	plotted_gene_model	TRUE	hoxc6b	ENSDARG00000101954	ENSDART00000160515	
+zebrafish	zebrafish_b	C	CB	5	Hox5	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_b	C	CB	4	Hox4	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_b	C	CB	3	Hox3	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_b	C	CB	2	Hox2	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+zebrafish	zebrafish_b	C	CB	1	Hox1	biologically_not_retained	FALSE				Not part of the curated functional complement for this cluster.
+amphioxus	amphioxus	A	ancestral	15	Hox15	plotted_gene_model	TRUE	Hox15	BL12289	BL12289_cuf1	
+amphioxus	amphioxus	A	ancestral	14	Hox14	plotted_gene_model	TRUE	Hox14	BL01409	BL01409_evm0	
+amphioxus	amphioxus	A	ancestral	13	Hox13	annotation_gap_expected_functional_member	TRUE	Hox13			No release-63 BraLan2 gene model lies between the collinearly mapped Hox12 and Hox14 models; this is an annotation gap, not inferred loss.
+amphioxus	amphioxus	A	ancestral	12	Hox12	plotted_gene_model	TRUE	Hox12	BL14546	BL14546_evm1	
+amphioxus	amphioxus	A	ancestral	11	Hox11	plotted_gene_model	TRUE	Hox11	BL11265	BL11265_evm0	
+amphioxus	amphioxus	A	ancestral	10	Hox10	plotted_gene_model	TRUE	Hox10	BL01497	BL01497_evm0	
+amphioxus	amphioxus	A	ancestral	9	Hox9	plotted_gene_model	TRUE	Hox9	BL02690	BL02690_evm0	
+amphioxus	amphioxus	A	ancestral	8	Hox8	plotted_gene_model	TRUE	Hox8	BL01142	BL01142_evm0	
+amphioxus	amphioxus	A	ancestral	7	Hox7	plotted_gene_model	TRUE	Hox7	BL02747	BL02747_evm1	
+amphioxus	amphioxus	A	ancestral	6	Hox6	plotted_gene_model	TRUE	Hox6	BL02721	BL02721_evm0	
+amphioxus	amphioxus	A	ancestral	5	Hox5	plotted_gene_model	TRUE	Hox5	BL22794	BL22794_evm0	
+amphioxus	amphioxus	A	ancestral	4	Hox4	plotted_gene_model	TRUE	Hox4	BL01764	BL01764_evm0	
+amphioxus	amphioxus	A	ancestral	3	Hox3	plotted_gene_model	TRUE	Hox3	BL11259	BL11259_evm0	
+amphioxus	amphioxus	A	ancestral	2	Hox2	plotted_gene_model	TRUE	Hox2	BL11262	BL11262_cuf5	
+amphioxus	amphioxus	A	ancestral	1	Hox1	plotted_gene_model	TRUE	Hox1	BL06042	BL06042_cuf1	

@@ -12,8 +12,9 @@
 #' `anchor = "end"` uses the middle nucleotide of a complete annotated stop
 #' codon, and `anchor = "middle"` uses the genomic midpoint between those two
 #' anchors. Associated `start_codon` or `stop_codon` records are complete only
-#' when their total feature width is exactly three nucleotides. Otherwise, the
-#' middle position of the corresponding terminal CDS triplet is used as a
+#' when their total feature width is exactly three nucleotides and every piece
+#' matches the selected transcript's seqname, strand, and bounds. Otherwise,
+#' the middle position of the corresponding terminal CDS triplet is used as a
 #' positional proxy; this fallback does not verify an ATG or stop-codon sequence.
 #'
 #' @param mapping,data,stat,position,...,na.rm,show.legend,inherit.aes Standard
@@ -499,8 +500,9 @@ GeomGeneBox <- ggproto(
 #' @param context Internal Syn plotting context.
 #'
 #' @return A data frame with one selected protein-coding transcript per gene.
-#'   Per-end source and fallback columns distinguish complete, exactly
-#'   three-nucleotide codon features from terminal-CDS positional proxies.
+#'   Per-end source and fallback columns distinguish complete,
+#'   transcript-consistent three-nucleotide codon features from terminal-CDS
+#'   positional proxies.
 #' @keywords internal
 syn_to_genebox_df <- function(x,
                               species = NULL,
@@ -673,8 +675,16 @@ syn_to_genebox_df <- function(x,
 
     one_start <- start_gr[vapply(start_membership, function(ids) key %in% ids, logical(1))]
     one_stop <- stop_gr[vapply(stop_membership, function(ids) key %in% ids, logical(1))]
-    has_explicit_start <- .genebox_complete_codon_feature(one_start)
-    has_explicit_stop <- .genebox_complete_codon_feature(one_stop)
+    has_explicit_start <- .genebox_complete_codon_feature(
+      one_start,
+      transcript = tx_gr[i],
+      strand = strand
+    )
+    has_explicit_stop <- .genebox_complete_codon_feature(
+      one_stop,
+      transcript = tx_gr[i],
+      strand = strand
+    )
     start_anchor <- if (has_explicit_start) {
       .genebox_nth_transcribed_base(one_start, 2L, strand = strand)
     } else {
@@ -882,8 +892,42 @@ syn_to_genebox_df <- function(x,
   }
 }
 
-.genebox_complete_codon_feature <- function(gr) {
-  length(gr) > 0L && sum(IRanges::width(gr)) == 3L
+.genebox_complete_codon_feature <- function(gr,
+                                             transcript = NULL,
+                                             strand = NULL) {
+  if (length(gr) == 0L || sum(IRanges::width(gr)) != 3L) {
+    return(FALSE)
+  }
+  if (is.null(transcript)) {
+    return(TRUE)
+  }
+  if (length(transcript) != 1L) {
+    return(FALSE)
+  }
+
+  transcript_seqname <- as.character(GenomeInfoDb::seqnames(transcript))[[1L]]
+  codon_seqnames <- unique(as.character(GenomeInfoDb::seqnames(gr)))
+  if (length(codon_seqnames) != 1L ||
+      !identical(codon_seqnames[[1L]], transcript_seqname)) {
+    return(FALSE)
+  }
+
+  expected_strand <- unique(as.character(strand))
+  if (length(expected_strand) != 1L || is.na(expected_strand) ||
+      !expected_strand %in% c("+", "-")) {
+    return(FALSE)
+  }
+  codon_strands <- as.character(BiocGenerics::strand(gr))
+  if (anyNA(codon_strands) || !all(codon_strands == expected_strand)) {
+    return(FALSE)
+  }
+
+  transcript_start <- IRanges::start(transcript)[[1L]]
+  transcript_end <- IRanges::end(transcript)[[1L]]
+  all(
+    IRanges::start(gr) >= transcript_start &
+      IRanges::end(gr) <= transcript_end
+  )
 }
 
 .genebox_gene_info <- function(gene_gr, gene_id, fallback_name = NA_character_) {

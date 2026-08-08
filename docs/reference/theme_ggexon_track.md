@@ -2,7 +2,9 @@
 
 `theme_ggexon_track()` provides compact defaults for genomic tracks. It
 keeps the x axis visible, hides the y axis used only for track geometry,
-and removes visual noise from minor grids and legends.
+and removes visual noise from minor grids and legends. It inherits its
+background-free foundation from
+[`theme_ggexon_base()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_base.md).
 
 ## Usage
 
@@ -64,4 +66,5 @@ A ggplot2 theme object.
 `theme_ggexon_genomictree()` builds on `theme_ggexon_track()` for
 stacked tree-aligned genomic panels. The tree-tip labels use
 `strip.text.y`, and the custom tree branch-length axis reuses the x-axis
-text styling.
+text styling. It inherits the shared background contract through the
+track theme.

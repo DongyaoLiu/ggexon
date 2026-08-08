@@ -78,6 +78,37 @@ test_that("strip_scale_x() maps gene-box anchors to exact synthetic slots", {
   expect_s3_class(ggplot2::ggplotGrob(p), "gtable")
 })
 
+test_that("strip_scale_x() shares one inventory across overlaid gene layers", {
+  genes <- data.frame(
+    track = "A",
+    xmin = c(100, 300),
+    xmax = c(200, 400),
+    x = c(150, 350),
+    y = 1,
+    strand = "+",
+    gene_key = c("g1", "g2"),
+    label = c("g1", "g2"),
+    stringsAsFactors = FALSE
+  )
+
+  p <- ggexon() +
+    geom_genetag(data = genes, show_label = FALSE) +
+    geom_genebox(data = genes) +
+    strip_scale_x(gene_gap_ratio = 3, guide = "none") +
+    facet_genomics(ggplot2::vars(track), scales = "free_x")
+  built <- ggexon_build(p)
+  transform <- built@layout$strip_scale_x_transform
+  gene_transform <- transform[transform$region_type == "gene", , drop = FALSE]
+
+  expect_equal(gene_transform$gene_key, c("g1", "g2"))
+  expect_equal(gene_transform$plot_end - gene_transform$plot_start, c(3, 3))
+  expect_equal(lengths(strsplit(gene_transform$source_keys, ",", fixed = TRUE)), c(2L, 2L))
+  expect_equal(
+    (built@data[[1L]]$xmin + built@data[[1L]]$xmax) / 2,
+    built@data[[2L]]$x
+  )
+})
+
 test_that("exact template mode preserves raw genomic provenance across x transforms", {
   genes <- data.frame(
     track = "scaled",
@@ -107,6 +138,42 @@ test_that("exact template mode preserves raw genomic provenance across x transfo
     names(built@data[[1L]]),
     .strip_scale_raw_marker_prefix
   )))
+})
+
+test_that("exact template direction is independent of x-scale reversal", {
+  genes <- data.frame(
+    track = "A",
+    x = c(100, 900),
+    y = 1,
+    strand = "+",
+    gene_key = c("g2", "g1"),
+    slot = c("Hox2", "Hox1"),
+    stringsAsFactors = FALSE
+  )
+
+  make_plot <- function(reverse = FALSE) {
+    p <- ggexon() +
+      geom_genebox(data = genes) +
+      strip_scale_x(slot_order = c("Hox2", "Hox1"), guide = "none") +
+      facet_genomics(ggplot2::vars(track), scales = "free_x")
+    if (isTRUE(reverse)) p <- p + ggplot2::scale_x_reverse()
+    p
+  }
+  normal <- ggexon_build(make_plot())
+  reversed <- ggexon_build(make_plot(TRUE))
+
+  expect_equal(
+    reversed@data[[1L]]$strip_x_direction,
+    normal@data[[1L]]$strip_x_direction
+  )
+  expect_equal(unique(reversed@data[[1L]]$strip_x_direction), 1)
+  expect_equal(
+    .genebox_x_orientation(
+      reversed@layout$panel_params[[1L]],
+      reversed@layout$coord
+    ) * reversed@data[[1L]]$strip_x_direction,
+    c(-1, -1)
+  )
 })
 
 test_that("exact template mode passes slot through geom_genetag", {

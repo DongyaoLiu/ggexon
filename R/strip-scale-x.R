@@ -303,6 +303,24 @@ strip_scale_x_collect_genetags <- function(data, tag_layers) {
     } else {
       (start + end) / 2
     }
+    raw_start <- strip_scale_x_raw_coordinate(
+      df,
+      genomic_column = "genomic_xmin",
+      position_column = "xmin",
+      fallback = start
+    )
+    raw_end <- strip_scale_x_raw_coordinate(
+      df,
+      genomic_column = "genomic_xmax",
+      position_column = "xmax",
+      fallback = end
+    )
+    raw_anchor <- strip_scale_x_raw_coordinate(
+      df,
+      genomic_column = "genomic_x",
+      position_column = "x",
+      fallback = (pmin(raw_start, raw_end) + pmax(raw_start, raw_end)) / 2
+    )
     out <- data.frame(
       layer = layer_i,
       row = seq_len(nrow(df)),
@@ -329,6 +347,8 @@ strip_scale_x_collect_genetags <- function(data, tag_layers) {
       genomic_start = start,
       genomic_end = end,
       genomic_anchor = genomic_anchor,
+      direction_anchor = raw_anchor,
+      source_keys = paste(layer_i, seq_len(nrow(df)), sep = ":"),
       stringsAsFactors = FALSE
     )
     keep <- is.finite(out$genomic_start) & is.finite(out$genomic_end) &
@@ -344,9 +364,94 @@ strip_scale_x_collect_genetags <- function(data, tag_layers) {
   }
   if (length(pieces) == 0L) return(data.frame())
   out <- dplyr::bind_rows(pieces)
+  out <- strip_scale_x_consolidate_gene_inventory(out)
   out <- out[order(out$PANEL, out$track, out$genomic_start, out$genomic_end, out$row), , drop = FALSE]
   rownames(out) <- NULL
   out
+}
+
+strip_scale_x_raw_coordinate <- function(df,
+                                         genomic_column,
+                                         position_column,
+                                         fallback) {
+  fallback <- as.numeric(fallback)
+  genomic_marker <- .strip_scale_raw_marker(genomic_column)
+  position_marker <- .strip_scale_raw_marker(position_column)
+  if (genomic_marker %in% names(df)) {
+    out <- as.numeric(df[[genomic_marker]])
+    if (position_marker %in% names(df)) {
+      missing <- !is.finite(out)
+      out[missing] <- as.numeric(df[[position_marker]][missing])
+    }
+    missing <- !is.finite(out)
+    out[missing] <- fallback[missing]
+    return(out)
+  }
+  if (position_marker %in% names(df)) {
+    out <- as.numeric(df[[position_marker]])
+    missing <- !is.finite(out)
+    out[missing] <- fallback[missing]
+    return(out)
+  }
+  fallback
+}
+
+strip_scale_x_consolidate_gene_inventory <- function(tags) {
+  if (nrow(tags) < 2L) return(tags)
+
+  ordering <- order(
+    tags$PANEL,
+    tags$track,
+    tags$gene_key,
+    tags$layer,
+    tags$genomic_start,
+    tags$genomic_end,
+    tags$row
+  )
+  tags <- tags[ordering, , drop = FALSE]
+  within_layer_key <- paste(
+    tags$PANEL,
+    tags$track,
+    tags$gene_key,
+    tags$layer,
+    sep = "\r"
+  )
+  occurrence <- ave(seq_len(nrow(tags)), within_layer_key, FUN = seq_along)
+  inventory_key <- paste(
+    tags$PANEL,
+    tags$track,
+    tags$gene_key,
+    occurrence,
+    sep = "\r"
+  )
+  groups <- split(seq_len(nrow(tags)), inventory_key, drop = TRUE)
+  character_metadata <- c(
+    "label", "gene_id", "gene_name", "gene", "reference_gene",
+    "reference_gene_name", "slot", "anchor_mode"
+  )
+
+  pieces <- lapply(groups, function(rows) {
+    candidates <- tags[rows, , drop = FALSE]
+    if (nrow(candidates) == 1L) return(candidates)
+
+    widths <- candidates$genomic_end - candidates$genomic_start
+    primary <- which.max(widths)
+    out <- candidates[primary, , drop = FALSE]
+    out$source_keys <- paste(unique(candidates$source_keys), collapse = ",")
+    for (column in intersect(character_metadata, names(candidates))) {
+      current <- as.character(out[[column]])
+      if (!is.na(current) && nzchar(current)) next
+      values <- as.character(candidates[[column]])
+      values <- values[!is.na(values) & nzchar(values)]
+      if (length(values) > 0L) out[[column]] <- values[[1L]]
+    }
+    if ("homology_hit" %in% names(candidates)) {
+      values <- candidates$homology_hit[!is.na(candidates$homology_hit)]
+      out$homology_hit <- if (length(values) == 0L) NA else any(values)
+    }
+    out
+  })
+  dplyr::bind_rows(pieces)
 }
 
 strip_scale_x_logical_or_na <- function(x) {
@@ -429,7 +534,7 @@ strip_scale_x_build_template_layout <- function(tags, spec) {
       is_anchor = TRUE,
       homology_anchor = TRUE,
       members = tags$gene_key[[i]],
-      source_keys = paste(tags$layer[[i]], tags$row[[i]], sep = ":"),
+      source_keys = tags$source_keys[[i]],
       genomic_start = tags$genomic_start[[i]],
       genomic_end = tags$genomic_end[[i]],
       plot_start_raw = plot_start[[i]],
@@ -440,7 +545,10 @@ strip_scale_x_build_template_layout <- function(tags, spec) {
       slot = resolved_slot[[i]]
     )
   }))
-  transform <- strip_scale_x_template_directions(transform)
+  transform <- strip_scale_x_template_directions(
+    transform,
+    genomic_anchor = tags$direction_anchor
+  )
 
   built <- strip_scale_x_finalize_layout(transform)
   built$limits <- c(0.5, length(slot_order) + 0.5)
@@ -453,7 +561,8 @@ strip_scale_x_build_template_layout <- function(tags, spec) {
   built
 }
 
-strip_scale_x_template_directions <- function(transform) {
+strip_scale_x_template_directions <- function(transform,
+                                              genomic_anchor = transform$genomic_anchor) {
   transform$strip_x_direction <- 1
   groups <- split(
     seq_len(nrow(transform)),
@@ -463,7 +572,7 @@ strip_scale_x_template_directions <- function(transform) {
   underdetermined <- character()
   for (group_name in names(groups)) {
     idx <- groups[[group_name]]
-    genomic <- transform$genomic_anchor[idx]
+    genomic <- genomic_anchor[idx]
     plotted <- transform$plot_anchor_raw[idx]
     usable <- is.finite(genomic) & is.finite(plotted)
     genomic <- genomic[usable]
@@ -849,7 +958,7 @@ strip_scale_x_slots_to_transform <- function(group, slots, gap_width, start_offs
       is_anchor = slot$is_anchor,
       homology_anchor = slot$homology_anchor %||% slot$is_anchor,
       members = paste(group$gene_key[slot$rows], collapse = ","),
-      source_keys = paste(group$layer[slot$rows], group$row[slot$rows], sep = ":", collapse = ","),
+      source_keys = paste(group$source_keys[slot$rows], collapse = ","),
       genomic_start = slot$genomic_start,
       genomic_end = slot$genomic_end,
       plot_start_raw = current,

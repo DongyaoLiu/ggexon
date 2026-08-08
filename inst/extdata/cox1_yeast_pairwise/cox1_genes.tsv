@@ -1,0 +1,3 @@
+species	display_name	scientific_name	source_database	assembly	gene_id	gene_symbol	seqname	chr	start	end	strand	length_bp
+fission_yeast	Fission yeast	Schizosaccharomyces pombe	PomBase	PomBase current reference	SPMIT.01	cox1	mitochondrial	mitochondrial	4885	8817	1	3933
+budding_yeast	Budding yeast	Saccharomyces cerevisiae S288C	SGD	S288C R64 mitochondrial reference	Q0045	COX1	17	chrmt	13818	26701	1	12884

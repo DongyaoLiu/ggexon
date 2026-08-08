@@ -1,0 +1,5 @@
+track	tspecies	tchr	tstart	tend	qspecies	qchr	qstart	qend	strand	group	score	alignment_length	identity	identity_bin
+link_fission_budding	fission_yeast	mitochondrial	4724	5097	budding_yeast	chrmt	13604	14010	+	lastz_1	245	415	59.036	55-60%
+link_fission_budding	fission_yeast	mitochondrial	6500	8179	budding_yeast	chrmt	20652	22264	+	lastz_2	1008	1765	57.11	55-60%
+link_fission_budding	fission_yeast	mitochondrial	8178	8311	budding_yeast	chrmt	23624	23754	+	lastz_3	100	134	74.627	>=70%
+link_fission_budding	fission_yeast	mitochondrial	8329	8845	budding_yeast	chrmt	26229	26764	+	lastz_4	352	547	64.351	60-65%
