@@ -35,23 +35,17 @@ test_that("SynSpecies stores individuals and explicit alignment relationships", 
   expect_true(methods::hasMethod("species_tree_plot<-", "SynSpecies"))
   expect_true(methods::hasMethod("add_tree", "SynSpecies"))
 
-  genome_path <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  genome_path <- system.file("extdata", "compact_synspecies", "XZ1516.fasta", package = "ggexon")
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
-  n2_genome_path <- system.file(
-    "extdata",
-    "c_elegans.PRJNA13758.WS285.genomic.fa",
+  n2_genome_path <- system.file("extdata", "compact_synspecies", "c_elegans.PRJNA13758.WS285.genomic.fa",
     package = "ggexon"
   )
-  n2_annotation_path <- system.file(
-    "extdata",
-    "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
+  n2_annotation_path <- system.file("extdata", "compact_synspecies", "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
     package = "ggexon"
   )
-  paf_path <- system.file("extdata", "V_alginment.paf", package = "ggexon")
+  paf_path <- system.file("extdata", "compact_synspecies", "V_alginment.paf", package = "ggexon")
 
   expect_true(nzchar(paf_path))
 
@@ -204,9 +198,7 @@ test_that("add_tree routes file, tree object, and ggtree plot inputs", {
 })
 
 test_that("add_individual accepts multiple SynIndividuals", {
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
 
@@ -221,9 +213,7 @@ test_that("add_individual accepts multiple SynIndividuals", {
 })
 
 test_that("add_individual requires every added object to be a SynIndividual", {
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
 
@@ -236,13 +226,11 @@ test_that("add_individual requires every added object to be a SynIndividual", {
 })
 
 test_that("add_pairwise_alignment warns when alignment individuals are missing from SynSpecies", {
-  genome_path <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  genome_path <- system.file("extdata", "compact_synspecies", "XZ1516.fasta", package = "ggexon")
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
-  paf_path <- system.file("extdata", "V_alginment.paf", package = "ggexon")
+  paf_path <- system.file("extdata", "compact_synspecies", "V_alginment.paf", package = "ggexon")
 
   sp <- SynSpecies(name = "Caenorhabditis")
   sp <- add_individual(
@@ -269,23 +257,17 @@ test_that("add_pairwise_alignment warns when alignment individuals are missing f
 })
 
 test_that("load_annotation loads all stored individuals in a SynSpecies", {
-  genome_path <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  genome_path <- system.file("extdata", "compact_synspecies", "XZ1516.fasta", package = "ggexon")
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
-  n2_genome_path <- system.file(
-    "extdata",
-    "c_elegans.PRJNA13758.WS285.genomic.fa",
+  n2_genome_path <- system.file("extdata", "compact_synspecies", "c_elegans.PRJNA13758.WS285.genomic.fa",
     package = "ggexon"
   )
-  n2_annotation_path <- system.file(
-    "extdata",
-    "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
+  n2_annotation_path <- system.file("extdata", "compact_synspecies", "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
     package = "ggexon"
   )
-  paf_path <- system.file("extdata", "V_alginment.paf", package = "ggexon")
+  paf_path <- system.file("extdata", "compact_synspecies", "V_alginment.paf", package = "ggexon")
 
   sp <- SynSpecies(name = "Caenorhabditis")
   sp <- add_individual(
@@ -327,9 +309,7 @@ test_that("load_annotation loads all stored individuals in a SynSpecies", {
 })
 
 test_that("load_annotation can target one annotation layer through SynSpecies", {
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
 
@@ -356,23 +336,17 @@ test_that("load_annotation can target one annotation layer through SynSpecies", 
 })
 
 test_that("load_alignment loads all stored alignments in a SynSpecies", {
-  genome_path <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  genome_path <- system.file("extdata", "compact_synspecies", "XZ1516.fasta", package = "ggexon")
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
-  n2_genome_path <- system.file(
-    "extdata",
-    "c_elegans.PRJNA13758.WS285.genomic.fa",
+  n2_genome_path <- system.file("extdata", "compact_synspecies", "c_elegans.PRJNA13758.WS285.genomic.fa",
     package = "ggexon"
   )
-  n2_annotation_path <- system.file(
-    "extdata",
-    "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
+  n2_annotation_path <- system.file("extdata", "compact_synspecies", "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
     package = "ggexon"
   )
-  paf_path <- system.file("extdata", "V_alginment.paf", package = "ggexon")
+  paf_path <- system.file("extdata", "compact_synspecies", "V_alginment.paf", package = "ggexon")
 
   odgi_tbl <- data.frame(
     node_id = c(1L, 2L),
@@ -449,23 +423,17 @@ test_that("load_alignment loads all stored alignments in a SynSpecies", {
 })
 
 test_that("load_alignment can target one stored alignment through SynSpecies", {
-  genome_path <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  genome_path <- system.file("extdata", "compact_synspecies", "XZ1516.fasta", package = "ggexon")
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
-  n2_genome_path <- system.file(
-    "extdata",
-    "c_elegans.PRJNA13758.WS285.genomic.fa",
+  n2_genome_path <- system.file("extdata", "compact_synspecies", "c_elegans.PRJNA13758.WS285.genomic.fa",
     package = "ggexon"
   )
-  n2_annotation_path <- system.file(
-    "extdata",
-    "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
+  n2_annotation_path <- system.file("extdata", "compact_synspecies", "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
     package = "ggexon"
   )
-  paf_path <- system.file("extdata", "V_alginment.paf", package = "ggexon")
+  paf_path <- system.file("extdata", "compact_synspecies", "V_alginment.paf", package = "ggexon")
 
   odgi_tbl <- data.frame(
     node_id = c(1L, 2L),
@@ -529,14 +497,10 @@ test_that("load_alignment can target one stored alignment through SynSpecies", {
 })
 
 test_that("add_individuals_from_folder imports supported annotation files with filename ids", {
-  xz_annotation <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  xz_annotation <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
-  n2_annotation <- system.file(
-    "extdata",
-    "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
+  n2_annotation <- system.file("extdata", "compact_synspecies", "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
     package = "ggexon"
   )
 
@@ -568,14 +532,10 @@ test_that("add_individuals_from_folder imports supported annotation files with f
 })
 
 test_that("SynSpecies can initialize individuals directly from an annotation folder", {
-  xz_annotation <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  xz_annotation <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
-  n2_annotation <- system.file(
-    "extdata",
-    "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
+  n2_annotation <- system.file("extdata", "compact_synspecies", "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
     package = "ggexon"
   )
 
@@ -609,14 +569,10 @@ test_that("add_individuals_from_folder errors when no supported annotation files
 })
 
 test_that("subset_species trims selected individuals from species-tagged coords", {
-  xz_annotation <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  xz_annotation <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
-  n2_annotation <- system.file(
-    "extdata",
-    "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
+  n2_annotation <- system.file("extdata", "compact_synspecies", "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
     package = "ggexon"
   )
 
@@ -680,9 +636,7 @@ test_that("subset_species trims selected individuals from species-tagged coords"
 })
 
 test_that("subset_feature_annotation returns an updated SynSpecies when given SynSpecies", {
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
 
@@ -714,10 +668,8 @@ test_that("subset_feature_annotation returns an updated SynSpecies when given Sy
 })
 
 test_that("SynLayout shared geom parameters are resolved before layer overrides", {
-  genome_path <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  genome_path <- system.file("extdata", "compact_synspecies", "XZ1516.fasta", package = "ggexon")
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
 
@@ -828,9 +780,7 @@ test_that("SynLayout validates panel-specific x windows stored in panels", {
 })
 
 test_that("set_panel_xlim updates one panel by individual name and clear_panel_xlim removes it", {
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
 
@@ -871,9 +821,7 @@ test_that("set_panel_xlim updates one panel by individual name and clear_panel_x
 })
 
 test_that("set_panel_xlim can reuse subset_feature_annotation coordinates", {
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
 
@@ -910,9 +858,7 @@ test_that("set_panel_xlim can reuse subset_feature_annotation coordinates", {
 })
 
 test_that("set_panel_xlim seeds all subsetted annotation panels and preserves explicit overrides", {
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
 
@@ -971,9 +917,7 @@ test_that("set_panel_xlim seeds all subsetted annotation panels and preserves ex
 })
 
 test_that("set_panel_xlim explicit override also keeps subset windows for other panels", {
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
 
@@ -1029,7 +973,7 @@ test_that("set_panel_xlim errors clearly when no subset window is stored", {
   sp <- SynSpecies(name = "worms") |>
     add_individual(
       SynIndividual(
-        annotation_file = system.file("extdata", "caenorhabditis_XZ1516.gff3", package = "ggexon"),
+        annotation_file = system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3", package = "ggexon"),
         genome_file = genome_waiver(),
         id = "XZ1516"
       ) |>
@@ -1069,9 +1013,7 @@ test_that("set_panel_xlim requires explicit limits for SynLayout inputs", {
 })
 
 test_that("set_panel_xlim infers seqname from attached pairwise alignments", {
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
 
@@ -1124,9 +1066,7 @@ test_that("set_panel_xlim infers seqname from attached pairwise alignments", {
 })
 
 test_that("set_panel_xlim stores numeric-only windows for unloaded annotations", {
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
 
@@ -1157,7 +1097,7 @@ test_that("set_panel_xlim accepts explicit xlim_chr", {
   sp <- add_individual(
     sp,
     SynIndividual(
-      annotation_file = system.file("extdata", "caenorhabditis_XZ1516.gff3", package = "ggexon"),
+      annotation_file = system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3", package = "ggexon"),
       genome_file = genome_waiver(),
       id = "XZ1516"
     ) |>
@@ -1192,23 +1132,17 @@ test_that("reference-led comparative subsetting trims both annotations and the p
     message = "Comparative window subsetting helper not implemented yet."
   )
 
-  xz_genome <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
-  xz_annotation <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  xz_genome <- system.file("extdata", "compact_synspecies", "XZ1516.fasta", package = "ggexon")
+  xz_annotation <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
-  n2_genome <- system.file(
-    "extdata",
-    "c_elegans.PRJNA13758.WS285.genomic.fa",
+  n2_genome <- system.file("extdata", "compact_synspecies", "c_elegans.PRJNA13758.WS285.genomic.fa",
     package = "ggexon"
   )
-  n2_annotation <- system.file(
-    "extdata",
-    "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
+  n2_annotation <- system.file("extdata", "compact_synspecies", "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
     package = "ggexon"
   )
-  paf_path <- system.file("extdata", "V_alginment.paf", package = "ggexon")
+  paf_path <- system.file("extdata", "compact_synspecies", "V_alginment.paf", package = "ggexon")
 
   sp <- SynSpecies(name = "Caenorhabditis")
   sp <- add_individual(
@@ -1289,13 +1223,11 @@ test_that("reference-led comparative subsetting errors when pairwise alignments 
     message = "Comparative window subsetting helper not implemented yet."
   )
 
-  xz_genome <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
-  xz_annotation <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  xz_genome <- system.file("extdata", "compact_synspecies", "XZ1516.fasta", package = "ggexon")
+  xz_annotation <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
-  paf_path <- system.file("extdata", "V_alginment.paf", package = "ggexon")
+  paf_path <- system.file("extdata", "compact_synspecies", "V_alginment.paf", package = "ggexon")
 
   sp <- SynSpecies(name = "Caenorhabditis")
   for (id in c("XZ1516", "N2", "CB4856")) {
@@ -1340,9 +1272,7 @@ test_that("reference-led comparative subsetting errors when pairwise alignments 
 })
 
 test_that("subset_synspecies_window can derive multiple species windows from an ODGI alignment", {
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
 
@@ -1403,23 +1333,17 @@ test_that("subset_synspecies_window can derive multiple species windows from an 
 })
 
 test_that("pairwise_alignment_data subsets query and target regions and filters short paf rows", {
-  xz_genome <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
-  xz_annotation <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  xz_genome <- system.file("extdata", "compact_synspecies", "XZ1516.fasta", package = "ggexon")
+  xz_annotation <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
-  n2_genome <- system.file(
-    "extdata",
-    "c_elegans.PRJNA13758.WS285.genomic.fa",
+  n2_genome <- system.file("extdata", "compact_synspecies", "c_elegans.PRJNA13758.WS285.genomic.fa",
     package = "ggexon"
   )
-  n2_annotation <- system.file(
-    "extdata",
-    "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
+  n2_annotation <- system.file("extdata", "compact_synspecies", "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
     package = "ggexon"
   )
-  paf_path <- system.file("extdata", "V_alginment.paf", package = "ggexon")
+  paf_path <- system.file("extdata", "compact_synspecies", "V_alginment.paf", package = "ggexon")
 
   sp <- SynSpecies(name = "Caenorhabditis")
   sp <- add_individual(
@@ -1471,14 +1395,10 @@ test_that("pairwise_alignment_data subsets query and target regions and filters 
 })
 
 test_that("subset_synspecies_window works with PSL-backed pairwise alignments", {
-  n2_genome <- system.file(
-    "extdata",
-    "c_elegans.PRJNA13758.WS285.genomic.fa",
+  n2_genome <- system.file("extdata", "compact_synspecies", "c_elegans.PRJNA13758.WS285.genomic.fa",
     package = "ggexon"
   )
-  n2_annotation <- system.file(
-    "extdata",
-    "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
+  n2_annotation <- system.file("extdata", "compact_synspecies", "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
     package = "ggexon"
   )
 
@@ -1545,23 +1465,17 @@ test_that("subset_synspecies_window works with PSL-backed pairwise alignments", 
 })
 
 test_that("subset_pairwise_alignment and filter_pairwise_alignment compose on a SynSpecies", {
-  xz_genome <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
-  xz_annotation <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  xz_genome <- system.file("extdata", "compact_synspecies", "XZ1516.fasta", package = "ggexon")
+  xz_annotation <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
-  n2_genome <- system.file(
-    "extdata",
-    "c_elegans.PRJNA13758.WS285.genomic.fa",
+  n2_genome <- system.file("extdata", "compact_synspecies", "c_elegans.PRJNA13758.WS285.genomic.fa",
     package = "ggexon"
   )
-  n2_annotation <- system.file(
-    "extdata",
-    "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
+  n2_annotation <- system.file("extdata", "compact_synspecies", "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
     package = "ggexon"
   )
-  paf_path <- system.file("extdata", "V_alginment.paf", package = "ggexon")
+  paf_path <- system.file("extdata", "compact_synspecies", "V_alginment.paf", package = "ggexon")
 
   sp <- SynSpecies(name = "Caenorhabditis")
   sp <- add_individual(
@@ -1618,23 +1532,17 @@ test_that("subset_pairwise_alignment and filter_pairwise_alignment compose on a 
 })
 
 test_that("subset_pairwise_alignment accepts one-sided subsets", {
-  xz_genome <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
-  xz_annotation <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  xz_genome <- system.file("extdata", "compact_synspecies", "XZ1516.fasta", package = "ggexon")
+  xz_annotation <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
-  n2_genome <- system.file(
-    "extdata",
-    "c_elegans.PRJNA13758.WS285.genomic.fa",
+  n2_genome <- system.file("extdata", "compact_synspecies", "c_elegans.PRJNA13758.WS285.genomic.fa",
     package = "ggexon"
   )
-  n2_annotation <- system.file(
-    "extdata",
-    "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
+  n2_annotation <- system.file("extdata", "compact_synspecies", "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
     package = "ggexon"
   )
-  paf_path <- system.file("extdata", "V_alginment.paf", package = "ggexon")
+  paf_path <- system.file("extdata", "compact_synspecies", "V_alginment.paf", package = "ggexon")
 
   sp <- SynSpecies(name = "Caenorhabditis")
   sp <- add_individual(
@@ -1679,23 +1587,17 @@ test_that("subset_pairwise_alignment accepts one-sided subsets", {
 })
 
 test_that("subset_pairwise_alignment accepts chromosome-only subset strings", {
-  xz_genome <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
-  xz_annotation <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  xz_genome <- system.file("extdata", "compact_synspecies", "XZ1516.fasta", package = "ggexon")
+  xz_annotation <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
-  n2_genome <- system.file(
-    "extdata",
-    "c_elegans.PRJNA13758.WS285.genomic.fa",
+  n2_genome <- system.file("extdata", "compact_synspecies", "c_elegans.PRJNA13758.WS285.genomic.fa",
     package = "ggexon"
   )
-  n2_annotation <- system.file(
-    "extdata",
-    "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
+  n2_annotation <- system.file("extdata", "compact_synspecies", "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
     package = "ggexon"
   )
-  paf_path <- system.file("extdata", "V_alginment.paf", package = "ggexon")
+  paf_path <- system.file("extdata", "compact_synspecies", "V_alginment.paf", package = "ggexon")
 
   sp <- SynSpecies(name = "Caenorhabditis")
   sp <- add_individual(

@@ -49,8 +49,25 @@ effective panel window. A plain data frame can instead provide \code{xmin},
 \details{
 Coverage scores are plotted unchanged. The layer does not normalize,
 smooth, threshold, or expand signal records to one row per base.
+In a Syn-aware \code{\link[=facet_genomics]{facet_genomics()}} build, every requested BigWig track owns
+a first-class coverage panel separate from gene annotation. Coverage starts
+at zero and is never moved into a synthetic negative annotation band. Use
+\code{\link[=scale_panel_coverage]{scale_panel_coverage()}} to share one raw-depth y scale or give each
+coverage panel an independent scale.
+Explicit coverage data on a \code{SynIndividual} or \code{SynSpecies} plot can also
+form standalone first-class coverage panels without an annotation layer.
+Ordinary non-Syn plots retain the legacy composite-layer behavior.
+
+Continuous coverage panels use ordinary genomic x coordinates. They cannot
+currently be combined with \code{\link[=scale_x_ggexon_genomic]{scale_x_ggexon_genomic()}} exon/intron
+compression or \code{\link[=strip_scale_x]{strip_scale_x()}}; those mixed builds fail before
+transforming the signal.
 Inclusive genomic interval endpoints are retained in \code{interval_start},
 \code{interval_end}, \code{genomic_xmin}, and \code{genomic_xmax} in the built layer data;
 rectangle edges are shifted by half a base so adjacent intervals meet
 without overlap or gaps.
+}
+\seealso{
+\code{\link[=SynBigWigAnnotation]{SynBigWigAnnotation()}}, \code{\link[=query_signal]{query_signal()}},
+\code{\link[=scale_panel_coverage]{scale_panel_coverage()}}, \code{\link[=center_panel_annotation]{center_panel_annotation()}}
 }

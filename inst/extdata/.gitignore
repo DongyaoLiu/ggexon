@@ -1,5 +1,10 @@
 *
 !.gitignore
+!compact_synspecies/
+!compact_synspecies/**
+!XZ1516.TA.gff
+!DL238.rename.ChrV.XZ1516.vcf.gz
+!InterProScan.tsv
 !cd44_pairwise_ensembl116/
 !cd44_pairwise_ensembl116/**
 !peel1_coverage/

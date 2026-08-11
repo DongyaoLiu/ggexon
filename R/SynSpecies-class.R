@@ -172,8 +172,8 @@ setClass(
 #' @slot panels Layout data frame. It must contain `PANEL`, `ROW`, `COL`, and
 #'   `track`, and may also contain comparative plotting columns such as
 #'   `panel_type`, `species`, `alignment_name`, `tspecies`, `qspecies`,
-#'   `t_panel`, `q_panel`, and optional panel-specific x-window columns
-#'   `xlim_chr`, `xlim_min`, and `xlim_max`.
+#'   `t_panel`, `q_panel`, `x_source_panel`, `SCALE_X`, `SCALE_Y`, and optional
+#'   panel-specific x-window columns `xlim_chr`, `xlim_min`, and `xlim_max`.
 #' @slot layout_type Scalar layout strategy label such as `"custom"` or
 #'   `"chain"`.
 #' @slot free List with logical `x` and `y` entries describing whether scales
@@ -191,6 +191,15 @@ setClass(
 #' * `exon_height = NA_real_`
 #' * `x_translation = NA_real_`
 #' * `metadata = list()`
+#'
+#' @section Panel roles and inherited scales:
+#' Syn-aware layouts use explicit `panel_type` values such as `"annotation"`,
+#' `"coverage"`, and `"link"`. The same public `track` may therefore occur in
+#' more than one role. `SCALE_Y` is the authoritative inherited scale-object
+#' identity: panels with equal values share training, while panels with
+#' different values train independently. Resolved role policies may be kept in
+#' `metadata$panel_role_y_policies` so older or serialized layouts preserve
+#' their fixed/free interpretation.
 #'
 #' @section Validity rules:
 #' * `panels` must contain at least the columns `PANEL`, `ROW`, `COL`, and
@@ -620,7 +629,7 @@ infer_syn_layout_type <- function(panels) {
   "custom"
 }
 
-infer_syn_layout_free <- function(panels) {
+infer_syn_layout_free <- function(panels, panel_role_y_policies = NULL) {
   panel_x_windows <- FALSE
   if (all(c("xlim_chr", "xlim_min", "xlim_max") %in% names(panels))) {
     annotation_rows <- if ("panel_type" %in% names(panels)) {
@@ -641,9 +650,35 @@ infer_syn_layout_free <- function(panels) {
     }
   }
 
+  free_y <- FALSE
+  if ("SCALE_Y" %in% names(panels)) {
+    panel_roles <- link_panel_type(panels)
+    present_roles <- unique(panel_roles[!is.na(panel_roles) & nzchar(panel_roles)])
+
+    if (!is.null(panel_role_y_policies)) {
+      policy_names <- names(panel_role_y_policies)
+      policies <- if (is.null(policy_names)) {
+        unlist(panel_role_y_policies, use.names = FALSE)
+      } else {
+        unlist(
+          panel_role_y_policies[intersect(present_roles, policy_names)],
+          use.names = FALSE
+        )
+      }
+      free_y <- any(policies == "free_y")
+    } else if ("coverage" %in% present_roles) {
+      free_y <- any(vapply(present_roles, function(role) {
+        ids <- panels$SCALE_Y[panel_roles == role]
+        length(unique(stats::na.omit(ids))) > 1L
+      }, logical(1)))
+    } else {
+      free_y <- length(unique(stats::na.omit(panels$SCALE_Y))) > 1L
+    }
+  }
+
   list(
     x = ("SCALE_X" %in% names(panels) && length(unique(stats::na.omit(panels$SCALE_X))) > 1L) || panel_x_windows,
-    y = "SCALE_Y" %in% names(panels) && length(unique(stats::na.omit(panels$SCALE_Y))) > 1L
+    y = free_y
   )
 }
 
@@ -667,7 +702,10 @@ as_syn_layout <- function(x,
   SynLayout(
     panels = panels,
     layout_type = layout_type %||% infer_syn_layout_type(panels),
-    free = free %||% infer_syn_layout_free(panels),
+    free = free %||% infer_syn_layout_free(
+      panels,
+      metadata$panel_role_y_policies %||% NULL
+    ),
     exon_height = exon_height,
     x_translation = x_translation,
     metadata = metadata
@@ -2049,6 +2087,7 @@ store_chain_layout <- function(x,
 #' @examples
 #' ann_path <- system.file(
 #'   "extdata",
+#'   "compact_synspecies",
 #'   "caenorhabditis_XZ1516.gff3",
 #'   package = "ggexon"
 #' )
@@ -2128,14 +2167,17 @@ setMethod("subset_species", "SynSpecies", function(x,
 #' @return An updated `SynPairAlignment` or `SynSpecies` object.
 #'
 #' @examples
-#' paf_path <- system.file("extdata", "V_alginment.paf", package = "ggexon")
+#' paf_path <- system.file(
+#'   "extdata", "cd44_pairwise_ensembl116", "cd44_lastz.paf",
+#'   package = "ggexon"
+#' )
 #' pair <- SynPairAlignment(
-#'   name = "XZ1516_vs_N2",
-#'   query_individual = "XZ1516",
-#'   target_individual = "N2",
+#'   name = "mouse_vs_human",
+#'   query_individual = "mouse",
+#'   target_individual = "human",
 #'   file = paf_path
 #' )
-#' pair <- subset_pairwise_alignment(pair, subset = c(XZ1516 = "RagTag_V"))
+#' pair <- subset_pairwise_alignment(pair, subset = c(mouse = "mouse"))
 #'
 #' @export
 setGeneric("subset_pairwise_alignment", function(x, subset, alignment = NULL) {
@@ -2171,11 +2213,14 @@ setMethod("subset_pairwise_alignment", "SynSpecies", function(x, subset, alignme
 #' @return An updated `SynPairAlignment` or `SynSpecies` object.
 #'
 #' @examples
-#' paf_path <- system.file("extdata", "V_alginment.paf", package = "ggexon")
+#' paf_path <- system.file(
+#'   "extdata", "cd44_pairwise_ensembl116", "cd44_lastz.paf",
+#'   package = "ggexon"
+#' )
 #' pair <- SynPairAlignment(
-#'   name = "XZ1516_vs_N2",
-#'   query_individual = "XZ1516",
-#'   target_individual = "N2",
+#'   name = "mouse_vs_human",
+#'   query_individual = "mouse",
+#'   target_individual = "human",
 #'   file = paf_path
 #' )
 #' pair <- filter_pairwise_alignment(pair, filter = 200)
@@ -3237,11 +3282,14 @@ read_pairwise_psl <- function(path,
 #' @return An updated object of the same class as `x`.
 #'
 #' @examples
-#' paf_path <- system.file("extdata", "V_alginment.paf", package = "ggexon")
+#' paf_path <- system.file(
+#'   "extdata", "cd44_pairwise_ensembl116", "cd44_lastz.paf",
+#'   package = "ggexon"
+#' )
 #' pair <- SynPairAlignment(
-#'   name = "XZ1516_vs_N2",
-#'   query_individual = "XZ1516",
-#'   target_individual = "N2",
+#'   name = "mouse_vs_human",
+#'   query_individual = "mouse",
+#'   target_individual = "human",
 #'   file = paf_path
 #' )
 #' pair <- load_alignment(pair)

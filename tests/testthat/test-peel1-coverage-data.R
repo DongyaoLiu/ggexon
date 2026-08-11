@@ -55,6 +55,13 @@ test_that("PEEL-1 coverage fixtures contain four raw tracks and four complete ge
   expect_true(all(vapply(queried, function(gr) {
     all(as.numeric(S4Vectors::mcols(gr)$score) >= 0)
   }, logical(1))))
+  raw_maxima <- vapply(queried, function(gr) {
+    max(as.numeric(S4Vectors::mcols(gr)$score))
+  }, numeric(1))
+  expect_identical(
+    unname(raw_maxima),
+    c(187, 6115, 228, 192)
+  )
   expect_true(all(vapply(queried, function(gr) {
     reduced <- GenomicRanges::reduce(gr)
     length(reduced) == 1L &&

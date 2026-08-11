@@ -530,6 +530,49 @@ ggexon(sp) +
   facet_genomics(ggplot2::vars(track), scales = "free_y")
 ```
 
+### Role-qualified panels and inherited y scales
+
+Syn-aware layouts distinguish annotation, coverage, and link panels by
+`panel_type`.  A coverage panel and an annotation panel may keep the same
+public `track` label while remaining separate panels. Coverage panels are
+placed above the existing annotation/link chain, inherit ordinary genomic x
+windows from an annotation source when one exists, and are never used as link
+source panels. A standalone coverage panel can instead use its own coordinates
+or a named `facet_genomics(xlim = ..., xlim_chr = ...)` window.
+
+The layout's `SCALE_Y` column records scale-object inheritance. Panels with the
+same `SCALE_Y` value train through one y-scale object; different values mean
+independent objects. `scale_panel_annotation()` and `scale_panel_coverage()`
+control those identities by role:
+
+- annotation defaults to `"fixed_y"`, so annotation panels share one scale;
+- coverage follows the y part of `facet_genomics(scales = ...)` when no
+  coverage wrapper is supplied;
+- an explicit role wrapper takes precedence over that facet fallback;
+- a valid wrapper for a role absent from the plot is a no-op.
+
+```{r eval = FALSE}
+ggexon(sp) +
+  geom_coverage(annotation = "coverage") +
+  geom_exon(
+    species = "XZ1516",
+    chr = "I",
+    subset = c(2332338L, 2373985L)
+  ) +
+  facet_genomics(ggplot2::vars(track), ncol = 1) +
+  scale_panel_annotation("fixed_y") +
+  scale_panel_coverage("free_y") +
+  center_panel_annotation()
+```
+
+`center_panel_annotation()` changes only the post-training annotation view in
+a Syn-backed plot. It does not alter annotation rows, inherited scales,
+coverage/link panels, or ggplot2 position adjustment. It is the dedicated
+Syn-aware equivalent of `facet_genomics(vertical = "center")`. Ordinary
+non-Syn faceting and `facet_genomictree()` keep their existing behavior. See the
+`bigwig-coverage-demo` article for a complete runnable example with bundled
+files.
+
 ## `facet_genomictree()`
 
 `facet_genomictree()` is for genomic panels aligned to a tree or another

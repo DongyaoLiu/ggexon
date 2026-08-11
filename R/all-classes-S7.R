@@ -103,6 +103,14 @@ class_mapping <- ggplot2::class_mapping
 class_ggplot <- ggplot2::class_ggplot
 
 #' The major ggexon object
+#'
+#' @section Internal panel state:
+#' `panel_scale_specs` stores role-keyed specifications added through
+#' `scale_panel_annotation()` and `scale_panel_coverage()`.
+#' `center_annotation_panels` stores the request made by
+#' `center_panel_annotation()`. These are build-time implementation properties;
+#' users should add the public specification objects instead of assigning the
+#' properties directly.
 #' @noRd
 class_ggexon <- S7::new_class(
   name = "ggexon", parent = class_gg,
@@ -110,6 +118,8 @@ class_ggexon <- S7::new_class(
     data    = S7::class_any,
     layers  = S7::class_list,
     cross_panel_annotations = S7::class_list,
+    panel_scale_specs = S7::class_list,
+    center_annotation_panels = S7::class_logical,
     genomic_tree = S7::class_any,
     genomic_x_scale = S7::class_any,
     strip_scale = S7::class_any,
@@ -129,6 +139,8 @@ class_ggexon <- S7::new_class(
     ...,
     layers = list(),
     cross_panel_annotations = list(),
+    panel_scale_specs = list(),
+    center_annotation_panels = FALSE,
     genomic_tree = NULL,
     genomic_x_scale = NULL,
     strip_scale = NULL,
@@ -149,6 +161,8 @@ class_ggexon <- S7::new_class(
       data        = data,
       layers      = layers,
       cross_panel_annotations = cross_panel_annotations,
+      panel_scale_specs = panel_scale_specs,
+      center_annotation_panels = center_annotation_panels,
       genomic_tree = genomic_tree,
       genomic_x_scale = genomic_x_scale,
       strip_scale = strip_scale,

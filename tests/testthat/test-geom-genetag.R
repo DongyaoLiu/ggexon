@@ -610,9 +610,7 @@ test_that("compile_ggtree_genetag aligns gene rows to rectangular ggtree tips", 
   testthat::skip_if_not_installed("ape")
   testthat::skip_if_not_installed("ggtree")
 
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
   sp <- SynSpecies(name = "worms")
@@ -699,9 +697,7 @@ test_that("compile_ggtree_genetag rejects old x-layout modifiers", {
   testthat::skip_if_not_installed("ape")
   testthat::skip_if_not_installed("ggtree")
 
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
   sp <- SynSpecies(name = "worms") |>
@@ -731,9 +727,7 @@ test_that("ggtree genomic alignment keeps tree y and per-individual genomic pane
   testthat::skip_if_not_installed("ape")
   testthat::skip_if_not_installed("ggtree")
 
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
   sp <- SynSpecies(name = "worms")
@@ -776,9 +770,7 @@ test_that("additive genomic tree grammar renders gene tags and exon layers", {
   testthat::skip_if_not_installed("ape")
   testthat::skip_if_not_installed("ggtree")
 
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
   sp <- SynSpecies(name = "worms")
@@ -820,6 +812,85 @@ test_that("additive genomic tree grammar renders gene tags and exon layers", {
   exon2_grob <- ggplot2::ggplotGrob(exon2_plot)
   expect_true(inherits(exon2_grob, "gtable"))
   expect_true(any(exon2_grob$layout$name == "genomic-tree"))
+})
+
+test_that("facet_genomictree keeps free-y semantics with unused panel specs", {
+  testthat::skip_if_not_installed("ape")
+  testthat::skip_if_not_installed("ggtree")
+
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+  species <- SynSpecies(name = "tree panel scales")
+  for (id in c("XZ1516", "N2")) {
+    species <- add_individual(
+      species,
+      SynIndividual(
+        annotation_file = annotation_path,
+        genome_file = genome_waiver(),
+        id = id
+      )
+    )
+  }
+
+  tree <- ape::read.tree(text = "(XZ1516:0.1,N2:0.2);")
+  tree_plot <- suppressWarnings(ggtree::ggtree(tree, layout = "rectangular"))
+  base_plot <- ggexon(species) +
+    geom_exon(chr = "RagTag_V", subset = c(21574445, 21584356)) +
+    geom_genomic_tree(tree_plot = tree_plot)
+
+  without_spec <- ggexon_build(
+    base_plot + facet_genomictree(scales = "free_y")
+  )
+  with_unused_spec <- ggexon_build(
+    base_plot +
+      facet_genomictree(scales = "free_y") +
+      scale_panel_coverage("free_y")
+  )
+  with_center_wrapper <- ggexon_build(
+    base_plot +
+      facet_genomictree(scales = "free_y") +
+      center_panel_annotation()
+  )
+
+  expect_identical(
+    as.integer(without_spec@layout$layout$SCALE_Y),
+    c(1L, 2L)
+  )
+  expect_identical(
+    as.integer(with_unused_spec@layout$layout$SCALE_Y),
+    c(1L, 2L)
+  )
+  expect_true(without_spec@layout$facet_params$free$y)
+  expect_true(without_spec@layout$facet_params$draw_axes$y)
+  expect_true(without_spec@layout$facet_params$axis_labels$y)
+  expect_identical(
+    with_unused_spec@layout$facet_params[c(
+      "free", "draw_axes", "axis_labels"
+    )],
+    without_spec@layout$facet_params[c(
+      "free", "draw_axes", "axis_labels"
+    )]
+  )
+  expect_length(with_unused_spec@data, length(without_spec@data))
+  for (layer_index in seq_along(without_spec@data)) {
+    expect_identical(
+      with_unused_spec@data[[layer_index]],
+      without_spec@data[[layer_index]]
+    )
+    expect_identical(
+      with_center_wrapper@data[[layer_index]],
+      without_spec@data[[layer_index]]
+    )
+  }
+  expect_identical(
+    with_center_wrapper@layout$layout,
+    without_spec@layout$layout
+  )
+  expect_identical(
+    lapply(with_center_wrapper@layout$panel_params, `[[`, "y.range"),
+    lapply(without_spec@layout$panel_params, `[[`, "y.range")
+  )
 })
 
 test_that("facet_genomictree orders ordinary track data by tree tips", {

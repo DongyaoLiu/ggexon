@@ -69,6 +69,7 @@ This is an S4 generic that dispatches on the class of \code{x}.
 \examples{
 ann_path <- system.file(
   "extdata",
+  "compact_synspecies",
   "caenorhabditis_XZ1516.gff3",
   package = "ggexon"
 )

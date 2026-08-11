@@ -1,7 +1,6 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://dongyaoliu.github.io/ggexon/404.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/AGENTS.html</loc></url>
-<url><loc>https://dongyaoliu.github.io/ggexon/CLAUDE.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/LICENSE-text.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/LICENSE.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/articles/bigwig-coverage-demo.html</loc></url>
@@ -10,7 +9,6 @@
 <url><loc>https://dongyaoliu.github.io/ggexon/articles/ggexon-classes-and-verbs.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/articles/ggexon-workflow.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/articles/hox-cluster-expansion-demo.html</loc></url>
-<url><loc>https://dongyaoliu.github.io/ggexon/articles/hoxa-ensembl115-demo.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/articles/index.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/authors.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/index.html</loc></url>
@@ -73,6 +71,7 @@
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/annotation_data.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/bidirection.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/build_feature_index.html</loc></url>
+<url><loc>https://dongyaoliu.github.io/ggexon/reference/center_panel_annotation.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/check_device.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/check_syn_files.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/class_ggexon_built.html</loc></url>
@@ -176,6 +175,8 @@
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/remove_missing.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/rename_domain_annotation_ids.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/resolve_syn_individual.html</loc></url>
+<url><loc>https://dongyaoliu.github.io/ggexon/reference/scale_panel_annotation.html</loc></url>
+<url><loc>https://dongyaoliu.github.io/ggexon/reference/scale_panel_coverage.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/scale_x_ggexon_genomic.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/set_active_annotation.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/set_active_feature_annotation.html</loc></url>

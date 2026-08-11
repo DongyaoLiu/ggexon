@@ -96,6 +96,9 @@ reference:
   desc: Arrange genomic panels beside link panels, tree panels, or other plots, and control genomic x-axis guides.
   contents:
   - facet_genomics
+  - scale_panel_annotation
+  - scale_panel_coverage
+  - center_panel_annotation
   - facet_genomictree
   - scale_x_ggexon_genomic
   - strip_scale

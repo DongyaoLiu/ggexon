@@ -5,7 +5,7 @@
 \alias{FacetGenomics}
 \title{ggproto backend for \code{facet_genomics()}}
 \format{
-An object of class \code{FacetGenomics} (inherits from \code{FacetWrap}, \code{Facet}, \code{ggproto}, \code{gg}) of length 5.
+An object of class \code{FacetGenomics} (inherits from \code{FacetWrap}, \code{Facet}, \code{ggproto}, \code{gg}) of length 6.
 }
 \usage{
 FacetGenomics
@@ -18,6 +18,11 @@ The main custom responsibilities are:
 \itemize{
 \item deciding whether to use a stored \code{SynLayout}, derive a new comparative
 chain layout, or fall back to standard wrap-style faceting
+\item inserting first-class coverage rows ahead of annotation and link rows
+\item mapping layers to role-qualified \verb{(panel_type, track)} panels
+\item inheriting genomic x windows, reversal, and scales from resolved
+annotation sources while supporting standalone coverage coordinates
+\item allocating role-aware inherited y-scale identities
 \item reordering link panels so they sit between the relevant annotation panels
 \item annotating link panels with source panel ids (\code{t_panel}, \code{q_panel})
 \item assigning vertical anchor directions (\code{target_anchor_y},
@@ -32,8 +37,9 @@ These panel-level decisions are consumed later by \code{Layout2} and
 \describe{
 \item{\code{compute_layout()}}{Chooses the panel table. For \code{SynSpecies}
 data it prefers an explicit layout override, then a stored \code{SynLayout}
-when link layers are present, then a derived chain layout, and finally a
-standard wrap layout.}
+whenever one is available, then a derived chain layout, and finally a
+standard wrap layout. Coverage requests are inserted as first-class panel
+rows before the comparative layout is finalized.}
 \item{\code{compute_alignment_layout()}}{Reorders link panels relative to their
 neighboring annotation panels and annotates the resulting layout with
 source panel ids.}

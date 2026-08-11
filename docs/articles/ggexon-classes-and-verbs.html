@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>ggexon Classes, Geoms, Facets, and Guides • ggexon</title>
 <script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_3-0.4.10/font.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_3-0.4.10/font.css" rel="stylesheet">
 <link href="../deps/Source_Code_Pro-0.4.10/font.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
@@ -643,6 +643,54 @@ layout.</p>
 <span>    alignment <span class="op">=</span> <span class="st">"XZ1516_vs_N2"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/facet_genomics.html">facet_genomics</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">track</span><span class="op">)</span>, scales <span class="op">=</span> <span class="st">"free_y"</span><span class="op">)</span></span></code></pre></div>
+<div class="section level4">
+<h4 id="role-qualified-panels-and-inherited-y-scales">Role-qualified panels and inherited y scales<a class="anchor" aria-label="anchor" href="#role-qualified-panels-and-inherited-y-scales"></a>
+</h4>
+<p>Syn-aware layouts distinguish annotation, coverage, and link panels
+by <code>panel_type</code>. A coverage panel and an annotation panel may
+keep the same public <code>track</code> label while remaining separate
+panels. Coverage panels are placed above the existing annotation/link
+chain, inherit ordinary genomic x windows from an annotation source when
+one exists, and are never used as link source panels. A standalone
+coverage panel can instead use its own coordinates or a named
+<code>facet_genomics(xlim = ..., xlim_chr = ...)</code> window.</p>
+<p>The layout’s <code>SCALE_Y</code> column records scale-object
+inheritance. Panels with the same <code>SCALE_Y</code> value train
+through one y-scale object; different values mean independent objects.
+<code><a href="../reference/scale_panel_annotation.html">scale_panel_annotation()</a></code> and
+<code><a href="../reference/scale_panel_coverage.html">scale_panel_coverage()</a></code> control those identities by
+role:</p>
+<ul>
+<li>annotation defaults to <code>"fixed_y"</code>, so annotation panels
+share one scale;</li>
+<li>coverage follows the y part of
+<code>facet_genomics(scales = ...)</code> when no coverage wrapper is
+supplied;</li>
+<li>an explicit role wrapper takes precedence over that facet
+fallback;</li>
+<li>a valid wrapper for a role absent from the plot is a no-op.</li>
+</ul>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">sp</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_coverage.html">geom_coverage</a></span><span class="op">(</span>annotation <span class="op">=</span> <span class="st">"coverage"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_exon.html">geom_exon</a></span><span class="op">(</span></span>
+<span>    species <span class="op">=</span> <span class="st">"XZ1516"</span>,</span>
+<span>    chr <span class="op">=</span> <span class="st">"I"</span>,</span>
+<span>    subset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2332338L</span>, <span class="fl">2373985L</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/facet_genomics.html">facet_genomics</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">track</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/scale_panel_annotation.html">scale_panel_annotation</a></span><span class="op">(</span><span class="st">"fixed_y"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/scale_panel_coverage.html">scale_panel_coverage</a></span><span class="op">(</span><span class="st">"free_y"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/center_panel_annotation.html">center_panel_annotation</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p><code><a href="../reference/center_panel_annotation.html">center_panel_annotation()</a></code> changes only the post-training
+annotation view in a Syn-backed plot. It does not alter annotation rows,
+inherited scales, coverage/link panels, or ggplot2 position adjustment.
+It is the dedicated Syn-aware equivalent of
+<code>facet_genomics(vertical = "center")</code>. Ordinary non-Syn
+faceting and <code><a href="../reference/facet_genomictree.html">facet_genomictree()</a></code> keep their existing
+behavior. See the <code>bigwig-coverage-demo</code> article for a
+complete runnable example with bundled files.</p>
+</div>
 </div>
 <div class="section level3">
 <h3 id="facet_genomictree">
@@ -654,7 +702,7 @@ such as <code><a href="../reference/compile_ggtree_genetag.html">compile_ggtree_
 <code><a href="../reference/compile_ggtree_genomic_alignment.html">compile_ggtree_genomic_alignment()</a></code>,
 <code><a href="../reference/compile_ggtree_rectangular_segments.html">compile_ggtree_rectangular_segments()</a></code>, and
 <code><a href="../reference/plot_ggtree_genomic_alignment.html">plot_ggtree_genomic_alignment()</a></code>.</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_ggtree_genomic_alignment.html">plot_ggtree_genomic_alignment</a></span><span class="op">(</span></span>
 <span>  <span class="va">sp</span>,</span>
 <span>  alignment <span class="op">=</span> <span class="st">"worm-maf"</span>,</span>
@@ -705,7 +753,7 @@ dedicated width argument:</p>
 <p>Species labels can be placed on the left
 (<code>label_position = "left"</code>, default), right
 (<code>"right"</code>), or hidden (<code>"none"</code>).</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Explicit column widths</span></span>
 <span><span class="fu"><a href="../reference/facet_genomictree.html">facet_genomictree</a></span><span class="op">(</span></span>
 <span>  label_position <span class="op">=</span> <span class="st">"left"</span>,</span>
@@ -731,7 +779,7 @@ or to a fixed unit when the output dimensions are known in advance.</p>
 while supporting compressed regions. The guide
 <code><a href="../reference/guide_x_ggexon_piecewise.html">guide_x_ggexon_piecewise()</a></code> shows separate exon and intron
 scale bars instead of ordinary genomic ticks.</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">sp</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_exon.html">geom_exon</a></span><span class="op">(</span>species <span class="op">=</span> <span class="st">"XZ1516"</span>, chr <span class="op">=</span> <span class="st">"RagTag_V"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/scale_x_ggexon_genomic.html">scale_x_ggexon_genomic</a></span><span class="op">(</span></span>
@@ -753,7 +801,7 @@ data, then use verbs and geoms to operate on those classes.</p>
 <p>Use <code>add_*()</code> functions when a parent object should
 remember a child object, annotation layer, alignment, tree, or layout
 result.</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SynSpecies.html">SynSpecies</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"Caenorhabditis"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/add_individual.html">add_individual</a></span><span class="op">(</span><span class="va">xz</span>, <span class="va">n2</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/add_tree.html">add_tree</a></span><span class="op">(</span><span class="va">tree</span><span class="op">)</span></span>
@@ -779,12 +827,12 @@ result.</p>
 </h3>
 <p>Use <code>load_*()</code> when the object knows where a file is, but
 the data have not yet been materialized.</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">xz</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_annotation.html">load_annotation</a></span><span class="op">(</span><span class="va">xz</span><span class="op">)</span></span>
 <span><span class="va">sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_alignment.html">load_alignment</a></span><span class="op">(</span><span class="va">sp</span>, alignment <span class="op">=</span> <span class="st">"XZ1516_vs_N2"</span><span class="op">)</span></span></code></pre></div>
 <p>Use <code>query_*()</code> and <code>*_data()</code> helpers when you
 want rows or ranges back:</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">features</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/query_features.html">query_features</a></span><span class="op">(</span></span>
 <span>  <span class="va">xz</span>,</span>
 <span>  chr <span class="op">=</span> <span class="st">"V_RagTag"</span>,</span>
@@ -808,7 +856,7 @@ that accepts chromosome and coordinates. Both calls return the same
 interval-native signal ranges with raw <code>score</code> metadata; they
 do not alter the annotation object or expand intervals to per-base
 rows.</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">region</span> <span class="op">&lt;-</span> <span class="fu">GenomicRanges</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/GenomicRanges/man/GRanges-class.html" class="external-link">GRanges</a></span><span class="op">(</span></span>
 <span>  <span class="st">"I"</span>,</span>
 <span>  <span class="fu">IRanges</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IRanges/man/IRanges-constructor.html" class="external-link">IRanges</a></span><span class="op">(</span><span class="fl">2332338L</span>, <span class="fl">2373985L</span><span class="op">)</span></span>
@@ -832,7 +880,7 @@ rows.</p>
 </h3>
 <p>Use <code>subset_*()</code> and <code>filter_*()</code> when you want
 updated objects or filtered alignment state.</p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sp_window</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/subset_species.html">subset_species</a></span><span class="op">(</span></span>
 <span>  <span class="va">sp</span>,</span>
 <span>  coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"XZ1516#V_RagTag:21574445-21584356"</span><span class="op">)</span></span>
@@ -848,7 +896,7 @@ updated objects or filtered alignment state.</p>
 <span><span class="op">)</span></span></code></pre></div>
 <p>Use curation verbs when a feature annotation needs readable labels or
 corrected gene models:</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">xz</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/set_gene_labels.html">set_gene_labels</a></span><span class="op">(</span></span>
 <span>  <span class="va">xz</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>FUN_000001 <span class="op">=</span> <span class="st">"sept-1"</span>, FUN_000002 <span class="op">=</span> <span class="st">"zina-1"</span><span class="op">)</span></span>
@@ -908,7 +956,7 @@ axes need explicit exon and intron scale bars</li>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

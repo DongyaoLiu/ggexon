@@ -1,8 +1,6 @@
 test_that("SynAnnotation subclasses can be attached to SynIndividual", {
-  genome_path <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  genome_path <- system.file("extdata", "compact_synspecies", "XZ1516.fasta", package = "ggexon")
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
 
@@ -264,9 +262,7 @@ test_that("SynAnnotationPatch now participates in the genome annotation hierarch
 })
 
 test_that("subset_feature_annotation accepts coords strings", {
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
 
@@ -301,9 +297,7 @@ test_that("subset_feature_annotation accepts coords strings", {
 })
 
 test_that("subset_feature_annotation returns an updated SynIndividual when given SynIndividual", {
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
 
@@ -383,10 +377,8 @@ test_that("SynProteinDomainAnnotation reads the shipped InterProScan export", {
 })
 
 test_that("add_interproscan_annotation attaches the shipped InterProScan layer", {
-  genome_path <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  genome_path <- system.file("extdata", "compact_synspecies", "XZ1516.fasta", package = "ggexon")
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
 
@@ -409,9 +401,7 @@ test_that("add_interproscan_annotation attaches the shipped InterProScan layer",
 })
 
 test_that("subset_feature_annotation returns a clean windowed snapshot", {
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
   expect_true(nzchar(annotation_path))
@@ -471,9 +461,7 @@ test_that("subset_feature_annotation returns a clean windowed snapshot", {
 })
 
 test_that("subset_feature_annotation supports gene and transcript selectors", {
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
   expect_true(nzchar(annotation_path))
@@ -505,9 +493,7 @@ test_that("subset_feature_annotation supports gene and transcript selectors", {
 })
 
 test_that("subset_feature_annotation reports retained rows and features", {
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
   expect_true(nzchar(annotation_path))
@@ -535,9 +521,7 @@ test_that("subset_feature_annotation reports retained rows and features", {
 })
 
 test_that("subset_feature_annotation intersects selectors with coordinates", {
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
   expect_true(nzchar(annotation_path))
@@ -577,9 +561,7 @@ test_that("subset_feature_annotation intersects selectors with coordinates", {
 })
 
 test_that("build_feature_index also supports SynFeatureAnnotation objects", {
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
   expect_true(nzchar(annotation_path))
@@ -625,10 +607,8 @@ test_that("rename_domain_annotation_ids rewrites the domain key column", {
 })
 
 test_that("geom_motif projects renamed domain coordinates onto genomic tracks", {
-  genome_path <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  genome_path <- system.file("extdata", "compact_synspecies", "XZ1516.fasta", package = "ggexon")
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
   patch_path <- system.file("extdata", "XZ1516.TA.gff", package = "ggexon")
@@ -694,10 +674,8 @@ test_that("geom_motif projects renamed domain coordinates onto genomic tracks", 
 })
 
 test_that("project_domains_to_genome filters InterProScan models and motifs", {
-  genome_path <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  genome_path <- system.file("extdata", "compact_synspecies", "XZ1516.fasta", package = "ggexon")
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
   patch_path <- system.file("extdata", "XZ1516.TA.gff", package = "ggexon")
@@ -744,10 +722,8 @@ test_that("project_domains_to_genome filters InterProScan models and motifs", {
 })
 
 test_that("store_projected_domains keeps projected tables on SynIndividual", {
-  genome_path <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  genome_path <- system.file("extdata", "compact_synspecies", "XZ1516.fasta", package = "ggexon")
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
 
@@ -779,10 +755,8 @@ test_that("store_projected_domains keeps projected tables on SynIndividual", {
 })
 
 test_that("set_gene_labels stores plot labels without replacing stable IDs", {
-  genome_path <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  genome_path <- system.file("extdata", "compact_synspecies", "XZ1516.fasta", package = "ggexon")
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
 
@@ -830,10 +804,8 @@ test_that("set_gene_labels normalizes and validates mapping inputs", {
 })
 
 test_that("geom_genelabel uses Syn annotation plot labels with syn-aware defaults", {
-  genome_path <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  genome_path <- system.file("extdata", "compact_synspecies", "XZ1516.fasta", package = "ggexon")
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
 
@@ -865,10 +837,8 @@ test_that("geom_genelabel uses Syn annotation plot labels with syn-aware default
 })
 
 test_that("patch_annotation replaces a gene model and clears feature caches", {
-  genome_path <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  genome_path <- system.file("extdata", "compact_synspecies", "XZ1516.fasta", package = "ggexon")
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
 
@@ -966,10 +936,8 @@ test_that("replace-mode patches remove all old features overlapping the patch ra
 })
 
 test_that("read_patch_gff and patch_annotation_from_gff use the real patch file", {
-  genome_path <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  genome_path <- system.file("extdata", "compact_synspecies", "XZ1516.fasta", package = "ggexon")
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
   patch_path <- system.file("extdata", "XZ1516.TA.gff", package = "ggexon")
@@ -1007,10 +975,8 @@ test_that("read_patch_gff and patch_annotation_from_gff use the real patch file"
 })
 
 test_that("geom_exon falls back to CDS when patched transcripts have no exon rows", {
-  genome_path <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  genome_path <- system.file("extdata", "compact_synspecies", "XZ1516.fasta", package = "ggexon")
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
   patch_path <- system.file("extdata", "XZ1516.TA.gff", package = "ggexon")

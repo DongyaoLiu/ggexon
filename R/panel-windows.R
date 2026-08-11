@@ -41,6 +41,17 @@ effective_panel_windows <- function(x) {
   )
 }
 
+.panel_window_individual <- function(panels) {
+  out <- rep(NA_character_, nrow(panels))
+  for (column in intersect(c("individual", "species", "track"), names(panels))) {
+    values <- as.character(panels[[column]])
+    fill <- (is.na(out) | !nzchar(out)) &
+      !is.na(values) & nzchar(values)
+    out[fill] <- values[fill]
+  }
+  out
+}
+
 .effective_panel_windows_synlayout <- function(x) {
   panels <- syn_layout_panels(x)
   if (!is.data.frame(panels) || nrow(panels) == 0L) {
@@ -53,17 +64,11 @@ effective_panel_windows <- function(x) {
   } else {
     rep("annotation", nrow(panels))
   }
-  species_col <- if ("species" %in% names(panels)) {
-    as.character(panels$species)
-  } else {
-    as.character(panels$track)
-  }
-
   out <- data.frame(
     PANEL = as.integer(panels$PANEL),
     track = as.character(panels$track),
     panel_type = panel_type,
-    individual = species_col,
+    individual = .panel_window_individual(panels),
     chr = as.character(panels$xlim_chr),
     start = as.numeric(panels$xlim_min),
     end = as.numeric(panels$xlim_max),
@@ -122,7 +127,7 @@ effective_panel_windows <- function(x) {
       PANEL = as.integer(layout_df$PANEL),
       track = as.character(layout_df$track),
       panel_type = if ("panel_type" %in% names(layout_df)) as.character(layout_df$panel_type) else "annotation",
-      individual = if ("species" %in% names(layout_df)) as.character(layout_df$species) else as.character(layout_df$track),
+      individual = .panel_window_individual(layout_df),
       chr = as.character(layout_df$xlim_chr),
       start = as.numeric(layout_df$xlim_min),
       end = as.numeric(layout_df$xlim_max),
@@ -134,7 +139,9 @@ effective_panel_windows <- function(x) {
 
   context_windows <- list()
   for (layer in built@plot@layers) {
-    windows <- layer$syn_plot_context$windows %||% NULL
+    windows <- layer$syn_plot_context$annotation_windows %||%
+      layer$syn_plot_context$windows %||%
+      NULL
     if (!is.null(windows) && length(windows) > 0L) {
       context_windows <- windows
       break
@@ -148,13 +155,14 @@ effective_panel_windows <- function(x) {
       if (is.null(window)) {
         next
       }
-      if (length(window$chr) == 1L) {
+      if (length(window$chr) == 1L &&
+          (is.na(out$chr[[i]]) || !nzchar(out$chr[[i]]))) {
         out$chr[[i]] <- as.character(window$chr)
       }
-      if (length(window$start) == 1L) {
+      if (length(window$start) == 1L && !is.finite(out$start[[i]])) {
         out$start[[i]] <- as.numeric(window$start)
       }
-      if (length(window$end) == 1L) {
+      if (length(window$end) == 1L && !is.finite(out$end[[i]])) {
         out$end[[i]] <- as.numeric(window$end)
       }
     }

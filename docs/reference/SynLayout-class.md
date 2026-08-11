@@ -14,8 +14,9 @@ x-axis translation.
   Layout data frame. It must contain `PANEL`, `ROW`, `COL`, and `track`,
   and may also contain comparative plotting columns such as
   `panel_type`, `species`, `alignment_name`, `tspecies`, `qspecies`,
-  `t_panel`, `q_panel`, and optional panel-specific x-window columns
-  `xlim_chr`, `xlim_min`, and `xlim_max`.
+  `t_panel`, `q_panel`, `x_source_panel`, `SCALE_X`, `SCALE_Y`, and
+  optional panel-specific x-window columns `xlim_chr`, `xlim_min`, and
+  `xlim_max`.
 
 - `layout_type`:
 
@@ -52,6 +53,16 @@ x-axis translation.
 - `x_translation = NA_real_`
 
 - `metadata = list()`
+
+## Panel roles and inherited scales
+
+Syn-aware layouts use explicit `panel_type` values such as
+`"annotation"`, `"coverage"`, and `"link"`. The same public `track` may
+therefore occur in more than one role. `SCALE_Y` is the authoritative
+inherited scale-object identity: panels with equal values share
+training, while panels with different values train independently.
+Resolved role policies may be kept in `metadata$panel_role_y_policies`
+so older or serialized layouts preserve their fixed/free interpretation.
 
 ## Validity rules
 

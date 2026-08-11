@@ -85,6 +85,15 @@ collect_syn_plot_context <- function(layers, plot_data, facet = NULL) {
   if (is.null(syn_data)) {
     return(NULL)
   }
+  has_syn_dispatched_layer <- any(vapply(
+    layers,
+    is_syn_layer_input,
+    logical(1),
+    plot_data = plot_data
+  ))
+  if (!has_syn_dispatched_layer) {
+    return(NULL)
+  }
 
   annotation_requests <- unlist(lapply(layers, function(layer) {
     collect_syn_annotation_requests(layer, syn_data, plot_data)
@@ -98,18 +107,29 @@ collect_syn_plot_context <- function(layers, plot_data, facet = NULL) {
     link_requests = link_requests
   )
 
-  windows <- collect_layout_panel_windows(syn_data)
-  windows <- utils::modifyList(
-    windows,
-    collect_facet_panel_windows(
-      syn_data,
-      facet = facet,
-      annotation_species_order = annotation_species_order
-    )
+  layout_windows <- collect_layout_panel_windows(syn_data)
+  layout_annotation_windows <- collect_layout_panel_windows(
+    syn_data,
+    panel_roles = "annotation"
   )
-  windows <- utils::modifyList(
-    windows,
-    collect_explicit_annotation_windows(annotation_requests, syn_data)
+  facet_windows <- collect_facet_panel_windows(
+    syn_data,
+    facet = facet,
+    annotation_species_order = annotation_species_order
+  )
+  explicit_annotation_windows <- collect_explicit_annotation_windows(
+    annotation_requests,
+    syn_data
+  )
+  windows <- utils::modifyList(layout_windows, facet_windows)
+  windows <- utils::modifyList(windows, explicit_annotation_windows)
+  annotation_windows <- utils::modifyList(
+    layout_annotation_windows,
+    facet_windows
+  )
+  annotation_windows <- utils::modifyList(
+    annotation_windows,
+    explicit_annotation_windows
   )
   windows <- derive_syn_plot_windows(
     syn_data,
@@ -117,50 +137,346 @@ collect_syn_plot_context <- function(layers, plot_data, facet = NULL) {
     link_requests,
     annotation_species_order = annotation_species_order
   )
-  coverage_tracks <- collect_requested_coverage_tracks(
+  annotation_windows <- derive_syn_plot_windows(
+    syn_data,
+    annotation_windows,
+    link_requests,
+    annotation_species_order = annotation_species_order
+  )
+  window_names <- names(annotation_windows) %||%
+    rep("", length(annotation_windows))
+  coverage_annotation_windows <- annotation_windows[vapply(
+    seq_along(annotation_windows),
+    function(i) {
+    window <- annotation_windows[[i]]
+    recipient <- as.character(
+      window$individual %||% window$species %||% window_names[[i]]
+    )
+    length(recipient) == 1L && recipient %in% annotation_species_order
+  }, logical(1))]
+  coverage_requests <- collect_syn_coverage_requests(
     layers = layers,
     syn_data = syn_data,
     plot_data = plot_data,
     windows = windows,
-    annotation_species_order = annotation_species_order
+    annotation_windows = coverage_annotation_windows
   )
+  coverage_tracks <- unique(unlist(lapply(coverage_requests, function(request) {
+    request$tracks
+  }), use.names = FALSE))
+  coverage_tracks <- as.character(
+    coverage_tracks[!is.na(coverage_tracks) & nzchar(coverage_tracks)]
+  )
+  for (request in coverage_requests) {
+    for (track in names(request$windows)) {
+      windows[[track]] <- request$windows[[track]]
+    }
+  }
 
   list(
     syn_data = syn_data,
     annotation_requests = annotation_requests,
     link_requests = link_requests,
     windows = windows,
+    annotation_windows = annotation_windows,
     annotation_species_order = annotation_species_order,
+    coverage_requests = coverage_requests,
     coverage_tracks = coverage_tracks,
     query_cache = new.env(parent = emptyenv())
   )
 }
 
-collect_requested_coverage_tracks <- function(layers,
-                                              syn_data,
-                                              plot_data,
-                                              windows = list(),
-                                              annotation_species_order = NULL) {
-  coverage_layers <- Filter(function(layer) {
-    identical(layer$geom, GeomCoverage) && is_syn_layer_input(layer, plot_data)
-  }, layers)
-  if (length(coverage_layers) == 0L) {
-    return(character())
+.layout_panel_recipients <- function(panels, syn_data) {
+  recipients <- rep(NA_character_, nrow(panels))
+  individual_ids <- names(individuals(syn_data))
+  recipient_columns <- intersect(
+    c("individual", "species", "track"),
+    names(panels)
+  )
+
+  for (recipient_column in recipient_columns) {
+    values <- as.character(panels[[recipient_column]])
+    fill <- is.na(recipients) &
+      !is.na(values) & nzchar(values) &
+      values %in% individual_ids
+    recipients[fill] <- values[fill]
   }
 
-  tracks <- unlist(lapply(coverage_layers, function(layer) {
-    species <- syn_layer_params(layer)$species %||% NULL
-    if (!is.null(species)) {
-      return(resolve_plot_species_params(syn_data, species))
+  recipients
+}
+
+.coverage_track_recipients <- function(syn_data) {
+  if (methods::is(syn_data, "SynIndividual")) {
+    id <- syn_id(syn_data)
+    return(stats::setNames(id, id))
+  }
+  if (!methods::is(syn_data, "SynSpecies")) {
+    return(stats::setNames(character(), character()))
+  }
+
+  individual_ids <- names(individuals(syn_data))
+  layout <- species_layout(syn_data)
+  if (!is.null(layout)) {
+    panels <- syn_layout_panels(layout)
+    if (is.data.frame(panels) && "track" %in% names(panels)) {
+      panel_type <- if ("panel_type" %in% names(panels)) {
+        as.character(panels$panel_type)
+      } else {
+        rep("annotation", nrow(panels))
+      }
+      panel_type[is.na(panel_type)] <- "annotation"
+      recipient_rows <- panel_type %in% c("annotation", "coverage")
+      tracks <- as.character(panels$track)
+      recipients <- .layout_panel_recipients(panels, syn_data)
+      keep <- recipient_rows &
+        !is.na(tracks) & nzchar(tracks) &
+        !is.na(recipients) & nzchar(recipients)
+      tracks <- tracks[keep]
+      recipients <- recipients[keep]
+      panel_type <- panel_type[keep]
+      preferred_recipient_rows <- unlist(lapply(
+        unique(recipients),
+        function(recipient) {
+          hits <- which(recipients == recipient)
+          coverage_hits <- hits[panel_type[hits] == "coverage"]
+          if (length(coverage_hits) > 0L) coverage_hits else hits
+        }
+      ), use.names = FALSE)
+      tracks <- tracks[preferred_recipient_rows]
+      recipients <- recipients[preferred_recipient_rows]
+      panel_type <- panel_type[preferred_recipient_rows]
+      track_order <- unique(tracks)
+      if (length(track_order) > 0L) {
+        preferred_rows <- vapply(track_order, function(track) {
+          hits <- which(tracks == track)
+          coverage_hits <- hits[panel_type[hits] == "coverage"]
+          if (length(coverage_hits) > 0L) {
+            return(coverage_hits[[1L]])
+          }
+          hits[[1L]]
+        }, integer(1))
+        out <- stats::setNames(
+          recipients[preferred_rows],
+          track_order
+        )
+        missing_individuals <- individual_ids[
+          !individual_ids %in% unname(out)
+        ]
+        return(c(
+          out,
+          stats::setNames(missing_individuals, missing_individuals)
+        ))
+      }
     }
-    window_tracks <- names(windows)
-    window_tracks <- window_tracks[!is.na(window_tracks) & nzchar(window_tracks)]
-    if (length(window_tracks) > 0L) {
-      return(window_tracks)
+  }
+
+  stats::setNames(individual_ids, individual_ids)
+}
+
+.coverage_individual_is_eligible <- function(individual, annotation = NULL) {
+  if (!is.null(annotation)) {
+    return(!is.null(resolve_syn_bigwig_annotation(
+      individual,
+      annotation = annotation,
+      allow_missing = TRUE
+    )))
+  }
+
+  matches <- vapply(annotation_names(individual), function(annotation_name) {
+    methods::is(
+      get_annotation(individual, annotation_name),
+      "SynBigWigAnnotation"
+    )
+  }, logical(1))
+  match_count <- sum(matches)
+  if (match_count > 1L) {
+    resolve_syn_bigwig_annotation(individual)
+  }
+
+  identical(match_count, 1L)
+}
+
+.normalize_coverage_species_selector <- function(syn_data, species = NULL) {
+  if (is.null(species)) {
+    return(NULL)
+  }
+  if (methods::is(syn_data, "SynIndividual")) {
+    return(syn_id(syn_data))
+  }
+  unique(as.character(species))
+}
+
+.coverage_window_is_complete <- function(window) {
+  if (is.null(window)) {
+    return(FALSE)
+  }
+  chr <- as.character(window$chr %||% character())
+  start <- suppressWarnings(as.numeric(window$start %||% numeric()))
+  end <- suppressWarnings(as.numeric(window$end %||% numeric()))
+  length(chr) == 1L && !is.na(chr) && nzchar(chr) &&
+    length(start) == 1L && is.finite(start) &&
+    length(end) == 1L && is.finite(end)
+}
+
+.coverage_window_coordinates <- function(window) {
+  list(
+    chr = as.character(window$chr[[1L]]),
+    start = as.numeric(window$start[[1L]]),
+    end = as.numeric(window$end[[1L]])
+  )
+}
+
+.coverage_window_key <- function(window) {
+  coordinates <- .coverage_window_coordinates(window)
+  paste0(
+    nchar(coordinates$chr), ":", coordinates$chr, ":",
+    sprintf("%.17g", coordinates$start), ":",
+    sprintf("%.17g", coordinates$end)
+  )
+}
+
+.complete_common_coverage_windows <- function(coverage_tracks,
+                                               coverage_windows,
+                                               annotation_windows) {
+  coverage_tracks <- unique(as.character(coverage_tracks %||% character()))
+  coverage_tracks <- coverage_tracks[
+    !is.na(coverage_tracks) & nzchar(coverage_tracks)
+  ]
+  if (length(coverage_tracks) == 0L) {
+    return(list())
+  }
+
+  coverage_windows <- coverage_windows %||% list()
+  coverage_windows <- stats::setNames(lapply(coverage_tracks, function(track) {
+    window <- coverage_windows[[track]] %||% list()
+    if (is.data.frame(window)) {
+      window <- as.list(window)
     }
-    annotation_species_order
-  }), use.names = FALSE)
-  unique(as.character(tracks[!is.na(tracks) & nzchar(tracks)]))
+    window
+  }), coverage_tracks)
+  resolved <- vapply(
+    coverage_windows,
+    .coverage_window_is_complete,
+    logical(1)
+  )
+  if (all(resolved)) {
+    return(coverage_windows)
+  }
+
+  candidates <- Filter(
+    .coverage_window_is_complete,
+    annotation_windows %||% list()
+  )
+  if (length(candidates) == 0L) {
+    return(coverage_windows[resolved])
+  }
+  candidate_keys <- vapply(candidates, .coverage_window_key, character(1))
+  candidates <- candidates[!duplicated(candidate_keys)]
+  if (length(candidates) > 1L) {
+    cli::cli_abort(c(
+      "Cannot choose a common coverage window from multiple incompatible annotation windows.",
+      "i" = "Add one explicit annotation window for coverage, use a stored layout window, or supply facet {.arg xlim}/{.arg xlim_chr}."
+    ))
+  }
+
+  common <- candidates[[1L]]
+  if (is.data.frame(common)) {
+    common <- as.list(common)
+  }
+  common <- common[c("chr", "start", "end")]
+  for (track in coverage_tracks[!resolved]) {
+    recipient <- coverage_windows[[track]]
+    individual <- as.character(
+      recipient$individual %||% recipient$species %||% track
+    )[[1L]]
+    coverage_windows[[track]] <- c(
+      common,
+      list(track = track, individual = individual, species = individual)
+    )
+  }
+  coverage_windows
+}
+
+collect_syn_coverage_requests <- function(layers,
+                                          syn_data,
+                                          plot_data,
+                                          windows = list(),
+                                          annotation_windows = windows) {
+  layer_indices <- which(vapply(layers, function(layer) {
+    identical(layer$geom, GeomCoverage) && is_syn_layer_input(layer, plot_data)
+  }, logical(1)))
+  if (length(layer_indices) == 0L) {
+    return(list())
+  }
+
+  recipients <- .coverage_track_recipients(syn_data)
+  lapply(seq_along(layer_indices), function(request_index) {
+    layer_index <- layer_indices[[request_index]]
+    params <- syn_layer_params(layers[[layer_index]])
+    selector <- .normalize_coverage_species_selector(syn_data, params$species)
+    omitted_species <- is.null(params$species)
+    annotation <- params$annotation %||% NULL
+
+    selected <- recipients
+    if (!omitted_species) {
+      selected_tracks <- unique(unlist(lapply(selector, function(value) {
+        names(recipients)[
+          names(recipients) == value | unname(recipients) == value
+        ]
+      }), use.names = FALSE))
+      unmatched <- selector[
+        !selector %in% names(recipients) &
+          !selector %in% unname(recipients)
+      ]
+      selected <- c(
+        recipients[selected_tracks],
+        stats::setNames(unmatched, unmatched)
+      )
+    } else {
+      eligible <- vapply(unname(recipients), function(individual_name) {
+        individual <- if (methods::is(syn_data, "SynIndividual")) {
+          syn_data
+        } else {
+          individuals(syn_data)[[individual_name]]
+        }
+        methods::is(individual, "SynIndividual") &&
+          .coverage_individual_is_eligible(
+            individual,
+            annotation = annotation
+          )
+      }, logical(1))
+      selected <- recipients[eligible]
+    }
+
+    tracks <- unname(names(selected))
+    coverage_windows <- stats::setNames(lapply(seq_along(tracks), function(i) {
+      track <- tracks[[i]]
+      individual <- unname(selected[[i]])
+      source_window <- windows[[track]] %||% NULL
+      if (is.data.frame(source_window)) {
+        source_window <- as.list(source_window)
+      }
+      utils::modifyList(
+        source_window %||% list(),
+        list(track = track, individual = individual, species = individual)
+      )
+    }), tracks)
+    coverage_windows <- .complete_common_coverage_windows(
+      tracks,
+      coverage_windows,
+      annotation_windows
+    )
+
+    list(
+      request_id = paste0("coverage:", request_index),
+      annotation = annotation,
+      species = selector,
+      omitted_species = omitted_species,
+      layer_index = as.integer(layer_index),
+      tracks = tracks,
+      windows = coverage_windows
+    )
+  })
 }
 
 compact_syn_plot_context <- function(context) {
@@ -173,16 +489,40 @@ compact_syn_plot_context <- function(context) {
   windows <- lapply(context$windows %||% list(), function(window) {
     window[intersect(keep_window_fields, names(window))]
   })
+  annotation_windows <- lapply(
+    context$annotation_windows %||% list(),
+    function(window) {
+      window[intersect(keep_window_fields, names(window))]
+    }
+  )
+  coverage_requests <- lapply(context$coverage_requests %||% list(), function(request) {
+    request_windows <- lapply(request$windows %||% list(), function(window) {
+      window[intersect(keep_window_fields, names(window))]
+    })
+    list(
+      request_id = as.character(request$request_id),
+      annotation = request$annotation %||% NULL,
+      species = request$species %||% NULL,
+      omitted_species = isTRUE(request$omitted_species),
+      layer_index = as.integer(request$layer_index),
+      tracks = as.character(request$tracks %||% character()),
+      windows = request_windows
+    )
+  })
   list(
     windows = windows,
+    annotation_windows = annotation_windows,
     annotation_species_order = as.character(
       context$annotation_species_order %||% character()
     ),
+    coverage_requests = coverage_requests,
     coverage_tracks = as.character(context$coverage_tracks %||% character())
   )
 }
 
-collect_layout_panel_windows <- function(syn_data) {
+collect_layout_panel_windows <- function(
+    syn_data,
+    panel_roles = c("annotation", "coverage")) {
   if (!methods::is(syn_data, "SynSpecies")) {
     return(list())
   }
@@ -198,45 +538,52 @@ collect_layout_panel_windows <- function(syn_data) {
     return(list())
   }
 
-  annotation_rows <- if ("panel_type" %in% names(panels)) {
-    is.na(panels$panel_type) | panels$panel_type == "annotation"
+  panel_type <- if ("panel_type" %in% names(panels)) {
+    as.character(panels$panel_type)
   } else {
-    rep(TRUE, nrow(panels))
+    rep("annotation", nrow(panels))
   }
-  species_col <- if ("species" %in% names(panels)) {
-    as.character(panels$species)
-  } else {
-    as.character(panels$track)
-  }
-  complete_rows <- annotation_rows &
-    !is.na(species_col) & nzchar(species_col) &
-    !is.na(panels$xlim_chr) &
-    !is.na(panels$xlim_min) &
-    !is.na(panels$xlim_max)
+  panel_type[is.na(panel_type)] <- "annotation"
+  recipients <- .layout_panel_recipients(panels, syn_data)
+  track_col <- as.character(panels$track)
+  xlim_chr <- as.character(panels$xlim_chr)
+  xlim_min <- suppressWarnings(as.numeric(panels$xlim_min))
+  xlim_max <- suppressWarnings(as.numeric(panels$xlim_max))
+  complete_rows <- panel_type %in% panel_roles &
+    !is.na(recipients) & nzchar(recipients) &
+    !is.na(track_col) & nzchar(track_col) &
+    !is.na(xlim_chr) & nzchar(xlim_chr) &
+    is.finite(xlim_min) & is.finite(xlim_max)
 
   if (!any(complete_rows)) {
     return(list())
   }
 
   panels <- panels[complete_rows, , drop = FALSE]
-  species_col <- species_col[complete_rows]
-  track_col <- as.character(panels$track)
+  panel_type <- panel_type[complete_rows]
+  recipients <- recipients[complete_rows]
+  track_col <- track_col[complete_rows]
+  xlim_chr <- xlim_chr[complete_rows]
+  xlim_min <- xlim_min[complete_rows]
+  xlim_max <- xlim_max[complete_rows]
   out <- list()
-  for (i in seq_len(nrow(panels))) {
-    species_name <- species_col[[i]]
-    track_name <- track_col[[i]]
-    if (is.na(track_name) || !nzchar(track_name)) {
-      track_name <- species_name
+  for (track_name in unique(track_col)) {
+    hits <- which(track_col == track_name)
+    coverage_hits <- hits[panel_type[hits] == "coverage"]
+    if (length(coverage_hits) > 0L) {
+      hits <- coverage_hits
     }
+    i <- utils::tail(hits, 1L)
+    species_name <- recipients[[i]]
     individual <- individuals(syn_data)[[species_name]]
     window <- list(
       chr = if (methods::is(individual, "SynIndividual")) {
-        resolve_syn_seqname(individual, as.character(panels$xlim_chr[[i]]))
+        resolve_syn_seqname(individual, xlim_chr[[i]])
       } else {
-        as.character(panels$xlim_chr[[i]])
+        xlim_chr[[i]]
       },
-      start = as.numeric(panels$xlim_min[[i]]),
-      end = as.numeric(panels$xlim_max[[i]]),
+      start = xlim_min[[i]],
+      end = xlim_max[[i]],
       individual = species_name,
       species = species_name,
       track = track_name
@@ -250,12 +597,41 @@ collect_layout_panel_windows <- function(syn_data) {
 collect_facet_panel_windows <- function(syn_data,
                                         facet = NULL,
                                         annotation_species_order = NULL) {
-  if (!methods::is(syn_data, "SynSpecies") || is.null(facet)) {
+  if (is.null(facet)) {
     return(list())
   }
 
   params <- facet$params %||% list()
   if (!.has_facet_panel_xlim(params)) {
+    return(list())
+  }
+
+  if (methods::is(syn_data, "SynIndividual")) {
+    individual_id <- syn_id(syn_data)
+    requested <- .facet_panel_xlim_individuals(
+      params,
+      available = individual_id
+    )
+    xlim_map <- .facet_panel_xlim_map(requested, params$panel_xlim)
+    chr_map <- .facet_panel_xlim_chr_map(requested, params$panel_xlim_chr)
+    return(stats::setNames(lapply(requested, function(name) {
+      chr <- chr_map[[name]] %||% NA_character_
+      if (!is.na(chr) && nzchar(chr)) {
+        chr <- resolve_syn_seqname_or_raw(syn_data, chr)
+      }
+      limits <- xlim_map[[name]]
+      list(
+        chr = chr,
+        start = min(limits),
+        end = max(limits),
+        individual = individual_id,
+        species = individual_id,
+        track = individual_id
+      )
+    }), requested))
+  }
+
+  if (!methods::is(syn_data, "SynSpecies")) {
     return(list())
   }
 
@@ -310,8 +686,7 @@ collect_syn_annotation_requests <- function(layer, syn_data, plot_data) {
         identical(layer$geom, GeomGeneLabel) ||
         identical(layer$geom, GeomGeneBox) ||
         identical(layer$geom, GeomGeneTag) ||
-        identical(layer$geom, GeomMotif) ||
-        identical(layer$geom, GeomCoverage))) {
+        identical(layer$geom, GeomMotif))) {
     return(list())
   }
   if (!is_syn_layer_input(layer, plot_data)) {
@@ -949,6 +1324,10 @@ normalize_syn_window_request <- function(x,
   derived_window <- .context_window_for_track(context, species) %||%
     .context_window_for_track(context, individual_name)
   if (!is.null(derived_window)) {
+    derived_window$chr <- resolve_syn_seqname_or_raw(
+      individual,
+      derived_window$chr
+    )
     if (!is.null(chr)) {
       requested_chr <- resolve_syn_seqname_or_raw(individual, chr)
       if (!identical(requested_chr, derived_window$chr)) {
@@ -962,6 +1341,13 @@ normalize_syn_window_request <- function(x,
 
   if (allow_missing_subset) {
     return(list(chr = resolve_syn_seqname_or_raw(individual, chr), start = NULL, end = NULL))
+  }
+
+  if (identical(geom, "geom_coverage")) {
+    cli::cli_abort(c(
+      "No genomic window is available for coverage track {.val {species}}.",
+      "i" = "Add an explicit annotation window, use a stored layout window, or supply facet {.arg xlim}/{.arg xlim_chr}."
+    ))
   }
 
   cli::cli_abort(
@@ -1130,11 +1516,76 @@ query_syn_bigwig_window <- function(annotation, window, context = NULL) {
   out
 }
 
+.coverage_annotation_selector <- function(annotation = NULL) {
+  if (is.null(annotation)) {
+    return(NULL)
+  }
+  as.character(annotation)[[1L]]
+}
+
+.match_context_coverage_request <- function(x,
+                                             context,
+                                             annotation = NULL,
+                                             species = NULL) {
+  requests <- context$coverage_requests %||% list()
+  if (length(requests) == 0L) {
+    return(NULL)
+  }
+
+  annotation <- .coverage_annotation_selector(annotation)
+  omitted_species <- is.null(species)
+  selector <- .normalize_coverage_species_selector(x, species)
+  matches <- which(vapply(requests, function(request) {
+    request_annotation <- .coverage_annotation_selector(
+      request$annotation %||% NULL
+    )
+    annotation_matches <- identical(request_annotation, annotation)
+    omitted_matches <- identical(
+      isTRUE(request$omitted_species),
+      omitted_species
+    )
+    species_matches <- omitted_species || identical(
+      request$species %||% NULL,
+      selector
+    )
+    annotation_matches && omitted_matches && species_matches
+  }, logical(1)))
+
+  if (length(matches) == 0L) {
+    return(NULL)
+  }
+  requests[[matches[[1L]]]]
+}
+
 syn_to_coverage_df <- function(x,
                                species = NULL,
                                annotation = NULL,
                                context = NULL) {
+  request <- .match_context_coverage_request(
+    x,
+    context,
+    annotation = annotation,
+    species = species
+  )
+  if (!is.null(request)) {
+    context$windows <- request$windows %||% list()
+    context$coverage_tracks <- request$tracks %||% character()
+    context$coverage_requests <- list()
+    species <- request$tracks %||% character()
+  } else if (length(context$coverage_requests %||% list()) > 1L) {
+    cli::cli_abort(
+      "No build-local coverage request matches this layer's annotation and species selector."
+    )
+  } else if (is.null(species) &&
+             length(context$coverage_tracks %||% character()) > 0L) {
+    species <- context$coverage_tracks
+  }
+
   species <- resolve_context_species_params(x, species, context)
+
+  if (length(species %||% character()) == 0L) {
+    return(.empty_syn_coverage_df())
+  }
 
   if (methods::is(x, "SynSpecies") && length(species %||% character()) > 1L) {
     species <- unique(as.character(species))

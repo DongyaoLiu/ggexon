@@ -10,10 +10,8 @@ write_indexed_annotation_fixture <- function(lines, ext = ".gff3") {
 }
 
 test_that("SynIndividual validates and stores the test genome inputs", {
-  genome_path <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  genome_path <- system.file("extdata", "compact_synspecies", "XZ1516.fasta", package = "ggexon")
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
 
@@ -39,9 +37,7 @@ test_that("SynIndividual validates and stores the test genome inputs", {
 })
 
 test_that("SynIndividual can waive the genome file at construction time", {
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
 
@@ -145,9 +141,7 @@ test_that("SynIndividual accepts multiple annotation files and merges them on lo
 })
 
 test_that("load_annotation can target a stored annotation layer through SynIndividual", {
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
 
@@ -216,9 +210,7 @@ test_that("query_features combines indexed windows across multiple annotation fi
 })
 
 test_that("query_features returns the same window on unloaded and loaded annotations", {
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
 
@@ -333,9 +325,7 @@ test_that("query_features uses indexed gtf.gz windows", {
 })
 
 test_that("build_feature_index stores reusable lookups for loaded individuals", {
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
 
@@ -365,10 +355,8 @@ test_that("build_feature_index stores reusable lookups for loaded individuals", 
 })
 
 test_that("subset_individual trims all feature annotation layers by default", {
-  genome_path <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  genome_path <- system.file("extdata", "compact_synspecies", "XZ1516.fasta", package = "ggexon")
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
 
@@ -427,9 +415,7 @@ test_that("subset_individual trims all feature annotation layers by default", {
 })
 
 test_that("subset_feature_annotation returns an updated SynIndividual for gene-only selection", {
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
 
@@ -454,10 +440,8 @@ test_that("subset_feature_annotation returns an updated SynIndividual for gene-o
 })
 
 test_that("subset_individual can limit trimming to the active feature layer", {
-  genome_path <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  genome_path <- system.file("extdata", "compact_synspecies", "XZ1516.fasta", package = "ggexon")
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
 
@@ -499,9 +483,7 @@ test_that("subset_individual can limit trimming to the active feature layer", {
 })
 
 test_that("subset_individual accepts coords strings", {
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
 
@@ -536,9 +518,7 @@ test_that("subset_individual accepts coords strings", {
 })
 
 test_that("subset_individual can resolve through SynSpecies", {
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
 

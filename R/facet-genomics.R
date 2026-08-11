@@ -20,6 +20,12 @@
 #'   layouts.
 #' @param nrow,ncol Number of rows and columns in the wrapped layout.
 #' @param scales One of `"fixed"`, `"free_x"`, `"free_y"`, or `"free"`.
+#'   Ordinary data follows ggplot2 wrap-facet semantics. For first-class Syn
+#'   coverage panels, the y component is the coverage-policy fallback only:
+#'   `"fixed"`/`"free_x"` share a coverage scale and
+#'   `"free_y"`/`"free"` give each coverage panel its own scale. Annotation
+#'   remains `"fixed_y"` by default. Explicit [`scale_panel_annotation()`] and
+#'   [`scale_panel_coverage()`] specifications take precedence.
 #' @param shrink Passed through to the facet.
 #' @param labeller A labeller specification.
 #' @param as.table Logical; whether panels are laid out like a table.
@@ -49,7 +55,10 @@
 #' @param vertical Annotation-panel vertical alignment. `"default"` preserves
 #'   the trained y-ranges. `"center"` symmetrizes each annotation panel's
 #'   y-range around its visible annotation bodies. Link panels keep their fixed
-#'   vertical range in either mode.
+#'   vertical range in either mode. For Syn-backed plots this compatibility
+#'   argument is equivalent to adding [`center_panel_annotation()`] and does
+#'   not change coverage panels, layer positions, or scale training. Its legacy
+#'   ordinary-data behavior is retained; the dedicated wrapper is Syn-only.
 #' @param reverse_x Annotation panels whose x axis should be drawn in reverse.
 #'   Use `NULL` or `FALSE` for no panel reversal, `TRUE` to reverse all
 #'   annotation panels, or a character vector matched against panel layout
@@ -59,10 +68,11 @@
 #' @param reverse_x_match_by Panel-layout column used to match `reverse_x`
 #'   character values. `"auto"` checks common layout columns such as `species`,
 #'   `strain`, `id`, and `track`.
-#' @param xlim Optional panel-specific x limits for annotation panels. Supply a
-#'   named list of numeric length-2 vectors keyed by individual / annotation-panel
-#'   name. If the plot contains only one annotation panel, a single numeric
-#'   length-2 vector is also accepted.
+#' @param xlim Optional panel-specific x limits for annotation panels, or for
+#'   standalone coverage panels when no annotation panel is present. Supply a
+#'   named list of numeric length-2 vectors keyed by individual / panel name.
+#'   If the plot contains only one eligible panel, a single numeric length-2
+#'   vector is also accepted.
 #' @param xlim_chr Optional chromosome / seqname for `xlim`. Supply one
 #'   character value for a single panel, or a named character vector/list keyed
 #'   by individual when `xlim` contains multiple panels. When omitted, ggexon
@@ -77,14 +87,31 @@
 #' structure used by `Layout2`. The returned panel table may include:
 #'
 #' - annotation panels for each species track
+#' - first-class coverage panels for attached BigWig tracks
 #' - link panels inserted between paired species tracks
 #' - `panel_type`, `tspecies`, `qspecies`, `t_panel`, and `q_panel` metadata
 #'   used later by `geom_nuclink()`
 #'
-#' If no Syn-specific layout is available, the facet falls back to ordinary
-#' wrap-style panel generation.
+#' Coverage, annotation, and link rows are role-qualified even when they share
+#' the same public `track` label. Coverage panels precede the existing
+#' annotation/link chain and inherit ordinary genomic x windows and direction
+#' from an annotation source when one exists. A standalone coverage panel can
+#' instead use its own coordinates or named facet limits. Coverage panels never
+#' become `t_panel` or `q_panel` link sources.
 #'
-#' @seealso [SynLayout]
+#' `SCALE_Y` in the resolved layout is the inherited scale-object identity:
+#' panels with the same value train through one y-scale object, while different
+#' values use independent objects. Annotation and coverage role families never
+#' share an identity. Use [`scale_panel_annotation()`] and
+#' [`scale_panel_coverage()`] to choose fixed or per-panel inheritance for each
+#' role independently.
+#'
+#' If no Syn-specific layout is available, the facet falls back to ordinary
+#' wrap-style panel generation. Valid but unused panel-scale specifications are
+#' no-ops. Ordinary non-Syn behavior and [`facet_genomictree()`] are unchanged.
+#'
+#' @seealso [SynLayout], [`scale_panel_annotation()`],
+#'   [`scale_panel_coverage()`], [`center_panel_annotation()`]
 #' @export
 facet_genomics <- function(facets, nrow = NULL, ncol = NULL, scales = "fixed",
                        shrink = TRUE, labeller = "label_value", as.table = TRUE,
@@ -120,18 +147,26 @@ facet_genomics <- function(facets, nrow = NULL, ncol = NULL, scales = "fixed",
   )
 
   # If scales are free, always draw the axes
-  draw_axes <- arg_match0(axes, c("margins", "all_x", "all_y", "all"))
+  requested_axes <- arg_match0(
+    axes,
+    c("margins", "all_x", "all_y", "all")
+  )
   draw_axes <- list(
-    x = free$x || any(draw_axes %in% c("all_x", "all")),
-    y = free$y || any(draw_axes %in% c("all_y", "all"))
+    x = free$x || any(requested_axes %in% c("all_x", "all")),
+    y = free$y || any(requested_axes %in% c("all_y", "all"))
   )
 
   # Omitting labels is special-cased internally, so only omit labels if
   # scales are not free and the axis is to be drawn
-  axis_labels <- arg_match0(axis.labels, c("margins", "all_x", "all_y", "all"))
+  requested_axis_labels <- arg_match0(
+    axis.labels,
+    c("margins", "all_x", "all_y", "all")
+  )
   axis_labels <- list(
-    x = free$x || !draw_axes$x || any(axis_labels %in% c("all_x", "all")),
-    y = free$y || !draw_axes$y || any(axis_labels %in% c("all_y", "all"))
+    x = free$x || !draw_axes$x ||
+      any(requested_axis_labels %in% c("all_x", "all")),
+    y = free$y || !draw_axes$y ||
+      any(requested_axis_labels %in% c("all_y", "all"))
   )
 
   # Check for deprecated labellers
@@ -167,6 +202,8 @@ facet_genomics <- function(facets, nrow = NULL, ncol = NULL, scales = "fixed",
       dir = dir,
       draw_axes = draw_axes,
       axis_labels = axis_labels,
+      requested_axes = requested_axes,
+      requested_axis_labels = requested_axis_labels,
       panel_xlim = xlim,
       panel_xlim_chr = xlim_chr,
       link_panel_height = link_panel_height,
@@ -231,6 +268,11 @@ facet_genomics <- function(facets, nrow = NULL, ncol = NULL, scales = "fixed",
 #'
 #' - deciding whether to use a stored `SynLayout`, derive a new comparative
 #'   chain layout, or fall back to standard wrap-style faceting
+#' - inserting first-class coverage rows ahead of annotation and link rows
+#' - mapping layers to role-qualified `(panel_type, track)` panels
+#' - inheriting genomic x windows, reversal, and scales from resolved
+#'   annotation sources while supporting standalone coverage coordinates
+#' - allocating role-aware inherited y-scale identities
 #' - reordering link panels so they sit between the relevant annotation panels
 #' - annotating link panels with source panel ids (`t_panel`, `q_panel`)
 #' - assigning vertical anchor directions (`target_anchor_y`,
@@ -243,8 +285,9 @@ facet_genomics <- function(facets, nrow = NULL, ncol = NULL, scales = "fixed",
 #' \describe{
 #'   \item{`compute_layout()`}{Chooses the panel table. For `SynSpecies`
 #'   data it prefers an explicit layout override, then a stored `SynLayout`
-#'   when link layers are present, then a derived chain layout, and finally a
-#'   standard wrap layout.}
+#'   whenever one is available, then a derived chain layout, and finally a
+#'   standard wrap layout. Coverage requests are inserted as first-class panel
+#'   rows before the comparative layout is finalized.}
 #'   \item{`compute_alignment_layout()`}{Reorders link panels relative to their
 #'   neighboring annotation panels and annotates the resulting layout with
 #'   source panel ids.}
@@ -286,12 +329,22 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
     vars <- params$facets
 
     if (methods::is(params$plot_data, "SynSpecies")) {
+      coverage_tracks <- .ordered_coverage_tracks_from_layers(data, params)
+      coverage_windows <- .syn_context_coverage_windows(params)
+
       if (!is.null(params$layout_override)) {
         # Highest priority: use an explicit layout override attached during
         # build, e.g. from species_layout(sp) or a layer-provided override.
-        finalized <- .finalize_synspecies_layout_scales(
+        role_layout <- .prepend_synspecies_coverage_rows(
           params$layout_override,
-          free = params$free
+          coverage_tracks,
+          coverage_windows
+        )
+        role_layout <- .apply_layer_panel_metadata(role_layout, data)
+        finalized <- .finalize_synspecies_layout_scales(
+          role_layout,
+          free = params$free,
+          panel_scale_specs = params$panel_scale_specs
         )
         return(
           syn_layout_panels(
@@ -309,11 +362,19 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
         stored_layout <- .filter_stored_syn_layout(
           stored_layout,
           annotation_species = .annotation_species_from_layers(data),
-          link_pairs = .link_pairs_from_layers(data)
+          link_pairs = .link_pairs_from_layers(data),
+          coverage_tracks = coverage_tracks
         )
-        finalized <- .finalize_synspecies_layout_scales(
+        role_layout <- .prepend_synspecies_coverage_rows(
           stored_layout,
-          free = params$free
+          coverage_tracks,
+          coverage_windows
+        )
+        role_layout <- .apply_layer_panel_metadata(role_layout, data)
+        finalized <- .finalize_synspecies_layout_scales(
+          role_layout,
+          free = params$free,
+          panel_scale_specs = params$panel_scale_specs
         )
         return(
           syn_layout_panels(
@@ -334,9 +395,25 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
         free = params$free,
         annotation_species = .annotation_species_from_layers(data),
         link_pairs = .link_pairs_from_layers(data),
-        allow_annotation_only = .has_coverage_layer_data(data)
+        allow_annotation_only = length(coverage_tracks) > 0L,
+        panel_scale_specs = params$panel_scale_specs
       )
-      if (!is.null(plot_layout)) {
+      if (!is.null(plot_layout) || length(coverage_tracks) > 0L) {
+        if (is.null(plot_layout)) {
+          plot_layout <- .empty_synspecies_layout_panels()
+        }
+        plot_layout <- .prepend_synspecies_coverage_rows(
+          plot_layout,
+          coverage_tracks,
+          coverage_windows
+        )
+        plot_layout <- .apply_layer_panel_metadata(plot_layout, data)
+        plot_layout <- .finalize_synspecies_layout_scales(
+          plot_layout,
+          free = params$free,
+          layout_type = "chain",
+          panel_scale_specs = params$panel_scale_specs
+        )
         return(
           syn_layout_panels(
             .apply_facet_panel_xlim_to_layout(
@@ -348,7 +425,14 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
         )
       }
 
-      standard_layout <- .compute_standard_genomics_layout(data, params, self)
+      annotation_scale_specified <- !is.null(
+        params$panel_scale_specs$annotation
+      )
+      standard_layout <- if (annotation_scale_specified) {
+        .compute_role_aware_standard_genomics_layout(data, params, self)
+      } else {
+        .compute_standard_genomics_layout(data, params, self)
+      }
       if (.has_facet_panel_xlim(params)) {
         return(
           syn_layout_panels(
@@ -361,7 +445,39 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
         )
       }
 
+      if (annotation_scale_specified) {
+        standard_layout <- .assign_role_aware_y_scales(
+          standard_layout,
+          free = params$free,
+          panel_scale_specs = params$panel_scale_specs
+        )
+      }
       return(standard_layout)
+    }
+
+    individual_coverage_tracks <- .ordered_coverage_tracks_from_layers(
+      data,
+      params
+    )
+    if (methods::is(params$plot_data, "SynIndividual") &&
+        (length(individual_coverage_tracks) > 0L ||
+          !is.null(params$panel_scale_specs$annotation))) {
+      role_layout <- .compute_role_aware_standard_genomics_layout(
+        data,
+        params,
+        self,
+        coverage_tracks = individual_coverage_tracks
+      )
+      role_layout <- .apply_manual_facet_panel_xlim_to_layout(
+        role_layout,
+        params
+      )
+      role_layout <- .annotate_coverage_x_source_panels(role_layout)
+      return(.assign_role_aware_y_scales(
+        role_layout,
+        free = params$free,
+        panel_scale_specs = params$panel_scale_specs
+      ))
     }
 
     if (length(vars) == 0) {
@@ -369,6 +485,67 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
     }
     standard_layout <- .compute_standard_genomics_layout(data, params, self)
     .apply_manual_facet_panel_xlim_to_layout(standard_layout, params)
+  },
+
+  # Syn-aware layers map only to panels with the same semantic role. The
+  # public `track` label remains unchanged; a private role-qualified value is
+  # substituted only while FacetWrap performs its panel join.
+  map_data = function(data, layout, params) {
+    standard_map <- function(data, layout) {
+      ggplot2::FacetWrap$map_data(data, layout, params)
+    }
+
+    role_aware_syn_input <- methods::is(params$plot_data, "SynSpecies") ||
+      methods::is(params$plot_data, "SynIndividual")
+    if (!role_aware_syn_input ||
+        !all(c("panel_type", "track") %in% names(layout))) {
+      return(standard_map(data, layout))
+    }
+
+    has_explicit_role <- !is.null(
+      attr(data, "ggexon_panel_role", exact = TRUE)
+    ) || ".ggexon_panel_role" %in% names(data)
+    if (!has_explicit_role &&
+        !.is_link_like_df(data) &&
+        !.is_annotation_like_df(data)) {
+      return(standard_map(data, layout))
+    }
+
+    role <- if (!has_explicit_role && .is_link_like_df(data)) {
+      "link"
+    } else {
+      .syn_layer_panel_role(data)
+    }
+    role_rows <- as.character(layout$panel_type) == role
+    role_rows[is.na(role_rows)] <- FALSE
+    role_layout <- layout[role_rows, , drop = FALSE]
+
+    if (nrow(role_layout) == 0L) {
+      data$PANEL <- rep(NA_integer_, nrow(data))
+      return(data)
+    }
+    if (nrow(data) == 0L) {
+      return(standard_map(data, role_layout))
+    }
+
+    role_layout$track <- .syn_role_panel_key(
+      role_layout$panel_type,
+      role_layout$track
+    )
+    if (!"track" %in% names(data)) {
+      return(standard_map(data, role_layout))
+    }
+
+    public_track_col <- ".ggexon_public_track"
+    while (public_track_col %in% names(data)) {
+      public_track_col <- paste0(public_track_col, "_")
+    }
+    data[[public_track_col]] <- data$track
+    data$track <- .syn_role_panel_key(role, data$track)
+    mapped <- standard_map(data, role_layout)
+    mapped$track <- mapped[[public_track_col]]
+    mapped[[public_track_col]] <- NULL
+    mapped
   },
 
   # ggexon-specific post-processing step: reorder link panels so they sit
@@ -451,7 +628,13 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
   # upper vs lower edge of the link panel.
   map_link_direction = function(self, data, layout){
 
-    link_layout = layout[stringr::str_detect(layout$track, "link"), ]
+    link_rows <- if ("panel_type" %in% names(layout)) {
+      link_panel_type(layout) == "link"
+    } else {
+      stringr::str_detect(layout$track, "link")
+    }
+    link_rows[is.na(link_rows)] <- FALSE
+    link_layout = layout[link_rows, , drop = FALSE]
 
 
     link_y_list = list()
@@ -461,15 +644,31 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
 
       tspecies = link_layout[i,"tspecies"]
       qspecies = link_layout[i, "qspecies"]
-      uppper_panel_species = if (!is.na(link_index) && link_index > 1L) {
-        layout[link_index - 1L, "track"]
+      target_source <- if ("t_panel" %in% names(link_layout)) {
+        match(link_layout$t_panel[[i]], layout$PANEL)
       } else {
-        NA_character_
+        NA_integer_
+      }
+      query_source <- if ("q_panel" %in% names(link_layout)) {
+        match(link_layout$q_panel[[i]], layout$PANEL)
+      } else {
+        NA_integer_
+      }
+      source_order_known <- !is.na(target_source) && !is.na(query_source)
+      target_is_upper <- if (source_order_known && "ROW" %in% names(layout)) {
+        layout$ROW[[target_source]] < layout$ROW[[query_source]]
+      } else if (source_order_known) {
+        target_source < query_source
+      } else {
+        upper_panel_species <- if (!is.na(link_index) && link_index > 1L) {
+          layout[link_index - 1L, "track"]
+        } else {
+          NA_character_
+        }
+        !is.na(upper_panel_species) && upper_panel_species == tspecies
       }
 
-
-
-      if (!is.na(uppper_panel_species) && uppper_panel_species == tspecies){
+      if (isTRUE(target_is_upper)) {
         target_anchor_y = 1
         query_anchor_y = 0
       }else{
@@ -543,7 +742,7 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
 
   cli::cli_abort(
     c(
-      "{.arg xlim} in {.fn facet_genomics} must name the annotation panel limits by individual.",
+      "{.arg xlim} in {.fn facet_genomics} must name eligible panel limits by panel name.",
       "i" = "Use a named list such as {.code list(N2 = c(20450000, 20470000), XZ1516 = c(21574000, 21585000))}."
     )
   )
@@ -578,6 +777,42 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
   }
 
   layout <- as_syn_layout(layout, free = params$free)
+  panels <- syn_layout_panels(layout)
+  panel_roles <- link_panel_type(panels)
+  has_annotation <- any(panel_roles == "annotation", na.rm = TRUE)
+  has_coverage <- any(panel_roles == "coverage", na.rm = TRUE)
+  if (!has_annotation && has_coverage) {
+    panels <- .apply_manual_facet_panel_xlim_to_layout(panels, params)
+    resolved_free <- params$free
+    complete_windows <- !is.na(panels$xlim_min) &
+      !is.na(panels$xlim_max) &
+      is.finite(panels$xlim_min) &
+      is.finite(panels$xlim_max)
+    if (sum(complete_windows) > 1L) {
+      window_keys <- paste(
+        as.character(panels$xlim_chr[complete_windows]),
+        panels$xlim_min[complete_windows],
+        panels$xlim_max[complete_windows],
+        sep = "\r"
+      )
+      resolved_free$x <- isTRUE(resolved_free$x) ||
+        length(unique(window_keys)) > 1L
+    }
+    updated_layout <- SynLayout(
+      panels = panels,
+      layout_type = layout@layout_type,
+      free = resolved_free,
+      exon_height = layout@exon_height,
+      x_translation = layout@x_translation,
+      metadata = layout@metadata
+    )
+    return(.finalize_synspecies_layout_scales(
+      updated_layout,
+      free = resolved_free,
+      layout_type = updated_layout@layout_type,
+      panel_scale_specs = params$panel_scale_specs
+    ))
+  }
   individual <- .facet_panel_xlim_individuals(
     params,
     available = .layout_annotation_individuals(layout)
@@ -594,10 +829,13 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
   )
 
   updated_layout <- species_layout(syn_data)
+  refinalize_free <- updated_layout@free
+  refinalize_free$y <- params$free$y
   .finalize_synspecies_layout_scales(
     updated_layout,
-    free = updated_layout@free,
-    layout_type = updated_layout@layout_type
+    free = refinalize_free,
+    layout_type = updated_layout@layout_type,
+    panel_scale_specs = params$panel_scale_specs
   )
 }
 
@@ -610,9 +848,19 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
   }
 
   panel_type <- link_panel_type(layout)
-  annotation_rows <- panel_type == "annotation"
-  annotation_rows[is.na(annotation_rows)] <- FALSE
-  available <- unique(as.character(layout$track[annotation_rows]))
+  target_rows <- panel_type == "annotation"
+  target_rows[is.na(target_rows)] <- FALSE
+  if (!any(target_rows)) {
+    target_rows <- panel_type == "coverage"
+    target_rows[is.na(target_rows)] <- FALSE
+  }
+  identity_columns <- intersect(
+    c("track", "individual", "species"),
+    names(layout)
+  )
+  available <- unique(unlist(lapply(identity_columns, function(column) {
+    as.character(layout[[column]][target_rows])
+  }), use.names = FALSE))
   available <- available[!is.na(available) & nzchar(available)]
   individual <- .facet_panel_xlim_individuals(params, available = available)
 
@@ -630,9 +878,15 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
   }
 
   for (name in names(xlim_map)) {
-    hit <- annotation_rows & as.character(layout$track) == name
+    hit <- rep(FALSE, nrow(layout))
+    for (column in identity_columns) {
+      hit <- hit | (
+        target_rows & as.character(layout[[column]]) == name
+      )
+    }
+    hit[is.na(hit)] <- FALSE
     if (!any(hit)) {
-      cli::cli_abort("{.arg xlim} names must match annotation panel names in {.fn facet_genomics}.")
+      cli::cli_abort("{.arg xlim} names must match panel names in {.fn facet_genomics}.")
     }
     limits <- xlim_map[[name]]
     layout$xlim_min[hit] <- min(limits)
@@ -650,13 +904,13 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
   if (!is.list(xlim) || is.null(names(xlim))) {
     cli::cli_abort(
       c(
-        "{.arg xlim} in {.fn facet_genomics} must name the annotation panel limits by individual.",
+        "{.arg xlim} in {.fn facet_genomics} must name eligible panel limits by panel name.",
         "i" = "Use a named list such as {.code list(human = c(1, 100), mouse = c(500, 900))}."
       )
     )
   }
   if (!all(names(xlim) %in% individual)) {
-    cli::cli_abort("{.arg xlim} contains names that do not match annotation panels.")
+    cli::cli_abort("{.arg xlim} contains names that do not match eligible panels.")
   }
 
   lapply(xlim, function(limits) {
@@ -678,7 +932,7 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
     xlim_chr <- as.list(xlim_chr)
   }
   if (!is.list(xlim_chr) || is.null(names(xlim_chr)) || !all(names(xlim_chr) %in% individual)) {
-    cli::cli_abort("{.arg xlim_chr} must be NULL, one character value for one panel, or a named vector/list keyed by annotation panel.")
+    cli::cli_abort("{.arg xlim_chr} must be NULL, one character value for one panel, or a named vector/list keyed by panel name.")
   }
   out <- stats::setNames(as.list(rep(NA_character_, length(individual))), individual)
   for (name in names(xlim_chr)) {
@@ -689,6 +943,257 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
     out[[name]] <- value
   }
   out
+}
+
+.panel_role_tracks_from_layers <- function(data, role) {
+  tracks <- unlist(lapply(data, function(df) {
+    if (!is.data.frame(df) || !"track" %in% names(df)) {
+      return(character())
+    }
+    layer_role <- if (.is_link_like_df(df)) {
+      "link"
+    } else {
+      .syn_layer_panel_role(df)
+    }
+    if (!identical(layer_role, role)) {
+      return(character())
+    }
+    as.character(df$track)
+  }), use.names = FALSE)
+  tracks <- tracks[!is.na(tracks) & nzchar(tracks)]
+  unique(tracks)
+}
+
+.ordered_coverage_tracks_from_layers <- function(data, params) {
+  requests <- params$syn_plot_context$coverage_requests %||% list()
+  request_indices <- vapply(requests, function(request) {
+    as.integer(request$layer_index %||% NA_integer_)[[1L]]
+  }, integer(1))
+  valid_indices <- request_indices[!is.na(request_indices) & request_indices > 0L]
+  layer_count <- max(
+    c(length(data) - 1L, valid_indices, 0L),
+    na.rm = TRUE
+  )
+
+  tracks <- character()
+  if (layer_count > 0L) {
+    for (layer_index in seq_len(layer_count)) {
+      request_tracks <- unlist(lapply(
+        requests[request_indices == layer_index],
+        function(request) request$tracks %||% character()
+      ), use.names = FALSE)
+      data_index <- layer_index + 1L
+      layer_tracks <- if (data_index <= length(data)) {
+        .panel_role_tracks_from_layers(
+          list(data[[data_index]]),
+          "coverage"
+        )
+      } else {
+        character()
+      }
+      tracks <- c(tracks, request_tracks, layer_tracks)
+    }
+  }
+
+  tracks <- c(tracks, .syn_context_coverage_tracks(params))
+  tracks <- as.character(tracks)
+  unique(tracks[!is.na(tracks) & nzchar(tracks)])
+}
+
+.layer_panel_metadata <- function(data) {
+  rows <- lapply(data, function(df) {
+    if (!is.data.frame(df) || nrow(df) == 0L || !"track" %in% names(df)) {
+      return(NULL)
+    }
+    role <- if (.is_link_like_df(df)) "link" else .syn_layer_panel_role(df)
+    if (!role %in% c("annotation", "coverage")) {
+      return(NULL)
+    }
+    out <- data.frame(
+      panel_type = role,
+      track = as.character(df$track),
+      individual = NA_character_,
+      species = NA_character_,
+      stringsAsFactors = FALSE
+    )
+    for (column in c("individual", "species")) {
+      if (column %in% names(df)) {
+        out[[column]] <- as.character(df[[column]])
+      }
+    }
+    out
+  })
+  rows <- dplyr::bind_rows(Filter(Negate(is.null), rows))
+  if (nrow(rows) == 0L) {
+    return(rows)
+  }
+  rows <- rows[
+    !is.na(rows$track) & nzchar(rows$track),
+    ,
+    drop = FALSE
+  ]
+  keys <- .syn_role_panel_key(rows$panel_type, rows$track)
+  key_order <- unique(keys)
+  collapsed <- lapply(key_order, function(key) {
+    candidates <- rows[keys == key, , drop = FALSE]
+    out <- candidates[1L, , drop = FALSE]
+    for (column in c("individual", "species")) {
+      values <- candidates[[column]]
+      values <- values[!is.na(values) & nzchar(values)]
+      out[[column]] <- if (length(values) == 0L) NA_character_ else values[[1L]]
+    }
+    out
+  })
+  dplyr::bind_rows(collapsed)
+}
+
+.apply_layer_panel_metadata <- function(layout, data) {
+  metadata <- .layer_panel_metadata(data)
+  if (nrow(metadata) == 0L) {
+    return(layout)
+  }
+
+  layout_is_object <- methods::is(layout, "SynLayout")
+  panels <- if (layout_is_object) syn_layout_panels(layout) else layout
+  if (!is.data.frame(panels) || nrow(panels) == 0L ||
+      !all(c("track", "panel_type") %in% names(panels))) {
+    return(layout)
+  }
+  for (column in c("individual", "species")) {
+    if (!column %in% names(panels)) {
+      panels[[column]] <- NA_character_
+    } else {
+      panels[[column]] <- as.character(panels[[column]])
+    }
+  }
+
+  panel_roles <- as.character(panels$panel_type)
+  panel_tracks <- as.character(panels$track)
+  for (i in seq_len(nrow(metadata))) {
+    hit <- panel_roles == metadata$panel_type[[i]] &
+      panel_tracks == metadata$track[[i]]
+    hit[is.na(hit)] <- FALSE
+    for (column in c("individual", "species")) {
+      value <- metadata[[column]][[i]]
+      if (is.na(value) || !nzchar(value)) {
+        next
+      }
+      current <- panels[[column]]
+      replace <- hit & (
+        is.na(current) | !nzchar(current) | current == panel_tracks
+      )
+      replace[is.na(replace)] <- FALSE
+      panels[[column]][replace] <- value
+    }
+  }
+
+  if (!layout_is_object) {
+    return(panels)
+  }
+  SynLayout(
+    panels = panels,
+    layout_type = layout@layout_type,
+    free = layout@free,
+    exon_height = layout@exon_height,
+    x_translation = layout@x_translation,
+    metadata = layout@metadata
+  )
+}
+
+.compute_role_aware_standard_genomics_layout <- function(data,
+                                                         params,
+                                                         facet,
+                                                         coverage_tracks = character()) {
+  coverage_tracks <- unique(as.character(coverage_tracks %||% character()))
+  coverage_tracks <- coverage_tracks[
+    !is.na(coverage_tracks) & nzchar(coverage_tracks)
+  ]
+  if (length(coverage_tracks) > 0L) {
+    coverage_seed <- data.frame(
+      track = coverage_tracks,
+      stringsAsFactors = FALSE
+    )
+    attr(coverage_seed, "ggexon_panel_role") <- "coverage"
+    data <- c(data, list(coverage_seed))
+  }
+
+  role_map <- list()
+  qualified_data <- lapply(data, function(df) {
+    if (!is.data.frame(df) || !"track" %in% names(df)) {
+      return(df)
+    }
+    role <- if (.is_link_like_df(df)) "link" else .syn_layer_panel_role(df)
+    if (!role %in% c("annotation", "coverage", "link")) {
+      return(df)
+    }
+
+    public_track <- as.character(df$track)
+    if (length(public_track) == 0L) {
+      return(df)
+    }
+    qualified_track <- .syn_role_panel_key(role, public_track)
+    role_map[[length(role_map) + 1L]] <<- data.frame(
+      qualified_track = qualified_track,
+      track = public_track,
+      panel_type = role,
+      stringsAsFactors = FALSE
+    )
+    df$track <- qualified_track
+    df
+  })
+
+  layout <- .compute_standard_genomics_layout(qualified_data, params, facet)
+  role_map <- unique(dplyr::bind_rows(role_map))
+  matched <- match(as.character(layout$track), role_map$qualified_track)
+  layout$track <- role_map$track[matched]
+  layout$panel_type <- role_map$panel_type[matched]
+  panel_positions <- layout[
+    order(as.integer(layout$PANEL)),
+    c("PANEL", "ROW", "COL"),
+    drop = FALSE
+  ]
+  role_rank <- match(layout$panel_type, c("coverage", "annotation", "link"))
+  layout <- layout[
+    order(role_rank, as.integer(layout$PANEL), na.last = TRUE),
+    ,
+    drop = FALSE
+  ]
+  layout$PANEL <- panel_positions$PANEL
+  layout$ROW <- panel_positions$ROW
+  layout$COL <- panel_positions$COL
+  rownames(layout) <- NULL
+  .apply_layer_panel_metadata(layout, data)
+}
+
+.assign_role_aware_y_scales <- function(layout,
+                                        free,
+                                        panel_scale_specs = list()) {
+  roles <- link_panel_type(layout)
+  policies <- .resolve_present_panel_y_policies(
+    roles,
+    specs = panel_scale_specs,
+    free = free
+  )
+  groups <- vapply(seq_len(nrow(layout)), function(i) {
+    role <- roles[[i]]
+    policy <- policies[[role]] %||% .facet_y_policy(free)
+    if (role %in% c("annotation", "coverage")) {
+      if (identical(policy, "fixed_y")) {
+        return(paste0(role, ":shared"))
+      }
+      return(paste0(role, ":", layout$PANEL[[i]]))
+    }
+    if (identical(role, "link")) {
+      return("link:shared")
+    }
+    if (identical(policy, "free_y")) {
+      paste0("role:", role, ":", layout$PANEL[[i]])
+    } else {
+      paste0("role:", role, ":shared")
+    }
+  }, character(1))
+  layout$SCALE_Y <- match(groups, unique(groups))
+  layout
 }
 
 .compute_standard_genomics_layout <- function(data, params, facet) {
@@ -723,12 +1228,207 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
   }, logical(1)))
 }
 
+.syn_context_coverage_tracks <- function(params) {
+  tracks <- params$syn_plot_context$coverage_tracks %||% character()
+  tracks <- as.character(tracks)
+  unique(tracks[!is.na(tracks) & nzchar(tracks)])
+}
+
+.syn_context_coverage_windows <- function(params) {
+  tracks <- .syn_context_coverage_tracks(params)
+  windows <- params$syn_plot_context$windows %||% list()
+  stats::setNames(lapply(tracks, function(track) {
+    window <- windows[[track]] %||% list()
+    if (is.data.frame(window)) as.list(window) else window
+  }), tracks)
+}
+
+.empty_synspecies_layout_panels <- function() {
+  data.frame(
+    PANEL = integer(),
+    ROW = integer(),
+    COL = integer(),
+    track = character(),
+    panel_type = character(),
+    species = character(),
+    alignment_name = character(),
+    tspecies = character(),
+    qspecies = character(),
+    stringsAsFactors = FALSE
+  )
+}
+
+.new_synspecies_coverage_panel <- function(track, window = list()) {
+  individual <- as.character(
+    window$individual %||% window$species %||% track
+  )[[1L]]
+  chr <- as.character(window$chr %||% NA_character_)[[1L]]
+  start <- suppressWarnings(as.numeric(window$start %||% NA_real_))[[1L]]
+  end <- suppressWarnings(as.numeric(window$end %||% NA_real_))[[1L]]
+  data.frame(
+    PANEL = NA_integer_,
+    ROW = NA_integer_,
+    COL = 1L,
+    track = track,
+    panel_type = "coverage",
+    individual = individual,
+    species = individual,
+    alignment_name = NA_character_,
+    tspecies = NA_character_,
+    qspecies = NA_character_,
+    xlim_chr = chr,
+    xlim_min = start,
+    xlim_max = end,
+    .ggexon_coverage_window_explicit = FALSE,
+    stringsAsFactors = FALSE
+  )
+}
+
+.fill_synspecies_coverage_panel <- function(row, track, window = list()) {
+  defaults <- .new_synspecies_coverage_panel(track, window)
+  for (column in names(defaults)) {
+    if (!column %in% names(row)) {
+      row[[column]] <- defaults[[column]]
+      next
+    }
+    missing <- is.na(row[[column]])
+    if (is.character(row[[column]])) {
+      missing <- missing | !nzchar(row[[column]])
+    }
+    row[[column]][missing] <- defaults[[column]][missing]
+  }
+  row$track <- track
+  row$panel_type <- "coverage"
+  row
+}
+
+.prepend_synspecies_coverage_rows <- function(layout,
+                                              coverage_tracks,
+                                              coverage_windows = list()) {
+  layout_obj <- as_syn_layout(layout)
+  panels <- syn_layout_panels(layout_obj)
+  panels <- as.data.frame(panels, stringsAsFactors = FALSE)
+  panels$panel_type <- link_panel_type(panels)
+
+  coverage_rows <- panels$panel_type == "coverage"
+  coverage_rows[is.na(coverage_rows)] <- FALSE
+  if (!".ggexon_coverage_window_explicit" %in% names(panels)) {
+    panels$.ggexon_coverage_window_explicit <- rep(NA, nrow(panels))
+  }
+  stored_complete <- coverage_rows &
+    "xlim_min" %in% names(panels) &
+    "xlim_max" %in% names(panels) &
+    is.finite(suppressWarnings(as.numeric(panels$xlim_min))) &
+    is.finite(suppressWarnings(as.numeric(panels$xlim_max)))
+  infer_explicit <- coverage_rows &
+    is.na(panels$.ggexon_coverage_window_explicit)
+  panels$.ggexon_coverage_window_explicit[infer_explicit] <-
+    stored_complete[infer_explicit]
+  stored_coverage <- panels[coverage_rows, , drop = FALSE]
+  annotation_link_chain <- panels[!coverage_rows, , drop = FALSE]
+
+  # Realize any stored factor-based ordering before adding coverage rows, then
+  # keep that annotation/link chain in the same relative order below coverage.
+  annotation_link_chain <- .normalize_synspecies_layout_order(
+    annotation_link_chain
+  )
+  if ("track" %in% names(annotation_link_chain) &&
+      is.factor(annotation_link_chain$track)) {
+    annotation_link_chain$track <- as.character(annotation_link_chain$track)
+  }
+
+  coverage_tracks <- unique(as.character(coverage_tracks %||% character()))
+  coverage_tracks <- coverage_tracks[
+    !is.na(coverage_tracks) & nzchar(coverage_tracks)
+  ]
+  if (length(coverage_tracks) == 0L && nrow(stored_coverage) > 0L) {
+    coverage_tracks <- unique(as.character(stored_coverage$track))
+  }
+
+  stored_tracks <- as.character(stored_coverage$track %||% character())
+  complete_stored_role_grid <- nrow(stored_coverage) > 0L &&
+    all(c("ROW", "COL") %in% names(panels)) &&
+    !anyNA(panels$ROW) && !anyNA(panels$COL) &&
+    length(unique(panels$COL)) > 1L &&
+    nrow(unique(panels[, c("ROW", "COL"), drop = FALSE])) == nrow(panels)
+  all_coverage_already_stored <- length(coverage_tracks) == length(stored_tracks) &&
+    !anyDuplicated(stored_tracks) &&
+    setequal(coverage_tracks, stored_tracks)
+  if (complete_stored_role_grid && all_coverage_already_stored) {
+    preserved_rows <- lapply(seq_len(nrow(panels)), function(i) {
+      row <- panels[i, , drop = FALSE]
+      if (!coverage_rows[[i]]) {
+        return(row)
+      }
+      track <- as.character(row$track[[1L]])
+      window <- coverage_windows[[track]] %||% list()
+      .fill_synspecies_coverage_panel(row, track, window)
+    })
+    panels <- dplyr::bind_rows(preserved_rows)
+    rownames(panels) <- NULL
+    return(SynLayout(
+      panels = panels,
+      layout_type = layout_obj@layout_type,
+      free = layout_obj@free,
+      exon_height = layout_obj@exon_height,
+      x_translation = layout_obj@x_translation,
+      metadata = layout_obj@metadata
+    ))
+  }
+
+  ordered_coverage <- lapply(coverage_tracks, function(track) {
+    window <- coverage_windows[[track]] %||% list()
+    matching <- which(as.character(stored_coverage$track) == track)
+    if (length(matching) > 0L) {
+      row <- stored_coverage[matching[[1L]], , drop = FALSE]
+      if (is.factor(row$track)) row$track <- as.character(row$track)
+      return(.fill_synspecies_coverage_panel(row, track, window))
+    }
+    .new_synspecies_coverage_panel(track, window)
+  })
+
+  if (length(ordered_coverage) > 0L) {
+    ordered_coverage <- lapply(seq_along(ordered_coverage), function(i) {
+      row <- ordered_coverage[[i]]
+      row$PANEL <- NA_integer_
+      row$ROW <- as.integer(i)
+      row$COL <- 1L
+      row
+    })
+    complete_stored_grid <- nrow(annotation_link_chain) > 0L &&
+      all(c("ROW", "COL") %in% names(annotation_link_chain)) &&
+      !anyNA(annotation_link_chain$ROW) &&
+      !anyNA(annotation_link_chain$COL)
+    if (complete_stored_grid) {
+      annotation_link_chain$ROW <- as.integer(
+        annotation_link_chain$ROW + length(ordered_coverage)
+      )
+    }
+  }
+
+  panels <- dplyr::bind_rows(
+    Filter(Negate(is.null), ordered_coverage),
+    annotation_link_chain
+  )
+  rownames(panels) <- NULL
+
+  SynLayout(
+    panels = panels,
+    layout_type = layout_obj@layout_type,
+    free = layout_obj@free,
+    exon_height = layout_obj@exon_height,
+    x_translation = layout_obj@x_translation,
+    metadata = layout_obj@metadata
+  )
+}
+
 synspecies_chain_layout <- function(x,
                                     vars,
                                     free,
                                     annotation_species = NULL,
                                     link_pairs = NULL,
-                                    allow_annotation_only = FALSE) {
+                                    allow_annotation_only = FALSE,
+                                    panel_scale_specs = list()) {
   if (!methods::is(x, "SynSpecies")) {
     cli::cli_abort("Expected a {.cls SynSpecies} object.")
   }
@@ -756,7 +1456,8 @@ synspecies_chain_layout <- function(x,
       annotation_species = annotation_species,
       link_pairs = link_pairs,
       free = free,
-      allow_annotation_only = allow_annotation_only
+      allow_annotation_only = allow_annotation_only,
+      panel_scale_specs = panel_scale_specs
     ))
   }
 
@@ -810,7 +1511,8 @@ synspecies_chain_layout <- function(x,
   .finalize_synspecies_layout_scales(
     panels,
     free = free,
-    layout_type = "chain"
+    layout_type = "chain",
+    panel_scale_specs = panel_scale_specs
   )
 }
 
@@ -819,7 +1521,8 @@ synspecies_chain_layout <- function(x,
     if (!is.data.frame(df) || !"track" %in% names(df)) {
       return(character())
     }
-    if (any(c("tspecies", "qspecies") %in% names(df))) {
+    role <- if (.is_link_like_df(df)) "link" else .syn_layer_panel_role(df)
+    if (!identical(role, "annotation")) {
       return(character())
     }
     as.character(df$track)
@@ -830,10 +1533,7 @@ synspecies_chain_layout <- function(x,
 
 .has_coverage_layer_data <- function(data) {
   any(vapply(data, function(df) {
-    is.data.frame(df) &&
-      ".ggexon_panel_role" %in% names(df) &&
-      (identical(attr(df, "ggexon_panel_role", exact = TRUE), "coverage") ||
-        any(df$.ggexon_panel_role == "coverage", na.rm = TRUE))
+    is.data.frame(df) && identical(.syn_layer_panel_role(df), "coverage")
   }, logical(1)))
 }
 
@@ -859,20 +1559,89 @@ synspecies_chain_layout <- function(x,
       stringsAsFactors = FALSE
     ))
   }
+  annotation_metadata <- .layer_panel_metadata(data)
+  annotation_metadata <- annotation_metadata[
+    annotation_metadata$panel_type == "annotation",
+    ,
+    drop = FALSE
+  ]
+  out$t_track <- .resolve_link_annotation_tracks(
+    out$tspecies,
+    annotation_metadata,
+    endpoint = "target"
+  )
+  out$q_track <- .resolve_link_annotation_tracks(
+    out$qspecies,
+    annotation_metadata,
+    endpoint = "query"
+  )
   out
+}
+
+.resolve_link_annotation_tracks <- function(values,
+                                             annotation_metadata,
+                                             endpoint) {
+  values <- as.character(values)
+  if (!is.data.frame(annotation_metadata) ||
+      nrow(annotation_metadata) == 0L) {
+    return(values)
+  }
+
+  vapply(values, function(value) {
+    if (is.na(value) || !nzchar(value)) {
+      return(value)
+    }
+    exact_tracks <- unique(as.character(
+      annotation_metadata$track[annotation_metadata$track == value]
+    ))
+    if (length(exact_tracks) == 1L) {
+      return(exact_tracks[[1L]])
+    }
+
+    recipient_hit <- rep(FALSE, nrow(annotation_metadata))
+    for (column in intersect(
+      c("individual", "species"),
+      names(annotation_metadata)
+    )) {
+      recipient_hit <- recipient_hit |
+        as.character(annotation_metadata[[column]]) == value
+    }
+    recipient_hit[is.na(recipient_hit)] <- FALSE
+    recipient_tracks <- unique(as.character(
+      annotation_metadata$track[recipient_hit]
+    ))
+    recipient_tracks <- recipient_tracks[
+      !is.na(recipient_tracks) & nzchar(recipient_tracks)
+    ]
+    if (length(recipient_tracks) == 1L) {
+      return(recipient_tracks[[1L]])
+    }
+    if (length(recipient_tracks) > 1L) {
+      cli::cli_abort(c(
+        "The {endpoint} link endpoint {.val {value}} matches multiple annotation panels.",
+        "i" = "Use one annotation track alias as the link endpoint: {paste(recipient_tracks, collapse = ', ')}."
+      ))
+    }
+    value
+  }, character(1))
 }
 
 .filter_stored_syn_layout <- function(layout,
                                       annotation_species = NULL,
-                                      link_pairs = NULL) {
+                                      link_pairs = NULL,
+                                      coverage_tracks = NULL) {
   layout_obj <- as_syn_layout(layout)
   panels <- syn_layout_panels(layout_obj)
   if (!is.data.frame(panels) || nrow(panels) == 0L) {
     return(layout_obj)
   }
 
+  panels$panel_type <- link_panel_type(panels)
+
   annotation_species <- unique(as.character(annotation_species %||% character()))
   annotation_species <- annotation_species[!is.na(annotation_species) & nzchar(annotation_species)]
+  coverage_tracks <- unique(as.character(coverage_tracks %||% character()))
+  coverage_tracks <- coverage_tracks[!is.na(coverage_tracks) & nzchar(coverage_tracks)]
 
   link_pairs <- link_pairs %||% data.frame()
   selected_species <- unique(c(
@@ -882,8 +1651,15 @@ synspecies_chain_layout <- function(x,
   ))
   selected_species <- selected_species[!is.na(selected_species) & nzchar(selected_species)]
 
-  if (length(selected_species) == 0L) {
-    return(layout_obj)
+  if (length(selected_species) == 0L && length(coverage_tracks) == 0L) {
+    return(SynLayout(
+      panels = panels,
+      layout_type = layout_obj@layout_type,
+      free = layout_obj@free,
+      exon_height = layout_obj@exon_height,
+      x_translation = layout_obj@x_translation,
+      metadata = layout_obj@metadata
+    ))
   }
 
   panel_species <- if ("species" %in% names(panels)) {
@@ -891,15 +1667,14 @@ synspecies_chain_layout <- function(x,
   } else {
     as.character(panels$track)
   }
-  panel_type <- if ("panel_type" %in% names(panels)) {
-    as.character(panels$panel_type)
-  } else {
-    rep("annotation", nrow(panels))
-  }
+  panel_type <- as.character(panels$panel_type)
 
-  keep_annotation <- panel_type != "link" &
+  keep_annotation <- panel_type == "annotation" &
     !is.na(panel_species) &
     panel_species %in% selected_species
+  keep_coverage <- panel_type == "coverage" &
+    "track" %in% names(panels) &
+    as.character(panels$track) %in% coverage_tracks
 
   link_tracks <- unique(as.character(link_pairs$track %||% character()))
   link_tracks <- link_tracks[!is.na(link_tracks) & nzchar(link_tracks)]
@@ -915,10 +1690,21 @@ synspecies_chain_layout <- function(x,
       as.character(panels$qspecies) %in% selected_species
   }
 
-  keep <- keep_annotation | keep_link
+  known_roles <- c("annotation", "coverage", "link")
+  keep_extension <- !panel_type %in% known_roles
+  keep_extension[is.na(keep_extension)] <- TRUE
+
+  keep <- keep_annotation | keep_coverage | keep_link | keep_extension
   filtered <- panels[keep, , drop = FALSE]
   if (nrow(filtered) == 0L) {
-    return(layout_obj)
+    return(SynLayout(
+      panels = panels,
+      layout_type = layout_obj@layout_type,
+      free = layout_obj@free,
+      exon_height = layout_obj@exon_height,
+      x_translation = layout_obj@x_translation,
+      metadata = layout_obj@metadata
+    ))
   }
 
   missing_link_tracks <- setdiff(link_tracks, as.character(filtered$track %||% character()))
@@ -967,17 +1753,21 @@ synspecies_chain_layout <- function(x,
                                                  annotation_species,
                                                  link_pairs,
                                                  free,
-                                                 allow_annotation_only = FALSE) {
+                                                 allow_annotation_only = FALSE,
+                                                 panel_scale_specs = list()) {
   annotation_species <- unique(as.character(annotation_species %||% character()))
   if (!is.null(link_pairs) && nrow(link_pairs) > 0L) {
+    t_track <- as.character(link_pairs$t_track %||% link_pairs$tspecies)
+    q_track <- as.character(link_pairs$q_track %||% link_pairs$qspecies)
     annotation_species <- unique(c(
       annotation_species,
-      as.character(link_pairs$tspecies),
-      as.character(link_pairs$qspecies)
+      t_track,
+      q_track
     ))
   }
   annotation_species <- annotation_species[!is.na(annotation_species) & nzchar(annotation_species)]
-  if (length(annotation_species) < 2L) {
+  if (length(annotation_species) == 0L ||
+      (length(annotation_species) < 2L && !isTRUE(allow_annotation_only))) {
     return(NULL)
   }
 
@@ -992,8 +1782,14 @@ synspecies_chain_layout <- function(x,
       stringsAsFactors = FALSE
     )
   } else {
-    link_pairs <- unique(link_pairs[, c("track", "tspecies", "qspecies"), drop = FALSE])
+    pair_columns <- intersect(
+      c("track", "tspecies", "qspecies", "t_track", "q_track"),
+      names(link_pairs)
+    )
+    link_pairs <- unique(link_pairs[, pair_columns, drop = FALSE])
   }
+  link_t_track <- as.character(link_pairs$t_track %||% link_pairs$tspecies)
+  link_q_track <- as.character(link_pairs$q_track %||% link_pairs$qspecies)
   panel_rows <- vector("list", length(annotation_species) + nrow(link_pairs))
   panel_index <- 1L
   used_links <- rep(FALSE, nrow(link_pairs))
@@ -1021,7 +1817,7 @@ synspecies_chain_layout <- function(x,
     later_species <- annotation_species[seq.int(i + 1L, length(annotation_species))]
     pair_match <- vapply(seq_len(nrow(link_pairs)), function(j) {
       if (isTRUE(used_links[[j]])) return(FALSE)
-      pair_species <- c(link_pairs$tspecies[[j]], link_pairs$qspecies[[j]])
+      pair_species <- c(link_t_track[[j]], link_q_track[[j]])
       species_name %in% pair_species && any(later_species %in% pair_species)
     }, logical(1))
     matched_pairs <- link_pairs[pair_match, , drop = FALSE]
@@ -1075,37 +1871,266 @@ synspecies_chain_layout <- function(x,
   .finalize_synspecies_layout_scales(
     panels,
     free = free,
-    layout_type = "chain"
+    layout_type = "chain",
+    panel_scale_specs = panel_scale_specs
   )
 }
 
-.finalize_synspecies_layout_scales <- function(layout, free, layout_type = NULL) {
+.coverage_x_source_candidates <- function(layout, coverage_row, annotation_rows) {
+  track <- as.character(layout$track[[coverage_row]])
+  same_track <- annotation_rows[
+    as.character(layout$track[annotation_rows]) == track
+  ]
+  if (length(same_track) > 0L) {
+    return(same_track)
+  }
+
+  coverage_columns <- intersect(c("individual", "species"), names(layout))
+  annotation_columns <- intersect(
+    c("individual", "species", "track"),
+    names(layout)
+  )
+  recipients <- unique(unlist(lapply(coverage_columns, function(column) {
+    as.character(layout[[column]][[coverage_row]])
+  }), use.names = FALSE))
+  recipients <- recipients[!is.na(recipients) & nzchar(recipients)]
+  if (length(recipients) == 0L) {
+    return(integer())
+  }
+
+  matched <- rep(FALSE, length(annotation_rows))
+  for (column in annotation_columns) {
+    matched <- matched |
+      as.character(layout[[column]][annotation_rows]) %in% recipients
+  }
+  annotation_rows[matched]
+}
+
+.collapse_equivalent_coverage_x_sources <- function(layout, candidates) {
+  if (length(candidates) <= 1L ||
+      !all(c("xlim_chr", "xlim_min", "xlim_max") %in% names(layout))) {
+    return(candidates)
+  }
+  windows <- data.frame(
+    chr = as.character(layout$xlim_chr[candidates]),
+    start = suppressWarnings(as.numeric(layout$xlim_min[candidates])),
+    end = suppressWarnings(as.numeric(layout$xlim_max[candidates])),
+    stringsAsFactors = FALSE
+  )
+  finite_coordinates <- all(
+    is.finite(windows$start) & is.finite(windows$end)
+  )
+  has_chr <- !is.na(windows$chr) & nzchar(windows$chr)
+  compatible_chr <- all(!has_chr) ||
+    (all(has_chr) && length(unique(windows$chr)) == 1L)
+  equivalent_coordinates <- length(unique(windows$start)) == 1L &&
+    length(unique(windows$end)) == 1L
+  if (finite_coordinates && compatible_chr && equivalent_coordinates) {
+    return(candidates[[1L]])
+  }
+  candidates
+}
+
+.annotate_coverage_x_source_panels <- function(layout) {
+  layout <- as.data.frame(layout, stringsAsFactors = FALSE)
+  roles <- link_panel_type(layout)
+  coverage_rows <- which(roles == "coverage")
+  if (length(coverage_rows) == 0L) {
+    return(layout)
+  }
+
+  if (!"x_source_panel" %in% names(layout)) {
+    layout$x_source_panel <- NA_integer_
+  }
+  for (column in c("xlim_chr", "xlim_min", "xlim_max")) {
+    if (!column %in% names(layout)) {
+      layout[[column]] <- if (identical(column, "xlim_chr")) {
+        NA_character_
+      } else {
+        NA_real_
+      }
+    }
+  }
+  annotation_rows <- which(roles == "annotation")
+  if (length(annotation_rows) == 0L) {
+    layout$x_source_panel[coverage_rows] <- NA_integer_
+    return(layout)
+  }
+
+  for (coverage_row in coverage_rows) {
+    candidates <- .coverage_x_source_candidates(
+      layout,
+      coverage_row,
+      annotation_rows
+    )
+    if (length(candidates) == 0L && length(annotation_rows) == 1L) {
+      candidates <- annotation_rows
+    }
+    candidates <- .collapse_equivalent_coverage_x_sources(
+      layout,
+      candidates
+    )
+    track <- as.character(layout$track[[coverage_row]])
+    if (length(candidates) != 1L) {
+      candidate_panels <- as.integer(layout$PANEL[candidates])
+      candidate_text <- if (length(candidate_panels) == 0L) {
+        "none"
+      } else {
+        paste(candidate_panels, collapse = ", ")
+      }
+      cli::cli_abort(c(
+        "Cannot resolve one annotation x source for coverage track {.val {track}}.",
+        "i" = "Candidate annotation panels: {candidate_text}."
+      ))
+    }
+
+    source_row <- candidates[[1L]]
+    layout$x_source_panel[[coverage_row]] <- as.integer(
+      layout$PANEL[[source_row]]
+    )
+    coverage_chr <- as.character(layout$xlim_chr[[coverage_row]])
+    coverage_start <- suppressWarnings(as.numeric(
+      layout$xlim_min[[coverage_row]]
+    ))
+    coverage_end <- suppressWarnings(as.numeric(
+      layout$xlim_max[[coverage_row]]
+    ))
+    source_chr <- as.character(layout$xlim_chr[[source_row]])
+    source_start <- suppressWarnings(as.numeric(layout$xlim_min[[source_row]]))
+    source_end <- suppressWarnings(as.numeric(layout$xlim_max[[source_row]]))
+    coverage_complete <- is.finite(coverage_start) &&
+      is.finite(coverage_end) &&
+      (is.na(coverage_chr) || nzchar(coverage_chr))
+    source_complete <- is.finite(source_start) && is.finite(source_end) &&
+      (is.na(source_chr) || nzchar(source_chr))
+    same_complete_window <- coverage_complete && source_complete &&
+      identical(coverage_chr, source_chr) &&
+      identical(coverage_start, source_start) &&
+      identical(coverage_end, source_end)
+    inherit_source_window <- !coverage_complete
+    coverage_window_explicit <- if (
+      ".ggexon_coverage_window_explicit" %in% names(layout) &&
+        !is.na(layout$.ggexon_coverage_window_explicit[[coverage_row]])
+    ) {
+      isTRUE(layout$.ggexon_coverage_window_explicit[[coverage_row]])
+    } else {
+      coverage_complete
+    }
+    share_source_scale <- inherit_source_window ||
+      (!source_complete && !coverage_window_explicit) ||
+      same_complete_window
+
+    if ("SCALE_X" %in% names(layout) &&
+        share_source_scale) {
+      layout$SCALE_X[[coverage_row]] <- layout$SCALE_X[[source_row]]
+    }
+    if (inherit_source_window) {
+      for (column in c("xlim_chr", "xlim_min", "xlim_max")) {
+        source_value <- layout[[column]][[source_row]]
+        if (!is.na(source_value)) {
+          layout[[column]][[coverage_row]] <- source_value
+        }
+      }
+    }
+  }
+
+  if ("SCALE_X" %in% names(layout)) {
+    layout$SCALE_X <- match(layout$SCALE_X, unique(layout$SCALE_X))
+  }
+  layout$x_source_panel <- as.integer(layout$x_source_panel)
+  layout
+}
+
+.finalize_synspecies_layout_scales <- function(layout,
+                                               free,
+                                               layout_type = NULL,
+                                               panel_scale_specs = list()) {
   layout_obj <- as_syn_layout(layout, layout_type = layout_type, free = free)
   layout <- syn_layout_panels(layout_obj)
+  had_panel_type <- "panel_type" %in% names(layout)
   layout <- .normalize_synspecies_layout_order(layout)
   rownames(layout) <- NULL
 
   layout$SCALE_X <- if (isTRUE(free$x)) seq_len(nrow(layout)) else 1L
+  layout <- .annotate_coverage_x_source_panels(layout)
 
-  if (isTRUE(free$y)) {
-    if ("panel_type" %in% colnames(layout)) {
-      layout$SCALE_Y <- ifelse(layout$panel_type == "link", 2L, 1L)
+  panel_roles <- link_panel_type(layout)
+  policies <- .resolve_present_panel_y_policies(
+    panel_roles,
+    specs = panel_scale_specs,
+    free = free
+  )
+  has_coverage <- any(panel_roles == "coverage")
+  annotation_policy_changed <- !is.null(panel_scale_specs$annotation) &&
+    !identical(panel_scale_specs$annotation$policy, "fixed_y")
+
+  if (!has_coverage && !annotation_policy_changed) {
+    # Preserve the exact coverage-free annotation/link allocation used by
+    # existing pairwise layouts. Role-aware allocation is only required once
+    # coverage is present or annotation explicitly opts into per-panel y
+    # scales.
+    if (isTRUE(free$y)) {
+      if (had_panel_type) {
+        layout$SCALE_Y <- ifelse(panel_roles == "link", 2L, 1L)
+      } else {
+        layout$SCALE_Y <- seq_len(nrow(layout))
+      }
     } else {
-      layout$SCALE_Y <- seq_len(nrow(layout))
+      layout$SCALE_Y <- 1L
     }
   } else {
-    layout$SCALE_Y <- 1L
+    groups <- vapply(seq_len(nrow(layout)), function(i) {
+      role <- panel_roles[[i]]
+      policy <- policies[[role]] %||% .facet_y_policy(free)
+
+      if (role %in% c("annotation", "coverage")) {
+        if (identical(policy, "fixed_y")) {
+          return(paste0(role, ":shared"))
+        }
+        return(paste0(role, ":", layout$PANEL[[i]]))
+      }
+      if (identical(role, "link")) {
+        return("link:shared")
+      }
+      if (identical(policy, "free_y")) {
+        paste0("role:", role, ":", layout$PANEL[[i]])
+      } else {
+        paste0("role:", role, ":shared")
+      }
+    }, character(1))
+    layout$SCALE_Y <- match(groups, unique(groups))
   }
 
   layout <- .annotate_synspecies_link_source_panels(layout)
+  metadata <- layout_obj@metadata
+  metadata$panel_role_y_policies <- policies
+  resolved_free <- free
+  resolved_free$y <- any(vapply(
+    policies,
+    identical,
+    logical(1),
+    "free_y"
+  ))
   SynLayout(
     panels = layout,
     layout_type = layout_type %||% layout_obj@layout_type,
-    free = free,
+    free = resolved_free,
     exon_height = layout_obj@exon_height,
     x_translation = layout_obj@x_translation,
-    metadata = layout_obj@metadata
+    metadata = metadata
   )
+}
+
+.syn_layer_panel_role <- function(data) {
+  role <- attr(data, "ggexon_panel_role", exact = TRUE)
+  if (is.null(role) && ".ggexon_panel_role" %in% names(data)) {
+    role <- unique(stats::na.omit(as.character(data$.ggexon_panel_role)))
+  }
+  if (length(role) == 0L) "annotation" else as.character(role[[1L]])
+}
+
+.syn_role_panel_key <- function(panel_type, track) {
+  paste(panel_type, track, sep = "\r")
 }
 
 .is_link_like_df <- function(df) {
@@ -1230,8 +2255,35 @@ synspecies_chain_layout <- function(x,
   }
 
   rownames(layout) <- NULL
-  layout$ROW <- seq_len(nrow(layout))
-  layout$PANEL <- seq_len(nrow(layout))
+  old_panel <- if (is.factor(layout$PANEL)) {
+    suppressWarnings(as.integer(as.character(layout$PANEL)))
+  } else {
+    suppressWarnings(as.integer(layout$PANEL))
+  }
+  new_panel <- seq_len(nrow(layout))
+  annotation_rows <- which(link_panel_type(layout) == "annotation")
+  old_annotation_panel <- old_panel[annotation_rows]
+  new_annotation_panel <- new_panel[annotation_rows]
+  for (source_column in intersect(c("t_panel", "q_panel"), names(layout))) {
+    source_panel <- if (is.factor(layout[[source_column]])) {
+      suppressWarnings(as.integer(as.character(layout[[source_column]])))
+    } else {
+      suppressWarnings(as.integer(layout[[source_column]]))
+    }
+    source_match <- match(source_panel, old_annotation_panel)
+    remapped <- rep(NA_integer_, length(source_panel))
+    resolved <- !is.na(source_match)
+    remapped[resolved] <- new_annotation_panel[source_match[resolved]]
+    layout[[source_column]] <- remapped
+  }
+
+  complete_multi_column_grid <- all(c("ROW", "COL") %in% names(layout)) &&
+    !anyNA(layout$ROW) && !anyNA(layout$COL) &&
+    length(unique(layout$COL)) > 1L
+  if (!complete_multi_column_grid) {
+    layout$ROW <- seq_len(nrow(layout))
+  }
+  layout$PANEL <- new_panel
   layout
 }
 

@@ -452,6 +452,7 @@ check_syn_files <- function(genome_file, annotation_file) {
 #' @examples
 #' ann_path <- system.file(
 #'   "extdata",
+#'   "compact_synspecies",
 #'   "caenorhabditis_XZ1516.gff3",
 #'   package = "ggexon"
 #' )
@@ -532,6 +533,13 @@ setMethod("load_annotation", "SynIndividual", function(x, annotation = NULL, ind
   lower_chr <- base::tolower(chr)
   if (lower_chr %in% lower_available) {
     return(available[match(lower_chr, lower_available)])
+  }
+
+  stripped_chr <- sub("^chr", "", lower_chr)
+  stripped_available <- sub("^chr", "", lower_available)
+  prefix_matches <- which(stripped_available == stripped_chr)
+  if (length(prefix_matches) == 1L) {
+    return(available[[prefix_matches]])
   }
 
   chr_parts <- strsplit(chr, "_", fixed = TRUE)[[1L]]
@@ -1445,6 +1453,7 @@ query_features <- function(x,
 #' @examples
 #' ann_path <- system.file(
 #'   "extdata",
+#'   "compact_synspecies",
 #'   "caenorhabditis_XZ1516.gff3",
 #'   package = "ggexon"
 #' )
@@ -1690,6 +1699,7 @@ setMethod("subset_feature_annotation", "SynIndividual", function(x,
 #' @examples
 #' ann_path <- system.file(
 #'   "extdata",
+#'   "compact_synspecies",
 #'   "caenorhabditis_XZ1516.gff3",
 #'   package = "ggexon"
 #' )

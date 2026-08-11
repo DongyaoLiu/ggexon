@@ -278,9 +278,7 @@ test_that("geom_exon2 terminal rectangles are trimmed before arrow caps", {
 })
 
 test_that("geom_exon2 resolves SynSpecies data like geom_exon", {
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
 
@@ -306,9 +304,7 @@ test_that("geom_exon2 resolves SynSpecies data like geom_exon", {
 })
 
 test_that("geom_exon2 defaults to the same Syn exon rows as geom_exon", {
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
 
@@ -341,9 +337,7 @@ test_that("geom_exon2 defaults to the same Syn exon rows as geom_exon", {
 })
 
 test_that("geom_exon2 annotation_type all keeps CDS and exon rows", {
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
 

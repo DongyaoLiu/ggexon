@@ -24,6 +24,26 @@ coverage_fixture_species <- function(strains = c(
   species
 }
 
+peel1_five_panel_plot <- function() {
+  ggexon(coverage_fixture_species()) +
+    geom_coverage(annotation = "coverage", fill = "#4C78A8") +
+    geom_exon(
+      species = "XZ1516",
+      chr = "I",
+      subset = c(2332338L, 2373985L),
+      annotation_type = "exon"
+    ) +
+    facet_genomics(
+      ggplot2::vars(track),
+      ncol = 1,
+      strip.position = "left"
+    ) +
+    scale_panel_coverage("free_y") +
+    center_panel_annotation() +
+    theme_ggexon_track() +
+    theme_ggexon_side_strips("left")
+}
+
 coverage_fixture_context <- function(strains = c(
   "XZ1516", "ECA2091", "ECA701", "ECA2191"
 )) {
@@ -89,6 +109,430 @@ coverage_synthetic_plot <- function(species) {
     facet_genomics(ggplot2::vars(track), scales = "free_y")
 }
 
+coverage_role_scale_layout <- function(strains = c("XZ1516", "ECA2091")) {
+  SynLayout(
+    panels = data.frame(
+      PANEL = 1:4,
+      ROW = c(1L, 1L, 2L, 2L),
+      COL = c(1L, 2L, 1L, 2L),
+      track = rep(strains, 2L),
+      panel_type = rep(c("coverage", "annotation"), each = 2L),
+      species = rep(strains, 2L),
+      stringsAsFactors = FALSE
+    )
+  )
+}
+
+coverage_role_scale_plot <- function(scales,
+                                     axes = "margins",
+                                     axis.labels = "all",
+                                     panel_limits = FALSE) {
+  strains <- c("XZ1516", "ECA2091")
+  species <- coverage_fixture_species(strains)
+  species_layout(species) <- coverage_role_scale_layout(strains)
+
+  facet_args <- list(
+    facets = ggplot2::vars(track),
+    ncol = 2L,
+    scales = scales,
+    axes = axes,
+    axis.labels = axis.labels
+  )
+  if (isTRUE(panel_limits)) {
+    facet_args$xlim <- stats::setNames(
+      rep(list(c(2332338L, 2373985L)), length(strains)),
+      strains
+    )
+    facet_args$xlim_chr <- stats::setNames(rep("I", length(strains)), strains)
+  }
+
+  ggexon(species) +
+    geom_coverage(annotation = "coverage") +
+    geom_exon(
+      chr = "I",
+      subset = c(2332338L, 2373985L),
+      annotation_type = "exon"
+    ) +
+    do.call(facet_genomics, facet_args)
+}
+
+test_that("coverage wrappers override facet fallback in multi-column Syn layouts", {
+  expect_no_warning(
+    coverage_free <- ggexon_build(
+      coverage_role_scale_plot("fixed", panel_limits = TRUE) +
+        scale_panel_coverage("free_y")
+    )
+  )
+  free_layout <- as.data.frame(coverage_free@layout$layout)
+  free_params <- coverage_free@layout$facet_params
+  free_annotation_ids <- free_layout$SCALE_Y[
+    free_layout$panel_type == "annotation"
+  ]
+  free_coverage_ids <- free_layout$SCALE_Y[
+    free_layout$panel_type == "coverage"
+  ]
+
+  expect_gt(length(unique(free_layout$COL)), 1L)
+  expect_false(any(free_layout$panel_type == "link"))
+  expect_length(unique(free_annotation_ids), 1L)
+  expect_length(unique(free_coverage_ids), length(free_coverage_ids))
+  expect_false(any(free_annotation_ids %in% free_coverage_ids))
+  expect_identical(
+    unname(unlist(free_params$panel_role_y_policies[c(
+      "annotation", "coverage"
+    )])),
+    c("fixed_y", "free_y")
+  )
+  expect_false(free_params$free$x)
+  expect_true(free_params$free$y)
+  expect_true(free_params$draw_axes$y)
+  expect_true(free_params$axis_labels$y)
+
+  expect_no_warning(
+    coverage_fixed <- ggexon_build(
+      coverage_role_scale_plot("free_y") +
+        scale_panel_coverage("fixed_y")
+    )
+  )
+  fixed_layout <- as.data.frame(coverage_fixed@layout$layout)
+  fixed_params <- coverage_fixed@layout$facet_params
+  fixed_annotation_ids <- fixed_layout$SCALE_Y[
+    fixed_layout$panel_type == "annotation"
+  ]
+  fixed_coverage_ids <- fixed_layout$SCALE_Y[
+    fixed_layout$panel_type == "coverage"
+  ]
+
+  expect_gt(length(unique(fixed_layout$COL)), 1L)
+  expect_false(any(fixed_layout$panel_type == "link"))
+  expect_length(unique(fixed_annotation_ids), 1L)
+  expect_length(unique(fixed_coverage_ids), 1L)
+  expect_false(any(fixed_annotation_ids %in% fixed_coverage_ids))
+  expect_identical(
+    unname(unlist(fixed_params$panel_role_y_policies[c(
+      "annotation", "coverage"
+    )])),
+    c("fixed_y", "fixed_y")
+  )
+  expect_false(fixed_params$free$x)
+  expect_false(fixed_params$free$y)
+  expect_false(fixed_params$draw_axes$y)
+  expect_true(fixed_params$axis_labels$y)
+})
+
+test_that("fixed role overrides preserve explicit y-axis requests and free x", {
+  explicit <- ggexon_build(
+    coverage_role_scale_plot(
+      "free_y",
+      axes = "all_y",
+      axis.labels = "all_y"
+    ) +
+      scale_panel_coverage("fixed_y")
+  )
+  explicit_params <- explicit@layout$facet_params
+
+  expect_false(explicit_params$free$x)
+  expect_false(explicit_params$free$y)
+  expect_true(explicit_params$draw_axes$y)
+  expect_true(explicit_params$axis_labels$y)
+  expect_identical(explicit_params$requested_axes, "all_y")
+  expect_identical(explicit_params$requested_axis_labels, "all_y")
+
+  free_x <- ggexon_build(
+    coverage_role_scale_plot("free") +
+      scale_panel_coverage("fixed_y")
+  )
+  free_x_params <- free_x@layout$facet_params
+
+  expect_true(free_x_params$free$x)
+  expect_false(free_x_params$free$y)
+  expect_true(free_x_params$draw_axes$x)
+  expect_true(free_x_params$axis_labels$x)
+  expect_false(free_x_params$draw_axes$y)
+  expect_true(free_x_params$axis_labels$y)
+})
+
+test_that("omitted coverage species are independent of representative annotation", {
+  p <- ggexon(coverage_fixture_species()) +
+    geom_coverage(annotation = "coverage") +
+    geom_exon(
+      species = "XZ1516",
+      chr = "I",
+      subset = c(2332338L, 2373985L),
+      annotation_type = "exon"
+    )
+
+  context <- collect_syn_plot_context(
+    p@layers,
+    p@data,
+    facet = p@facet
+  )
+
+  expect_identical(
+    context$coverage_tracks,
+    c("XZ1516", "ECA2091", "ECA701", "ECA2191")
+  )
+  expect_identical(context$annotation_species_order, "XZ1516")
+  coverage_windows <- context$windows[context$coverage_tracks]
+  expect_length(coverage_windows, 4L)
+  expect_true(all(vapply(
+    coverage_windows,
+    function(x) identical(c(as.integer(x$start), as.integer(x$end)),
+                          c(2332338L, 2373985L)),
+    logical(1)
+  )))
+  expect_identical(
+    unname(vapply(coverage_windows, `[[`, character(1), "track")),
+    context$coverage_tracks
+  )
+  expect_identical(
+    unname(vapply(coverage_windows, `[[`, character(1), "individual")),
+    context$coverage_tracks
+  )
+  expect_identical(
+    unname(vapply(coverage_windows, `[[`, character(1), "species")),
+    context$coverage_tracks
+  )
+})
+
+test_that("coverage requests remain ordered and dispatch only their own tracks", {
+  species <- coverage_fixture_species()
+  replicate_tracks <- c("ECA2091", "ECA701")
+  for (track in replicate_tracks) {
+    individual <- individuals(species)[[track]]
+    individual <- add_annotation(
+      individual,
+      SynBigWigAnnotation(
+        "replicate",
+        source_file(get_annotation(individual, "coverage"))
+      )
+    )
+    species <- add_individual(species, individual)
+  }
+
+  p <- ggexon(species) +
+    geom_coverage(annotation = "coverage") +
+    geom_coverage(annotation = "replicate") +
+    geom_exon(
+      species = "XZ1516",
+      chr = "I",
+      subset = c(2332338L, 2373985L),
+      annotation_type = "exon"
+    )
+  context <- collect_syn_plot_context(p@layers, p@data, facet = p@facet)
+
+  expect_identical(
+    vapply(context$coverage_requests, `[[`, character(1), "request_id"),
+    c("coverage:1", "coverage:2")
+  )
+  expect_identical(
+    vapply(context$coverage_requests, `[[`, character(1), "annotation"),
+    c("coverage", "replicate")
+  )
+  expect_identical(
+    lapply(context$coverage_requests, `[[`, "tracks"),
+    list(
+      c("XZ1516", "ECA2091", "ECA701", "ECA2191"),
+      replicate_tracks
+    )
+  )
+
+  coverage <- syn_to_coverage_df(
+    species,
+    annotation = "coverage",
+    context = context
+  )
+  replicate <- syn_to_coverage_df(
+    species,
+    annotation = "replicate",
+    context = context
+  )
+  expect_identical(unique(coverage$track), context$coverage_requests[[1L]]$tracks)
+  expect_identical(unique(replicate$track), replicate_tracks)
+})
+
+test_that("duplicate explicit SynIndividual coverage selectors match normalized requests", {
+  species <- coverage_synthetic_species("sample", 10L, 3)
+  individual <- individuals(species)[["sample"]]
+  p <- ggexon(individual) +
+    geom_coverage(annotation = "coverage", species = "ignored") +
+    geom_coverage(annotation = "coverage", species = "ignored") +
+    geom_exon(
+      chr = "chr1",
+      subset = c(1L, 50L),
+      annotation_type = "exon"
+    )
+  context <- collect_syn_plot_context(p@layers, p@data, facet = p@facet)
+
+  expect_identical(
+    lapply(context$coverage_requests, `[[`, "species"),
+    list("sample", "sample")
+  )
+  data <- syn_to_coverage_df(
+    individual,
+    species = "ignored",
+    annotation = "coverage",
+    context = context
+  )
+  expect_gt(nrow(data), 0L)
+  expect_identical(unique(data$track), "sample")
+
+  built <- ggexon_build(p)
+  expect_equal(built@data[[1L]], built@data[[2L]])
+})
+
+test_that("coverage broadcast compares only normalized genomic coordinates", {
+  coverage_windows <- list(
+    resolved = list(
+      chr = "chr2", start = 5L, end = 9L,
+      track = "resolved", individual = "resolved", species = "resolved"
+    ),
+    unresolved = list(
+      track = "unresolved", individual = "recipient", species = "recipient"
+    )
+  )
+  annotation_windows <- list(
+    representative = list(
+      chr = "chr1", start = 10, end = 40,
+      track = "representative", individual = "one", species = "one"
+    ),
+    same_coordinates = list(
+      chr = "chr1", start = 10L, end = 40L,
+      track = "different-metadata", individual = "two", species = "two"
+    )
+  )
+
+  windows <- .complete_common_coverage_windows(
+    c("resolved", "unresolved"),
+    coverage_windows,
+    annotation_windows
+  )
+
+  expect_identical(names(windows), c("resolved", "unresolved"))
+  expect_identical(
+    unname(unlist(windows$resolved[c("chr", "start", "end")])),
+    c("chr2", "5", "9")
+  )
+  expect_identical(
+    unname(unlist(windows$unresolved[c("chr", "start", "end")])),
+    c("chr1", "10", "40")
+  )
+  expect_identical(windows$unresolved$track, "unresolved")
+  expect_identical(windows$unresolved$individual, "recipient")
+  expect_identical(windows$unresolved$species, "recipient")
+})
+
+test_that("coverage broadcast rejects every incompatible genomic coordinate", {
+  coverage_windows <- list(
+    unresolved = list(
+      track = "unresolved", individual = "recipient", species = "recipient"
+    )
+  )
+  reference <- list(chr = "chr1", start = 10L, end = 40L)
+  incompatible <- list(
+    list(chr = "chr2", start = 10L, end = 40L),
+    list(chr = "chr1", start = 11L, end = 40L),
+    list(chr = "chr1", start = 10L, end = 41L)
+  )
+
+  for (candidate in incompatible) {
+    expect_error(
+      .complete_common_coverage_windows(
+        "unresolved",
+        coverage_windows,
+        list(reference = reference, incompatible = candidate)
+      ),
+      "multiple.*coverage window|explicit.*coverage"
+    )
+  }
+})
+
+test_that("coverage context rejects ambiguous annotation-window broadcast", {
+  species <- coverage_fixture_species(c("XZ1516", "ECA2091", "ECA701"))
+  p_ambiguous <- ggexon(species) +
+    geom_coverage(annotation = "coverage") +
+    geom_exon(
+      species = "XZ1516",
+      chr = "I",
+      subset = c(2332338L, 2350000L),
+      annotation_type = "exon"
+    ) +
+    geom_exon(
+      species = "ECA2091",
+      chr = "I",
+      subset = c(2350001L, 2373985L),
+      annotation_type = "exon"
+    )
+
+  expect_error(
+    collect_syn_plot_context(
+      p_ambiguous@layers,
+      p_ambiguous@data,
+      facet = p_ambiguous@facet
+    ),
+    "multiple.*coverage window|explicit.*coverage"
+  )
+})
+
+test_that("coverage context does not invent a missing genomic window", {
+  species <- coverage_synthetic_species("sample", 10L, 3)
+  p <- ggexon(species) + geom_coverage(annotation = "coverage")
+  context <- collect_syn_plot_context(p@layers, p@data, facet = p@facet)
+
+  expect_identical(context$coverage_tracks, "sample")
+  expect_length(context$windows, 0L)
+  expect_length(context$coverage_requests[[1L]]$windows, 0L)
+  expect_error(
+    ggexon_build(p),
+    "explicit annotation window|stored layout window|xlim|xlim_chr"
+  )
+})
+
+test_that("coverage and annotation with the same track own different panels", {
+  built <- ggexon_build(
+    ggexon(coverage_fixture_species(c("XZ1516", "ECA2091"))) +
+      geom_coverage(annotation = "coverage") +
+      geom_exon(
+        species = "XZ1516",
+        chr = "I",
+        subset = c(2332338L, 2373985L)
+      ) +
+      facet_genomics(ggplot2::vars(track), ncol = 1)
+  )
+
+  layout <- built@layout$layout
+  expect_identical(layout$panel_type,
+                   c("coverage", "coverage", "annotation"))
+  expect_identical(layout$track,
+                   c("XZ1516", "ECA2091", "XZ1516"))
+
+  coverage_panels <- layout$PANEL[layout$panel_type == "coverage"]
+  annotation_panel <- layout$PANEL[layout$panel_type == "annotation"]
+  expect_true(all(built@data[[1L]]$PANEL %in% coverage_panels))
+  expect_true(all(built@data[[2L]]$PANEL %in% annotation_panel))
+})
+
+test_that("all-empty coverage requests create ordered coverage panels from context", {
+  species <- coverage_synthetic_species(
+    ids = c("empty_a", "empty_b"),
+    signal_starts = c(80L, 90L),
+    scores = c(5, 8)
+  )
+
+  built <- ggexon_build(coverage_synthetic_plot(species))
+  layout <- as.data.frame(built@layout$layout)
+
+  expect_identical(
+    as.character(layout$panel_type),
+    c("coverage", "coverage", "annotation", "annotation")
+  )
+  expect_identical(
+    as.character(layout$track),
+    c("empty_a", "empty_b", "empty_a", "empty_b")
+  )
+  expect_equal(nrow(built@data[[1L]]), 0L)
+})
+
 test_that("Syn coverage dispatch keeps one interval row per BigWig record", {
   species <- coverage_fixture_species()
   context <- coverage_fixture_context()
@@ -137,6 +581,19 @@ test_that("SynLocusSet coverage preserves repeated-individual panel aliases", {
     list(coverage_layer, exon_layer),
     species
   )
+  expect_identical(context$coverage_tracks, aliases)
+  expect_identical(context$coverage_requests[[1L]]$tracks, aliases)
+  expect_identical(names(context$coverage_requests[[1L]]$windows), aliases)
+  expect_identical(
+    unname(vapply(context$windows[aliases], `[[`, character(1), "track")),
+    aliases
+  )
+  expect_true(all(vapply(
+    context$windows[aliases],
+    function(window) identical(window$individual, "sample") &&
+      identical(window$species, "sample"),
+    logical(1)
+  )))
   data <- syn_to_coverage_df(
     species,
     annotation = "coverage",
@@ -226,21 +683,41 @@ test_that("BigWig window queries use only the build-local cache", {
 
 test_that("plot builds clone layers and discard their ephemeral query cache", {
   species <- coverage_synthetic_species("sample", 10L, 3)
-  plot <- coverage_synthetic_plot(species)
+  plot <- coverage_synthetic_plot(species) +
+    scale_panel_coverage("free_y") +
+    center_panel_annotation()
   original_coverage_layer <- plot@layers[[1L]]
   expect_false("syn_plot_context" %in% ls(original_coverage_layer, all.names = TRUE))
 
-  built <- ggexon_build(plot)
-  built_coverage_layer <- built@plot@layers[[1L]]
+  first <- ggexon_build(plot)
+  second <- ggexon_build(plot)
+  built_coverage_layer <- first@plot@layers[[1L]]
   built_context <- built_coverage_layer$syn_plot_context
 
   expect_false(identical(built_coverage_layer, original_coverage_layer))
+  expect_null(plot@layers[[1L]]$syn_plot_context)
+  expect_false(identical(first@plot@layers[[1L]], second@plot@layers[[1L]]))
   expect_false("syn_plot_context" %in% ls(original_coverage_layer, all.names = TRUE))
   expect_null(original_coverage_layer$syn_plot_context$query_cache)
-  expect_null(built_context$query_cache)
-  expect_null(built_context$syn_data)
+  expect_false("query_cache" %in% names(built_context))
+  expect_false("syn_data" %in% names(built_context))
   expect_true(is.list(built_context$windows))
   expect_identical(names(built_context$windows), "sample")
+  expect_equal(first@data[[1L]], second@data[[1L]])
+
+  layout_context <- first@layout$facet_params$syn_plot_context
+  expect_identical(layout_context, built_context)
+  expect_false("query_cache" %in% names(layout_context))
+  expect_false("syn_data" %in% names(layout_context))
+  expect_false(any(vapply(layout_context, is.environment, logical(1))))
+  expect_identical(
+    first@layout$facet_params$panel_scale_specs,
+    plot@panel_scale_specs
+  )
+  expect_identical(
+    first@layout$facet_params$center_annotation_panels,
+    plot@center_annotation_panels
+  )
 })
 
 test_that("Syn coverage dispatch preserves raw scores and empty schema", {
@@ -446,6 +923,104 @@ test_that("coverage bands preserve raw scores and reserve 25 percent below zero"
   expect_setequal(result$composite_panels, c(1L, 3L))
 })
 
+test_that("ordinary data retains the legacy composed coverage panel", {
+  coverage <- data.frame(
+    track = "sample",
+    xmin = c(1, 5),
+    xmax = c(4, 8),
+    coverage = c(0, 20)
+  )
+  annotation <- data.frame(
+    track = "sample",
+    xmin = 1,
+    xmax = 8,
+    y = 1,
+    strand = "+",
+    gene = "g",
+    label = "g"
+  )
+  built <- ggexon_build(
+    ggexon() +
+      geom_coverage(
+        data = coverage,
+        mapping = ggplot2::aes(
+          xmin = xmin, xmax = xmax, coverage = coverage, track = track
+        ),
+        inherit.aes = FALSE
+      ) +
+      geom_genetag(data = annotation, show_label = FALSE) +
+      facet_genomics(ggplot2::vars(track), scales = "free_y")
+  )
+
+  expect_identical(as.character(built@layout$layout$panel_type), "annotation")
+  expect_identical(as.integer(built@data[[1L]]$PANEL), c(1L, 1L))
+  expect_identical(as.integer(built@data[[2L]]$PANEL), 1L)
+  expect_identical(built@data[[1L]]$coverage, c(0, 20))
+  expect_identical(built@data[[1L]]$ymin, c(0, 0))
+  expect_identical(built@data[[1L]]$ymax, c(0, 20))
+  expect_identical(
+    built@data[[2L]][c(
+      "y", "ymin", "ymax", ".ggexon_band_ymin", ".ggexon_band_ymax"
+    )],
+    data.frame(
+      y = -2.5,
+      ymin = -5,
+      ymax = 0,
+      .ggexon_band_ymin = -5,
+      .ggexon_band_ymax = 0,
+      check.names = FALSE
+    )
+  )
+  expect_identical(built@layout$ggexon_composite_coverage_panels, 1L)
+  expect_identical(built@layout$panel_scales_y[[1L]]$range$range, c(-5, 20))
+  expect_identical(built@layout$panel_params[[1L]]$y.range, c(-6.25, 21.25))
+  expect_identical(
+    built@layout$panel_params[[1L]]$y$get_breaks(),
+    c(0, 5, 10, 15, 20)
+  )
+})
+
+test_that("ordinary panel_type data cannot opt into the first-class Syn path", {
+  coverage <- data.frame(
+    track = "sample",
+    panel_type = "coverage",
+    xmin = c(1, 5),
+    xmax = c(4, 8),
+    coverage = c(0, 20)
+  )
+  annotation <- data.frame(
+    track = "sample",
+    panel_type = "coverage",
+    xmin = 1,
+    xmax = 8,
+    y = 1,
+    strand = "+",
+    gene = "g",
+    label = "g"
+  )
+  built <- ggexon_build(
+    ggexon() +
+      geom_coverage(
+        data = coverage,
+        mapping = ggplot2::aes(
+          xmin = xmin, xmax = xmax, coverage = coverage, track = track
+        ),
+        inherit.aes = FALSE
+      ) +
+      geom_genetag(data = annotation, show_label = FALSE) +
+      facet_genomics(
+        ggplot2::vars(track, panel_type),
+        scales = "free_y"
+      )
+  )
+
+  expect_identical(built@layout$ggexon_composite_coverage_panels, 1L)
+  expect_identical(built@data[[2L]]$y, -2.5)
+  expect_identical(built@data[[2L]]$ymin, -5)
+  expect_identical(built@data[[2L]]$ymax, 0)
+  expect_identical(built@layout$panel_scales_y[[1L]]$range$range, c(-5, 20))
+})
+
 test_that("all-zero coverage retains zeros and uses a finite training fallback", {
   coverage <- data.frame(
     PANEL = factor(c(1, 1)),
@@ -515,7 +1090,7 @@ test_that("requested coverage panels participate even when no signal row exists"
   expect_true(all(result$data[[2L]]$ymax <= 0))
 })
 
-test_that("one empty requested coverage panel keeps its identity and shared band", {
+test_that("one empty free coverage panel receives only its own fallback", {
   species <- coverage_synthetic_species(
     ids = c("signal", "empty"),
     signal_starts = c(10L, 80L),
@@ -523,73 +1098,153 @@ test_that("one empty requested coverage panel keeps its identity and shared band
   )
   built <- ggexon_build(coverage_synthetic_plot(species))
   layout <- as.data.frame(built@layout$layout)
+  coverage_rows <- layout$panel_type == "coverage"
   annotation_rows <- layout$panel_type == "annotation"
-  panels <- as.integer(layout$PANEL[annotation_rows])
+  panels <- as.integer(layout$PANEL[coverage_rows])
 
+  expect_identical(as.character(layout$track[coverage_rows]), c("signal", "empty"))
   expect_identical(as.character(layout$track[annotation_rows]), c("signal", "empty"))
-  expect_identical(
-    sort(built@layout$ggexon_composite_coverage_panels),
-    sort(panels)
-  )
+  expect_null(built@layout$ggexon_composite_coverage_panels)
   expect_identical(unique(as.character(built@data[[1L]]$track)), "signal")
-  expect_true(all(built@data[[2L]]$ymax <= 0))
-  expect_true(all(vapply(
-    panels,
-    function(panel) built@layout$panel_params[[panel]]$y.range[[2L]] >= 5,
-    logical(1)
-  )))
+  expect_true(all(built@data[[1L]]$PANEL %in% panels))
+  expect_false(any(built@data[[2L]]$PANEL %in% panels))
+  expect_true(all(built@data[[2L]]$ymin > 0))
+  coverage <- layout[coverage_rows, , drop = FALSE]
+  signal_scale <- coverage$SCALE_Y[coverage$track == "signal"]
+  empty_scale <- coverage$SCALE_Y[coverage$track == "empty"]
+  expect_identical(
+    built@layout$panel_scales_y[[signal_scale]]$range$range,
+    c(0, 5)
+  )
+  expect_identical(
+    built@layout$panel_scales_y[[empty_scale]]$range$range,
+    c(0, 1)
+  )
 })
 
-test_that("all-empty requested coverage panels retain order and positive training", {
+test_that("one empty fixed coverage panel inherits its non-empty shared scale", {
+  species <- coverage_synthetic_species(
+    ids = c("signal", "empty"),
+    signal_starts = c(10L, 80L),
+    scores = c(5, 5)
+  )
+  built <- ggexon_build(
+    coverage_synthetic_plot(species) + scale_panel_coverage("fixed_y")
+  )
+  layout <- as.data.frame(built@layout$layout)
+  coverage <- layout[layout$panel_type == "coverage", , drop = FALSE]
+
+  expect_length(unique(coverage$SCALE_Y), 1L)
+  expect_identical(
+    built@layout$panel_scales_y[[unique(coverage$SCALE_Y)]]$range$range,
+    c(0, 5)
+  )
+  expect_identical(unique(as.character(built@data[[1L]]$track)), "signal")
+})
+
+test_that("all-empty coverage panels train to one under fixed and free policies", {
   species <- coverage_synthetic_species(
     ids = c("empty_a", "empty_b"),
     signal_starts = c(80L, 90L),
     scores = c(5, 8)
   )
-  built <- ggexon_build(coverage_synthetic_plot(species))
-  layout <- as.data.frame(built@layout$layout)
-  annotation_rows <- layout$panel_type == "annotation"
-  panels <- as.integer(layout$PANEL[annotation_rows])
+  for (policy in c("fixed_y", "free_y")) {
+    built <- ggexon_build(
+      coverage_synthetic_plot(species) + scale_panel_coverage(policy)
+    )
+    layout <- as.data.frame(built@layout$layout)
+    coverage_rows <- layout$panel_type == "coverage"
+    annotation_rows <- layout$panel_type == "annotation"
+    panels <- as.integer(layout$PANEL[coverage_rows])
+    scale_ids <- unique(layout$SCALE_Y[coverage_rows])
 
-  expect_identical(
-    as.character(layout$track[annotation_rows]),
-    c("empty_a", "empty_b")
-  )
-  expect_equal(nrow(built@data[[1L]]), 0L)
-  expect_identical(
-    sort(built@layout$ggexon_composite_coverage_panels),
-    sort(panels)
-  )
-  expect_identical(built@layout$ggexon_coverage_max, 0)
-  expect_identical(built@layout$ggexon_coverage_training_max, 1)
-  expect_true(all(built@data[[2L]]$ymax <= 0))
-  expect_true(all(vapply(
-    panels,
-    function(panel) built@layout$panel_params[[panel]]$y.range[[2L]] >= 1,
-    logical(1)
-  )))
+    expect_identical(
+      as.character(layout$track[coverage_rows]),
+      c("empty_a", "empty_b"),
+      info = policy
+    )
+    expect_identical(
+      as.character(layout$track[annotation_rows]),
+      c("empty_a", "empty_b"),
+      info = policy
+    )
+    expect_equal(nrow(built@data[[1L]]), 0L, info = policy)
+    expect_null(built@layout$ggexon_composite_coverage_panels, info = policy)
+    expect_false(any(built@data[[2L]]$PANEL %in% panels), info = policy)
+    expect_true(all(built@data[[2L]]$ymin > 0), info = policy)
+    expect_true(all(vapply(
+      scale_ids,
+      function(scale_id) identical(
+        built@layout$panel_scales_y[[scale_id]]$range$range,
+        c(0, 1)
+      ),
+      logical(1)
+    )), info = policy)
+    expect_true(all(vapply(
+      panels,
+      function(panel) {
+        view <- built@layout$panel_params[[panel]]$y.range
+        length(view) == 2L && all(is.finite(view)) &&
+          view[[1L]] <= 0 && view[[2L]] >= 1
+      },
+      logical(1)
+    )), info = policy)
+  }
 })
 
-test_that("all-zero requested coverage panels explicitly train to one", {
+test_that("all-zero coverage rows stay zero while their scales train to one", {
   species <- coverage_synthetic_species(
     ids = c("zero_a", "zero_b"),
     signal_starts = c(10L, 20L),
     scores = c(0, 0)
   )
+  for (policy in c("fixed_y", "free_y")) {
+    built <- ggexon_build(
+      coverage_synthetic_plot(species) + scale_panel_coverage(policy)
+    )
+    layout <- as.data.frame(built@layout$layout)
+    coverage_rows <- layout$panel_type == "coverage"
+    scale_ids <- unique(layout$SCALE_Y[coverage_rows])
+    panels <- as.integer(layout$PANEL[coverage_rows])
+
+    expect_true(all(built@data[[1L]]$coverage == 0), info = policy)
+    expect_true(all(built@data[[1L]]$ymin == 0), info = policy)
+    expect_true(all(built@data[[1L]]$ymax == 0), info = policy)
+    expect_true(all(vapply(
+      scale_ids,
+      function(scale_id) identical(
+        built@layout$panel_scales_y[[scale_id]]$range$range,
+        c(0, 1)
+      ),
+      logical(1)
+    )), info = policy)
+    expect_true(all(vapply(
+      panels,
+      function(panel) {
+        view <- built@layout$panel_params[[panel]]$y.range
+        length(view) == 2L && all(is.finite(view)) &&
+          view[[1L]] <= 0 && view[[2L]] >= 1
+      },
+      logical(1)
+    )), info = policy)
+  }
+})
+
+test_that("one-base first-class coverage keeps raw depth and a finite scale", {
+  species <- coverage_synthetic_species("single", 10L, 7)
   built <- ggexon_build(coverage_synthetic_plot(species))
   layout <- as.data.frame(built@layout$layout)
-  annotation_rows <- layout$panel_type == "annotation"
-  panels <- as.integer(layout$PANEL[annotation_rows])
+  scale_id <- layout$SCALE_Y[layout$panel_type == "coverage"]
 
-  expect_true(all(built@data[[1L]]$coverage == 0))
-  expect_true(all(built@data[[1L]]$ymax == 0))
-  expect_identical(built@layout$ggexon_coverage_max, 0)
-  expect_identical(built@layout$ggexon_coverage_training_max, 1)
-  expect_true(all(vapply(
-    panels,
-    function(panel) built@layout$panel_params[[panel]]$y.range[[2L]] >= 1,
-    logical(1)
-  )))
+  expect_identical(built@data[[1L]]$interval_start, 10)
+  expect_identical(built@data[[1L]]$interval_end, 10)
+  expect_identical(built@data[[1L]]$coverage, 7)
+  expect_identical(built@data[[1L]]$ymin, 0)
+  expect_identical(built@data[[1L]]$ymax, 7)
+  expect_identical(
+    built@layout$panel_scales_y[[scale_id]]$range$range,
+    c(0, 7)
+  )
 })
 
 test_that("coverage composition classifies all participating geoms explicitly", {
@@ -641,22 +1296,39 @@ test_that("coverage guide filtering removes negative breaks and matching labels"
   expect_identical(layout$panel_params[[1L]]$y.range, original_range)
 })
 
-test_that("coverage and gene annotations share four composed panel scales", {
+test_that("coverage and gene annotations occupy role-qualified panels", {
   strains <- c("XZ1516", "ECA2091", "ECA701", "ECA2191")
-  plot <- ggexon(coverage_fixture_species()) +
+  species <- coverage_fixture_species()
+  annotation_layer <- geom_exon(
+    chr = "I",
+    subset = c(2332338L, 2373985L),
+    annotation_type = "exon"
+  )
+  facet <- facet_genomics(ggplot2::vars(track), scales = "free_y")
+  annotation_only <- ggexon_build(
+    ggexon(species) + annotation_layer + facet
+  )
+  annotation_only_reference <- annotation_only@data[[1L]]
+
+  plot <- ggexon(species) +
     geom_coverage(annotation = "coverage") +
-    geom_exon(
-      chr = "I",
-      subset = c(2332338L, 2373985L),
-      annotation_type = "exon"
-    ) +
-    facet_genomics(ggplot2::vars(track), scales = "free_y")
+    annotation_layer +
+    facet
 
   built <- ggexon_build(plot)
   layout <- as.data.frame(built@layout$layout)
+  coverage_rows <- layout$panel_type == "coverage"
   annotation_rows <- layout$panel_type == "annotation"
+  expect_identical(as.character(layout$track[coverage_rows]), strains)
   expect_identical(as.character(layout$track[annotation_rows]), strains)
   expect_true(length(unique(layout$SCALE_Y[annotation_rows])) == 1L)
+  expect_identical(
+    length(unique(layout$SCALE_Y[coverage_rows])),
+    sum(coverage_rows)
+  )
+  expect_false(any(
+    layout$SCALE_Y[annotation_rows] %in% layout$SCALE_Y[coverage_rows]
+  ))
 
   windows <- effective_panel_windows(plot)
   expect_identical(windows$track, strains)
@@ -665,27 +1337,443 @@ test_that("coverage and gene annotations share four composed panel scales", {
   expect_identical(windows$end, rep(2373985, length(strains)))
 
   coverage_data <- built@data[[1L]]
+  original_scores <- coverage_data$coverage
   expect_identical(coverage_data$ymax, coverage_data$coverage)
+  expect_identical(coverage_data$ymax, original_scores)
   expect_true(all(coverage_data$ymin == 0))
+  expect_true(all(coverage_data$PANEL %in% layout$PANEL[coverage_rows]))
 
-  gene_data <- built@data[[2L]]
-  expect_true(all(gene_data$ymax <= 0))
-  expect_true(all(gene_data$ymin < 0))
-
-  panel_ranges <- lapply(
-    layout$PANEL[annotation_rows],
-    function(panel) built@layout$panel_params[[as.integer(panel)]]$y.range
+  annotation_data <- built@data[[2L]]
+  expect_true(all(annotation_data$PANEL %in% layout$PANEL[annotation_rows]))
+  expect_false(any(annotation_data$PANEL %in% layout$PANEL[coverage_rows]))
+  expect_false(any(c(
+    ".ggexon_band_ymin", ".ggexon_band_ymax"
+  ) %in% names(annotation_data)))
+  expect_equal(
+    annotation_data[c("ymin", "ymax")],
+    annotation_only_reference[c("ymin", "ymax")]
   )
-  expect_true(all(vapply(
-    panel_ranges,
-    function(x) x[[2L]] >= max(coverage_data$coverage),
-    logical(1)
-  )))
+  expect_null(built@layout$ggexon_composite_coverage_panels)
 
-  for (panel in layout$PANEL[annotation_rows]) {
+  for (panel in layout$PANEL[coverage_rows]) {
+    panel_coverage <- coverage_data$coverage[
+      as.integer(coverage_data$PANEL) == as.integer(panel)
+    ]
+    scale_id <- layout$SCALE_Y[layout$PANEL == panel]
+    expect_equal(
+      built@layout$panel_scales_y[[scale_id]]$range$range,
+      c(0, max(panel_coverage))
+    )
+    expect_true(
+      built@layout$panel_params[[as.integer(panel)]]$y.range[[2L]] >=
+        max(panel_coverage)
+    )
     breaks <- built@layout$panel_params[[as.integer(panel)]]$y$get_breaks()
     expect_true(all(breaks[is.finite(breaks)] >= 0))
   }
+})
+
+test_that("PEEL-1 renders four free coverage panels above one annotation", {
+  plot <- peel1_five_panel_plot()
+  built <- ggexon_build(plot)
+  layout <- as.data.frame(built@layout$layout)
+  strains <- c("XZ1516", "ECA2091", "ECA701", "ECA2191")
+
+  expect_identical(
+    as.character(layout$panel_type),
+    c(rep("coverage", 4L), "annotation")
+  )
+  expect_identical(
+    as.character(layout$track),
+    c(strains, "XZ1516")
+  )
+  expect_length(unique(layout$SCALE_Y[layout$panel_type == "coverage"]), 4L)
+  expect_length(unique(layout$SCALE_Y[layout$panel_type == "annotation"]), 1L)
+  expect_identical(plot@facet$params$strip.position, "left")
+
+  coverage_data <- built@data[[1L]]
+  coverage_maxima <- tapply(
+    coverage_data$coverage,
+    as.character(coverage_data$track),
+    max
+  )
+  global_maximum <- unname(coverage_maxima[["ECA2091"]])
+  coverage_layout <- layout[layout$panel_type == "coverage", , drop = FALSE]
+  for (i in seq_len(nrow(coverage_layout))) {
+    track <- as.character(coverage_layout$track[[i]])
+    scale_id <- as.integer(coverage_layout$SCALE_Y[[i]])
+    trained <- built@layout$panel_scales_y[[scale_id]]$range$range
+    expect_equal(trained, c(0, unname(coverage_maxima[[track]])), info = track)
+    if (!identical(track, "ECA2091")) {
+      expect_false(isTRUE(all.equal(trained[[2L]], global_maximum)), info = track)
+    }
+  }
+
+  annotation_panel <- as.integer(
+    layout$PANEL[layout$panel_type == "annotation"]
+  )
+  annotation_data <- built@data[[2L]]
+  expect_true(all(as.integer(annotation_data$PANEL) == annotation_panel))
+  gene_ranges <- data.frame(
+    gene = c("ugt-31", "zeel-1", "peel-1", "nekl-1"),
+    start = c(2333338L, 2342216L, 2352835L, 2357883L),
+    end = c(2338693L, 2350536L, 2356238L, 2372985L)
+  )
+  expect_true(all(vapply(seq_len(nrow(gene_ranges)), function(i) {
+    any(
+      annotation_data$xmax >= gene_ranges$start[[i]] &
+        annotation_data$xmin <= gene_ranges$end[[i]]
+    )
+  }, logical(1))), info = paste(gene_ranges$gene, collapse = ", "))
+  expect_true(all(annotation_data$xmin >= 2332338L))
+  expect_true(all(annotation_data$xmax <= 2373985L))
+  centers <- annotation_panel_body_centers(built@data, annotation_panel)
+  expect_equal(
+    mean(built@layout$panel_params[[annotation_panel]]$y.range),
+    unname(centers[[as.character(annotation_panel)]])
+  )
+})
+
+test_that("annotation centering is view-only and isolated from coverage and links", {
+  strains <- c("XZ1516", "ECA2091")
+  species <- coverage_fixture_species(strains)
+  paf <- tempfile(fileext = ".paf")
+  writeLines(
+    paste(
+      c(
+        "I", 15072434, 2332400, 2332500, "+",
+        "I", 15072434, 2332400, 2332500,
+        100, 100, 60
+      ),
+      collapse = "\t"
+    ),
+    paf
+  )
+  species <- add_pairwise_alignment(
+    species,
+    SynPairAlignment(
+      name = "XZ1516_vs_ECA2091",
+      query_individual = "ECA2091",
+      target_individual = "XZ1516",
+      file = paf,
+      format = "paf"
+    )
+  )
+
+  build_mode <- function(mode = c("default", "vertical", "wrapper", "both")) {
+    mode <- match.arg(mode)
+    facet_args <- list(
+      facets = ggplot2::vars(track),
+      scales = "free_y"
+    )
+    if (mode %in% c("vertical", "both")) {
+      facet_args$vertical <- "center"
+    }
+    plot <- ggexon(species) +
+      geom_coverage(annotation = "coverage") +
+      geom_genetag(
+        chr = "I",
+        subset = c(2332338L, 2373985L)
+      ) +
+      geom_nuclink(alignment = "XZ1516_vs_ECA2091") +
+      do.call(facet_genomics, facet_args)
+    if (mode %in% c("wrapper", "both")) {
+      plot <- plot + center_panel_annotation()
+    }
+    ggexon_build(plot)
+  }
+
+  builds <- lapply(
+    c("default", "vertical", "wrapper", "both"),
+    build_mode
+  )
+  names(builds) <- c("default", "vertical", "wrapper", "both")
+  reference <- builds$default
+  reference_layout <- as.data.frame(reference@layout$layout)
+  role_panels <- function(role) {
+    as.integer(reference_layout$PANEL[reference_layout$panel_type == role])
+  }
+  coverage_panels <- role_panels("coverage")
+  annotation_panels <- role_panels("annotation")
+  link_panels <- role_panels("link")
+  annotation_scale_ids <- unique(
+    reference_layout$SCALE_Y[reference_layout$panel_type == "annotation"]
+  )
+
+  expect_length(annotation_panels, 2L)
+  expect_length(annotation_scale_ids, 1L)
+  expect_length(link_panels, 1L)
+
+  for (mode in c("vertical", "wrapper", "both")) {
+    centered <- builds[[mode]]
+    centered_layout <- as.data.frame(centered@layout$layout)
+    expect_identical(centered@data, reference@data, info = mode)
+    expect_identical(
+      centered_layout$SCALE_Y[centered_layout$panel_type == "annotation"],
+      reference_layout$SCALE_Y[reference_layout$panel_type == "annotation"],
+      info = mode
+    )
+    expect_identical(
+      centered@layout$panel_scales_y[[annotation_scale_ids]]$range$range,
+      reference@layout$panel_scales_y[[annotation_scale_ids]]$range$range,
+      info = mode
+    )
+
+    for (panel in coverage_panels) {
+      expect_identical(
+        centered@layout$panel_params[[panel]]$y.range,
+        reference@layout$panel_params[[panel]]$y.range,
+        info = mode
+      )
+    }
+    for (panel in link_panels) {
+      expect_identical(
+        centered@layout$panel_params[[panel]]$y.range,
+        reference@layout$panel_params[[panel]]$y.range,
+        info = mode
+      )
+    }
+
+    centers <- annotation_panel_body_centers(centered@data, annotation_panels)
+    for (panel in annotation_panels) {
+      expect_equal(
+        mean(centered@layout$panel_params[[panel]]$y.range),
+        unname(centers[[as.character(panel)]]),
+        info = mode
+      )
+    }
+  }
+
+  expect_true(any(vapply(
+    annotation_panels,
+    function(panel) !identical(
+      builds$wrapper@layout$panel_params[[panel]]$y.range,
+      reference@layout$panel_params[[panel]]$y.range
+    ),
+    logical(1)
+  )))
+  for (panel in annotation_panels) {
+    expect_identical(
+      builds$vertical@layout$panel_params[[panel]]$y.range,
+      builds$wrapper@layout$panel_params[[panel]]$y.range
+    )
+    expect_identical(
+      builds$both@layout$panel_params[[panel]]$y.range,
+      builds$wrapper@layout$panel_params[[panel]]$y.range
+    )
+  }
+})
+
+test_that("coverage panels inherit a broadcast annotation x source and reversal", {
+  plot <- ggexon(coverage_fixture_species()) +
+    geom_coverage(annotation = "coverage") +
+    geom_exon(
+      species = "XZ1516",
+      chr = "I",
+      subset = c(2332338L, 2373985L),
+      annotation_type = "exon"
+    ) +
+    facet_genomics(
+      ggplot2::vars(track),
+      scales = "free_x",
+      reverse_x = "XZ1516",
+      reverse_x_match_by = "track"
+    )
+
+  built <- ggexon_build(plot)
+  layout <- as.data.frame(built@layout$layout)
+  coverage_rows <- layout$panel_type == "coverage"
+  annotation_rows <- layout$panel_type == "annotation"
+  annotation_panel <- as.integer(layout$PANEL[annotation_rows])
+
+  expect_length(annotation_panel, 1L)
+  expect_identical(
+    as.integer(layout$x_source_panel[coverage_rows]),
+    rep(annotation_panel, sum(coverage_rows))
+  )
+  expect_identical(
+    as.integer(layout$SCALE_X[coverage_rows]),
+    rep(as.integer(layout$SCALE_X[annotation_rows]), sum(coverage_rows))
+  )
+  inherited_panels <- c(as.integer(layout$PANEL[coverage_rows]), annotation_panel)
+  expect_true(all(vapply(
+    inherited_panels,
+    function(panel) identical(built@layout$panel_params[[panel]]$reverse, "x"),
+    logical(1)
+  )))
+  expect_setequal(built@layout$ggexon_reverse_x_panels, inherited_panels)
+})
+
+test_that("stored annotation windows seed matching coverage x sources", {
+  strains <- c("XZ1516", "ECA2091")
+  species <- coverage_fixture_species(strains)
+  annotation_panels <- data.frame(
+    PANEL = 1:2,
+    ROW = 1:2,
+    COL = 1L,
+    track = strains,
+    panel_type = "annotation",
+    species = strains,
+    xlim_chr = "I",
+    xlim_min = c(2332338, 2350000),
+    xlim_max = c(2350000, 2373985),
+    stringsAsFactors = FALSE
+  )
+  species_layout(species) <- SynLayout(
+    panels = annotation_panels,
+    free = list(x = TRUE, y = FALSE)
+  )
+
+  built <- ggexon_build(
+    ggexon(species) +
+      geom_coverage(annotation = "coverage") +
+      geom_exon(annotation_type = "exon") +
+      facet_genomics(ggplot2::vars(track), scales = "free_x")
+  )
+  layout <- as.data.frame(built@layout$layout)
+  coverage <- layout[layout$panel_type == "coverage", , drop = FALSE]
+  annotation <- layout[layout$panel_type == "annotation", , drop = FALSE]
+  annotation <- annotation[match(coverage$track, annotation$track), , drop = FALSE]
+
+  expect_identical(as.integer(coverage$x_source_panel), as.integer(annotation$PANEL))
+  expect_identical(as.integer(coverage$SCALE_X), as.integer(annotation$SCALE_X))
+  expect_identical(coverage$xlim_chr, annotation$xlim_chr)
+  expect_identical(coverage$xlim_min, annotation$xlim_min)
+  expect_identical(coverage$xlim_max, annotation$xlim_max)
+})
+
+test_that("stored coverage rows inherit track-specific windows and reversal", {
+  strains <- c("XZ1516", "ECA2091")
+  species <- coverage_fixture_species(strains)
+  stored_panels <- data.frame(
+    PANEL = 1:4,
+    ROW = 1:4,
+    COL = 1L,
+    track = c(strains, strains),
+    panel_type = c("coverage", "coverage", "annotation", "annotation"),
+    individual = c(strains, strains),
+    species = c(strains, strains),
+    xlim_chr = c(NA, NA, "I", "I"),
+    xlim_min = c(NA, NA, 2332338, 2350000),
+    xlim_max = c(NA, NA, 2350000, 2373985),
+    stringsAsFactors = FALSE
+  )
+  species_layout(species) <- SynLayout(
+    panels = stored_panels,
+    free = list(x = TRUE, y = FALSE)
+  )
+
+  built <- ggexon_build(
+    ggexon(species) +
+      geom_coverage(annotation = "coverage") +
+      geom_exon(annotation_type = "exon") +
+      facet_genomics(
+        ggplot2::vars(track),
+        scales = "free_x",
+        reverse_x = "XZ1516",
+        reverse_x_match_by = "track"
+      )
+  )
+  layout <- as.data.frame(built@layout$layout)
+  coverage <- layout[layout$panel_type == "coverage", , drop = FALSE]
+  annotation <- layout[layout$panel_type == "annotation", , drop = FALSE]
+  annotation <- annotation[match(coverage$track, annotation$track), , drop = FALSE]
+
+  expect_identical(as.character(layout$panel_type), stored_panels$panel_type)
+  expect_identical(as.integer(coverage$x_source_panel), as.integer(annotation$PANEL))
+  expect_identical(as.integer(coverage$SCALE_X), as.integer(annotation$SCALE_X))
+  expect_identical(coverage$xlim_chr, annotation$xlim_chr)
+  expect_identical(coverage$xlim_min, annotation$xlim_min)
+  expect_identical(coverage$xlim_max, annotation$xlim_max)
+
+  xz_panels <- c(
+    coverage$PANEL[coverage$track == "XZ1516"],
+    annotation$PANEL[annotation$track == "XZ1516"]
+  )
+  eca_panels <- c(
+    coverage$PANEL[coverage$track == "ECA2091"],
+    annotation$PANEL[annotation$track == "ECA2091"]
+  )
+  expect_true(all(vapply(
+    as.integer(xz_panels),
+    function(panel) identical(built@layout$panel_params[[panel]]$reverse, "x"),
+    logical(1)
+  )))
+  expect_true(all(vapply(
+    as.integer(eca_panels),
+    function(panel) identical(built@layout$panel_params[[panel]]$reverse, "none"),
+    logical(1)
+  )))
+})
+
+test_that("link panels never source coordinates from coverage panels", {
+  strains <- c("XZ1516", "ECA2091")
+  species <- coverage_fixture_species(strains)
+  paf <- tempfile(fileext = ".paf")
+  writeLines(
+    paste(
+      c(
+        "I", 15072434, 2332400, 2332500, "+",
+        "I", 15072434, 2332400, 2332500,
+        100, 100, 60
+      ),
+      collapse = "\t"
+    ),
+    paf
+  )
+  species <- add_pairwise_alignment(
+    species,
+    SynPairAlignment(
+      name = "XZ1516_vs_ECA2091",
+      query_individual = "ECA2091",
+      target_individual = "XZ1516",
+      file = paf,
+      format = "paf"
+    )
+  )
+
+  built <- ggexon_build(
+    ggexon(species) +
+      geom_coverage(annotation = "coverage") +
+      geom_exon(
+        species = strains,
+        chr = "I",
+        subset = c(2332338L, 2373985L),
+        annotation_type = "exon"
+      ) +
+      geom_nuclink(alignment = "XZ1516_vs_ECA2091") +
+      facet_genomics(ggplot2::vars(track), scales = "free_x")
+  )
+  layout <- as.data.frame(built@layout$layout)
+  link <- layout[layout$panel_type == "link", , drop = FALSE]
+  annotation_panels <- as.integer(layout$PANEL[layout$panel_type == "annotation"])
+  coverage_panels <- as.integer(layout$PANEL[layout$panel_type == "coverage"])
+
+  expect_length(link$PANEL, 1L)
+  expect_true(all(c(link$t_panel, link$q_panel) %in% annotation_panels))
+  expect_false(any(c(link$t_panel, link$q_panel) %in% coverage_panels))
+})
+
+test_that("continuous coverage rejects compressed and strip genomic x transforms", {
+  species <- coverage_fixture_species("XZ1516")
+  base <- ggexon(species) +
+    geom_coverage(annotation = "coverage") +
+    geom_genetag(
+      species = "XZ1516",
+      chr = "I",
+      subset = c(2332338L, 2373985L),
+      show_label = FALSE
+    ) +
+    facet_genomics(ggplot2::vars(track), scales = "free_x")
+
+  expect_error(
+    ggexon_build(base + scale_x_ggexon_genomic()),
+    "coverage.*continuous.*not supported"
+  )
+  expect_error(
+    ggexon_build(base + strip_scale_x(guide = "none")),
+    "coverage.*continuous.*not supported"
+  )
 })
 
 .coverage_rendered_y <- function(grob) {

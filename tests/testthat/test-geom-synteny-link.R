@@ -34,6 +34,36 @@ test_that("geom_nuclink uses a polygon legend key", {
   expect_identical(key$gp$fill, "#123456FF")
 })
 
+test_that("multi-column link anchors follow their source panel rows", {
+  layout <- data.frame(
+    PANEL = 1:6,
+    ROW = c(1L, 1L, 2L, 2L, 3L, 3L),
+    COL = c(1L, 2L, 1L, 2L, 1L, 2L),
+    track = c("ann_a", "ann_c", "link_ab", "link_cd", "ann_b", "ann_d"),
+    panel_type = c(
+      "annotation", "annotation", "link", "link", "annotation", "annotation"
+    ),
+    tspecies = c(NA, NA, "ann_a", "ann_c", NA, NA),
+    qspecies = c(NA, NA, "ann_b", "ann_d", NA, NA),
+    t_panel = c(NA, NA, 1L, 2L, NA, NA),
+    q_panel = c(NA, NA, 5L, 6L, NA, NA),
+    stringsAsFactors = FALSE
+  )
+  link_data <- data.frame(
+    track = c("link_ab", "link_cd"),
+    tspecies = c("ann_a", "ann_c"),
+    qspecies = c("ann_b", "ann_d"),
+    tstart = c(10, 20),
+    qstart = c(30, 40),
+    stringsAsFactors = FALSE
+  )
+
+  mapped <- FacetGenomics$map_link_direction(list(link_data), layout)[[1L]]
+
+  expect_identical(mapped$target_anchor_y, c(1, 1))
+  expect_identical(mapped$query_anchor_y, c(0, 0))
+})
+
 test_that("geom_synteny_link renders manual interval ribbons", {
   track_levels <- c("human", "link_human_macaque", "macaque")
 

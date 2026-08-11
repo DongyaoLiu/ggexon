@@ -2,10 +2,8 @@ test_that("translate_protein translates the first three genes from extdata", {
   skip_if_not_installed("dplyr")
   library(dplyr)
 
-  genome_path <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  genome_path <- system.file("extdata", "compact_synspecies", "XZ1516.fasta", package = "ggexon")
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
 
