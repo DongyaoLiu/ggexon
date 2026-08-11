@@ -1,5 +1,14 @@
 *
 !.gitignore
+!caenorhabditis_XZ1516.gff3
+!XZ1516.fasta
+!c_elegans.PRJNA13758.WS285.canonical_geneset.gtf
+!c_elegans.PRJNA13758.WS285.canonical_geneset.gene.gtf
+!c_elegans.PRJNA13758.WS285.genomic.fa
+!V_alginment.paf
+!XZ1516.TA.gff
+!DL238.rename.ChrV.XZ1516.vcf.gz
+!InterProScan.tsv
 !cd44_pairwise_ensembl116/
 !cd44_pairwise_ensembl116/**
 !peel1_coverage/
