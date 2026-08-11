@@ -17,8 +17,8 @@ translation.
 \item{\code{panels}}{Layout data frame. It must contain \code{PANEL}, \code{ROW}, \code{COL}, and
 \code{track}, and may also contain comparative plotting columns such as
 \code{panel_type}, \code{species}, \code{alignment_name}, \code{tspecies}, \code{qspecies},
-\code{t_panel}, \code{q_panel}, and optional panel-specific x-window columns
-\code{xlim_chr}, \code{xlim_min}, and \code{xlim_max}.}
+\code{t_panel}, \code{q_panel}, \code{x_source_panel}, \code{SCALE_X}, \code{SCALE_Y}, and optional
+panel-specific x-window columns \code{xlim_chr}, \code{xlim_min}, and \code{xlim_max}.}
 
 \item{\code{layout_type}}{Scalar layout strategy label such as \code{"custom"} or
 \code{"chain"}.}
@@ -45,6 +45,17 @@ geoms.}
 \item \code{x_translation = NA_real_}
 \item \code{metadata = list()}
 }
+}
+
+\section{Panel roles and inherited scales}{
+
+Syn-aware layouts use explicit \code{panel_type} values such as \code{"annotation"},
+\code{"coverage"}, and \code{"link"}. The same public \code{track} may therefore occur in
+more than one role. \code{SCALE_Y} is the authoritative inherited scale-object
+identity: panels with equal values share training, while panels with
+different values train independently. Resolved role policies may be kept in
+\code{metadata$panel_role_y_policies} so older or serialized layouts preserve
+their fixed/free interpretation.
 }
 
 \section{Validity rules}{

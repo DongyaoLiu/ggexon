@@ -1,5 +1,5 @@
 pandoc: 3.9.0.2
-pkgdown: 2.2.0
+pkgdown: 2.2.1
 pkgdown_sha: ~
 articles:
   bigwig-coverage-demo: bigwig-coverage-demo.html
@@ -8,7 +8,7 @@ articles:
   ggexon-classes-and-verbs: ggexon-classes-and-verbs.html
   ggexon-workflow: ggexon-workflow.html
   hox-cluster-expansion-demo: hox-cluster-expansion-demo.html
-last_built: 2026-08-08T06:10Z
+last_built: 2026-08-11T10:33Z
 urls:
   reference: https://dongyaoliu.github.io/ggexon/reference
   article: https://dongyaoliu.github.io/ggexon/articles

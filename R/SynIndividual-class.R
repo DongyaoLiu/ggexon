@@ -534,6 +534,13 @@ setMethod("load_annotation", "SynIndividual", function(x, annotation = NULL, ind
     return(available[match(lower_chr, lower_available)])
   }
 
+  stripped_chr <- sub("^chr", "", lower_chr)
+  stripped_available <- sub("^chr", "", lower_available)
+  prefix_matches <- which(stripped_available == stripped_chr)
+  if (length(prefix_matches) == 1L) {
+    return(available[[prefix_matches]])
+  }
+
   chr_parts <- strsplit(chr, "_", fixed = TRUE)[[1L]]
   if (length(chr_parts) > 1L) {
     swapped <- paste(rev(chr_parts), collapse = "_")

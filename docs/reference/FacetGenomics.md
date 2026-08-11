@@ -12,12 +12,21 @@ FacetGenomics
 ## Format
 
 An object of class `FacetGenomics` (inherits from `FacetWrap`, `Facet`,
-`ggproto`, `gg`) of length 5.
+`ggproto`, `gg`) of length 6.
 
 ## Details
 
 - deciding whether to use a stored `SynLayout`, derive a new comparative
   chain layout, or fall back to standard wrap-style faceting
+
+- inserting first-class coverage rows ahead of annotation and link rows
+
+- mapping layers to role-qualified `(panel_type, track)` panels
+
+- inheriting genomic x windows, reversal, and scales from resolved
+  annotation sources while supporting standalone coverage coordinates
+
+- allocating role-aware inherited y-scale identities
 
 - reordering link panels so they sit between the relevant annotation
   panels
@@ -35,9 +44,10 @@ These panel-level decisions are consumed later by `Layout2` and
 - `compute_layout()`:
 
   Chooses the panel table. For `SynSpecies` data it prefers an explicit
-  layout override, then a stored `SynLayout` when link layers are
-  present, then a derived chain layout, and finally a standard wrap
-  layout.
+  layout override, then a stored `SynLayout` whenever one is available,
+  then a derived chain layout, and finally a standard wrap layout.
+  Coverage requests are inserted as first-class panel rows before the
+  comparative layout is finalized.
 
 - `compute_alignment_layout()`:
 

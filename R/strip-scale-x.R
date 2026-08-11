@@ -198,6 +198,10 @@ ggplot_add.ggexon_strip_scale_x_spec <- function(object, plot, ...) {
 }
 
 apply_strip_scale_x <- function(data, layers, strip_scale_spec, layout, plot) {
+  .abort_unsupported_coverage_x_transform(
+    layout,
+    "strip-scale genomic x transforms"
+  )
   gene_layers <- strip_scale_x_gene_layers(layers)
   tag_layers <- strip_scale_x_genetag_layers(layers)
   if (length(gene_layers) == 0L) {

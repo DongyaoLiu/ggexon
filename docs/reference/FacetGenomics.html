@@ -54,13 +54,18 @@ The main custom responsibilities are:</p>
 
     <div class="section level2">
     <h2 id="format">Format<a class="anchor" aria-label="anchor" href="#format"></a></h2>
-    <p>An object of class <code>FacetGenomics</code> (inherits from <code>FacetWrap</code>, <code>Facet</code>, <code>ggproto</code>, <code>gg</code>) of length 5.</p>
+    <p>An object of class <code>FacetGenomics</code> (inherits from <code>FacetWrap</code>, <code>Facet</code>, <code>ggproto</code>, <code>gg</code>) of length 6.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
 
 <ul><li><p>deciding whether to use a stored <code>SynLayout</code>, derive a new comparative
 chain layout, or fall back to standard wrap-style faceting</p></li>
+<li><p>inserting first-class coverage rows ahead of annotation and link rows</p></li>
+<li><p>mapping layers to role-qualified <code>(panel_type, track)</code> panels</p></li>
+<li><p>inheriting genomic x windows, reversal, and scales from resolved
+annotation sources while supporting standalone coverage coordinates</p></li>
+<li><p>allocating role-aware inherited y-scale identities</p></li>
 <li><p>reordering link panels so they sit between the relevant annotation panels</p></li>
 <li><p>annotating link panels with source panel ids (<code>t_panel</code>, <code>q_panel</code>)</p></li>
 <li><p>assigning vertical anchor directions (<code>target_anchor_y</code>,
@@ -75,8 +80,9 @@ chain layout, or fall back to standard wrap-style faceting</p></li>
 <dl><dt><code>compute_layout()</code></dt>
 <dd><p>Chooses the panel table. For <code>SynSpecies</code>
 data it prefers an explicit layout override, then a stored <code>SynLayout</code>
-when link layers are present, then a derived chain layout, and finally a
-standard wrap layout.</p></dd>
+whenever one is available, then a derived chain layout, and finally a
+standard wrap layout. Coverage requests are inserted as first-class panel
+rows before the comparative layout is finalized.</p></dd>
 
 <dt><code>compute_alignment_layout()</code></dt>
 <dd><p>Reorders link panels relative to their
@@ -104,7 +110,7 @@ panel in the resolved layout.</p></dd>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

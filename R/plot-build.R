@@ -73,14 +73,14 @@ apply_panel_xlim_to_trained_scales <- function(layout) {
   }
 
   panel_type <- link_panel_type(layout_df)
-  annotation_rows <- panel_type == "annotation" &
+  window_rows <- panel_type %in% c("annotation", "coverage") &
     !is.na(layout_df$xlim_min) &
     !is.na(layout_df$xlim_max)
-  if (!any(annotation_rows)) {
+  if (!any(window_rows)) {
     return(layout)
   }
 
-  for (i in which(annotation_rows)) {
+  for (i in which(window_rows)) {
     scale_id <- as.integer(layout_df$SCALE_X[[i]])
     if (is.na(scale_id) || scale_id < 1L || scale_id > length(panel_scales_x)) {
       next
@@ -192,6 +192,13 @@ ggexon_layer_panel_role <- function(layer) {
     if (identical(layer$geom, GeomNucLink)) "link" else "other"
 }
 
+ggexon_layout_layer_panel_roles <- function(layers) {
+  vapply(layers, function(layer) {
+    role <- ggexon_layer_panel_role(layer)
+    if (identical(role, "other")) NA_character_ else as.character(role)
+  }, character(1))
+}
+
 requested_coverage_panel_ids <- function(layers, coverage_layers, layout = NULL) {
   layout_df <- layout$layout %||% NULL
   if (!is.data.frame(layout_df) || nrow(layout_df) == 0L ||
@@ -218,8 +225,26 @@ requested_coverage_panel_ids <- function(layers, coverage_layers, layout = NULL)
     requested_rows <- requested_rows |
       as.character(layout_df[[column]]) %in% requested
   }
+  if ("panel_type" %in% names(layout_df)) {
+    requested_rows <- requested_rows &
+      link_panel_type(layout_df) == "coverage"
+  }
   panel_ids <- ggexon_gtable_index(layout_df$PANEL[requested_rows])
   sort(unique(as.integer(panel_ids[is.finite(panel_ids)])))
+}
+
+has_first_class_coverage_panels <- function(layout) {
+  layout_df <- layout$layout %||% NULL
+  plot_data <- layout$facet_params$plot_data %||% NULL
+  role_aware_syn_input <- methods::is(plot_data, "SynSpecies") ||
+    methods::is(plot_data, "SynIndividual")
+  if (!role_aware_syn_input ||
+      !is.data.frame(layout_df) || nrow(layout_df) == 0L ||
+      !"panel_type" %in% names(layout_df)) {
+    return(FALSE)
+  }
+  roles <- link_panel_type(layout_df)
+  any(roles == "coverage", na.rm = TRUE)
 }
 
 apply_coverage_panel_bands <- function(data,
@@ -373,6 +398,13 @@ share_composite_coverage_y_scale <- function(layout, composite_panels) {
     return(layout)
   }
 
+  # Role-aware layouts have already assigned semantic scale families. Keep
+  # those identities intact while the legacy composite-band machinery remains
+  # in place for older/custom layouts.
+  if (!is.null(layout$facet_params$panel_role_y_policies)) {
+    return(layout)
+  }
+
   panel_type <- link_panel_type(layout_df)
   layout_df$panel_type <- panel_type
   panel_id <- ggexon_gtable_index(layout_df$PANEL)
@@ -413,6 +445,38 @@ train_composite_coverage_y_scales <- function(layout,
   layout
 }
 
+train_empty_coverage_y_scales <- function(layout) {
+  layout_df <- layout$layout %||% NULL
+  panel_scales_y <- layout$panel_scales_y %||% NULL
+  if (!is.data.frame(layout_df) || nrow(layout_df) == 0L ||
+      !all(c("PANEL", "SCALE_Y", "panel_type") %in% names(layout_df)) ||
+      is.null(panel_scales_y) || length(panel_scales_y) == 0L) {
+    return(layout)
+  }
+
+  roles <- link_panel_type(layout_df)
+  coverage_scale_ids <- unique(as.integer(
+    layout_df$SCALE_Y[roles == "coverage"]
+  ))
+  coverage_scale_ids <- coverage_scale_ids[
+    is.finite(coverage_scale_ids) &
+      coverage_scale_ids >= 1L &
+      coverage_scale_ids <= length(panel_scales_y)
+  ]
+
+  for (scale_id in coverage_scale_ids) {
+    observed <- suppressWarnings(as.numeric(
+      panel_scales_y[[scale_id]]$range$range %||% numeric()
+    ))
+    if (any(is.finite(observed) & observed > 0)) {
+      next
+    }
+    panel_scales_y[[scale_id]]$train(c(0, 1))
+  }
+  layout$panel_scales_y <- panel_scales_y
+  layout
+}
+
 filter_composite_coverage_y_breaks <- function(layout) {
   panel_ids <- unique(as.integer(
     layout$ggexon_composite_coverage_panels %||% integer()
@@ -442,8 +506,12 @@ filter_composite_coverage_y_breaks <- function(layout) {
   layout
 }
 
-apply_facet_vertical <- function(layout, data, params = list()) {
-  if (!identical(params$vertical %||% "default", "center")) {
+apply_facet_vertical <- function(layout,
+                                 data,
+                                 params = list(),
+                                 center_annotation_panels = FALSE) {
+  if (!isTRUE(center_annotation_panels) &&
+      !identical(params$vertical %||% "default", "center")) {
     return(layout)
   }
   if (is.null(layout$panel_params) || length(layout$panel_params) == 0L) {
@@ -533,6 +601,15 @@ apply_facet_reverse_x <- function(layout, params = list()) {
       selected = reverse_x,
       match_by = params$reverse_x_match_by %||% "auto"
     )
+  }
+
+  reversed_annotation_panels <- as.integer(layout_df$PANEL[reverse_rows])
+  coverage_rows <- panel_type == "coverage"
+  coverage_rows[is.na(coverage_rows)] <- FALSE
+  if (any(coverage_rows) && "x_source_panel" %in% names(layout_df)) {
+    reverse_rows <- reverse_rows |
+      (coverage_rows &
+         as.integer(layout_df$x_source_panel) %in% reversed_annotation_panels)
   }
 
   panel_ids <- ggexon_gtable_index(layout_df$PANEL[reverse_rows])
@@ -671,6 +748,10 @@ build_ggexon <- S7::method(ggexon_build, class_ggexon) <- function(plot, ...) {
     # variables, and add on a PANEL variable to data
     layout <- create_layout2(plot@facet, plot@coordinates, plot@layout)
     layout$genomic_tree <- plot@genomic_tree
+    layout$syn_plot_context <- compact_syn_plot_context(syn_plot_context)
+    layout$layer_panel_roles <- ggexon_layout_layer_panel_roles(layers)
+    layout$panel_scale_specs <- plot@panel_scale_specs
+    layout$center_annotation_panels <- plot@center_annotation_panels
     data <- layout$setup(data, plot@data, plot@plot_env)
 
     # add aesthetics mapping to preserve link-anchor metadata. this is specialized for ggexon
@@ -772,15 +853,19 @@ build_ggexon <- S7::method(ggexon_build, class_ggexon) <- function(plot, ...) {
     # Apply position adjustments
     data <- by_layer(function(l, d) l$compute_position(d, layout), layers, data, "computing position")
 
-    coverage_bands <- apply_coverage_panel_bands(data, layers, layout = layout)
-    data <- coverage_bands$data
-    layout$ggexon_composite_coverage_panels <- coverage_bands$composite_panels
-    layout$ggexon_coverage_max <- coverage_bands$coverage_max
-    layout$ggexon_coverage_training_max <- coverage_bands$training_max
-    layout <- share_composite_coverage_y_scale(
-      layout,
-      coverage_bands$composite_panels
-    )
+    first_class_coverage <- has_first_class_coverage_panels(layout)
+    coverage_bands <- NULL
+    if (!first_class_coverage) {
+      coverage_bands <- apply_coverage_panel_bands(data, layers, layout = layout)
+      data <- coverage_bands$data
+      layout$ggexon_composite_coverage_panels <- coverage_bands$composite_panels
+      layout$ggexon_coverage_max <- coverage_bands$coverage_max
+      layout$ggexon_coverage_training_max <- coverage_bands$training_max
+      layout <- share_composite_coverage_y_scale(
+        layout,
+        coverage_bands$composite_panels
+      )
+    }
 
     # Reset position scales, then re-train and map.  This ensures that facets
     # have control over the range of a plot: is it generated from what is
@@ -788,16 +873,39 @@ build_ggexon <- S7::method(ggexon_build, class_ggexon) <- function(plot, ...) {
     data <- .ignore_data(data)
     layout$reset_scales()
     layout$train_position(data, scale_x(), scale_y())
-    layout <- train_composite_coverage_y_scales(
-      layout,
-      coverage_bands$composite_panels,
-      coverage_bands$training_max
-    )
+    if (first_class_coverage) {
+      layout <- train_empty_coverage_y_scales(layout)
+    } else {
+      layout <- train_composite_coverage_y_scales(
+        layout,
+        coverage_bands$composite_panels,
+        coverage_bands$training_max
+      )
+    }
     layout <- apply_panel_xlim_to_trained_scales(layout)
     layout$setup_panel_params()
     layout <- apply_link_panel_y_range(layout)
-    layout <- apply_facet_vertical(layout, data, plot@facet$params %||% list())
-    layout <- filter_composite_coverage_y_breaks(layout)
+    syn_backed_plot <- methods::is(plot@data, "SynSpecies") ||
+      methods::is(plot@data, "SynIndividual")
+    wrapper_centers_annotation <- isTRUE(plot@center_annotation_panels) &&
+      syn_backed_plot &&
+      !inherits(plot@facet, "FacetGenomicTree")
+    center_annotation <- (
+      wrapper_centers_annotation
+    ) ||
+      identical(
+        (plot@facet$params %||% list())$vertical %||% "default",
+        "center"
+      )
+    layout <- apply_facet_vertical(
+      layout,
+      data,
+      plot@facet$params %||% list(),
+      center_annotation_panels = center_annotation
+    )
+    if (!first_class_coverage) {
+      layout <- filter_composite_coverage_y_breaks(layout)
+    }
     layout <- apply_ggexon_genomic_x_axis(layout, plot@genomic_x_scale)
     layout <- apply_facet_reverse_x(layout, plot@facet$params %||% list())
     data <- layout$map_position(data)

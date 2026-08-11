@@ -52,36 +52,48 @@ for (strain in strains) {
 ggexon(coverage_species) +
   geom_coverage(annotation = "coverage", fill = "#4C78A8") +
   geom_exon(
+    species = "XZ1516",
     chr = "I",
     subset = c(2332338L, 2373985L),
     annotation_type = "exon"
   ) +
   facet_genomics(
     ggplot2::vars(track),
-    scales = "free_y",
-    vertical = "center"
+    ncol = 1,
+    strip.position = "left"
   ) +
-  theme_ggexon_track()
+  scale_panel_coverage("free_y") +
+  center_panel_annotation() +
+  theme_ggexon_track() +
+  theme_ggexon_side_strips("left")
 ```
 
-![A ggexon plot with four PEEL-1 raw coverage tracks for strains XZ1516,
-ECA2091, ECA701, and ECA2191. Each track has raw coverage above a
-four-gene exon annotation band over the same chromosome-I
+![A ggexon plot with four separate PEEL-1 raw coverage panels for
+strains XZ1516, ECA2091, ECA701, and ECA2191 above one centered
+four-gene annotation panel over the same chromosome-I
 interval.](bigwig-coverage-demo_files/figure-html/peel1-raw-coverage-1.png)
 
 Raw, unnormalized PEEL-1 coverage for four C. elegans strains over
-chromosome I:2,332,338-2,373,985. Each attached BigWig annotation is
-queried only for the displayed window.
+chromosome I:2,332,338-2,373,985. Every coverage track has an
+independent depth scale, while one shared annotation panel shows the
+four-gene locus.
 
 ## Reading the tracks
 
-All four coverage panels use the same maximum raw score, making their
-heights directly comparable despite the facet’s otherwise free y scales.
-Each exon annotation is placed in a band from negative 25% of that
-shared maximum up to zero. That band is a layout device only: it does
-not make gene coordinates or coverage values negative. The coverage
-therefore remains above the four-gene annotation for every strain while
-the underlying BigWig scores remain raw.
+The BigWig values are raw, nonnegative depth. Each file owns a
+first-class coverage panel, and `scale_panel_coverage("free_y")` gives
+every strain its own depth scale. A high-depth track such as ECA2091
+therefore does not compress the lower-depth tracks.
+
+The single
+[`geom_exon()`](https://dongyaoliu.github.io/ggexon/reference/geom_exon.md)
+request uses XZ1516 as the representative gene model for the common
+chromosome-I window. It occupies one independent annotation panel below
+the four coverage panels;
+[`center_panel_annotation()`](https://dongyaoliu.github.io/ggexon/reference/center_panel_annotation.md)
+centers that gene model within its panel without changing annotation
+data or any coverage scale. No synthetic negative annotation band is
+added to a coverage panel.
 
 For reproducibility, `manifest.tsv` in the fixture directory records
 each source BAM, output file, interval, bin size, normalization setting,

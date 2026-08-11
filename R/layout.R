@@ -30,6 +30,22 @@ create_layout2 <- function(facet, coord, layout = NULL) {
    ggproto(NULL, layout, facet = facet, coord = coord)
 }
 
+.apply_layout_layer_panel_roles <- function(data, roles) {
+  roles <- as.character(roles %||% character())
+  if (length(roles) < length(data)) {
+    roles <- c(roles, rep(NA_character_, length(data) - length(roles)))
+  }
+
+  lapply(seq_along(data), function(i) {
+    layer_data <- data[[i]]
+    role <- roles[[i]]
+    if (is.data.frame(layer_data) && !is.na(role) && nzchar(role)) {
+      attr(layer_data, "ggexon_panel_role") <- role
+    }
+    layer_data
+  })
+}
+
 #' ggexon layout runtime with Syn-aware panel setup
 #'
 #' `Layout2` is ggexon's custom layout ggproto. It inherits from ggplot2's
@@ -69,6 +85,14 @@ Layout2 <- ggproto("Layout2", Layout,
   setup = function(self, data, plot_data = data_frame0(), plot_env = emptyenv()) {
     plot_data_raw <- plot_data
     layout_override <- NULL
+    role_aware_syn_input <- methods::is(plot_data_raw, "SynSpecies") ||
+      methods::is(plot_data_raw, "SynIndividual")
+    layer_panel_roles <- if (role_aware_syn_input) {
+      self$layer_panel_roles %||% rep(NA_character_, length(data))
+    } else {
+      rep(NA_character_, length(data))
+    }
+    data <- .apply_layout_layer_panel_roles(data, layer_panel_roles)
     if (methods::is(plot_data, "SynSpecies") || methods::is(plot_data, "SynIndividual")) {
       # The original Syn object is still passed to the facet via
       # facet_params$plot_data, but the standard ggplot2 setup path expects a
@@ -87,20 +111,35 @@ Layout2 <- ggproto("Layout2", Layout,
 
     # Setup facets
     self$facet_params <- self$facet$setup_params(data, self$facet$params)
+    original_facet_free <- self$facet_params$free
     self$facet_params$plot_data <- plot_data_raw
     self$facet_params$layout_override <- layout_override
     self$facet_params$has_link_layers <- .detect_link_layers(data)
     self$facet_params$genomic_tree <- self$genomic_tree %||% NULL
+    self$facet_params$syn_plot_context <- self$syn_plot_context %||% NULL
+    self$facet_params$layer_panel_roles <- layer_panel_roles
+    self$facet_params$panel_scale_specs <- self$panel_scale_specs %||% list()
+    self$facet_params$center_annotation_panels <- isTRUE(
+      self$center_annotation_panels
+    )
 
     # detect any link data inside the data list
     # self$facet_params <- self$facet$compute_layer_type(data, self$facet_params)
 
     self$facet_params$plot_env <- plot_env
     data <- self$facet$setup_data(data, self$facet_params)
+    data <- .apply_layout_layer_panel_roles(
+      data,
+      c(NA_character_, layer_panel_roles)
+    )
 
     # Setup coords
     self$coord_params <- self$coord$setup_params(data)
     data <- self$coord$setup_data(data, self$coord_params)
+    data <- .apply_layout_layer_panel_roles(
+      data,
+      c(NA_character_, layer_panel_roles)
+    )
 
     # Generate panel layout
     # PANEL ROW COL "facet variable" SCALE_X SCALE_Y
@@ -108,14 +147,51 @@ Layout2 <- ggproto("Layout2", Layout,
 
     # This is ggexon-specific: if link panels are present, let the facet
     # reorder panels and annotate the layout with source-panel metadata.
-    if ("track" %in% colnames(self$layout) &&
-        TRUE %in% stringr::str_detect(self$layout$track, "link")) {
+    layout_has_link <- "track" %in% colnames(self$layout) && if (
+      "panel_type" %in% colnames(self$layout)
+    ) {
+      any(link_panel_type(self$layout) == "link", na.rm = TRUE)
+    } else {
+      any(stringr::str_detect(self$layout$track, "link"), na.rm = TRUE)
+    }
+    if (layout_has_link) {
       if (!"panel_type" %in% colnames(self$layout)) {
         self$layout <- self$facet$compute_alignment_layout(data, self$layout)
       }
 
       # Assign upper/lower link anchors from the resolved panel ordering.
       data <- self$facet$map_link_direction(data, self$layout)
+    }
+
+    role_aware_syn_layout <- role_aware_syn_input &&
+      !inherits(self$facet, "FacetGenomicTree") &&
+      "panel_type" %in% names(self$layout)
+    if (role_aware_syn_layout) {
+      panel_roles <- link_panel_type(self$layout)
+      role_policies <- .resolve_present_panel_y_policies(
+        panel_roles,
+        specs = self$facet_params$panel_scale_specs,
+        free = original_facet_free
+      )
+      effective_free_y <- any(vapply(
+        role_policies,
+        identical,
+        logical(1),
+        "free_y"
+      ))
+      requested_axes <- self$facet_params$requested_axes %||% "margins"
+      requested_axis_labels <-
+        self$facet_params$requested_axis_labels %||% "all"
+      draw_y <- effective_free_y ||
+        requested_axes %in% c("all_y", "all")
+      label_y <- effective_free_y || !draw_y ||
+        requested_axis_labels %in% c("all_y", "all")
+
+      self$facet_params$facet_free <- original_facet_free
+      self$facet_params$panel_role_y_policies <- role_policies
+      self$facet_params$free$y <- effective_free_y
+      self$facet_params$draw_axes$y <- draw_y
+      self$facet_params$axis_labels$y <- label_y
     }
 
     # PANEL ROW COL "facet variable" SCALE_X SCALE_Y COORD

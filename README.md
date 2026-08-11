@@ -106,8 +106,8 @@ The public API is organized around a few function families:
 | Load and query data | `load_annotation()`, `load_alignment()`, `import_blast_homology()`, `query_features()`, `query_variants()`, `query_signal()`, `query_domains()` |
 | Derive sequence/protein data | `extract_cds_seq()`, `translate_protein()`, `project_domains_to_genome()` |
 | Subset and curate objects | `subset_species()`, `subset_individual()`, `subset_pairwise_alignment()`, `set_gene_labels()`, `patch_annotation_from_gff()` |
-| Draw genomic layers | `ggexon()`, `geom_exon()`, `geom_genetag()`, `geom_genebox()`, `geom_genelabel()`, `geom_nuclink()`, `geom_synteny_link()`, `geom_protein_lollipop()` |
-| Arrange panels and guides | `facet_genomics()`, `facet_genomictree()`, `scale_x_ggexon_genomic()`, `guide_x_ggexon_piecewise()` |
+| Draw genomic layers | `ggexon()`, `geom_exon()`, `geom_coverage()`, `geom_genetag()`, `geom_genebox()`, `geom_genelabel()`, `geom_nuclink()`, `geom_synteny_link()`, `geom_protein_lollipop()` |
+| Arrange panels and guides | `facet_genomics()`, `scale_panel_annotation()`, `scale_panel_coverage()`, `center_panel_annotation()`, `facet_genomictree()`, `scale_x_ggexon_genomic()`, `guide_x_ggexon_piecewise()` |
 
 The typical workflow is:
 
@@ -138,6 +138,8 @@ The package site contains the longer cookbook-style documentation:
 - `vignette("hox-cluster-expansion-demo", package = "ggexon")` for the
   Ensembl-pinned HOX cluster matrix, exact curated Hox-number slots, and
   `geom_genebox()` anchor modes.
+- `vignette("bigwig-coverage-demo", package = "ggexon")` for four independent
+  raw-depth BigWig panels above one shared, centered gene annotation.
 - `?ggexon` and the reference index for function-level documentation.
 
 If you use `ggexon` in work, please also cite the preprint:

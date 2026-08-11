@@ -35,7 +35,13 @@ layouts.}
 
 \item{nrow, ncol}{Number of rows and columns in the wrapped layout.}
 
-\item{scales}{One of \code{"fixed"}, \code{"free_x"}, \code{"free_y"}, or \code{"free"}.}
+\item{scales}{One of \code{"fixed"}, \code{"free_x"}, \code{"free_y"}, or \code{"free"}.
+Ordinary data follows ggplot2 wrap-facet semantics. For first-class Syn
+coverage panels, the y component is the coverage-policy fallback only:
+\code{"fixed"}/\code{"free_x"} share a coverage scale and
+\code{"free_y"}/\code{"free"} give each coverage panel its own scale. Annotation
+remains \code{"fixed_y"} by default. Explicit \code{\link[=scale_panel_annotation]{scale_panel_annotation()}} and
+\code{\link[=scale_panel_coverage]{scale_panel_coverage()}} specifications take precedence.}
 
 \item{shrink}{Passed through to the facet.}
 
@@ -79,7 +85,10 @@ compactly. The per-panel free scales are preserved either way.}
 \item{vertical}{Annotation-panel vertical alignment. \code{"default"} preserves
 the trained y-ranges. \code{"center"} symmetrizes each annotation panel's
 y-range around its visible annotation bodies. Link panels keep their fixed
-vertical range in either mode.}
+vertical range in either mode. For Syn-backed plots this compatibility
+argument is equivalent to adding \code{\link[=center_panel_annotation]{center_panel_annotation()}} and does
+not change coverage panels, layer positions, or scale training. Its legacy
+ordinary-data behavior is retained; the dedicated wrapper is Syn-only.}
 
 \item{reverse_x}{Annotation panels whose x axis should be drawn in reverse.
 Use \code{NULL} or \code{FALSE} for no panel reversal, \code{TRUE} to reverse all
@@ -92,10 +101,11 @@ annotation panels.}
 character values. \code{"auto"} checks common layout columns such as \code{species},
 \code{strain}, \code{id}, and \code{track}.}
 
-\item{xlim}{Optional panel-specific x limits for annotation panels. Supply a
-named list of numeric length-2 vectors keyed by individual / annotation-panel
-name. If the plot contains only one annotation panel, a single numeric
-length-2 vector is also accepted.}
+\item{xlim}{Optional panel-specific x limits for annotation panels, or for
+standalone coverage panels when no annotation panel is present. Supply a
+named list of numeric length-2 vectors keyed by individual / panel name.
+If the plot contains only one eligible panel, a single numeric length-2
+vector is also accepted.}
 
 \item{xlim_chr}{Optional chromosome / seqname for \code{xlim}. Supply one
 character value for a single panel, or a named character vector/list keyed
@@ -132,15 +142,32 @@ In Syn-aware builds, \code{facet_genomics()} is responsible for deciding the pan
 structure used by \code{Layout2}. The returned panel table may include:
 \itemize{
 \item annotation panels for each species track
+\item first-class coverage panels for attached BigWig tracks
 \item link panels inserted between paired species tracks
 \item \code{panel_type}, \code{tspecies}, \code{qspecies}, \code{t_panel}, and \code{q_panel} metadata
 used later by \code{geom_nuclink()}
 }
 
+Coverage, annotation, and link rows are role-qualified even when they share
+the same public \code{track} label. Coverage panels precede the existing
+annotation/link chain and inherit ordinary genomic x windows and direction
+from an annotation source when one exists. A standalone coverage panel can
+instead use its own coordinates or named facet limits. Coverage panels never
+become \code{t_panel} or \code{q_panel} link sources.
+
+\code{SCALE_Y} in the resolved layout is the inherited scale-object identity:
+panels with the same value train through one y-scale object, while different
+values use independent objects. Annotation and coverage role families never
+share an identity. Use \code{\link[=scale_panel_annotation]{scale_panel_annotation()}} and
+\code{\link[=scale_panel_coverage]{scale_panel_coverage()}} to choose fixed or per-panel inheritance for each
+role independently.
+
 If no Syn-specific layout is available, the facet falls back to ordinary
-wrap-style panel generation.
+wrap-style panel generation. Valid but unused panel-scale specifications are
+no-ops. Ordinary non-Syn behavior and \code{\link[=facet_genomictree]{facet_genomictree()}} are unchanged.
 }
 
 \seealso{
-\link{SynLayout}
+\link{SynLayout}, \code{\link[=scale_panel_annotation]{scale_panel_annotation()}},
+\code{\link[=scale_panel_coverage]{scale_panel_coverage()}}, \code{\link[=center_panel_annotation]{center_panel_annotation()}}
 }

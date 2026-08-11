@@ -65,8 +65,8 @@ translation.</p>
 <dd><p>Layout data frame. It must contain <code>PANEL</code>, <code>ROW</code>, <code>COL</code>, and
 <code>track</code>, and may also contain comparative plotting columns such as
 <code>panel_type</code>, <code>species</code>, <code>alignment_name</code>, <code>tspecies</code>, <code>qspecies</code>,
-<code>t_panel</code>, <code>q_panel</code>, and optional panel-specific x-window columns
-<code>xlim_chr</code>, <code>xlim_min</code>, and <code>xlim_max</code>.</p></dd>
+<code>t_panel</code>, <code>q_panel</code>, <code>x_source_panel</code>, <code>SCALE_X</code>, <code>SCALE_Y</code>, and optional
+panel-specific x-window columns <code>xlim_chr</code>, <code>xlim_min</code>, and <code>xlim_max</code>.</p></dd>
 
 
 <dt><code>layout_type</code></dt>
@@ -106,6 +106,18 @@ geoms.</p></dd>
 <li><p><code>metadata = list()</code></p></li>
 </ul></div>
     <div class="section level2">
+    <h2 id="panel-roles-and-inherited-scales">Panel roles and inherited scales<a class="anchor" aria-label="anchor" href="#panel-roles-and-inherited-scales"></a></h2>
+
+
+<p>Syn-aware layouts use explicit <code>panel_type</code> values such as <code>"annotation"</code>,
+<code>"coverage"</code>, and <code>"link"</code>. The same public <code>track</code> may therefore occur in
+more than one role. <code>SCALE_Y</code> is the authoritative inherited scale-object
+identity: panels with equal values share training, while panels with
+different values train independently. Resolved role policies may be kept in
+<code>metadata$panel_role_y_policies</code> so older or serialized layouts preserve
+their fixed/free interpretation.</p>
+    </div>
+    <div class="section level2">
     <h2 id="validity-rules">Validity rules<a class="anchor" aria-label="anchor" href="#validity-rules"></a></h2>
 
 
@@ -132,7 +144,7 @@ display-only windows that should not drive annotation filtering.</p></li>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

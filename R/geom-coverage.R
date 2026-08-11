@@ -79,6 +79,19 @@ GeomCoverage <- ggplot2::ggproto(
 #'
 #' Coverage scores are plotted unchanged. The layer does not normalize,
 #' smooth, threshold, or expand signal records to one row per base.
+#' In a Syn-aware [`facet_genomics()`] build, every requested BigWig track owns
+#' a first-class coverage panel separate from gene annotation. Coverage starts
+#' at zero and is never moved into a synthetic negative annotation band. Use
+#' [`scale_panel_coverage()`] to share one raw-depth y scale or give each
+#' coverage panel an independent scale.
+#' Explicit coverage data on a `SynIndividual` or `SynSpecies` plot can also
+#' form standalone first-class coverage panels without an annotation layer.
+#' Ordinary non-Syn plots retain the legacy composite-layer behavior.
+#'
+#' Continuous coverage panels use ordinary genomic x coordinates. They cannot
+#' currently be combined with [`scale_x_ggexon_genomic()`] exon/intron
+#' compression or [`strip_scale_x()`]; those mixed builds fail before
+#' transforming the signal.
 #' Inclusive genomic interval endpoints are retained in `interval_start`,
 #' `interval_end`, `genomic_xmin`, and `genomic_xmax` in the built layer data;
 #' rectangle edges are shifted by half a base so adjacent intervals meet
@@ -95,6 +108,8 @@ GeomCoverage <- ggplot2::ggproto(
 #'   `SynBigWigAnnotation` and use effective panel windows instead.
 #'
 #' @return A ggplot2 layer.
+#' @seealso [`SynBigWigAnnotation()`], [`query_signal()`],
+#'   [`scale_panel_coverage()`], [`center_panel_annotation()`]
 #' @export
 geom_coverage <- function(mapping = NULL,
                           data = NULL,

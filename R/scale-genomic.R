@@ -166,6 +166,21 @@ ggexon_genomic_x_guide_type <- function(scale_spec) {
   scale_spec$guide$type %||% "genomic"
 }
 
+.abort_unsupported_coverage_x_transform <- function(layout, transform) {
+  layout_df <- layout$layout %||% NULL
+  if (!is.data.frame(layout_df) || nrow(layout_df) == 0L) {
+    return(invisible(FALSE))
+  }
+  roles <- link_panel_type(layout_df)
+  if (!any(roles == "coverage", na.rm = TRUE)) {
+    return(invisible(FALSE))
+  }
+  cli::cli_abort(c(
+    "First-class coverage panels contain continuous BigWig signal and are not supported with {transform}.",
+    "i" = "Use the ordinary genomic x scale for plots containing coverage panels."
+  ))
+}
+
 #' @export
 ggplot_add.ggexon_genomic_x_scale_spec <- function(object, plot, ...) {
   if (!is_ggexon(plot)) {
@@ -179,6 +194,10 @@ apply_ggexon_genomic_x_scale <- function(data, scale_spec, layout = NULL) {
   if (is.null(scale_spec)) {
     return(list(data = data, transforms = NULL))
   }
+  .abort_unsupported_coverage_x_transform(
+    layout,
+    "exon/intron-compressed genomic x scales"
+  )
 
   source_rows <- lapply(data, ggexon_genomic_x_source_rows)
   source_rows <- source_rows[lengths(source_rows) > 0L]

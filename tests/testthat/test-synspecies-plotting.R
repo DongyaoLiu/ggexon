@@ -2185,23 +2185,66 @@ test_that("geom_nuclink uses target and query source panels in the correct direc
       chr = "V",
       subset = c(20454111, 20491853)
     ) +
-    geom_nuclink() +
-    facet_genomics(ggplot2::vars(track), scales = "free_x")
+    geom_nuclink()
 
-  built <- ggexon_build(plot_obj)
-  link_layout <- built@layout$layout[built@layout$layout$panel_type == "link", , drop = FALSE]
-  link_data <- built@data[[3L]]
+  fixed <- ggexon_build(
+    plot_obj + facet_genomics(ggplot2::vars(track), scales = "free_x")
+  )
+  free_y <- ggexon_build(
+    plot_obj + facet_genomics(ggplot2::vars(track), scales = "free")
+  )
+  fixed_layout <- fixed@layout$layout
+  free_layout <- free_y@layout$layout
+  fixed_link_layout <- fixed_layout[
+    fixed_layout$panel_type == "link", , drop = FALSE
+  ]
+  free_link_layout <- free_layout[
+    free_layout$panel_type == "link", , drop = FALSE
+  ]
+  fixed_link_data <- fixed@data[[3L]]
+  free_link_data <- free_y@data[[3L]]
 
-  expect_identical(as.character(link_layout$tspecies), "N2")
-  expect_identical(as.character(link_layout$qspecies), "XZ1516")
-  expect_identical(as.integer(link_layout$t_panel), 3L)
-  expect_identical(as.integer(link_layout$q_panel), 1L)
+  expect_identical(as.integer(fixed_layout$SCALE_Y), c(1L, 1L, 1L))
+  expect_identical(as.integer(free_layout$SCALE_Y), c(1L, 2L, 1L))
+  expect_false(fixed@layout$facet_params$free$y)
+  expect_true(free_y@layout$facet_params$free$y)
+  expect_false(fixed@layout$facet_params$draw_axes$y)
+  expect_true(free_y@layout$facet_params$draw_axes$y)
+  expect_true(fixed@layout$facet_params$axis_labels$y)
+  expect_true(free_y@layout$facet_params$axis_labels$y)
+
+  expect_identical(as.character(fixed_link_layout$tspecies), "N2")
+  expect_identical(as.character(fixed_link_layout$qspecies), "XZ1516")
+  expect_identical(as.integer(fixed_link_layout$t_panel), 3L)
+  expect_identical(as.integer(fixed_link_layout$q_panel), 1L)
+  expect_identical(as.integer(free_link_layout$t_panel), 3L)
+  expect_identical(as.integer(free_link_layout$q_panel), 1L)
   expect_true(all(
-    as.integer(link_data$source_panel[link_data$x_variable %in% c("tstart", "tend")]) == 3L
+    as.integer(fixed_link_data$source_panel[
+      fixed_link_data$x_variable %in% c("tstart", "tend")
+    ]) == 3L
   ))
   expect_true(all(
-    as.integer(link_data$source_panel[link_data$x_variable %in% c("qstart", "qend")]) == 1L
+    as.integer(fixed_link_data$source_panel[
+      fixed_link_data$x_variable %in% c("qstart", "qend")
+    ]) == 1L
   ))
+  expect_identical(
+    unique(fixed_link_data$y[
+      fixed_link_data$y_variable == "target_anchor_y"
+    ]),
+    0
+  )
+  expect_identical(
+    unique(fixed_link_data$y[
+      fixed_link_data$y_variable == "query_anchor_y"
+    ]),
+    1
+  )
+  expect_identical(
+    free_link_data[c("source_panel", "y_variable", "y")],
+    fixed_link_data[c("source_panel", "y_variable", "y")]
+  )
 })
 
 test_that("annotation subset can be derived from a linked species window", {
@@ -2349,6 +2392,111 @@ test_that("facet_genomics behaves like standard faceting for multi-species annot
   expect_false(any(grepl("^link_", as.character(built@layout$layout$track))))
   expect_setequal(as.character(built@layout$layout$track), c("XZ1516", "N2"))
   expect_identical(as.integer(sort(unique(built@layout$layout$SCALE_X))), c(1L, 2L))
+})
+
+panel_scale_annotation_species <- function() {
+  xz_genome <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
+  xz_annotation <- system.file(
+    "extdata",
+    "caenorhabditis_XZ1516.gff3",
+    package = "ggexon"
+  )
+  n2_genome <- system.file(
+    "extdata",
+    "c_elegans.PRJNA13758.WS285.genomic.fa",
+    package = "ggexon"
+  )
+  n2_annotation <- system.file(
+    "extdata",
+    "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
+    package = "ggexon"
+  )
+
+  SynSpecies(name = "panel scales") |>
+    add_individual(
+      test_syn_individual(
+        genome_file = xz_genome,
+        annotation_file = xz_annotation,
+        id = "XZ1516"
+      ),
+      test_syn_individual(
+        genome_file = n2_genome,
+        annotation_file = n2_annotation,
+        id = "N2",
+        annotation_format = "gtf"
+      )
+    )
+}
+
+test_that("annotation-only wrappers are authoritative and unused role specs are no-ops", {
+  annotation_plot <- ggexon(panel_scale_annotation_species()) +
+    geom_exon(
+      species = "XZ1516",
+      chr = "RagTag_V",
+      subset = c(21574445, 21584356)
+    ) +
+    geom_exon(
+      species = "N2",
+      chr = "V",
+      subset = c(20456948, 20465040)
+    )
+
+  expect_no_warning(
+    unused_coverage <- ggexon_build(
+      annotation_plot +
+        facet_genomics(ggplot2::vars(track), scales = "fixed") +
+        scale_panel_coverage("free_y")
+    )
+  )
+  expect_identical(
+    as.integer(unused_coverage@layout$layout$SCALE_Y),
+    c(1L, 1L)
+  )
+  expect_false(unused_coverage@layout$facet_params$free$y)
+
+  expect_no_warning(
+    annotation_free <- ggexon_build(
+      annotation_plot +
+        facet_genomics(ggplot2::vars(track), scales = "fixed") +
+        scale_panel_annotation("free_y")
+    )
+  )
+  expect_identical(
+    as.integer(annotation_free@layout$layout$SCALE_Y),
+    c(1L, 2L)
+  )
+  expect_true(all(
+    annotation_free@layout$layout$panel_type == "annotation"
+  ))
+  expect_true(annotation_free@layout$facet_params$free$y)
+  expect_true(annotation_free@layout$facet_params$draw_axes$y)
+  expect_true(annotation_free@layout$facet_params$axis_labels$y)
+})
+
+test_that("panel role wrappers do not alter ordinary facet free-y behavior", {
+  ordinary <- data.frame(
+    track = c("a", "b"),
+    x = c(1, 1),
+    y = c(1, 2)
+  )
+
+  built <- ggexon_build(
+    ggexon() +
+      ggplot2::geom_point(
+        data = ordinary,
+        mapping = ggplot2::aes(x = x, y = y)
+      ) +
+      facet_genomics(ggplot2::vars(track), scales = "free_y") +
+      scale_panel_coverage("fixed_y")
+  )
+
+  expect_identical(
+    as.integer(built@layout$layout$SCALE_Y),
+    c(1L, 2L)
+  )
+  expect_true(built@layout$facet_params$free$y)
+  expect_true(built@layout$facet_params$draw_axes$y)
+  expect_true(built@layout$facet_params$axis_labels$y)
 })
 
 test_that("generic facet_genomics assigns source panels for link rescaling", {

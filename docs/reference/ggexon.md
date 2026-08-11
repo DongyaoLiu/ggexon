@@ -40,6 +40,17 @@ ggexon(data = NULL, mapping = aes(), ..., environment = parent.frame())
 
 A ggexon plot object inheriting from `ggplot`.
 
+## Panel specifications
+
+Add
+[`scale_panel_annotation()`](https://dongyaoliu.github.io/ggexon/reference/scale_panel_annotation.md),
+[`scale_panel_coverage()`](https://dongyaoliu.github.io/ggexon/reference/scale_panel_coverage.md),
+and
+[`center_panel_annotation()`](https://dongyaoliu.github.io/ggexon/reference/center_panel_annotation.md)
+to configure Syn-aware panels. ggexon stores those requests internally
+on the plot and resolves them during build; the corresponding plot
+properties are not intended for direct assignment.
+
 ## See also
 
 [`geom_exon()`](https://dongyaoliu.github.io/ggexon/reference/geom_exon.md),

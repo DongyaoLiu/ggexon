@@ -13,6 +13,12 @@
 #'   ggexon Syn object.
 #' @param environment Plot environment. Defaults to the caller environment.
 #'
+#' @section Panel specifications:
+#' Add [`scale_panel_annotation()`], [`scale_panel_coverage()`], and
+#' [`center_panel_annotation()`] to configure Syn-aware panels. ggexon stores
+#' those requests internally on the plot and resolves them during build; the
+#' corresponding plot properties are not intended for direct assignment.
+#'
 #' @return A ggexon plot object inheriting from `ggplot`.
 #' @seealso [`geom_exon()`], [`facet_genomics()`], [`SynIndividual()`],
 #'   [`SynSpecies()`]

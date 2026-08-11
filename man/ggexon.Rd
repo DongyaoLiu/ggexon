@@ -30,6 +30,14 @@ and associated track data. It follows the same basic shape as
 containers so ggexon layers can resolve their plotting data lazily during
 plot build.
 }
+\section{Panel specifications}{
+
+Add \code{\link[=scale_panel_annotation]{scale_panel_annotation()}}, \code{\link[=scale_panel_coverage]{scale_panel_coverage()}}, and
+\code{\link[=center_panel_annotation]{center_panel_annotation()}} to configure Syn-aware panels. ggexon stores
+those requests internally on the plot and resolves them during build; the
+corresponding plot properties are not intended for direct assignment.
+}
+
 \seealso{
 \code{\link[=geom_exon]{geom_exon()}}, \code{\link[=facet_genomics]{facet_genomics()}}, \code{\link[=SynIndividual]{SynIndividual()}},
 \code{\link[=SynSpecies]{SynSpecies()}}

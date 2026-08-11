@@ -47,7 +47,16 @@ facet_genomics(
 
 - scales:
 
-  One of `"fixed"`, `"free_x"`, `"free_y"`, or `"free"`.
+  One of `"fixed"`, `"free_x"`, `"free_y"`, or `"free"`. Ordinary data
+  follows ggplot2 wrap-facet semantics. For first-class Syn coverage
+  panels, the y component is the coverage-policy fallback only:
+  `"fixed"`/`"free_x"` share a coverage scale and `"free_y"`/`"free"`
+  give each coverage panel its own scale. Annotation remains `"fixed_y"`
+  by default. Explicit
+  [`scale_panel_annotation()`](https://dongyaoliu.github.io/ggexon/reference/scale_panel_annotation.md)
+  and
+  [`scale_panel_coverage()`](https://dongyaoliu.github.io/ggexon/reference/scale_panel_coverage.md)
+  specifications take precedence.
 
 - shrink:
 
@@ -119,7 +128,12 @@ facet_genomics(
   Annotation-panel vertical alignment. `"default"` preserves the trained
   y-ranges. `"center"` symmetrizes each annotation panel's y-range
   around its visible annotation bodies. Link panels keep their fixed
-  vertical range in either mode.
+  vertical range in either mode. For Syn-backed plots this compatibility
+  argument is equivalent to adding
+  [`center_panel_annotation()`](https://dongyaoliu.github.io/ggexon/reference/center_panel_annotation.md)
+  and does not change coverage panels, layer positions, or scale
+  training. Its legacy ordinary-data behavior is retained; the dedicated
+  wrapper is Syn-only.
 
 - reverse_x:
 
@@ -138,10 +152,11 @@ facet_genomics(
 
 - xlim:
 
-  Optional panel-specific x limits for annotation panels. Supply a named
-  list of numeric length-2 vectors keyed by individual /
-  annotation-panel name. If the plot contains only one annotation panel,
-  a single numeric length-2 vector is also accepted.
+  Optional panel-specific x limits for annotation panels, or for
+  standalone coverage panels when no annotation panel is present. Supply
+  a named list of numeric length-2 vectors keyed by individual / panel
+  name. If the plot contains only one eligible panel, a single numeric
+  length-2 vector is also accepted.
 
 - xlim_chr:
 
@@ -183,15 +198,40 @@ panel structure used by `Layout2`. The returned panel table may include:
 
 - annotation panels for each species track
 
+- first-class coverage panels for attached BigWig tracks
+
 - link panels inserted between paired species tracks
 
 - `panel_type`, `tspecies`, `qspecies`, `t_panel`, and `q_panel`
   metadata used later by
   [`geom_nuclink()`](https://dongyaoliu.github.io/ggexon/reference/geom_nuclink.md)
 
+Coverage, annotation, and link rows are role-qualified even when they
+share the same public `track` label. Coverage panels precede the
+existing annotation/link chain and inherit ordinary genomic x windows
+and direction from an annotation source when one exists. A standalone
+coverage panel can instead use its own coordinates or named facet
+limits. Coverage panels never become `t_panel` or `q_panel` link
+sources.
+
+`SCALE_Y` in the resolved layout is the inherited scale-object identity:
+panels with the same value train through one y-scale object, while
+different values use independent objects. Annotation and coverage role
+families never share an identity. Use
+[`scale_panel_annotation()`](https://dongyaoliu.github.io/ggexon/reference/scale_panel_annotation.md)
+and
+[`scale_panel_coverage()`](https://dongyaoliu.github.io/ggexon/reference/scale_panel_coverage.md)
+to choose fixed or per-panel inheritance for each role independently.
+
 If no Syn-specific layout is available, the facet falls back to ordinary
-wrap-style panel generation.
+wrap-style panel generation. Valid but unused panel-scale specifications
+are no-ops. Ordinary non-Syn behavior and
+[`facet_genomictree()`](https://dongyaoliu.github.io/ggexon/reference/facet_genomictree.md)
+are unchanged.
 
 ## See also
 
-[SynLayout](https://dongyaoliu.github.io/ggexon/reference/SynLayout.md)
+[SynLayout](https://dongyaoliu.github.io/ggexon/reference/SynLayout.md),
+[`scale_panel_annotation()`](https://dongyaoliu.github.io/ggexon/reference/scale_panel_annotation.md),
+[`scale_panel_coverage()`](https://dongyaoliu.github.io/ggexon/reference/scale_panel_coverage.md),
+[`center_panel_annotation()`](https://dongyaoliu.github.io/ggexon/reference/center_panel_annotation.md)

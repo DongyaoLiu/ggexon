@@ -124,6 +124,12 @@ and control genomic x-axis guides.
 
 - [`facet_genomics()`](https://dongyaoliu.github.io/ggexon/reference/facet_genomics.md)
   : Facet genomic tracks and link panels
+- [`scale_panel_annotation()`](https://dongyaoliu.github.io/ggexon/reference/scale_panel_annotation.md)
+  : Set the annotation-panel y-scale policy
+- [`scale_panel_coverage()`](https://dongyaoliu.github.io/ggexon/reference/scale_panel_coverage.md)
+  : Set the coverage-panel y-scale policy
+- [`center_panel_annotation()`](https://dongyaoliu.github.io/ggexon/reference/center_panel_annotation.md)
+  : Center annotation panels
 - [`facet_genomictree()`](https://dongyaoliu.github.io/ggexon/reference/facet_genomictree.md)
   : Facet genomic panels by tree-tip order
 - [`scale_x_ggexon_genomic()`](https://dongyaoliu.github.io/ggexon/reference/scale_x_ggexon_genomic.md)
