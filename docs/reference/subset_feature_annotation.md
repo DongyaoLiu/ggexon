@@ -124,11 +124,16 @@ ind <- SynIndividual(
   id = "XZ1516"
 ) |>
   load_annotation()
+#> Error in h(simpleError(msg, call)): error in evaluating the argument 'x' in selecting a method for function 'load_annotation': `annotation_file` must not contain missing or empty paths.
 
 gr <- annotation_data(ind)
+#> Error in h(simpleError(msg, call)): error in evaluating the argument 'x' in selecting a method for function 'annotation_data': object 'ind' not found
 chr <- as.character(GenomeInfoDb::seqnames(gr))[[1L]]
+#> Error in h(simpleError(msg, call)): error in evaluating the argument 'x' in selecting a method for function 'seqnames': object 'gr' not found
 start <- IRanges::start(gr)[[1L]]
+#> Error in h(simpleError(msg, call)): error in evaluating the argument 'x' in selecting a method for function 'start': object 'gr' not found
 end <- IRanges::end(gr)[[1L]]
+#> Error in h(simpleError(msg, call)): error in evaluating the argument 'x' in selecting a method for function 'end': object 'gr' not found
 
 ann_view <- subset_feature_annotation(
   get_annotation(ind, "default"),
@@ -136,7 +141,7 @@ ann_view <- subset_feature_annotation(
   start = start,
   end = end
 )
-#> subset_feature_annotation() kept 8 rows, 1 genes, and 1 transcripts.
+#> Error in h(simpleError(msg, call)): error in evaluating the argument 'x' in selecting a method for function 'subset_feature_annotation': object 'ind' not found
 ind_view <- subset_feature_annotation(ind, chr = chr, start = start, end = end)
-#> subset_feature_annotation() kept 8 rows, 1 genes, and 1 transcripts.
+#> Error in h(simpleError(msg, call)): error in evaluating the argument 'x' in selecting a method for function 'subset_feature_annotation': object 'ind' not found
 ```
