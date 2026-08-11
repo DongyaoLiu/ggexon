@@ -2166,14 +2166,17 @@ setMethod("subset_species", "SynSpecies", function(x,
 #' @return An updated `SynPairAlignment` or `SynSpecies` object.
 #'
 #' @examples
-#' paf_path <- system.file("extdata", "V_alginment.paf", package = "ggexon")
+#' paf_path <- system.file(
+#'   "extdata", "cd44_pairwise_ensembl116", "cd44_lastz.paf",
+#'   package = "ggexon"
+#' )
 #' pair <- SynPairAlignment(
-#'   name = "XZ1516_vs_N2",
-#'   query_individual = "XZ1516",
-#'   target_individual = "N2",
+#'   name = "mouse_vs_human",
+#'   query_individual = "mouse",
+#'   target_individual = "human",
 #'   file = paf_path
 #' )
-#' pair <- subset_pairwise_alignment(pair, subset = c(XZ1516 = "RagTag_V"))
+#' pair <- subset_pairwise_alignment(pair, subset = c(mouse = "mouse"))
 #'
 #' @export
 setGeneric("subset_pairwise_alignment", function(x, subset, alignment = NULL) {
@@ -2209,11 +2212,14 @@ setMethod("subset_pairwise_alignment", "SynSpecies", function(x, subset, alignme
 #' @return An updated `SynPairAlignment` or `SynSpecies` object.
 #'
 #' @examples
-#' paf_path <- system.file("extdata", "V_alginment.paf", package = "ggexon")
+#' paf_path <- system.file(
+#'   "extdata", "cd44_pairwise_ensembl116", "cd44_lastz.paf",
+#'   package = "ggexon"
+#' )
 #' pair <- SynPairAlignment(
-#'   name = "XZ1516_vs_N2",
-#'   query_individual = "XZ1516",
-#'   target_individual = "N2",
+#'   name = "mouse_vs_human",
+#'   query_individual = "mouse",
+#'   target_individual = "human",
 #'   file = paf_path
 #' )
 #' pair <- filter_pairwise_alignment(pair, filter = 200)
@@ -3275,11 +3281,14 @@ read_pairwise_psl <- function(path,
 #' @return An updated object of the same class as `x`.
 #'
 #' @examples
-#' paf_path <- system.file("extdata", "V_alginment.paf", package = "ggexon")
+#' paf_path <- system.file(
+#'   "extdata", "cd44_pairwise_ensembl116", "cd44_lastz.paf",
+#'   package = "ggexon"
+#' )
 #' pair <- SynPairAlignment(
-#'   name = "XZ1516_vs_N2",
-#'   query_individual = "XZ1516",
-#'   target_individual = "N2",
+#'   name = "mouse_vs_human",
+#'   query_individual = "mouse",
+#'   target_individual = "human",
 #'   file = paf_path
 #' )
 #' pair <- load_alignment(pair)

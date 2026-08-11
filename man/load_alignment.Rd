@@ -91,11 +91,14 @@ level, while \code{more = NULL} preserves any existing cached PSL mode.
 This is an S4 generic that dispatches on the class of \code{x}.
 }
 \examples{
-paf_path <- system.file("extdata", "V_alginment.paf", package = "ggexon")
+paf_path <- system.file(
+  "extdata", "cd44_pairwise_ensembl116", "cd44_lastz.paf",
+  package = "ggexon"
+)
 pair <- SynPairAlignment(
-  name = "XZ1516_vs_N2",
-  query_individual = "XZ1516",
-  target_individual = "N2",
+  name = "mouse_vs_human",
+  query_individual = "mouse",
+  target_individual = "human",
   file = paf_path
 )
 pair <- load_alignment(pair)
