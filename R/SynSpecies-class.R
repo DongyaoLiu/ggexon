@@ -2087,6 +2087,7 @@ store_chain_layout <- function(x,
 #' @examples
 #' ann_path <- system.file(
 #'   "extdata",
+#'   "compact_synspecies",
 #'   "caenorhabditis_XZ1516.gff3",
 #'   package = "ggexon"
 #' )

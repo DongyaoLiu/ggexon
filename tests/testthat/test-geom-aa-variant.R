@@ -3,7 +3,7 @@ xz_variant_individual <- function(mutation_data) {
   # are only present in a local working copy. Skip these integration checks when
   # the data is absent (CI / clean checkout); the synthetic .aa_interval_to_genome
   # tests below cover the projection maths without it.
-  fa <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
+  fa <- system.file("extdata", "compact_synspecies", "XZ1516.fasta", package = "ggexon")
   gff <- system.file("extdata", "XZ1516.TA.gff", package = "ggexon")
   testthat::skip_if_not(
     nzchar(fa) && nzchar(gff) && file.exists(fa) && file.exists(gff),

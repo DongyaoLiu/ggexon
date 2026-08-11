@@ -27,9 +27,7 @@ test_that("add verbs are S4 generics with class-specific methods", {
 })
 
 test_that("add verb fallback methods preserve clear validation errors", {
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
   ann <- SynFeatureAnnotation(name = "features", annotation_file = annotation_path)

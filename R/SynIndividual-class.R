@@ -452,6 +452,7 @@ check_syn_files <- function(genome_file, annotation_file) {
 #' @examples
 #' ann_path <- system.file(
 #'   "extdata",
+#'   "compact_synspecies",
 #'   "caenorhabditis_XZ1516.gff3",
 #'   package = "ggexon"
 #' )
@@ -1452,6 +1453,7 @@ query_features <- function(x,
 #' @examples
 #' ann_path <- system.file(
 #'   "extdata",
+#'   "compact_synspecies",
 #'   "caenorhabditis_XZ1516.gff3",
 #'   package = "ggexon"
 #' )
@@ -1697,6 +1699,7 @@ setMethod("subset_feature_annotation", "SynIndividual", function(x,
 #' @examples
 #' ann_path <- system.file(
 #'   "extdata",
+#'   "compact_synspecies",
 #'   "caenorhabditis_XZ1516.gff3",
 #'   package = "ggexon"
 #' )

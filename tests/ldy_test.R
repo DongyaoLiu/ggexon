@@ -13,27 +13,21 @@ devtools::load_all(".")
 
 # Input files ---------------------------------------------------------------
 
-xz_genome <- system.file("extdata", "XZ1516.fasta", package = "ggexon")
-xz_annotation <- system.file(
-  "extdata",
-  "caenorhabditis_XZ1516.gff3",
+xz_genome <- system.file("extdata", "compact_synspecies", "XZ1516.fasta", package = "ggexon")
+xz_annotation <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
   package = "ggexon"
 )
 xz_patch <- system.file("extdata", "XZ1516.TA.gff", package = "ggexon")
 xz_interpro <- system.file("extdata", "InterProScan.tsv", package = "ggexon")
 
-n2_genome <- system.file(
-  "extdata",
-  "c_elegans.PRJNA13758.WS285.genomic.fa",
+n2_genome <- system.file("extdata", "compact_synspecies", "c_elegans.PRJNA13758.WS285.genomic.fa",
   package = "ggexon"
 )
-n2_annotation <- system.file(
-  "extdata",
-  "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
+n2_annotation <- system.file("extdata", "compact_synspecies", "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
   package = "ggexon"
 )
 
-paf_path <- system.file("extdata", "V_alginment.paf", package = "ggexon")
+paf_path <- system.file("extdata", "compact_synspecies", "V_alginment.paf", package = "ggexon")
 
 xz_window_chr <- "RagTag_V"
 xz_window <- c(21558028, 21620381)

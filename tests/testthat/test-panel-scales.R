@@ -469,9 +469,7 @@ test_that("panel-limit re-finalization keeps the facet fallback for link policy"
     layout_type = "chain",
     panel_scale_specs = specs
   )
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
   species <- SynSpecies(name = "panel-limit policies") |>

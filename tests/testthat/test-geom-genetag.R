@@ -610,9 +610,7 @@ test_that("compile_ggtree_genetag aligns gene rows to rectangular ggtree tips", 
   testthat::skip_if_not_installed("ape")
   testthat::skip_if_not_installed("ggtree")
 
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
   sp <- SynSpecies(name = "worms")
@@ -699,9 +697,7 @@ test_that("compile_ggtree_genetag rejects old x-layout modifiers", {
   testthat::skip_if_not_installed("ape")
   testthat::skip_if_not_installed("ggtree")
 
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
   sp <- SynSpecies(name = "worms") |>
@@ -731,9 +727,7 @@ test_that("ggtree genomic alignment keeps tree y and per-individual genomic pane
   testthat::skip_if_not_installed("ape")
   testthat::skip_if_not_installed("ggtree")
 
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
   sp <- SynSpecies(name = "worms")
@@ -776,9 +770,7 @@ test_that("additive genomic tree grammar renders gene tags and exon layers", {
   testthat::skip_if_not_installed("ape")
   testthat::skip_if_not_installed("ggtree")
 
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
   sp <- SynSpecies(name = "worms")
@@ -826,9 +818,7 @@ test_that("facet_genomictree keeps free-y semantics with unused panel specs", {
   testthat::skip_if_not_installed("ape")
   testthat::skip_if_not_installed("ggtree")
 
-  annotation_path <- system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
   species <- SynSpecies(name = "tree panel scales")
