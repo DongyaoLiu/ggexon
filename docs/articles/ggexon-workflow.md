@@ -25,10 +25,8 @@ This vignette sketches the core workflow:
 library(ggexon)
 
 x <- SynIndividual(
-  genome_file = system.file("extdata", "XZ1516.fasta", package = "ggexon"),
-  annotation_file = system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  genome_file = system.file("extdata", "compact_synspecies", "XZ1516.fasta", package = "ggexon"),
+  annotation_file = system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   )
 )
@@ -222,10 +220,8 @@ mapping needed by
 ``` r
 
 x <- SynIndividual(
-  genome_file = system.file("extdata", "XZ1516.fasta", package = "ggexon"),
-  annotation_file = system.file(
-    "extdata",
-    "caenorhabditis_XZ1516.gff3",
+  genome_file = system.file("extdata", "compact_synspecies", "XZ1516.fasta", package = "ggexon"),
+  annotation_file = system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
   ),
   id = "XZ1516"

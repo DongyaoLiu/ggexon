@@ -43,14 +43,15 @@ This is an S4 generic that dispatches on the class of `x`.
 ## Examples
 
 ``` r
-paf_path <- system.file("extdata", "V_alginment.paf", package = "ggexon")
+paf_path <- system.file(
+  "extdata", "cd44_pairwise_ensembl116", "cd44_lastz.paf",
+  package = "ggexon"
+)
 pair <- SynPairAlignment(
-  name = "XZ1516_vs_N2",
-  query_individual = "XZ1516",
-  target_individual = "N2",
+  name = "mouse_vs_human",
+  query_individual = "mouse",
+  target_individual = "human",
   file = paf_path
 )
-#> Error in validObject(.Object): invalid class “SynPairAlignment” object: `source_file` must be a non-empty character vector with no empty entries.
-pair <- subset_pairwise_alignment(pair, subset = c(XZ1516 = "RagTag_V"))
-#> Error in h(simpleError(msg, call)): error in evaluating the argument 'x' in selecting a method for function 'subset_pairwise_alignment': object 'pair' not found
+pair <- subset_pairwise_alignment(pair, subset = c(mouse = "mouse"))
 ```
