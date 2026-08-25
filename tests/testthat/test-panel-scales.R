@@ -14,6 +14,161 @@ test_that("panel scale constructors record exact role and policy", {
                    list(role = "coverage", policy = "free_y"))
 })
 
+test_that("annotation scale specifications store named manual limits", {
+  spec <- scale_panel_annotation(
+    "free_y",
+    limits = list(ann_a = c(-2, 2), ann_b = c(-1, 3))
+  )
+
+  expect_identical(
+    spec$limits,
+    list(ann_a = c(-2, 2), ann_b = c(-1, 3))
+  )
+  expect_null(scale_panel_annotation("free_y")$limits)
+})
+
+test_that("annotation scale specifications validate manual limits", {
+  expect_error(
+    scale_panel_annotation("fixed_y", limits = list(ann_a = c(-2, 2))),
+    "free_y"
+  )
+  expect_error(
+    scale_panel_annotation("free_y", limits = c(ann_a = 2)),
+    "named list"
+  )
+  expect_error(
+    scale_panel_annotation("free_y", limits = list(c(-2, 2))),
+    "names"
+  )
+  expect_error(
+    scale_panel_annotation(
+      "free_y",
+      limits = stats::setNames(list(c(-2, 2)), "")
+    ),
+    "non-empty"
+  )
+  expect_error(
+    scale_panel_annotation(
+      "free_y",
+      limits = stats::setNames(
+        list(c(-2, 2), c(-1, 3)),
+        c("ann_a", "ann_a")
+      )
+    ),
+    "unique"
+  )
+  expect_error(
+    scale_panel_annotation("free_y", limits = list(ann_a = c("-2", "2"))),
+    "numeric"
+  )
+  expect_error(
+    scale_panel_annotation("free_y", limits = list(ann_a = c(-2, Inf))),
+    "finite"
+  )
+  expect_error(
+    scale_panel_annotation("free_y", limits = list(ann_a = -2)),
+    "length 2"
+  )
+  expect_error(
+    scale_panel_annotation("free_y", limits = list(ann_a = c(2, 2))),
+    "increasing"
+  )
+})
+
+test_that("coverage scale specifications store named manual limits", {
+  spec <- scale_panel_coverage(
+    "free_y",
+    limits = list(XZ1516 = c(0, 200), ECA2091 = c(0, 1000))
+  )
+
+  expect_identical(
+    spec$limits,
+    list(XZ1516 = c(0, 200), ECA2091 = c(0, 1000))
+  )
+  expect_null(scale_panel_coverage("free_y")$limits)
+})
+
+test_that("coverage scale specifications store automatic mode", {
+  spec <- scale_panel_coverage("free_y", auto = TRUE)
+
+  expect_true(spec$auto)
+  expect_null(scale_panel_coverage("free_y")$auto)
+})
+
+test_that("coverage scale specifications validate automatic mode", {
+  invalid <- list(NA, logical(), c(TRUE, FALSE), 1, "yes")
+  for (value in invalid) {
+    expect_error(
+      scale_panel_coverage("free_y", auto = value),
+      "auto.*logical"
+    )
+  }
+  expect_error(
+    scale_panel_coverage("fixed_y", auto = TRUE),
+    "auto.*free_y"
+  )
+})
+
+test_that("automatic coverage mode accepts manual overrides", {
+  spec <- scale_panel_coverage(
+    "free_y",
+    auto = TRUE,
+    limits = list(ECA2091 = c(0, 200))
+  )
+
+  expect_true(spec$auto)
+  expect_identical(spec$limits, list(ECA2091 = c(0, 200)))
+})
+
+test_that("coverage scale specifications validate manual limits", {
+  expect_error(
+    scale_panel_coverage("fixed_y", limits = list(XZ1516 = c(0, 200))),
+    "free_y"
+  )
+  expect_error(
+    scale_panel_coverage("free_y", limits = c(XZ1516 = 200)),
+    "named list"
+  )
+  expect_error(
+    scale_panel_coverage("free_y", limits = list(c(0, 200))),
+    "names"
+  )
+  expect_error(
+    scale_panel_coverage(
+      "free_y",
+      limits = stats::setNames(list(c(0, 200)), "")
+    ),
+    "non-empty"
+  )
+  expect_error(
+    scale_panel_coverage(
+      "free_y",
+      limits = stats::setNames(list(c(0, 200), c(0, 300)), c("A", "A"))
+    ),
+    "unique"
+  )
+  expect_error(
+    scale_panel_coverage("free_y", limits = list(XZ1516 = c("0", "200"))),
+    "numeric"
+  )
+  expect_error(
+    scale_panel_coverage("free_y", limits = list(XZ1516 = c(0, Inf))),
+    "finite"
+  )
+  expect_error(
+    scale_panel_coverage("free_y", limits = list(XZ1516 = 0)),
+    "length 2"
+  )
+  expect_error(
+    scale_panel_coverage("free_y", limits = list(XZ1516 = c(200, 200))),
+    "increasing"
+  )
+  expect_error(
+    scale_panel_coverage("free_y", limits = list(XZ1516 = c(200, 0))),
+    "increasing"
+  )
+})
+
 test_that("panel scale policies are validated exactly", {
   bad <- list(
     NULL, NA_character_, character(), c("fixed_y", "free_y"),
@@ -138,6 +293,127 @@ test_that("annotation scale policies apply to annotation-only SynIndividual plot
   expect_identical(layout$ROW, c(1L, 1L))
   expect_identical(layout$COL, c(1L, 2L))
   expect_length(unique(layout$SCALE_Y), 2L)
+})
+
+annotation_limit_test_plot <- function() {
+  annotation <- data.frame(
+    track = c("ann_a", "ann_b"),
+    xmin = c(100, 200),
+    xmax = c(140, 240),
+    y = c(1, 3),
+    strand = "+",
+    gene = c("gene_a", "gene_b"),
+    label = c("gene_a", "gene_b"),
+    stringsAsFactors = FALSE
+  )
+
+  ggexon(SynSpecies(name = "annotation limits")) +
+    geom_genetag(data = annotation, show_label = FALSE) +
+    facet_genomics(ggplot2::vars(track), ncol = 1)
+}
+
+test_that("named annotation limits override centering for matching panels", {
+  base_plot <- annotation_limit_test_plot()
+  centered <- ggexon_build(
+    base_plot +
+      scale_panel_annotation("free_y") +
+      center_panel_annotation()
+  )
+  limited <- ggexon_build(
+    base_plot +
+      scale_panel_annotation(
+        "free_y",
+        limits = list(ann_a = c(-2, 2))
+      ) +
+      center_panel_annotation()
+  )
+  layout <- as.data.frame(limited@layout$layout)
+  panel_id <- function(track) {
+    ggexon_gtable_index(layout$PANEL[layout$track == track])
+  }
+  annotation_panels <- vapply(
+    c("ann_a", "ann_b"),
+    panel_id,
+    integer(1)
+  )
+  centers <- annotation_panel_body_centers(
+    limited@data,
+    annotation_panels
+  )
+
+  expect_identical(
+    limited@layout$panel_params[[panel_id("ann_a")]]$y.range,
+    c(-2, 2)
+  )
+  expect_equal(
+    mean(limited@layout$panel_params[[panel_id("ann_b")]]$y.range),
+    unname(centers[[as.character(panel_id("ann_b"))]])
+  )
+  expect_identical(limited@data, centered@data)
+  ann_a_breaks <- limited@layout$panel_params[[panel_id("ann_a")]]$y$get_breaks()
+  expect_true(all(ann_a_breaks >= -2 & ann_a_breaks <= 2))
+})
+
+test_that("named annotation limits reject unknown first-class panel names", {
+  expect_error(
+    ggexon_build(
+      annotation_limit_test_plot() +
+        scale_panel_annotation(
+          "free_y",
+          limits = list(UNKNOWN = c(-2, 2))
+        )
+    ),
+    "UNKNOWN.*ann_a.*ann_b"
+  )
+})
+
+test_that("named annotation limits ignore ordinary facet panels", {
+  ordinary <- data.frame(
+    track = "ordinary",
+    x = 1,
+    y = 1,
+    ymin = 0,
+    ymax = 10
+  )
+  base_plot <- ggexon(ordinary) +
+    ggplot2::geom_pointrange(
+      ggplot2::aes(x = x, y = y, ymin = ymin, ymax = ymax)
+    ) +
+    facet_genomics(ggplot2::vars(track))
+  baseline <- ggexon_build(base_plot)
+  limited <- ggexon_build(
+    base_plot +
+      scale_panel_annotation(
+        "free_y",
+        limits = list(ordinary = c(-2, 2))
+      )
+  )
+
+  expect_identical(limited@data, baseline@data)
+  expect_identical(
+    limited@layout$panel_params[[1L]]$y.range,
+    baseline@layout$panel_params[[1L]]$y.range
+  )
+})
+
+test_that("named annotation limits apply to every matching panel row", {
+  built <- ggexon_build(
+    annotation_limit_test_plot() +
+      scale_panel_annotation("free_y")
+  )
+  built@layout$layout$track <- rep("ann_a", 2L)
+  limited <- apply_annotation_panel_y_limits(
+    built@layout,
+    list(annotation = scale_panel_annotation(
+      "free_y",
+      limits = list(ann_a = c(-2, 2))
+    ))
+  )
+
+  expect_identical(
+    lapply(limited$panel_params, `[[`, "y.range"),
+    rep(list(c(-2, 2)), 2L)
+  )
 })
 
 test_that("annotation centering wrapper ignores ordinary facet panels", {

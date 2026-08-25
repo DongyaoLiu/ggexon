@@ -5,6 +5,18 @@
 #' `"fixed_y"`, all annotation panels share one scale object. With `"free_y"`,
 #' each annotation panel receives its own scale object.
 #'
+#' With `policy = "free_y"`, `limits` can set exact visible y ranges for selected
+#' first-class annotation panels. Names match the layout's `track` values.
+#' Geometry outside a requested range is clipped at the panel boundary, but
+#' source annotation coordinates, built layer data, and trained scale data are
+#' unchanged.
+#'
+#' Named limits take precedence over [`center_panel_annotation()`] and
+#' `facet_genomics(vertical = "center")` for matching panels. Annotation panels
+#' omitted from `limits` retain their centered view when centering is requested,
+#' or their normally trained view otherwise. Coverage, link, composite coverage,
+#' tree, and ordinary non-Syn facet panels are unchanged.
+#'
 #' An explicit annotation policy takes precedence over the y component of the
 #' facet's `scales` argument. A valid specification is a no-op when no
 #' annotation panel is present. Ordinary non-Syn facets and
@@ -12,6 +24,9 @@
 #'
 #' @param policy One non-missing string, exactly `"fixed_y"` (the default) or
 #'   `"free_y"`.
+#' @param limits `NULL` (the default), or a named list of finite, strictly
+#'   increasing numeric length-two vectors. Names must exactly match first-class
+#'   annotation panel names. Manual limits require `policy = "free_y"`.
 #'
 #' @return An object of class `ggexon_panel_scale_spec` that can be added to a
 #'   ggexon plot.
@@ -21,9 +36,20 @@
 #' annotation_scales <- ggexon() +
 #'   facet_genomics(ggplot2::vars(track)) +
 #'   scale_panel_annotation("free_y")
+#'
+#' manual_annotation_ranges <- ggexon() +
+#'   facet_genomics(ggplot2::vars(track)) +
+#'   scale_panel_annotation(
+#'     "free_y",
+#'     limits = list(ann_a = c(-2, 2))
+#'   ) +
+#'   center_panel_annotation()
 #' @export
-scale_panel_annotation <- function(policy = "fixed_y") {
-  .new_panel_scale_spec("annotation", policy)
+scale_panel_annotation <- function(policy = "fixed_y",
+                                   limits = NULL) {
+  policy <- .validate_panel_scale_policy(policy)
+  limits <- .validate_panel_limits(limits, policy, role = "annotation")
+  .new_panel_scale_spec("annotation", policy, limits = limits)
 }
 
 #' Set the coverage-panel y-scale policy
@@ -32,6 +58,21 @@ scale_panel_annotation <- function(policy = "fixed_y") {
 #' inherit y-scale objects. `"fixed_y"` (the default) gives all coverage panels
 #' one shared raw-depth scale; `"free_y"` gives every coverage panel its own
 #' raw-depth scale.
+#'
+#' With `policy = "free_y"`, `limits` can set exact visible y ranges for selected
+#' coverage panels. Values outside a requested range are clipped at the panel
+#' boundary, but the underlying BigWig scores and built layer data are unchanged.
+#' Panels omitted from `limits` keep their automatically trained ranges.
+#'
+#' With `policy = "free_y"` and `auto = TRUE`, every first-class coverage panel
+#' receives an automatic visible range of `c(0, Q50 / 0.85)`, where `Q50` is the
+#' span-weighted median of the finite, non-negative rendered coverage intervals.
+#' Inclusive genomic interval widths are used when available, without expanding
+#' BigWig records to one row per base. This places `Q50` at 85 percent of the
+#' panel height, so roughly half the rendered span reaches or exceeds that line;
+#' tied coverage values can prevent the fraction from being exactly 50 percent.
+#' Panels with no usable positive `Q50` keep their trained ranges. Named `limits`
+#' override automatic ranges for matching panels.
 #'
 #' When this wrapper is absent, the y component of
 #' [`facet_genomics(scales = ...)`][facet_genomics] supplies the coverage
@@ -43,6 +84,12 @@ scale_panel_annotation <- function(policy = "fixed_y") {
 #'
 #' @param policy One non-missing string, exactly `"fixed_y"` (the default) or
 #'   `"free_y"`.
+#' @param limits `NULL` (the default), or a named list of finite, strictly
+#'   increasing numeric length-two vectors. Names must exactly match first-class
+#'   coverage panel names. Manual limits require `policy = "free_y"`.
+#' @param auto One non-missing logical value. When `TRUE`, apply the automatic
+#'   span-weighted median-at-85-percent rule to every first-class coverage panel.
+#'   Automatic limits require `policy = "free_y"`. The default is `FALSE`.
 #'
 #' @return An object of class `ggexon_panel_scale_spec` that can be added to a
 #'   ggexon plot.
@@ -89,15 +136,33 @@ scale_panel_annotation <- function(policy = "fixed_y") {
 #' # One shared raw-depth scale across all coverage panels.
 #' shared_depth <- coverage_layers + scale_panel_coverage("fixed_y")
 #'
-#' # One raw-depth scale per coverage panel, plus a centered gene model.
-#' free_depth <- coverage_layers +
-#'   scale_panel_coverage("free_y") +
+#' # Put each panel's span-weighted median at 85% of panel height.
+#' automatic_depth <- coverage_layers +
+#'   scale_panel_coverage("free_y", auto = TRUE) +
 #'   center_panel_annotation() +
 #'   theme_ggexon_track() +
 #'   theme_ggexon_side_strips("left")
+#'
+#' # Manual ranges override automatic ranges for matching panels.
+#' automatic_with_override <- coverage_layers +
+#'   scale_panel_coverage(
+#'     "free_y",
+#'     limits = list(ECA2091 = c(0, 200)),
+#'     auto = TRUE
+#'   )
 #' @export
-scale_panel_coverage <- function(policy = "fixed_y") {
-  .new_panel_scale_spec("coverage", policy)
+scale_panel_coverage <- function(policy = "fixed_y",
+                                 limits = NULL,
+  auto = FALSE) {
+  policy <- .validate_panel_scale_policy(policy)
+  limits <- .validate_panel_limits(limits, policy, role = "coverage")
+  auto <- .validate_coverage_panel_auto(auto, policy)
+  .new_panel_scale_spec(
+    "coverage",
+    policy,
+    limits = limits,
+    auto = auto
+  )
 }
 
 #' Center annotation panels
@@ -138,11 +203,83 @@ center_panel_annotation <- function() {
   policy
 }
 
-.new_panel_scale_spec <- function(role, policy) {
-  structure(
-    list(role = role, policy = .validate_panel_scale_policy(policy)),
-    class = "ggexon_panel_scale_spec"
-  )
+.validate_panel_limits <- function(limits, policy, role) {
+  if (is.null(limits)) {
+    return(NULL)
+  }
+  if (!identical(policy, "free_y")) {
+    cli::cli_abort(
+      "{.arg limits} requires {.code policy = \"free_y\"}."
+    )
+  }
+  if (!is.list(limits)) {
+    cli::cli_abort("{.arg limits} must be a named list.")
+  }
+
+  limit_names <- names(limits)
+  if (is.null(limit_names)) {
+    cli::cli_abort("{.arg limits} must have panel names.")
+  }
+  if (anyNA(limit_names) || any(!nzchar(limit_names))) {
+    cli::cli_abort("{.arg limits} names must be non-empty strings.")
+  }
+  if (anyDuplicated(limit_names)) {
+    cli::cli_abort("{.arg limits} names must be unique.")
+  }
+
+  normalized <- lapply(seq_along(limits), function(i) {
+    value <- limits[[i]]
+    panel <- limit_names[[i]]
+    if (!is.numeric(value)) {
+      cli::cli_abort(
+        "The limit for {role} panel {.val {panel}} must be numeric."
+      )
+    }
+    if (length(value) != 2L) {
+      cli::cli_abort(
+        "The limit for {role} panel {.val {panel}} must have length 2."
+      )
+    }
+    if (!all(is.finite(value))) {
+      cli::cli_abort(
+        "The limit for {role} panel {.val {panel}} must be finite."
+      )
+    }
+    if (value[[1L]] >= value[[2L]]) {
+      cli::cli_abort(
+        "The limit for {role} panel {.val {panel}} must be strictly increasing."
+      )
+    }
+    as.numeric(value)
+  })
+  names(normalized) <- limit_names
+  normalized
+}
+
+.validate_coverage_panel_auto <- function(auto, policy) {
+  if (!is.logical(auto) || length(auto) != 1L || is.na(auto)) {
+    cli::cli_abort("{.arg auto} must be one non-missing logical value.")
+  }
+  if (isTRUE(auto) && !identical(policy, "free_y")) {
+    cli::cli_abort(
+      "{.arg auto} requires {.code policy = \"free_y\"}."
+    )
+  }
+  auto
+}
+
+.new_panel_scale_spec <- function(role,
+                                  policy,
+                                  limits = NULL,
+                                  auto = FALSE) {
+  spec <- list(role = role, policy = .validate_panel_scale_policy(policy))
+  if (!is.null(limits)) {
+    spec$limits <- limits
+  }
+  if (isTRUE(auto)) {
+    spec$auto <- TRUE
+  }
+  structure(spec, class = "ggexon_panel_scale_spec")
 }
 
 .facet_y_policy <- function(free) {

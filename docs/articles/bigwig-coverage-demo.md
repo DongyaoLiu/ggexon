@@ -2,8 +2,8 @@
 
 ## Overview
 
-This article plots raw PEEL-1 coverage for four *C. elegans* strains
-over the same chromosome-I window. The bundled fixture contains the four
+This article plots raw PEEL-1 coverage for thirteen *C. elegans* strains
+over the same chromosome-I window. The bundled fixture contains thirteen
 BigWig files and a WS285 GTF subset for the four genes in the interval,
 so the workflow is self-contained and does not refer to source BAMs or
 other external paths.
@@ -29,7 +29,11 @@ gtf <- file.path(
   fixture_dir,
   "WS285.ugt31-zeel1-peel1-nekl1.gtf"
 )
-strains <- c("XZ1516", "ECA2091", "ECA701", "ECA2191")
+strains <- c(
+  "XZ1516", "ECA2091", "ECA2199", "ECA369", "QX1791",
+  "ECA701", "ECA1769", "ECA2191", "ECA2195", "XZ2211",
+  "MY10", "EG4349", "NIC256"
+)
 
 coverage_species <- SynSpecies(name = "PEEL-1 raw coverage")
 for (strain in strains) {
@@ -62,34 +66,44 @@ ggexon(coverage_species) +
     ncol = 1,
     strip.position = "left"
   ) +
-  scale_panel_coverage("free_y") +
+  scale_panel_coverage("free_y", auto = TRUE) +
   center_panel_annotation() +
   theme_ggexon_track() +
   theme_ggexon_side_strips("left")
 ```
 
-![A ggexon plot with four separate PEEL-1 raw coverage panels for
-strains XZ1516, ECA2091, ECA701, and ECA2191 above one centered
-four-gene annotation panel over the same chromosome-I
-interval.](bigwig-coverage-demo_files/figure-html/peel1-raw-coverage-1.png)
+![A ggexon plot with thirteen separate PEEL-1 raw-coverage panels in the
+approved strain order above one centered four-gene annotation panel over
+the same chromosome-I interval. Every coverage panel places its
+span-weighted median depth at 85 percent of the panel height, with
+higher peaks clipped at the panel
+boundary.](bigwig-coverage-demo_files/figure-html/peel1-raw-coverage-1.png)
 
-Raw, unnormalized PEEL-1 coverage for four C. elegans strains over
-chromosome I:2,332,338-2,373,985. Every coverage track has an
-independent depth scale, while one shared annotation panel shows the
-four-gene locus.
+Raw, unnormalized PEEL-1 coverage for thirteen C. elegans strains over
+chromosome I:2,332,338-2,373,985. In each independent coverage panel,
+the span-weighted median depth occupies 85 percent of the panel height.
+Higher peaks are clipped in the view only; raw BigWig values remain
+unchanged.
 
 ## Reading the tracks
 
 The BigWig values are raw, nonnegative depth. Each file owns a
-first-class coverage panel, and `scale_panel_coverage("free_y")` gives
-every strain its own depth scale. A high-depth track such as ECA2091
-therefore does not compress the lower-depth tracks.
+first-class coverage panel, and
+`scale_panel_coverage("free_y", auto = TRUE)` gives every strain its own
+automatic depth scale. For each panel, ggexon calculates the
+span-weighted median coverage value from the rendered BigWig intervals
+and places it at 85 percent of the panel height. Roughly half the
+rendered genomic span therefore reaches or exceeds that height; tied
+depth values can make the fraction differ from exactly 50 percent.
+Higher peaks are clipped at the panel boundary without changing the raw
+BigWig scores or built coverage data. The calculation uses interval
+widths directly and does not expand coverage to one row per base.
 
 The single
 [`geom_exon()`](https://dongyaoliu.github.io/ggexon/reference/geom_exon.md)
 request uses XZ1516 as the representative gene model for the common
 chromosome-I window. It occupies one independent annotation panel below
-the four coverage panels;
+the thirteen coverage panels;
 [`center_panel_annotation()`](https://dongyaoliu.github.io/ggexon/reference/center_panel_annotation.md)
 centers that gene model within its panel without changing annotation
 data or any coverage scale. No synthetic negative annotation band is

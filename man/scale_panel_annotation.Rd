@@ -4,11 +4,15 @@
 \alias{scale_panel_annotation}
 \title{Set the annotation-panel y-scale policy}
 \usage{
-scale_panel_annotation(policy = "fixed_y")
+scale_panel_annotation(policy = "fixed_y", limits = NULL)
 }
 \arguments{
 \item{policy}{One non-missing string, exactly \code{"fixed_y"} (the default) or
 \code{"free_y"}.}
+
+\item{limits}{\code{NULL} (the default), or a named list of finite, strictly
+increasing numeric length-two vectors. Names must exactly match first-class
+annotation panel names. Manual limits require \code{policy = "free_y"}.}
 }
 \value{
 An object of class \code{ggexon_panel_scale_spec} that can be added to a
@@ -21,6 +25,18 @@ y-scale objects in a Syn-aware \code{\link[=facet_genomics]{facet_genomics()}} l
 each annotation panel receives its own scale object.
 }
 \details{
+With \code{policy = "free_y"}, \code{limits} can set exact visible y ranges for selected
+first-class annotation panels. Names match the layout's \code{track} values.
+Geometry outside a requested range is clipped at the panel boundary, but
+source annotation coordinates, built layer data, and trained scale data are
+unchanged.
+
+Named limits take precedence over \code{\link[=center_panel_annotation]{center_panel_annotation()}} and
+\code{facet_genomics(vertical = "center")} for matching panels. Annotation panels
+omitted from \code{limits} retain their centered view when centering is requested,
+or their normally trained view otherwise. Coverage, link, composite coverage,
+tree, and ordinary non-Syn facet panels are unchanged.
+
 An explicit annotation policy takes precedence over the y component of the
 facet's \code{scales} argument. A valid specification is a no-op when no
 annotation panel is present. Ordinary non-Syn facets and
@@ -30,6 +46,14 @@ annotation panel is present. Ordinary non-Syn facets and
 annotation_scales <- ggexon() +
   facet_genomics(ggplot2::vars(track)) +
   scale_panel_annotation("free_y")
+
+manual_annotation_ranges <- ggexon() +
+  facet_genomics(ggplot2::vars(track)) +
+  scale_panel_annotation(
+    "free_y",
+    limits = list(ann_a = c(-2, 2))
+  ) +
+  center_panel_annotation()
 }
 \seealso{
 \code{\link[=scale_panel_coverage]{scale_panel_coverage()}}, \code{\link[=center_panel_annotation]{center_panel_annotation()}},

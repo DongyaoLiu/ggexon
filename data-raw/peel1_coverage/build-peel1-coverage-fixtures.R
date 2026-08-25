@@ -3,13 +3,17 @@ source_gtf <- Sys.getenv("GGEXON_WS285_GTF")
 output_dir <- file.path("inst", "extdata", "peel1_coverage")
 
 if (!nzchar(bam_dir) || !dir.exists(bam_dir)) {
-  stop("Set GGEXON_TA_BAM_DIR to the directory containing the four BAMs.")
+  stop("Set GGEXON_TA_BAM_DIR to the directory containing the thirteen BAMs.")
 }
 if (!nzchar(source_gtf) || !file.exists(source_gtf)) {
   stop("Set GGEXON_WS285_GTF to the WS285 canonical geneset GTF.")
 }
 
-strains <- c("XZ1516", "ECA2091", "ECA701", "ECA2191")
+strains <- c(
+  "XZ1516", "ECA2091", "ECA2199", "ECA369", "QX1791",
+  "ECA701", "ECA1769", "ECA2191", "ECA2195", "XZ2211",
+  "MY10", "EG4349", "NIC256"
+)
 gene_ids <- c(
   "WBGene00021464", "WBGene00021463",
   "WBGene00077563", "WBGene00021461"

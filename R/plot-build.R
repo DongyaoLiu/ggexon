@@ -131,6 +131,246 @@ apply_link_panel_y_range <- function(layout, y_range = c(0, 1)) {
   layout
 }
 
+.coverage_span_weights <- function(layer_data) {
+  weight <- rep(NA_real_, nrow(layer_data))
+  if (all(c("interval_start", "interval_end") %in% names(layer_data))) {
+    start <- suppressWarnings(as.numeric(layer_data$interval_start))
+    end <- suppressWarnings(as.numeric(layer_data$interval_end))
+    use <- is.finite(start) & is.finite(end) & end >= start
+    weight[use] <- end[use] - start[use] + 1
+  }
+  if (all(c("xmin", "xmax") %in% names(layer_data))) {
+    xmin <- suppressWarnings(as.numeric(layer_data$xmin))
+    xmax <- suppressWarnings(as.numeric(layer_data$xmax))
+    use <- !is.finite(weight) & is.finite(xmin) &
+      is.finite(xmax) & xmax > xmin
+    weight[use] <- xmax[use] - xmin[use]
+  }
+  weight
+}
+
+.weighted_coverage_quantile <- function(x,
+                                        weight,
+                                        probability = 0.50) {
+  keep <- is.finite(x) & x >= 0 & is.finite(weight) & weight > 0
+  x <- x[keep]
+  weight <- weight[keep]
+  if (length(x) == 0L) {
+    return(NA_real_)
+  }
+
+  value_order <- order(x)
+  x <- x[value_order]
+  weight <- weight[value_order]
+  threshold <- probability * sum(weight)
+  x[[which(cumsum(weight) >= threshold)[[1L]]]]
+}
+
+.automatic_coverage_limit <- function(x, weight) {
+  q50 <- .weighted_coverage_quantile(x, weight, probability = 0.50)
+  if (!is.finite(q50) || q50 <= 0) {
+    return(NULL)
+  }
+  c(0, q50 / 0.85)
+}
+
+.coverage_auto_panel_limits <- function(data,
+                                        layers,
+                                        coverage_panel_ids) {
+  coverage_panel_ids <- unique(as.integer(coverage_panel_ids))
+  coverage_panel_ids <- coverage_panel_ids[is.finite(coverage_panel_ids)]
+  if (length(coverage_panel_ids) == 0L || !is.list(data) ||
+      !is.list(layers)) {
+    return(list())
+  }
+
+  roles <- ggexon_layout_layer_panel_roles(layers)
+  coverage_layers <- which(roles == "coverage")
+  records <- lapply(coverage_layers, function(i) {
+    if (i > length(data)) {
+      return(NULL)
+    }
+    layer_data <- data[[i]]
+    if (!is.data.frame(layer_data) || nrow(layer_data) == 0L ||
+        !all(c("PANEL", "coverage") %in% names(layer_data))) {
+      return(NULL)
+    }
+
+    panel_id <- ggexon_gtable_index(layer_data$PANEL)
+    coverage <- suppressWarnings(
+      as.numeric(as.character(layer_data$coverage))
+    )
+    weight <- .coverage_span_weights(layer_data)
+    keep <- !is.na(panel_id) & panel_id %in% coverage_panel_ids &
+      is.finite(coverage) & coverage >= 0 &
+      is.finite(weight) & weight > 0
+    if (!any(keep)) {
+      return(NULL)
+    }
+    data.frame(
+      panel_id = panel_id[keep],
+      coverage = coverage[keep],
+      weight = weight[keep]
+    )
+  })
+  records <- Filter(Negate(is.null), records)
+  if (length(records) == 0L) {
+    return(list())
+  }
+
+  records <- do.call(rbind, records)
+  by_panel <- split(records, records$panel_id)
+  limits <- lapply(by_panel, function(panel_data) {
+    .automatic_coverage_limit(panel_data$coverage, panel_data$weight)
+  })
+  limits[!vapply(limits, is.null, logical(1))]
+}
+
+.install_panel_y_view <- function(layout, row, y_range) {
+  layout_df <- layout$layout
+  panel_id <- ggexon_gtable_index(layout_df$PANEL[[row]])
+  x_scale_id <- as.integer(layout_df$SCALE_X[[row]])
+  y_scale_id <- as.integer(layout_df$SCALE_Y[[row]])
+  if (is.na(panel_id) || is.na(x_scale_id) || is.na(y_scale_id) ||
+      panel_id < 1L || panel_id > length(layout$panel_params) ||
+      x_scale_id < 1L || x_scale_id > length(layout$panel_scales_x) ||
+      y_scale_id < 1L || y_scale_id > length(layout$panel_scales_y)) {
+    return(layout)
+  }
+
+  coord_limits <- layout$coord$limits %||% list(x = NULL, y = NULL)
+  coord_limits$y <- y_range
+  panel_coord <- ggplot2::ggproto(
+    NULL,
+    layout$coord,
+    limits = coord_limits
+  )
+  coord_params <- layout$coord_params %||% list()
+  if (!is.null(coord_params$expand) && length(coord_params$expand) >= 4L) {
+    coord_params$expand[c(3L, 1L)] <- FALSE
+  }
+  panel_view <- panel_coord$setup_panel_params(
+    layout$panel_scales_x[[x_scale_id]],
+    layout$panel_scales_y[[y_scale_id]],
+    coord_params
+  )
+  y_names <- intersect(c("y", "y.sec", "y.range"), names(panel_view))
+  layout$panel_params[[panel_id]][y_names] <- panel_view[y_names]
+  layout
+}
+
+apply_coverage_panel_y_limits <- function(layout,
+                                          panel_scale_specs = list(),
+                                          data = list(),
+                                          layers = list()) {
+  limits <- panel_scale_specs$coverage$limits %||% NULL
+  auto <- isTRUE(panel_scale_specs$coverage$auto)
+  if (is.null(limits) && !auto) {
+    return(layout)
+  }
+
+  layout_df <- layout$layout %||% NULL
+  if (!is.data.frame(layout_df) || nrow(layout_df) == 0L ||
+      !all(c("PANEL", "SCALE_X", "SCALE_Y", "track") %in% names(layout_df)) ||
+      is.null(layout$panel_params) || is.null(layout$panel_scales_x) ||
+      is.null(layout$panel_scales_y) || is.null(layout$coord)) {
+    return(layout)
+  }
+
+  panel_type <- link_panel_type(as.data.frame(layout_df))
+  coverage_rows <- panel_type == "coverage"
+  coverage_rows[is.na(coverage_rows)] <- FALSE
+  if (!any(coverage_rows)) {
+    return(layout)
+  }
+
+  available <- unique(as.character(layout_df$track[coverage_rows]))
+  available <- available[!is.na(available) & nzchar(available)]
+  unknown <- setdiff(names(limits) %||% character(), available)
+  if (length(unknown) > 0L) {
+    cli::cli_abort(paste0(
+      "Unknown coverage panels: ", paste(unknown, collapse = ", "),
+      ". Available: ", paste(available, collapse = ", "), "."
+    ))
+  }
+
+  coverage_panel_ids <- ggexon_gtable_index(
+    layout_df$PANEL[coverage_rows]
+  )
+  auto_limits <- if (auto) {
+    .coverage_auto_panel_limits(data, layers, coverage_panel_ids)
+  } else {
+    list()
+  }
+
+  for (row in which(coverage_rows)) {
+    panel_id <- ggexon_gtable_index(layout_df$PANEL[[row]])
+    panel_name <- as.character(layout_df$track[[row]])
+    panel_limit <- auto_limits[[as.character(panel_id)]] %||% NULL
+    manual_index <- if (!is.null(limits) && !is.na(panel_name)) {
+      match(panel_name, names(limits), nomatch = 0L)
+    } else {
+      0L
+    }
+    if (manual_index > 0L) {
+      panel_limit <- limits[[manual_index]]
+    }
+    if (is.null(panel_limit)) {
+      next
+    }
+    layout <- .install_panel_y_view(layout, row, panel_limit)
+  }
+
+  layout
+}
+
+apply_annotation_panel_y_limits <- function(layout,
+                                             panel_scale_specs = list()) {
+  limits <- panel_scale_specs$annotation$limits %||% NULL
+  if (is.null(limits)) {
+    return(layout)
+  }
+
+  layout_df <- layout$layout %||% NULL
+  if (!is.data.frame(layout_df) || nrow(layout_df) == 0L ||
+      !all(c("PANEL", "SCALE_X", "SCALE_Y", "track") %in% names(layout_df)) ||
+      is.null(layout$panel_params) || is.null(layout$panel_scales_x) ||
+      is.null(layout$panel_scales_y) || is.null(layout$coord)) {
+    return(layout)
+  }
+
+  panel_type <- link_panel_type(as.data.frame(layout_df))
+  panel_ids <- ggexon_gtable_index(layout_df$PANEL)
+  composite_ids <- as.integer(
+    layout$ggexon_composite_coverage_panels %||% integer()
+  )
+  annotation_rows <- panel_type == "annotation" &
+    !panel_ids %in% composite_ids
+  annotation_rows[is.na(annotation_rows)] <- FALSE
+  if (!any(annotation_rows)) {
+    return(layout)
+  }
+
+  available <- unique(as.character(layout_df$track[annotation_rows]))
+  available <- available[!is.na(available) & nzchar(available)]
+  unknown <- setdiff(names(limits), available)
+  if (length(unknown) > 0L) {
+    cli::cli_abort(paste0(
+      "Unknown annotation panels: ", paste(unknown, collapse = ", "),
+      ". Available: ", paste(available, collapse = ", "), "."
+    ))
+  }
+
+  for (row in which(annotation_rows)) {
+    panel_name <- as.character(layout_df$track[[row]])
+    manual_index <- match(panel_name, names(limits), nomatch = 0L)
+    if (manual_index > 0L) {
+      layout <- .install_panel_y_view(layout, row, limits[[manual_index]])
+    }
+  }
+  layout
+}
+
 annotation_panel_body_centers <- function(data, annotation_panel_ids) {
   annotation_panel_ids <- unique(as.integer(annotation_panel_ids))
   annotation_panel_ids <- annotation_panel_ids[!is.na(annotation_panel_ids)]
@@ -884,6 +1124,12 @@ build_ggexon <- S7::method(ggexon_build, class_ggexon) <- function(plot, ...) {
     }
     layout <- apply_panel_xlim_to_trained_scales(layout)
     layout$setup_panel_params()
+    layout <- apply_coverage_panel_y_limits(
+      layout,
+      plot@panel_scale_specs,
+      data = data,
+      layers = layers
+    )
     layout <- apply_link_panel_y_range(layout)
     syn_backed_plot <- methods::is(plot@data, "SynSpecies") ||
       methods::is(plot@data, "SynIndividual")
@@ -903,6 +1149,12 @@ build_ggexon <- S7::method(ggexon_build, class_ggexon) <- function(plot, ...) {
       plot@facet$params %||% list(),
       center_annotation_panels = center_annotation
     )
+    if (syn_backed_plot && !inherits(plot@facet, "FacetGenomicTree")) {
+      layout <- apply_annotation_panel_y_limits(
+        layout,
+        plot@panel_scale_specs
+      )
+    }
     if (!first_class_coverage) {
       layout <- filter_composite_coverage_y_breaks(layout)
     }

@@ -161,8 +161,9 @@ The package site contains the longer cookbook-style documentation:
   [`geom_genebox()`](https://dongyaoliu.github.io/ggexon/reference/geom_genebox.md)
   anchor modes.
 - [`vignette("bigwig-coverage-demo", package = "ggexon")`](https://dongyaoliu.github.io/ggexon/articles/bigwig-coverage-demo.md)
-  for four independent raw-depth BigWig panels above one shared,
-  centered gene annotation.
+  for thirteen independent raw-depth BigWig panels with automatic
+  span-weighted median-at-85%-height scales above one shared, centered
+  gene annotation.
 - [`?ggexon`](https://dongyaoliu.github.io/ggexon/reference/ggexon.md)
   and the reference index for function-level documentation.
 

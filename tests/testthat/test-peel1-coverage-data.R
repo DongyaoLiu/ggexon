@@ -1,4 +1,4 @@
-test_that("PEEL-1 coverage fixtures contain four raw tracks and four complete genes", {
+test_that("PEEL-1 coverage fixtures contain thirteen raw tracks and four complete genes", {
   fixture_dir <- system.file("extdata", "peel1_coverage", package = "ggexon")
   expect_true(nzchar(fixture_dir))
 
@@ -11,10 +11,13 @@ test_that("PEEL-1 coverage fixtures contain four raw tracks and four complete ge
   expect_true(file.exists(gtf_path))
 
   manifest <- utils::read.delim(manifest_path, check.names = FALSE)
-  expect_identical(
-    as.character(manifest$strain),
-    c("XZ1516", "ECA2091", "ECA701", "ECA2191")
+  expected_strains <- c(
+    "XZ1516", "ECA2091", "ECA2199", "ECA369", "QX1791",
+    "ECA701", "ECA1769", "ECA2191", "ECA2195", "XZ2211",
+    "MY10", "EG4349", "NIC256"
   )
+  expect_identical(as.character(manifest$strain), expected_strains)
+  expect_identical(nrow(manifest), length(expected_strains))
   expect_true(all(manifest$chr == "I"))
   expect_true(all(manifest$start == 2332338L))
   expect_true(all(manifest$end == 2373985L))
@@ -60,7 +63,7 @@ test_that("PEEL-1 coverage fixtures contain four raw tracks and four complete ge
   }, numeric(1))
   expect_identical(
     unname(raw_maxima),
-    c(187, 6115, 228, 192)
+    c(187, 6115, 356, 686, 416, 228, 899, 192, 234, 260, 1253, 573, 147)
   )
   expect_true(all(vapply(queried, function(gr) {
     reduced <- GenomicRanges::reduce(gr)

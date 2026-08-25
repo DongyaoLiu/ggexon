@@ -1,7 +1,15 @@
 # PEEL-1 coverage fixtures
 
-This directory contains raw coverage BigWig fixtures for four *C. elegans*
-strains: `XZ1516`, `ECA2091`, `ECA701`, and `ECA2191`.
+This directory contains raw coverage BigWig fixtures for thirteen
+*C. elegans* strains: `XZ1516`, `ECA2091`, `ECA2199`, `ECA369`, `QX1791`,
+`ECA701`, `ECA1769`, `ECA2191`, `ECA2195`, `XZ2211`, `MY10`, `EG4349`, and
+`NIC256`.
+
+The first nine tracks cover every strain in Hawaii-category genotype groups
+with `peel-1 = 1` in the Figure 7 unique-genotype table. `XZ2211` adds the F97Y
+carrier from a group whose majority category is Non-Hawaii; the allele table
+labels its F97Y allele Hawaii-only. `MY10`, `EG4349`, and `NIC256` are
+additional comparison strains.
 
 The tracks cover chromosome I, interval `2332338-2373985` (1-based,
 inclusive), with one-base bins and no normalization.  The accompanying GTF is

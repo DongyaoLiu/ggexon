@@ -220,6 +220,241 @@ test_that("coverage wrappers override facet fallback in multi-column Syn layouts
   expect_true(fixed_params$axis_labels$y)
 })
 
+test_that("named coverage limits clip one panel view without changing raw data", {
+  automatic <- ggexon_build(
+    coverage_role_scale_plot("fixed", panel_limits = TRUE) +
+      scale_panel_coverage("free_y")
+  )
+  limited <- ggexon_build(
+    coverage_role_scale_plot("fixed", panel_limits = TRUE) +
+      scale_panel_coverage(
+        "free_y",
+        limits = list(XZ1516 = c(0, 50))
+      )
+  )
+  layout <- as.data.frame(limited@layout$layout)
+  panel_id <- function(track, panel_type) {
+    row <- layout$track == track & layout$panel_type == panel_type
+    ggexon_gtable_index(layout$PANEL[row])
+  }
+
+  xz_coverage_panel <- panel_id("XZ1516", "coverage")
+  eca_coverage_panel <- panel_id("ECA2091", "coverage")
+  annotation_panels <- vapply(
+    as.character(layout$track[layout$panel_type == "annotation"]),
+    panel_id,
+    integer(1),
+    panel_type = "annotation"
+  )
+
+  expect_identical(
+    limited@layout$panel_params[[xz_coverage_panel]]$y.range,
+    c(0, 50)
+  )
+  expect_identical(
+    limited@layout$panel_params[[eca_coverage_panel]]$y.range,
+    automatic@layout$panel_params[[eca_coverage_panel]]$y.range
+  )
+  expect_identical(
+    lapply(
+      limited@layout$panel_params[annotation_panels],
+      function(x) x$y.range
+    ),
+    lapply(
+      automatic@layout$panel_params[annotation_panels],
+      function(x) x$y.range
+    )
+  )
+
+  breaks <- limited@layout$panel_params[[xz_coverage_panel]]$y$get_breaks()
+  expect_true(all(breaks >= 0 & breaks <= 50))
+
+  coverage_data <- limited@data[[which(vapply(
+    limited@data,
+    function(x) is.data.frame(x) && "coverage" %in% names(x),
+    logical(1)
+  ))[[1L]]]]
+  expect_gt(
+    max(coverage_data$coverage[as.integer(coverage_data$PANEL) == xz_coverage_panel]),
+    50
+  )
+})
+
+test_that("automatic coverage limits use inclusive genomic span weights", {
+  layer_data <- data.frame(
+    interval_start = c(1, 9, 10),
+    interval_end = c(8, 9, 10),
+    xmin = c(0.5, 8.5, 9.5),
+    xmax = c(8.5, 9.5, 10.5)
+  )
+
+  expect_identical(.coverage_span_weights(layer_data), c(8, 1, 1))
+  expect_identical(
+    .weighted_coverage_quantile(c(1, 5, 100), c(8, 1, 1)),
+    1
+  )
+  expect_equal(
+    .automatic_coverage_limit(c(1, 5, 100), c(8, 1, 1)),
+    c(0, 1 / 0.85)
+  )
+})
+
+test_that("automatic coverage limits fall back for unusable data", {
+  expect_null(.automatic_coverage_limit(numeric(), numeric()))
+  expect_null(.automatic_coverage_limit(c(0, 0), c(1, 1)))
+  expect_null(.automatic_coverage_limit(c(1, NA), c(0, NA)))
+})
+
+test_that("automatic coverage limits place span-weighted Q50 at 85 percent", {
+  base <- coverage_role_scale_plot("fixed", panel_limits = TRUE)
+  baseline <- ggexon_build(base + scale_panel_coverage("free_y"))
+  automatic <- ggexon_build(
+    base + scale_panel_coverage("free_y", auto = TRUE)
+  )
+  layout <- as.data.frame(automatic@layout$layout)
+  panel_id <- function(track, panel_type) {
+    row <- layout$track == track & layout$panel_type == panel_type
+    ggexon_gtable_index(layout$PANEL[row])
+  }
+
+  xz_panel <- panel_id("XZ1516", "coverage")
+  eca_panel <- panel_id("ECA2091", "coverage")
+  annotation_panels <- vapply(
+    as.character(layout$track[layout$panel_type == "annotation"]),
+    panel_id,
+    integer(1),
+    panel_type = "annotation"
+  )
+
+  expect_equal(
+    automatic@layout$panel_params[[xz_panel]]$y.range,
+    c(0, 33 / 0.85)
+  )
+  expect_equal(
+    automatic@layout$panel_params[[eca_panel]]$y.range,
+    c(0, 103 / 0.85)
+  )
+  expect_identical(
+    lapply(
+      automatic@layout$panel_params[annotation_panels],
+      function(x) x$y.range
+    ),
+    lapply(
+      baseline@layout$panel_params[annotation_panels],
+      function(x) x$y.range
+    )
+  )
+
+  coverage_data <- automatic@data[[which(vapply(
+    automatic@data,
+    function(x) is.data.frame(x) && "coverage" %in% names(x),
+    logical(1)
+  ))[[1L]]]]
+  expect_identical(
+    max(coverage_data$coverage[as.integer(coverage_data$PANEL) == eca_panel]),
+    6115
+  )
+})
+
+test_that("manual coverage limits override automatic panel ranges", {
+  built <- ggexon_build(
+    coverage_role_scale_plot("fixed", panel_limits = TRUE) +
+      scale_panel_coverage(
+        "free_y",
+        auto = TRUE,
+        limits = list(ECA2091 = c(0, 200))
+      )
+  )
+  layout <- as.data.frame(built@layout$layout)
+  coverage_panel <- function(track) {
+    row <- layout$track == track & layout$panel_type == "coverage"
+    ggexon_gtable_index(layout$PANEL[row])
+  }
+
+  expect_equal(
+    built@layout$panel_params[[coverage_panel("XZ1516")]]$y.range,
+    c(0, 33 / 0.85)
+  )
+  expect_identical(
+    built@layout$panel_params[[coverage_panel("ECA2091")]]$y.range,
+    c(0, 200)
+  )
+})
+
+test_that("named coverage limits reject unknown first-class panel names", {
+  plot <- coverage_role_scale_plot("fixed", panel_limits = TRUE) +
+    scale_panel_coverage(
+      "free_y",
+      limits = list(UNKNOWN = c(0, 50))
+    )
+
+  expect_error(
+    ggexon_build(plot),
+    "UNKNOWN.*XZ1516.*ECA2091"
+  )
+})
+
+test_that("named coverage limits ignore ordinary composite coverage panels", {
+  coverage <- data.frame(
+    track = "sample",
+    xmin = c(1, 5),
+    xmax = c(4, 8),
+    coverage = c(0, 20)
+  )
+  annotation <- data.frame(
+    track = "sample",
+    xmin = 1,
+    xmax = 8,
+    y = 1,
+    strand = "+",
+    gene = "g",
+    label = "g"
+  )
+  plot <- ggexon() +
+    geom_coverage(
+      data = coverage,
+      mapping = ggplot2::aes(
+        xmin = xmin, xmax = xmax, coverage = coverage, track = track
+      ),
+      inherit.aes = FALSE
+    ) +
+    geom_genetag(data = annotation, show_label = FALSE) +
+    facet_genomics(ggplot2::vars(track), scales = "free_y")
+
+  automatic <- ggexon_build(plot)
+  limited <- ggexon_build(
+    plot + scale_panel_coverage(
+      "free_y",
+      limits = list(sample = c(0, 10))
+    )
+  )
+  auto_limited <- ggexon_build(
+    plot + scale_panel_coverage("free_y", auto = TRUE)
+  )
+  annotation_limited <- ggexon_build(
+    plot + scale_panel_annotation(
+      "free_y",
+      limits = list(sample = c(-2, 2))
+    )
+  )
+
+  expect_identical(limited@data, automatic@data)
+  expect_identical(
+    limited@layout$panel_params[[1L]]$y.range,
+    automatic@layout$panel_params[[1L]]$y.range
+  )
+  expect_identical(auto_limited@data, automatic@data)
+  expect_identical(
+    auto_limited@layout$panel_params[[1L]]$y.range,
+    automatic@layout$panel_params[[1L]]$y.range
+  )
+  expect_identical(annotation_limited@data, automatic@data)
+  expect_identical(
+    annotation_limited@layout$panel_params[[1L]]$y.range,
+    automatic@layout$panel_params[[1L]]$y.range
+  )
+})
+
 test_that("fixed role overrides preserve explicit y-axis requests and free x", {
   explicit <- ggexon_build(
     coverage_role_scale_plot(

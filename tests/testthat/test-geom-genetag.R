@@ -847,6 +847,14 @@ test_that("facet_genomictree keeps free-y semantics with unused panel specs", {
       facet_genomictree(scales = "free_y") +
       scale_panel_coverage("free_y")
   )
+  with_annotation_limits <- ggexon_build(
+    base_plot +
+      facet_genomictree(scales = "free_y") +
+      scale_panel_annotation(
+        "free_y",
+        limits = list(XZ1516 = c(-2, 2))
+      )
+  )
   with_center_wrapper <- ggexon_build(
     base_plot +
       facet_genomictree(scales = "free_y") +
@@ -888,7 +896,15 @@ test_that("facet_genomictree keeps free-y semantics with unused panel specs", {
     without_spec@layout$layout
   )
   expect_identical(
+    with_annotation_limits@layout$layout,
+    without_spec@layout$layout
+  )
+  expect_identical(
     lapply(with_center_wrapper@layout$panel_params, `[[`, "y.range"),
+    lapply(without_spec@layout$panel_params, `[[`, "y.range")
+  )
+  expect_identical(
+    lapply(with_annotation_limits@layout$panel_params, `[[`, "y.range"),
     lapply(without_spec@layout$panel_params, `[[`, "y.range")
   )
 })

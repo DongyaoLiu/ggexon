@@ -138,8 +138,9 @@ The package site contains the longer cookbook-style documentation:
 - `vignette("hox-cluster-expansion-demo", package = "ggexon")` for the
   Ensembl-pinned HOX cluster matrix, exact curated Hox-number slots, and
   `geom_genebox()` anchor modes.
-- `vignette("bigwig-coverage-demo", package = "ggexon")` for four independent
-  raw-depth BigWig panels above one shared, centered gene annotation.
+- `vignette("bigwig-coverage-demo", package = "ggexon")` for thirteen independent
+  raw-depth BigWig panels with automatic span-weighted median-at-85%-height
+  scales above one shared, centered gene annotation.
 - `?ggexon` and the reference index for function-level documentation.
 
 If you use `ggexon` in work, please also cite the preprint:

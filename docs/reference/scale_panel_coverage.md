@@ -8,7 +8,7 @@ its own raw-depth scale.
 ## Usage
 
 ``` r
-scale_panel_coverage(policy = "fixed_y")
+scale_panel_coverage(policy = "fixed_y", limits = NULL, auto = FALSE)
 ```
 
 ## Arguments
@@ -18,12 +18,42 @@ scale_panel_coverage(policy = "fixed_y")
   One non-missing string, exactly `"fixed_y"` (the default) or
   `"free_y"`.
 
+- limits:
+
+  `NULL` (the default), or a named list of finite, strictly increasing
+  numeric length-two vectors. Names must exactly match first-class
+  coverage panel names. Manual limits require `policy = "free_y"`.
+
+- auto:
+
+  One non-missing logical value. When `TRUE`, apply the automatic
+  span-weighted median-at-85-percent rule to every first-class coverage
+  panel. Automatic limits require `policy = "free_y"`. The default is
+  `FALSE`.
+
 ## Value
 
 An object of class `ggexon_panel_scale_spec` that can be added to a
 ggexon plot.
 
 ## Details
+
+With `policy = "free_y"`, `limits` can set exact visible y ranges for
+selected coverage panels. Values outside a requested range are clipped
+at the panel boundary, but the underlying BigWig scores and built layer
+data are unchanged. Panels omitted from `limits` keep their
+automatically trained ranges.
+
+With `policy = "free_y"` and `auto = TRUE`, every first-class coverage
+panel receives an automatic visible range of `c(0, Q50 / 0.85)`, where
+`Q50` is the span-weighted median of the finite, non-negative rendered
+coverage intervals. Inclusive genomic interval widths are used when
+available, without expanding BigWig records to one row per base. This
+places `Q50` at 85 percent of the panel height, so roughly half the
+rendered span reaches or exceeds that line; tied coverage values can
+prevent the fraction from being exactly 50 percent. Panels with no
+usable positive `Q50` keep their trained ranges. Named `limits` override
+automatic ranges for matching panels.
 
 When this wrapper is absent, the y component of
 [`facet_genomics(scales = ...)`](https://dongyaoliu.github.io/ggexon/reference/facet_genomics.md)
@@ -85,10 +115,18 @@ coverage_layers <- ggexon(coverage_species) +
 # One shared raw-depth scale across all coverage panels.
 shared_depth <- coverage_layers + scale_panel_coverage("fixed_y")
 
-# One raw-depth scale per coverage panel, plus a centered gene model.
-free_depth <- coverage_layers +
-  scale_panel_coverage("free_y") +
+# Put each panel's span-weighted median at 85% of panel height.
+automatic_depth <- coverage_layers +
+  scale_panel_coverage("free_y", auto = TRUE) +
   center_panel_annotation() +
   theme_ggexon_track() +
   theme_ggexon_side_strips("left")
+
+# Manual ranges override automatic ranges for matching panels.
+automatic_with_override <- coverage_layers +
+  scale_panel_coverage(
+    "free_y",
+    limits = list(ECA2091 = c(0, 200)),
+    auto = TRUE
+  )
 ```
