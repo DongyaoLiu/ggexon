@@ -19,6 +19,8 @@ query_variants(x, chr, start, end)
 A \code{S4Vectors::DataFrame} with the matching variant records.
 }
 \description{
-For large tabix-backed VCF files, this function uses region-based access when
-possible. Plain-text VCF files are read and filtered on demand.
+VCF querying is supported. BCF parsing is not implemented; BCF input raises
+an unsupported-format error. For large tabix-backed VCF files, this function
+uses region-based access when possible. Plain-text VCF files are read and
+filtered on demand.
 }

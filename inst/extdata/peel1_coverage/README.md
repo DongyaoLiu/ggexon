@@ -38,6 +38,7 @@ GGEXON_BAMCOVERAGE=/path/to/bamCoverage \
 Rscript data-raw/peel1_coverage/build-peel1-coverage-fixtures.R
 ```
 
-`manifest.tsv` records the source BAM path, output filename, interval,
+`manifest.tsv` records each source BAM basename, output filename, interval,
 binning, normalization, `bamCoverage` version, and MD5 checksum for every
-track.
+track. Each `checksum` is the MD5 of the BigWig named by `bigwig` on the same
+manifest row.

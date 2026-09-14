@@ -19,6 +19,12 @@ if (!dir.exists(file.path(repo_root, "inst"))) {
   repo_root <- normalizePath(getwd(), mustWork = TRUE)
 }
 
+provenance_helper_path <- file.path(repo_root, "R", "cd44-provenance.R")
+if (!file.exists(provenance_helper_path)) {
+  stop("Missing CD44 provenance helper at ", provenance_helper_path, call. = FALSE)
+}
+source(provenance_helper_path, local = environment())
+
 required_packages <- c("jsonlite", "dplyr", "readr", "stringr", "Biostrings")
 missing_packages <- required_packages[!vapply(required_packages, requireNamespace, logical(1), quietly = TRUE)]
 if (length(missing_packages) > 0L) {
@@ -34,7 +40,6 @@ dir.create(file.path(out_dir, "sequences"), showWarnings = FALSE, recursive = TR
 
 lastz_bin <- Sys.getenv("LASTZ", unset = "/opt/homebrew/bin/lastz")
 lastz_bin <- normalizePath(lastz_bin, mustWork = FALSE)
-rscript_bin <- normalizePath(file.path(R.home("bin"), "Rscript"), mustWork = FALSE)
 
 ensembl_base <- "https://rest.ensembl.org"
 ucsc_base <- "https://api.genome.ucsc.edu"
@@ -510,6 +515,13 @@ run_lastz <- function(windows, min_len = lastz_min_len, min_identity = lastz_min
     "--format=paf:minimap2",
     paste0("--output=", paf_path)
   )
+  portable_args <- c(
+    basename(target_fa),
+    basename(query_fa),
+    "--strand=both --chain --format=paf:minimap2",
+    paste0("--output=", basename(paf_path))
+  )
+  portable_command <- paste(c(basename(lastz_bin), portable_args), collapse = " ")
   message("Running LASTZ: ", paste(c(lastz_bin, args), collapse = " "))
   status <- system2(lastz_bin, args = args, stdout = TRUE, stderr = TRUE)
   exit_status <- attr(status, "status") %||% 0L
@@ -519,7 +531,7 @@ run_lastz <- function(windows, min_len = lastz_min_len, min_identity = lastz_min
 
   paf <- parse_paf(paf_path)
   if (nrow(paf) == 0L) {
-    return(list(paf = paf, paf_path = paf_path, command = paste(c(lastz_bin, args), collapse = " ")))
+    return(list(paf = paf, paf_path = paf_path, command = portable_command))
   }
 
   paf <- paf |>
@@ -527,7 +539,7 @@ run_lastz <- function(windows, min_len = lastz_min_len, min_identity = lastz_min
     dplyr::filter(.data$alen >= min_len, .data$identity >= min_identity) |>
     dplyr::arrange(.data$tstart, .data$qstart)
 
-  list(paf = paf, paf_path = paf_path, command = paste(c(lastz_bin, args), collapse = " "))
+  list(paf = paf, paf_path = paf_path, command = portable_command)
 }
 
 make_nuclinks <- function(paf, windows) {
@@ -1153,6 +1165,28 @@ readr::write_tsv(exon_protein_identity, file.path(out_dir, "cd44_exon_protein_id
 write_selected_gff3(selected_exons, "human", file.path(out_dir, "annotations", "human.gff3"))
 write_selected_gff3(selected_exons, "mouse", file.path(out_dir, "annotations", "mouse.gff3"))
 
+human_fasta <- file.path(
+  out_dir,
+  windows$fasta_file[windows$species == "human"]
+)
+mouse_fasta <- file.path(
+  out_dir,
+  windows$fasta_file[windows$species == "mouse"]
+)
+lastz_provenance <- collect_lastz_provenance(
+  lastz_bin = lastz_bin,
+  human_fasta = human_fasta,
+  mouse_fasta = mouse_fasta,
+  alignment = alignment
+)
+lastz_binary <- lastz_provenance$lastz_binary
+lastz_version <- lastz_provenance$lastz_version
+lastz_command <- lastz_provenance$lastz_command
+rscript <- paste("R", getRversion())
+human_fasta_md5 <- lastz_provenance$human_fasta_md5
+mouse_fasta_md5 <- lastz_provenance$mouse_fasta_md5
+paf_md5 <- lastz_provenance$paf_md5
+
 provenance <- data.frame(
   key = c(
     "ensembl_release",
@@ -1166,8 +1200,12 @@ provenance <- data.frame(
     "lastz_min_alignment_length",
     "lastz_min_identity",
     "lastz_binary",
+    "lastz_version",
     "lastz_command",
-    "rscript"
+    "rscript",
+    "human_fasta_md5",
+    "mouse_fasta_md5",
+    "paf_md5"
   ),
   value = c(
     ensembl_release,
@@ -1180,9 +1218,13 @@ provenance <- data.frame(
     paste0(ucsc_base, "/getData/sequence?genome=mm39;chrom=chr2;start=", windows$window_start0[windows$species == "mouse"], ";end=", windows$window_end0[windows$species == "mouse"]),
     as.character(lastz_min_len),
     as.character(lastz_min_identity),
-    lastz_bin,
-    alignment$command %||% NA_character_,
-    rscript_bin
+    lastz_binary,
+    lastz_version,
+    lastz_command,
+    rscript,
+    human_fasta_md5,
+    mouse_fasta_md5,
+    paf_md5
   ),
   stringsAsFactors = FALSE
 )
@@ -1227,7 +1269,10 @@ readme <- c(
   "  exon-pair candidates.",
   "- `annotations/*.gff3`: compact selected-transcript GFF3 files.",
   "- `sequences/*.fa`: genomic DNA windows used for LASTZ.",
-  "- `cd44_provenance.tsv`: source URLs and local command provenance."
+  "- `cd44_provenance.tsv`: source URLs, tool basenames and versions, a portable",
+  "  LASTZ reproduction command, and MD5 checksums. `human_fasta_md5` checks",
+  "  `sequences/human_cd44_window.fa`, `mouse_fasta_md5` checks",
+  "  `sequences/mouse_cd44_window.fa`, and `paf_md5` checks `cd44_lastz.paf`."
 )
 writeLines(readme, file.path(out_dir, "README.md"))
 

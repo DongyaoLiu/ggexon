@@ -9,7 +9,9 @@
 individuals. Like \code{SynPairAlignment}, it is a concrete \code{SynSpeAnnotation}
 with a source file, optional cached parsed representation, and metadata, but
 it records a vector of participating individual identifiers instead of
-query/target sides.
+query/target sides. \code{SynMultiAlignment} can store already parsed MAF data
+supplied through \code{data}, but \code{load_alignment()} cannot parse a MAF file.
+ODGI-backed file loading is supported.
 }
 \section{Slots}{
 

@@ -24,6 +24,11 @@ test_that("PEEL-1 coverage fixtures contain thirteen raw tracks and four complet
   expect_true(all(manifest$normalization == "None"))
   expect_true(all(manifest$bin_size == 1L))
   expect_true(all(manifest$bamCoverage_region == "I:2332337:2373985"))
+  expect_identical(
+    as.character(manifest$source_bam),
+    basename(as.character(manifest$source_bam))
+  )
+  expect_true(all(manifest$bamCoverage_version == "bamCoverage 3.5.6"))
   expect_true(all(nzchar(manifest$checksum)))
 
   bw_paths <- file.path(fixture_dir, manifest$bigwig)

@@ -81,9 +81,9 @@ to an ODGI node-table TSV or raw \code{.og} graph file. When \code{x} is a
 the updated \code{SynSpecies} object is returned.
 }
 \details{
-Unloaded \code{SynMultiAlignment} objects with \code{format = "maf"} are not yet
-supported because the package does not currently provide a MAF parser. For
-PSL-backed \code{\link{SynPairAlignment}} objects, repeated calls to
+\code{SynMultiAlignment} can store already parsed MAF data supplied through
+\code{data}, but \code{load_alignment()} cannot parse a MAF file. ODGI-backed file
+loading is supported. For PSL-backed \code{\link{SynPairAlignment}} objects, repeated calls to
 \code{load_alignment()} with different explicit \code{more} values will replace the
 cached data so the in-memory representation matches the requested detail
 level, while \code{more = NULL} preserves any existing cached PSL mode.

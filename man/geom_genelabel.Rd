@@ -83,7 +83,7 @@ Syn-backed.}
 
 \item{panel_width_mm}{Estimated width of the genomic panel in millimetres.
 Used to convert text size into data-coordinate units for label placement
-and collision avoidance. Default \code{300} (≈ A4/US-letter panel width).
+and collision avoidance. Default \code{300} (\eqn{\approx} A4/US-letter panel width).
 Increase this for wide output (e.g. \code{ggsave(width = 40)}).}
 
 \item{panel_width_inch}{Same as \code{panel_width_mm} but in inches. When both

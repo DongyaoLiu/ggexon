@@ -1272,20 +1272,27 @@ test_that("syn-aware geoms preserve mapped and fixed aesthetics via standard aes
     )
   )
 
-  exon_build <- ggexon_build(
-    ggexon(sp) +
-      geom_exon(
-        ggplot2::aes(fill = strand, colour = strand, alpha = strand),
-        species = "XZ1516",
-        chr = "RagTag_V",
-        subset = c(21574445, 21584356)
-      )
+  exon_build <- expect_no_warning(
+    ggexon_build(
+      ggexon(sp) +
+        geom_exon(
+          ggplot2::aes(
+            fill = strand,
+            colour = strand,
+            alpha = ifelse(strand == "+", 0.4, 0.8)
+          ),
+          species = "XZ1516",
+          chr = "RagTag_V",
+          subset = c(21574445, 21584356)
+        ) +
+        ggplot2::scale_alpha_identity()
+    )
   )
   exon_data <- exon_build@data[[1L]]
   expect_true(all(c("fill", "colour", "alpha") %in% names(exon_data)))
   expect_true(length(unique(exon_data$fill)) >= 1L)
   expect_true(length(unique(exon_data$colour)) >= 1L)
-  expect_true(all(!is.na(exon_data$alpha)))
+  expect_true(all(exon_data$alpha %in% c(0.4, 0.8)))
 
   exon_gene_build <- ggexon_build(
     ggexon(sp) +
@@ -1313,39 +1320,52 @@ test_that("syn-aware geoms preserve mapped and fixed aesthetics via standard aes
   expect_true(nrow(exon_transcript_data) > 0L)
   expect_true(length(unique(exon_transcript_data$fill)) >= 1L)
 
-  gene_build <- ggexon_build(
-    ggexon(sp) +
-      geom_gene(
-        ggplot2::aes(fill = strand, colour = strand, alpha = strand),
-        species = "XZ1516",
-        chr = "RagTag_V",
-        subset = c(21574445, 21584356)
-      )
+  gene_build <- expect_no_warning(
+    ggexon_build(
+      ggexon(sp) +
+        geom_gene(
+          ggplot2::aes(
+            fill = strand,
+            colour = strand,
+            alpha = ifelse(strand == "+", 0.4, 0.8)
+          ),
+          species = "XZ1516",
+          chr = "RagTag_V",
+          subset = c(21574445, 21584356)
+        ) +
+        ggplot2::scale_alpha_identity()
+    )
   )
   gene_data <- gene_build@data[[1L]]
   expect_true(all(c("fill", "colour", "alpha") %in% names(gene_data)))
-  expect_true(all(!is.na(gene_data$alpha)))
+  expect_true(all(gene_data$alpha %in% c(0.4, 0.8)))
 
-  label_build <- ggexon_build(
-    ggexon(sp) +
-      geom_exon(
-        species = "XZ1516",
-        chr = "RagTag_V",
-        subset = c(21558028, 21620381)
-      ) +
-      geom_exon(
-        species = "N2",
-        chr = "V",
-        subset = c(20454111, 20491853)
-      ) +
-      geom_genelabel(
-        ggplot2::aes(colour = strand, alpha = strand)
-      ) +
-      facet_genomics(ggplot2::vars(track), scales = "free")
+  label_build <- expect_no_warning(
+    ggexon_build(
+      ggexon(sp) +
+        geom_exon(
+          species = "XZ1516",
+          chr = "RagTag_V",
+          subset = c(21558028, 21620381)
+        ) +
+        geom_exon(
+          species = "N2",
+          chr = "V",
+          subset = c(20454111, 20491853)
+        ) +
+        geom_genelabel(
+          ggplot2::aes(
+            colour = strand,
+            alpha = ifelse(strand == "+", 0.4, 0.8)
+          )
+        ) +
+        facet_genomics(ggplot2::vars(track), scales = "free") +
+        ggplot2::scale_alpha_identity()
+    )
   )
   label_data <- label_build@data[[3L]]
   expect_true(all(c("colour", "alpha") %in% names(label_data)))
-  expect_true(all(!is.na(label_data$alpha)))
+  expect_true(all(label_data$alpha %in% c(0.4, 0.8)))
 
   fixed_exon_build <- ggexon_build(
     ggexon(sp) +

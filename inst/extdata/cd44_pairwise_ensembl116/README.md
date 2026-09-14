@@ -28,4 +28,7 @@ Key files:
   exon-pair candidates.
 - `annotations/*.gff3`: compact selected-transcript GFF3 files.
 - `sequences/*.fa`: genomic DNA windows used for LASTZ.
-- `cd44_provenance.tsv`: source URLs and local command provenance.
+- `cd44_provenance.tsv`: source URLs, tool basenames and versions, a portable
+  LASTZ reproduction command, and MD5 checksums. `human_fasta_md5` checks
+  `sequences/human_cd44_window.fa`, `mouse_fasta_md5` checks
+  `sequences/mouse_cd44_window.fa`, and `paf_md5` checks `cd44_lastz.paf`.

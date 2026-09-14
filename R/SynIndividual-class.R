@@ -1937,6 +1937,11 @@ translate_protein <- function(x,
 #' @param x A `SynIndividual` object.
 #' @param value A `GenomicRanges::GRanges` object or `NULL`.
 #'
+#' @details For a `SynIndividual`, `active_feature_annotation(x)` must name an
+#'   attached `SynFeatureAnnotation` layer before replacement. Add a feature
+#'   layer with [add_annotation()] first. Replacing with `NULL` clears the
+#'   active feature layer and its synchronized owner state.
+#'
 #' @return The updated `SynIndividual` object.
 #' @export
 setGeneric("annotation_data<-", function(x, value) {
@@ -2296,7 +2301,20 @@ setMethod("show", "SynIndividual", function(object) {
   cat("  loaded:", paste(names(loaded)[loaded], collapse = ", "), "\n")
 })
 
+#' Access a SynIndividual identifier
+#'
+#' Returns the identifier assigned to a `SynIndividual` object.
+#'
+#' @param x A `SynIndividual` object.
+#'
+#' @return A length-one character identifier.
+#'
+#' @examples
+#' x <- SynIndividual(id = "sample")
+#' syn_id(x)
+#' @export
 setGeneric("syn_id", function(x) standardGeneric("syn_id"))
+#' @rdname syn_id
 setMethod("syn_id", "SynIndividual", function(x) x@id)
 
 setGeneric("genome_file", function(x) standardGeneric("genome_file"))
@@ -2341,13 +2359,29 @@ setMethod("nucleotide_seq", "SynIndividual", function(x) {
 })
 setMethod("nucleotide_seq", "SynFeatureAnnotation", function(x) x@nucleotide_seq)
 
+#' Access translated protein sequences
+#'
+#' Returns the translated protein sequences stored on a `SynIndividual` or
+#' `SynFeatureAnnotation` object.
+#'
+#' @param x A `SynIndividual` or `SynFeatureAnnotation` object.
+#'
+#' @return A `Biostrings::AAStringSet` object, or `NULL` when no protein
+#'   sequences are stored.
+#'
+#' @examples
+#' x <- SynIndividual(id = "sample")
+#' protein_seq(x)
+#' @export
 setGeneric("protein_seq", function(x) standardGeneric("protein_seq"))
+#' @rdname protein_seq
 setMethod("protein_seq", "SynIndividual", function(x) {
   ann_name <- active_feature_annotation(x)
   if (!ann_name %in% names(x@annotations)) return(NULL)
   ann <- get_annotation(x, ann_name)
   protein_seq(ann)
 })
+#' @rdname protein_seq
 setMethod("protein_seq", "SynFeatureAnnotation", function(x) x@protein_seq)
 
 setGeneric("seqinfo", function(x) standardGeneric("seqinfo"))
@@ -2369,7 +2403,21 @@ setGeneric("plot_cache", function(x) standardGeneric("plot_cache"))
 setMethod("plot_cache", "SynIndividual", function(x) x@plot_cache)
 setMethod("plot_cache", "SynAnnotation", function(x) x@plot_cache)
 
+#' Access stored projected protein-domain tables
+#'
+#' Returns the named list of projected protein-domain tables stored on a
+#' `SynIndividual` object.
+#'
+#' @param x A `SynIndividual` object.
+#'
+#' @return A named list of stored projected protein-domain tables.
+#'
+#' @examples
+#' x <- SynIndividual(id = "sample")
+#' projected_domains(x)
+#' @export
 setGeneric("projected_domains", function(x) standardGeneric("projected_domains"))
+#' @rdname projected_domains
 setMethod("projected_domains", "SynIndividual", function(x) x@projected_domains)
 
 setGeneric("annotation_names", function(x) standardGeneric("annotation_names"))
@@ -2577,11 +2625,20 @@ setReplaceMethod("annotation_data", "SynIndividual", function(x, value) {
   if (!is.null(value) && !methods::is(value, "GRanges")) {
     stop("`annotation_data<-` expects a GRanges object or NULL.", call. = FALSE)
   }
-  if (length(x@annotations) > 0L && active_annotation(x) %in% names(x@annotations)) {
-    ann <- x@annotations[[active_annotation(x)]]
-    ann@annotation <- value
-    x@annotations[[active_annotation(x)]] <- ann
+  ann_name <- active_feature_annotation(x)
+  has_active_feature <- ann_name %in% names(x@annotations) &&
+    methods::is(x@annotations[[ann_name]], "SynFeatureAnnotation")
+  if (!has_active_feature) {
+    stop(
+      "`annotation_data<-` requires an active SynFeatureAnnotation layer. Add one with `add_annotation()` first.",
+      call. = FALSE
+    )
   }
+  ann <- x@annotations[[ann_name]]
+  annotation_data(ann) <- value
+  x@annotations[[ann_name]] <- ann
+  x@seqinfo <- if (is.null(value)) NULL else GenomeInfoDb::seqinfo(value)
+  x@plot_cache <- list()
   validObject(x)
   x
 })
@@ -2591,6 +2648,13 @@ setReplaceMethod("annotation_data", "SynFeatureAnnotation", function(x, value) {
     stop("`annotation_data<-` expects a GRanges object or NULL.", call. = FALSE)
   }
   x@annotation <- value
+  x@base_annotation <- value
+  x@patches <- list()
+  x@label_map <- NULL
+  x@feature_index <- NULL
+  x@nucleotide_seq <- NULL
+  x@protein_seq <- NULL
+  x@plot_cache <- list()
   x@loaded <- !is.null(value)
   validObject(x)
   x

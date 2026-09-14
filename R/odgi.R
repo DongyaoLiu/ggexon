@@ -39,7 +39,7 @@ odgi_node_table_script <- function() {
 .run_python_script <- function(python, script, args) {
   output <- system2(
     python,
-    args = c(script, args),
+    args = shQuote(c(script, args)),
     stdout = TRUE,
     stderr = TRUE
   )
@@ -1246,6 +1246,12 @@ setMethod("multiple_alignment_data", "SynMultiAlignment", function(x, ..., odgi 
     return(x@data)
   }
 
+  if (identical(alignment_format(x), "maf")) {
+    stop(
+      "Loading a MAF file is not implemented; supply already parsed MAF data through `data`.",
+      call. = FALSE
+    )
+  }
   if (!identical(alignment_format(x), "odgi")) {
     stop(
       "Automatic parsing is currently implemented only for `SynMultiAlignment` objects with format = 'odgi'.",

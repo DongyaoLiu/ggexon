@@ -636,7 +636,7 @@ GeomGeneLabel <- ggproto("GeomGeneLabel", Geom,
 #' @param subset Optional numeric length-2 genomic window to keep.
 #' @param panel_width_mm Estimated width of the genomic panel in millimetres.
 #'   Used to convert text size into data-coordinate units for label placement
-#'   and collision avoidance. Default `300` (≈ A4/US-letter panel width).
+#'   and collision avoidance. Default `300` (\eqn{\approx} A4/US-letter panel width).
 #'   Increase this for wide output (e.g. `ggsave(width = 40)`).
 #' @param panel_width_inch Same as `panel_width_mm` but in inches. When both
 #'   are provided, `panel_width_inch` takes precedence. One inch = 25.4 mm.

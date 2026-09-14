@@ -9,6 +9,10 @@ ucsc_human_sequence	https://api.genome.ucsc.edu/getData/sequence?genome=hg38;chr
 ucsc_mouse_sequence	https://api.genome.ucsc.edu/getData/sequence?genome=mm39;chrom=chr2;start=102631485;end=102752010
 lastz_min_alignment_length	80
 lastz_min_identity	50
-lastz_binary	/opt/homebrew/Cellar/lastz/1.04.52/bin/lastz
-lastz_command	/opt/homebrew/Cellar/lastz/1.04.52/bin/lastz /Users/liudongyao/Downloads/repository/ggexon/inst/extdata/cd44_pairwise_ensembl116/sequences/human_cd44_window.fa /Users/liudongyao/Downloads/repository/ggexon/inst/extdata/cd44_pairwise_ensembl116/sequences/mouse_cd44_window.fa --strand=both --chain --format=paf:minimap2 --output=/Users/liudongyao/Downloads/repository/ggexon/inst/extdata/cd44_pairwise_ensembl116/cd44_lastz.paf
-rscript	/Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/bin/Rscript
+lastz_binary	lastz
+lastz_version	1.04.52
+lastz_command	lastz human_cd44_window.fa mouse_cd44_window.fa --strand=both --chain --format=paf:minimap2 --output=cd44_lastz.paf
+rscript	R 4.4.1
+human_fasta_md5	831e0af2005f105ee109d8a44850ac26
+mouse_fasta_md5	ac17f56ce45b257a7030b453078b43cc
+paf_md5	a8e51d0a5dc44d03dc6f64e101ec6527

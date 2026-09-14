@@ -548,3 +548,88 @@ test_that("subset_individual can resolve through SynSpecies", {
   expect_identical(syn_id(subset_x), "XZ1516")
   expect_true(length(annotation_data(subset_x)) >= 1L)
 })
+
+test_that("annotation_data replacement refreshes SynIndividual owner state", {
+  x <- SynIndividual(id = "sample")
+  x <- add_annotation(
+    x,
+    SynFeatureAnnotation("default", "fixture.gff3"),
+    set_active = TRUE
+  )
+  x@plot_cache <- list(stale = TRUE)
+  replacement <- GenomicRanges::GRanges(
+    "chrReplacement",
+    IRanges::IRanges(5, 12),
+    seqinfo = GenomeInfoDb::Seqinfo("chrReplacement", seqlengths = 100L)
+  )
+
+  annotation_data(x) <- replacement
+
+  embedded <- get_annotation(x, "default")
+  expect_identical(annotation_data(embedded), replacement)
+  expect_identical(base_annotation(embedded), replacement)
+  expect_identical(seqinfo(x), GenomeInfoDb::seqinfo(replacement))
+  expect_identical(plot_cache(x), list())
+  expect_null(feature_index(x))
+
+  annotation_data(x) <- NULL
+  expect_null(annotation_data(x))
+  expect_null(seqinfo(x))
+})
+
+test_that("annotation_data replacement rejects a bare SynIndividual without mutation", {
+  x <- SynIndividual(id = "bare")
+  original_seqinfo <- GenomeInfoDb::Seqinfo(
+    "chrExisting",
+    seqlengths = 50L
+  )
+  original_cache <- list(stale = data.frame(value = 1L))
+  seqinfo(x) <- original_seqinfo
+  plot_cache(x) <- original_cache
+  replacement <- GenomicRanges::GRanges(
+    "chrReplacement",
+    IRanges::IRanges(5, 12),
+    seqinfo = GenomeInfoDb::Seqinfo("chrReplacement", seqlengths = 100L)
+  )
+
+  expect_error(
+    annotation_data(x) <- replacement,
+    "requires an active SynFeatureAnnotation layer.*add_annotation\\(\\)"
+  )
+  expect_null(annotation_data(x))
+  expect_identical(annotation_names(x), character())
+  expect_identical(seqinfo(x), original_seqinfo)
+  expect_identical(plot_cache(x), original_cache)
+})
+
+test_that("set_gene_labels clears the SynIndividual plot cache", {
+  original <- GenomicRanges::GRanges("chr1", IRanges::IRanges(10, 20))
+  S4Vectors::mcols(original)$gene_id <- "g1"
+  ann <- SynFeatureAnnotation("default", "fixture.gff3")
+  annotation_data(ann) <- original
+  x <- SynIndividual(id = "sample")
+  x <- add_annotation(x, ann, set_active = TRUE)
+  x@plot_cache <- list(stale = TRUE)
+
+  labelled <- set_gene_labels(x, c(g1 = "Gene one"))
+
+  embedded <- get_annotation(labelled, "default")
+  expect_identical(
+    as.character(S4Vectors::mcols(annotation_data(embedded))$plot_label),
+    "Gene one"
+  )
+  expect_identical(plot_cache(labelled), list())
+})
+
+test_that("documented SynIndividual accessors are exported", {
+  x <- SynIndividual(id = "sample")
+  public <- lapply(
+    c("syn_id", "protein_seq", "projected_domains"),
+    function(name) getExportedValue("ggexon", name)
+  )
+  names(public) <- c("syn_id", "protein_seq", "projected_domains")
+
+  expect_identical(public$syn_id(x), "sample")
+  expect_null(public$protein_seq(x))
+  expect_identical(public$projected_domains(x), list())
+})

@@ -33,6 +33,7 @@ introns. The data are bundled under `inst/extdata/cox1_yeast_pairwise`.
 
 ```{r cox1-genes, message = FALSE, warning = FALSE}
 library(ggexon)
+library(ggplot2)
 
 demo_dir <- system.file("extdata", "cox1_yeast_pairwise", package = "ggexon")
 species <- read.delim(file.path(demo_dir, "cox1_species.tsv"), check.names = FALSE)

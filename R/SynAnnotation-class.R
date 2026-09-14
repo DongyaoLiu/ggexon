@@ -18,7 +18,9 @@ NULL
 #' * `SynProteinAnnotation`: abstract protein-coordinate individual annotation
 #' * `SynFeatureAnnotation`: GFF/GTF structural annotation
 #' * `SynAnnotationPatch`: gene-model patch record
-#' * `SynVCFAnnotation`: VCF/BCF variant annotation
+#' * `SynVCFAnnotation`: VCF variant annotation. VCF querying is supported.
+#'   BCF parsing is not implemented; BCF input raises an unsupported-format
+#'   error.
 #' * `SynBigWigAnnotation`: BigWig signal annotation
 #' * `SynProteinDomainAnnotation`: protein-domain annotation
 #' * `SynProteinMutationAnnotation`: protein-coordinate mutation annotation
@@ -287,8 +289,9 @@ setClass(
 
 #' SynVCFAnnotation class
 #'
-#' `SynVCFAnnotation` stores a region-queryable variant layer backed by a VCF or
-#' BCF file.
+#' `SynVCFAnnotation` stores a region-queryable variant layer backed by a VCF
+#' file. VCF querying is supported. BCF parsing is not implemented; BCF input
+#' raises an unsupported-format error.
 #'
 #' In addition to the slots listed below, the class inherits `name`,
 #' `source_file`, `annotation_scope`, `lazy`, `loaded`, `metadata`, and
@@ -298,7 +301,9 @@ setClass(
 #' @slot variants Optional cached parsed variant data.
 #' @slot index_file Optional index file path for random access.
 #' @slot genome_build Optional genome-build label.
-#' @slot region_cache Cache of previously queried genomic windows.
+#' @slot region_cache Compatibility store for pre-populated genomic-window
+#'   results. On-demand value-returning queries do not populate the
+#'   caller-owned object.
 #'
 #' @section Prototype defaults:
 #' * `data_format = "vcf"`
@@ -397,7 +402,9 @@ setClass(
 #' `plot_cache` from `SynAnnotation`.
 #'
 #' @slot data_format Domain file format label. Currently `"domain"`.
-#' @slot domain_data Optional cached parsed domain table.
+#' @slot domain_data Optional pre-populated compatibility store for a parsed
+#'   domain table. On-demand value-returning queries do not populate the
+#'   caller-owned object.
 #' @slot keytype Identifier type used to join domain rows to package objects.
 #' @slot source_db Optional source database label such as `"Pfam"` or
 #'   `"InterPro"`.
@@ -444,7 +451,9 @@ setClass(
 #'
 #' @slot data_format Mutation file format label. Currently
 #'   `"protein_mutation"`.
-#' @slot mutation_data Optional cached normalized mutation table.
+#' @slot mutation_data Optional pre-populated compatibility store for a
+#'   normalized mutation table. On-demand value-returning queries do not
+#'   populate the caller-owned object.
 #' @slot individual_index Optional long index mapping source mutation rows to
 #'   individual/strain identifiers.
 #' @slot keytype Identifier column used to join mutations to proteins,
@@ -549,11 +558,24 @@ SynAnnotationPatch <- function(name,
   )
 }
 
+.is_bcf_file <- function(path) {
+  length(path) == 1L && !is.na(path) &&
+    grepl("\\.bcf(?:\\.gz)?$", path, ignore.case = TRUE, perl = TRUE)
+}
+
+.abort_unsupported_bcf <- function() {
+  stop(
+    "BCF parsing is not supported; provide a VCF or VCF.GZ file.",
+    call. = FALSE
+  )
+}
+
 #' Constructor for SynVCFAnnotation
 #'
 #' @param name Short unique label for the annotation layer.
-#' @param vcf_file Path to the VCF or BCF file.
-#' @param index_file Optional index path for large VCF/BCF access.
+#' @param vcf_file Path to the VCF file. VCF querying is supported. BCF parsing
+#'   is not implemented; BCF input raises an unsupported-format error.
+#' @param index_file Optional index path for large VCF access.
 #' @param genome_build Optional genome build string.
 #' @param metadata Optional metadata list.
 #' @param lazy Logical; defaults to `TRUE` for region-based querying.
@@ -566,6 +588,10 @@ SynVCFAnnotation <- function(name,
                              genome_build = NA_character_,
                              metadata = list(),
                              lazy = TRUE) {
+  if (.is_bcf_file(vcf_file)) {
+    .abort_unsupported_bcf()
+  }
+
   new(
     "SynVCFAnnotation",
     name = name,
@@ -771,6 +797,8 @@ set_gene_labels <- function(x, mapping, annotation = NULL) {
     }
     ann <- set_gene_labels(ann, mapping = mapping)
     x <- add_annotation(x, ann, set_active = identical(ann_name, active_feature_annotation(x)))
+    x@plot_cache <- list()
+    validObject(x)
     return(x)
   }
 
@@ -782,12 +810,12 @@ set_gene_labels <- function(x, mapping, annotation = NULL) {
   }
 
   map_df <- .normalize_label_mapping(mapping)
-  label_map(x) <- map_df
-
-  if (!is.null(annotation_data(x))) {
-    annotation_data(x) <- .apply_label_mapping(annotation_data(x), map_df)
+  x@label_map <- map_df
+  if (!is.null(x@annotation)) {
+    x@annotation <- .apply_label_mapping(x@annotation, map_df)
   }
-
+  x@plot_cache <- list()
+  validObject(x)
   x
 }
 
@@ -1218,8 +1246,10 @@ patch_annotation_from_gff <- function(x,
 
 #' Query variants from a SynVCFAnnotation
 #'
-#' For large tabix-backed VCF files, this function uses region-based access when
-#' possible. Plain-text VCF files are read and filtered on demand.
+#' VCF querying is supported. BCF parsing is not implemented; BCF input raises
+#' an unsupported-format error. For large tabix-backed VCF files, this function
+#' uses region-based access when possible. Plain-text VCF files are read and
+#' filtered on demand.
 #'
 #' @param x A `SynVCFAnnotation` object.
 #' @param chr Chromosome name.
@@ -1232,6 +1262,9 @@ query_variants <- function(x, chr, start, end) {
   if (!methods::is(x, "SynVCFAnnotation")) {
     stop("`query_variants()` expects a SynVCFAnnotation object.", call. = FALSE)
   }
+  if (.is_bcf_file(source_file(x))) {
+    .abort_unsupported_bcf()
+  }
 
   cache_key <- paste(chr, start, end, sep = ":")
   if (cache_key %in% names(x@region_cache)) {
@@ -1241,8 +1274,12 @@ query_variants <- function(x, chr, start, end) {
   if (grepl("\\.gz$", source_file(x), ignore.case = TRUE) &&
       !is.na(x@index_file) && nzchar(x@index_file) &&
       file.exists(source_file(x)) && file.exists(x@index_file)) {
-    param <- sprintf("%s:%s-%s", chr, start, end)
-    vcf_lines <- Rsamtools::scanTabix(source_file(x), param = param)[[1L]]
+    param <- GenomicRanges::GRanges(
+      chr,
+      IRanges::IRanges(start = start, end = end)
+    )
+    tabix <- Rsamtools::TabixFile(source_file(x), index = x@index_file)
+    vcf_lines <- Rsamtools::scanTabix(tabix, param = param)[[1L]]
     lines <- vcf_lines[!grepl("^#", vcf_lines)]
   } else {
     lines <- .read_delimited_annotation_lines(source_file(x), skip_pattern = "^##")
@@ -1264,8 +1301,6 @@ query_variants <- function(x, chr, start, end) {
   }
 
   result <- .vcf_lines_to_dataframe(lines)
-  x@region_cache[[cache_key]] <- result
-  x@loaded <- TRUE
   result
 }
 
@@ -1288,8 +1323,6 @@ query_domains <- function(x, ids = NULL, domains = NULL) {
   domain_data <- x@domain_data
   if (is.null(domain_data)) {
     domain_data <- .load_domain_table(source_file(x))
-    x@domain_data <- domain_data
-    x@loaded <- TRUE
   }
 
   out <- domain_data

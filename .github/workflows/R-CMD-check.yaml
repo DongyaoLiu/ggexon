@@ -1,0 +1,43 @@
+name: R-CMD-check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  R-CMD-check:
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - {os: macos-latest, r: release}
+          - {os: windows-latest, r: release}
+          - {os: ubuntu-latest, r: devel, http-user-agent: release}
+          - {os: ubuntu-latest, r: release}
+          - {os: ubuntu-latest, r: oldrel-1}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: r-lib/actions/setup-pandoc@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590
+      - uses: r-lib/actions/setup-r@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590
+        with:
+          r-version: ${{ matrix.config.r }}
+          http-user-agent: ${{ matrix.config.http-user-agent }}
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-tinytex@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590
+      - uses: r-lib/actions/setup-r-dependencies@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590
+        with:
+          extra-packages: any::rcmdcheck
+          needs: check
+      - uses: r-lib/actions/check-r-package@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590
+        with:
+          args: 'c("--as-cran")'
+          build_args: 'character()'
+          error-on: '"warning"'

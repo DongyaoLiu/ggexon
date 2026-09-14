@@ -32,4 +32,6 @@ A \code{data.frame} containing pairwise alignment rows.
 \description{
 Returns the pairwise alignment table for a \code{\link{SynPairAlignment}} object or a
 stored pairwise alignment inside a \code{\link{SynSpecies}} object.
+Returned \code{qstart}, \code{qend}, \code{tstart}, and \code{tend} values use one-based closed
+genomic intervals; PAF and PSL source starts are normalized during import.
 }

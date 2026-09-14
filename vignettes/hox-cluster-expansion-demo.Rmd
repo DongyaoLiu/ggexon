@@ -38,6 +38,7 @@ HOXA. Its HOXB--HOXD cells are structural blanks.
 
 ```{r hox-data, message = FALSE, warning = FALSE}
 library(ggexon)
+library(ggplot2)
 
 demo_dir <- system.file("extdata", "hox_cluster_expansion", package = "ggexon")
 genes <- read.delim(file.path(demo_dir, "hox_genes.tsv"), check.names = FALSE)

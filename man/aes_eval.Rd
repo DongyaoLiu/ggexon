@@ -131,38 +131,38 @@ ggplot(mpg, aes(class, displ)) +
 
 \examples{
 # Default histogram display
-ggplot(mpg, aes(displ)) +
-  geom_histogram(aes(y = after_stat(count)))
+ggplot2::ggplot(ggplot2::mpg, ggplot2::aes(displ)) +
+  ggplot2::geom_histogram(ggplot2::aes(y = after_stat(count)))
 
 # Scale tallest bin to 1
-ggplot(mpg, aes(displ)) +
-  geom_histogram(aes(y = after_stat(count / max(count))))
+ggplot2::ggplot(ggplot2::mpg, ggplot2::aes(displ)) +
+  ggplot2::geom_histogram(ggplot2::aes(y = after_stat(count / max(count))))
 
 # Use a transparent version of colour for fill
-ggplot(mpg, aes(class, hwy)) +
-  geom_boxplot(aes(colour = class, fill = after_scale(alpha(colour, 0.4))))
+ggplot2::ggplot(ggplot2::mpg, ggplot2::aes(class, hwy)) +
+  ggplot2::geom_boxplot(ggplot2::aes(colour = class, fill = after_scale(alpha(colour, 0.4))))
 
 # Use stage to modify the scaled fill
-ggplot(mpg, aes(class, hwy)) +
-  geom_boxplot(aes(fill = stage(class, after_scale = alpha(fill, 0.4))))
+ggplot2::ggplot(ggplot2::mpg, ggplot2::aes(class, hwy)) +
+  ggplot2::geom_boxplot(ggplot2::aes(fill = stage(class, after_scale = alpha(fill, 0.4))))
 
 # Making a proportional stacked density plot
-ggplot(mpg, aes(cty)) +
-  geom_density(
-    aes(
+ggplot2::ggplot(ggplot2::mpg, ggplot2::aes(cty)) +
+  ggplot2::geom_density(
+    ggplot2::aes(
       colour = factor(cyl),
       fill = after_scale(alpha(colour, 0.3)),
       y = after_stat(count / sum(n[!duplicated(group)]))
     ),
     position = "stack", bw = 1
   ) +
-  geom_density(bw = 1)
+  ggplot2::geom_density(bw = 1)
 
 # Imitating a ridgeline plot
-ggplot(mpg, aes(cty, colour = factor(cyl))) +
-  geom_ribbon(
+ggplot2::ggplot(ggplot2::mpg, ggplot2::aes(cty, colour = factor(cyl))) +
+  ggplot2::geom_ribbon(
     stat = "density", outline.type = "upper",
-    aes(
+    ggplot2::aes(
       fill = after_scale(alpha(colour, 0.3)),
       ymin = after_stat(group),
       ymax = after_stat(group + ndensity)
@@ -170,10 +170,10 @@ ggplot(mpg, aes(cty, colour = factor(cyl))) +
   )
 
 # Labelling a bar plot
-ggplot(mpg, aes(class)) +
-  geom_bar() +
-  geom_text(
-    aes(
+ggplot2::ggplot(ggplot2::mpg, ggplot2::aes(class)) +
+  ggplot2::geom_bar() +
+  ggplot2::geom_text(
+    ggplot2::aes(
       y = after_stat(count + 2),
       label = after_stat(count)
     ),
@@ -182,10 +182,10 @@ ggplot(mpg, aes(class)) +
 
 # Labelling the upper hinge of a boxplot,
 # inspired by June Choe
-ggplot(mpg, aes(displ, class)) +
-  geom_boxplot(outlier.shape = NA) +
-  geom_text(
-    aes(
+ggplot2::ggplot(ggplot2::mpg, ggplot2::aes(displ, class)) +
+  ggplot2::geom_boxplot(outlier.shape = NA) +
+  ggplot2::geom_text(
+    ggplot2::aes(
       label = after_stat(xmax),
       x = stage(displ, after_stat = xmax)
     ),

@@ -37,4 +37,6 @@ PSL record and normalizes the output columns to \code{qchr}, \code{qstart}, \cod
 \code{tchr}, \code{tstart}, \code{tend}, \code{strand}, \code{nmatch}, \code{alen}, and related fields
 expected by \code{\link[=pairwise_alignment_data]{pairwise_alignment_data()}} and \code{\link[=geom_nuclink]{geom_nuclink()}}. When
 \code{more = TRUE}, each PSL record is expanded into one row per ungapped block.
+Returned \code{qstart}, \code{qend}, \code{tstart}, and \code{tend} values use one-based closed
+genomic intervals; PAF and PSL source starts are normalized during import.
 }

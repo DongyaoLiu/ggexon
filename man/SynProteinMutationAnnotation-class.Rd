@@ -20,7 +20,9 @@ In addition to the slots listed below, the class inherits \code{name},
 \item{\code{data_format}}{Mutation file format label. Currently
 \code{"protein_mutation"}.}
 
-\item{\code{mutation_data}}{Optional cached normalized mutation table.}
+\item{\code{mutation_data}}{Optional pre-populated compatibility store for a
+normalized mutation table. On-demand value-returning queries do not
+populate the caller-owned object.}
 
 \item{\code{individual_index}}{Optional long index mapping source mutation rows to
 individual/strain identifiers.}

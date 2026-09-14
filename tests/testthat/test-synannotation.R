@@ -1007,3 +1007,107 @@ test_that("geom_exon falls back to CDS when patched transcripts have no exon row
   expect_true(all(as.character(exon_layer$type[zina_rows]) == "exon"))
   expect_equal(sum(zina_rows), 15L)
 })
+
+test_that("annotation_data replacement resets authoritative feature state", {
+  old <- GenomicRanges::GRanges("chrOld", IRanges::IRanges(10, 20))
+  replacement <- GenomicRanges::GRanges("chrNew", IRanges::IRanges(30, 40))
+  ann <- SynFeatureAnnotation("features", "fixture.gff3")
+  ann@annotation <- old
+  ann@base_annotation <- old
+  ann@patches <- list(SynAnnotationPatch("patch", old, target_ids = "g1"))
+  ann@label_map <- data.frame(feature_id = "g1", plot_label = "old")
+  ann@feature_index <- list(gene = 1L)
+  ann@nucleotide_seq <- stats::setNames(Biostrings::DNAStringSet("ATG"), "old")
+  ann@protein_seq <- stats::setNames(Biostrings::AAStringSet("M"), "old")
+  ann@plot_cache <- list(old = data.frame(x = 1L))
+  ann@loaded <- TRUE
+
+  annotation_data(ann) <- replacement
+
+  expect_identical(annotation_data(ann), replacement)
+  expect_identical(base_annotation(ann), replacement)
+  expect_length(list_patches(ann), 0L)
+  expect_null(label_map(ann))
+  expect_null(feature_index(ann))
+  expect_null(nucleotide_seq(ann))
+  expect_null(protein_seq(ann))
+  expect_identical(plot_cache(ann), list())
+  expect_true(is_loaded(ann))
+
+  annotation_data(ann) <- NULL
+  expect_null(annotation_data(ann))
+  expect_null(base_annotation(ann))
+  expect_false(is_loaded(ann))
+})
+
+test_that("set_gene_labels preserves authoritative state and clears only plot cache", {
+  original <- GenomicRanges::GRanges("chr1", IRanges::IRanges(10, 20))
+  S4Vectors::mcols(original)$gene_id <- "g1"
+  ann <- SynFeatureAnnotation("features", "fixture.gff3")
+  ann@annotation <- original
+  ann@base_annotation <- original
+  ann@patches <- list(SynAnnotationPatch("patch", original, target_ids = "g1"))
+  ann@feature_index <- list(gene = 1L)
+  ann@nucleotide_seq <- stats::setNames(Biostrings::DNAStringSet("ATG"), "g1")
+  ann@protein_seq <- stats::setNames(Biostrings::AAStringSet("M"), "g1")
+  ann@plot_cache <- list(stale = TRUE)
+  base_before <- ann@base_annotation
+  patches_before <- ann@patches
+  index_before <- ann@feature_index
+  nucleotide_before <- ann@nucleotide_seq
+  protein_before <- ann@protein_seq
+
+  labelled <- set_gene_labels(ann, c(g1 = "Gene one"))
+
+  expect_identical(as.character(label_map(labelled)$label), "Gene one")
+  expect_identical(
+    as.character(S4Vectors::mcols(annotation_data(labelled))$plot_label),
+    "Gene one"
+  )
+  expect_identical(base_annotation(labelled), base_before)
+  expect_identical(list_patches(labelled), patches_before)
+  expect_identical(feature_index(labelled), index_before)
+  expect_identical(nucleotide_seq(labelled), nucleotide_before)
+  expect_identical(protein_seq(labelled), protein_before)
+  expect_identical(plot_cache(labelled), list())
+})
+
+test_that("query_variants uses the configured non-default Tabix index", {
+  root <- tempfile("ggexon vcf ")
+  dir.create(root)
+  source <- file.path(root, "variants.vcf")
+  bgzf <- file.path(root, "variants with spaces.vcf.gz")
+  custom_index <- file.path(root, "custom index location.tbi")
+  writeLines(c(
+    "##fileformat=VCFv4.2",
+    "##contig=<ID=chr1,length=100>",
+    "#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO",
+    "chr1\t10\t.\tA\tG\t.\tPASS\t.",
+    "chr1\t20\t.\tC\tT\t.\tPASS\t."
+  ), source)
+  Rsamtools::bgzip(source, dest = bgzf, overwrite = TRUE)
+  default_index <- Rsamtools::indexTabix(bgzf, format = "vcf")
+  expect_true(file.rename(default_index, custom_index))
+  expect_false(file.exists(paste0(bgzf, ".tbi")))
+
+  layer <- SynVCFAnnotation("variants", bgzf, index_file = custom_index)
+  hits <- query_variants(layer, chr = "chr1", start = 10L, end = 10L)
+
+  expect_identical(nrow(hits), 1L)
+  expect_identical(as.integer(hits$POS), 10L)
+  expect_identical(as.character(hits$REF), "A")
+  expect_identical(as.character(hits$ALT), "G")
+})
+
+test_that("SynVCFAnnotation rejects unsupported BCF inputs explicitly", {
+  expect_error(
+    SynVCFAnnotation("variants", "sample.bcf"),
+    "BCF.*not supported.*VCF"
+  )
+  expect_error(
+    SynVCFAnnotation("variants", "sample.BCF.GZ"),
+    "BCF.*not supported.*VCF"
+  )
+  expect_s4_class(SynVCFAnnotation("variants", "sample.vcf"), "SynVCFAnnotation")
+  expect_s4_class(SynVCFAnnotation("variants", "sample.vcf.gz"), "SynVCFAnnotation")
+})

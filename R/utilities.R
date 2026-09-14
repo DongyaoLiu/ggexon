@@ -15,11 +15,11 @@ warn_dots_empty <- function(env = caller_env(), call = caller_env()) {
 #' @rdname reexports
 #' @export
 #' @examples
-#' ggplot(mpg, aes(displ, hwy)) +
-#'   geom_point(alpha = 0.5, colour = "blue")
+#' ggplot2::ggplot(ggplot2::mpg, ggplot2::aes(displ, hwy)) +
+#'   ggplot2::geom_point(alpha = 0.5, colour = "blue")
 #'
-#' ggplot(mpg, aes(displ, hwy)) +
-#'   geom_point(colour = alpha("blue", 0.5))
+#' ggplot2::ggplot(ggplot2::mpg, ggplot2::aes(displ, hwy)) +
+#'   ggplot2::geom_point(colour = alpha("blue", 0.5))
 alpha <- scales::alpha
 
 "%||%" <- function(a, b) {

@@ -66,9 +66,9 @@ test_that("read_pairwise_psl expands ungapped blocks when more = TRUE", {
 
   expect_identical(nrow(psl), 2L)
   expect_true(all(c("psl_row", "block_index", "block_size", "qstrand", "tstrand") %in% names(psl)))
-  expect_identical(psl$qstart, c(100L, 117L))
+  expect_identical(psl$qstart, c(101L, 118L))
   expect_identical(psl$qend, c(110L, 120L))
-  expect_identical(psl$tstart, c(1490L, 1480L))
+  expect_identical(psl$tstart, c(1491L, 1481L))
   expect_identical(psl$tend, c(1500L, 1483L))
   expect_identical(psl$block_size, c(10L, 3L))
   expect_identical(psl$qstrand, c("+", "+"))
@@ -201,24 +201,4 @@ test_that("read_pairwise_psl parses the 22-column liftover PSL shape", {
   expect_identical(psl$strand, "-")
   expect_identical(psl$nmatch, 100L)
   expect_identical(psl$alen, 105L)
-})
-
-test_that("read_pairwise_psl handles the external liftover PSL fixture shape", {
-  psl_path <- file.path(
-    "/Users/liudongyao/Downloads/workprogress/C35Project/V3/04/liftover_N2_V_20450000_20490000/psl",
-    "Caenorhabditis_afra.psl"
-  )
-  skip_if_not(file.exists(psl_path))
-
-  psl <- read_pairwise_psl(
-    psl_path,
-    query_individual = "N2",
-    target_individual = "Caenorhabditis_afra"
-  )
-
-  expect_true(nrow(psl) > 0L)
-  expect_true(all(as.character(psl$qchr) == "V"))
-  expect_true(all(psl$qlen > 0L))
-  expect_true(all(psl$tlen > 0L))
-  expect_true(all(psl$alen >= psl$nmatch))
 })

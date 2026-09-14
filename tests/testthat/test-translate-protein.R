@@ -1,7 +1,4 @@
 test_that("translate_protein translates the first three genes from extdata", {
-  skip_if_not_installed("dplyr")
-  library(dplyr)
-
   genome_path <- system.file("extdata", "compact_synspecies", "XZ1516.fasta", package = "ggexon")
   annotation_path <- system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
     package = "ggexon"
@@ -13,7 +10,7 @@ test_that("translate_protein translates the first three genes from extdata", {
   x <- test_syn_individual(
     genome_file = genome_path,
     annotation_file = annotation_path
-  ) %>%
+  ) |>
     load_annotation()
 
   ann <- annotation_data(x)
@@ -35,7 +32,7 @@ test_that("translate_protein translates the first three genes from extdata", {
 
   expect_gte(length(expected_transcripts), 3L)
 
-  x2 <- x %>%
+  x2 <- x |>
     translate_protein(genes = selected_genes)
 
   translated_tx <- names(protein_seq(x2))

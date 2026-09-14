@@ -67,7 +67,7 @@ rows <- lapply(strains, function(strain) {
 
   data.frame(
     strain = strain,
-    source_bam = normalizePath(bam),
+    source_bam = basename(bam),
     bigwig = bigwig_name,
     chr = chr,
     start = window_start,

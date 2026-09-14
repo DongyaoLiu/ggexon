@@ -87,13 +87,13 @@ The core data containers are:
 | `SynSpecies` | Project-level container for individuals, alignments, trees, and layout state |
 | `SynIndividual` | One genome, strain, species, or sample |
 | `SynFeatureAnnotation` | Genes, transcripts, exons, CDS, labels, and annotation patches |
-| `SynVCFAnnotation` | Variant data queried by genomic interval |
+| `SynVCFAnnotation` | VCF querying is supported. BCF parsing is not implemented; BCF input raises an unsupported-format error. |
 | `SynBigWigAnnotation` | Signal tracks queried by genomic interval |
 | `SynProteinDomainAnnotation` | Protein-domain intervals from InterProScan-like tables |
 | `SynProteinMutationAnnotation` | Protein mutation summaries for lollipop-style tracks |
 | `HomologyAnnotation` | Cross-species gene homology mappings from BLAST results |
 | `SynPairAlignment` | Pairwise genome links from PAF, PSL, or ODGI-derived data |
-| `SynMultiAlignment` | Multi-genome alignment links from MAF or ODGI-backed data |
+| `SynMultiAlignment` | Stores already parsed MAF data supplied through `data`; loading a MAF file remains unavailable. ODGI-backed loading is available. |
 | `SynLayout` | Stored panel windows and layout decisions |
 
 ### Part 2: Functions Manipulate and Draw Classes

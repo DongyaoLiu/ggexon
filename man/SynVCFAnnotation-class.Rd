@@ -5,8 +5,9 @@
 \alias{SynVCFAnnotation-class}
 \title{SynVCFAnnotation class}
 \description{
-\code{SynVCFAnnotation} stores a region-queryable variant layer backed by a VCF or
-BCF file.
+\code{SynVCFAnnotation} stores a region-queryable variant layer backed by a VCF
+file. VCF querying is supported. BCF parsing is not implemented; BCF input
+raises an unsupported-format error.
 }
 \details{
 In addition to the slots listed below, the class inherits \code{name},
@@ -24,7 +25,9 @@ In addition to the slots listed below, the class inherits \code{name},
 
 \item{\code{genome_build}}{Optional genome-build label.}
 
-\item{\code{region_cache}}{Cache of previously queried genomic windows.}
+\item{\code{region_cache}}{Compatibility store for pre-populated genomic-window
+results. On-demand value-returning queries do not populate the
+caller-owned object.}
 }}
 
 \section{Prototype defaults}{

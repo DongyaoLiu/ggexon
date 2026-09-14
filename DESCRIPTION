@@ -1,46 +1,48 @@
 Package: ggexon
-Title: Harmonizing Visualization of Genomic Synteny Across Different Genomes
+Title: Harmonizing Visualization of Genomic Synteny Across Genomes
 Version: 0.1
 Authors@R: 
-    person("Dongyao", "LIU", , "dongyao@connect.hku.hk", role = c("aut", "cre"),
-           comment = c(ORCID = "0000-0002-8066-1487"))
-Description: visulize genomic tracks with associate meta information.
+    person("Dongyao", "LIU", , "dongyao@connect.hku.hk", role = c("aut", "cre"))
+Description: Provides a grammar of graphics for visualizing genomic annotations,
+    synteny, alignments, protein features, mutation summaries, and associated
+    track data across genomes.
 URL: https://dongyaoliu.github.io/ggexon/,
     https://github.com/DongyaoLiu/ggexon
 BugReports: https://github.com/DongyaoLiu/ggexon/issues
 SystemRequirements: Python (>= 3.8), odgi
 Depends:
-    methods,
-    gtable,
-    ggforce,
-    dplyr,
-    rtracklayer,
-    grid,
-    tidyr,
-    scales,
-    reshape2,
-    rlang,
-    vctrs,
-    S7
+    R (>= 4.1)
 Imports:
     BiocGenerics,
     Biostrings,
     cli,
+    dplyr,
     farver,
     fuzzyjoin,
     GenomeInfoDb,
     GenomicRanges,
-    ggplot2,
+    ggforce,
+    ggplot2 (>= 4.0.0),
     glue,
+    grid,
+    gtable,
     IRanges,
     lifecycle,
+    methods,
     readr,
+    reshape2,
+    rlang,
     Rsamtools,
+    rtracklayer,
     S4Vectors,
+    S7,
+    scales,
     stats,
     stringr,
     tibble,
+    tidyr,
     utils,
+    vctrs,
     withr
 Suggests:
     ape,
@@ -65,6 +67,7 @@ Collate:
     'aes-evaluation.R'
     'all-classes-S7.R'
     'bigwig-annotation.R'
+    'cd44-provenance.R'
     'coord.R'
     'cross-panel-annotations.R'
     'facet-genomics.R'
@@ -72,7 +75,6 @@ Collate:
     'geom-aa-variant.R'
     'geom-coverage.R'
     'geom-coverageMUT.R'
-    'geom-direction.R'
     'geom-exon.R'
     'geom-gene.R'
     'geom-genebox.R'

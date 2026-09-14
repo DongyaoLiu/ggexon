@@ -12,6 +12,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+library(ggexon)
 ```
 
 # Overview
@@ -35,8 +36,6 @@ This vignette sketches the core workflow:
 # Create a `SynIndividual`
 
 ```{r eval = FALSE}
-library(ggexon)
-
 x <- SynIndividual(
   genome_file = system.file("extdata", "compact_synspecies", "XZ1516.fasta", package = "ggexon"),
   annotation_file = system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
@@ -58,6 +57,9 @@ At this point the active layer is a `SynFeatureAnnotation`.
 
 You can attach variant, signal, and protein-domain layers to the same
 `SynIndividual`.
+
+VCF querying is supported. BCF parsing is not implemented; BCF input raises an
+unsupported-format error.
 
 ```{r eval = FALSE}
 x <- add_annotation(
@@ -146,6 +148,9 @@ query_variants(variant_layer, chr = "V_RagTag", start = 21574336, end = 21574400
 Once you have multiple genomes or species, `SynSpecies` can hold both the
 `SynIndividual` objects and their cross-species alignments.
 
+Template requiring user-provided files: this recipe expects your second genome,
+annotation, and pairwise alignment files.
+
 ```{r eval = FALSE}
 x2 <- SynIndividual(other_genome_file, other_annotation_file)
 
@@ -166,13 +171,22 @@ sp <- add_pairwise_alignment(
 
 For multiple-species alignments:
 
+`SynMultiAlignment` can store already parsed MAF data supplied through `data`,
+but `load_alignment()` cannot parse a MAF file. ODGI-backed file loading is
+supported.
+
+Template requiring user-provided files: this storage-only recipe expects
+already parsed MAF data from your own file.
+
 ```{r eval = FALSE}
 sp <- add_multiple_alignment(
   sp,
   SynMultiAlignment(
     name = "worm-maf",
     individuals = c("XZ1516", "N2", "CB4856"),
-    file = "worms.maf"
+    file = "worms.maf",
+    format = "maf",
+    data = pre_parsed_maf
   )
 )
 ```
@@ -214,7 +228,7 @@ label `RagTag_V` to the annotation seqname used in the GFF (`V_RagTag` in the
 bundled example), and creates the default `aes()` mapping needed by
 `geom_exon()`.
 
-```{r eval = FALSE}
+```{r workflow-one-individual, eval = TRUE, fig.alt = "Exon structures for XZ1516 genes across RagTag_V positions 21,550,000 to 21,680,000."}
 x <- SynIndividual(
   genome_file = system.file("extdata", "compact_synspecies", "XZ1516.fasta", package = "ggexon"),
   annotation_file = system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
@@ -239,11 +253,12 @@ required so the geom knows which one to plot.
 The same direct plotting workflow is also available for `geom_genetag()`, which
 collapses the region to one directional span per `gene_id`.
 
-```{r eval = FALSE}
+```{r workflow-genetag, eval = TRUE, fig.alt = "Directional gene spans for XZ1516 across the same RagTag_V interval."}
 ggexon(sp) +
   geom_genetag(
     chr = "RagTag_V",
-    subset = c(21550000, 21680000)
+    subset = c(21550000, 21680000),
+    show_label = FALSE
   )
 ```
 
@@ -262,12 +277,40 @@ For pairwise comparison, draw the annotation tracks and then let
 `geom_nuclink()` resolve the stored alignment into the middle link panel. The
 reference species supplies the input coordinates.
 
-```{r eval = FALSE}
+```{r workflow-pairwise-setup, eval = TRUE}
+n2 <- SynIndividual(
+  genome_file = system.file(
+    "extdata", "compact_synspecies",
+    "c_elegans.PRJNA13758.WS285.genomic.fa",
+    package = "ggexon"
+  ),
+  annotation_file = system.file(
+    "extdata", "compact_synspecies",
+    "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
+    package = "ggexon"
+  ),
+  annotation_format = "gtf",
+  id = "N2"
+)
+sp <- add_individual(sp, n2)
+sp <- add_pairwise_alignment(
+  sp,
+  SynPairAlignment(
+    "XZ1516_vs_N2",
+    query_individual = "XZ1516",
+    target_individual = "N2",
+    file = system.file(
+      "extdata", "compact_synspecies", "V_alginment.paf",
+      package = "ggexon"
+    )
+  )
+)
+```
+
+```{r workflow-pairwise-plot, eval = TRUE, fig.alt = "N2 and XZ1516 exon tracks linked by nucleotide alignments across the selected RagTag_V region."}
 ggexon(sp) +
   geom_exon(
-    species = c("N2", "XZ1516"),
-    chr = "RagTag_V",
-    subset = c(21574445, 21584356)
+    species = c("N2", "XZ1516")
   ) +
   geom_nuclink(
     reference = "XZ1516",

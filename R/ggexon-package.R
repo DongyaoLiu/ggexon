@@ -5,11 +5,11 @@
 ## Imports are declared selectively here so the package no longer relies on a
 ## broad `Depends:` search path. Symbols are grouped by their source package.
 
-#' @importFrom dplyr %>% arrange distinct filter first group_by if_else
-#'   left_join mutate n rename row_number rowwise select slice summarize ungroup
+#' @importFrom dplyr %>% arrange bind_rows case_when distinct filter first group_by if_else
+#'   join_by left_join mutate n rename row_number rowwise select slice summarize ungroup
 #' @importFrom rlang arg_match0 as_function as_string call_match caller_arg
 #'   caller_env check_dots_empty check_installed cnd_message current_env dots_list
-#'   enexprs expr get_expr inject is_bare_list is_bare_numeric is_call is_null
+#'   enexprs expr get_expr inject int is_bare_list is_bare_numeric is_call is_null
 #'   is_quosure is_symbol new_quosure quo_get_env quo_get_expr quo_is_symbol
 #'   quo_text set_names sym try_fetch format_error_call zap
 #' @importFrom lifecycle deprecated
@@ -18,11 +18,11 @@
 #' @importFrom vctrs data_frame new_data_frame vec_cast vec_cbind vec_ptype2
 #'   vec_rbind vec_unique vec_unique_count
 #' @importFrom grid convertHeight convertWidth gList gTree gpar grobHeight
-#'   grobName grobWidth is.grob is.unit polylineGrob segmentsGrob unit unit.c
+#'   grobName grobWidth is.grob is.unit polygonGrob polylineGrob segmentsGrob textGrob unit unit.c
 #'   arrow drawDetails
-#' @importFrom gtable gtable_add_cols gtable_add_grob gtable_add_padding
+#' @importFrom gtable as.gtable gtable_add_cols gtable_add_grob gtable_add_padding
 #'   gtable_add_rows
-#' @importFrom scales label_ordinal
+#' @importFrom scales label_ordinal squish_infinite
 #' @import ggplot2
 #' @importFrom BiocGenerics width
 #' @importFrom GenomicRanges GRanges

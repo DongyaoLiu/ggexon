@@ -1,4 +1,5 @@
 .Rproj.user
+.Rhistory
 .deepseek/
 codex_output/
 tests/ldy_test.R

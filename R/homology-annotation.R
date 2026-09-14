@@ -314,6 +314,7 @@ import_blast_homology <- function(blast_file,
   }
 
   blast_df <- .read_blast_tabular(blast_file, col_names = col_names)
+  n_input_rows <- nrow(blast_df)
 
   blast_df$normalized_query <- .normalize_blast_query_id(
     blast_df$qseqid,
@@ -345,7 +346,7 @@ import_blast_homology <- function(blast_file,
     homology_table    = homology_table,
     source_file       = blast_file,
     metadata = c(metadata, list(
-      n_input_rows     = nrow(blast_df),
+      n_input_rows     = n_input_rows,
       n_unique_query   = nrow(homology_table),
       outfmt           = outfmt,
       rank_by          = rank_by

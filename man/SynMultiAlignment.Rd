@@ -20,8 +20,9 @@ SynMultiAlignment(
 
 \item{file}{Path to the alignment file.}
 
-\item{format}{Alignment format. Currently \code{"maf"} and \code{"odgi"} are
-supported.}
+\item{format}{Alignment format. \code{SynMultiAlignment} can store already parsed
+MAF data supplied through \code{data}, but \code{load_alignment()} cannot parse a MAF
+file. ODGI-backed file loading is supported.}
 
 \item{data}{Optional cached parsed alignment representation.}
 

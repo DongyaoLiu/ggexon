@@ -18,7 +18,9 @@ In addition to the slots listed below, the class inherits \code{name},
 \describe{
 \item{\code{data_format}}{Domain file format label. Currently \code{"domain"}.}
 
-\item{\code{domain_data}}{Optional cached parsed domain table.}
+\item{\code{domain_data}}{Optional pre-populated compatibility store for a parsed
+domain table. On-demand value-returning queries do not populate the
+caller-owned object.}
 
 \item{\code{keytype}}{Identifier type used to join domain rows to package objects.}
 

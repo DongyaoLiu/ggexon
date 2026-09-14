@@ -108,6 +108,27 @@ test_that("SynSpecies stores individuals and explicit alignment relationships", 
   expect_identical(individual_names(unnamed_sp), c("XZ1516", "N2"))
 })
 
+test_that("SynMultiAlignment stores parsed MAF data but rejects MAF file loading", {
+  parsed <- data.frame(block = 1L, sequence = c("AC", "AT"))
+  stored <- SynMultiAlignment(
+    "maf",
+    individuals = c("a", "b"),
+    file = "input.maf",
+    format = "maf",
+    data = parsed
+  )
+  expect_identical(multiple_alignment_data(stored), parsed)
+
+  unloaded <- SynMultiAlignment(
+    "maf",
+    individuals = c("a", "b"),
+    file = "input.maf",
+    format = "maf"
+  )
+  expect_error(multiple_alignment_data(unloaded), "Loading a MAF file is not implemented")
+  expect_error(load_alignment(unloaded), "Loading a MAF file is not implemented")
+})
+
 test_that("SynSpecies stores tree and tree plot objects", {
   tree <- structure(
     list(
@@ -1209,10 +1230,10 @@ test_that("reference-led comparative subsetting trims both annotations and the p
   expect_true(nrow(out$links) > 0L)
   expect_true(all(out$links$qchr == "V_RagTag"))
   expect_true(all(out$links$tchr == "V"))
-  expect_true(all(out$links$qstart < 21584356L & out$links$qend > 21574445L))
+  expect_true(all(out$links$qstart <= 21584356L & out$links$qend >= 21574445L))
   expect_true(all(
-    out$links$tstart < as.integer(out$windows$N2$end[[1L]]) &
-      out$links$tend > as.integer(out$windows$N2$start[[1L]])
+    out$links$tstart <= as.integer(out$windows$N2$end[[1L]]) &
+      out$links$tend >= as.integer(out$windows$N2$start[[1L]])
   ))
 })
 
@@ -1387,8 +1408,8 @@ test_that("pairwise_alignment_data subsets query and target regions and filters 
   expect_true(all(paf$alen >= 200L))
   expect_true(all(as.character(paf$qchr) == "V_RagTag"))
   expect_true(all(as.character(paf$tchr) == "V"))
-  expect_true(all(paf$qstart < 21680000L & paf$qend > 21550000L))
-  expect_true(all(paf$tstart < 20510000L & paf$tend > 19100000L))
+  expect_true(all(paf$qstart <= 21680000L & paf$qend >= 21550000L))
+  expect_true(all(paf$tstart <= 20510000L & paf$tend >= 19100000L))
   expect_identical(unique(as.character(paf$qspecies)), "XZ1516")
   expect_identical(unique(as.character(paf$tspecies)), "N2")
   expect_identical(unique(as.character(paf$track)), "link_XZ1516_vs_N2")
@@ -1527,8 +1548,8 @@ test_that("subset_pairwise_alignment and filter_pairwise_alignment compose on a 
   expect_true(nrow(subsetted_rows) > 0L)
   expect_true(nrow(filtered_rows) > 0L)
   expect_true(all(filtered_rows$alen >= 200L))
-  expect_true(all(subsetted_rows$qstart < 21584356L & subsetted_rows$qend > 21574445L))
-  expect_true(all(subsetted_rows$tstart < 20465040L & subsetted_rows$tend > 20456000L))
+  expect_true(all(subsetted_rows$qstart <= 21584356L & subsetted_rows$qend >= 21574445L))
+  expect_true(all(subsetted_rows$tstart <= 20465040L & subsetted_rows$tend >= 20456000L))
 })
 
 test_that("subset_pairwise_alignment accepts one-sided subsets", {
@@ -1582,7 +1603,7 @@ test_that("subset_pairwise_alignment accepts one-sided subsets", {
 
   expect_s4_class(subsetted, "SynSpecies")
   expect_true(nrow(subsetted_rows) > 0L)
-  expect_true(all(subsetted_rows$qstart < 21584356L & subsetted_rows$qend > 21574445L))
+  expect_true(all(subsetted_rows$qstart <= 21584356L & subsetted_rows$qend >= 21574445L))
   expect_identical(unique(as.character(subsetted_rows$qchr)), "V_RagTag")
 })
 

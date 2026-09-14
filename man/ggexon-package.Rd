@@ -3,9 +3,9 @@
 \docType{package}
 \name{ggexon-package}
 \alias{ggexon-package}
-\title{ggexon: Harmonizing Visualization of Genomic Synteny Across Different Genomes}
+\title{ggexon: Harmonizing Visualization of Genomic Synteny Across Genomes}
 \description{
-visulize genomic tracks with associate meta information.
+Provides a grammar of graphics for visualizing genomic annotations, synteny, alignments, protein features, mutation summaries, and associated track data across genomes.
 }
 \seealso{
 Useful links:
@@ -17,7 +17,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Dongyao LIU \email{dongyao@connect.hku.hk} (\href{https://orcid.org/0000-0002-8066-1487}{ORCID})
+\strong{Maintainer}: Dongyao LIU \email{dongyao@connect.hku.hk}
 
 }
 \keyword{internal}

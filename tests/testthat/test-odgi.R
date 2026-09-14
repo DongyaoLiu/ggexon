@@ -47,6 +47,34 @@ test_that("odgi_node_table exposes the bundled script path", {
   expect_match(basename(script), "^odgi_node_table\\.py$")
 })
 
+test_that(".run_python_script preserves literal argv boundaries", {
+  skip_on_os("windows")
+  python <- Sys.which("python3")
+  skip_if(!nzchar(python), "python3 is not installed")
+
+  root <- tempfile("ggexon odgi ; literal ")
+  dir.create(root)
+  script <- file.path(root, "capture argv.py")
+  capture <- file.path(root, "captured argv.txt")
+  marker <- file.path(root, "GGEXON_PWNED")
+  payload <- paste0("literal; touch ", marker)
+
+  writeLines(c(
+    "from pathlib import Path",
+    "import sys",
+    "Path(sys.argv[1]).write_text('\\n'.join(sys.argv[2:]) + '\\n')"
+  ), script)
+
+  .run_python_script(
+    python,
+    script,
+    c(capture, "value with spaces", payload)
+  )
+
+  expect_false(file.exists(marker))
+  expect_identical(readLines(capture), c("value with spaces", payload))
+})
+
 test_that("odgi_node_table builds a node table via the bundled Python script", {
   skip_if(.Platform$OS.type == "windows")
 

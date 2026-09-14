@@ -77,3 +77,56 @@ test_that("bundled CD44 demo reports exon-split protein identity", {
   expect_true(all(reciprocal$human_peptide_length_aa > 0))
   expect_true(all(reciprocal$mouse_peptide_length_aa > 0))
 })
+
+test_that("bundled CD44 demo records portable tool and checksum provenance", {
+  demo_dir <- system.file("extdata", "cd44_pairwise_ensembl116", package = "ggexon")
+  provenance <- read.delim(
+    file.path(demo_dir, "cd44_provenance.tsv"),
+    check.names = FALSE
+  )
+  required_keys <- c(
+    "lastz_binary", "lastz_version", "lastz_command", "rscript",
+    "human_fasta_md5", "mouse_fasta_md5", "paf_md5"
+  )
+
+  expect_true(all(required_keys %in% provenance$key))
+  values <- stats::setNames(as.character(provenance$value), provenance$key)
+  expect_true(all(grepl(
+    "^[0-9a-f]{32}$",
+    values[c("human_fasta_md5", "mouse_fasta_md5", "paf_md5")]
+  )))
+  expect_identical(values[["lastz_binary"]], basename(values[["lastz_binary"]]))
+})
+
+test_that("CD44 provenance skips unavailable LASTZ and PAF outputs", {
+  missing_lastz <- file.path(tempdir(), "missing-lastz")
+  missing_paf <- file.path(tempdir(), "missing-cd44.paf")
+  provenance <- ggexon:::collect_lastz_provenance(
+    lastz_bin = missing_lastz,
+    human_fasta = file.path(tempdir(), "missing-human.fa"),
+    mouse_fasta = file.path(tempdir(), "missing-mouse.fa"),
+    alignment = list(paf_path = missing_paf, command = NA_character_)
+  )
+
+  expect_identical(provenance$lastz_binary, "missing-lastz")
+  expect_true(is.na(provenance$lastz_version))
+  expect_true(is.na(provenance$lastz_command))
+  expect_true(is.na(provenance$human_fasta_md5))
+  expect_true(is.na(provenance$mouse_fasta_md5))
+  expect_true(is.na(provenance$paf_md5))
+})
+
+builder_path <- file.path(
+  testthat::test_path("..", ".."),
+  "data-raw", "cd44_pairwise_ensembl116", "build-cd44-demo.R"
+)
+if (file.exists(builder_path)) {
+  test_that("CD44 builder sources the package provenance helper", {
+    builder_text <- readLines(builder_path, warn = FALSE)
+    expect_true(any(grepl(
+      'file.path\\(repo_root, "R", "cd44-provenance.R"\\)',
+      builder_text
+    )))
+    expect_false(any(grepl("^collect_lastz_provenance <-", builder_text)))
+  })
+}

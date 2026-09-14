@@ -34,9 +34,9 @@ test_that("pairwise_alignment_data(cigar = TRUE) expands PAF cg matches into lon
 
   expect_identical(nrow(paf), 6L)
   expect_true(all(c("paf_row", "block_index", "block_size", "cigar_op", "qstrand", "tstrand") %in% names(paf)))
-  expect_identical(paf$qstart, c(100L, 107L, 110L, 106L, 101L, 100L))
+  expect_identical(paf$qstart, c(101L, 108L, 111L, 107L, 102L, 101L))
   expect_identical(paf$qend, c(105L, 110L, 114L, 110L, 104L, 101L))
-  expect_identical(paf$tstart, c(500L, 505L, 510L, 500L, 504L, 508L))
+  expect_identical(paf$tstart, c(501L, 506L, 511L, 501L, 505L, 509L))
   expect_identical(paf$tend, c(505L, 508L, 514L, 504L, 507L, 509L))
   expect_identical(paf$qstrand, c("+", "+", "+", "-", "-", "-"))
   expect_identical(paf$tstrand, rep("+", 6L))

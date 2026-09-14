@@ -16,9 +16,10 @@ SynVCFAnnotation(
 \arguments{
 \item{name}{Short unique label for the annotation layer.}
 
-\item{vcf_file}{Path to the VCF or BCF file.}
+\item{vcf_file}{Path to the VCF file. VCF querying is supported. BCF parsing
+is not implemented; BCF input raises an unsupported-format error.}
 
-\item{index_file}{Optional index path for large VCF/BCF access.}
+\item{index_file}{Optional index path for large VCF access.}
 
 \item{genome_build}{Optional genome build string.}
 

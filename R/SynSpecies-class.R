@@ -105,7 +105,9 @@ setClass(
 #' individuals. Like `SynPairAlignment`, it is a concrete `SynSpeAnnotation`
 #' with a source file, optional cached parsed representation, and metadata, but
 #' it records a vector of participating individual identifiers instead of
-#' query/target sides.
+#' query/target sides. `SynMultiAlignment` can store already parsed MAF data
+#' supplied through `data`, but `load_alignment()` cannot parse a MAF file.
+#' ODGI-backed file loading is supported.
 #'
 #' @slot name Unique alignment label used to retrieve the object from a
 #'   `SynSpecies`.
@@ -479,6 +481,8 @@ SynLayout <- function(panels,
 #' @details For PSL-backed alignments, use [load_alignment()] with
 #'   `more = TRUE` when you want the cached alignment table expanded to one row
 #'   per ungapped block instead of one row per PSL record.
+#'   Returned `qstart`, `qend`, `tstart`, and `tend` values use one-based closed
+#'   genomic intervals; PAF and PSL source starts are normalized during import.
 #'
 #' @return A `SynPairAlignment` object.
 #' @export
@@ -507,8 +511,9 @@ SynPairAlignment <- function(name,
 #' @param name Alignment label.
 #' @param individuals Character vector of included individuals.
 #' @param file Path to the alignment file.
-#' @param format Alignment format. Currently `"maf"` and `"odgi"` are
-#'   supported.
+#' @param format Alignment format. `SynMultiAlignment` can store already parsed
+#'   MAF data supplied through `data`, but `load_alignment()` cannot parse a MAF
+#'   file. ODGI-backed file loading is supported.
 #' @param data Optional cached parsed alignment representation.
 #' @param metadata Optional metadata list.
 #'
@@ -1448,6 +1453,8 @@ setMethod("alignment_individuals", "SynMultiAlignment", function(x) x@individual
 #'
 #' Returns the pairwise alignment table for a [`SynPairAlignment`] object or a
 #' stored pairwise alignment inside a [`SynSpecies`] object.
+#' Returned `qstart`, `qend`, `tstart`, and `tend` values use one-based closed
+#' genomic intervals; PAF and PSL source starts are normalized during import.
 #'
 #' @param x A [`SynPairAlignment`] or [`SynSpecies`] object.
 #' @param alignment Optional alignment name when `x` is a [`SynSpecies`].
@@ -2359,8 +2366,8 @@ setMethod("subset_synspecies_window", "SynSpecies", function(x,
   ref_chr_paf <- .resolve_paf_seqname(ref_chr, unique(as.character(paf[[ref_cols[["chr"]]]])))
   hits <- paf[
     as.character(paf[[ref_cols[["chr"]]]]) == ref_chr_paf &
-      paf[[ref_cols[["start"]]]] < ref_end &
-      paf[[ref_cols[["end"]]]] > ref_start,
+      paf[[ref_cols[["start"]]]] <= ref_end &
+      paf[[ref_cols[["end"]]]] >= ref_start,
     ,
     drop = FALSE
   ]
@@ -2396,8 +2403,8 @@ setMethod("subset_synspecies_window", "SynSpecies", function(x,
   partner_end <- max(cluster_hits[[partner_cols[["end"]]]])
 
   cluster_hits <- cluster_hits[
-    cluster_hits[[partner_cols[["start"]]]] < partner_end &
-      cluster_hits[[partner_cols[["end"]]]] > partner_start,
+    cluster_hits[[partner_cols[["start"]]]] <= partner_end &
+      cluster_hits[[partner_cols[["end"]]]] >= partner_start,
     ,
     drop = FALSE
   ]
@@ -2706,12 +2713,12 @@ setMethod("subset_synspecies_window", "SynSpecies", function(x,
         rows[[row_index]] <- data.frame(
           qchr = as.character(paf$qchr[[i]]),
           qlen = as.integer(paf$qlen[[i]]),
-          qstart = as.integer(q_interval[[1L]]),
+          qstart = as.integer(q_interval[[1L]] + 1L),
           qend = as.integer(q_interval[[2L]]),
           strand = as.character(paf$strand[[i]]),
           tchr = as.character(paf$tchr[[i]]),
           tlen = as.integer(paf$tlen[[i]]),
-          tstart = as.integer(t_interval[[1L]]),
+          tstart = as.integer(t_interval[[1L]] + 1L),
           tend = as.integer(t_interval[[2L]]),
           nmatch = len,
           alen = len,
@@ -2782,6 +2789,8 @@ setMethod("subset_synspecies_window", "SynSpecies", function(x,
     return(.expand_paf_matches(paf))
   }
   paf$cigar <- NULL
+  paf$qstart <- paf$qstart + 1L
+  paf$tstart <- paf$tstart + 1L
   paf
 }
 
@@ -2917,12 +2926,12 @@ setMethod("subset_synspecies_window", "SynSpecies", function(x,
     block_rows[[i]] <- data.frame(
       qchr = rep(.psl_seqname_from_field(psl$qChrom[[i]], species = query_individual), block_n),
       qlen = rep(as.integer(psl$qSize[[i]]), block_n),
-      qstart = as.integer(q_intervals[, 1L]),
+      qstart = as.integer(q_intervals[, 1L] + 1L),
       qend = as.integer(q_intervals[, 2L]),
       strand = rep(.psl_relative_strand(psl$strand_raw[[i]]), block_n),
       tchr = rep(.psl_seqname_from_field(psl$tName[[i]], species = target_individual), block_n),
       tlen = rep(as.integer(psl$tSize[[i]]), block_n),
-      tstart = as.integer(t_intervals[, 1L]),
+      tstart = as.integer(t_intervals[, 1L] + 1L),
       tend = as.integer(t_intervals[, 2L]),
       nmatch = block_sizes,
       alen = block_sizes,
@@ -3029,6 +3038,8 @@ setMethod("subset_synspecies_window", "SynSpecies", function(x,
 #' `tchr`, `tstart`, `tend`, `strand`, `nmatch`, `alen`, and related fields
 #' expected by [`pairwise_alignment_data()`] and [`geom_nuclink()`]. When
 #' `more = TRUE`, each PSL record is expanded into one row per ungapped block.
+#' Returned `qstart`, `qend`, `tstart`, and `tend` values use one-based closed
+#' genomic intervals; PAF and PSL source starts are normalized during import.
 #'
 #' @param path Path to a PSL file.
 #' @param query_individual Optional query-side individual identifier used to
@@ -3118,12 +3129,12 @@ read_pairwise_psl <- function(path,
   out <- data.frame(
     qchr = vapply(psl$qChrom, .psl_seqname_from_field, character(1), species = query_individual),
     qlen = as.integer(psl$qSize),
-    qstart = as.integer(psl$qStart),
+    qstart = as.integer(psl$qStart + 1L),
     qend = as.integer(psl$qEnd),
     strand = .psl_relative_strand(psl$strand_raw),
     tchr = vapply(psl$tName, .psl_seqname_from_field, character(1), species = target_individual),
     tlen = as.integer(psl$tSize),
-    tstart = as.integer(psl$tStart),
+    tstart = as.integer(psl$tStart + 1L),
     tend = as.integer(psl$tEnd),
     nmatch = as.integer(psl$matches + psl$repMatches),
     alen = as.integer(block_totals),
@@ -3216,14 +3227,14 @@ read_pairwise_psl <- function(path,
     if (!is.null(qspec)) {
       keep <- keep &
         as.character(paf$qchr) == qspec$chr &
-        paf$qstart < qspec$end &
-        paf$qend > qspec$start
+        paf$qstart <= qspec$end &
+        paf$qend >= qspec$start
     }
     if (!is.null(tspec)) {
       keep <- keep &
         as.character(paf$tchr) == tspec$chr &
-        paf$tstart < tspec$end &
-        paf$tend > tspec$start
+        paf$tstart <= tspec$end &
+        paf$tend >= tspec$start
     }
 
     paf <- paf[keep, , drop = FALSE]
@@ -3249,9 +3260,9 @@ read_pairwise_psl <- function(path,
 #' [`SynSpecies`], every stored pairwise and multiple alignment is loaded and
 #' the updated `SynSpecies` object is returned.
 #'
-#' Unloaded `SynMultiAlignment` objects with `format = "maf"` are not yet
-#' supported because the package does not currently provide a MAF parser. For
-#' PSL-backed [`SynPairAlignment`] objects, repeated calls to
+#' `SynMultiAlignment` can store already parsed MAF data supplied through
+#' `data`, but `load_alignment()` cannot parse a MAF file. ODGI-backed file
+#' loading is supported. For PSL-backed [`SynPairAlignment`] objects, repeated calls to
 #' `load_alignment()` with different explicit `more` values will replace the
 #' cached data so the in-memory representation matches the requested detail
 #' level, while `more = NULL` preserves any existing cached PSL mode.
@@ -3348,6 +3359,12 @@ setMethod("load_alignment", "SynPairAlignment", function(x, odgi = NULL, python 
 #' @rdname load_alignment
 setMethod("load_alignment", "SynMultiAlignment", function(x, odgi = NULL, python = NULL, more = NULL, cigar = NULL, alignment = NULL) {
   if (is.null(x@data)) {
+    if (identical(alignment_format(x), "maf")) {
+      stop(
+        "Loading a MAF file is not implemented; supply already parsed MAF data through `data`.",
+        call. = FALSE
+      )
+    }
     if (!identical(alignment_format(x), "odgi")) {
       stop(
         "`load_alignment()` currently supports unloaded SynMultiAlignment objects only when `format = 'odgi'`.",
@@ -3605,7 +3622,7 @@ setMethod("load_alignment", "SynSpecies", function(x, odgi = NULL, python = NULL
                                          max_target_gap) {
   hits$ref_overlap_bp <- pmax(
     0L,
-    pmin(hits[[ref_cols[["end"]]]], ref_end) - pmax(hits[[ref_cols[["start"]]]], ref_start)
+    pmin(hits[[ref_cols[["end"]]]], ref_end) - pmax(hits[[ref_cols[["start"]]]], ref_start) + 1L
   )
   hits <- hits[hits$ref_overlap_bp > 0L, , drop = FALSE]
   if (nrow(hits) == 0L) {
@@ -3631,7 +3648,7 @@ setMethod("load_alignment", "SynSpecies", function(x, odgi = NULL, python = NULL
         as.character(hits[[partner_cols[["chr"]]]][i - 1L])
       )
       same_strand <- identical(as.character(hits$strand[i]), as.character(hits$strand[i - 1L]))
-      gap_bp <- hits[[partner_cols[["start"]]]][i] - hits[[partner_cols[["end"]]]][i - 1L]
+      gap_bp <- hits[[partner_cols[["start"]]]][i] - hits[[partner_cols[["end"]]]][i - 1L] - 1L
       new_cluster[i] <- !(same_chr && same_strand && gap_bp <= max_target_gap)
     }
   }

@@ -13,3 +13,10 @@
 ^\.Rhistory$
 ^tests/ldy_test\.R$
 ^\.superpowers$
+(^|/)\.DS_Store$
+^inst/extdata/V_alginment\.paf$
+^inst/extdata/XZ1516\.fasta(\.fai)?$
+^inst/extdata/XZ1516_chrV_21560000_21620000\.(node_table\.tsv|og)$
+^inst/extdata/c_elegans\.PRJNA13758\.WS285\.canonical_geneset\.gtf$
+^inst/extdata/c_elegans\.PRJNA13758\.WS285\.genomic\.fa(\.fai)?$
+^inst/extdata/caenorhabditis_XZ1516\.gff3$

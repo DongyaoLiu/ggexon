@@ -41,6 +41,7 @@ original genomic coordinates.
 
 ```{r cd44-isoforms, message = FALSE, warning = FALSE}
 library(ggexon)
+library(ggplot2)
 
 demo_dir <- system.file("extdata", "cd44_pairwise_ensembl116", package = "ggexon")
 species <- read.delim(file.path(demo_dir, "cd44_species.tsv"), check.names = FALSE)

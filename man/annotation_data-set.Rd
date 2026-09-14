@@ -23,3 +23,9 @@ The updated \code{SynIndividual} object.
 \description{
 Coerce and assign annotation data
 }
+\details{
+For a \code{SynIndividual}, \code{active_feature_annotation(x)} must name an
+attached \code{SynFeatureAnnotation} layer before replacement. Add a feature
+layer with \code{\link[=add_annotation]{add_annotation()}} first. Replacing with \code{NULL} clears the
+active feature layer and its synchronized owner state.
+}

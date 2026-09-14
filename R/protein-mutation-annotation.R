@@ -450,13 +450,11 @@ setMethod("add_protein_mutation_annotation", "ANY", function(x,
 setGeneric("protein_mutation_data", function(x) standardGeneric("protein_mutation_data"))
 #' @rdname protein_mutation_data
 setMethod("protein_mutation_data", "SynProteinMutationAnnotation", function(x) {
-  if (is.null(x@mutation_data)) {
+  mutation_data <- x@mutation_data
+  if (is.null(mutation_data)) {
     mutation_data <- read_protein_mutation_counts(source_file(x))
-    x@mutation_data <- mutation_data
-    x@individual_index <- attr(mutation_data, "individual_index", exact = TRUE)
-    x@loaded <- TRUE
   }
-  x@mutation_data
+  mutation_data
 })
 
 setGeneric("protein_mutation_individual_index", function(x) {

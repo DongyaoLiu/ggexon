@@ -412,3 +412,27 @@ test_that("homology injection matches transcript aliases on gene rows", {
   expect_true(out$homology_hit[[1L]])
   expect_identical(out$reference_gene[[1L]], "prp-6")
 })
+
+test_that("import_blast_homology ranks hits before deduplication and records input metadata", {
+  blast_path <- tempfile(fileext = ".blast6")
+  writeLines(c(
+    "transcript:q1.t1\tref_low\t80\t100\t0\t0\t1\t100\t1\t100\t1e-20\t100",
+    "transcript:q1.t1\tref_best\t90\t100\t0\t0\t1\t100\t1\t100\t1e-30\t250",
+    "gene:q2-T1\tref_two\t85\t100\t0\t0\t1\t100\t1\t100\t1e-25\t200"
+  ), blast_path)
+
+  imported <- import_blast_homology(
+    blast_path,
+    reference_species = "reference",
+    query_species = "query",
+    rank_by = c("bitscore", "evalue"),
+    metadata = list(fixture = "multi-hit")
+  )
+  expect_identical(homology_table(imported)$query_gene, c("q1", "q2"))
+  expect_identical(homology_table(imported)$reference_gene, c("ref_best", "ref_two"))
+  metadata <- annotation_metadata(imported)
+  expect_identical(metadata$n_input_rows, 3L)
+  expect_identical(metadata$n_unique_query, 2L)
+  expect_identical(metadata$rank_by, c("bitscore", "evalue"))
+  expect_identical(metadata$fixture, "multi-hit")
+})

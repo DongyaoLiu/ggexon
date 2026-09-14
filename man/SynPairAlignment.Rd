@@ -42,4 +42,6 @@ Constructor for SynPairAlignment
 For PSL-backed alignments, use \code{\link[=load_alignment]{load_alignment()}} with
 \code{more = TRUE} when you want the cached alignment table expanded to one row
 per ungapped block instead of one row per PSL record.
+Returned \code{qstart}, \code{qend}, \code{tstart}, and \code{tend} values use one-based closed
+genomic intervals; PAF and PSL source starts are normalized during import.
 }

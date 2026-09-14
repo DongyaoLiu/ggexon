@@ -20,7 +20,9 @@ individual-level branch.
 \item \code{SynProteinAnnotation}: abstract protein-coordinate individual annotation
 \item \code{SynFeatureAnnotation}: GFF/GTF structural annotation
 \item \code{SynAnnotationPatch}: gene-model patch record
-\item \code{SynVCFAnnotation}: VCF/BCF variant annotation
+\item \code{SynVCFAnnotation}: VCF variant annotation. VCF querying is supported.
+BCF parsing is not implemented; BCF input raises an unsupported-format
+error.
 \item \code{SynBigWigAnnotation}: BigWig signal annotation
 \item \code{SynProteinDomainAnnotation}: protein-domain annotation
 \item \code{SynProteinMutationAnnotation}: protein-coordinate mutation annotation

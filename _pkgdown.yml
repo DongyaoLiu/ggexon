@@ -140,6 +140,7 @@ reference:
   - use_locus_grid
   - set_active_annotation
   - set_active_feature_annotation
+  - syn_id
   - individual_names
   - species_tree
   - matches("^species_tree<-$")
@@ -154,6 +155,7 @@ reference:
   - import_blast_homology
   - load_annotation
   - annotation_data
+  - protein_seq
   - query_features
   - query_variants
   - query_annotation

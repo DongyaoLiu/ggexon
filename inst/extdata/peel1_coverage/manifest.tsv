@@ -1,14 +1,14 @@
 strain	source_bam	bigwig	chr	start	end	bin_size	normalization	bamCoverage_region	bamCoverage_version	checksum
-XZ1516	/Users/liudongyao/Downloads/repository/TA_tmp/sept2_absent_igv_bams/bams/XZ1516.ChrI.ChrIII.ChrV.bam	XZ1516.raw.bw	I	2332338	2373985	1	None	I:2332337:2373985	bamCoverage 3.5.6	3e76b0ba8d503f2489c8cd59450701f8
-ECA2091	/Users/liudongyao/Downloads/repository/TA_tmp/sept2_absent_igv_bams/bams/ECA2091.ChrI.ChrIII.ChrV.bam	ECA2091.raw.bw	I	2332338	2373985	1	None	I:2332337:2373985	bamCoverage 3.5.6	5a0be0290ed8404defda4782db43745b
-ECA2199	/Users/liudongyao/Downloads/repository/TA_tmp/sept2_absent_igv_bams/bams/ECA2199.ChrI.ChrIII.ChrV.bam	ECA2199.raw.bw	I	2332338	2373985	1	None	I:2332337:2373985	bamCoverage 3.5.6	e074c28bf3e8a228135625731f501b63
-ECA369	/Users/liudongyao/Downloads/repository/TA_tmp/sept2_absent_igv_bams/bams/ECA369.ChrI.ChrIII.ChrV.bam	ECA369.raw.bw	I	2332338	2373985	1	None	I:2332337:2373985	bamCoverage 3.5.6	70931b2eb0720c1347a4a006cf9acfe7
-QX1791	/Users/liudongyao/Downloads/repository/TA_tmp/sept2_absent_igv_bams/bams/QX1791.ChrI.ChrIII.ChrV.bam	QX1791.raw.bw	I	2332338	2373985	1	None	I:2332337:2373985	bamCoverage 3.5.6	79c397d549abb54dc5a9b58e5dbdf263
-ECA701	/Users/liudongyao/Downloads/repository/TA_tmp/sept2_absent_igv_bams/bams/ECA701.ChrI.ChrIII.ChrV.bam	ECA701.raw.bw	I	2332338	2373985	1	None	I:2332337:2373985	bamCoverage 3.5.6	93550565a1bbc61cb6667dd66ce1fa70
-ECA1769	/Users/liudongyao/Downloads/repository/TA_tmp/sept2_absent_igv_bams/bams/ECA1769.ChrI.ChrIII.ChrV.bam	ECA1769.raw.bw	I	2332338	2373985	1	None	I:2332337:2373985	bamCoverage 3.5.6	9de8fbdb35323837a31d2f48e29112dc
-ECA2191	/Users/liudongyao/Downloads/repository/TA_tmp/sept2_absent_igv_bams/bams/ECA2191.ChrI.ChrIII.ChrV.bam	ECA2191.raw.bw	I	2332338	2373985	1	None	I:2332337:2373985	bamCoverage 3.5.6	6ff0ddc16be5a81bacc66586dd12d1b7
-ECA2195	/Users/liudongyao/Downloads/repository/TA_tmp/sept2_absent_igv_bams/bams/ECA2195.ChrI.ChrIII.ChrV.bam	ECA2195.raw.bw	I	2332338	2373985	1	None	I:2332337:2373985	bamCoverage 3.5.6	2707ad0887b7eb00b2f4bd8289e316cd
-XZ2211	/Users/liudongyao/Downloads/repository/TA_tmp/sept2_absent_igv_bams/bams/XZ2211.ChrI.ChrIII.ChrV.bam	XZ2211.raw.bw	I	2332338	2373985	1	None	I:2332337:2373985	bamCoverage 3.5.6	81f357f324a8dffefb4df2fac9e063b2
-MY10	/Users/liudongyao/Downloads/repository/TA_tmp/sept2_absent_igv_bams/bams/MY10.ChrI.ChrIII.ChrV.bam	MY10.raw.bw	I	2332338	2373985	1	None	I:2332337:2373985	bamCoverage 3.5.6	9fad64a7a485eb2b4ab16213fc9697a2
-EG4349	/Users/liudongyao/Downloads/repository/TA_tmp/sept2_absent_igv_bams/bams/EG4349.ChrI.ChrIII.ChrV.bam	EG4349.raw.bw	I	2332338	2373985	1	None	I:2332337:2373985	bamCoverage 3.5.6	1bb20f3bfb67a8e9c5ecf1cc6f2e99d8
-NIC256	/Users/liudongyao/Downloads/repository/TA_tmp/sept2_absent_igv_bams/bams/NIC256.ChrI.ChrIII.ChrV.bam	NIC256.raw.bw	I	2332338	2373985	1	None	I:2332337:2373985	bamCoverage 3.5.6	e63390dc9fc58201aa0688de1c6c7672
+XZ1516	XZ1516.ChrI.ChrIII.ChrV.bam	XZ1516.raw.bw	I	2332338	2373985	1	None	I:2332337:2373985	bamCoverage 3.5.6	3e76b0ba8d503f2489c8cd59450701f8
+ECA2091	ECA2091.ChrI.ChrIII.ChrV.bam	ECA2091.raw.bw	I	2332338	2373985	1	None	I:2332337:2373985	bamCoverage 3.5.6	5a0be0290ed8404defda4782db43745b
+ECA2199	ECA2199.ChrI.ChrIII.ChrV.bam	ECA2199.raw.bw	I	2332338	2373985	1	None	I:2332337:2373985	bamCoverage 3.5.6	e074c28bf3e8a228135625731f501b63
+ECA369	ECA369.ChrI.ChrIII.ChrV.bam	ECA369.raw.bw	I	2332338	2373985	1	None	I:2332337:2373985	bamCoverage 3.5.6	70931b2eb0720c1347a4a006cf9acfe7
+QX1791	QX1791.ChrI.ChrIII.ChrV.bam	QX1791.raw.bw	I	2332338	2373985	1	None	I:2332337:2373985	bamCoverage 3.5.6	79c397d549abb54dc5a9b58e5dbdf263
+ECA701	ECA701.ChrI.ChrIII.ChrV.bam	ECA701.raw.bw	I	2332338	2373985	1	None	I:2332337:2373985	bamCoverage 3.5.6	93550565a1bbc61cb6667dd66ce1fa70
+ECA1769	ECA1769.ChrI.ChrIII.ChrV.bam	ECA1769.raw.bw	I	2332338	2373985	1	None	I:2332337:2373985	bamCoverage 3.5.6	9de8fbdb35323837a31d2f48e29112dc
+ECA2191	ECA2191.ChrI.ChrIII.ChrV.bam	ECA2191.raw.bw	I	2332338	2373985	1	None	I:2332337:2373985	bamCoverage 3.5.6	6ff0ddc16be5a81bacc66586dd12d1b7
+ECA2195	ECA2195.ChrI.ChrIII.ChrV.bam	ECA2195.raw.bw	I	2332338	2373985	1	None	I:2332337:2373985	bamCoverage 3.5.6	2707ad0887b7eb00b2f4bd8289e316cd
+XZ2211	XZ2211.ChrI.ChrIII.ChrV.bam	XZ2211.raw.bw	I	2332338	2373985	1	None	I:2332337:2373985	bamCoverage 3.5.6	81f357f324a8dffefb4df2fac9e063b2
+MY10	MY10.ChrI.ChrIII.ChrV.bam	MY10.raw.bw	I	2332338	2373985	1	None	I:2332337:2373985	bamCoverage 3.5.6	9fad64a7a485eb2b4ab16213fc9697a2
+EG4349	EG4349.ChrI.ChrIII.ChrV.bam	EG4349.raw.bw	I	2332338	2373985	1	None	I:2332337:2373985	bamCoverage 3.5.6	1bb20f3bfb67a8e9c5ecf1cc6f2e99d8
+NIC256	NIC256.ChrI.ChrIII.ChrV.bam	NIC256.raw.bw	I	2332338	2373985	1	None	I:2332337:2373985	bamCoverage 3.5.6	e63390dc9fc58201aa0688de1c6c7672
