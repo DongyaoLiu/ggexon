@@ -2272,7 +2272,7 @@ test_that("stacked both-strand GeomGeneBox glyphs stay inside the negative band"
   plot <- .coverage_render_fixture(
     geom_genebox(
       data = genes,
-      box_size = 3,
+      box_size = 0.1,
       inherit.aes = FALSE
     )
   )

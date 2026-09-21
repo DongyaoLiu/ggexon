@@ -30,16 +30,20 @@ anchor; this placement does not assign it specifically to HOXA. Its HOXB--HOXD
 cells are structural blanks. A not-retained zebrafish HOXDB cluster and
 unoccupied gene slots within retained clusters remain visually distinct.
 
-Genes are drawn with `geom_genebox()` as fixed-size squares containing
-strand-direction arrows. `strip_scale_x(slot_order = ...)` aligns every gene to
+Genes are drawn with `geom_genebox()` as data-unit squares containing
+strand-direction arrows. Its default `box_size = 1` spans one x and y data
+unit; `coord_fixed(ratio = 1)` keeps the boxes visually square when the figure
+is rendered or exported. `strip_scale_x(slot_order = ...)` aligns every gene to
 a shared Hox15-to-Hox1 template, so genes assigned to the same curated
 Hox-number slot occupy exactly the same x coordinate. Box position represents
 that paralog-slot alignment, whereas the arrow independently represents
 transcription direction; amphioxus therefore retains its left-pointing arrows
 without breaking homolog-slot alignment. Unoccupied positions remain visible
-and do not by themselves imply gene loss. The tutorial removes nucleotide and
-synteny links, and also demonstrates initiation, genomic
-coding-midpoint, and stop anchor modes on the human HOXA cluster, with any
+and do not by themselves imply gene loss. The example uses
+`theme_ggexon_clean()` to remove panel outlines and facet-strip backgrounds.
+The tutorial removes nucleotide and synteny links, and also demonstrates
+initiation, genomic coding-midpoint, and stop anchor modes on the human HOXA
+cluster, with any
 terminal-CDS positional proxies flagged in the bundled data. Its
 annotations are pinned to Ensembl release 116 for vertebrates and Ensembl
 Metazoa release 63 for amphioxus.
@@ -108,6 +112,7 @@ The public API is organized around a few function families:
 | Subset and curate objects | `subset_species()`, `subset_individual()`, `subset_pairwise_alignment()`, `set_gene_labels()`, `patch_annotation_from_gff()` |
 | Draw genomic layers | `ggexon()`, `geom_exon()`, `geom_coverage()`, `geom_genetag()`, `geom_genebox()`, `geom_genelabel()`, `geom_nuclink()`, `geom_synteny_link()`, `geom_protein_lollipop()` |
 | Arrange panels and guides | `facet_genomics()`, `scale_panel_annotation()`, `scale_panel_coverage()`, `center_panel_annotation()`, `facet_genomictree()`, `scale_x_ggexon_genomic()`, `guide_x_ggexon_piecewise()` |
+| Style plots | `theme_ggexon_clean()`, `theme_ggexon_base()`, `theme_ggexon_track()`, `theme_ggexon_pairwise()` |
 
 The typical workflow is:
 

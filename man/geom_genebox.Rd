@@ -10,7 +10,7 @@ geom_genebox(
   stat = "identity",
   position = "identity",
   ...,
-  box_size = 3,
+  box_size = GeomGeneBox$default_params()$box_size,
   anchor = c("middle", "start", "end"),
   arrow_colour = NULL,
   arrow_linewidth = 0.45,
@@ -28,7 +28,8 @@ geom_genebox(
 ggplot2 layer arguments. When column names are literally \code{x}, \code{y}, and
 \code{strand}, they are mapped automatically.}
 
-\item{box_size}{Side length of each square in millimetres. Defaults to \code{3}.}
+\item{box_size}{Side length of each square in x and y data units. Defaults
+to the \code{GeomGeneBox} class default of \code{1}.}
 
 \item{anchor}{Genomic point derived for Syn-backed data: the annotated
 initiation-codon centre or 5-prime terminal-CDS proxy (\code{"start"}), midpoint
@@ -54,10 +55,10 @@ millimetres.}
 A ggplot layer.
 }
 \description{
-\code{geom_genebox()} represents each gene with a square of fixed physical size
-and a horizontal arrow indicating transcription direction. Because the box
-dimensions are measured in millimetres, the symbol stays square under free
-genomic scales and coordinate transformations.
+\code{geom_genebox()} represents each gene with a square of fixed data-unit size
+and a horizontal arrow indicating transcription direction. The box size is
+interpreted like ggplot2's bar width: \code{box_size = 1} spans one x and y data
+unit around the mapped gene position.
 }
 \details{
 For ordinary data frames, map \code{x}, \code{y}, and \code{strand}. In a ggexon plot backed

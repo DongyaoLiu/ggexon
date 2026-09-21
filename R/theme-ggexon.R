@@ -27,6 +27,27 @@ theme_ggexon_base <- function(base_size = 8, base_family = "") {
     .theme_ggexon_backgrounds()
 }
 
+#' Clean background-free theme for ggexon plots
+#'
+#' `theme_ggexon_clean()` keeps the minimal-theme grids, axes, text, and legend
+#' styling while removing panel outlines and facet-strip background rectangles.
+#' It is the named public shortcut for ggexon's background-free theme contract.
+#'
+#' @param base_size Base font size passed to [ggplot2::theme_minimal()].
+#' @param base_family Base font family passed to [ggplot2::theme_minimal()].
+#'
+#' @return A ggplot2 theme object.
+#'
+#' @seealso [theme_ggexon_base()], [theme_ggexon_track()],
+#'   [theme_ggexon_side_strips()]
+#' @export
+theme_ggexon_clean <- function(base_size = 8, base_family = "") {
+  theme_ggexon_base(
+    base_size = base_size,
+    base_family = base_family
+  )
+}
+
 .theme_ggexon_backgrounds <- function() {
   ggplot2::theme(
     plot.background = ggplot2::element_blank(),

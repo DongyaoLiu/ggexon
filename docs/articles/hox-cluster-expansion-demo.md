@@ -65,7 +65,7 @@ genes$species_row <- factor(genes$species_row, levels = row_levels)
 genes$cluster_column <- factor(genes$cluster_column, levels = column_levels)
 genes$track <- paste(genes$species_row, genes$cluster_column, sep = "::")
 genes$slot <- factor(genes$slot, levels = slot_order)
-genes$y <- 1
+genes$y <- 0
 
 panels$species_row <- factor(panels$matrix_row, levels = row_levels)
 panels$cluster_column <- factor(panels$matrix_column, levels = column_levels)
@@ -74,7 +74,10 @@ panels$cluster_column <- factor(panels$matrix_column, levels = column_levels)
 ## Exact shared Hox slots
 
 [`geom_genebox()`](https://dongyaoliu.github.io/ggexon/reference/geom_genebox.md)
-uses a true square measured in millimetres. Its internal arrow shows
+uses a square whose side length is measured in x and y data units, like a
+ggplot2 bar width. The default is `box_size = 1`, and
+`coord_fixed(ratio = 1)` keeps that one-by-one data-unit box visually
+square when the figure is rendered or exported. Its internal arrow shows
 transcriptional direction, and black or white is selected automatically
 to contrast with the fill. The figure maps fill to Hox paralog number
 with an ordered, color-vision-friendly viridis HCL palette. No large
@@ -98,16 +101,6 @@ assigned to the same slot are stacked vertically at that x coordinate.
 
 ``` r
 
-active_panels <- panels[
-  panels$cell_status != "structural_blank",
-  c("species_row", "cluster_column")
-]
-slot_guides <- merge(
-  active_panels,
-  data.frame(xintercept = seq_along(slot_order)),
-  by = NULL,
-  all = TRUE
-)
 structural_panels <- panels[panels$cell_status == "structural_blank", ]
 lost_panels <- panels[panels$cell_status == "cluster_not_retained", ]
 
@@ -139,31 +132,23 @@ ggexon() +
     linewidth = 0.35,
     linetype = 2
   ) +
-  geom_vline(
-    data = slot_guides,
-    aes(xintercept = xintercept),
-    inherit.aes = FALSE,
-    colour = "#D9D9D9",
-    linewidth = 0.2
-  ) +
   geom_genebox(
     data = genes,
     aes(fill = slot),
-    box_size = 2.8,
     colour = "grey20",
     linewidth = 0.25,
     show.legend = FALSE
   ) +
   geom_text(
     data = structural_panels,
-    aes(x = 8, y = 1, label = "not applicable"),
+    aes(x = 8, y = 0, label = "not applicable"),
     inherit.aes = FALSE,
     colour = "#6F6F6F",
     size = 2.2
   ) +
   geom_text(
     data = lost_panels,
-    aes(x = 8, y = 1, label = "HOXDB not retained"),
+    aes(x = 8, y = 0, label = "HOXDB not retained"),
     inherit.aes = FALSE,
     colour = "#A33F36",
     size = 2.2
@@ -186,10 +171,7 @@ ggexon() +
     labels = 15:1,
     expand = expansion(mult = 0)
   ) +
-  scale_y_continuous(
-    limits = c(0, 2),
-    expand = expansion(mult = 0)
-  ) +
+  coord_fixed(ratio = 1) +
   labs(
     x = "Hox paralog slot (posterior to anterior)",
     y = NULL,
@@ -198,15 +180,13 @@ ggexon() +
       "The ancestral amphioxus cluster is shown under HOXA for layout only."
     )
   ) +
-  theme_minimal(base_size = 8) +
+  theme_ggexon_clean(base_size = 8) +
   theme(
     panel.grid = element_blank(),
-    panel.border = element_rect(colour = "#D0D0D0", fill = NA, linewidth = 0.25),
     panel.spacing = grid::unit(0.45, "lines"),
     axis.text.x = element_text(size = 6.5),
     axis.text.y = element_blank(),
     axis.ticks.y = element_blank(),
-    strip.background = element_rect(fill = "#ECECEC", colour = "#C8C8C8", linewidth = 0.25),
     strip.text.x = element_text(face = "bold", size = 8),
     strip.text.y.left = element_text(angle = 0, hjust = 1, size = 7.5),
     strip.placement = "outside",
@@ -306,10 +286,11 @@ interpreting it as a confirmed initiation or stop codon.
   spliced CDS.
 
 The main matrix uses `middle`. Here the same human HOXA genes are drawn
-at all three raw anchors. The x axis is reversed only for presentation,
-so the panel still reads Hox13 to Hox1 like the matrix; the displayed
-numbers remain the original GRCh38 coordinates. Labels are composed with
-a separate `geom_text()` layer because
+at all three raw anchors. The x coordinates are displayed in megabases and
+reversed only for presentation, so the panel still reads Hox13 to Hox1 like
+the matrix. The gene boxes use the same data-unit geometry as the matrix,
+with a 0.004 Mb side length. Labels are composed with a separate
+`geom_text()` layer because
 [`geom_genebox()`](https://dongyaoliu.github.io/ggexon/reference/geom_genebox.md)
 deliberately does not contain text.
 
@@ -323,26 +304,26 @@ anchor_columns <- c(
 )
 anchor_demo <- do.call(rbind, lapply(names(anchor_columns), function(mode) {
   out <- human_hoxa
-  out$x <- out[[anchor_columns[[mode]]]]
+  out$x <- out[[anchor_columns[[mode]]]] / 1e6
   out$anchor_mode <- mode
   out
 }))
 anchor_demo$anchor_mode <- factor(anchor_demo$anchor_mode, levels = names(anchor_columns))
 anchor_demo$track <- as.character(anchor_demo$anchor_mode)
-anchor_demo$y <- 1
+anchor_demo$y <- 0
 
 ggexon() +
   geom_genebox(
     data = anchor_demo,
     aes(fill = slot),
-    box_size = 3,
+    box_size = 0.004,
     colour = "grey20",
     linewidth = 0.25,
     show.legend = FALSE
   ) +
   geom_text(
     data = anchor_demo,
-    aes(x = x, y = 1.42, label = gene_symbol),
+    aes(x = x, y = 0.006, label = gene_symbol),
     inherit.aes = FALSE,
     angle = 35,
     hjust = 0,
@@ -352,30 +333,27 @@ ggexon() +
   facet_grid(rows = vars(anchor_mode), switch = "y") +
   scale_fill_manual(values = hox_palette, drop = FALSE) +
   scale_x_reverse(
-    labels = function(x) paste0(format(round(x / 1e6, 3), nsmall = 3), " Mb"),
+    labels = function(x) paste0(format(round(x, 3), nsmall = 3), " Mb"),
     expand = expansion(mult = c(0.06, 0.06))
   ) +
-  scale_y_continuous(limits = c(0.45, 1.7), breaks = NULL, expand = expansion(mult = 0)) +
+  coord_fixed(ratio = 1) +
   labs(x = "GRCh38 coordinate (descending)", y = NULL) +
-  theme_minimal(base_size = 8) +
+  theme_ggexon_clean(base_size = 8) +
   theme(
     panel.grid.major.y = element_blank(),
     panel.grid.minor = element_blank(),
-    panel.border = element_rect(colour = "#D0D0D0", fill = NA, linewidth = 0.25),
-    strip.background = element_rect(fill = "#ECECEC", colour = "#C8C8C8", linewidth = 0.25),
     strip.text.y.left = element_text(angle = 0, hjust = 1),
     strip.placement = "outside",
     legend.position = "none"
   )
 ```
 
-![Three stacked raw-coordinate human HOXA panels place the same
-fixed-size gene boxes at initiation-codon, genomic coding-midpoint, and
-stop-codon anchors. The genomic x axis is reversed so HOXA13 is at left
-and HOXA1 is at
+![Three stacked human HOXA panels place data-unit gene boxes at
+initiation-codon, genomic coding-midpoint, and stop-codon anchors. The
+genomic x axis is reversed so HOXA13 is at left and HOXA1 is at
 right.](hox-cluster-expansion-demo_files/figure-html/human-hoxa-anchors-1.png)
 
-Human HOXA anchor modes on the original GRCh38 coordinate scale. The
+Human HOXA anchor modes on the GRCh38 coordinate scale in megabases. The
 descending x axis preserves the posterior-to-anterior reading direction;
 no strip scale is applied.
 

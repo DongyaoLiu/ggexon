@@ -70,7 +70,7 @@ local({
   S7::method(print, class_ggexon) <- S7::method(plot, class_ggexon) <-
     function(x, newpage = is.null(vp), vp = NULL, ...) {
       set_last_plot(x)
-      if (newpage) grid.newpage()
+      if (newpage) grid::grid.newpage()
 
       # Record dependency on 'ggplot2' on the display list
       # (AFTER grid.newpage())
@@ -83,11 +83,11 @@ local({
 
       gtable <- ggplot2::ggplot_gtable(data)
       if (is.null(vp)) {
-        grid.draw(gtable)
+        grid::grid.draw(gtable)
       } else {
-        if (is.character(vp)) seekViewport(vp) else pushViewport(vp)
-        grid.draw(gtable)
-        upViewport()
+        if (is.character(vp)) grid::seekViewport(vp) else grid::pushViewport(vp)
+        grid::grid.draw(gtable)
+        grid::upViewport()
       }
 
       if (isTRUE(getOption("BrailleR.VI")) && rlang::is_installed("BrailleR")) {

@@ -1,4 +1,4 @@
-test_that("geom_genebox draws fixed-size boxes and omits unknown-strand arrows", {
+test_that("geom_genebox draws data-unit boxes and omits unknown-strand arrows", {
   genes <- data.frame(
     x = c(1, 2, 3),
     y = 1,
@@ -37,14 +37,10 @@ test_that("geom_genebox draws fixed-size boxes and omits unknown-strand arrows",
 
   expect_s3_class(ggplot2::ggplotGrob(p), "gtable")
   expect_s3_class(grob$children[[1L]], "rect")
-  expect_equal(
-    grid::convertWidth(grob$children[[1L]]$width[[1L]], "mm", valueOnly = TRUE),
-    4
-  )
-  expect_equal(
-    grid::convertHeight(grob$children[[1L]]$height[[1L]], "mm", valueOnly = TRUE),
-    4
-  )
+  expect_equal(built$data[[1L]]$xmin, genes$x - 2)
+  expect_equal(built$data[[1L]]$xmax, genes$x + 2)
+  expect_equal(built$data[[1L]]$ymin, genes$y - 2)
+  expect_equal(built$data[[1L]]$ymax, genes$y + 2)
   expect_s3_class(grob$children[[2L]], "segments")
   expect_length(grob$children[[2L]]$x0, 2L)
   expect_identical(
@@ -68,6 +64,26 @@ test_that("geom_genebox draws fixed-size boxes and omits unknown-strand arrows",
     unknown_built$layout$coord
   )
   expect_s3_class(unknown_grob$children[[2L]], "zeroGrob")
+})
+
+test_that("geom_genebox defaults to one data-unit boxes", {
+  expect_equal(GeomGeneBox$default_params()$box_size, 1)
+
+  p <- ggplot2::ggplot() +
+    geom_genebox(
+      data = data.frame(x = 1, y = 0, strand = "+")
+    )
+  built <- ggplot2::ggplot_build(p)
+  grob <- GeomGeneBox$draw_panel(
+    built$data[[1L]],
+    built$layout$panel_params[[1L]],
+    built$layout$coord
+  )
+
+  expect_equal(built$data[[1L]]$xmin, 0.5)
+  expect_equal(built$data[[1L]]$xmax, 1.5)
+  expect_equal(built$data[[1L]]$ymin, -0.5)
+  expect_equal(built$data[[1L]]$ymax, 0.5)
 })
 
 test_that("geom_genebox reverses arrow orientation once per x reversal", {

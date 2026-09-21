@@ -1,9 +1,9 @@
 #' Draw fixed-size gene boxes with internal strand arrows
 #'
-#' `geom_genebox()` represents each gene with a square of fixed physical size
-#' and a horizontal arrow indicating transcription direction. Because the box
-#' dimensions are measured in millimetres, the symbol stays square under free
-#' genomic scales and coordinate transformations.
+#' `geom_genebox()` represents each gene with a square of fixed data-unit size
+#' and a horizontal arrow indicating transcription direction. The box size is
+#' interpreted like ggplot2's bar width: `box_size = 1` spans one x and y data
+#' unit around the mapped gene position.
 #'
 #' For ordinary data frames, map `x`, `y`, and `strand`. In a ggexon plot backed
 #' by a [SynIndividual] or [SynSpecies] object, the layer selects, for each gene,
@@ -20,7 +20,8 @@
 #' @param mapping,data,stat,position,...,na.rm,show.legend,inherit.aes Standard
 #'   ggplot2 layer arguments. When column names are literally `x`, `y`, and
 #'   `strand`, they are mapped automatically.
-#' @param box_size Side length of each square in millimetres. Defaults to `3`.
+#' @param box_size Side length of each square in x and y data units. Defaults
+#'   to the `GeomGeneBox` class default of `1`.
 #' @param anchor Genomic point derived for Syn-backed data: the annotated
 #'   initiation-codon centre or 5-prime terminal-CDS proxy (`"start"`), midpoint
 #'   between the selected start and end anchors (`"middle"`), or annotated
@@ -63,7 +64,7 @@ geom_genebox <- function(mapping = NULL,
                          stat = "identity",
                          position = "identity",
                          ...,
-                         box_size = 3,
+                         box_size = GeomGeneBox$default_params()$box_size,
                          anchor = c("middle", "start", "end"),
                          arrow_colour = NULL,
                          arrow_linewidth = 0.45,
@@ -154,7 +155,7 @@ GeomGeneBox <- ggproto(
   ),
   default_params = function() {
     list(
-      box_size = 3,
+      box_size = 1,
       anchor = "middle",
       arrow_colour = NULL,
       arrow_linewidth = 0.45,
@@ -166,9 +167,17 @@ GeomGeneBox <- ggproto(
     )
   },
   setup_data = function(data, params) {
-    .genebox_positive_number(params$box_size %||% 3, "box_size")
+    box_size <- .genebox_positive_number(
+      params$box_size %||% GeomGeneBox$default_params()$box_size,
+      "box_size"
+    )
     .genebox_positive_number(params$arrow_linewidth %||% 0.45, "arrow_linewidth")
     .genebox_positive_number(params$arrow_head_size %||% 0.7, "arrow_head_size")
+    half_box_size <- box_size / 2
+    data$xmin <- data$x - half_box_size
+    data$xmax <- data$x + half_box_size
+    data$ymin <- data$y - half_box_size
+    data$ymax <- data$y + half_box_size
     data
   },
   handle_na = function(data, params) {
@@ -188,7 +197,7 @@ GeomGeneBox <- ggproto(
   draw_panel = function(data,
                         panel_params,
                         coord,
-                        box_size = 3,
+                        box_size = GeomGeneBox$default_params()$box_size,
                         arrow_colour = NULL,
                         arrow_linewidth = 0.45,
                         arrow_head_size = 0.7) {
@@ -210,32 +219,44 @@ GeomGeneBox <- ggproto(
     }
 
     stack_offset <- .genebox_stack_offsets(data$x, data$y, box_size = box_size)
-    x_unit <- grid::unit(coords$x, "native")
-    y_unit <- .genebox_clamped_y_units(
+    center_data <- data
+    center_data$y <- .genebox_clamped_y(
       data = data,
-      coords = coords,
-      panel_params = panel_params,
-      coord = coord,
       stack_offset = stack_offset,
       box_size = box_size
     )
+    coords <- coord$transform(center_data, panel_params)
+    x_unit <- grid::unit(coords$x, "native")
+    y_unit <- grid::unit(coords$y, "native")
     fill <- scales::alpha(data$fill, data$alpha)
     colour <- scales::alpha(data$colour, data$alpha)
 
-    box_grob <- grid::rectGrob(
-      x = x_unit,
-      y = y_unit,
-      width = grid::unit(box_size, "mm"),
-      height = grid::unit(box_size, "mm"),
-      gp = grid::gpar(
-        col = colour,
-        fill = fill,
-        lwd = data$linewidth * ggplot2::.pt,
-        lty = data$linetype,
-        linejoin = "mitre"
-      ),
-      name = "genebox-boxes"
-    )
+    box_data <- center_data
+    half_box_size <- box_size / 2
+    box_data$xmin <- box_data$x - half_box_size
+    box_data$xmax <- box_data$x + half_box_size
+    box_data$ymin <- box_data$y - half_box_size
+    box_data$ymax <- box_data$y + half_box_size
+    box_coords <- coord$transform(box_data, panel_params)
+    if (isTRUE(coord$is_linear())) {
+      box_grob <- grid::rectGrob(
+        x = grid::unit((box_coords$xmin + box_coords$xmax) / 2, "native"),
+        y = grid::unit((box_coords$ymin + box_coords$ymax) / 2, "native"),
+        width = grid::unit(abs(box_coords$xmax - box_coords$xmin), "native"),
+        height = grid::unit(abs(box_coords$ymax - box_coords$ymin), "native"),
+        gp = grid::gpar(
+          col = colour,
+          fill = fill,
+          lwd = data$linewidth * ggplot2::.pt,
+          lty = data$linetype,
+          linejoin = "mitre"
+        ),
+        name = "genebox-boxes"
+      )
+    } else {
+      box_grob <- ggplot2::GeomRect$draw_panel(box_data, panel_params, coord)
+    }
+    box_grob$name <- "genebox-boxes"
 
     strand <- as.character(data$strand)
     arrow_rows <- which(!is.na(strand) & strand %in% c("+", "-"))
@@ -259,10 +280,20 @@ GeomGeneBox <- ggproto(
       }
       arrow_col <- scales::alpha(arrow_col, data$alpha[arrow_rows])
 
+      arrow_data <- center_data[arrow_rows, , drop = FALSE]
+      arrow_data$x <- arrow_data$x - shaft_half
+      x_low <- coord$transform(arrow_data, panel_params)$x
+      arrow_data$x <- center_data$x[arrow_rows] + shaft_half
+      x_high <- coord$transform(arrow_data, panel_params)$x
+      x_left <- pmin(x_low, x_high)
+      x_right <- pmax(x_low, x_high)
+      x0 <- ifelse(direction > 0, x_left, x_right)
+      x1 <- ifelse(direction > 0, x_right, x_left)
+
       arrow_grob <- grid::segmentsGrob(
-        x0 = x_unit[arrow_rows] - grid::unit(direction * shaft_half, "mm"),
+        x0 = grid::unit(x0, "native"),
         y0 = y_unit[arrow_rows],
-        x1 = x_unit[arrow_rows] + grid::unit(direction * shaft_half, "mm"),
+        x1 = grid::unit(x1, "native"),
         y1 = y_unit[arrow_rows],
         arrow = grid::arrow(
           angle = 28,
@@ -377,14 +408,8 @@ GeomGeneBox <- ggproto(
   out
 }
 
-.genebox_clamped_y_units <- function(data,
-                                     coords,
-                                     panel_params,
-                                     coord,
-                                     stack_offset,
-                                     box_size) {
-  centers <- grid::unit(coords$y, "native") +
-    grid::unit(stack_offset, "mm")
+.genebox_clamped_y <- function(data, stack_offset, box_size) {
+  centers <- as.numeric(data$y) + stack_offset
   band_columns <- c(".ggexon_band_ymin", ".ggexon_band_ymax")
   if (!all(band_columns %in% names(data))) {
     return(centers)
@@ -397,26 +422,20 @@ GeomGeneBox <- ggproto(
     return(centers)
   }
 
-  lower <- coord$transform(
-    data.frame(x = data$x[valid], y = band_ymin[valid]),
-    panel_params
-  )$y
-  upper <- coord$transform(
-    data.frame(x = data$x[valid], y = band_ymax[valid]),
-    panel_params
-  )$y
-  lower_native <- pmin(lower, upper)
-  upper_native <- pmax(lower, upper)
-  half_height <- grid::unit(box_size / 2, "mm")
+  lower <- pmin(band_ymin[valid], band_ymax[valid])
+  upper <- pmax(band_ymin[valid], band_ymax[valid])
+  half_height <- box_size / 2
   valid_rows <- which(valid)
   for (i in seq_along(valid_rows)) {
     row <- valid_rows[[i]]
-    inset_lower <- grid::unit(lower_native[[i]], "native") + half_height
-    inset_upper <- grid::unit(upper_native[[i]], "native") - half_height
-    centers[row] <- grid::unit.pmin(
-      grid::unit.pmax(centers[row], inset_lower),
-      inset_upper
-    )
+    if ((upper[[i]] - lower[[i]]) >= box_size) {
+      centers[row] <- min(
+        max(centers[row], lower[[i]] + half_height),
+        upper[[i]] - half_height
+      )
+    } else {
+      centers[row] <- (lower[[i]] + upper[[i]]) / 2
+    }
   }
   centers
 }

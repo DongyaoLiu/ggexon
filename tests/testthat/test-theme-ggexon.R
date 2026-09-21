@@ -27,6 +27,22 @@ test_that("theme_ggexon_base removes backgrounds but retains labels and x grids"
   )
 })
 
+test_that("theme_ggexon_clean removes panel and strip backgrounds", {
+  th <- theme_ggexon_clean()
+
+  expect_s3_class(th, "theme")
+  expect_s3_class(ggplot2::calc_element("panel.border", th), "element_blank")
+  expect_s3_class(
+    ggplot2::calc_element("strip.background", th),
+    "element_blank"
+  )
+  expect_s3_class(
+    ggplot2::calc_element("panel.grid.major.x", th),
+    "element_line"
+  )
+  expect_s3_class(ggplot2::calc_element("axis.text.x", th), "element_text")
+})
+
 test_that("theme_ggexon_track keeps genomic x axes visible by default", {
   th <- theme_ggexon_track()
 

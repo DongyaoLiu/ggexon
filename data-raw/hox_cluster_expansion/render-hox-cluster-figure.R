@@ -54,20 +54,10 @@ genes$species_row <- factor(genes$species_row, levels = row_levels)
 genes$cluster_column <- factor(genes$cluster_column, levels = column_levels)
 genes$track <- paste(genes$species_row, genes$cluster_column, sep = "::")
 genes$slot <- factor(genes$slot, levels = slot_order)
-genes$y <- 1
+genes$y <- 0
 panels$species_row <- factor(panels$matrix_row, levels = row_levels)
 panels$cluster_column <- factor(panels$matrix_column, levels = column_levels)
 
-active_panels <- panels[
-  panels$cell_status != "structural_blank",
-  c("species_row", "cluster_column")
-]
-slot_guides <- merge(
-  active_panels,
-  data.frame(xintercept = seq_along(slot_order)),
-  by = NULL,
-  all = TRUE
-)
 structural_panels <- panels[panels$cell_status == "structural_blank", ]
 lost_panels <- panels[panels$cell_status == "cluster_not_retained", ]
 hox_palette <- setNames(
@@ -98,17 +88,9 @@ plot <- ggexon() +
     linewidth = 0.35,
     linetype = 2
   ) +
-  ggplot2::geom_vline(
-    data = slot_guides,
-    ggplot2::aes(xintercept = xintercept),
-    inherit.aes = FALSE,
-    colour = "#D9D9D9",
-    linewidth = 0.2
-  ) +
   geom_genebox(
     data = genes,
     ggplot2::aes(fill = slot),
-    box_size = 2.8,
     colour = "grey20",
     linewidth = 0.25,
     show.legend = FALSE
@@ -116,7 +98,7 @@ plot <- ggexon() +
   ggplot2::geom_text(
     data = structural_panels,
     x = 8,
-    y = 1,
+    y = 0,
     label = "not applicable",
     inherit.aes = FALSE,
     colour = "#6F6F6F",
@@ -125,7 +107,7 @@ plot <- ggexon() +
   ggplot2::geom_text(
     data = lost_panels,
     x = 8,
-    y = 1,
+    y = 0,
     label = "HOXDB not retained",
     inherit.aes = FALSE,
     colour = "#A33F36",
@@ -149,10 +131,7 @@ plot <- ggexon() +
     labels = 15:1,
     expand = ggplot2::expansion(mult = 0)
   ) +
-  ggplot2::scale_y_continuous(
-    limits = c(0, 2),
-    expand = ggplot2::expansion(mult = 0)
-  ) +
+  ggplot2::coord_fixed(ratio = 1) +
   ggplot2::labs(
     x = "Hox paralog slot (posterior to anterior)",
     y = NULL,
@@ -161,19 +140,13 @@ plot <- ggexon() +
       "The ancestral amphioxus cluster is shown under HOXA for layout only."
     )
   ) +
-  ggplot2::theme_minimal(base_size = 8) +
+  theme_ggexon_clean(base_size = 8) +
   ggplot2::theme(
     panel.grid = ggplot2::element_blank(),
-    panel.border = ggplot2::element_rect(
-      colour = "#D0D0D0", fill = NA, linewidth = 0.25
-    ),
     panel.spacing = grid::unit(0.45, "lines"),
     axis.text.x = ggplot2::element_text(size = 6.5),
     axis.text.y = ggplot2::element_blank(),
     axis.ticks.y = ggplot2::element_blank(),
-    strip.background = ggplot2::element_rect(
-      fill = "#ECECEC", colour = "#C8C8C8", linewidth = 0.25
-    ),
     strip.text.x = ggplot2::element_text(face = "bold", size = 8),
     strip.text.y.left = ggplot2::element_text(angle = 0, hjust = 1, size = 7.5),
     strip.placement = "outside",
@@ -188,7 +161,7 @@ ggplot2::ggsave(
   output,
   plot = plot,
   width = 10.5,
-  height = 7.4,
+  height = 3.2,
   units = "in",
   dpi = 220,
   bg = "white"
