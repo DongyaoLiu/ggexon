@@ -68,7 +68,9 @@ individual-level branch.</p>
 <li><p><code>SynProteinAnnotation</code>: abstract protein-coordinate individual annotation</p></li>
 <li><p><code>SynFeatureAnnotation</code>: GFF/GTF structural annotation</p></li>
 <li><p><code>SynAnnotationPatch</code>: gene-model patch record</p></li>
-<li><p><code>SynVCFAnnotation</code>: VCF/BCF variant annotation</p></li>
+<li><p><code>SynVCFAnnotation</code>: VCF variant annotation. VCF querying is supported.
+BCF parsing is not implemented; BCF input raises an unsupported-format
+error.</p></li>
 <li><p><code>SynBigWigAnnotation</code>: BigWig signal annotation</p></li>
 <li><p><code>SynProteinDomainAnnotation</code>: protein-domain annotation</p></li>
 <li><p><code>SynProteinMutationAnnotation</code>: protein-coordinate mutation annotation</p></li>

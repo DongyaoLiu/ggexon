@@ -103,9 +103,9 @@ An updated object of the same class as `x`.
 
 ## Details
 
-Unloaded `SynMultiAlignment` objects with `format = "maf"` are not yet
-supported because the package does not currently provide a MAF parser.
-For PSL-backed
+`SynMultiAlignment` can store already parsed MAF data supplied through
+`data`, but `load_alignment()` cannot parse a MAF file. ODGI-backed file
+loading is supported. For PSL-backed
 [`SynPairAlignment`](https://dongyaoliu.github.io/ggexon/reference/SynPairAlignment.md)
 objects, repeated calls to `load_alignment()` with different explicit
 `more` values will replace the cached data so the in-memory

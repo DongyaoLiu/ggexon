@@ -158,7 +158,8 @@ labels, and patch history</td>
 </tr>
 <tr class="even">
 <td><code>SynVCFAnnotation</code></td>
-<td>Variant data queried by genomic region</td>
+<td>VCF querying is supported. BCF parsing is not implemented; BCF input
+raises an unsupported-format error.</td>
 </tr>
 <tr class="odd">
 <td><code>SynBigWigAnnotation</code></td>
@@ -223,9 +224,9 @@ at the <code>SynSpecies</code> level:</p>
 between two individuals. Supported inputs include PAF, PSL, and
 ODGI-derived pairwise links.</li>
 <li>
-<code>SynMultiAlignment</code> stores a multiple alignment across
-more than two individuals. Supported inputs include MAF and ODGI-backed
-graph data.</li>
+<code>SynMultiAlignment</code> can store already parsed MAF data
+supplied through <code>data</code>, but <code><a href="../reference/load_alignment.html">load_alignment()</a></code>
+cannot parse a MAF file. ODGI-backed file loading is supported.</li>
 <li>
 <code>HomologyAnnotation</code> stores cross-species gene homology
 mappings, typically derived from BLAST results. It maps gene identifiers
@@ -240,6 +241,8 @@ state so plots can be rebuilt from the same coordinate decisions.</li>
 <div class="section level4">
 <h4 id="building-homology-from-blast">Building homology from BLAST<a class="anchor" aria-label="anchor" href="#building-homology-from-blast"></a>
 </h4>
+<p>Template requiring user-provided files: the following recipe expects
+your BLAST outfmt 6 results and WormBase gene ID map.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SynSpecies.html">SynSpecies</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"worms"</span><span class="op">)</span></span>
 <span></span>
@@ -277,9 +280,15 @@ suffixes are stripped on lookup miss (e.g. <code>B0250.18a</code> →
 <p>When <code>SynSpecies</code> holds homology annotations,
 <code><a href="../reference/geom_genelabel.html">geom_genelabel()</a></code> can apply reference-species gene names
 automatically.</p>
+<div class="section level5">
+<h5 id="template-requiring-your-blast-files">Template requiring your BLAST files<a class="anchor" aria-label="anchor" href="#template-requiring-your-blast-files"></a>
+</h5>
+<p>Template requiring user-provided files: the loop below expects one
+BLAST outfmt 6 file per query species and a WormBase gene ID map.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Build homologies for all query species</span></span>
-<span><span class="kw">for</span> <span class="op">(</span><span class="va">sp_name</span> <span class="kw">in</span> <span class="va">query_species</span><span class="op">)</span> <span class="op">{</span></span>
+<span><span class="va">query_species_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"C_bovis"</span>, <span class="st">"C_afra"</span><span class="op">)</span></span>
+<span><span class="kw">for</span> <span class="op">(</span><span class="va">sp_name</span> <span class="kw">in</span> <span class="va">query_species_names</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">ha</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/import_blast_homology.html">import_blast_homology</a></span><span class="op">(</span></span>
 <span>    blast_file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">sp_name</span>, <span class="st">".blast6"</span><span class="op">)</span>,</span>
 <span>    reference_species <span class="op">=</span> <span class="st">"C. elegans"</span>,</span>
@@ -291,14 +300,16 @@ automatically.</p>
 <span></span>
 <span><span class="co"># Auto-match: each track gets its homology by query_species</span></span>
 <span><span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">sp</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/geom_genetag.html">geom_genetag</a></span><span class="op">(</span>chr <span class="op">=</span> <span class="st">"V"</span>, feature_type <span class="op">=</span> <span class="st">"gene"</span>, mapping <span class="op">=</span> <span class="fu">aes</span><span class="op">(</span>fill <span class="op">=</span> <span class="va">gene</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_genetag.html">geom_genetag</a></span><span class="op">(</span>chr <span class="op">=</span> <span class="st">"V"</span>, feature_type <span class="op">=</span> <span class="st">"gene"</span>, mapping <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">gene</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_genelabel.html">geom_genelabel</a></span><span class="op">(</span>chr <span class="op">=</span> <span class="st">"V"</span>, size <span class="op">=</span> <span class="fl">2.4</span><span class="op">)</span> <span class="op">+</span>  <span class="co"># no homology_name — auto-match</span></span>
-<span>  <span class="fu"><a href="../reference/facet_genomictree.html">facet_genomictree</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">track</span><span class="op">)</span>, scales <span class="op">=</span> <span class="st">"free"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/facet_genomictree.html">facet_genomictree</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">track</span><span class="op">)</span>, scales <span class="op">=</span> <span class="st">"free"</span><span class="op">)</span></span></code></pre></div>
 <p>When <code>homology_name</code> is omitted and the
 <code>SynSpecies</code> contains homology annotations, each track
 automatically finds the matching <code>HomologyAnnotation</code> by its
 <code>query_species</code> field. For a single explicit mapping, set
 <code>homology_name = "bovis_to_n2"</code>.</p>
+<p>Template requiring user-provided files: this object-building recipe
+expects your pairwise alignment and already parsed MAF data.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_individual.html">add_individual</a></span><span class="op">(</span><span class="va">sp</span>, <span class="va">xz</span><span class="op">)</span></span>
 <span></span>
@@ -317,16 +328,19 @@ automatically finds the matching <code>HomologyAnnotation</code> by its
 <span>  <span class="fu"><a href="../reference/SynMultiAlignment.html">SynMultiAlignment</a></span><span class="op">(</span></span>
 <span>    name <span class="op">=</span> <span class="st">"worm-maf"</span>,</span>
 <span>    individuals <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"XZ1516"</span>, <span class="st">"N2"</span>, <span class="st">"CB4856"</span><span class="op">)</span>,</span>
-<span>    file <span class="op">=</span> <span class="st">"worms.maf"</span></span>
+<span>    file <span class="op">=</span> <span class="st">"worms.maf"</span>,</span>
+<span>    format <span class="op">=</span> <span class="st">"maf"</span>,</span>
+<span>    data <span class="op">=</span> <span class="va">pre_parsed_maf</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
+</div>
 </div>
 </div>
 </div>
 <div class="section level2">
 <h2 id="plot-entry-point-and-geoms">Plot entry point and geoms<a class="anchor" aria-label="anchor" href="#plot-entry-point-and-geoms"></a>
 </h2>
-<p><code><a href="../reference/ggexon.html">ggexon()</a></code> starts a plot like <code>ggplot()</code>, but
+<p><code><a href="../reference/ggexon.html">ggexon()</a></code> starts a plot like <code><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot()</a></code>, but
 it understands <code>SynIndividual</code> and <code>SynSpecies</code>
 objects. Geoms can resolve stored annotation or alignment data at build
 time.</p>
@@ -496,8 +510,8 @@ intervals.</p>
 interval blocks. It is a general interval layer when the data are
 already in a plot-ready table.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">motif_data</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/geom_motif.html">geom_motif</a></span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>xmin <span class="op">=</span> <span class="va">start</span>, xmax <span class="op">=</span> <span class="va">end</span>, y <span class="op">=</span> <span class="va">track</span>, fill <span class="op">=</span> <span class="va">motif</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">motif_data</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_motif.html">geom_motif</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>xmin <span class="op">=</span> <span class="va">start</span>, xmax <span class="op">=</span> <span class="va">end</span>, y <span class="op">=</span> <span class="va">track</span>, fill <span class="op">=</span> <span class="va">motif</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="geom_mutation_label">
@@ -506,8 +520,8 @@ already in a plot-ready table.</p>
 <p>Use <code><a href="../reference/geom_mutation_label.html">geom_mutation_label()</a></code> when mutation labels need to
 be placed on sequence or protein tracks.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">mutation_data</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/geom_mutation_label.html">geom_mutation_label</a></span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">position</span>, y <span class="op">=</span> <span class="va">track</span>, label <span class="op">=</span> <span class="va">mutation</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">mutation_data</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_mutation_label.html">geom_mutation_label</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">position</span>, y <span class="op">=</span> <span class="va">track</span>, label <span class="op">=</span> <span class="va">mutation</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="geom_nuclink">
@@ -547,7 +561,7 @@ target interval columns (<code>tspecies</code>, <code>tchr</code>,
 <span>  <span class="fu"><a href="../reference/geom_genetag.html">geom_genetag</a></span><span class="op">(</span>species <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"human"</span>, <span class="st">"macaque"</span><span class="op">)</span>, chr <span class="op">=</span> <span class="st">"HOXA"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_synteny_link.html">geom_synteny_link</a></span><span class="op">(</span></span>
 <span>    data <span class="op">=</span> <span class="va">hoxa_links</span>,</span>
-<span>    <span class="fu">aes</span><span class="op">(</span>fill <span class="op">=</span> <span class="va">orthology_group</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">orthology_group</span><span class="op">)</span>,</span>
 <span>    alpha <span class="op">=</span> <span class="fl">0.35</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/facet_genomics.html">facet_genomics</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">track</span><span class="op">)</span>, scales <span class="op">=</span> <span class="st">"free"</span><span class="op">)</span></span></code></pre></div>
@@ -567,10 +581,23 @@ panel.</p>
 with mutation lollipops. It is usually paired with protein-domain or
 protein-mutation helper data.</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span><span class="va">protein_lollipop_data</span><span class="op">)</span> <span class="op">+</span></span>
+<code class="sourceCode R"><span><span class="va">mutations</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">8</span>, <span class="fl">20</span><span class="op">)</span>,</span>
+<span>  mutation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"M5T"</span>, <span class="st">"K8R"</span>, <span class="st">"A20V"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">domains</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">15</span><span class="op">)</span>,</span>
+<span>  end <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">25</span><span class="op">)</span>,</span>
+<span>  Domain <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"C2H2"</span>, <span class="st">"Coil"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_protein_lollipop.html">geom_protein_lollipop</a></span><span class="op">(</span></span>
-<span>    <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">position</span>, y <span class="op">=</span> <span class="va">protein_id</span>, label <span class="op">=</span> <span class="va">mutation</span><span class="op">)</span></span>
+<span>    mutations <span class="op">=</span> <span class="va">mutations</span>,</span>
+<span>    domains <span class="op">=</span> <span class="va">domains</span>,</span>
+<span>    protein_length <span class="op">=</span> <span class="fl">30</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
+<p><img src="ggexon-classes-and-verbs_files/figure-html/protein-lollipop-example-1.png" class="r-plt" alt="A linear 30-residue protein with C2H2 and Coil domains and mutation lollipops at residues 5, 8, and 20." width="700"></p>
 </div>
 <div class="section level3">
 <h3 id="geom_aa_variant">
@@ -602,7 +629,7 @@ this projection core with <code><a href="../reference/geom_motif.html">geom_moti
 <span><span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">xz</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_exon.html">geom_exon</a></span><span class="op">(</span>chr <span class="op">=</span> <span class="st">"RagTag_V"</span>, subset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">21574445</span>, <span class="fl">21584356</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_aa_variant.html">geom_aa_variant</a></span><span class="op">(</span></span>
-<span>    <span class="fu">aes</span><span class="op">(</span>fill <span class="op">=</span> <span class="va">sample_count</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">sample_count</span><span class="op">)</span>,</span>
 <span>    chr <span class="op">=</span> <span class="st">"RagTag_V"</span>,</span>
 <span>    subset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">21574445</span>, <span class="fl">21584356</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
@@ -801,6 +828,8 @@ data, then use verbs and geoms to operate on those classes.</p>
 <p>Use <code>add_*()</code> functions when a parent object should
 remember a child object, annotation layer, alignment, tree, or layout
 result.</p>
+<p>Template requiring user-provided files: the multiple-alignment recipe
+below expects already parsed MAF data from your own file.</p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SynSpecies.html">SynSpecies</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"Caenorhabditis"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/add_individual.html">add_individual</a></span><span class="op">(</span><span class="va">xz</span>, <span class="va">n2</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -811,7 +840,9 @@ result.</p>
 <span>  <span class="fu"><a href="../reference/SynMultiAlignment.html">SynMultiAlignment</a></span><span class="op">(</span></span>
 <span>    name <span class="op">=</span> <span class="st">"worm-maf"</span>,</span>
 <span>    individuals <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"XZ1516"</span>, <span class="st">"N2"</span>, <span class="st">"CB4856"</span><span class="op">)</span>,</span>
-<span>    file <span class="op">=</span> <span class="st">"worms.maf"</span></span>
+<span>    file <span class="op">=</span> <span class="st">"worms.maf"</span>,</span>
+<span>    format <span class="op">=</span> <span class="st">"maf"</span>,</span>
+<span>    data <span class="op">=</span> <span class="va">pre_parsed_maf</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>Common graph-building functions include
@@ -819,7 +850,7 @@ result.</p>
 <code><a href="../reference/add_individuals_from_folder.html">add_individuals_from_folder()</a></code>,
 <code><a href="../reference/add_annotation.html">add_annotation()</a></code>, <code><a href="../reference/add_pairwise_alignment.html">add_pairwise_alignment()</a></code>,
 <code><a href="../reference/add_multiple_alignment.html">add_multiple_alignment()</a></code>, <code><a href="../reference/add_tree.html">add_tree()</a></code>,
-<code>add_genetag()</code>, <code><a href="../reference/store_chain_layout.html">store_chain_layout()</a></code>, and
+<code><a href="../reference/store_chain_layout.html">store_chain_layout()</a></code>, and
 <code><a href="../reference/store_projected_domains.html">store_projected_domains()</a></code>.</p>
 </div>
 <div class="section level3">

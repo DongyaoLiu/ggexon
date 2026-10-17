@@ -24,7 +24,9 @@ further specializing the individual-level branch.
 
 - `SynAnnotationPatch`: gene-model patch record
 
-- `SynVCFAnnotation`: VCF/BCF variant annotation
+- `SynVCFAnnotation`: VCF variant annotation. VCF querying is supported.
+  BCF parsing is not implemented; BCF input raises an unsupported-format
+  error.
 
 - `SynBigWigAnnotation`: BigWig signal annotation
 

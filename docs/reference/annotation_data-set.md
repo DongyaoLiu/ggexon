@@ -29,3 +29,12 @@ annotation_data(x) <- value
 ## Value
 
 The updated `SynIndividual` object.
+
+## Details
+
+For a `SynIndividual`, `active_feature_annotation(x)` must name an
+attached `SynFeatureAnnotation` layer before replacement. Add a feature
+layer with
+[`add_annotation()`](https://dongyaoliu.github.io/ggexon/reference/add_annotation.md)
+first. Replacing with `NULL` clears the active feature layer and its
+synchronized owner state.

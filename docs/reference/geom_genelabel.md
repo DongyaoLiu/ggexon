@@ -114,8 +114,8 @@ geom_genelabel(
 
   Estimated width of the genomic panel in millimetres. Used to convert
   text size into data-coordinate units for label placement and collision
-  avoidance. Default `300` (≈ A4/US-letter panel width). Increase this
-  for wide output (e.g. `ggsave(width = 40)`).
+  avoidance. Default `300` (\\\approx\\ A4/US-letter panel width).
+  Increase this for wide output (e.g. `ggsave(width = 40)`).
 
 - panel_width_inch:
 

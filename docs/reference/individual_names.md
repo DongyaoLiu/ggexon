@@ -4,7 +4,9 @@ Returns the names used to index the `SynIndividual` objects attached to
 a
 [`SynSpecies`](https://dongyaoliu.github.io/ggexon/reference/SynSpecies.md).
 These usually match `names(individuals(x))`. If unnamed entries are
-present, the accessor falls back to `syn_id()` for those objects.
+present, the accessor falls back to
+[`syn_id()`](https://dongyaoliu.github.io/ggexon/reference/syn_id.md)
+for those objects.
 
 ## Usage
 

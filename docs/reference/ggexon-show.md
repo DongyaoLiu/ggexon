@@ -1,9 +1,8 @@
 # Display ggexon S4 objects
 
-Compact [`show()`](https://rdrr.io/r/methods/show.html) methods that
-print a one-screen summary of the major `ggexon` S4 objects
-(`SynSpecies`, `SynIndividual`, `SynLayout`, `SynLocusSet`,
-`SynAnnotation`, and `HomologyAnnotation`).
+Compact `show()` methods that print a one-screen summary of the major
+`ggexon` S4 objects (`SynSpecies`, `SynIndividual`, `SynLayout`,
+`SynLocusSet`, `SynAnnotation`, and `HomologyAnnotation`).
 
 ## Usage
 

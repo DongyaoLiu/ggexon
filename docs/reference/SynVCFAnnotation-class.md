@@ -1,7 +1,8 @@
 # SynVCFAnnotation class
 
 `SynVCFAnnotation` stores a region-queryable variant layer backed by a
-VCF or BCF file.
+VCF file. VCF querying is supported. BCF parsing is not implemented; BCF
+input raises an unsupported-format error.
 
 ## Details
 
@@ -29,7 +30,9 @@ In addition to the slots listed below, the class inherits `name`,
 
 - `region_cache`:
 
-  Cache of previously queried genomic windows.
+  Compatibility store for pre-populated genomic-window results.
+  On-demand value-returning queries do not populate the caller-owned
+  object.
 
 ## Prototype defaults
 

@@ -18,10 +18,10 @@ alpha(colour, alpha = NA)
 ## Examples
 
 ``` r
-ggplot(mpg, aes(displ, hwy)) +
-  geom_point(alpha = 0.5, colour = "blue")
+ggplot2::ggplot(ggplot2::mpg, ggplot2::aes(displ, hwy)) +
+  ggplot2::geom_point(alpha = 0.5, colour = "blue")
 
 
-ggplot(mpg, aes(displ, hwy)) +
-  geom_point(colour = alpha("blue", 0.5))
+ggplot2::ggplot(ggplot2::mpg, ggplot2::aes(displ, hwy)) +
+  ggplot2::geom_point(colour = alpha("blue", 0.5))
 ```

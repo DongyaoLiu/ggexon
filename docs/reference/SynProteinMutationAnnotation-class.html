@@ -67,7 +67,9 @@ It is a protein-space annotation parallel to <code>SynProteinDomainAnnotation</c
 
 
 <dt><code>mutation_data</code></dt>
-<dd><p>Optional cached normalized mutation table.</p></dd>
+<dd><p>Optional pre-populated compatibility store for a
+normalized mutation table. On-demand value-returning queries do not
+populate the caller-owned object.</p></dd>
 
 
 <dt><code>individual_index</code></dt>

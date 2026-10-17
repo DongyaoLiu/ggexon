@@ -23,8 +23,8 @@ anchor; this placement does not assign it specifically to HOXA. Its
 HOXB–HOXD cells are structural blanks.
 
 ``` r
-
 library(ggexon)
+library(ggplot2)
 
 demo_dir <- system.file("extdata", "hox_cluster_expansion", package = "ggexon")
 genes <- read.delim(file.path(demo_dir, "hox_genes.tsv"), check.names = FALSE)
@@ -61,6 +61,19 @@ column_labels <- c(
 )
 slot_order <- paste0("Hox", 15:1)
 
+hox_axis_labels <- setNames(lapply(column_levels, function(cluster) {
+  reference <- genes[
+    genes$species_row == "human" & genes$cluster_column == cluster,
+    ,
+    drop = FALSE
+  ]
+  by_slot <- setNames(reference$gene_symbol, reference$slot)
+  labels <- unname(by_slot[slot_order])
+  labels[is.na(labels) | !nzchar(labels)] <-
+    slot_order[is.na(labels) | !nzchar(labels)]
+  labels
+}), column_levels)
+
 genes$species_row <- factor(genes$species_row, levels = row_levels)
 genes$cluster_column <- factor(genes$cluster_column, levels = column_levels)
 genes$track <- paste(genes$species_row, genes$cluster_column, sep = "::")
@@ -74,15 +87,16 @@ panels$cluster_column <- factor(panels$matrix_column, levels = column_levels)
 ## Exact shared Hox slots
 
 [`geom_genebox()`](https://dongyaoliu.github.io/ggexon/reference/geom_genebox.md)
-uses a square whose side length is measured in x and y data units, like a
-ggplot2 bar width. The default is `box_size = 1`, and
+uses a square whose side length is measured in x and y data units, like
+a ggplot2 bar width. The default is `box_size = 1`, and
 `coord_fixed(ratio = 1)` keeps that one-by-one data-unit box visually
 square when the figure is rendered or exported. Its internal arrow shows
 transcriptional direction, and black or white is selected automatically
 to contrast with the fill. The figure maps fill to Hox paralog number
 with an ordered, color-vision-friendly viridis HCL palette. No large
-legend is needed because the shared Hox15-to-Hox1 slot labels appear on
-every column axis.
+legend is needed because each cluster column axis shows the
+corresponding human reference gene symbols, with `HoxN` fallback labels
+for human reference slots that are absent from that cluster.
 
 `strip_scale_x(slot_order = ...)` supplies a complete synthetic
 comparison template. Each displayed gene’s selected coding midpoint is
@@ -92,15 +106,24 @@ template slots do not close up and do not by themselves imply gene loss.
 This alignment is a visualization convention, not an inferred one-to-one
 orthology relationship, particularly for posterior amphioxus Hox genes.
 Box position therefore represents the curated Hox paralog slot, while
-the internal arrow independently represents transcription direction. The
-mapped BraLan2 amphioxus genes are all on the minus strand, so their
+the axis labels identify the human reference symbols for each cluster
+and the internal arrow independently represents transcription direction.
+The mapped BraLan2 amphioxus genes are all on the minus strand, so their
 arrows point left even though their Hox-number slots remain aligned with
 the vertebrate rows. If the template reverses a cluster’s native genomic
 direction, the gene-box arrows are reversed with it. Duplicated genes
 assigned to the same slot are stacked vertically at that x coordinate.
 
-``` r
+[`scale_x_facet_labels()`](https://dongyaoliu.github.io/ggexon/reference/scale_x_facet_labels.md)
+takes the explicit named list `hox_axis_labels`, keyed by the
+`cluster_column` facet values `A`, `B`, `C`, and `D`. Each character
+vector supplies the reference symbols (or `HoxN` fallbacks) in
+`slot_order`. The facets share fixed x-coordinate limits and break
+positions; only the axis labels vary by cluster. This preserves the
+common slot geometry and supports `coord_fixed(ratio = 1)`. The 15
+labels in each narrow column are rotated 90 degrees for readability.
 
+``` r
 structural_panels <- panels[panels$cell_status == "structural_blank", ]
 lost_panels <- panels[panels$cell_status == "cluster_not_retained", ]
 
@@ -157,7 +180,6 @@ ggexon() +
   facet_grid(
     rows = vars(species_row),
     cols = vars(cluster_column),
-    scales = "fixed",
     drop = FALSE,
     switch = "y",
     labeller = labeller(
@@ -165,15 +187,16 @@ ggexon() +
       cluster_column = as_labeller(column_labels)
     )
   ) +
-  scale_fill_manual(values = hox_palette, drop = FALSE) +
-  scale_x_continuous(
+  scale_x_facet_labels(
+    facet = cluster_column,
     breaks = seq_along(slot_order),
-    labels = 15:1,
-    expand = expansion(mult = 0)
+    labels = hox_axis_labels,
+    expand = ggplot2::expansion(mult = 0)
   ) +
+  scale_fill_manual(values = hox_palette, drop = FALSE) +
   coord_fixed(ratio = 1) +
   labs(
-    x = "Hox paralog slot (posterior to anterior)",
+    x = "Human reference gene symbol (shared Hox slot position)",
     y = NULL,
     caption = paste0(
       "Box position = Hox paralog slot; arrow = transcription direction. ",
@@ -184,7 +207,7 @@ ggexon() +
   theme(
     panel.grid = element_blank(),
     panel.spacing = grid::unit(0.45, "lines"),
-    axis.text.x = element_text(size = 6.5),
+    axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5, size = 6.5),
     axis.text.y = element_blank(),
     axis.ticks.y = element_blank(),
     strip.text.x = element_text(face = "bold", size = 8),
@@ -240,7 +263,7 @@ calls.
 
 Literature-expected Hox members without a safe coding model in the
 pinned source annotation. Full evidence and candidate-model assessments
-remain in hox_annotation_gaps.tsv. {.table}
+remain in hox_annotation_gaps.tsv.
 
 Two spotted-gar Hox14 positions have different, explicit states rather
 than annotation gaps: HoxA14 is a lineage absence, while HoxD14 is a
@@ -286,16 +309,17 @@ interpreting it as a confirmed initiation or stop codon.
   spliced CDS.
 
 The main matrix uses `middle`. Here the same human HOXA genes are drawn
-at all three raw anchors. The x coordinates are displayed in megabases and
-reversed only for presentation, so the panel still reads Hox13 to Hox1 like
-the matrix. The gene boxes use the same data-unit geometry as the matrix,
-with a 0.004 Mb side length. Labels are composed with a separate
-`geom_text()` layer because
+at all three raw anchors. The x coordinates are displayed in megabases
+and reversed only for presentation, so the panel still reads Hox13 to
+Hox1 like the matrix. The gene boxes use the same data-unit geometry as
+the matrix, with a 0.004 Mb side length. Labels are composed with a
+separate
+[`geom_text()`](https://ggplot2.tidyverse.org/reference/geom_text.html)
+layer because
 [`geom_genebox()`](https://dongyaoliu.github.io/ggexon/reference/geom_genebox.md)
 deliberately does not contain text.
 
 ``` r
-
 human_hoxa <- genes[genes$species == "human" & genes$cluster == "A", ]
 anchor_columns <- c(
   "ATG anchor" = "genomic_x_start",
@@ -357,19 +381,19 @@ Human HOXA anchor modes on the GRCh38 coordinate scale in megabases. The
 descending x axis preserves the posterior-to-anterior reading direction;
 no strip scale is applied.
 
-| Gene | Selected transcript | Strand | Transcript span (bp) | ATG anchor | Midpoint | Stop anchor |
-|:---|:---|:--:|---:|---:|---:|---:|
-| HOXA13 | ENST00000649031.1 | \- | 5,728 | 27,200,076 | 27,199,138 | 27,198,199 |
-| HOXA11 | ENST00001135396.1 | \- | 4,097 | 27,185,143 | 27,183,970 | 27,182,797 |
-| HOXA10 | ENST00000396344.5 | \- | 9,670 | 27,179,654 | 27,175,777 | 27,171,900 |
-| HOXA9 | ENST00001143300.1 | \- | 3,128 | 27,165,456 | 27,164,530 | 27,163,604 |
-| HOXA7 | ENST00001136817.1 | \- | 2,977 | 27,156,544 | 27,155,727 | 27,154,910 |
-| HOXA6 | ENST00001140137.1 | \- | 3,672 | 27,147,748 | 27,146,704 | 27,145,659 |
-| HOXA5 | ENST00001138441.1 | \- | 2,668 | 27,143,606 | 27,142,721 | 27,141,836 |
-| HOXA4 | ENST00000610970.2 | \- | 2,894 | 27,130,732 | 27,129,979 | 27,129,226 |
-| HOXA3 | ENST00000851228.2 | \- | 46,427 | 27,110,639 | 27,109,278 | 27,107,916 |
-| HOXA2 | ENST00001141882.1 | \- | 2,706 | 27,102,499 | 27,101,613 | 27,100,727 |
-| HOXA1 | ENST00000643460.2 | \- | 3,008 | 27,095,911 | 27,095,176 | 27,094,441 |
+| Gene   | Selected transcript | Strand | Transcript span (bp) | ATG anchor |   Midpoint | Stop anchor |
+|:-------|:--------------------|:------:|---------------------:|-----------:|-----------:|------------:|
+| HOXA13 | ENST00000649031.1   |   \-   |                5,728 | 27,200,076 | 27,199,138 |  27,198,199 |
+| HOXA11 | ENST00001135396.1   |   \-   |                4,097 | 27,185,143 | 27,183,970 |  27,182,797 |
+| HOXA10 | ENST00000396344.5   |   \-   |                9,670 | 27,179,654 | 27,175,777 |  27,171,900 |
+| HOXA9  | ENST00001143300.1   |   \-   |                3,128 | 27,165,456 | 27,164,530 |  27,163,604 |
+| HOXA7  | ENST00001136817.1   |   \-   |                2,977 | 27,156,544 | 27,155,727 |  27,154,910 |
+| HOXA6  | ENST00001140137.1   |   \-   |                3,672 | 27,147,748 | 27,146,704 |  27,145,659 |
+| HOXA5  | ENST00001138441.1   |   \-   |                2,668 | 27,143,606 | 27,142,721 |  27,141,836 |
+| HOXA4  | ENST00000610970.2   |   \-   |                2,894 | 27,130,732 | 27,129,979 |  27,129,226 |
+| HOXA3  | ENST00000851228.2   |   \-   |               46,427 | 27,110,639 | 27,109,278 |  27,107,916 |
+| HOXA2  | ENST00001141882.1   |   \-   |                2,706 | 27,102,499 | 27,101,613 |  27,100,727 |
+| HOXA1  | ENST00000643460.2   |   \-   |                3,008 | 27,095,911 | 27,095,176 |  27,094,441 |
 
 ## Pinned data and audit trail
 
@@ -378,14 +402,14 @@ uses BraLan2 from Ensembl Metazoa release 63. The builder stores the
 source URL, assembly accession, retrieval date, and SHA-256 checksum
 rather than silently following a moving current release.
 
-| Species | Assembly | Source | Retrieved on | Source annotation |
-|:---|:---|:---|:---|:---|
-| Human | GRCh38 | Ensembl 116 | 2026-07-20 | [Homo_sapiens.GRCh38.116.chr.gtf.gz](https://ftp.ensembl.org/pub/release-116/gtf/homo_sapiens/Homo_sapiens.GRCh38.116.chr.gtf.gz) |
-| Mouse | GRCm39 | Ensembl 116 | 2026-07-20 | [Mus_musculus.GRCm39.116.chr.gtf.gz](https://ftp.ensembl.org/pub/release-116/gtf/mus_musculus/Mus_musculus.GRCm39.116.chr.gtf.gz) |
-| Chicken | bGalGal1.mat.broiler.GRCg7b | Ensembl 116 | 2026-07-20 | [Gallus_gallus.bGalGal1.mat.broiler.GRCg7b.116.chr.gtf.gz](https://ftp.ensembl.org/pub/release-116/gtf/gallus_gallus/Gallus_gallus.bGalGal1.mat.broiler.GRCg7b.116.chr.gtf.gz) |
-| Spotted gar | LepOcu1 | Ensembl 116 | 2026-07-20 | [Lepisosteus_oculatus.LepOcu1.116.chr.gtf.gz](https://ftp.ensembl.org/pub/release-116/gtf/lepisosteus_oculatus/Lepisosteus_oculatus.LepOcu1.116.chr.gtf.gz) |
-| Zebrafish | GRCz11 | Ensembl 116 | 2026-07-20 | [Danio_rerio.GRCz11.116.chr.gtf.gz](https://ftp.ensembl.org/pub/release-116/gtf/danio_rerio/Danio_rerio.GRCz11.116.chr.gtf.gz) |
-| Amphioxus | BraLan2 | Ensembl Metazoa 63 | 2026-07-20 | [Branchiostoma_lanceolatum.BraLan2.63.gtf.gz](https://ftp.ensemblgenomes.ebi.ac.uk/pub/metazoa/release-63/gtf/branchiostoma_lanceolatum/Branchiostoma_lanceolatum.BraLan2.63.gtf.gz) |
+| Species     | Assembly                    | Source             | Retrieved on | Source annotation                                                                                                                                                                    |
+|:------------|:----------------------------|:-------------------|:-------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Human       | GRCh38                      | Ensembl 116        | 2026-07-20   | [Homo_sapiens.GRCh38.116.chr.gtf.gz](https://ftp.ensembl.org/pub/release-116/gtf/homo_sapiens/Homo_sapiens.GRCh38.116.chr.gtf.gz)                                                    |
+| Mouse       | GRCm39                      | Ensembl 116        | 2026-07-20   | [Mus_musculus.GRCm39.116.chr.gtf.gz](https://ftp.ensembl.org/pub/release-116/gtf/mus_musculus/Mus_musculus.GRCm39.116.chr.gtf.gz)                                                    |
+| Chicken     | bGalGal1.mat.broiler.GRCg7b | Ensembl 116        | 2026-07-20   | [Gallus_gallus.bGalGal1.mat.broiler.GRCg7b.116.chr.gtf.gz](https://ftp.ensembl.org/pub/release-116/gtf/gallus_gallus/Gallus_gallus.bGalGal1.mat.broiler.GRCg7b.116.chr.gtf.gz)       |
+| Spotted gar | LepOcu1                     | Ensembl 116        | 2026-07-20   | [Lepisosteus_oculatus.LepOcu1.116.chr.gtf.gz](https://ftp.ensembl.org/pub/release-116/gtf/lepisosteus_oculatus/Lepisosteus_oculatus.LepOcu1.116.chr.gtf.gz)                          |
+| Zebrafish   | GRCz11                      | Ensembl 116        | 2026-07-20   | [Danio_rerio.GRCz11.116.chr.gtf.gz](https://ftp.ensembl.org/pub/release-116/gtf/danio_rerio/Danio_rerio.GRCz11.116.chr.gtf.gz)                                                       |
+| Amphioxus   | BraLan2                     | Ensembl Metazoa 63 | 2026-07-20   | [Branchiostoma_lanceolatum.BraLan2.63.gtf.gz](https://ftp.ensemblgenomes.ebi.ac.uk/pub/metazoa/release-63/gtf/branchiostoma_lanceolatum/Branchiostoma_lanceolatum.BraLan2.63.gtf.gz) |
 
 The bundled directory contains:
 

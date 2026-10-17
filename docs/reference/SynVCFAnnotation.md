@@ -23,11 +23,12 @@ SynVCFAnnotation(
 
 - vcf_file:
 
-  Path to the VCF or BCF file.
+  Path to the VCF file. VCF querying is supported. BCF parsing is not
+  implemented; BCF input raises an unsupported-format error.
 
 - index_file:
 
-  Optional index path for large VCF/BCF access.
+  Optional index path for large VCF access.
 
 - genome_build:
 

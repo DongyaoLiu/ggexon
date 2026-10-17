@@ -1,6 +1,8 @@
-# ggexon: Harmonizing Visualization of Genomic Synteny Across Different Genomes
+# ggexon: Harmonizing Visualization of Genomic Synteny Across Genomes
 
-visulize genomic tracks with associate meta information.
+Provides a grammar of graphics for visualizing genomic annotations,
+synteny, alignments, protein features, mutation summaries, and
+associated track data across genomes.
 
 ## See also
 
@@ -15,4 +17,3 @@ Useful links:
 ## Author
 
 **Maintainer**: Dongyao LIU <dongyao@connect.hku.hk>
-([ORCID](https://orcid.org/0000-0002-8066-1487))

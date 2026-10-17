@@ -95,9 +95,7 @@ object</li>
 <h2 id="create-a-synindividual">Create a <code>SynIndividual</code><a class="anchor" aria-label="anchor" href="#create-a-synindividual"></a>
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dongyaoliu.github.io/ggexon/">ggexon</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SynIndividual.html">SynIndividual</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SynIndividual.html">SynIndividual</a></span><span class="op">(</span></span>
 <span>  genome_file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"compact_synspecies"</span>, <span class="st">"XZ1516.fasta"</span>, package <span class="op">=</span> <span class="st">"ggexon"</span><span class="op">)</span>,</span>
 <span>  annotation_file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"compact_synspecies"</span>, <span class="st">"caenorhabditis_XZ1516.gff3"</span>,</span>
 <span>    package <span class="op">=</span> <span class="st">"ggexon"</span></span>
@@ -118,6 +116,8 @@ object</li>
 </h2>
 <p>You can attach variant, signal, and protein-domain layers to the same
 <code>SynIndividual</code>.</p>
+<p>VCF querying is supported. BCF parsing is not implemented; BCF input
+raises an unsupported-format error.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_annotation.html">add_annotation</a></span><span class="op">(</span></span>
 <span>  <span class="va">x</span>,</span>
@@ -185,7 +185,7 @@ annotation and clears stale sequence caches.</p>
 <span>  genes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"FUN_000001"</span>, <span class="st">"FUN_000002"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">protein_seq</span><span class="op">(</span><span class="fu"><a href="../reference/get_annotation.html">get_annotation</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/protein_seq.html">protein_seq</a></span><span class="op">(</span><span class="fu"><a href="../reference/get_annotation.html">get_annotation</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="query-attached-non-feature-layers">Query attached non-feature layers<a class="anchor" aria-label="anchor" href="#query-attached-non-feature-layers"></a>
@@ -202,6 +202,8 @@ verbs.</p>
 <p>Once you have multiple genomes or species, <code>SynSpecies</code>
 can hold both the <code>SynIndividual</code> objects and their
 cross-species alignments.</p>
+<p>Template requiring user-provided files: this recipe expects your
+second genome, annotation, and pairwise alignment files.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SynIndividual.html">SynIndividual</a></span><span class="op">(</span><span class="va">other_genome_file</span>, <span class="va">other_annotation_file</span><span class="op">)</span></span>
 <span></span>
@@ -214,18 +216,25 @@ cross-species alignments.</p>
 <span>  <span class="fu"><a href="../reference/SynPairAlignment.html">SynPairAlignment</a></span><span class="op">(</span></span>
 <span>    name <span class="op">=</span> <span class="st">"XZ1516_vs_other"</span>,</span>
 <span>    query_individual <span class="op">=</span> <span class="st">"XZ1516"</span>,</span>
-<span>    target_individual <span class="op">=</span> <span class="fu">syn_id</span><span class="op">(</span><span class="va">x2</span><span class="op">)</span>,</span>
+<span>    target_individual <span class="op">=</span> <span class="fu"><a href="../reference/syn_id.html">syn_id</a></span><span class="op">(</span><span class="va">x2</span><span class="op">)</span>,</span>
 <span>    file <span class="op">=</span> <span class="st">"XZ1516_vs_other.paf"</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>For multiple-species alignments:</p>
+<p><code>SynMultiAlignment</code> can store already parsed MAF data
+supplied through <code>data</code>, but <code><a href="../reference/load_alignment.html">load_alignment()</a></code>
+cannot parse a MAF file. ODGI-backed file loading is supported.</p>
+<p>Template requiring user-provided files: this storage-only recipe
+expects already parsed MAF data from your own file.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_multiple_alignment.html">add_multiple_alignment</a></span><span class="op">(</span></span>
 <span>  <span class="va">sp</span>,</span>
 <span>  <span class="fu"><a href="../reference/SynMultiAlignment.html">SynMultiAlignment</a></span><span class="op">(</span></span>
 <span>    name <span class="op">=</span> <span class="st">"worm-maf"</span>,</span>
 <span>    individuals <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"XZ1516"</span>, <span class="st">"N2"</span>, <span class="st">"CB4856"</span><span class="op">)</span>,</span>
-<span>    file <span class="op">=</span> <span class="st">"worms.maf"</span></span>
+<span>    file <span class="op">=</span> <span class="st">"worms.maf"</span>,</span>
+<span>    format <span class="op">=</span> <span class="st">"maf"</span>,</span>
+<span>    data <span class="op">=</span> <span class="va">pre_parsed_maf</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -265,7 +274,7 @@ specify <code>species =</code>. Internally, the plotting code resolves
 that sole individual, maps the user-facing chromosome label
 <code>RagTag_V</code> to the annotation seqname used in the GFF
 (<code>V_RagTag</code> in the bundled example), and creates the default
-<code>aes()</code> mapping needed by <code><a href="../reference/geom_exon.html">geom_exon()</a></code>.</p>
+<code><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes()</a></code> mapping needed by <code><a href="../reference/geom_exon.html">geom_exon()</a></code>.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SynIndividual.html">SynIndividual</a></span><span class="op">(</span></span>
 <span>  genome_file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"compact_synspecies"</span>, <span class="st">"XZ1516.fasta"</span>, package <span class="op">=</span> <span class="st">"ggexon"</span><span class="op">)</span>,</span>
@@ -283,6 +292,7 @@ that sole individual, maps the user-facing chromosome label
 <span>    chr <span class="op">=</span> <span class="st">"RagTag_V"</span>,</span>
 <span>    subset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">21550000</span>, <span class="fl">21680000</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
+<p><img src="ggexon-workflow_files/figure-html/workflow-one-individual-1.png" class="r-plt" alt="Exon structures for XZ1516 genes across RagTag_V positions 21,550,000 to 21,680,000." width="700"></p>
 <p>If a <code>SynSpecies</code> contains multiple individuals, then
 <code>species =</code> becomes required so the geom knows which one to
 plot.</p>
@@ -293,8 +303,10 @@ directional span per <code>gene_id</code>.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">sp</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_genetag.html">geom_genetag</a></span><span class="op">(</span></span>
 <span>    chr <span class="op">=</span> <span class="st">"RagTag_V"</span>,</span>
-<span>    subset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">21550000</span>, <span class="fl">21680000</span><span class="op">)</span></span>
+<span>    subset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">21550000</span>, <span class="fl">21680000</span><span class="op">)</span>,</span>
+<span>    show_label <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
+<p><img src="ggexon-workflow_files/figure-html/workflow-genetag-1.png" class="r-plt" alt="Directional gene spans for XZ1516 across the same RagTag_V interval." width="700"></p>
 <p>Use the two geoms for different levels of detail:</p>
 <ul>
 <li>
@@ -311,11 +323,37 @@ re-based to a local zero point for each track.</p>
 <code><a href="../reference/geom_nuclink.html">geom_nuclink()</a></code> resolve the stored alignment into the middle
 link panel. The reference species supplies the input coordinates.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">n2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SynIndividual.html">SynIndividual</a></span><span class="op">(</span></span>
+<span>  genome_file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span></span>
+<span>    <span class="st">"extdata"</span>, <span class="st">"compact_synspecies"</span>,</span>
+<span>    <span class="st">"c_elegans.PRJNA13758.WS285.genomic.fa"</span>,</span>
+<span>    package <span class="op">=</span> <span class="st">"ggexon"</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  annotation_file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span></span>
+<span>    <span class="st">"extdata"</span>, <span class="st">"compact_synspecies"</span>,</span>
+<span>    <span class="st">"c_elegans.PRJNA13758.WS285.canonical_geneset.gtf"</span>,</span>
+<span>    package <span class="op">=</span> <span class="st">"ggexon"</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  annotation_format <span class="op">=</span> <span class="st">"gtf"</span>,</span>
+<span>  id <span class="op">=</span> <span class="st">"N2"</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_individual.html">add_individual</a></span><span class="op">(</span><span class="va">sp</span>, <span class="va">n2</span><span class="op">)</span></span>
+<span><span class="va">sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_pairwise_alignment.html">add_pairwise_alignment</a></span><span class="op">(</span></span>
+<span>  <span class="va">sp</span>,</span>
+<span>  <span class="fu"><a href="../reference/SynPairAlignment.html">SynPairAlignment</a></span><span class="op">(</span></span>
+<span>    <span class="st">"XZ1516_vs_N2"</span>,</span>
+<span>    query_individual <span class="op">=</span> <span class="st">"XZ1516"</span>,</span>
+<span>    target_individual <span class="op">=</span> <span class="st">"N2"</span>,</span>
+<span>    file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span></span>
+<span>      <span class="st">"extdata"</span>, <span class="st">"compact_synspecies"</span>, <span class="st">"V_alginment.paf"</span>,</span>
+<span>      package <span class="op">=</span> <span class="st">"ggexon"</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">sp</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_exon.html">geom_exon</a></span><span class="op">(</span></span>
-<span>    species <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"N2"</span>, <span class="st">"XZ1516"</span><span class="op">)</span>,</span>
-<span>    chr <span class="op">=</span> <span class="st">"RagTag_V"</span>,</span>
-<span>    subset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">21574445</span>, <span class="fl">21584356</span><span class="op">)</span></span>
+<span>    species <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"N2"</span>, <span class="st">"XZ1516"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_nuclink.html">geom_nuclink</a></span><span class="op">(</span></span>
 <span>    reference <span class="op">=</span> <span class="st">"XZ1516"</span>,</span>
@@ -324,6 +362,7 @@ link panel. The reference species supplies the input coordinates.</p>
 <span>    alignment <span class="op">=</span> <span class="st">"XZ1516_vs_N2"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/facet_genomics.html">facet_genomics</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">track</span><span class="op">)</span>, scales <span class="op">=</span> <span class="st">"free_y"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="ggexon-workflow_files/figure-html/workflow-pairwise-plot-1.png" class="r-plt" alt="N2 and XZ1516 exon tracks linked by nucleotide alignments across the selected RagTag_V region." width="700"></p>
 <p>For custom pairwise views, the PAF helper and the plotting grammar
 are meant to work together: derive or specify the windows you want,
 filter short PAF rows with <code>filter =</code>, and then draw the
@@ -333,7 +372,7 @@ comparison.</p>
 <code><a href="../reference/geom_nuclink.html">geom_nuclink()</a></code>. The same pattern can be extended to other
 geoms so they can consume <code>SynSpecies</code> or
 <code>SynIndividual</code> objects without requiring a manual
-<code>fortify()</code> step.</p>
+<code><a href="https://ggplot2.tidyverse.org/reference/fortify.html" class="external-link">fortify()</a></code> step.</p>
 </div>
 <div class="section level2">
 <h2 id="notes">Notes<a class="anchor" aria-label="anchor" href="#notes"></a>
