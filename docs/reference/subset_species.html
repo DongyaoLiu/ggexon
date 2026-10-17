@@ -44,7 +44,7 @@ metadata may no longer match the new subsetted windows.'></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Subset one or more individuals in a <code>SynSpecies</code> by coordinate string</h1>
-      <small class="dont-index">Source: <a href="https://github.com/DongyaoLiu/ggexon/blob/HEAD/R/SynSpecies-class.R" class="external-link"><code>R/SynSpecies-class.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/DongyaoLiu/ggexon/blob/main/R/SynSpecies-class.R" class="external-link"><code>R/SynSpecies-class.R</code></a></small>
       <div class="d-none name"><code>subset_species.Rd</code></div>
     </div>
 
@@ -109,7 +109,7 @@ vector, or a list of strings.</p></dd>
 <span class="r-in"><span><span class="va">gr</span> <span class="op">&lt;-</span> <span class="fu"><a href="annotation_data.html">annotation_data</a></span><span class="op">(</span><span class="va">ind</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">coords</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="st">"XZ1516#"</span>,</span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="fu">GenomeInfoDb</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/GenomeInfoDb/man/seqinfo.html" class="external-link">seqnames</a></span><span class="op">(</span><span class="va">gr</span><span class="op">)</span><span class="op">)</span><span class="op">[[</span><span class="fl">1L</span><span class="op">]</span><span class="op">]</span>,</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="fu">GenomeInfoDb</span><span class="fu">::</span><span class="fu">seqnames</span><span class="op">(</span><span class="va">gr</span><span class="op">)</span><span class="op">)</span><span class="op">[[</span><span class="fl">1L</span><span class="op">]</span><span class="op">]</span>,</span></span>
 <span class="r-in"><span>  <span class="st">":"</span>,</span></span>
 <span class="r-in"><span>  <span class="fu">IRanges</span><span class="fu">::</span><span class="fu">start</span><span class="op">(</span><span class="va">gr</span><span class="op">)</span><span class="op">[[</span><span class="fl">1L</span><span class="op">]</span><span class="op">]</span>,</span></span>
 <span class="r-in"><span>  <span class="st">"-"</span>,</span></span>
