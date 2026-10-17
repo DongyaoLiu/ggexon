@@ -6,6 +6,32 @@ read_hox_demo_table <- function(demo_dir, file) {
   )
 }
 
+test_that("human Hox reference labels cover every cluster slot", {
+  demo_dir <- system.file("extdata", "hox_cluster_expansion", package = "ggexon")
+  genes <- read_hox_demo_table(demo_dir, "hox_genes.tsv")
+  column_levels <- c("A", "B", "C", "D")
+  slot_order <- paste0("Hox", 15:1)
+
+  hox_axis_labels <- setNames(lapply(column_levels, function(cluster) {
+    reference <- genes[
+      genes$species_row == "human" & genes$cluster_column == cluster,
+      ,
+      drop = FALSE
+    ]
+    by_slot <- setNames(reference$gene_symbol, reference$slot)
+    labels <- unname(by_slot[slot_order])
+    labels[is.na(labels) | !nzchar(labels)] <-
+      slot_order[is.na(labels) | !nzchar(labels)]
+    labels
+  }), column_levels)
+
+  expect_named(hox_axis_labels, c("A", "B", "C", "D"))
+  expect_true(all(lengths(hox_axis_labels) == 15L))
+  expect_equal(hox_axis_labels$A[3L], "HOXA13")
+  expect_equal(hox_axis_labels$B[2L], "Hox14")
+  expect_true(all(grepl("^(HOX[A-D][0-9]+|Hox[0-9]+)$", unlist(hox_axis_labels))))
+})
+
 test_that("bundled HOX expansion data preserve sources and matrix states", {
   demo_dir <- system.file("extdata", "hox_cluster_expansion", package = "ggexon")
   expect_true(dir.exists(demo_dir))

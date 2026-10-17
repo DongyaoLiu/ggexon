@@ -20,7 +20,7 @@ familiar plotting ideas.
 
 ## Flagship HOX Cluster Expansion Example
 
-![A seven-row by four-column HOX matrix with equal-width HOXA-to-HOXD columns, the ancestral amphioxus cluster displayed under HOXA, Hox15-to-Hox1 gene squares, grey not-applicable cells, and a marked zebrafish HOXDB cluster-not-retained cell](man/figures/hox-cluster-expansion-demo.png)
+![A seven-row by four-column HOX matrix with cluster-specific human gene symbols on the x axes, square gene boxes, the ancestral amphioxus cluster displayed under HOXA, grey not-applicable cells, and a marked zebrafish HOXDB cluster-not-retained cell](man/figures/hox-cluster-expansion-demo.png)
 
 The bundled HOX cluster-expansion tutorial compares six chordate species in a
 seven-row by four-column matrix. HOXA through HOXD show the four vertebrate
@@ -39,7 +39,13 @@ Hox-number slot occupy exactly the same x coordinate. Box position represents
 that paralog-slot alignment, whereas the arrow independently represents
 transcription direction; amphioxus therefore retains its left-pointing arrows
 without breaking homolog-slot alignment. Unoccupied positions remain visible
-and do not by themselves imply gene loss. The example uses
+and do not by themselves imply gene loss. `scale_x_facet_labels()` supplies
+cluster-specific human reference gene symbols from an explicit named list,
+with `HoxN` fallback labels for slots absent from the human reference cluster.
+All facets retain the same fixed x-coordinate range and break positions, so
+changing the labels preserves slot alignment and works with
+`coord_fixed(ratio = 1)`. Labels are rotated 90 degrees to fit the 15 slots in
+each narrow column. The example uses
 `theme_ggexon_clean()` to remove panel outlines and facet-strip backgrounds.
 The tutorial removes nucleotide and synteny links, and also demonstrates
 initiation, genomic coding-midpoint, and stop anchor modes on the human HOXA
@@ -111,7 +117,7 @@ The public API is organized around a few function families:
 | Derive sequence/protein data | `extract_cds_seq()`, `translate_protein()`, `project_domains_to_genome()` |
 | Subset and curate objects | `subset_species()`, `subset_individual()`, `subset_pairwise_alignment()`, `set_gene_labels()`, `patch_annotation_from_gff()` |
 | Draw genomic layers | `ggexon()`, `geom_exon()`, `geom_coverage()`, `geom_genetag()`, `geom_genebox()`, `geom_genelabel()`, `geom_nuclink()`, `geom_synteny_link()`, `geom_protein_lollipop()` |
-| Arrange panels and guides | `facet_genomics()`, `scale_panel_annotation()`, `scale_panel_coverage()`, `center_panel_annotation()`, `facet_genomictree()`, `scale_x_ggexon_genomic()`, `guide_x_ggexon_piecewise()` |
+| Arrange panels and guides | `facet_genomics()`, `scale_panel_annotation()`, `scale_panel_coverage()`, `center_panel_annotation()`, `facet_genomictree()`, `scale_x_ggexon_genomic()`, `scale_x_facet_labels()`, `guide_x_ggexon_piecewise()` |
 | Style plots | `theme_ggexon_clean()`, `theme_ggexon_base()`, `theme_ggexon_track()`, `theme_ggexon_pairwise()` |
 
 The typical workflow is:

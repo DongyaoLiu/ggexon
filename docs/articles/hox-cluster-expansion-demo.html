@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>HOX Cluster Expansion Across Chordates • ggexon</title>
 <script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_3-0.4.10/font.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_3-0.4.10/font.css" rel="stylesheet">
 <link href="../deps/Source_Code_Pro-0.4.10/font.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
@@ -129,6 +129,19 @@ specifically to HOXA. Its HOXB–HOXD cells are structural blanks.</p>
 <span><span class="op">)</span></span>
 <span><span class="va">slot_order</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Hox"</span>, <span class="fl">15</span><span class="op">:</span><span class="fl">1</span><span class="op">)</span></span>
 <span></span>
+<span><span class="va">hox_axis_labels</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/setNames.html" class="external-link">setNames</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">column_levels</span>, <span class="kw">function</span><span class="op">(</span><span class="va">cluster</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">reference</span> <span class="op">&lt;-</span> <span class="va">genes</span><span class="op">[</span></span>
+<span>    <span class="va">genes</span><span class="op">$</span><span class="va">species_row</span> <span class="op">==</span> <span class="st">"human"</span> <span class="op">&amp;</span> <span class="va">genes</span><span class="op">$</span><span class="va">cluster_column</span> <span class="op">==</span> <span class="va">cluster</span>,</span>
+<span>    ,</span>
+<span>    drop <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  <span class="op">]</span></span>
+<span>  <span class="va">by_slot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/setNames.html" class="external-link">setNames</a></span><span class="op">(</span><span class="va">reference</span><span class="op">$</span><span class="va">gene_symbol</span>, <span class="va">reference</span><span class="op">$</span><span class="va">slot</span><span class="op">)</span></span>
+<span>  <span class="va">labels</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unname.html" class="external-link">unname</a></span><span class="op">(</span><span class="va">by_slot</span><span class="op">[</span><span class="va">slot_order</span><span class="op">]</span><span class="op">)</span></span>
+<span>  <span class="va">labels</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">labels</span><span class="op">)</span> <span class="op">|</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/nchar.html" class="external-link">nzchar</a></span><span class="op">(</span><span class="va">labels</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span></span>
+<span>    <span class="va">slot_order</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">labels</span><span class="op">)</span> <span class="op">|</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/nchar.html" class="external-link">nzchar</a></span><span class="op">(</span><span class="va">labels</span><span class="op">)</span><span class="op">]</span></span>
+<span>  <span class="va">labels</span></span>
+<span><span class="op">}</span><span class="op">)</span>, <span class="va">column_levels</span><span class="op">)</span></span>
+<span></span>
 <span><span class="va">genes</span><span class="op">$</span><span class="va">species_row</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">genes</span><span class="op">$</span><span class="va">species_row</span>, levels <span class="op">=</span> <span class="va">row_levels</span><span class="op">)</span></span>
 <span><span class="va">genes</span><span class="op">$</span><span class="va">cluster_column</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">genes</span><span class="op">$</span><span class="va">cluster_column</span>, levels <span class="op">=</span> <span class="va">column_levels</span><span class="op">)</span></span>
 <span><span class="va">genes</span><span class="op">$</span><span class="va">track</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">genes</span><span class="op">$</span><span class="va">species_row</span>, <span class="va">genes</span><span class="op">$</span><span class="va">cluster_column</span>, sep <span class="op">=</span> <span class="st">"::"</span><span class="op">)</span></span>
@@ -149,8 +162,9 @@ rendered or exported. Its internal arrow shows transcriptional
 direction, and black or white is selected automatically to contrast with
 the fill. The figure maps fill to Hox paralog number with an ordered,
 color-vision-friendly viridis HCL palette. No large legend is needed
-because the shared Hox15-to-Hox1 slot labels appear on every column
-axis.</p>
+because each cluster column axis shows the corresponding human reference
+gene symbols, with <code>HoxN</code> fallback labels for human reference
+slots that are absent from that cluster.</p>
 <p><code>strip_scale_x(slot_order = ...)</code> supplies a complete
 synthetic comparison template. Each displayed gene’s selected coding
 midpoint is mapped to its curated Hox-number slot, so genes assigned to
@@ -159,13 +173,23 @@ Unoccupied template slots do not close up and do not by themselves imply
 gene loss. This alignment is a visualization convention, not an inferred
 one-to-one orthology relationship, particularly for posterior amphioxus
 Hox genes. Box position therefore represents the curated Hox paralog
-slot, while the internal arrow independently represents transcription
-direction. The mapped BraLan2 amphioxus genes are all on the minus
-strand, so their arrows point left even though their Hox-number slots
-remain aligned with the vertebrate rows. If the template reverses a
-cluster’s native genomic direction, the gene-box arrows are reversed
-with it. Duplicated genes assigned to the same slot are stacked
-vertically at that x coordinate.</p>
+slot, while the axis labels identify the human reference symbols for
+each cluster and the internal arrow independently represents
+transcription direction. The mapped BraLan2 amphioxus genes are all on
+the minus strand, so their arrows point left even though their
+Hox-number slots remain aligned with the vertebrate rows. If the
+template reverses a cluster’s native genomic direction, the gene-box
+arrows are reversed with it. Duplicated genes assigned to the same slot
+are stacked vertically at that x coordinate.</p>
+<p><code><a href="../reference/scale_x_facet_labels.html">scale_x_facet_labels()</a></code> takes the explicit named list
+<code>hox_axis_labels</code>, keyed by the <code>cluster_column</code>
+facet values <code>A</code>, <code>B</code>, <code>C</code>, and
+<code>D</code>. Each character vector supplies the reference symbols (or
+<code>HoxN</code> fallbacks) in <code>slot_order</code>. The facets
+share fixed x-coordinate limits and break positions; only the axis
+labels vary by cluster. This preserves the common slot geometry and
+supports <code>coord_fixed(ratio = 1)</code>. The 15 labels in each
+narrow column are rotated 90 degrees for readability.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">structural_panels</span> <span class="op">&lt;-</span> <span class="va">panels</span><span class="op">[</span><span class="va">panels</span><span class="op">$</span><span class="va">cell_status</span> <span class="op">==</span> <span class="st">"structural_blank"</span>, <span class="op">]</span></span>
 <span><span class="va">lost_panels</span> <span class="op">&lt;-</span> <span class="va">panels</span><span class="op">[</span><span class="va">panels</span><span class="op">$</span><span class="va">cell_status</span> <span class="op">==</span> <span class="st">"cluster_not_retained"</span>, <span class="op">]</span></span>
@@ -176,7 +200,7 @@ vertically at that x coordinate.</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/geom_tile.html" class="external-link">geom_rect</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_rect</a></span><span class="op">(</span></span>
 <span>    data <span class="op">=</span> <span class="va">structural_panels</span>,</span>
 <span>    xmin <span class="op">=</span> <span class="op">-</span><span class="cn">Inf</span>,</span>
 <span>    xmax <span class="op">=</span> <span class="cn">Inf</span>,</span>
@@ -186,7 +210,7 @@ vertically at that x coordinate.</p>
 <span>    fill <span class="op">=</span> <span class="st">"#F4F4F4"</span>,</span>
 <span>    colour <span class="op">=</span> <span class="cn">NA</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/geom_tile.html" class="external-link">geom_rect</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_rect</a></span><span class="op">(</span></span>
 <span>    data <span class="op">=</span> <span class="va">lost_panels</span>,</span>
 <span>    xmin <span class="op">=</span> <span class="op">-</span><span class="cn">Inf</span>,</span>
 <span>    xmax <span class="op">=</span> <span class="cn">Inf</span>,</span>
@@ -200,46 +224,46 @@ vertically at that x coordinate.</p>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_genebox.html">geom_genebox</a></span><span class="op">(</span></span>
 <span>    data <span class="op">=</span> <span class="va">genes</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">slot</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">slot</span><span class="op">)</span>,</span>
 <span>    colour <span class="op">=</span> <span class="st">"grey20"</span>,</span>
 <span>    linewidth <span class="op">=</span> <span class="fl">0.25</span>,</span>
 <span>    show.legend <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/geom_text.html" class="external-link">geom_text</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_text.html" class="external-link">geom_text</a></span><span class="op">(</span></span>
 <span>    data <span class="op">=</span> <span class="va">structural_panels</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">8</span>, y <span class="op">=</span> <span class="fl">0</span>, label <span class="op">=</span> <span class="st">"not applicable"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">8</span>, y <span class="op">=</span> <span class="fl">0</span>, label <span class="op">=</span> <span class="st">"not applicable"</span><span class="op">)</span>,</span>
 <span>    inherit.aes <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>    colour <span class="op">=</span> <span class="st">"#6F6F6F"</span>,</span>
 <span>    size <span class="op">=</span> <span class="fl">2.2</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/geom_text.html" class="external-link">geom_text</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_text.html" class="external-link">geom_text</a></span><span class="op">(</span></span>
 <span>    data <span class="op">=</span> <span class="va">lost_panels</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">8</span>, y <span class="op">=</span> <span class="fl">0</span>, label <span class="op">=</span> <span class="st">"HOXDB not retained"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">8</span>, y <span class="op">=</span> <span class="fl">0</span>, label <span class="op">=</span> <span class="st">"HOXDB not retained"</span><span class="op">)</span>,</span>
 <span>    inherit.aes <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>    colour <span class="op">=</span> <span class="st">"#A33F36"</span>,</span>
 <span>    size <span class="op">=</span> <span class="fl">2.2</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/strip_scale_x.html">strip_scale_x</a></span><span class="op">(</span>slot_order <span class="op">=</span> <span class="va">slot_order</span>, guide <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span></span>
-<span>    rows <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">species_row</span><span class="op">)</span>,</span>
-<span>    cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">cluster_column</span><span class="op">)</span>,</span>
-<span>    scales <span class="op">=</span> <span class="st">"fixed"</span>,</span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span></span>
+<span>    rows <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">species_row</span><span class="op">)</span>,</span>
+<span>    cols <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">cluster_column</span><span class="op">)</span>,</span>
 <span>    drop <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>    switch <span class="op">=</span> <span class="st">"y"</span>,</span>
-<span>    labeller <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/labeller.html" class="external-link">labeller</a></span><span class="op">(</span></span>
-<span>      species_row <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/as_labeller.html" class="external-link">as_labeller</a></span><span class="op">(</span><span class="va">row_labels</span><span class="op">)</span>,</span>
-<span>      cluster_column <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/as_labeller.html" class="external-link">as_labeller</a></span><span class="op">(</span><span class="va">column_labels</span><span class="op">)</span></span>
+<span>    labeller <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labeller.html" class="external-link">labeller</a></span><span class="op">(</span></span>
+<span>      species_row <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/as_labeller.html" class="external-link">as_labeller</a></span><span class="op">(</span><span class="va">row_labels</span><span class="op">)</span>,</span>
+<span>      cluster_column <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/as_labeller.html" class="external-link">as_labeller</a></span><span class="op">(</span><span class="va">column_labels</span><span class="op">)</span></span>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="va">hox_palette</span>, drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="../reference/scale_x_facet_labels.html">scale_x_facet_labels</a></span><span class="op">(</span></span>
+<span>    facet <span class="op">=</span> <span class="va">cluster_column</span>,</span>
 <span>    breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">slot_order</span><span class="op">)</span>,</span>
-<span>    labels <span class="op">=</span> <span class="fl">15</span><span class="op">:</span><span class="fl">1</span>,</span>
-<span>    expand <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/expansion.html" class="external-link">expansion</a></span><span class="op">(</span>mult <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
+<span>    labels <span class="op">=</span> <span class="va">hox_axis_labels</span>,</span>
+<span>    expand <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/expansion.html" class="external-link">expansion</a></span><span class="op">(</span>mult <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/coord_fixed.html" class="external-link">coord_fixed</a></span><span class="op">(</span>ratio <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
-<span>    x <span class="op">=</span> <span class="st">"Hox paralog slot (posterior to anterior)"</span>,</span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="va">hox_palette</span>, drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_fixed.html" class="external-link">coord_fixed</a></span><span class="op">(</span>ratio <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
+<span>    x <span class="op">=</span> <span class="st">"Human reference gene symbol (shared Hox slot position)"</span>,</span>
 <span>    y <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>    caption <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span></span>
 <span>      <span class="st">"Box position = Hox paralog slot; arrow = transcription direction. "</span>,</span>
@@ -247,18 +271,18 @@ vertically at that x coordinate.</p>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/theme_ggexon_clean.html">theme_ggexon_clean</a></span><span class="op">(</span>base_size <span class="op">=</span> <span class="fl">8</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/theme.html" class="external-link">theme</a></span><span class="op">(</span></span>
-<span>    panel.grid <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span></span>
+<span>    panel.grid <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>    panel.spacing <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">0.45</span>, <span class="st">"lines"</span><span class="op">)</span>,</span>
-<span>    axis.text.x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">6.5</span><span class="op">)</span>,</span>
-<span>    axis.text.y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>    axis.ticks.y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>    strip.text.x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/element.html" class="external-link">element_text</a></span><span class="op">(</span>face <span class="op">=</span> <span class="st">"bold"</span>, size <span class="op">=</span> <span class="fl">8</span><span class="op">)</span>,</span>
-<span>    strip.text.y.left <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">0</span>, hjust <span class="op">=</span> <span class="fl">1</span>, size <span class="op">=</span> <span class="fl">7.5</span><span class="op">)</span>,</span>
+<span>    axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">90</span>, hjust <span class="op">=</span> <span class="fl">1</span>, vjust <span class="op">=</span> <span class="fl">0.5</span>, size <span class="op">=</span> <span class="fl">6.5</span><span class="op">)</span>,</span>
+<span>    axis.text.y <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>    axis.ticks.y <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>    strip.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>face <span class="op">=</span> <span class="st">"bold"</span>, size <span class="op">=</span> <span class="fl">8</span><span class="op">)</span>,</span>
+<span>    strip.text.y.left <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">0</span>, hjust <span class="op">=</span> <span class="fl">1</span>, size <span class="op">=</span> <span class="fl">7.5</span><span class="op">)</span>,</span>
 <span>    strip.placement <span class="op">=</span> <span class="st">"outside"</span>,</span>
 <span>    legend.position <span class="op">=</span> <span class="st">"none"</span>,</span>
-<span>    plot.caption <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">6.5</span>, colour <span class="op">=</span> <span class="st">"#555555"</span>, hjust <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>,</span>
-<span>    plot.margin <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="fl">5.5</span>, <span class="fl">8</span>, <span class="fl">5.5</span>, <span class="fl">5.5</span><span class="op">)</span></span>
+<span>    plot.caption <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">6.5</span>, colour <span class="op">=</span> <span class="st">"#555555"</span>, hjust <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>,</span>
+<span>    plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="fl">5.5</span>, <span class="fl">8</span>, <span class="fl">5.5</span>, <span class="fl">5.5</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
 <div class="figure">
 <img src="hox-cluster-expansion-demo_files/figure-html/hox-matrix-1.png" class="r-plt" alt="A seven-row by four-column matrix of chordate Hox clusters. Human, mouse, chicken, spotted gar, and two zebrafish subrows occupy HOXA through HOXD columns. The ancestral amphioxus cluster is displayed under HOXA with left-pointing strand arrows, while its homologous Hox15 through Hox1 slots remain vertically aligned with vertebrate slots. HOXB through HOXD are structural blanks for amphioxus, and zebrafish HOXDB is marked as not retained." width="2310"><p class="caption">
@@ -378,7 +402,7 @@ genes are drawn at all three raw anchors. The x coordinates are
 displayed in megabases and reversed only for presentation, so the panel
 still reads Hox13 to Hox1 like the matrix. The gene boxes use the same
 data-unit geometry as the matrix, with a 0.004 Mb side length. Labels
-are composed with a separate <code><a href="https://rdrr.io/pkg/ggplot2/man/geom_text.html" class="external-link">geom_text()</a></code> layer because
+are composed with a separate <code><a href="https://ggplot2.tidyverse.org/reference/geom_text.html" class="external-link">geom_text()</a></code> layer because
 <code><a href="../reference/geom_genebox.html">geom_genebox()</a></code> deliberately does not contain text.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">human_hoxa</span> <span class="op">&lt;-</span> <span class="va">genes</span><span class="op">[</span><span class="va">genes</span><span class="op">$</span><span class="va">species</span> <span class="op">==</span> <span class="st">"human"</span> <span class="op">&amp;</span> <span class="va">genes</span><span class="op">$</span><span class="va">cluster</span> <span class="op">==</span> <span class="st">"A"</span>, <span class="op">]</span></span>
@@ -400,34 +424,34 @@ are composed with a separate <code><a href="https://rdrr.io/pkg/ggplot2/man/geom
 <span><span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_genebox.html">geom_genebox</a></span><span class="op">(</span></span>
 <span>    data <span class="op">=</span> <span class="va">anchor_demo</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">slot</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">slot</span><span class="op">)</span>,</span>
 <span>    box_size <span class="op">=</span> <span class="fl">0.004</span>,</span>
 <span>    colour <span class="op">=</span> <span class="st">"grey20"</span>,</span>
 <span>    linewidth <span class="op">=</span> <span class="fl">0.25</span>,</span>
 <span>    show.legend <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/geom_text.html" class="external-link">geom_text</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_text.html" class="external-link">geom_text</a></span><span class="op">(</span></span>
 <span>    data <span class="op">=</span> <span class="va">anchor_demo</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span>, y <span class="op">=</span> <span class="fl">0.006</span>, label <span class="op">=</span> <span class="va">gene_symbol</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span>, y <span class="op">=</span> <span class="fl">0.006</span>, label <span class="op">=</span> <span class="va">gene_symbol</span><span class="op">)</span>,</span>
 <span>    inherit.aes <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>    angle <span class="op">=</span> <span class="fl">35</span>,</span>
 <span>    hjust <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>    size <span class="op">=</span> <span class="fl">2.2</span>,</span>
 <span>    check_overlap <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span>rows <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">anchor_mode</span><span class="op">)</span>, switch <span class="op">=</span> <span class="st">"y"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="va">hox_palette</span>, drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/scale_continuous.html" class="external-link">scale_x_reverse</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span>rows <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">anchor_mode</span><span class="op">)</span>, switch <span class="op">=</span> <span class="st">"y"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="va">hox_palette</span>, drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_reverse</a></span><span class="op">(</span></span>
 <span>    labels <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">x</span>, <span class="fl">3</span><span class="op">)</span>, nsmall <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>, <span class="st">" Mb"</span><span class="op">)</span>,</span>
-<span>    expand <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/expansion.html" class="external-link">expansion</a></span><span class="op">(</span>mult <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.06</span>, <span class="fl">0.06</span><span class="op">)</span><span class="op">)</span></span>
+<span>    expand <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/expansion.html" class="external-link">expansion</a></span><span class="op">(</span>mult <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.06</span>, <span class="fl">0.06</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/coord_fixed.html" class="external-link">coord_fixed</a></span><span class="op">(</span>ratio <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"GRCh38 coordinate (descending)"</span>, y <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_fixed.html" class="external-link">coord_fixed</a></span><span class="op">(</span>ratio <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"GRCh38 coordinate (descending)"</span>, y <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/theme_ggexon_clean.html">theme_ggexon_clean</a></span><span class="op">(</span>base_size <span class="op">=</span> <span class="fl">8</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/theme.html" class="external-link">theme</a></span><span class="op">(</span></span>
-<span>    panel.grid.major.y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>    panel.grid.minor <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>    strip.text.y.left <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">0</span>, hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span></span>
+<span>    panel.grid.major.y <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>    panel.grid.minor <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>    strip.text.y.left <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">0</span>, hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
 <span>    strip.placement <span class="op">=</span> <span class="st">"outside"</span>,</span>
 <span>    legend.position <span class="op">=</span> <span class="st">"none"</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>

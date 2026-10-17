@@ -101,6 +101,7 @@ reference:
   - center_panel_annotation
   - facet_genomictree
   - scale_x_ggexon_genomic
+  - scale_x_facet_labels
   - strip_scale
   - guide_x_ggexon_piecewise
   - theme_ggexon_base

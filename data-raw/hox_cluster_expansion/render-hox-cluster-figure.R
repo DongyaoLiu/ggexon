@@ -50,6 +50,18 @@ column_labels <- c(
 )
 slot_order <- paste0("Hox", 15:1)
 
+hox_axis_labels <- setNames(lapply(column_levels, function(cluster) {
+  reference <- genes[
+    genes$species_row == "human" & genes$cluster_column == cluster,
+    , drop = FALSE
+  ]
+  by_slot <- setNames(reference$gene_symbol, reference$slot)
+  labels <- unname(by_slot[slot_order])
+  missing <- is.na(labels) | !nzchar(labels)
+  labels[missing] <- slot_order[missing]
+  labels
+}), column_levels)
+
 genes$species_row <- factor(genes$species_row, levels = row_levels)
 genes$cluster_column <- factor(genes$cluster_column, levels = column_levels)
 genes$track <- paste(genes$species_row, genes$cluster_column, sep = "::")
@@ -126,14 +138,15 @@ plot <- ggexon() +
     )
   ) +
   ggplot2::scale_fill_manual(values = hox_palette, drop = FALSE) +
-  ggplot2::scale_x_continuous(
+  scale_x_facet_labels(
+    facet = cluster_column,
     breaks = seq_along(slot_order),
-    labels = 15:1,
+    labels = hox_axis_labels,
     expand = ggplot2::expansion(mult = 0)
   ) +
   ggplot2::coord_fixed(ratio = 1) +
   ggplot2::labs(
-    x = "Hox paralog slot (posterior to anterior)",
+    x = "Human reference gene symbol (shared Hox slot position)",
     y = NULL,
     caption = paste0(
       "Box position = Hox paralog slot; arrow = transcription direction. ",
@@ -144,7 +157,7 @@ plot <- ggexon() +
   ggplot2::theme(
     panel.grid = ggplot2::element_blank(),
     panel.spacing = grid::unit(0.45, "lines"),
-    axis.text.x = ggplot2::element_text(size = 6.5),
+    axis.text.x = ggplot2::element_text(angle = 90, hjust = 1, vjust = 0.5, size = 6.5),
     axis.text.y = ggplot2::element_blank(),
     axis.ticks.y = ggplot2::element_blank(),
     strip.text.x = ggplot2::element_text(face = "bold", size = 8),

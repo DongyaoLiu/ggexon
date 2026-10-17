@@ -730,6 +730,9 @@ strip_scale_to_plot_x <- function(x, transform) {
 .strip_scale_force_fixed_x <- function(layout, transform_panels) {
   layout_df <- layout$layout
   if (!is.data.frame(layout_df) || !"PANEL" %in% names(layout_df)) return(layout)
+  # These presentation scales already train a shared range. Retain their IDs
+  # so slot alignment does not replace every facet's labels with the first's.
+  if (inherits(layout$facet, "FacetSharedXLabels")) return(layout)
   # A fixed FacetGrid already shares one x scale. Mutating its axis-label
   # bookkeeping is redundant and breaks axis attachment in ggplot2 4.0.0.
   if (inherits(layout$facet, "FacetGrid") &&

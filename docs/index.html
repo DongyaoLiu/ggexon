@@ -74,10 +74,10 @@
 <h2 id="flagship-hox-cluster-expansion-example">Flagship HOX Cluster Expansion Example<a class="anchor" aria-label="anchor" href="#flagship-hox-cluster-expansion-example"></a>
 </h2>
 <div class="float">
-<img src="reference/figures/hox-cluster-expansion-demo.png" alt="A seven-row by four-column HOX matrix with equal-width HOXA-to-HOXD columns, the ancestral amphioxus cluster displayed under HOXA, Hox15-to-Hox1 gene squares, grey not-applicable cells, and a marked zebrafish HOXDB cluster-not-retained cell"><div class="figcaption">A seven-row by four-column HOX matrix with equal-width HOXA-to-HOXD columns, the ancestral amphioxus cluster displayed under HOXA, Hox15-to-Hox1 gene squares, grey not-applicable cells, and a marked zebrafish HOXDB cluster-not-retained cell</div>
+<img src="reference/figures/hox-cluster-expansion-demo.png" alt="A seven-row by four-column HOX matrix with cluster-specific human gene symbols on the x axes, square gene boxes, the ancestral amphioxus cluster displayed under HOXA, grey not-applicable cells, and a marked zebrafish HOXDB cluster-not-retained cell"><div class="figcaption">A seven-row by four-column HOX matrix with cluster-specific human gene symbols on the x axes, square gene boxes, the ancestral amphioxus cluster displayed under HOXA, grey not-applicable cells, and a marked zebrafish HOXDB cluster-not-retained cell</div>
 </div>
 <p>The bundled HOX cluster-expansion tutorial compares six chordate species in a seven-row by four-column matrix. HOXA through HOXD show the four vertebrate cluster families and the duplicated zebrafish <code>a</code> and <code>b</code> rows. The single ancestral amphioxus cluster is displayed under HOXA only as a compact layout anchor; this placement does not assign it specifically to HOXA. Its HOXB–HOXD cells are structural blanks. A not-retained zebrafish HOXDB cluster and unoccupied gene slots within retained clusters remain visually distinct.</p>
-<p>Genes are drawn with <code><a href="reference/geom_genebox.html">geom_genebox()</a></code> as fixed-size squares containing strand-direction arrows. <code>strip_scale_x(slot_order = ...)</code> aligns every gene to a shared Hox15-to-Hox1 template, so genes assigned to the same curated Hox-number slot occupy exactly the same x coordinate. Box position represents that paralog-slot alignment, whereas the arrow independently represents transcription direction; amphioxus therefore retains its left-pointing arrows without breaking homolog-slot alignment. Unoccupied positions remain visible and do not by themselves imply gene loss. The tutorial removes nucleotide and synteny links, and also demonstrates initiation, genomic coding-midpoint, and stop anchor modes on the human HOXA cluster, with any terminal-CDS positional proxies flagged in the bundled data. Its annotations are pinned to Ensembl release 116 for vertebrates and Ensembl Metazoa release 63 for amphioxus.</p>
+<p>Genes are drawn with <code><a href="reference/geom_genebox.html">geom_genebox()</a></code> as data-unit squares containing strand-direction arrows. Its default <code>box_size = 1</code> spans one x and y data unit; <code>coord_fixed(ratio = 1)</code> keeps the boxes visually square when the figure is rendered or exported. <code>strip_scale_x(slot_order = ...)</code> aligns every gene to a shared Hox15-to-Hox1 template, so genes assigned to the same curated Hox-number slot occupy exactly the same x coordinate. Box position represents that paralog-slot alignment, whereas the arrow independently represents transcription direction; amphioxus therefore retains its left-pointing arrows without breaking homolog-slot alignment. Unoccupied positions remain visible and do not by themselves imply gene loss. <code><a href="reference/scale_x_facet_labels.html">scale_x_facet_labels()</a></code> supplies cluster-specific human reference gene symbols from an explicit named list, with <code>HoxN</code> fallback labels for slots absent from the human reference cluster. All facets retain the same fixed x-coordinate range and break positions, so changing the labels preserves slot alignment and works with <code>coord_fixed(ratio = 1)</code>. Labels are rotated 90 degrees to fit the 15 slots in each narrow column. The example uses <code><a href="reference/theme_ggexon_clean.html">theme_ggexon_clean()</a></code> to remove panel outlines and facet-strip backgrounds. The tutorial removes nucleotide and synteny links, and also demonstrates initiation, genomic coding-midpoint, and stop anchor modes on the human HOXA cluster, with any terminal-CDS positional proxies flagged in the bundled data. Its annotations are pinned to Ensembl release 116 for vertebrates and Ensembl Metazoa release 63 for amphioxus.</p>
 <p>Open <code><a href="articles/hox-cluster-expansion-demo.html">vignette("hox-cluster-expansion-demo", package = "ggexon")</a></code> for the full example, selected-transcript provenance, and source audit trail.</p>
 </div>
 <div class="section level2">
@@ -134,7 +134,7 @@
 </tr>
 <tr>
 <td><code>SynVCFAnnotation</code></td>
-<td>Variant data queried by genomic interval</td>
+<td>VCF querying is supported. BCF parsing is not implemented; BCF input raises an unsupported-format error.</td>
 </tr>
 <tr>
 <td><code>SynBigWigAnnotation</code></td>
@@ -158,7 +158,7 @@
 </tr>
 <tr>
 <td><code>SynMultiAlignment</code></td>
-<td>Multi-genome alignment links from MAF or ODGI-backed data</td>
+<td>Stores already parsed MAF data supplied through <code>data</code>; loading a MAF file remains unavailable. ODGI-backed loading is available.</td>
 </tr>
 <tr>
 <td><code>SynLayout</code></td>
@@ -214,7 +214,13 @@
 <tr>
 <td>Arrange panels and guides</td>
 <td>
-<code><a href="reference/facet_genomics.html">facet_genomics()</a></code>, <code><a href="reference/scale_panel_annotation.html">scale_panel_annotation()</a></code>, <code><a href="reference/scale_panel_coverage.html">scale_panel_coverage()</a></code>, <code><a href="reference/center_panel_annotation.html">center_panel_annotation()</a></code>, <code><a href="reference/facet_genomictree.html">facet_genomictree()</a></code>, <code><a href="reference/scale_x_ggexon_genomic.html">scale_x_ggexon_genomic()</a></code>, <code><a href="reference/guide_x_ggexon_piecewise.html">guide_x_ggexon_piecewise()</a></code>
+<code><a href="reference/facet_genomics.html">facet_genomics()</a></code>, <code><a href="reference/scale_panel_annotation.html">scale_panel_annotation()</a></code>, <code><a href="reference/scale_panel_coverage.html">scale_panel_coverage()</a></code>, <code><a href="reference/center_panel_annotation.html">center_panel_annotation()</a></code>, <code><a href="reference/facet_genomictree.html">facet_genomictree()</a></code>, <code><a href="reference/scale_x_ggexon_genomic.html">scale_x_ggexon_genomic()</a></code>, <code><a href="reference/scale_x_facet_labels.html">scale_x_facet_labels()</a></code>, <code><a href="reference/guide_x_ggexon_piecewise.html">guide_x_ggexon_piecewise()</a></code>
+</td>
+</tr>
+<tr>
+<td>Style plots</td>
+<td>
+<code><a href="reference/theme_ggexon_clean.html">theme_ggexon_clean()</a></code>, <code><a href="reference/theme_ggexon_base.html">theme_ggexon_base()</a></code>, <code><a href="reference/theme_ggexon_track.html">theme_ggexon_track()</a></code>, <code><a href="reference/theme_ggexon_pairwise.html">theme_ggexon_pairwise()</a></code>
 </td>
 </tr>
 </tbody>
@@ -285,7 +291,7 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Dongyao LIU <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-8066-1487" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
+<li>Dongyao LIU <br><small class="roles"> Author, maintainer </small>   </li>
 </ul>
 </div>
 
