@@ -100,7 +100,9 @@ this can be either one row per PSL record or one row per ungapped block.</p></dd
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>For PSL-backed alignments, use <code><a href="load_alignment.html">load_alignment()</a></code> with
 <code>more = TRUE</code> when you want the cached alignment table expanded to one row
-per ungapped block instead of one row per PSL record.</p>
+per ungapped block instead of one row per PSL record.
+Returned <code>qstart</code>, <code>qend</code>, <code>tstart</code>, and <code>tend</code> values use one-based closed
+genomic intervals; PAF and PSL source starts are normalized during import.</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

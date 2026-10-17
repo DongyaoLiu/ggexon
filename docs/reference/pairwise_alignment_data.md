@@ -4,7 +4,9 @@ Returns the pairwise alignment table for a
 [`SynPairAlignment`](https://dongyaoliu.github.io/ggexon/reference/SynPairAlignment.md)
 object or a stored pairwise alignment inside a
 [`SynSpecies`](https://dongyaoliu.github.io/ggexon/reference/SynSpecies.md)
-object.
+object. Returned `qstart`, `qend`, `tstart`, and `tend` values use
+one-based closed genomic intervals; PAF and PSL source starts are
+normalized during import.
 
 ## Usage
 

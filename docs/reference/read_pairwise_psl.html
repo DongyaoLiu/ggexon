@@ -4,12 +4,16 @@ ggexon for pairwise link dispatch. By default the parser keeps one row per
 PSL record and normalizes the output columns to qchr, qstart, qend,
 tchr, tstart, tend, strand, nmatch, alen, and related fields
 expected by pairwise_alignment_data() and geom_nuclink(). When
-more = TRUE, each PSL record is expanded into one row per ungapped block."><meta property="og:description" content="Parses a UCSC PSL file and returns the PAF-like table used internally by
+more = TRUE, each PSL record is expanded into one row per ungapped block.
+Returned qstart, qend, tstart, and tend values use one-based closed
+genomic intervals; PAF and PSL source starts are normalized during import."><meta property="og:description" content="Parses a UCSC PSL file and returns the PAF-like table used internally by
 ggexon for pairwise link dispatch. By default the parser keeps one row per
 PSL record and normalizes the output columns to qchr, qstart, qend,
 tchr, tstart, tend, strand, nmatch, alen, and related fields
 expected by pairwise_alignment_data() and geom_nuclink(). When
-more = TRUE, each PSL record is expanded into one row per ungapped block."></head><body>
+more = TRUE, each PSL record is expanded into one row per ungapped block.
+Returned qstart, qend, tstart, and tend values use one-based closed
+genomic intervals; PAF and PSL source starts are normalized during import."></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -56,7 +60,9 @@ more = TRUE, each PSL record is expanded into one row per ungapped block."></hea
 PSL record and normalizes the output columns to <code>qchr</code>, <code>qstart</code>, <code>qend</code>,
 <code>tchr</code>, <code>tstart</code>, <code>tend</code>, <code>strand</code>, <code>nmatch</code>, <code>alen</code>, and related fields
 expected by <code><a href="pairwise_alignment_data.html">pairwise_alignment_data()</a></code> and <code><a href="geom_nuclink.html">geom_nuclink()</a></code>. When
-<code>more = TRUE</code>, each PSL record is expanded into one row per ungapped block.</p>
+<code>more = TRUE</code>, each PSL record is expanded into one row per ungapped block.
+Returned <code>qstart</code>, <code>qend</code>, <code>tstart</code>, and <code>tend</code> values use one-based closed
+genomic intervals; PAF and PSL source starts are normalized during import.</p>
     </div>
 
     <div class="section level2">

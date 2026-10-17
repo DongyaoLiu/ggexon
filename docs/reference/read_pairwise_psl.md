@@ -9,7 +9,9 @@ related fields expected by
 and
 [`geom_nuclink()`](https://dongyaoliu.github.io/ggexon/reference/geom_nuclink.md).
 When `more = TRUE`, each PSL record is expanded into one row per
-ungapped block.
+ungapped block. Returned `qstart`, `qend`, `tstart`, and `tend` values
+use one-based closed genomic intervals; PAF and PSL source starts are
+normalized during import.
 
 ## Usage
 

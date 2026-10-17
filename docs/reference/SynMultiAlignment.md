@@ -31,7 +31,10 @@ SynMultiAlignment(
 
 - format:
 
-  Alignment format. Currently `"maf"` and `"odgi"` are supported.
+  Alignment format. `SynMultiAlignment` can store already parsed MAF
+  data supplied through `data`, but
+  [`load_alignment()`](https://dongyaoliu.github.io/ggexon/reference/load_alignment.md)
+  cannot parse a MAF file. ODGI-backed file loading is supported.
 
 - data:
 

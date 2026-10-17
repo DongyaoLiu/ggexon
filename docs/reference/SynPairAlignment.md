@@ -58,4 +58,7 @@ A `SynPairAlignment` object.
 For PSL-backed alignments, use
 [`load_alignment()`](https://dongyaoliu.github.io/ggexon/reference/load_alignment.md)
 with `more = TRUE` when you want the cached alignment table expanded to
-one row per ungapped block instead of one row per PSL record.
+one row per ungapped block instead of one row per PSL record. Returned
+`qstart`, `qend`, `tstart`, and `tend` values use one-based closed
+genomic intervals; PAF and PSL source starts are normalized during
+import.

@@ -27,8 +27,8 @@ strand, so the plot below reverses the mouse panel at draw time while
 keeping tick labels in original genomic coordinates.
 
 ``` r
-
 library(ggexon)
+library(ggplot2)
 
 demo_dir <- system.file("extdata", "cd44_pairwise_ensembl116", package = "ggexon")
 species <- read.delim(file.path(demo_dir, "cd44_species.tsv"), check.names = FALSE)
@@ -42,16 +42,16 @@ names(isoform_table) <- c("Species", "Transcript", "Ensembl transcript", "Exons"
 knitr::kable(isoform_table)
 ```
 
-| Species | Transcript | Ensembl transcript | Exons | Reason |
-|:---|:---|:---|---:|:---|
-| Human | CD44-208 | ENST00000428726 | 18 | RefSeq-backed Ensembl canonical transcript (NM_000610) |
-| Human | CD44-201 | ENST00000263398 | 9 | RefSeq-backed shorter CD44 splice isoform (NM_001001391) |
-| Human | CD44-210 | ENST00000434472 | 10 | RefSeq-backed intermediate CD44 splice isoform (NM_001202555) |
-| Human | CD44-242 | ENST00000904013 | 18 | RefSeq-backed expanded CD44 splice isoform (NM_001440324/NM_001440326) |
-| Mouse | Cd44-201 | ENSMUST00000005218 | 19 | RefSeq-backed Ensembl canonical transcript (NM_009851) |
-| Mouse | Cd44-203 | ENSMUST00000099673 | 9 | RefSeq-backed shorter Cd44 splice isoform (NM_001039151) |
-| Mouse | Cd44-204 | ENSMUST00000111190 | 11 | RefSeq-backed intermediate Cd44 splice isoform (NM_001177787) |
-| Mouse | Cd44-208 | ENSMUST00000111198 | 16 | RefSeq-backed expanded Cd44 splice isoform (NM_001177785) |
+| Species | Transcript | Ensembl transcript | Exons | Reason                                                                 |
+|:--------|:-----------|:-------------------|------:|:-----------------------------------------------------------------------|
+| Human   | CD44-208   | ENST00000428726    |    18 | RefSeq-backed Ensembl canonical transcript (NM_000610)                 |
+| Human   | CD44-201   | ENST00000263398    |     9 | RefSeq-backed shorter CD44 splice isoform (NM_001001391)               |
+| Human   | CD44-210   | ENST00000434472    |    10 | RefSeq-backed intermediate CD44 splice isoform (NM_001202555)          |
+| Human   | CD44-242   | ENST00000904013    |    18 | RefSeq-backed expanded CD44 splice isoform (NM_001440324/NM_001440326) |
+| Mouse   | Cd44-201   | ENSMUST00000005218 |    19 | RefSeq-backed Ensembl canonical transcript (NM_009851)                 |
+| Mouse   | Cd44-203   | ENSMUST00000099673 |     9 | RefSeq-backed shorter Cd44 splice isoform (NM_001039151)               |
+| Mouse   | Cd44-204   | ENSMUST00000111190 |    11 | RefSeq-backed intermediate Cd44 splice isoform (NM_001177787)          |
+| Mouse   | Cd44-208   | ENSMUST00000111198 |    16 | RefSeq-backed expanded Cd44 splice isoform (NM_001177785)              |
 
 ## Pairwise splice-variant plot
 
@@ -63,7 +63,6 @@ LASTZ percent identity. The transcript backbone is drawn in neutral grey
 with `transcript_backbone_fill`.
 
 ``` r
-
 exons <- read.delim(file.path(demo_dir, "cd44_selected_exons.tsv"), check.names = FALSE)
 links <- read.delim(file.path(demo_dir, "cd44_nuclinks_lastz.tsv"), check.names = FALSE)
 
@@ -213,7 +212,6 @@ separate from the exon annotation rows:
   needs.
 
 ``` r
-
 homology_candidates <- read.delim(
   file.path(demo_dir, "cd44_exon_homology_ranked.tsv"),
   check.names = FALSE
@@ -253,7 +251,6 @@ target-bp-weighted identity. The middle region is the longest
 consecutive run of variable selected exons.
 
 ``` r
-
 unique_exons <- read.delim(
   file.path(demo_dir, "cd44_selected_unique_exons.tsv"),
   check.names = FALSE
@@ -305,11 +302,11 @@ region_summary <- do.call(rbind, lapply(seq_len(nrow(regions)), function(i) {
 knitr::kable(region_summary)
 ```
 
-| Region | Retained blocks | Human bp covered | Weighted identity (%) |
-|:---|---:|---:|---:|
-| 5’ side | 15 | 52737 | 55.0 |
-| variable exon-rich middle | 3 | 14714 | 55.4 |
-| 3’ side | 5 | 16851 | 56.4 |
+| Region                    | Retained blocks | Human bp covered | Weighted identity (%) |
+|:--------------------------|----------------:|-----------------:|----------------------:|
+| 5’ side                   |              15 |            52737 |                  55.0 |
+| variable exon-rich middle |               3 |            14714 |                  55.4 |
+| 3’ side                   |               5 |            16851 |                  56.4 |
 
 The same exon-pair candidates can be summarized at the protein level.
 Peptide fragments are reconstructed from selected transcript CDS codons
@@ -318,7 +315,6 @@ below uses a global peptide alignment; the denominator is aligned
 amino-acid columns, including gap columns.
 
 ``` r
-
 protein_identity <- read.delim(
   file.path(demo_dir, "cd44_exon_protein_identity.tsv"),
   check.names = FALSE
@@ -347,13 +343,13 @@ knitr::kable(protein_identity_table, row.names = FALSE)
 ```
 
 | Human exon | Mouse exon | Human role | Mouse role | Genomic identity (%) | Human peptide aa | Mouse peptide aa | Identical aa | Aligned aa | Gap aa | Protein identity (%) |
-|---:|---:|:---|:---|---:|---:|---:|---:|---:|---:|---:|
-| 1 | 19 | variable | common | 56.099 | 23 | 27 | 20 | 27 | 4 | 74.1 |
-| 3 | 18 | common | common | 54.681 | 55 | 55 | 47 | 55 | 0 | 85.5 |
-| 6 | 15 | common | common | 53.681 | 77 | 74 | 42 | 78 | 5 | 53.8 |
-| 16 | 5 | variable | variable | 59.102 | 68 | 69 | 32 | 69 | 1 | 46.4 |
-| 19 | 2 | common | common | 53.880 | 26 | 26 | 25 | 26 | 0 | 96.2 |
-| 20 | 1 | common | common | 59.770 | 67 | 67 | 60 | 67 | 0 | 89.6 |
+|-----------:|-----------:|:-----------|:-----------|---------------------:|-----------------:|-----------------:|-------------:|-----------:|-------:|---------------------:|
+|          1 |         19 | variable   | common     |               56.099 |               23 |               27 |           20 |         27 |      4 |                 74.1 |
+|          3 |         18 | common     | common     |               54.681 |               55 |               55 |           47 |         55 |      0 |                 85.5 |
+|          6 |         15 | common     | common     |               53.681 |               77 |               74 |           42 |         78 |      5 |                 53.8 |
+|         16 |          5 | variable   | variable   |               59.102 |               68 |               69 |           32 |         69 |      1 |                 46.4 |
+|         19 |          2 | common     | common     |               53.880 |               26 |               26 |           25 |         26 |      0 |                 96.2 |
+|         20 |          1 | common     | common     |               59.770 |               67 |               67 |           60 |         67 |      0 |                 89.6 |
 
 ## Reusing the pattern
 

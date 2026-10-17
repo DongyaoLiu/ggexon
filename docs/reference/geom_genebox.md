@@ -1,9 +1,9 @@
 # Draw fixed-size gene boxes with internal strand arrows
 
-`geom_genebox()` represents each gene with a square of fixed physical
-size and a horizontal arrow indicating transcription direction. Because
-the box dimensions are measured in millimetres, the symbol stays square
-under free genomic scales and coordinate transformations.
+`geom_genebox()` represents each gene with a square of fixed data-unit
+size and a horizontal arrow indicating transcription direction. The box
+size is interpreted like ggplot2's bar width: `box_size = 1` spans one x
+and y data unit around the mapped gene position.
 
 ## Usage
 
@@ -14,7 +14,7 @@ geom_genebox(
   stat = "identity",
   position = "identity",
   ...,
-  box_size = 3,
+  box_size = GeomGeneBox$default_params()$box_size,
   anchor = c("middle", "start", "end"),
   arrow_colour = NULL,
   arrow_linewidth = 0.45,
@@ -37,7 +37,8 @@ geom_genebox(
 
 - box_size:
 
-  Side length of each square in millimetres. Defaults to `3`.
+  Side length of each square in x and y data units. Defaults to the
+  `GeomGeneBox` class default of `1`.
 
 - anchor:
 

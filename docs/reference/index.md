@@ -134,6 +134,8 @@ and control genomic x-axis guides.
   : Facet genomic panels by tree-tip order
 - [`scale_x_ggexon_genomic()`](https://dongyaoliu.github.io/ggexon/reference/scale_x_ggexon_genomic.md)
   : Compress introns while keeping genomic x-axis labels
+- [`scale_x_facet_labels()`](https://dongyaoliu.github.io/ggexon/reference/scale_x_facet_labels.md)
+  : Label shared continuous x coordinates by facet
 - [`strip_scale_x()`](https://dongyaoliu.github.io/ggexon/reference/strip_scale_x.md)
   [`strip_scale()`](https://dongyaoliu.github.io/ggexon/reference/strip_scale_x.md)
   : X-only strip scale for gene tracks
@@ -141,6 +143,8 @@ and control genomic x-axis guides.
   : Draw representative exon and intron scale bars for genomic x scaling
 - [`theme_ggexon_base()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_base.md)
   : Shared background-free theme for ggexon plots
+- [`theme_ggexon_clean()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_clean.md)
+  : Clean background-free theme for ggexon plots
 - [`theme_ggexon_track()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_track.md)
   [`theme_ggexon_genomictree()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_track.md)
   : ggexon themes for genomic tracks
@@ -234,6 +238,9 @@ stored layout information to Syn containers.
 - [`set_active_feature_annotation()`](https://dongyaoliu.github.io/ggexon/reference/set_active_feature_annotation.md)
   : Set the active feature annotation layer on a SynIndividual
 
+- [`syn_id()`](https://dongyaoliu.github.io/ggexon/reference/syn_id.md)
+  : Access a SynIndividual identifier
+
 - [`individual_names()`](https://dongyaoliu.github.io/ggexon/reference/individual_names.md)
   :
 
@@ -278,6 +285,8 @@ derive sequence or protein-level summaries.
   : Load annotations into Syn-aware objects
 - [`annotation_data()`](https://dongyaoliu.github.io/ggexon/reference/annotation_data.md)
   : Access annotation data
+- [`protein_seq()`](https://dongyaoliu.github.io/ggexon/reference/protein_seq.md)
+  : Access translated protein sequences
 - [`query_features()`](https://dongyaoliu.github.io/ggexon/reference/query_features.md)
   : Query annotation features from a SynIndividual object
 - [`query_variants()`](https://dongyaoliu.github.io/ggexon/reference/query_variants.md)

@@ -3,11 +3,15 @@
 individuals. Like SynPairAlignment, it is a concrete SynSpeAnnotation
 with a source file, optional cached parsed representation, and metadata, but
 it records a vector of participating individual identifiers instead of
-query/target sides."><meta property="og:description" content="SynMultiAlignment stores one multiple alignment spanning more than two
+query/target sides. SynMultiAlignment can store already parsed MAF data
+supplied through data, but load_alignment() cannot parse a MAF file.
+ODGI-backed file loading is supported."><meta property="og:description" content="SynMultiAlignment stores one multiple alignment spanning more than two
 individuals. Like SynPairAlignment, it is a concrete SynSpeAnnotation
 with a source file, optional cached parsed representation, and metadata, but
 it records a vector of participating individual identifiers instead of
-query/target sides."></head><body>
+query/target sides. SynMultiAlignment can store already parsed MAF data
+supplied through data, but load_alignment() cannot parse a MAF file.
+ODGI-backed file loading is supported."></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -53,7 +57,9 @@ query/target sides."></head><body>
 individuals. Like <code>SynPairAlignment</code>, it is a concrete <code>SynSpeAnnotation</code>
 with a source file, optional cached parsed representation, and metadata, but
 it records a vector of participating individual identifiers instead of
-query/target sides.</p>
+query/target sides. <code>SynMultiAlignment</code> can store already parsed MAF data
+supplied through <code>data</code>, but <code><a href="load_alignment.html">load_alignment()</a></code> cannot parse a MAF file.
+ODGI-backed file loading is supported.</p>
     </div>
 
 

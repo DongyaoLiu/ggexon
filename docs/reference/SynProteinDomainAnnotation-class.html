@@ -63,7 +63,9 @@ transcript-, or gene-level identifier.</p>
 
 
 <dt><code>domain_data</code></dt>
-<dd><p>Optional cached parsed domain table.</p></dd>
+<dd><p>Optional pre-populated compatibility store for a parsed
+domain table. On-demand value-returning queries do not populate the
+caller-owned object.</p></dd>
 
 
 <dt><code>keytype</code></dt>

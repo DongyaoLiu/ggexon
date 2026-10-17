@@ -19,7 +19,9 @@ In addition to the slots listed below, the class inherits `name`,
 
 - `mutation_data`:
 
-  Optional cached normalized mutation table.
+  Optional pre-populated compatibility store for a normalized mutation
+  table. On-demand value-returning queries do not populate the
+  caller-owned object.
 
 - `individual_index`:
 

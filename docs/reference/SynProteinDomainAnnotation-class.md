@@ -17,7 +17,9 @@ In addition to the slots listed below, the class inherits `name`,
 
 - `domain_data`:
 
-  Optional cached parsed domain table.
+  Optional pre-populated compatibility store for a parsed domain table.
+  On-demand value-returning queries do not populate the caller-owned
+  object.
 
 - `keytype`:
 

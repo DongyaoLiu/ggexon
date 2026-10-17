@@ -148,9 +148,9 @@ When omitted, all stored pairwise and multiple alignments are loaded.</p></dd>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>Unloaded <code>SynMultiAlignment</code> objects with <code>format = "maf"</code> are not yet
-supported because the package does not currently provide a MAF parser. For
-PSL-backed <code><a href="SynPairAlignment.html">SynPairAlignment</a></code> objects, repeated calls to
+    <p><code>SynMultiAlignment</code> can store already parsed MAF data supplied through
+<code>data</code>, but <code>load_alignment()</code> cannot parse a MAF file. ODGI-backed file
+loading is supported. For PSL-backed <code><a href="SynPairAlignment.html">SynPairAlignment</a></code> objects, repeated calls to
 <code>load_alignment()</code> with different explicit <code>more</code> values will replace the
 cached data so the in-memory representation matches the requested detail
 level, while <code>more = NULL</code> preserves any existing cached PSL mode.</p>

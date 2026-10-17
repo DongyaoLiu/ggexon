@@ -5,6 +5,10 @@ individuals. Like `SynPairAlignment`, it is a concrete
 `SynSpeAnnotation` with a source file, optional cached parsed
 representation, and metadata, but it records a vector of participating
 individual identifiers instead of query/target sides.
+`SynMultiAlignment` can store already parsed MAF data supplied through
+`data`, but
+[`load_alignment()`](https://dongyaoliu.github.io/ggexon/reference/load_alignment.md)
+cannot parse a MAF file. ODGI-backed file loading is supported.
 
 ## Slots
 
