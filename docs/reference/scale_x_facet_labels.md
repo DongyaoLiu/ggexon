@@ -90,25 +90,25 @@ hox_labels <- list(
 scale_x_facet_labels("cluster", labels = hox_labels, limits = c(0.5, 15.5))
 #> $facet
 #> [1] "cluster"
-#>
+#> 
 #> $labels
 #> $labels$HoxA
-#>  [1] "HOXA1"  "HOXA2"  "HOXA3"  "HOXA4"  "HOXA5"  "HOXA6"  "HOXA7"  "HOXA8"
+#>  [1] "HOXA1"  "HOXA2"  "HOXA3"  "HOXA4"  "HOXA5"  "HOXA6"  "HOXA7"  "HOXA8" 
 #>  [9] "HOXA9"  "HOXA10" "HOXA11" "HOXA12" "HOXA13" "HOXA14" "HOXA15"
-#>
+#> 
 #> $labels$HoxB
-#>  [1] "HOXB1"  "HOXB2"  "HOXB3"  "HOXB4"  "HOXB5"  "HOXB6"  "HOXB7"  "HOXB8"
+#>  [1] "HOXB1"  "HOXB2"  "HOXB3"  "HOXB4"  "HOXB5"  "HOXB6"  "HOXB7"  "HOXB8" 
 #>  [9] "HOXB9"  "HOXB10" "HOXB11" "HOXB12" "HOXB13" "HOXB14" "HOXB15"
-#>
-#>
+#> 
+#> 
 #> $breaks
 #>  [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15
-#>
+#> 
 #> $scale
 #> <ScaleContinuousPosition>
-#>  Range:
+#>  Range:  
 #>  Limits:  0.5 -- 15.5
-#>
+#> 
 #> attr(,"class")
 #> [1] "ggexon_facet_labels_spec"
 ```

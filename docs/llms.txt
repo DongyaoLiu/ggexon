@@ -2,6 +2,8 @@
 
 **Grammar of genomic annotations, synteny, and associated data.**
 
+[Documentation and tutorials](https://dongyaoliu.github.io/ggexon/)
+
 `ggexon` is a ggplot2 extension for drawing genomic annotation together
 with comparative and track-level data. It was developed while
 visualizing the `sept-1`/`zina-1` toxin-antidote locus described in the
