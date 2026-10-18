@@ -36,14 +36,15 @@ jobs:
         with:
           extra-packages: any::rcmdcheck
           needs: check
-      - name: Install and verify PDF manual fonts
+      - name: Install and verify PDF manual dependencies
         shell: Rscript {0}
         run: |
-          tinytex::tlmgr_install("courier")
+          tinytex::tlmgr_install(c("courier", "makeindex"))
           for (font in c("pcrr8t.tfm", "pcrr8c.tfm")) {
             path <- system2("kpsewhich", font, stdout = TRUE)
             stopifnot(length(path) == 1L, file.exists(path))
           }
+          stopifnot(nzchar(Sys.which("makeindex")))
       - name: Verify Windows PDF indexing
         if: runner.os == 'Windows'
         shell: Rscript {0}
