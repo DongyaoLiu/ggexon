@@ -76,6 +76,26 @@ Open
 for the full example, selected-transcript provenance, and source audit
 trail.
 
+## HLA-A Alleles on an Exon–Intron Gene Model
+
+![Dense amino-acid variant lollipops projected onto the HLA-A reference
+gene, with eight coding exons and seven introns compressed
+three-fold](reference/figures/hla-a-genomic-lollipop-demo.png)
+
+Dense amino-acid variant lollipops projected onto the HLA-A reference
+gene, with eight coding exons and seven introns compressed three-fold
+
+The HLA-A tutorial summarizes 5,998 eligible named alleles as 1,212
+amino-acid substitutions. It shows both a protein-domain view and a
+splice-aware projection onto the exact A\*02:01:01:01 reference gene.
+Exons retain their native scale;
+`scale_x_ggexon_genomic(intron_factor = 3)` compresses introns
+three-fold, with separate exon and intron scale bars. Counts describe
+database representation, not population frequencies.
+
+See the [HLA-A protein and gene-model
+tutorial](https://dongyaoliu.github.io/ggexon/articles/hla-a-lollipop-demo.html).
+
 ## Installation
 
 `ggexon` is currently a development package.

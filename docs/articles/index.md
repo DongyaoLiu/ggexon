@@ -8,6 +8,8 @@
   Chordates](https://dongyaoliu.github.io/ggexon/articles/hox-cluster-expansion-demo.md):
 - [CD44 Splice Variant Alignment
   Demo](https://dongyaoliu.github.io/ggexon/articles/cd44-splice-variants-demo.md):
+- [HLA-A Protein Variants: Dense Multiallelic
+  Lollipops](https://dongyaoliu.github.io/ggexon/articles/hla-a-lollipop-demo.md):
 - [PEEL-1 Raw BigWig
   Coverage](https://dongyaoliu.github.io/ggexon/articles/bigwig-coverage-demo.md):
 - [Yeast cox1 Intron Architecture

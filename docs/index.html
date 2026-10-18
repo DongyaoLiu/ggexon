@@ -97,11 +97,11 @@
 <p><code>ggexon</code> is currently a development package.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"DongyaoLiu/ggexon"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"DongyaoLiu/ggexon"</span><span class="op">)</span></span></code></pre></div>
 <p>Some dependencies are from Bioconductor. If your R installation cannot resolve them automatically, install them first:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span></span>
-<span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://bioconductor.github.io/BiocManager/reference/install.html" class="external-link">install</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu">install</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>  <span class="st">"Biostrings"</span>,</span>
 <span>  <span class="st">"GenomeInfoDb"</span>,</span>
 <span>  <span class="st">"GenomicRanges"</span>,</span>
@@ -126,52 +126,52 @@
 <col width="50%">
 <col width="50%">
 </colgroup>
-<thead><tr>
+<thead><tr class="header">
 <th>Class</th>
 <th>Role</th>
 </tr></thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td><code>SynSpecies</code></td>
 <td>Project-level container for individuals, alignments, trees, and layout state</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>SynIndividual</code></td>
 <td>One genome, strain, species, or sample</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>SynFeatureAnnotation</code></td>
 <td>Genes, transcripts, exons, CDS, labels, and annotation patches</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>SynVCFAnnotation</code></td>
 <td>VCF querying is supported. BCF parsing is not implemented; BCF input raises an unsupported-format error.</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>SynBigWigAnnotation</code></td>
 <td>Signal tracks queried by genomic interval</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>SynProteinDomainAnnotation</code></td>
 <td>Protein-domain intervals from InterProScan-like tables</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>SynProteinMutationAnnotation</code></td>
 <td>Protein mutation summaries for lollipop-style tracks</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>HomologyAnnotation</code></td>
 <td>Cross-species gene homology mappings from BLAST results</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>SynPairAlignment</code></td>
 <td>Pairwise genome links from PAF, PSL, or ODGI-derived data</td>
 </tr>
-<tr>
+<tr class="even">
 <td><code>SynMultiAlignment</code></td>
 <td>Stores already parsed MAF data supplied through <code>data</code>; loading a MAF file remains unavailable. ODGI-backed loading is available.</td>
 </tr>
-<tr>
+<tr class="odd">
 <td><code>SynLayout</code></td>
 <td>Stored panel windows and layout decisions</td>
 </tr>
@@ -187,48 +187,48 @@
 <col width="50%">
 <col width="50%">
 </colgroup>
-<thead><tr>
+<thead><tr class="header">
 <th>Task</th>
 <th>Main functions</th>
 </tr></thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td>Build object graphs</td>
 <td>
 <code><a href="reference/add_individual.html">add_individual()</a></code>, <code><a href="reference/add_annotation.html">add_annotation()</a></code>, <code><a href="reference/add_homology_annotation.html">add_homology_annotation()</a></code>, <code><a href="reference/add_pairwise_alignment.html">add_pairwise_alignment()</a></code>, <code><a href="reference/add_multiple_alignment.html">add_multiple_alignment()</a></code>, <code><a href="reference/add_tree.html">add_tree()</a></code>
 </td>
 </tr>
-<tr>
+<tr class="even">
 <td>Load and query data</td>
 <td>
 <code><a href="reference/load_annotation.html">load_annotation()</a></code>, <code><a href="reference/load_alignment.html">load_alignment()</a></code>, <code><a href="reference/import_blast_homology.html">import_blast_homology()</a></code>, <code><a href="reference/query_features.html">query_features()</a></code>, <code><a href="reference/query_variants.html">query_variants()</a></code>, <code><a href="reference/query_signal.html">query_signal()</a></code>, <code><a href="reference/query_domains.html">query_domains()</a></code>
 </td>
 </tr>
-<tr>
+<tr class="odd">
 <td>Derive sequence/protein data</td>
 <td>
 <code><a href="reference/extract_cds_seq.html">extract_cds_seq()</a></code>, <code><a href="reference/translate_protein.html">translate_protein()</a></code>, <code><a href="reference/project_domains_to_genome.html">project_domains_to_genome()</a></code>
 </td>
 </tr>
-<tr>
+<tr class="even">
 <td>Subset and curate objects</td>
 <td>
 <code><a href="reference/subset_species.html">subset_species()</a></code>, <code><a href="reference/subset_individual.html">subset_individual()</a></code>, <code><a href="reference/subset_pairwise_alignment.html">subset_pairwise_alignment()</a></code>, <code><a href="reference/set_gene_labels.html">set_gene_labels()</a></code>, <code><a href="reference/patch_annotation_from_gff.html">patch_annotation_from_gff()</a></code>
 </td>
 </tr>
-<tr>
+<tr class="odd">
 <td>Draw genomic layers</td>
 <td>
 <code><a href="reference/ggexon.html">ggexon()</a></code>, <code><a href="reference/geom_exon.html">geom_exon()</a></code>, <code><a href="reference/geom_coverage.html">geom_coverage()</a></code>, <code><a href="reference/geom_genetag.html">geom_genetag()</a></code>, <code><a href="reference/geom_genebox.html">geom_genebox()</a></code>, <code><a href="reference/geom_genelabel.html">geom_genelabel()</a></code>, <code><a href="reference/geom_nuclink.html">geom_nuclink()</a></code>, <code><a href="reference/geom_synteny_link.html">geom_synteny_link()</a></code>, <code><a href="reference/geom_protein_lollipop.html">geom_protein_lollipop()</a></code>
 </td>
 </tr>
-<tr>
+<tr class="even">
 <td>Arrange panels and guides</td>
 <td>
 <code><a href="reference/facet_genomics.html">facet_genomics()</a></code>, <code><a href="reference/scale_panel_annotation.html">scale_panel_annotation()</a></code>, <code><a href="reference/scale_panel_coverage.html">scale_panel_coverage()</a></code>, <code><a href="reference/center_panel_annotation.html">center_panel_annotation()</a></code>, <code><a href="reference/facet_genomictree.html">facet_genomictree()</a></code>, <code><a href="reference/scale_x_ggexon_genomic.html">scale_x_ggexon_genomic()</a></code>, <code><a href="reference/scale_x_facet_labels.html">scale_x_facet_labels()</a></code>, <code><a href="reference/guide_x_ggexon_piecewise.html">guide_x_ggexon_piecewise()</a></code>
 </td>
 </tr>
-<tr>
+<tr class="odd">
 <td>Style plots</td>
 <td>
 <code><a href="reference/theme_ggexon_clean.html">theme_ggexon_clean()</a></code>, <code><a href="reference/theme_ggexon_base.html">theme_ggexon_base()</a></code>, <code><a href="reference/theme_ggexon_track.html">theme_ggexon_track()</a></code>, <code><a href="reference/theme_ggexon_pairwise.html">theme_ggexon_pairwise()</a></code>
@@ -319,7 +319,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>
