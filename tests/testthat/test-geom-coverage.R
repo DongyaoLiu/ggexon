@@ -157,6 +157,7 @@ coverage_role_scale_plot <- function(scales,
 }
 
 test_that("coverage wrappers override facet fallback in multi-column Syn layouts", {
+  skip_on_os("windows") # rtracklayer BigWig I/O is unsupported on Windows.
   expect_no_warning(
     coverage_free <- ggexon_build(
       coverage_role_scale_plot("fixed", panel_limits = TRUE) +
@@ -221,6 +222,7 @@ test_that("coverage wrappers override facet fallback in multi-column Syn layouts
 })
 
 test_that("named coverage limits clip one panel view without changing raw data", {
+  skip_on_os("windows") # rtracklayer BigWig I/O is unsupported on Windows.
   automatic <- ggexon_build(
     coverage_role_scale_plot("fixed", panel_limits = TRUE) +
       scale_panel_coverage("free_y")
@@ -306,6 +308,7 @@ test_that("automatic coverage limits fall back for unusable data", {
 })
 
 test_that("automatic coverage limits place span-weighted Q50 at 85 percent", {
+  skip_on_os("windows") # rtracklayer BigWig I/O is unsupported on Windows.
   base <- coverage_role_scale_plot("fixed", panel_limits = TRUE)
   baseline <- ggexon_build(base + scale_panel_coverage("free_y"))
   automatic <- ggexon_build(
@@ -357,6 +360,7 @@ test_that("automatic coverage limits place span-weighted Q50 at 85 percent", {
 })
 
 test_that("manual coverage limits override automatic panel ranges", {
+  skip_on_os("windows") # rtracklayer BigWig I/O is unsupported on Windows.
   built <- ggexon_build(
     coverage_role_scale_plot("fixed", panel_limits = TRUE) +
       scale_panel_coverage(
@@ -382,6 +386,7 @@ test_that("manual coverage limits override automatic panel ranges", {
 })
 
 test_that("named coverage limits reject unknown first-class panel names", {
+  skip_on_os("windows") # rtracklayer BigWig I/O is unsupported on Windows.
   plot <- coverage_role_scale_plot("fixed", panel_limits = TRUE) +
     scale_panel_coverage(
       "free_y",
@@ -456,6 +461,7 @@ test_that("named coverage limits ignore ordinary composite coverage panels", {
 })
 
 test_that("fixed role overrides preserve explicit y-axis requests and free x", {
+  skip_on_os("windows") # rtracklayer BigWig I/O is unsupported on Windows.
   explicit <- ggexon_build(
     coverage_role_scale_plot(
       "free_y",
@@ -531,6 +537,7 @@ test_that("omitted coverage species are independent of representative annotation
 })
 
 test_that("coverage requests remain ordered and dispatch only their own tracks", {
+  skip_on_os("windows") # rtracklayer BigWig I/O is unsupported on Windows.
   species <- coverage_fixture_species()
   replicate_tracks <- c("ECA2091", "ECA701")
   for (track in replicate_tracks) {
@@ -587,6 +594,7 @@ test_that("coverage requests remain ordered and dispatch only their own tracks",
 })
 
 test_that("duplicate explicit SynIndividual coverage selectors match normalized requests", {
+  skip_on_os("windows") # rtracklayer BigWig I/O is unsupported on Windows.
   species <- coverage_synthetic_species("sample", 10L, 3)
   individual <- individuals(species)[["sample"]]
   p <- ggexon(individual) +
@@ -710,6 +718,7 @@ test_that("coverage context rejects ambiguous annotation-window broadcast", {
 })
 
 test_that("coverage context does not invent a missing genomic window", {
+  skip_on_os("windows") # rtracklayer BigWig I/O is unsupported on Windows.
   species <- coverage_synthetic_species("sample", 10L, 3)
   p <- ggexon(species) + geom_coverage(annotation = "coverage")
   context <- collect_syn_plot_context(p@layers, p@data, facet = p@facet)
@@ -724,6 +733,7 @@ test_that("coverage context does not invent a missing genomic window", {
 })
 
 test_that("coverage and annotation with the same track own different panels", {
+  skip_on_os("windows") # rtracklayer BigWig I/O is unsupported on Windows.
   built <- ggexon_build(
     ggexon(coverage_fixture_species(c("XZ1516", "ECA2091"))) +
       geom_coverage(annotation = "coverage") +
@@ -748,6 +758,7 @@ test_that("coverage and annotation with the same track own different panels", {
 })
 
 test_that("all-empty coverage requests create ordered coverage panels from context", {
+  skip_on_os("windows") # rtracklayer BigWig I/O is unsupported on Windows.
   species <- coverage_synthetic_species(
     ids = c("empty_a", "empty_b"),
     signal_starts = c(80L, 90L),
@@ -769,6 +780,7 @@ test_that("all-empty coverage requests create ordered coverage panels from conte
 })
 
 test_that("Syn coverage dispatch keeps one interval row per BigWig record", {
+  skip_on_os("windows") # rtracklayer BigWig I/O is unsupported on Windows.
   species <- coverage_fixture_species()
   context <- coverage_fixture_context()
 
@@ -790,6 +802,7 @@ test_that("Syn coverage dispatch keeps one interval row per BigWig record", {
 })
 
 test_that("SynLocusSet coverage preserves repeated-individual panel aliases", {
+  skip_on_os("windows") # rtracklayer BigWig I/O is unsupported on Windows.
   species <- coverage_synthetic_species("sample", 10L, 3)
   aliases <- c("sample__left", "sample__right")
   loci <- SynLocusSet(
@@ -880,6 +893,7 @@ test_that("BigWig resolution validates names and ambiguous defaults", {
 })
 
 test_that("Syn coverage dispatch identifies an individual missing coverage", {
+  skip_on_os("windows") # rtracklayer BigWig I/O is unsupported on Windows.
   species <- coverage_fixture_species(c("XZ1516", "ECA2091"))
   fixture_dir <- system.file("extdata", "peel1_coverage", package = "ggexon")
   gtf <- file.path(fixture_dir, "WS285.ugt31-zeel1-peel1-nekl1.gtf")
@@ -901,6 +915,7 @@ test_that("Syn coverage dispatch identifies an individual missing coverage", {
 })
 
 test_that("BigWig window queries use only the build-local cache", {
+  skip_on_os("windows") # rtracklayer BigWig I/O is unsupported on Windows.
   species <- coverage_fixture_species("XZ1516")
   individual <- individuals(species)[["XZ1516"]]
   annotation <- get_annotation(individual, "coverage")
@@ -917,6 +932,7 @@ test_that("BigWig window queries use only the build-local cache", {
 })
 
 test_that("plot builds clone layers and discard their ephemeral query cache", {
+  skip_on_os("windows") # rtracklayer BigWig I/O is unsupported on Windows.
   species <- coverage_synthetic_species("sample", 10L, 3)
   plot <- coverage_synthetic_plot(species) +
     scale_panel_coverage("free_y") +
@@ -956,6 +972,7 @@ test_that("plot builds clone layers and discard their ephemeral query cache", {
 })
 
 test_that("Syn coverage dispatch preserves raw scores and empty schema", {
+  skip_on_os("windows") # rtracklayer BigWig I/O is unsupported on Windows.
   bw_path <- tempfile(fileext = ".bw")
   signal <- GenomicRanges::GRanges(
     "chr1",
@@ -1091,6 +1108,7 @@ test_that("geom_coverage rejects negative and non-finite scores", {
 })
 
 test_that("geom_coverage inherits an explicit geom_genebox window", {
+  skip_on_os("windows") # rtracklayer BigWig I/O is unsupported on Windows.
   species <- coverage_fixture_species("XZ1516")
 
   built <- NULL
@@ -1326,6 +1344,7 @@ test_that("requested coverage panels participate even when no signal row exists"
 })
 
 test_that("one empty free coverage panel receives only its own fallback", {
+  skip_on_os("windows") # rtracklayer BigWig I/O is unsupported on Windows.
   species <- coverage_synthetic_species(
     ids = c("signal", "empty"),
     signal_starts = c(10L, 80L),
@@ -1358,6 +1377,7 @@ test_that("one empty free coverage panel receives only its own fallback", {
 })
 
 test_that("one empty fixed coverage panel inherits its non-empty shared scale", {
+  skip_on_os("windows") # rtracklayer BigWig I/O is unsupported on Windows.
   species <- coverage_synthetic_species(
     ids = c("signal", "empty"),
     signal_starts = c(10L, 80L),
@@ -1378,6 +1398,7 @@ test_that("one empty fixed coverage panel inherits its non-empty shared scale", 
 })
 
 test_that("all-empty coverage panels train to one under fixed and free policies", {
+  skip_on_os("windows") # rtracklayer BigWig I/O is unsupported on Windows.
   species <- coverage_synthetic_species(
     ids = c("empty_a", "empty_b"),
     signal_starts = c(80L, 90L),
@@ -1428,6 +1449,7 @@ test_that("all-empty coverage panels train to one under fixed and free policies"
 })
 
 test_that("all-zero coverage rows stay zero while their scales train to one", {
+  skip_on_os("windows") # rtracklayer BigWig I/O is unsupported on Windows.
   species <- coverage_synthetic_species(
     ids = c("zero_a", "zero_b"),
     signal_starts = c(10L, 20L),
@@ -1466,6 +1488,7 @@ test_that("all-zero coverage rows stay zero while their scales train to one", {
 })
 
 test_that("one-base first-class coverage keeps raw depth and a finite scale", {
+  skip_on_os("windows") # rtracklayer BigWig I/O is unsupported on Windows.
   species <- coverage_synthetic_species("single", 10L, 7)
   built <- ggexon_build(coverage_synthetic_plot(species))
   layout <- as.data.frame(built@layout$layout)
@@ -1532,6 +1555,7 @@ test_that("coverage guide filtering removes negative breaks and matching labels"
 })
 
 test_that("coverage and gene annotations occupy role-qualified panels", {
+  skip_on_os("windows") # rtracklayer BigWig I/O is unsupported on Windows.
   strains <- c("XZ1516", "ECA2091", "ECA701", "ECA2191")
   species <- coverage_fixture_species()
   annotation_layer <- geom_exon(
@@ -1609,6 +1633,7 @@ test_that("coverage and gene annotations occupy role-qualified panels", {
 })
 
 test_that("PEEL-1 renders four free coverage panels above one annotation", {
+  skip_on_os("windows") # rtracklayer BigWig I/O is unsupported on Windows.
   plot <- peel1_five_panel_plot()
   built <- ggexon_build(plot)
   layout <- as.data.frame(built@layout$layout)
@@ -1670,6 +1695,7 @@ test_that("PEEL-1 renders four free coverage panels above one annotation", {
 })
 
 test_that("annotation centering is view-only and isolated from coverage and links", {
+  skip_on_os("windows") # rtracklayer BigWig I/O is unsupported on Windows.
   strains <- c("XZ1516", "ECA2091")
   species <- coverage_fixture_species(strains)
   paf <- tempfile(fileext = ".paf")
@@ -1800,6 +1826,7 @@ test_that("annotation centering is view-only and isolated from coverage and link
 })
 
 test_that("coverage panels inherit a broadcast annotation x source and reversal", {
+  skip_on_os("windows") # rtracklayer BigWig I/O is unsupported on Windows.
   plot <- ggexon(coverage_fixture_species()) +
     geom_coverage(annotation = "coverage") +
     geom_exon(
@@ -1840,6 +1867,7 @@ test_that("coverage panels inherit a broadcast annotation x source and reversal"
 })
 
 test_that("stored annotation windows seed matching coverage x sources", {
+  skip_on_os("windows") # rtracklayer BigWig I/O is unsupported on Windows.
   strains <- c("XZ1516", "ECA2091")
   species <- coverage_fixture_species(strains)
   annotation_panels <- data.frame(
@@ -1878,6 +1906,7 @@ test_that("stored annotation windows seed matching coverage x sources", {
 })
 
 test_that("stored coverage rows inherit track-specific windows and reversal", {
+  skip_on_os("windows") # rtracklayer BigWig I/O is unsupported on Windows.
   strains <- c("XZ1516", "ECA2091")
   species <- coverage_fixture_species(strains)
   stored_panels <- data.frame(
@@ -1942,6 +1971,7 @@ test_that("stored coverage rows inherit track-specific windows and reversal", {
 })
 
 test_that("link panels never source coordinates from coverage panels", {
+  skip_on_os("windows") # rtracklayer BigWig I/O is unsupported on Windows.
   strains <- c("XZ1516", "ECA2091")
   species <- coverage_fixture_species(strains)
   paf <- tempfile(fileext = ".paf")
@@ -1990,6 +2020,7 @@ test_that("link panels never source coordinates from coverage panels", {
 })
 
 test_that("continuous coverage rejects compressed and strip genomic x transforms", {
+  skip_on_os("windows") # rtracklayer BigWig I/O is unsupported on Windows.
   species <- coverage_fixture_species("XZ1516")
   base <- ggexon(species) +
     geom_coverage(annotation = "coverage") +

@@ -77,6 +77,7 @@ test_that("SynAnnotation subclasses can be attached to SynIndividual", {
 })
 
 test_that("BigWig queries dispatch generically without mutating their object", {
+  skip_on_os("windows") # rtracklayer BigWig I/O is unsupported on Windows.
   bw_path <- tempfile(fileext = ".bw")
   bw_gr <- GenomicRanges::GRanges(
     "chr1",
@@ -200,22 +201,24 @@ test_that("type-specific annotation verbs query their data sources", {
   expect_identical(as.character(vcf_hits$REF[[1L]]), query_ref)
   expect_identical(as.character(vcf_hits$ALT[[1L]]), query_alt)
 
-  bw_path <- tempfile(fileext = ".bw")
-  bw_gr <- GenomicRanges::GRanges(
-    seqnames = c("chr1", "chr1"),
-    ranges = IRanges::IRanges(start = c(1, 21), end = c(10, 30)),
-    score = c(5, 8)
-  )
-  GenomeInfoDb::seqinfo(bw_gr) <- GenomeInfoDb::Seqinfo(
-    seqnames = "chr1",
-    seqlengths = 100
-  )
-  rtracklayer::export.bw(bw_gr, bw_path)
-  bw_layer <- SynBigWigAnnotation(name = "coverage", bigwig_file = bw_path)
-  bw_hits <- query_signal(bw_layer, chr = "chr1", start = 5, end = 22)
-  expect_s4_class(bw_hits, "GRanges")
-  expect_true(length(bw_hits) >= 1L)
-  expect_true(all(as.character(GenomeInfoDb::seqnames(bw_hits)) == "chr1"))
+  if (.Platform$OS.type != "windows") {
+    bw_path <- tempfile(fileext = ".bw")
+    bw_gr <- GenomicRanges::GRanges(
+      seqnames = c("chr1", "chr1"),
+      ranges = IRanges::IRanges(start = c(1, 21), end = c(10, 30)),
+      score = c(5, 8)
+    )
+    GenomeInfoDb::seqinfo(bw_gr) <- GenomeInfoDb::Seqinfo(
+      seqnames = "chr1",
+      seqlengths = 100
+    )
+    rtracklayer::export.bw(bw_gr, bw_path)
+    bw_layer <- SynBigWigAnnotation(name = "coverage", bigwig_file = bw_path)
+    bw_hits <- query_signal(bw_layer, chr = "chr1", start = 5, end = 22)
+    expect_s4_class(bw_hits, "GRanges")
+    expect_true(length(bw_hits) >= 1L)
+    expect_true(all(as.character(GenomeInfoDb::seqnames(bw_hits)) == "chr1"))
+  }
 
   domain_path <- tempfile(fileext = ".tsv")
   writeLines(

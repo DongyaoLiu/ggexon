@@ -214,6 +214,7 @@ coverage_mixed_edge_build <- function(object_first) {
 }
 
 test_that("mixed coverage panels follow layer order with an empty Syn request", {
+  skip_on_os("windows") # rtracklayer BigWig I/O is unsupported on Windows.
   external_first <- coverage_mixed_edge_build(object_first = FALSE)
   object_first <- coverage_mixed_edge_build(object_first = TRUE)
   external_layout <- as.data.frame(external_first@layout$layout)

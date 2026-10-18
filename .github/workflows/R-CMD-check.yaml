@@ -36,6 +36,14 @@ jobs:
         with:
           extra-packages: any::rcmdcheck
           needs: check
+      - name: Install and verify PDF manual fonts
+        shell: Rscript {0}
+        run: |
+          tinytex::tlmgr_install("courier")
+          for (font in c("pcrr8t.tfm", "pcrr8c.tfm")) {
+            path <- system2("kpsewhich", font, stdout = TRUE)
+            stopifnot(length(path) == 1L, file.exists(path))
+          }
       - uses: r-lib/actions/check-r-package@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590
         with:
           args: 'c("--as-cran")'

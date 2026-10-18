@@ -50,6 +50,7 @@ test_that("PEEL-1 coverage fixtures contain thirteen raw tracks and four complet
   expect_false(any(grepl("WBGene", gtf_lines) &
     !Reduce(`|`, lapply(gene_ids, grepl, x = gtf_lines, fixed = TRUE))))
 
+  skip_on_os("windows") # rtracklayer BigWig I/O is unsupported on Windows.
   queried <- lapply(bw_paths, function(path) {
     rtracklayer::import.bw(
       path,

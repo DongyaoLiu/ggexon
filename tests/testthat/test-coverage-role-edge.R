@@ -74,6 +74,7 @@ coverage_role_edge_empty_individual <- function() {
 }
 
 test_that("SynIndividual coverage and annotation use separate role panels", {
+  skip_on_os("windows") # rtracklayer BigWig I/O is unsupported on Windows.
   individual <- coverage_role_edge_individual()
   expect_true(is_lazy(get_annotation(individual, "coverage")))
 
@@ -106,6 +107,7 @@ test_that("SynIndividual coverage and annotation use separate role panels", {
 })
 
 test_that("empty SynIndividual coverage requests keep their first-class panel", {
+  skip_on_os("windows") # rtracklayer BigWig I/O is unsupported on Windows.
   individual <- coverage_role_edge_empty_individual()
 
   built <- ggexon_build(
@@ -169,6 +171,7 @@ test_that("SynIndividual coverage-only data does not require an annotation row",
 })
 
 test_that("SynIndividual lazy coverage-only data accepts facet limits", {
+  skip_on_os("windows") # rtracklayer BigWig I/O is unsupported on Windows.
   built <- ggexon_build(
     ggexon(coverage_role_edge_individual()) +
       geom_coverage(annotation = "coverage") +
@@ -253,6 +256,7 @@ test_that("plain SynSpecies coverage-only data accepts facet limits", {
 })
 
 test_that("SynSpecies lazy coverage-only data accepts named facet limits", {
+  skip_on_os("windows") # rtracklayer BigWig I/O is unsupported on Windows.
   species <- add_individual(
     SynSpecies(name = "lazy coverage only"),
     coverage_role_edge_individual()

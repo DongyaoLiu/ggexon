@@ -32,7 +32,12 @@ normalization.  The plotted scores remain raw depth: `geom_coverage()` neither
 normalizes, smooths, thresholds, nor expands the stored intervals to one row
 per base.
 
-```{r peel1-raw-coverage, message = FALSE, warning = FALSE, fig.alt = "A ggexon plot with thirteen separate PEEL-1 raw-coverage panels in the approved strain order above one centered four-gene annotation panel over the same chromosome-I interval. Every coverage panel places its span-weighted median depth at 85 percent of the panel height, with higher peaks clipped at the panel boundary.", fig.cap = "Raw, unnormalized PEEL-1 coverage for thirteen C. elegans strains over chromosome I:2,332,338-2,373,985. In each independent coverage panel, the span-weighted median depth occupies 85 percent of the panel height. Higher peaks are clipped in the view only; raw BigWig values remain unchanged."}
+The `rtracklayer` BigWig backend is unsupported on Windows. The code below is
+shown on every platform and executed only on macOS and Linux. Windows readers
+can view the rendered figure in the
+[online tutorial](https://dongyaoliu.github.io/ggexon/articles/bigwig-coverage-demo.html).
+
+```{r peel1-raw-coverage, eval = .Platform$OS.type != "windows", message = FALSE, warning = FALSE, fig.alt = "A ggexon plot with thirteen separate PEEL-1 raw-coverage panels in the approved strain order above one centered four-gene annotation panel over the same chromosome-I interval. Every coverage panel places its span-weighted median depth at 85 percent of the panel height, with higher peaks clipped at the panel boundary.", fig.cap = "Raw, unnormalized PEEL-1 coverage for thirteen C. elegans strains over chromosome I:2,332,338-2,373,985. In each independent coverage panel, the span-weighted median depth occupies 85 percent of the panel height. Higher peaks are clipped in the view only; raw BigWig values remain unchanged."}
 library(ggexon)
 
 fixture_dir <- system.file("extdata", "peel1_coverage", package = "ggexon")

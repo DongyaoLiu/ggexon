@@ -216,6 +216,7 @@ test_that("standalone coverage rows clear stale annotation sources", {
 })
 
 test_that("effective windows keep annotation coordinates for shared aliases", {
+  skip_on_os("windows") # rtracklayer BigWig I/O is unsupported on Windows.
   fixture_dir <- system.file("extdata", "peel1_coverage", package = "ggexon")
   individual <- SynIndividual(
     annotation_file = file.path(
