@@ -101,6 +101,10 @@ For Syn-backed layers, ggexon adds canonical identifier columns to the
 resolved exon table so users can map aesthetics with expressions such as
 \code{aes(fill = gene_id)}, \code{aes(fill = gene_name)}, or
 \code{aes(fill = transcript_id)}.
+Additional feature metadata columns are preserved for aesthetic mappings,
+except names reserved for the resolver's coordinates and layout. For example,
+an annotation can carry \code{exon_role} for fill and \code{isoform_y} for an explicit
+\code{aes(ymin = isoform_y)} transcript order.
 
 When \code{data} is a \code{SynSpecies}, omitting \code{species} uses all stored
 individuals. Omitting \code{subset} keeps the full annotation table, while

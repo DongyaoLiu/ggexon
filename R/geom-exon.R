@@ -172,6 +172,10 @@ GeomExon <- ggproto("GeomExon", Geom,
 #' resolved exon table so users can map aesthetics with expressions such as
 #' `aes(fill = gene_id)`, `aes(fill = gene_name)`, or
 #' `aes(fill = transcript_id)`.
+#' Additional feature metadata columns are preserved for aesthetic mappings,
+#' except names reserved for the resolver's coordinates and layout. For example,
+#' an annotation can carry `exon_role` for fill and `isoform_y` for an explicit
+#' `aes(ymin = isoform_y)` transcript order.
 #'
 #' When `data` is a `SynSpecies`, omitting `species` uses all stored
 #' individuals. Omitting `subset` keeps the full annotation table, while

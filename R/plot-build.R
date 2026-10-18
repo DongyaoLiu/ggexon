@@ -1257,7 +1257,7 @@ S7::method(ggexon_gtable, class_ggexon_built) <- function(data) {
   plot_table <- apply_link_panel_layout(plot_table, build)
   # Legends
   legend_box <- plot@guides$assemble(theme)
-  #plot_table <- table_add_legends(plot_table, legend_box, theme)
+  plot_table <- table_add_legends(plot_table, legend_box, theme)
   # whole plot annotation
   plot_table <- table_add_titles(plot_table, labels, theme)
   plot_table <- table_add_caption(plot_table, labels$caption, theme)
@@ -2219,8 +2219,8 @@ table_add_legends <- function(table, legends, theme) {
   )
 
   empty <- vapply(legends, ggplot2:::is_zero, logical(1))
-  widths[!empty]  <- lapply(legends[!empty], gtable_width)
-  heights[!empty] <- lapply(legends[!empty], gtable_height)
+  widths[!empty]  <- lapply(legends[!empty], gtable::gtable_width)
+  heights[!empty] <- lapply(legends[!empty], gtable::gtable_height)
   spacing <- calc_element("legend.box.spacing", theme) %||% unit(0.2, "cm")
 
   # If legend is missing, set spacing to zero for that legend

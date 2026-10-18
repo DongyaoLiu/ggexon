@@ -15,6 +15,8 @@ knitr::opts_chunk$set(
   fig.height = 5.4,
   dpi = 220
 )
+knitr::read_chunk(system.file("extdata", "cd44_pairwise_ensembl116",
+  "load-cd44-example.R", package = "ggexon"))
 ```
 
 # Overview
@@ -39,13 +41,38 @@ GRCm39 `chr2`. The mouse `Cd44` gene is on the reverse strand, so the plot
 below reverses the mouse panel at draw time while keeping tick labels in
 original genomic coordinates.
 
-```{r cd44-isoforms, message = FALSE, warning = FALSE}
+# Build one comparative data object
+
+The comparison is stored in one `SynSpecies` object named `cd44`. It contains
+human and mouse `SynIndividual` objects with loaded `SynFeatureAnnotation`
+layers, a `SynPairAlignment` with chromosome-coordinate LASTZ links, a stored
+`SynLayout` with human above mouse and their genomic windows, and the
+supporting tables and provenance in its `metadata` slot. Each individual also
+stores its extracted DNA window together with the chromosome, start, and end.
+These window sequences are not whole-chromosome genomes, so they are not passed
+as `genome_file`.
+
+The example-level loader below uses public ggexon constructors and accessors.
+Its complete construction code is shown at the end of this tutorial; it is not
+a new exported package function.
+
+```{r cd44-object, message = FALSE, warning = FALSE}
 library(ggexon)
 library(ggplot2)
 
 demo_dir <- system.file("extdata", "cd44_pairwise_ensembl116", package = "ggexon")
-species <- read.delim(file.path(demo_dir, "cd44_species.tsv"), check.names = FALSE)
-isoforms <- read.delim(file.path(demo_dir, "cd44_selected_isoforms.tsv"), check.names = FALSE)
+source(file.path(demo_dir, "load-cd44-example.R"), local = TRUE)
+cd44 <- load_cd44_example(demo_dir)
+cd44
+```
+
+The annotation, alignment, sequences, and summary inputs now travel together.
+For example, the selected isoform table is retrieved from the object rather
+than read again from a separate file:
+
+```{r cd44-isoforms, message = FALSE, warning = FALSE}
+species <- cd44@metadata$species
+isoforms <- cd44@metadata$tables$cd44_selected_isoforms
 
 isoform_table <- isoforms[, c(
   "display_name", "transcript_name", "transcript_id", "exon_count",
@@ -57,33 +84,20 @@ knitr::kable(isoform_table)
 
 # Pairwise splice-variant plot
 
-The plotting table has one row per exon per selected isoform. The y-position is
-assigned by `selection_order`, which keeps the four selected isoforms visible
-instead of overplotting them on one baseline. Exon fill maps to exon-level splice
-role, while link fill maps to binned LASTZ percent identity. The transcript
-backbone is drawn in neutral grey with `transcript_backbone_fill`.
+The geoms resolve their data from `ggexon(cd44)`. The feature annotation retains
+`exon_role`, `transcript_name`, `selection_order`, and `isoform_y` as metadata.
+Mapping `ymin = isoform_y` preserves the selected transcript order and spacing,
+while `fill = exon_role` distinguishes common and variable exons. Link fill
+maps to the stored LASTZ identity bin. The transcript backbone is neutral grey.
 
 ```{r cd44-plot, message = FALSE, warning = FALSE, fig.alt = "A ggexon pairwise CD44 splice variant plot with four human isoform rows above a nucleotide-link panel and four mouse isoform rows below it. The mouse x axis is reversed. Common exons are green, variable exons are orange, transcript backbones are grey, and nucleotide-link ribbons are colored from pale to dark blue by LASTZ identity range.", fig.cap = "Selected human CD44 and mouse Cd44 splice variants with the mouse panel reversed. Exons present in every selected isoform are green; variable splice exons are orange. LASTZ genomic DNA alignment blocks are drawn as nucleotide links and colored by percent-identity range."}
-exons <- read.delim(file.path(demo_dir, "cd44_selected_exons.tsv"), check.names = FALSE)
-links <- read.delim(file.path(demo_dir, "cd44_nuclinks_lastz.tsv"), check.names = FALSE)
-
-track_levels <- c("human", "link_human_mouse", "mouse")
 track_labels <- c(
   human = sprintf("Human CD44 (%s)", species$chr[species$species == "human"]),
   link_human_mouse = "",
   mouse = sprintf("Mouse Cd44 (%s)", species$chr[species$species == "mouse"])
 )
 
-exons$track <- factor(exons$track, levels = track_levels)
-links$track <- factor(links$track, levels = track_levels)
-exons$exon_role <- factor(exons$exon_role, levels = c("common", "variable"))
-panel_xlim <- stats::setNames(
-  lapply(seq_len(nrow(species)), function(i) c(species$window_start[[i]], species$window_end[[i]])),
-  species$species
-)
-panel_xlim_chr <- stats::setNames(species$chr, species$species)
 identity_levels <- c("50-55%", "55-60%", "60-65%", "65-70%", ">=70%")
-links$identity_bin <- factor(links$identity_bin, levels = identity_levels)
 
 splice_palette <- c(common = "#246B5A", variable = "#D88A3D")
 identity_palette <- c(
@@ -94,36 +108,18 @@ identity_palette <- c(
   ">=70%" = "#0E557A"
 )
 
-ggexon() +
+cd44_plot <- ggexon(cd44) +
   geom_nuclink(
-    data = links,
-    mapping = aes(
-      tspecies = tspecies,
-      tchr = tchr,
-      tstart = tstart,
-      tend = tend,
-      qspecies = qspecies,
-      qchr = qchr,
-      qstart = qstart,
-      qend = qend,
-      strand = strand,
-      group = group,
-      fill = identity_bin
-    ),
+    alignment = "human_mouse",
+    mapping = aes(fill = identity_bin),
     colour = NA,
     alpha = 0.38,
     inherit.aes = FALSE
   ) +
   geom_exon(
-    data = exons,
     mapping = aes(
-      xmin = xmin,
-      xmax = xmax,
-      ymin = ymin,
-      transcripts = transcripts,
-      strand = strand,
-      track = track,
-      type = type,
+      ymin = isoform_y,
+      transcripts = transcript_name,
       fill = exon_role
     ),
     exon_height = 0.5,
@@ -146,9 +142,7 @@ ggexon() +
     reverse_x = "mouse",
     reverse_x_match_by = "track",
     strip.position = "left",
-    labeller = ggplot2::as_labeller(track_labels),
-    xlim = panel_xlim,
-    xlim_chr = panel_xlim_chr
+    labeller = ggplot2::as_labeller(track_labels)
   ) +
   scale_fill_manual(
     values = c(splice_palette, identity_palette),
@@ -178,6 +172,7 @@ ggexon() +
     fill = ggplot2::guide_legend(nrow = 2, byrow = TRUE, override.aes = list(alpha = 1))
   ) +
   theme_ggexon_side_strips("left", base_size = 7.5)
+cd44_plot
 ```
 
 # What the alignment layer contributes
@@ -187,8 +182,8 @@ intervals come from LASTZ alignments of genomic DNA windows spanning the human
 and mouse gene loci plus 20 kb promoter-side and 10 kb 3-prime-side flanks. The
 demo keeps blocks with alignment length at least 80 bp and identity at least
 50%, so lower-identity central genomic matches remain visible instead of being
-filtered out. The link rows are deliberately kept separate from the exon
-annotation rows:
+filtered out. The exon annotations and links are distinct typed components
+inside `cd44`, rather than independent plot-layer data frames:
 
 - annotation rows describe selected transcript structures and exon membership;
 - link rows describe nucleotide-level genomic alignment blocks and identity
@@ -196,11 +191,17 @@ annotation rows:
 - `facet_genomics()` creates the middle panel and injects the source-panel
   coordinates that `geom_nuclink()` needs.
 
+The original PAF uses zero-based, half-open coordinates within the extracted
+sequence windows. The object caches the already filtered, one-based, closed
+chromosome-coordinate links from `cd44_nuclinks_lastz.tsv`. The raw PAF and
+source-window coordinates remain stored for inspection. The cached alignment
+uses an in-memory source label: do not replace it by directly loading the raw
+PAF as though those offsets were chromosome coordinates. To change the LASTZ
+filtering or block interpretation, regenerate and normalize the links first.
+
 ```{r cd44-link-summary, message = FALSE, warning = FALSE}
-homology_candidates <- read.delim(
-  file.path(demo_dir, "cd44_exon_homology_ranked.tsv"),
-  check.names = FALSE
-)
+links <- pairwise_alignment_data(cd44, alignment = "human_mouse")
+homology_candidates <- cd44@metadata$tables$cd44_exon_homology_ranked
 
 summary_table <- data.frame(
   Metric = c(
@@ -227,10 +228,7 @@ to three human-side regions and computes a target-bp-weighted identity. The
 middle region is the longest consecutive run of variable selected exons.
 
 ```{r cd44-regional-identity, message = FALSE, warning = FALSE}
-unique_exons <- read.delim(
-  file.path(demo_dir, "cd44_selected_unique_exons.tsv"),
-  check.names = FALSE
-)
+unique_exons <- cd44@metadata$tables$cd44_selected_unique_exons
 
 human_exons <- unique_exons[unique_exons$species == "human", ]
 human_exons <- human_exons[order(human_exons$start, human_exons$end), ]
@@ -285,10 +283,7 @@ peptide alignment; the denominator is aligned amino-acid columns, including
 gap columns.
 
 ```{r cd44-exon-protein-identity, message = FALSE, warning = FALSE}
-protein_identity <- read.delim(
-  file.path(demo_dir, "cd44_exon_protein_identity.tsv"),
-  check.names = FALSE
-)
+protein_identity <- cd44@metadata$tables$cd44_exon_protein_identity
 
 protein_identity_table <- protein_identity[
   protein_identity$reciprocal_best,
@@ -314,6 +309,14 @@ knitr::kable(protein_identity_table, row.names = FALSE)
 
 # Reusing the pattern
 
+Save the comparative object to keep its loaded annotations, normalized links,
+sequence windows, and supporting tables together:
+
+```{r eval = FALSE}
+saveRDS(cd44, "cd44-comparison.rds")
+cd44 <- readRDS("cd44-comparison.rds")
+```
+
 For splice-variant comparisons, keep the biological feature colors on the exon
 rectangles and use neutral styling for schematic structure. In `geom_exon()`,
 that means setting `transcript_backbone_fill` and
@@ -326,3 +329,13 @@ The reproducible data-preparation script is stored in
 release, source URLs, strand-aware flank sizes, UCSC sequence windows, LASTZ
 command, selected isoforms, common-exon calls, and exon-homology candidate
 tables.
+
+# Object construction code
+
+This is the loader sourced above. The annotation is loaded into each
+`SynIndividual` and enriched by matching transcript IDs and exon coordinates.
+`exon_role` and `isoform_y` then reach the geoms through the ordinary Syn-backed
+data resolution path. All bundled TSV tables are retained for audit and reuse.
+
+```{r cd44-object-construction, eval = FALSE}
+```

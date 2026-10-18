@@ -11,6 +11,8 @@ then add the remaining transcript that maximizes exon-set Jaccard distance.
 
 Key files:
 
+- `load-cd44-example.R`: example-level loader assembling annotations, normalized
+  links, sequence windows, layout, and supporting tables into one `SynSpecies`.
 - `cd44_selected_isoforms.tsv`: representative isoforms selected for plotting.
 - `cd44_selected_exons.tsv`: plot-ready exon intervals for those isoforms.
 - `cd44_selected_unique_exons.tsv`: unique exon intervals in the selected isoforms.

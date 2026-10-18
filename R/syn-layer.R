@@ -2852,6 +2852,13 @@ syn_gr_to_exon_df <- function(feature_gr,
     stringsAsFactors = FALSE
   )
 
+  # Keep user feature attributes available to aesthetic mappings, while
+  # protecting coordinates and layout columns owned by the resolver.
+  extra_cols <- setdiff(names(meta), c(names(out), "ymin", "group", "PANEL"))
+  if (length(extra_cols) > 0L) {
+    out[extra_cols] <- as.data.frame(meta[, extra_cols, drop = FALSE])
+  }
+
   out <- merge(
     out,
     order_df[, c("transcripts", "ymin", "group")],

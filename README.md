@@ -148,6 +148,9 @@ The package site contains the longer cookbook-style documentation:
   model, every geom, facet systems, and the genomic guide.
 - `vignette("ggexon-workflow", package = "ggexon")` for a step-by-step workflow
   using individuals, annotations, alignments, and direct plotting.
+- `vignette("cd44-splice-variants-demo", package = "ggexon")` for human and mouse
+  splice variants, LASTZ links, sequence windows, and supporting tables stored
+  together in one `SynSpecies` object.
 - `vignette("hox-cluster-expansion-demo", package = "ggexon")` for the
   Ensembl-pinned HOX cluster matrix, exact curated Hox-number slots, and
   `geom_genebox()` anchor modes.

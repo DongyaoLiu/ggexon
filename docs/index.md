@@ -2,6 +2,8 @@
 
 **Grammar of genomic annotations, synteny, and associated data.**
 
+[Documentation and tutorials](https://dongyaoliu.github.io/ggexon/)
+
 `ggexon` is a ggplot2 extension for drawing genomic annotation together
 with comparative and track-level data. It was developed while
 visualizing the `sept-1`/`zina-1` toxin-antidote locus described in the
@@ -79,6 +81,7 @@ trail.
 `ggexon` is currently a development package.
 
 ``` r
+
 install.packages("remotes")
 remotes::install_github("DongyaoLiu/ggexon")
 ```
@@ -87,6 +90,7 @@ Some dependencies are from Bioconductor. If your R installation cannot
 resolve them automatically, install them first:
 
 ``` r
+
 install.packages("BiocManager")
 BiocManager::install(c(
   "Biostrings",
@@ -109,37 +113,38 @@ listed in `DESCRIPTION`:
 
 The core data containers are:
 
-| Class                          | Role                                                                                                                              |
-|--------------------------------|-----------------------------------------------------------------------------------------------------------------------------------|
-| `SynSpecies`                   | Project-level container for individuals, alignments, trees, and layout state                                                      |
-| `SynIndividual`                | One genome, strain, species, or sample                                                                                            |
-| `SynFeatureAnnotation`         | Genes, transcripts, exons, CDS, labels, and annotation patches                                                                    |
-| `SynVCFAnnotation`             | VCF querying is supported. BCF parsing is not implemented; BCF input raises an unsupported-format error.                          |
-| `SynBigWigAnnotation`          | Signal tracks queried by genomic interval                                                                                         |
-| `SynProteinDomainAnnotation`   | Protein-domain intervals from InterProScan-like tables                                                                            |
-| `SynProteinMutationAnnotation` | Protein mutation summaries for lollipop-style tracks                                                                              |
-| `HomologyAnnotation`           | Cross-species gene homology mappings from BLAST results                                                                           |
-| `SynPairAlignment`             | Pairwise genome links from PAF, PSL, or ODGI-derived data                                                                         |
-| `SynMultiAlignment`            | Stores already parsed MAF data supplied through `data`; loading a MAF file remains unavailable. ODGI-backed loading is available. |
-| `SynLayout`                    | Stored panel windows and layout decisions                                                                                         |
+| Class | Role |
+|----|----|
+| `SynSpecies` | Project-level container for individuals, alignments, trees, and layout state |
+| `SynIndividual` | One genome, strain, species, or sample |
+| `SynFeatureAnnotation` | Genes, transcripts, exons, CDS, labels, and annotation patches |
+| `SynVCFAnnotation` | VCF querying is supported. BCF parsing is not implemented; BCF input raises an unsupported-format error. |
+| `SynBigWigAnnotation` | Signal tracks queried by genomic interval |
+| `SynProteinDomainAnnotation` | Protein-domain intervals from InterProScan-like tables |
+| `SynProteinMutationAnnotation` | Protein mutation summaries for lollipop-style tracks |
+| `HomologyAnnotation` | Cross-species gene homology mappings from BLAST results |
+| `SynPairAlignment` | Pairwise genome links from PAF, PSL, or ODGI-derived data |
+| `SynMultiAlignment` | Stores already parsed MAF data supplied through `data`; loading a MAF file remains unavailable. ODGI-backed loading is available. |
+| `SynLayout` | Stored panel windows and layout decisions |
 
 ### Part 2: Functions Manipulate and Draw Classes
 
 The public API is organized around a few function families:
 
-| Task                         | Main functions                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-|------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Build object graphs          | [`add_individual()`](https://dongyaoliu.github.io/ggexon/reference/add_individual.md), [`add_annotation()`](https://dongyaoliu.github.io/ggexon/reference/add_annotation.md), [`add_homology_annotation()`](https://dongyaoliu.github.io/ggexon/reference/add_homology_annotation.md), [`add_pairwise_alignment()`](https://dongyaoliu.github.io/ggexon/reference/add_pairwise_alignment.md), [`add_multiple_alignment()`](https://dongyaoliu.github.io/ggexon/reference/add_multiple_alignment.md), [`add_tree()`](https://dongyaoliu.github.io/ggexon/reference/add_tree.md)                                                                                                                                                                                                                                             |
-| Load and query data          | [`load_annotation()`](https://dongyaoliu.github.io/ggexon/reference/load_annotation.md), [`load_alignment()`](https://dongyaoliu.github.io/ggexon/reference/load_alignment.md), [`import_blast_homology()`](https://dongyaoliu.github.io/ggexon/reference/import_blast_homology.md), [`query_features()`](https://dongyaoliu.github.io/ggexon/reference/query_features.md), [`query_variants()`](https://dongyaoliu.github.io/ggexon/reference/query_variants.md), [`query_signal()`](https://dongyaoliu.github.io/ggexon/reference/query_signal.md), [`query_domains()`](https://dongyaoliu.github.io/ggexon/reference/query_domains.md)                                                                                                                                                                                  |
-| Derive sequence/protein data | [`extract_cds_seq()`](https://dongyaoliu.github.io/ggexon/reference/extract_cds_seq.md), [`translate_protein()`](https://dongyaoliu.github.io/ggexon/reference/translate_protein.md), [`project_domains_to_genome()`](https://dongyaoliu.github.io/ggexon/reference/project_domains_to_genome.md)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| Subset and curate objects    | [`subset_species()`](https://dongyaoliu.github.io/ggexon/reference/subset_species.md), [`subset_individual()`](https://dongyaoliu.github.io/ggexon/reference/subset_individual.md), [`subset_pairwise_alignment()`](https://dongyaoliu.github.io/ggexon/reference/subset_pairwise_alignment.md), [`set_gene_labels()`](https://dongyaoliu.github.io/ggexon/reference/set_gene_labels.md), [`patch_annotation_from_gff()`](https://dongyaoliu.github.io/ggexon/reference/patch_annotation_from_gff.md)                                                                                                                                                                                                                                                                                                                      |
-| Draw genomic layers          | [`ggexon()`](https://dongyaoliu.github.io/ggexon/reference/ggexon.md), [`geom_exon()`](https://dongyaoliu.github.io/ggexon/reference/geom_exon.md), [`geom_coverage()`](https://dongyaoliu.github.io/ggexon/reference/geom_coverage.md), [`geom_genetag()`](https://dongyaoliu.github.io/ggexon/reference/geom_genetag.md), [`geom_genebox()`](https://dongyaoliu.github.io/ggexon/reference/geom_genebox.md), [`geom_genelabel()`](https://dongyaoliu.github.io/ggexon/reference/geom_genelabel.md), [`geom_nuclink()`](https://dongyaoliu.github.io/ggexon/reference/geom_nuclink.md), [`geom_synteny_link()`](https://dongyaoliu.github.io/ggexon/reference/geom_synteny_link.md), [`geom_protein_lollipop()`](https://dongyaoliu.github.io/ggexon/reference/geom_protein_lollipop.md)                                  |
-| Arrange panels and guides    | [`facet_genomics()`](https://dongyaoliu.github.io/ggexon/reference/facet_genomics.md), [`scale_panel_annotation()`](https://dongyaoliu.github.io/ggexon/reference/scale_panel_annotation.md), [`scale_panel_coverage()`](https://dongyaoliu.github.io/ggexon/reference/scale_panel_coverage.md), [`center_panel_annotation()`](https://dongyaoliu.github.io/ggexon/reference/center_panel_annotation.md), [`facet_genomictree()`](https://dongyaoliu.github.io/ggexon/reference/facet_genomictree.md), [`scale_x_ggexon_genomic()`](https://dongyaoliu.github.io/ggexon/reference/scale_x_ggexon_genomic.md), [`scale_x_facet_labels()`](https://dongyaoliu.github.io/ggexon/reference/scale_x_facet_labels.md), [`guide_x_ggexon_piecewise()`](https://dongyaoliu.github.io/ggexon/reference/guide_x_ggexon_piecewise.md) |
-| Style plots                  | [`theme_ggexon_clean()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_clean.md), [`theme_ggexon_base()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_base.md), [`theme_ggexon_track()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_track.md), [`theme_ggexon_pairwise()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_pairwise.md)                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| Task | Main functions |
+|----|----|
+| Build object graphs | [`add_individual()`](https://dongyaoliu.github.io/ggexon/reference/add_individual.md), [`add_annotation()`](https://dongyaoliu.github.io/ggexon/reference/add_annotation.md), [`add_homology_annotation()`](https://dongyaoliu.github.io/ggexon/reference/add_homology_annotation.md), [`add_pairwise_alignment()`](https://dongyaoliu.github.io/ggexon/reference/add_pairwise_alignment.md), [`add_multiple_alignment()`](https://dongyaoliu.github.io/ggexon/reference/add_multiple_alignment.md), [`add_tree()`](https://dongyaoliu.github.io/ggexon/reference/add_tree.md) |
+| Load and query data | [`load_annotation()`](https://dongyaoliu.github.io/ggexon/reference/load_annotation.md), [`load_alignment()`](https://dongyaoliu.github.io/ggexon/reference/load_alignment.md), [`import_blast_homology()`](https://dongyaoliu.github.io/ggexon/reference/import_blast_homology.md), [`query_features()`](https://dongyaoliu.github.io/ggexon/reference/query_features.md), [`query_variants()`](https://dongyaoliu.github.io/ggexon/reference/query_variants.md), [`query_signal()`](https://dongyaoliu.github.io/ggexon/reference/query_signal.md), [`query_domains()`](https://dongyaoliu.github.io/ggexon/reference/query_domains.md) |
+| Derive sequence/protein data | [`extract_cds_seq()`](https://dongyaoliu.github.io/ggexon/reference/extract_cds_seq.md), [`translate_protein()`](https://dongyaoliu.github.io/ggexon/reference/translate_protein.md), [`project_domains_to_genome()`](https://dongyaoliu.github.io/ggexon/reference/project_domains_to_genome.md) |
+| Subset and curate objects | [`subset_species()`](https://dongyaoliu.github.io/ggexon/reference/subset_species.md), [`subset_individual()`](https://dongyaoliu.github.io/ggexon/reference/subset_individual.md), [`subset_pairwise_alignment()`](https://dongyaoliu.github.io/ggexon/reference/subset_pairwise_alignment.md), [`set_gene_labels()`](https://dongyaoliu.github.io/ggexon/reference/set_gene_labels.md), [`patch_annotation_from_gff()`](https://dongyaoliu.github.io/ggexon/reference/patch_annotation_from_gff.md) |
+| Draw genomic layers | [`ggexon()`](https://dongyaoliu.github.io/ggexon/reference/ggexon.md), [`geom_exon()`](https://dongyaoliu.github.io/ggexon/reference/geom_exon.md), [`geom_coverage()`](https://dongyaoliu.github.io/ggexon/reference/geom_coverage.md), [`geom_genetag()`](https://dongyaoliu.github.io/ggexon/reference/geom_genetag.md), [`geom_genebox()`](https://dongyaoliu.github.io/ggexon/reference/geom_genebox.md), [`geom_genelabel()`](https://dongyaoliu.github.io/ggexon/reference/geom_genelabel.md), [`geom_nuclink()`](https://dongyaoliu.github.io/ggexon/reference/geom_nuclink.md), [`geom_synteny_link()`](https://dongyaoliu.github.io/ggexon/reference/geom_synteny_link.md), [`geom_protein_lollipop()`](https://dongyaoliu.github.io/ggexon/reference/geom_protein_lollipop.md) |
+| Arrange panels and guides | [`facet_genomics()`](https://dongyaoliu.github.io/ggexon/reference/facet_genomics.md), [`scale_panel_annotation()`](https://dongyaoliu.github.io/ggexon/reference/scale_panel_annotation.md), [`scale_panel_coverage()`](https://dongyaoliu.github.io/ggexon/reference/scale_panel_coverage.md), [`center_panel_annotation()`](https://dongyaoliu.github.io/ggexon/reference/center_panel_annotation.md), [`facet_genomictree()`](https://dongyaoliu.github.io/ggexon/reference/facet_genomictree.md), [`scale_x_ggexon_genomic()`](https://dongyaoliu.github.io/ggexon/reference/scale_x_ggexon_genomic.md), [`scale_x_facet_labels()`](https://dongyaoliu.github.io/ggexon/reference/scale_x_facet_labels.md), [`guide_x_ggexon_piecewise()`](https://dongyaoliu.github.io/ggexon/reference/guide_x_ggexon_piecewise.md) |
+| Style plots | [`theme_ggexon_clean()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_clean.md), [`theme_ggexon_base()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_base.md), [`theme_ggexon_track()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_track.md), [`theme_ggexon_pairwise()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_pairwise.md) |
 
 The typical workflow is:
 
 ``` r
+
 library(ggexon)
 
 x <- SynIndividual(
@@ -164,6 +169,9 @@ The package site contains the longer cookbook-style documentation:
 - [`vignette("ggexon-workflow", package = "ggexon")`](https://dongyaoliu.github.io/ggexon/articles/ggexon-workflow.md)
   for a step-by-step workflow using individuals, annotations,
   alignments, and direct plotting.
+- [`vignette("cd44-splice-variants-demo", package = "ggexon")`](https://dongyaoliu.github.io/ggexon/articles/cd44-splice-variants-demo.md)
+  for human and mouse splice variants, LASTZ links, sequence windows,
+  and supporting tables stored together in one `SynSpecies` object.
 - [`vignette("hox-cluster-expansion-demo", package = "ggexon")`](https://dongyaoliu.github.io/ggexon/articles/hox-cluster-expansion-demo.md)
   for the Ensembl-pinned HOX cluster matrix, exact curated Hox-number
   slots, and
