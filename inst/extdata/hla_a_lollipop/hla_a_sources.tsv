@@ -1,0 +1,7 @@
+source	url	sha256
+fasta/A_prot.fasta	https://raw.githubusercontent.com/ANHIG/IMGTHLA/d972ae287948dc2e5468a40ff3b3d27227541189/fasta/A_prot.fasta	39de62598bf7024c120e4a1365e361361115ecadc24a4f36c47d921b8edb9080
+alignments/A_prot.txt	https://raw.githubusercontent.com/ANHIG/IMGTHLA/d972ae287948dc2e5468a40ff3b3d27227541189/alignments/A_prot.txt	118ef597265585e1ef75110fef5cf10100b14d36eafdbfdaabc178b53608adde
+release_version.txt	https://raw.githubusercontent.com/ANHIG/IMGTHLA/d972ae287948dc2e5468a40ff3b3d27227541189/release_version.txt	58ab5f99837bbac0d7b055cd99fd9085c529dabf826c777aa0a7987c7208400b
+LICENCE.md	https://raw.githubusercontent.com/ANHIG/IMGTHLA/d972ae287948dc2e5468a40ff3b3d27227541189/LICENCE.md	8c93368c1abd89ba88b416981b3c559c63841685def42f3151e6e7b5d892c637
+UniProt P04439 annotation snapshot	https://rest.uniprot.org/uniprotkb/P04439.json	bb88d5e380a6c5ecccd731cadb83245cb9738d532ef4ca8613d66172aa37358f
+IPD HLA00005 reference snapshot, release 3.66.0	https://www.ebi.ac.uk/cgi-bin/ipd/api/allele/HLA00005	98049a64458f1c9f876ce8bddbbc818a9ba126263cbf1d549780acca774f6d8b
