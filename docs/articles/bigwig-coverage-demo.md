@@ -15,7 +15,6 @@ neither normalizes, smooths, thresholds, nor expands the stored
 intervals to one row per base.
 
 ``` r
-
 library(ggexon)
 
 fixture_dir <- system.file("extdata", "peel1_coverage", package = "ggexon")

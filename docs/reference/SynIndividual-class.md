@@ -30,7 +30,7 @@ methods.
 
   Sequence-level metadata such as chromosome names and lengths stored as
   a
-  [`GenomeInfoDb::Seqinfo`](https://rdrr.io/pkg/GenomeInfoDb/man/Seqinfo-class.html)
+  [`GenomeInfoDb::Seqinfo`](https://rdrr.io/pkg/Seqinfo/man/Seqinfo-class.html)
   object.
 
 - `annotations`:
