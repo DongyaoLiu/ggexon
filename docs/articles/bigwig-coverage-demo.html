@@ -83,6 +83,10 @@ not refer to source BAMs or other external paths.</p>
 without normalization. The plotted scores remain raw depth:
 <code><a href="../reference/geom_coverage.html">geom_coverage()</a></code> neither normalizes, smooths, thresholds,
 nor expands the stored intervals to one row per base.</p>
+<p>The <code>rtracklayer</code> BigWig backend is unsupported on
+Windows. The code below is shown on every platform and executed only on
+macOS and Linux. Windows readers can view the rendered figure in the <a href="https://dongyaoliu.github.io/ggexon/articles/bigwig-coverage-demo.html">online
+tutorial</a>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dongyaoliu.github.io/ggexon/">ggexon</a></span><span class="op">)</span></span>
 <span></span>

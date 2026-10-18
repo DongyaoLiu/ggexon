@@ -14,6 +14,11 @@ without normalization. The plotted scores remain raw depth:
 neither normalizes, smooths, thresholds, nor expands the stored
 intervals to one row per base.
 
+The `rtracklayer` BigWig backend is unsupported on Windows. The code
+below is shown on every platform and executed only on macOS and Linux.
+Windows readers can view the rendered figure in the [online
+tutorial](https://dongyaoliu.github.io/ggexon/articles/bigwig-coverage-demo.html).
+
 ``` r
 library(ggexon)
 
