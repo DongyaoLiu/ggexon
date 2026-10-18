@@ -1,0 +1,1458 @@
+{
+  "accession": "HLA00005",
+  "allele_history": [
+    {
+      "name": "A*02011",
+      "release_version": "1.05.0",
+      "sversion": 1
+    },
+    {
+      "name": "A*02011",
+      "release_version": "1.06.0",
+      "sversion": 1
+    },
+    {
+      "name": "A*02011",
+      "release_version": "1.07.0",
+      "sversion": 1
+    },
+    {
+      "name": "A*02011",
+      "release_version": "1.08.0",
+      "sversion": 1
+    },
+    {
+      "name": "A*02011",
+      "release_version": "1.09.0",
+      "sversion": 1
+    },
+    {
+      "name": "A*02011",
+      "release_version": "1.10.0",
+      "sversion": 1
+    },
+    {
+      "name": "A*02011",
+      "release_version": "1.11.0",
+      "sversion": 1
+    },
+    {
+      "name": "A*02011",
+      "release_version": "1.12.0",
+      "sversion": 2
+    },
+    {
+      "name": "A*02011",
+      "release_version": "1.13.0",
+      "sversion": 2
+    },
+    {
+      "name": "A*02011",
+      "release_version": "1.14.0",
+      "sversion": 2
+    },
+    {
+      "name": "A*02011",
+      "release_version": "1.15.0",
+      "sversion": 2
+    },
+    {
+      "name": "A*020101",
+      "release_version": "1.16.0",
+      "sversion": 2
+    },
+    {
+      "name": "A*020101",
+      "release_version": "2.00.0",
+      "sversion": 2
+    },
+    {
+      "name": "A*020101",
+      "release_version": "2.01.0",
+      "sversion": 2
+    },
+    {
+      "name": "A*020101",
+      "release_version": "2.02.0",
+      "sversion": 2
+    },
+    {
+      "name": "A*02010101",
+      "release_version": "2.03.0",
+      "sversion": 3
+    },
+    {
+      "name": "A*02010101",
+      "release_version": "2.04.0",
+      "sversion": 3
+    },
+    {
+      "name": "A*02010101",
+      "release_version": "2.05.0",
+      "sversion": 4
+    },
+    {
+      "name": "A*02010101",
+      "release_version": "2.06.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02010101",
+      "release_version": "2.07.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02010101",
+      "release_version": "2.08.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02010101",
+      "release_version": "2.09.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02010101",
+      "release_version": "2.10.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02010101",
+      "release_version": "2.11.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02010101",
+      "release_version": "2.12.0",
+      "sversion": 6
+    },
+    {
+      "name": "A*02010101",
+      "release_version": "2.13.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02010101",
+      "release_version": "2.14.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02010101",
+      "release_version": "2.14.1",
+      "sversion": 5
+    },
+    {
+      "name": "A*02010101",
+      "release_version": "2.15.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02010101",
+      "release_version": "2.16.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02010101",
+      "release_version": "2.17.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02010101",
+      "release_version": "2.18.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02010101",
+      "release_version": "2.19.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02010101",
+      "release_version": "2.20.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02010101",
+      "release_version": "2.21.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02010101",
+      "release_version": "2.22.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02010101",
+      "release_version": "2.23.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02010101",
+      "release_version": "2.24.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02010101",
+      "release_version": "2.25.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02010101",
+      "release_version": "2.25.1",
+      "sversion": 5
+    },
+    {
+      "name": "A*02010101",
+      "release_version": "2.25.2",
+      "sversion": 5
+    },
+    {
+      "name": "A*02010101",
+      "release_version": "2.26.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02010101",
+      "release_version": "2.27.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02010101",
+      "release_version": "2.28.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.00.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.01.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.02.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.03.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.04.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.05.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.06.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.07.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.08.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.09.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.10.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.11.0",
+      "sversion": 7
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.12.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.13.1",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.14.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.15.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.16.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.17.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.18.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.19.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.20.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.21.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.22.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.23.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.24.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.25.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.26.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.27.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.28.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.29.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.30.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.31.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.32.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.33.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.34.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.35.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.36.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.37.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.38.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.39.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.40.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.41.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.42.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.43.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.44.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.45.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.46.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.47.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.48.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.49.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.50.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.51.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.52.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.53.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.54.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.55.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.56.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.57.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.58.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.59.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.60.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.61.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.62.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.63.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.64.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.65.0",
+      "sversion": 5
+    },
+    {
+      "name": "A*02:01:01:01",
+      "release_version": "3.66.0",
+      "sversion": 5
+    }
+  ],
+  "cell_entries": [
+    {
+      "ancestry": "Undefined",
+      "cell_name": "BEI",
+      "cellid": "10304"
+    },
+    {
+      "ancestry": "European",
+      "cell_name": "BEL5GB",
+      "cellid": "10306"
+    },
+    {
+      "ancestry": "Undefined",
+      "cell_name": "BGE",
+      "cellid": "10314"
+    },
+    {
+      "ancestry": "European",
+      "cell_name": "BM16",
+      "cellid": "10321"
+    },
+    {
+      "ancestry": "European",
+      "cell_name": "BOLETH",
+      "cellid": "10329"
+    },
+    {
+      "ancestry": "European",
+      "cell_name": "CALOGERO",
+      "cellid": "10377"
+    },
+    {
+      "ancestry": "Hispanic or Latin American",
+      "cell_name": "CB",
+      "cellid": "10394"
+    },
+    {
+      "ancestry": "European",
+      "cell_name": "DBB",
+      "cellid": "10472"
+    },
+    {
+      "ancestry": "African or African Descent",
+      "cell_name": "DOP-ND",
+      "cellid": "10517"
+    },
+    {
+      "ancestry": "Hispanic or Latin American",
+      "cell_name": "EC",
+      "cellid": "10550"
+    },
+    {
+      "ancestry": "European",
+      "cell_name": "EK",
+      "cellid": "10557"
+    },
+    {
+      "ancestry": "European",
+      "cell_name": "EMJ",
+      "cellid": "10562"
+    },
+    {
+      "ancestry": "European",
+      "cell_name": "GM637",
+      "cellid": "10615"
+    },
+    {
+      "ancestry": "Native American",
+      "cell_name": "GRC-138",
+      "cellid": "10682"
+    },
+    {
+      "ancestry": "Native American",
+      "cell_name": "GRC-150",
+      "cellid": "10683"
+    },
+    {
+      "ancestry": "European",
+      "cell_name": "HAG",
+      "cellid": "10708"
+    },
+    {
+      "ancestry": "European",
+      "cell_name": "HERLUF",
+      "cellid": "10728"
+    },
+    {
+      "ancestry": "European",
+      "cell_name": "JAP-NF",
+      "cellid": "10819"
+    },
+    {
+      "ancestry": "European",
+      "cell_name": "JD",
+      "cellid": "10838"
+    },
+    {
+      "ancestry": "European",
+      "cell_name": "JVM",
+      "cellid": "10879"
+    },
+    {
+      "ancestry": "European",
+      "cell_name": "JY",
+      "cellid": "10882"
+    },
+    {
+      "ancestry": "European",
+      "cell_name": "KOSE",
+      "cellid": "10927"
+    },
+    {
+      "ancestry": "Undefined",
+      "cell_name": "LCL721",
+      "cellid": "10972"
+    },
+    {
+      "ancestry": "Undefined",
+      "cell_name": "LK707",
+      "cellid": "10999"
+    },
+    {
+      "ancestry": "Asian - East Asian",
+      "cell_name": "LKT2",
+      "cellid": "11003"
+    },
+    {
+      "ancestry": "European",
+      "cell_name": "LUY",
+      "cellid": "11011"
+    },
+    {
+      "ancestry": "African",
+      "cell_name": "OMW",
+      "cellid": "11215"
+    },
+    {
+      "ancestry": "Asian - South East Asian",
+      "cell_name": "RSA-ND",
+      "cellid": "11339"
+    },
+    {
+      "ancestry": "European",
+      "cell_name": "SLE005",
+      "cellid": "11391"
+    },
+    {
+      "ancestry": "European",
+      "cell_name": "SPO010",
+      "cellid": "11398"
+    },
+    {
+      "ancestry": "Undefined",
+      "cell_name": "T5-1",
+      "cellid": "11419"
+    },
+    {
+      "ancestry": "Asian - East Asian",
+      "cell_name": "TAB089",
+      "cellid": "11424"
+    },
+    {
+      "ancestry": "European",
+      "cell_name": "TER-ND",
+      "cellid": "11449"
+    },
+    {
+      "ancestry": "European",
+      "cell_name": "WDV",
+      "cellid": "11555"
+    },
+    {
+      "ancestry": "European",
+      "cell_name": "WJR076",
+      "cellid": "11567"
+    },
+    {
+      "ancestry": "European",
+      "cell_name": "AWELLS",
+      "cellid": "11615"
+    },
+    {
+      "ancestry": "European",
+      "cell_name": "BER",
+      "cellid": "11616"
+    },
+    {
+      "ancestry": "European",
+      "cell_name": "BH",
+      "cellid": "11617"
+    },
+    {
+      "ancestry": "European",
+      "cell_name": "BM9",
+      "cellid": "11619"
+    },
+    {
+      "ancestry": "European",
+      "cell_name": "BTB",
+      "cellid": "11625"
+    },
+    {
+      "ancestry": "European",
+      "cell_name": "CF996",
+      "cellid": "11626"
+    },
+    {
+      "ancestry": "European",
+      "cell_name": "DEM",
+      "cellid": "11627"
+    },
+    {
+      "ancestry": "European",
+      "cell_name": "JESTHOM",
+      "cellid": "11635"
+    },
+    {
+      "ancestry": "European",
+      "cell_name": "MLF",
+      "cellid": "11641"
+    },
+    {
+      "ancestry": "European",
+      "cell_name": "WT24",
+      "cellid": "11651"
+    },
+    {
+      "ancestry": "Undefined",
+      "cell_name": "CAR, ML",
+      "cellid": "11653"
+    },
+    {
+      "ancestry": "Aboriginal Australian",
+      "cell_name": "BUR, E",
+      "cellid": "11663"
+    },
+    {
+      "ancestry": "European",
+      "cell_name": "1416-1188",
+      "cellid": "13832"
+    },
+    {
+      "ancestry": "Asian - East Asian",
+      "cell_name": "B9537",
+      "cellid": "16069"
+    },
+    {
+      "ancestry": "Asian - East Asian",
+      "cell_name": "08009402",
+      "cellid": "16085"
+    },
+    {
+      "ancestry": "European",
+      "cell_name": "FH05",
+      "cellid": "17341"
+    },
+    {
+      "ancestry": "Undefined",
+      "cell_name": "DE-SMS_A-570429",
+      "cellid": "75523"
+    }
+  ],
+  "cigars": {
+    "coding_cigar": "27M4D14MD14M4D2M6D16MD6MD5M21D7MD4MD15M5D2M5D16MD3M4D5M16D14M23D9M4DMD4MDMD2M4D23MD12M2D6MD5M20D14MDMD20MD11M14D10MD11MD25MD21MD26MD2MD25M14D5MD28M25D4M3D9MD12MD3M3D11M23D2MD14M14D10M42D6M8D2M2D22MD4M4D6M2D6MD4MD5M4D7MD11MD10M2DM8D6M4D6M14D5M2D6MD11M9D6MD11MDM17D14M3D17MD19M4D6M4D67MD5M3D7M21D31MD29MD36M4D37MD14M65D74M3D16M2D113M",
+    "genomic_cigar": "289MD52MD14M4D2M6D16MD136MD5M21D7MD4MD15M5D18MD3M4D5M16D14M23D10MD4MDMD2M4D23MD23M20D14MDMD20MD11M14D10MD36MD21MD38MD14M3D11MD100MD29MD7MD24M5D9M19D35MD2MD25M14D5MD28M25D4M3D9MD12MD3M3D11M23D2MD14M14D10M42D6M8D2M2D22MD4M4D6M2D6MD4MD5M4D7MD11MD11M8D6M4D11M2D6MD17MD11MDM17D11M7D15M5D9M13D6MD2M23D20M2D52M2D98M12D34M8D100M2D4MD70MD24MD52M4D44MD48MD25M3D17MD97M3D7M21D31MD29MD36M4D37MD55M14D13M3D21M3D114M2D33M2D17MD235M3D264MD30MD181MD47MD188MD10MD157M",
+    "protein_cigar": "19M2D6M2D3M7D109MD10MD31M14D20M3D8MD41MD2M7D116M"
+  },
+  "citations": [
+    {
+      "authors": "Koller BH, Orr HT",
+      "journal": "Journal of Immunology",
+      "pubmed": "2982951",
+      "title": "Cloning and complete sequence of an HLA-A2 gene: analysis of two HLA-A alleles at the nucleotide level.",
+      "volume": "134:2727-2733",
+      "year": "1985"
+    },
+    {
+      "authors": "Krangel MS",
+      "journal": "EMBO Journal",
+      "pubmed": "3874058",
+      "title": "Unusual RNA splicing generates a secreted form of HLA-A2 in a mutagenized B lymphoblastoid cell line.",
+      "volume": "4:1205-1210",
+      "year": "1985"
+    },
+    {
+      "authors": "Cianetti L, Testa U, Scotto L, La Valle R, Simeone A, Boccoli G, Giannella G, Peschle C, Boncinelli E",
+      "journal": "Immunogenetics",
+      "pubmed": "2914713",
+      "title": "Three new class I HLA alleles: structure of mRNAs and alternative mechanisms of processing.",
+      "volume": "29:80-91",
+      "year": "1989"
+    },
+    {
+      "authors": "Ennis PD, Zemmour J, Salter RD, Parham P",
+      "journal": "Proceedings of the National Academy of Sciences USA",
+      "pubmed": "2320591",
+      "title": "Rapid cloning of HLA-A,B cDNA by using the polymerase chain reaction: frequency and nature of errors produced in amplification.",
+      "volume": "87:2833-2837",
+      "year": "1990"
+    },
+    {
+      "authors": "Belich MP, Madrigal JA, Hildebrand WH, Zemmour J, Williams RC, Luz R, Petzl-Erler ML, Parham P",
+      "journal": "Nature",
+      "pubmed": "1317015",
+      "title": "Unusual HLA-B alleles in two tribes of Brazilian Indians.",
+      "volume": "357:326-329",
+      "year": "1992"
+    },
+    {
+      "authors": "Hampe A, Coriton O, Andrieux N, Carn G, Lepourcelet M, Mottier S, Dreano S, Gatius MT, Hitte C, Soriano N, Galibert F",
+      "journal": "DNA Sequence",
+      "pubmed": "10727083",
+      "title": "A 356-Kb sequence of the subtelomeric part of the MHC Class I region.",
+      "volume": "10:263-299",
+      "year": "1999"
+    },
+    {
+      "authors": "Horton R, Gibson R, Coggill P, Miretti M, Allcok RJ, Almeida J, Forbes S, Gilbert JGR, Halls K, Harrow JL, Hart E, Howe K, Jackson DK, Palmer S, Roberts AN, Sims S, Stewart CA, Traherne JA, Trevanion S, Wilming L, Rogers J, de Jong PJ, Elliott JF, Sawcer S, Todd JA, Trowsdale J, Beck S",
+      "journal": "Immunogenetics",
+      "pubmed": "18193213",
+      "title": "Variation analysis and gene annotation of eight MHC haplotypes: The MHC Haplotype Project.",
+      "volume": "60:1-18",
+      "year": "2008"
+    },
+    {
+      "authors": "Zhu F, He Y, Zhang W, He J, He J, Xu X, Yan L",
+      "journal": "International Journal of Immunogenetics",
+      "pubmed": "19735485",
+      "title": "Analysis of the complete genomic sequence of HLA-A alleles in the Chinese Han population.",
+      "volume": "36:351-360",
+      "year": "2009"
+    },
+    {
+      "authors": "Tao H, Xu YP, Chen LX",
+      "journal": "Tissue Antigens",
+      "pubmed": "24903405",
+      "title": "Genomic full-length sequence of two HLA-A alleles, A*02:01:01:01 and A*02:03:01, identified by cloning and sequencing.",
+      "volume": "84:321-323",
+      "year": "2014"
+    }
+  ],
+  "class": "I",
+  "confirmation_status": {
+    "cells": 52,
+    "confirmed": true,
+    "laboratories": 12
+  },
+  "cwd": {
+    "version_2": "C",
+    "version_3": {
+      "EURO": "I",
+      "HIS": "C",
+      "Total": "I",
+      "UNK": "C"
+    }
+  },
+  "date_assigned": "1987-11-21",
+  "date_modified": "2013-04-17",
+  "dictionary": {
+    "data": {
+      "comments": null,
+      "expert_assigned": "A2",
+      "neural_assigned": "Training - A2",
+      "who_assigned": "A2"
+    },
+    "source": {
+      "13_IHWC": {
+        "cells_tested": "230",
+        "type_assigned": "A2"
+      },
+      "International_Cell_Exchange_UCLA": {
+        "cells_tested": "117",
+        "type_assigned": "A2 [99-100]"
+      },
+      "NMDP": {
+        "cells_tested": "6315",
+        "type_assigned": "A2 [98]"
+      }
+    }
+  },
+  "feature": {
+    "coding": [
+      {
+        "length": 73,
+        "number": "1",
+        "partial": false,
+        "start": 1,
+        "type": "exon"
+      },
+      {
+        "length": 270,
+        "number": "2",
+        "partial": false,
+        "start": 74,
+        "type": "exon"
+      },
+      {
+        "length": 276,
+        "number": "3",
+        "partial": false,
+        "start": 344,
+        "type": "exon"
+      },
+      {
+        "length": 276,
+        "number": "4",
+        "partial": false,
+        "start": 620,
+        "type": "exon"
+      },
+      {
+        "length": 117,
+        "number": "5",
+        "partial": false,
+        "start": 896,
+        "type": "exon"
+      },
+      {
+        "length": 33,
+        "number": "6",
+        "partial": false,
+        "start": 1013,
+        "type": "exon"
+      },
+      {
+        "length": 48,
+        "number": "7",
+        "partial": false,
+        "start": 1046,
+        "type": "exon"
+      },
+      {
+        "length": 5,
+        "number": "8",
+        "partial": false,
+        "start": 1094,
+        "type": "exon"
+      }
+    ],
+    "genomic": [
+      {
+        "length": 300,
+        "start": 1,
+        "type": "5utr"
+      },
+      {
+        "length": 73,
+        "number": "1",
+        "partial": false,
+        "start": 301,
+        "type": "exon"
+      },
+      {
+        "length": 130,
+        "number": "1",
+        "partial": false,
+        "start": 374,
+        "type": "intron"
+      },
+      {
+        "length": 270,
+        "number": "2",
+        "partial": false,
+        "start": 504,
+        "type": "exon"
+      },
+      {
+        "length": 241,
+        "number": "2",
+        "partial": false,
+        "start": 774,
+        "type": "intron"
+      },
+      {
+        "length": 276,
+        "number": "3",
+        "partial": false,
+        "start": 1015,
+        "type": "exon"
+      },
+      {
+        "length": 600,
+        "number": "3",
+        "partial": false,
+        "start": 1291,
+        "type": "intron"
+      },
+      {
+        "length": 276,
+        "number": "4",
+        "partial": false,
+        "start": 1891,
+        "type": "exon"
+      },
+      {
+        "length": 99,
+        "number": "4",
+        "partial": false,
+        "start": 2167,
+        "type": "intron"
+      },
+      {
+        "length": 117,
+        "number": "5",
+        "partial": false,
+        "start": 2266,
+        "type": "exon"
+      },
+      {
+        "length": 438,
+        "number": "5",
+        "partial": false,
+        "start": 2383,
+        "type": "intron"
+      },
+      {
+        "length": 33,
+        "number": "6",
+        "partial": false,
+        "start": 2821,
+        "type": "exon"
+      },
+      {
+        "length": 142,
+        "number": "6",
+        "partial": false,
+        "start": 2854,
+        "type": "intron"
+      },
+      {
+        "length": 48,
+        "number": "7",
+        "partial": false,
+        "start": 2996,
+        "type": "exon"
+      },
+      {
+        "length": 169,
+        "number": "7",
+        "partial": false,
+        "start": 3044,
+        "type": "intron"
+      },
+      {
+        "length": 5,
+        "number": "8",
+        "partial": false,
+        "start": 3213,
+        "type": "exon"
+      },
+      {
+        "length": 300,
+        "start": 3218,
+        "type": "3utr"
+      }
+    ],
+    "protein": [
+      {
+        "length": 24,
+        "start": 1,
+        "type": "signal"
+      },
+      {
+        "length": 341,
+        "start": 25,
+        "type": "mature"
+      }
+    ]
+  },
+  "first_release": "1.00.0",
+  "insdc": [
+    {
+      "accession": "AF055066",
+      "protein_id": "AAC24825.1",
+      "version": 1
+    },
+    {
+      "accession": "AJ555412",
+      "protein_id": "CAD87771.1",
+      "version": 1
+    },
+    {
+      "accession": "CR388220",
+      "protein_id": "CAP58484.1",
+      "version": 8
+    },
+    {
+      "accession": "CR759762",
+      "protein_id": "CAQ07032.1",
+      "version": 5
+    },
+    {
+      "accession": "EU445471",
+      "protein_id": "ACA34991.1",
+      "version": 1
+    },
+    {
+      "accession": "GQ996941",
+      "protein_id": "ACX71601.1",
+      "version": 1
+    },
+    {
+      "accession": "HG794376",
+      "protein_id": "CDK41185.1",
+      "version": 1
+    },
+    {
+      "accession": "K02883",
+      "protein_id": "AAA98727.1",
+      "version": 1
+    },
+    {
+      "accession": "M84379",
+      "protein_id": "AAA59606.1",
+      "version": 1
+    },
+    {
+      "accession": "OR126293",
+      "protein_id": "WMP24207.1",
+      "version": 1
+    },
+    {
+      "accession": "OZ079929",
+      "protein_id": "CAL6162465.1",
+      "version": 1
+    },
+    {
+      "accession": "OZ257578",
+      "protein_id": "CAN2487627.1",
+      "version": 1
+    },
+    {
+      "accession": "OZ257579",
+      "protein_id": "CAN2487628.1",
+      "version": 1
+    },
+    {
+      "accession": "OZ257580",
+      "protein_id": "CAN2487629.1",
+      "version": 1
+    },
+    {
+      "accession": "OZ257581",
+      "protein_id": "CAN2487630.1",
+      "version": 1
+    },
+    {
+      "accession": "OZ257582",
+      "protein_id": "CAN2487631.1",
+      "version": 1
+    },
+    {
+      "accession": "OZ257583",
+      "protein_id": "CAN2487632.1",
+      "version": 1
+    },
+    {
+      "accession": "OZ257584",
+      "protein_id": "CAN2487633.1",
+      "version": 1
+    },
+    {
+      "accession": "OZ257585",
+      "protein_id": "CAN2487634.1",
+      "version": 1
+    },
+    {
+      "accession": "OZ257586",
+      "protein_id": "CAN2487635.1",
+      "version": 1
+    },
+    {
+      "accession": "OZ257587",
+      "protein_id": "CAN2487636.1",
+      "version": 1
+    },
+    {
+      "accession": "OZ257588",
+      "protein_id": "CAN2487637.1",
+      "version": 1
+    },
+    {
+      "accession": "OZ257589",
+      "protein_id": "CAN2487638.1",
+      "version": 1
+    },
+    {
+      "accession": "OZ257590",
+      "protein_id": "CAN2487639.1",
+      "version": 1
+    },
+    {
+      "accession": "OZ257591",
+      "protein_id": "CAN2487640.1",
+      "version": 1
+    },
+    {
+      "accession": "OZ257592",
+      "protein_id": "CAN2487641.1",
+      "version": 1
+    },
+    {
+      "accession": "OZ257593",
+      "protein_id": "CAN2487642.1",
+      "version": 1
+    },
+    {
+      "accession": "OZ257594",
+      "protein_id": "CAN2487643.1",
+      "version": 1
+    },
+    {
+      "accession": "OZ257595",
+      "protein_id": "CAN2487644.1",
+      "version": 1
+    },
+    {
+      "accession": "OZ257596",
+      "protein_id": "CAN2487645.1",
+      "version": 1
+    },
+    {
+      "accession": "OZ257597",
+      "protein_id": "CAN2487646.1",
+      "version": 1
+    },
+    {
+      "accession": "OZ257598",
+      "protein_id": "CAN2487647.1",
+      "version": 1
+    },
+    {
+      "accession": "OZ257599",
+      "protein_id": "CAN2487648.1",
+      "version": 1
+    },
+    {
+      "accession": "OZ257600",
+      "protein_id": "CAN2487649.1",
+      "version": 1
+    },
+    {
+      "accession": "OZ257601",
+      "protein_id": "CAN2487650.1",
+      "version": 1
+    },
+    {
+      "accession": "OZ257602",
+      "protein_id": "CAN2487651.1",
+      "version": 1
+    },
+    {
+      "accession": "OZ257604",
+      "protein_id": "CAN2487653.1",
+      "version": 1
+    },
+    {
+      "accession": "OZ257605",
+      "protein_id": "CAN2487654.1",
+      "version": 1
+    },
+    {
+      "accession": "OZ257606",
+      "protein_id": "CAN2487655.1",
+      "version": 1
+    },
+    {
+      "accession": "OZ257607",
+      "protein_id": "CAN2487656.1",
+      "version": 1
+    },
+    {
+      "accession": "OZ257608",
+      "protein_id": "CAN2487657.1",
+      "version": 1
+    },
+    {
+      "accession": "OZ257609",
+      "protein_id": "CAN2487658.1",
+      "version": 1
+    },
+    {
+      "accession": "OZ257610",
+      "protein_id": "CAN2487659.1",
+      "version": 1
+    },
+    {
+      "accession": "OZ257611",
+      "protein_id": "CAN2487660.1",
+      "version": 1
+    },
+    {
+      "accession": "OZ257612",
+      "protein_id": "CAN2487661.1",
+      "version": 1
+    },
+    {
+      "accession": "OZ257613",
+      "protein_id": "CAN2487662.1",
+      "version": 1
+    },
+    {
+      "accession": "OZ257614",
+      "protein_id": "CAN2487663.1",
+      "version": 1
+    },
+    {
+      "accession": "OZ257615",
+      "protein_id": "CAN2487664.1",
+      "version": 1
+    },
+    {
+      "accession": "OZ257616",
+      "protein_id": "CAN2487665.1",
+      "version": 1
+    },
+    {
+      "accession": "OZ257617",
+      "protein_id": "CAN2487666.1",
+      "version": 1
+    },
+    {
+      "accession": "OZ257618",
+      "protein_id": "CAN2487667.1",
+      "version": 1
+    },
+    {
+      "accession": "OZ257619",
+      "protein_id": "CAN2487668.1",
+      "version": 1
+    },
+    {
+      "accession": "OZ257620",
+      "protein_id": "CAN2487669.1",
+      "version": 1
+    },
+    {
+      "accession": "X02457",
+      "protein_id": "CAA26297.1",
+      "version": 1
+    }
+  ],
+  "locus": "A*",
+  "name": "A*02:01:01:01",
+  "oid": "2.16.840.1.113883.13.252.1.1.5",
+  "omim": 142800,
+  "previous_nomenclature": "A*02010101",
+  "project": "HLA",
+  "release_date": "2026-10-14",
+  "release_modified": "3.12.0",
+  "release_status": "Sequence unchanged",
+  "release_version": "3.66.0",
+  "secondary_names": "A*02011, A2.1, A2.1, A2",
+  "sequence": {
+    "coding": "ATGGCCGTCATGGCGCCCCGAACCCTCGTCCTGCTACTCTCGGGGGCTCTGGCCCTGACCCAGACCTGGGCGGGCTCTCACTCCATGAGGTATTTCTTCACATCCGTGTCCCGGCCCGGCCGCGGGGAGCCCCGCTTCATCGCAGTGGGCTACGTGGACGACACGCAGTTCGTGCGGTTCGACAGCGACGCCGCGAGCCAGAGGATGGAGCCGCGGGCGCCGTGGATAGAGCAGGAGGGTCCGGAGTATTGGGACGGGGAGACACGGAAAGTGAAGGCCCACTCACAGACTCACCGAGTGGACCTGGGGACCCTGCGCGGCTACTACAACCAGAGCGAGGCCGGTTCTCACACCGTCCAGAGGATGTATGGCTGCGACGTGGGGTCGGACTGGCGCTTCCTCCGCGGGTACCACCAGTACGCCTACGACGGCAAGGATTACATCGCCCTGAAAGAGGACCTGCGCTCTTGGACCGCGGCGGACATGGCAGCTCAGACCACCAAGCACAAGTGGGAGGCGGCCCATGTGGCGGAGCAGTTGAGAGCCTACCTGGAGGGCACGTGCGTGGAGTGGCTCCGCAGATACCTGGAGAACGGGAAGGAGACGCTGCAGCGCACGGACGCCCCCAAAACGCATATGACTCACCACGCTGTCTCTGACCATGAAGCCACCCTGAGGTGCTGGGCCCTGAGCTTCTACCCTGCGGAGATCACACTGACCTGGCAGCGGGATGGGGAGGACCAGACCCAGGACACGGAGCTCGTGGAGACCAGGCCTGCAGGGGATGGAACCTTCCAGAAGTGGGCGGCTGTGGTGGTGCCTTCTGGACAGGAGCAGAGATACACCTGCCATGTGCAGCATGAGGGTTTGCCCAAGCCCCTCACCCTGAGATGGGAGCCGTCTTCCCAGCCCACCATCCCCATCGTGGGCATCATTGCTGGCCTGGTTCTCTTTGGAGCTGTGATCACTGGAGCTGTGGTCGCTGCTGTGATGTGGAGGAGGAAGAGCTCAGATAGAAAAGGAGGGAGCTACTCTCAGGCTGCAAGCAGTGACAGTGCCCAGGGCTCTGATGTGTCTCTCACAGCTTGTAAAGTGTGA",
+    "codon_start": 1,
+    "genomic": "CAGAAGCAGAGGGGTCAGGGCGAAGTCCCAGGGCCCCAGGCGTGGCTCTCAGGGTCTCAGGCCCCGAAGGCGGTGTATGGATTGGGGAGTCCCAGCCTTGGGGATTCCCCAACTCCGCAGTTTCTTTTCTCCCTCTCCCAACCTATGTAGGGTCCTTCTTCCTGGATACTCACGACGCGGACCCAGTTCTCACTCCCATTGGGTGTCGGGTTTCCAGAGAAGCCAATCAGTGTCGTCGCGGTCGCGGTTCTAAAGTCCGCACGCACCCACCGGGACTCAGATTCTCCCCAGACGCCGAGGATGGCCGTCATGGCGCCCCGAACCCTCGTCCTGCTACTCTCGGGGGCTCTGGCCCTGACCCAGACCTGGGCGGGTGAGTGCGGGGTCGGGAGGGAAACGGCCTCTGTGGGGAGAAGCAACGGGCCCGCCTGGCGGGGGCGCAGGACCCGGGAAGCCGCGCCGGGAGGAGGGTCGGGCGGGTCTCAGCCACTCCTCGTCCCCAGGCTCTCACTCCATGAGGTATTTCTTCACATCCGTGTCCCGGCCCGGCCGCGGGGAGCCCCGCTTCATCGCAGTGGGCTACGTGGACGACACGCAGTTCGTGCGGTTCGACAGCGACGCCGCGAGCCAGAGGATGGAGCCGCGGGCGCCGTGGATAGAGCAGGAGGGTCCGGAGTATTGGGACGGGGAGACACGGAAAGTGAAGGCCCACTCACAGACTCACCGAGTGGACCTGGGGACCCTGCGCGGCTACTACAACCAGAGCGAGGCCGGTGAGTGACCCCGGCCCGGGGCGCAGGTCACGACCTCTCATCCCCCACGGACGGGCCAGGTCGCCCACAGTCTCCGGGTCCGAGATCCGCCCCGAAGCCGCGGGACCCCGAGACCCTTGCCCCGGGAGAGGCCCAGGCGCCTTTACCCGGTTTCATTTTCAGTTTAGGCCAAAAATCCCCCCAGGTTGGTCGGGGCGGGGCGGGGCTCGGGGGACCGGGCTGACCGCGGGGTCCGGGCCAGGTTCTCACACCGTCCAGAGGATGTATGGCTGCGACGTGGGGTCGGACTGGCGCTTCCTCCGCGGGTACCACCAGTACGCCTACGACGGCAAGGATTACATCGCCCTGAAAGAGGACCTGCGCTCTTGGACCGCGGCGGACATGGCAGCTCAGACCACCAAGCACAAGTGGGAGGCGGCCCATGTGGCGGAGCAGTTGAGAGCCTACCTGGAGGGCACGTGCGTGGAGTGGCTCCGCAGATACCTGGAGAACGGGAAGGAGACGCTGCAGCGCACGGGTACCAGGGGCCACGGGGCGCCTCCCTGATCGCCTGTAGATCTCCCGGGCTGGCCTCCCACAAGGAGGGGAGACAATTGGGACCAACACTAGAATATCGCCCTCCCTCTGGTCCTGAGGGAGAGGAATCCTCCTGGGTTTCCAGATCCTGTACCAGAGAGTGACTCTGAGGTTCCGCCCTGCTCTCTGACACAATTAAGGGATAAAATCTCTGAAGGAATGACGGGAAGACGATCCCTCGAATACTGATGAGTGGTTCCCTTTGACACACACAGGCAGCAGCCTTGGGCCCGTGACTTTTCCTCTCAGGCCTTGTTCTCTGCTTCACACTCAATGTGTGTGGGGGTCTGAGTCCAGCACTTCTGAGTCCTTCAGCCTCCACTCAGGTCAGGACCAGAAGTCGCTGTTCCCTCTTCAGGGACTAGAATTTTCCACGGAATAGGAGATTATCCCAGGTGCCTGTGTCCAGGCTGGTGTCTGGGTTCTGTGCTCCCTTCCCCATCCCAGGTGTCCTGTCCATTCTCAAGATAGCCACATGTGTGCTGGAGGAGTGTCCCATGACAGATGCAAAATGCCTGAATGATCTGACTCTTCCTGACAGACGCCCCCAAAACGCATATGACTCACCACGCTGTCTCTGACCATGAAGCCACCCTGAGGTGCTGGGCCCTGAGCTTCTACCCTGCGGAGATCACACTGACCTGGCAGCGGGATGGGGAGGACCAGACCCAGGACACGGAGCTCGTGGAGACCAGGCCTGCAGGGGATGGAACCTTCCAGAAGTGGGCGGCTGTGGTGGTGCCTTCTGGACAGGAGCAGAGATACACCTGCCATGTGCAGCATGAGGGTTTGCCCAAGCCCCTCACCCTGAGATGGGGTAAGGAGGGAGACGGGGGTGTCATGTCTTTTAGGGAAAGCAGGAGCCTCTCTGACCTTTAGCAGGGTCAGGGCCCCTCACCTTCCCCTCTTTTCCCAGAGCCGTCTTCCCAGCCCACCATCCCCATCGTGGGCATCATTGCTGGCCTGGTTCTCTTTGGAGCTGTGATCACTGGAGCTGTGGTCGCTGCTGTGATGTGGAGGAGGAAGAGCTCAGGTGGGGAAGGGGTGAAGGGTGGGTCTGAGATTTCTTGTCTCACTGAGGGTTCCAAGACCCAGGTAGAAGTGTGCCCTGCCTCGTTACTGGGAAGCACCACCCACAATTATGGGCCTACCCAGCCTGGGCCCTGTGTGCCAGCACTTACTCTTTTGTAAAGCACCTGTTAAAATGAAGGACAGATTTATCACCTTGATTACAGCGGTGATGGGACCTGATCCCAGCAGTCACAAGTCACAGGGGAAGGTCCCTGAGGACCTTCAGGAGGGCGGTTGGTCCAGGACCCACACCTGCTTTCTTCATGTTTCCTGATCCCGCCCTGGGTCTGCAGTCACACATTTCTGGAAACTTCTCTGAGGTCCAAGACTTGGAGGTTCCTCTAGGACCTTAAGGCCCTGACTCCTTTCTGGTATCTCACAGGACATTTTCTTCCCACAGATAGAAAAGGAGGGAGCTACTCTCAGGCTGCAAGTAAGTATGAAGGAGGCTGATGCCTGAGGTCCTTGGGATATTGTGTTTGGGAGCCCATGGGGGAGCTCACCCACCCCACAATTCCTCCTCTAGCCACATCTTCTGTGGGATCTGACCAGGTTCTGTTTTTGTTCTACCCCAGGCAGTGACAGTGCCCAGGGCTCTGATGTGTCTCTCACAGCTTGTAAAGGTGAGAGCCTGGAGGGCCTGATGTGTGTTGGGTGTTGGGCGGAACAGTGGACACAGCTGTGCTATGGGGTTTCTTTCCATTGGATGTATTGAGCATGCGATGGGCTGTTTAAAGTGTGACCCCTCACTGTGACAGATACGAATTTGTTCATGAATATTTTTTTCTATAGTGTGAGACAGCTGCCTTGTGTGGGACTGAGAGGCAAGAGTTGTTCCTGCCCTTCCCTTTGTGACTTGAAGAACCCTGACTTTGTTTCTGCAAAGGCACCTGCATGTGTCTGTGTTCGTGTAGGCATAATGTGAGGAGGTGGGGAGACCACCCCACCCCCATGTCCACCATGACCCTCTTCCCACGCTGACCTGTGCTCCCTCCCCAATCATCTTTCCTGTTCCAGAGAGGTGGGGCTGAGGTGTCTCCATCTCTGTCTCAACTTCATGGTGCACTGAGCTGTAACTTCTTCCTTCCCTATTAAAA",
+    "protein": "MAVMAPRTLVLLLSGALALTQTWAGSHSMRYFFTSVSRPGRGEPRFIAVGYVDDTQFVRFDSDAASQRMEPRAPWIEQEGPEYWDGETRKVKAHSQTHRVDLGTLRGYYNQSEAGSHTVQRMYGCDVGSDWRFLRGYHQYAYDGKDYIALKEDLRSWTAADMAAQTTKHKWEAAHVAEQLRAYLEGTCVEWLRRYLENGKETLQRTDAPKTHMTHHAVSDHEATLRCWALSFYPAEITLTWQRDGEDQTQDTELVETRPAGDGTFQKWAAVVVPSGQEQRYTCHVQHEGLPKPLTLRWEPSSQPTIPIVGIIAGLVLFGAVITGAVVAAVMWRRKSSDRKGGSYSQAASSDSAQGSDVSLTACKV"
+  },
+  "sequence_status": {
+    "end": 1098,
+    "full": true,
+    "start": 1,
+    "type": "gDNA"
+  },
+  "sequence_version": 5,
+  "status": "Public",
+  "wmda": {
+    "G_group": {
+      "gid": "HGG00002",
+      "name": "A*02:01:01G"
+    },
+    "P_group": {
+      "name": "A*02:01P",
+      "pid": "HPG00016"
+    },
+    "rel_dna_ser": {
+      "hats_assigned": {
+        "associated": "A0201",
+        "broad": "A2",
+        "split": null
+      },
+      "hats_assignment": "A0201",
+      "hats_qualifier": "FULL",
+      "pre2026_unambiguous": "A2",
+      "pre2026_who_assigned": {
+        "associated": null,
+        "broad": "A2",
+        "split": null
+      },
+      "unambiguous": "A0201",
+      "who_assigned": {
+        "associated": "A0201",
+        "broad": "A2",
+        "split": null
+      }
+    }
+  }
+}

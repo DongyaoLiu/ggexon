@@ -1,0 +1,20 @@
+##gff-version 3
+##sequence-region HLA00005 1 3517
+HLA00005	IPD	gene	301	3217	.	+	.	ID=HLA_A0201;gene_id=HLA_A0201;gene_name=HLA-A
+HLA00005	IPD	mRNA	301	3217	.	+	.	ID=HLA_A0201_tx;Parent=HLA_A0201;transcript_id=HLA_A0201_tx;gene_id=HLA_A0201;gene_name=HLA-A
+HLA00005	IPD	exon	301	373	.	+	.	ID=HLA_A0201_tx.exon.1;Parent=HLA_A0201_tx;transcript_id=HLA_A0201_tx;exon_number=1;gene_id=HLA_A0201;gene_name=HLA-A
+HLA00005	IPD	CDS	301	373	.	+	0	ID=HLA_A0201_tx.CDS.1;Parent=HLA_A0201_tx;transcript_id=HLA_A0201_tx;exon_number=1;gene_id=HLA_A0201;gene_name=HLA-A
+HLA00005	IPD	exon	504	773	.	+	.	ID=HLA_A0201_tx.exon.2;Parent=HLA_A0201_tx;transcript_id=HLA_A0201_tx;exon_number=2;gene_id=HLA_A0201;gene_name=HLA-A
+HLA00005	IPD	CDS	504	773	.	+	2	ID=HLA_A0201_tx.CDS.2;Parent=HLA_A0201_tx;transcript_id=HLA_A0201_tx;exon_number=2;gene_id=HLA_A0201;gene_name=HLA-A
+HLA00005	IPD	exon	1015	1290	.	+	.	ID=HLA_A0201_tx.exon.3;Parent=HLA_A0201_tx;transcript_id=HLA_A0201_tx;exon_number=3;gene_id=HLA_A0201;gene_name=HLA-A
+HLA00005	IPD	CDS	1015	1290	.	+	2	ID=HLA_A0201_tx.CDS.3;Parent=HLA_A0201_tx;transcript_id=HLA_A0201_tx;exon_number=3;gene_id=HLA_A0201;gene_name=HLA-A
+HLA00005	IPD	exon	1891	2166	.	+	.	ID=HLA_A0201_tx.exon.4;Parent=HLA_A0201_tx;transcript_id=HLA_A0201_tx;exon_number=4;gene_id=HLA_A0201;gene_name=HLA-A
+HLA00005	IPD	CDS	1891	2166	.	+	2	ID=HLA_A0201_tx.CDS.4;Parent=HLA_A0201_tx;transcript_id=HLA_A0201_tx;exon_number=4;gene_id=HLA_A0201;gene_name=HLA-A
+HLA00005	IPD	exon	2266	2382	.	+	.	ID=HLA_A0201_tx.exon.5;Parent=HLA_A0201_tx;transcript_id=HLA_A0201_tx;exon_number=5;gene_id=HLA_A0201;gene_name=HLA-A
+HLA00005	IPD	CDS	2266	2382	.	+	2	ID=HLA_A0201_tx.CDS.5;Parent=HLA_A0201_tx;transcript_id=HLA_A0201_tx;exon_number=5;gene_id=HLA_A0201;gene_name=HLA-A
+HLA00005	IPD	exon	2821	2853	.	+	.	ID=HLA_A0201_tx.exon.6;Parent=HLA_A0201_tx;transcript_id=HLA_A0201_tx;exon_number=6;gene_id=HLA_A0201;gene_name=HLA-A
+HLA00005	IPD	CDS	2821	2853	.	+	2	ID=HLA_A0201_tx.CDS.6;Parent=HLA_A0201_tx;transcript_id=HLA_A0201_tx;exon_number=6;gene_id=HLA_A0201;gene_name=HLA-A
+HLA00005	IPD	exon	2996	3043	.	+	.	ID=HLA_A0201_tx.exon.7;Parent=HLA_A0201_tx;transcript_id=HLA_A0201_tx;exon_number=7;gene_id=HLA_A0201;gene_name=HLA-A
+HLA00005	IPD	CDS	2996	3043	.	+	2	ID=HLA_A0201_tx.CDS.7;Parent=HLA_A0201_tx;transcript_id=HLA_A0201_tx;exon_number=7;gene_id=HLA_A0201;gene_name=HLA-A
+HLA00005	IPD	exon	3213	3217	.	+	.	ID=HLA_A0201_tx.exon.8;Parent=HLA_A0201_tx;transcript_id=HLA_A0201_tx;exon_number=8;gene_id=HLA_A0201;gene_name=HLA-A
+HLA00005	IPD	CDS	3213	3217	.	+	2	ID=HLA_A0201_tx.CDS.8;Parent=HLA_A0201_tx;transcript_id=HLA_A0201_tx;exon_number=8;gene_id=HLA_A0201;gene_name=HLA-A
