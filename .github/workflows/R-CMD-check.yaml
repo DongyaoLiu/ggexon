@@ -44,6 +44,22 @@ jobs:
             path <- system2("kpsewhich", font, stdout = TRUE)
             stopifnot(length(path) == 1L, file.exists(path))
           }
+      - name: Verify Windows PDF indexing
+        if: runner.os == 'Windows'
+        shell: Rscript {0}
+        run: |
+          print(Sys.which(c("pdflatex", "makeindex", "texi2dvi", "texify")))
+          dir <- tempfile("pdf-index-check-")
+          dir.create(dir)
+          setwd(dir)
+          writeLines(c(
+            "\\documentclass{article}", "\\usepackage{makeidx}",
+            "\\makeindex", "\\begin{document}",
+            "Index smoke test\\index{smoke test}.",
+            "\\printindex", "\\end{document}"
+          ), "index-check.tex")
+          tools::texi2pdf("index-check.tex", clean = FALSE, quiet = FALSE)
+          stopifnot(file.exists("index-check.ind"))
       - uses: r-lib/actions/check-r-package@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590
         with:
           args: 'c("--as-cran")'
