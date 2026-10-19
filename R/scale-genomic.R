@@ -9,6 +9,10 @@
 #' This scale is intended for exon-structure layers such as [geom_exon()] and
 #' [geom_exon2()]. It builds one transform per panel from the union of exon-like
 #' intervals, so multiple transcripts in the same panel stay aligned.
+#' Nucleotide links drawn with [geom_nuclink()] are automatically subdivided
+#' at source-panel scale boundaries and transformed with the same maps. Supply
+#' their original genomic coordinates; no manual link-coordinate conversion is
+#' needed. Explicit panel windows are also mapped to compressed display limits.
 #'
 #' Use [guide_x_ggexon_piecewise()] in `guide` when the axis should display
 #' representative exon and intron scale bars instead of ordinary genomic ticks.
@@ -574,6 +578,12 @@ transform_ggexon_genomic_x_layer <- function(layer_data, transforms) {
   if (!is.data.frame(layer_data) || !"PANEL" %in% names(layer_data)) {
     return(layer_data)
   }
+  # Link vertices live in a middle panel, but their x coordinates belong to
+  # two different annotation panels. Use those source maps, not the middle map.
+  if (all(c("source_panel", "x_variable", "t_panel", "q_panel", "draw_order") %in%
+          names(layer_data))) {
+    return(transform_ggexon_genomic_x_links(layer_data, transforms))
+  }
 
   x_columns <- intersect(c("x", "xmin", "xmax", "xend", "xintercept"), names(layer_data))
   if (length(x_columns) == 0L) {
@@ -597,6 +607,89 @@ transform_ggexon_genomic_x_layer <- function(layer_data, transforms) {
   }
 
   layer_data
+}
+
+# Split interval ribbons at every change of slope in either source map. Cutting
+# in the parent alignment's fractional coordinate keeps the two ends paired,
+# including reverse-strand links and exon/intron boundaries that do not agree.
+transform_ggexon_genomic_x_links <- function(data, transforms) {
+  active <- vapply(transforms, function(tr) any(tr$slope != 1), logical(1))
+  if (!any(active) || nrow(data) == 0L) return(data)
+
+  genomic_x <- data$genomic_x %||% data$x
+  groups <- split(seq_len(nrow(data)), data$group, drop = TRUE)
+  output <- list()
+  next_group <- 0L
+
+  boundary_fractions <- function(start, end, tr) {
+    if (is.null(tr) || nrow(tr) < 2L || !is.finite(end - start) || end == start) {
+      return(numeric())
+    }
+    changes <- c(FALSE, diff(tr$slope) != 0)
+    fractions <- (tr$genomic_start[changes] - start) / (end - start)
+    fractions[is.finite(fractions) & fractions > 0 & fractions < 1]
+  }
+  map <- function(x, tr) {
+    if (is.null(tr)) x else ggexon_genomic_to_plot_x(x, tr)
+  }
+
+  for (index in groups) {
+    one <- data[index, , drop = FALSE]
+    vars <- as.character(one$x_variable)
+    corners <- match(c("tstart", "tend", "qstart", "qend"), vars)
+    target <- transforms[[as.character(as.integer(one$t_panel[[1L]]))]]
+    query <- transforms[[as.character(as.integer(one$q_panel[[1L]]))]]
+    raw <- genomic_x[index]
+
+    # Retain incomplete/degenerate polygons, still mapping each valid vertex
+    # through its own source panel. Ordinary complete ribbons use the path below.
+    if (length(index) != 4L || anyNA(corners) || any(!is.finite(raw))) {
+      next_group <- next_group + 1L
+      one$parent_group <- one$group
+      one$group <- next_group
+      one$genomic_x <- raw
+      for (panel in unique(as.integer(one$source_panel))) {
+        hit <- as.integer(one$source_panel) == panel
+        one$x[hit] <- map(raw[hit], transforms[[as.character(panel)]])
+      }
+      output[[length(output) + 1L]] <- one
+      next
+    }
+
+    ts <- raw[corners[1L]]; te <- raw[corners[2L]]
+    qs <- raw[corners[3L]]; qe <- raw[corners[4L]]
+    reverse <- identical(as.character(one$strand[[1L]]), "-")
+    q_from <- if (reverse) qe else qs
+    q_to <- if (reverse) qs else qe
+    fractions <- sort(unique(c(0, 1,
+      boundary_fractions(ts, te, target),
+      boundary_fractions(q_from, q_to, query))))
+
+    for (i in seq_len(length(fractions) - 1L)) {
+      f0 <- fractions[[i]]; f1 <- fractions[[i + 1L]]
+      # Suppress numerical slivers when the two maps share a boundary.
+      if (f1 - f0 <= 1e-12) next
+      t_edge <- ts + c(f0, f1) * (te - ts)
+      q_edge <- q_from + c(f0, f1) * (q_to - q_from)
+      values <- c(tstart = t_edge[1L], tend = t_edge[2L],
+                  qstart = if (reverse) q_edge[2L] else q_edge[1L],
+                  qend = if (reverse) q_edge[1L] else q_edge[2L])
+      piece <- one
+      piece$genomic_x <- unname(values[vars])
+      piece$x <- piece$genomic_x
+      is_target <- vars %in% c("tstart", "tend")
+      piece$x[is_target] <- map(piece$genomic_x[is_target], target)
+      piece$x[!is_target] <- map(piece$genomic_x[!is_target], query)
+      piece$parent_group <- one$group
+      piece$link_piece <- i
+      next_group <- next_group + 1L
+      piece$group <- next_group
+      output[[length(output) + 1L]] <- piece
+    }
+  }
+  out <- dplyr::bind_rows(output)
+  rownames(out) <- NULL
+  out
 }
 
 ggexon_genomic_to_plot_x <- function(x, transform) {

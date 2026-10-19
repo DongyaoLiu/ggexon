@@ -1,0 +1,33 @@
+{
+  "windows": [
+    {
+      "species": "human",
+      "assembly": "GRCh38.p14",
+      "chr": "chr10",
+      "start": 102869470,
+      "end": 102901899,
+      "url": "https://rest.ensembl.org/sequence/region/homo_sapiens/10:102869470..102901899:1?content-type=text/plain",
+      "sequence_sha256": "60997f91d75d6a9563b05f888c0d880ea887549be77caf428c616bd42d421c03"
+    },
+    {
+      "species": "chimp",
+      "assembly": "Pan_tro_3.0",
+      "chr": "chr10",
+      "start": 104324156,
+      "end": 104356197,
+      "url": "https://rest.ensembl.org/sequence/region/pan_troglodytes/10:104324156..104356197:1?content-type=text/plain",
+      "sequence_sha256": "87ed79088be42732efab68602375ed669d57bdf0ce0206f9955e3455616457ff"
+    }
+  ],
+  "command": [
+    "lastz",
+    "human.fa",
+    "chimp.fa",
+    "--strand=both",
+    "--chain",
+    "--format=paf:minimap2",
+    "--output=human_chimp.paf"
+  ],
+  "lastz_version": "lastz (version 1.04.52 released 20250402)\n  score=int, sequence=31-bit, alloc=32-bit, allowBackToBackGaps=OFF\n  built with gcc-4.2.1 \"Apple LLVM 17.0.0 (clang-1700.3.19.1)\"",
+  "paf_sha256": "75687a5f4c389c8d8bb90d6bed5a407fc3e268a578c0d94dfc4f3f7bbcb9f7ba"
+}

@@ -1,0 +1,27 @@
+##gff-version 3
+chr10	handoff	mRNA	102869470	102901899	.	+	.	ID=human_full;gene_id=AS3MT;gene_name=AS3MT;transcript_id=human_full;transcript_name=human_full
+chr10	handoff	UTR	102869470	102869592	.	+	.	Parent=human_full;gene_id=AS3MT;gene_name=AS3MT;transcript_id=human_full;transcript_name=human_full;exon_number=1
+chr10	handoff	CDS	102869593	102869593	.	+	.	Parent=human_full;gene_id=AS3MT;gene_name=AS3MT;transcript_id=human_full;transcript_name=human_full;exon_number=1
+chr10	handoff	CDS	102869805	102869845	.	+	.	Parent=human_full;gene_id=AS3MT;gene_name=AS3MT;transcript_id=human_full;transcript_name=human_full;exon_number=2
+chr10	handoff	CDS	102870084	102870211	.	+	.	Parent=human_full;gene_id=AS3MT;gene_name=AS3MT;transcript_id=human_full;transcript_name=human_full;exon_number=3
+chr10	handoff	CDS	102872448	102872598	.	+	.	Parent=human_full;gene_id=AS3MT;gene_name=AS3MT;transcript_id=human_full;transcript_name=human_full;exon_number=4
+chr10	handoff	CDS	102873097	102873233	.	+	.	Parent=human_full;gene_id=AS3MT;gene_name=AS3MT;transcript_id=human_full;transcript_name=human_full;exon_number=5
+chr10	handoff	CDS	102874592	102874661	.	+	.	Parent=human_full;gene_id=AS3MT;gene_name=AS3MT;transcript_id=human_full;transcript_name=human_full;exon_number=6
+chr10	handoff	CDS	102876954	102877035	.	+	.	Parent=human_full;gene_id=AS3MT;gene_name=AS3MT;transcript_id=human_full;transcript_name=human_full;exon_number=7
+chr10	handoff	CDS	102878379	102878510	.	+	.	Parent=human_full;gene_id=AS3MT;gene_name=AS3MT;transcript_id=human_full;transcript_name=human_full;exon_number=8
+chr10	handoff	CDS	102878849	102878991	.	+	.	Parent=human_full;gene_id=AS3MT;gene_name=AS3MT;transcript_id=human_full;transcript_name=human_full;exon_number=9
+chr10	handoff	CDS	102890544	102890678	.	+	.	Parent=human_full;gene_id=AS3MT;gene_name=AS3MT;transcript_id=human_full;transcript_name=human_full;exon_number=10
+chr10	handoff	CDS	102900593	102900700	.	+	.	Parent=human_full;gene_id=AS3MT;gene_name=AS3MT;transcript_id=human_full;transcript_name=human_full;exon_number=11
+chr10	handoff	UTR	102900701	102901899	.	+	.	Parent=human_full;gene_id=AS3MT;gene_name=AS3MT;transcript_id=human_full;transcript_name=human_full;exon_number=11
+chr10	handoff	mRNA	102869470	102901899	.	+	.	ID=human_short;gene_id=AS3MT;gene_name=AS3MT;transcript_id=human_short;transcript_name=human_short
+chr10	handoff	UTR	102869470	102869593	.	+	.	Parent=human_short;gene_id=AS3MT;gene_name=AS3MT;transcript_id=human_short;transcript_name=human_short;exon_number=1
+chr10	handoff	UTR	102872448	102872583	.	+	.	Parent=human_short;gene_id=AS3MT;gene_name=AS3MT;transcript_id=human_short;transcript_name=human_short;exon_number=4
+chr10	handoff	CDS	102872584	102872598	.	+	.	Parent=human_short;gene_id=AS3MT;gene_name=AS3MT;transcript_id=human_short;transcript_name=human_short;exon_number=4
+chr10	handoff	CDS	102873097	102873233	.	+	.	Parent=human_short;gene_id=AS3MT;gene_name=AS3MT;transcript_id=human_short;transcript_name=human_short;exon_number=5
+chr10	handoff	CDS	102874592	102874661	.	+	.	Parent=human_short;gene_id=AS3MT;gene_name=AS3MT;transcript_id=human_short;transcript_name=human_short;exon_number=6
+chr10	handoff	CDS	102876954	102877035	.	+	.	Parent=human_short;gene_id=AS3MT;gene_name=AS3MT;transcript_id=human_short;transcript_name=human_short;exon_number=7
+chr10	handoff	CDS	102878379	102878510	.	+	.	Parent=human_short;gene_id=AS3MT;gene_name=AS3MT;transcript_id=human_short;transcript_name=human_short;exon_number=8
+chr10	handoff	CDS	102878849	102878991	.	+	.	Parent=human_short;gene_id=AS3MT;gene_name=AS3MT;transcript_id=human_short;transcript_name=human_short;exon_number=9
+chr10	handoff	CDS	102890544	102890678	.	+	.	Parent=human_short;gene_id=AS3MT;gene_name=AS3MT;transcript_id=human_short;transcript_name=human_short;exon_number=10
+chr10	handoff	CDS	102900593	102900700	.	+	.	Parent=human_short;gene_id=AS3MT;gene_name=AS3MT;transcript_id=human_short;transcript_name=human_short;exon_number=11
+chr10	handoff	UTR	102900701	102901899	.	+	.	Parent=human_short;gene_id=AS3MT;gene_name=AS3MT;transcript_id=human_short;transcript_name=human_short;exon_number=11

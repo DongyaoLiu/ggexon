@@ -1,0 +1,15 @@
+##gff-version 3
+chr10	handoff	mRNA	104324156	104356197	.	+	.	ID=chimp;gene_id=AS3MT;gene_name=AS3MT;transcript_id=chimp;transcript_name=chimp
+chr10	handoff	UTR	104324156	104324233	.	+	.	Parent=chimp;gene_id=AS3MT;gene_name=AS3MT;transcript_id=chimp;transcript_name=chimp;exon_number=1
+chr10	handoff	CDS	104324234	104324234	.	+	.	Parent=chimp;gene_id=AS3MT;gene_name=AS3MT;transcript_id=chimp;transcript_name=chimp;exon_number=1
+chr10	handoff	CDS	104324447	104324487	.	+	.	Parent=chimp;gene_id=AS3MT;gene_name=AS3MT;transcript_id=chimp;transcript_name=chimp;exon_number=2
+chr10	handoff	CDS	104324726	104324853	.	+	.	Parent=chimp;gene_id=AS3MT;gene_name=AS3MT;transcript_id=chimp;transcript_name=chimp;exon_number=3
+chr10	handoff	CDS	104327055	104327205	.	+	.	Parent=chimp;gene_id=AS3MT;gene_name=AS3MT;transcript_id=chimp;transcript_name=chimp;exon_number=4
+chr10	handoff	CDS	104327704	104327840	.	+	.	Parent=chimp;gene_id=AS3MT;gene_name=AS3MT;transcript_id=chimp;transcript_name=chimp;exon_number=5
+chr10	handoff	CDS	104329200	104329269	.	+	.	Parent=chimp;gene_id=AS3MT;gene_name=AS3MT;transcript_id=chimp;transcript_name=chimp;exon_number=6
+chr10	handoff	CDS	104331561	104331642	.	+	.	Parent=chimp;gene_id=AS3MT;gene_name=AS3MT;transcript_id=chimp;transcript_name=chimp;exon_number=7
+chr10	handoff	CDS	104332978	104333109	.	+	.	Parent=chimp;gene_id=AS3MT;gene_name=AS3MT;transcript_id=chimp;transcript_name=chimp;exon_number=8
+chr10	handoff	CDS	104333448	104333590	.	+	.	Parent=chimp;gene_id=AS3MT;gene_name=AS3MT;transcript_id=chimp;transcript_name=chimp;exon_number=9
+chr10	handoff	CDS	104344864	104344998	.	+	.	Parent=chimp;gene_id=AS3MT;gene_name=AS3MT;transcript_id=chimp;transcript_name=chimp;exon_number=10
+chr10	handoff	CDS	104354886	104354993	.	+	.	Parent=chimp;gene_id=AS3MT;gene_name=AS3MT;transcript_id=chimp;transcript_name=chimp;exon_number=11
+chr10	handoff	UTR	104354994	104356197	.	+	.	Parent=chimp;gene_id=AS3MT;gene_name=AS3MT;transcript_id=chimp;transcript_name=chimp;exon_number=11

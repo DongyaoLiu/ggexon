@@ -1,0 +1,1213 @@
+{
+  "title": "Human AS3MTd2d3: exon skipping and neural phenotypes",
+  "prepared_date": "2026-10-18",
+  "annotation_release": 116,
+  "coordinate_conventions": {
+    "JSON": "1-based inclusive genomic coordinates unless explicitly named otherwise",
+    "BED": "0-based half-open; thick interval includes terminal stop codon",
+    "exon_numbers": "Numbers of the full-length reference; do not renumber retained d2d3 exons"
+  },
+  "reference_validation": {
+    "retrieval_date": "2026-10-18",
+    "coordinate_convention": "All start_1based/end_1based pairs are 1-based inclusive. BED intervals are 0-based half-open. Exons numbered by full-length reference transcript.",
+    "human": {
+      "assembly": "GRCh38",
+      "chromosome": "10",
+      "strand": "+",
+      "gene_id": "ENSG00000214435.11",
+      "gene_bounds_1based": [
+        102869296,
+        102901911
+      ],
+      "refseq_transcript": "NM_020682.4",
+      "ensembl_transcript": "ENST00000369880.8",
+      "refseq_protein": "NP_065733.2",
+      "ensembl_protein": "ENSP00000358896.3",
+      "transcript_bounds_1based": [
+        102869470,
+        102901899
+      ],
+      "exons": [
+        {
+          "exon": 1,
+          "chromosome": "10",
+          "strand": "+",
+          "start_1based": 102869470,
+          "end_1based": 102869593,
+          "start_bed0": 102869469,
+          "end_bed0": 102869593,
+          "length_nt": 124,
+          "cdna_start_1based": 1,
+          "cdna_end_1based": 124,
+          "ensembl_exon_id": "ENSE00003851131"
+        },
+        {
+          "exon": 2,
+          "chromosome": "10",
+          "strand": "+",
+          "start_1based": 102869805,
+          "end_1based": 102869845,
+          "start_bed0": 102869804,
+          "end_bed0": 102869845,
+          "length_nt": 41,
+          "cdna_start_1based": 125,
+          "cdna_end_1based": 165,
+          "ensembl_exon_id": "ENSE00003683637"
+        },
+        {
+          "exon": 3,
+          "chromosome": "10",
+          "strand": "+",
+          "start_1based": 102870084,
+          "end_1based": 102870211,
+          "start_bed0": 102870083,
+          "end_bed0": 102870211,
+          "length_nt": 128,
+          "cdna_start_1based": 166,
+          "cdna_end_1based": 293,
+          "ensembl_exon_id": "ENSE00003643519"
+        },
+        {
+          "exon": 4,
+          "chromosome": "10",
+          "strand": "+",
+          "start_1based": 102872448,
+          "end_1based": 102872598,
+          "start_bed0": 102872447,
+          "end_bed0": 102872598,
+          "length_nt": 151,
+          "cdna_start_1based": 294,
+          "cdna_end_1based": 444,
+          "ensembl_exon_id": "ENSE00003661944"
+        },
+        {
+          "exon": 5,
+          "chromosome": "10",
+          "strand": "+",
+          "start_1based": 102873097,
+          "end_1based": 102873233,
+          "start_bed0": 102873096,
+          "end_bed0": 102873233,
+          "length_nt": 137,
+          "cdna_start_1based": 445,
+          "cdna_end_1based": 581,
+          "ensembl_exon_id": "ENSE00003587396"
+        },
+        {
+          "exon": 6,
+          "chromosome": "10",
+          "strand": "+",
+          "start_1based": 102874592,
+          "end_1based": 102874661,
+          "start_bed0": 102874591,
+          "end_bed0": 102874661,
+          "length_nt": 70,
+          "cdna_start_1based": 582,
+          "cdna_end_1based": 651,
+          "ensembl_exon_id": "ENSE00003529361"
+        },
+        {
+          "exon": 7,
+          "chromosome": "10",
+          "strand": "+",
+          "start_1based": 102876954,
+          "end_1based": 102877035,
+          "start_bed0": 102876953,
+          "end_bed0": 102877035,
+          "length_nt": 82,
+          "cdna_start_1based": 652,
+          "cdna_end_1based": 733,
+          "ensembl_exon_id": "ENSE00003576807"
+        },
+        {
+          "exon": 8,
+          "chromosome": "10",
+          "strand": "+",
+          "start_1based": 102878379,
+          "end_1based": 102878510,
+          "start_bed0": 102878378,
+          "end_bed0": 102878510,
+          "length_nt": 132,
+          "cdna_start_1based": 734,
+          "cdna_end_1based": 865,
+          "ensembl_exon_id": "ENSE00003680896"
+        },
+        {
+          "exon": 9,
+          "chromosome": "10",
+          "strand": "+",
+          "start_1based": 102878849,
+          "end_1based": 102878991,
+          "start_bed0": 102878848,
+          "end_bed0": 102878991,
+          "length_nt": 143,
+          "cdna_start_1based": 866,
+          "cdna_end_1based": 1008,
+          "ensembl_exon_id": "ENSE00003506800"
+        },
+        {
+          "exon": 10,
+          "chromosome": "10",
+          "strand": "+",
+          "start_1based": 102890544,
+          "end_1based": 102890678,
+          "start_bed0": 102890543,
+          "end_bed0": 102890678,
+          "length_nt": 135,
+          "cdna_start_1based": 1009,
+          "cdna_end_1based": 1143,
+          "ensembl_exon_id": "ENSE00003551016"
+        },
+        {
+          "exon": 11,
+          "chromosome": "10",
+          "strand": "+",
+          "start_1based": 102900593,
+          "end_1based": 102901899,
+          "start_bed0": 102900592,
+          "end_bed0": 102901899,
+          "length_nt": 1307,
+          "cdna_start_1based": 1144,
+          "cdna_end_1based": 2450,
+          "ensembl_exon_id": "ENSE00003649607"
+        }
+      ],
+      "full_cDNA_length_nt": 2450,
+      "full_CDS_cDNA_1based_including_stop": [
+        124,
+        1251
+      ],
+      "full_protein_length_aa": 375,
+      "full_CDS_first_genomic_base": 102869593,
+      "last_amino_acid_coding_genomic_base": 102900697,
+      "stop_codon_genomic_1based": [
+        102900698,
+        102900700
+      ],
+      "stop_codon": "TAA",
+      "CDS_genomic_segments_1based_including_stop": [
+        [
+          102869593,
+          102869593
+        ],
+        [
+          102869805,
+          102869845
+        ],
+        [
+          102870084,
+          102870211
+        ],
+        [
+          102872448,
+          102872598
+        ],
+        [
+          102873097,
+          102873233
+        ],
+        [
+          102874592,
+          102874661
+        ],
+        [
+          102876954,
+          102877035
+        ],
+        [
+          102878379,
+          102878510
+        ],
+        [
+          102878849,
+          102878991
+        ],
+        [
+          102890544,
+          102890678
+        ],
+        [
+          102900593,
+          102900700
+        ]
+      ]
+    },
+    "checks": {
+      "ensembl_release_endpoint": {
+        "releases": [
+          116
+        ]
+      },
+      "RefSeq_exon_genomic_coordinates_equal_Ensembl": true,
+      "genomic_exon_concatenation_equals_RefSeq_cDNA": true,
+      "Ensembl_cDNA_equals_RefSeq_cDNA": true,
+      "Ensembl_CDS_equals_RefSeq_CDS_including_stop": true,
+      "Ensembl_CDS_length_nt": 1128,
+      "RefSeq_protein_equals_translation": true,
+      "d2d3_translation_equals_full_protein_from_aa103": true,
+      "all_current_Ensembl_transcripts_examined": 10,
+      "matching_E1_E4_transcript_ids": [],
+      "direct_NC_000010_11_stop_codon_bases": "TAA",
+      "direct_NC_000010_11_last_amino_acid_codon": {
+        "coordinates_1based": [
+          102900695,
+          102900697
+        ],
+        "sequence": "TGC",
+        "translation": "C"
+      },
+      "Ensembl_Translation_end_interpretation": "102900700 is final nucleotide of stop codon in this lookup result; independently verified against RefSeq CDS and genomic sequence."
+    },
+    "paper_defined_d2d3_reconstruction": {
+      "status": "Derived model on current reference: retain canonical E1,E4-E11 and canonical transcript ends; not a stable transcript accession; paper-specific ends not independently established here.",
+      "exons_retained": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "removed_exon_lengths_nt": [
+        41,
+        128
+      ],
+      "removed_total_nt": 169,
+      "reconstructed_cDNA_length_nt": 2281,
+      "CDS_cDNA_1based_including_stop": [
+        261,
+        1082
+      ],
+      "translation_start_genomic_1based": [
+        102872584,
+        102872586
+      ],
+      "translation_start_sequence": "ATG",
+      "protein_length_aa": 273,
+      "lost_N_terminal_residues": 102,
+      "protein_start": "MTKGQVEVAEKYLDYHMEKY",
+      "original_initiation_ATG": "A at final base E1, TG at first two bases E2; original start destroyed by E2/E3 skipping.",
+      "5prime_junction_context": "AGTCGCAGGCCGAGGAGACA|ATATTATGGCTGTGGTCTGG",
+      "GRCh38_gap_first_last_base_1based": [
+        102869594,
+        102872447
+      ],
+      "GRCh37_gap_first_last_base_1based": [
+        104629351,
+        104632204
+      ],
+      "gap_length_nt": 2854,
+      "publication_Table4_reported_length_2853_note": "The reported length2853 is end-start; inclusive intervening nucleotide count is2854.",
+      "CDS_genomic_segments_1based_including_stop": [
+        [
+          102872584,
+          102872598
+        ],
+        [
+          102873097,
+          102873233
+        ],
+        [
+          102874592,
+          102874661
+        ],
+        [
+          102876954,
+          102877035
+        ],
+        [
+          102878379,
+          102878510
+        ],
+        [
+          102878849,
+          102878991
+        ],
+        [
+          102890544,
+          102890678
+        ],
+        [
+          102900593,
+          102900700
+        ]
+      ],
+      "stop_codon_genomic_1based": [
+        102900698,
+        102900700
+      ],
+      "start_codon_note": "Assigned downstream initiation site for the paper-described protein; not the first ATG in the reconstructed RNA (upstream ATGs at cDNA130 and211)."
+    },
+    "chimpanzee": {
+      "assembly": "Pan_tro_3.0",
+      "chromosome": "10",
+      "strand": "+",
+      "gene_id": "ENSPTRG00000033989.3",
+      "transcript_id": "ENSPTRT00000007262.6",
+      "protein_id": "ENSPTRP00000006699.6",
+      "protein_length_aa": 375,
+      "exons": [
+        {
+          "exon": 1,
+          "start_1based": 104324156,
+          "end_1based": 104324234,
+          "ensembl_exon_id": "ENSPTRE00000456519"
+        },
+        {
+          "exon": 2,
+          "start_1based": 104324447,
+          "end_1based": 104324487,
+          "ensembl_exon_id": "ENSPTRE00000390733"
+        },
+        {
+          "exon": 3,
+          "start_1based": 104324726,
+          "end_1based": 104324853,
+          "ensembl_exon_id": "ENSPTRE00000375723"
+        },
+        {
+          "exon": 4,
+          "start_1based": 104327055,
+          "end_1based": 104327205,
+          "ensembl_exon_id": "ENSPTRE00000386081"
+        },
+        {
+          "exon": 5,
+          "start_1based": 104327704,
+          "end_1based": 104327840,
+          "ensembl_exon_id": "ENSPTRE00000390158"
+        },
+        {
+          "exon": 6,
+          "start_1based": 104329200,
+          "end_1based": 104329269,
+          "ensembl_exon_id": "ENSPTRE00000394129"
+        },
+        {
+          "exon": 7,
+          "start_1based": 104331561,
+          "end_1based": 104331642,
+          "ensembl_exon_id": "ENSPTRE00000395594"
+        },
+        {
+          "exon": 8,
+          "start_1based": 104332978,
+          "end_1based": 104333109,
+          "ensembl_exon_id": "ENSPTRE00000387121"
+        },
+        {
+          "exon": 9,
+          "start_1based": 104333448,
+          "end_1based": 104333590,
+          "ensembl_exon_id": "ENSPTRE00000384871"
+        },
+        {
+          "exon": 10,
+          "start_1based": 104344864,
+          "end_1based": 104344998,
+          "ensembl_exon_id": "ENSPTRE00000395105"
+        },
+        {
+          "exon": 11,
+          "start_1based": 104354886,
+          "end_1based": 104356197,
+          "ensembl_exon_id": "ENSPTRE00000386715"
+        }
+      ],
+      "caveat": "Current Ensembl model on Pan_tro_3.0; annotation absence does not demonstrate biological absence of low-level skipped transcript. Genomic coordinates cannot share the human axis without alignment."
+    },
+    "sources": {
+      "human_ensembl": "https://rest.ensembl.org/lookup/id/ENSG00000214435?expand=1&content-type=application/json",
+      "human_transcript_Ensembl": "https://www.ensembl.org/Homo_sapiens/Transcript/Summary?t=ENST00000369880",
+      "human_RefSeq": "https://www.ncbi.nlm.nih.gov/nuccore/NM_020682.4",
+      "chimp_ensembl": "https://rest.ensembl.org/lookup/symbol/pan_troglodytes/AS3MT?expand=1&content-type=application/json",
+      "GRCh37_ensembl": "https://grch37.rest.ensembl.org/lookup/id/ENST00000369880?expand=1&content-type=application/json"
+    }
+  },
+  "transcript_models": [
+    {
+      "model_id": "human_AS3MT_full_ENST00000369880.8",
+      "assembly": "GRCh38",
+      "chromosome": "chr10",
+      "strand": "+",
+      "status": "Direct Ensembl and matching RefSeq reference annotation",
+      "transcript_bounds_1based": [
+        102869470,
+        102901899
+      ],
+      "coding_start_1based": 102869593,
+      "coding_stop_end_1based": 102900700,
+      "exons": [
+        {
+          "exon_number_in_full_reference": 1,
+          "start_1based": 102869470,
+          "end_1based": 102869593,
+          "exon_id": "ENSE00003851131.1",
+          "length_nt": 124,
+          "cds_including_stop_1based": [
+            102869593,
+            102869593
+          ]
+        },
+        {
+          "exon_number_in_full_reference": 2,
+          "start_1based": 102869805,
+          "end_1based": 102869845,
+          "exon_id": "ENSE00003683637.1",
+          "length_nt": 41,
+          "cds_including_stop_1based": [
+            102869805,
+            102869845
+          ]
+        },
+        {
+          "exon_number_in_full_reference": 3,
+          "start_1based": 102870084,
+          "end_1based": 102870211,
+          "exon_id": "ENSE00003643519.1",
+          "length_nt": 128,
+          "cds_including_stop_1based": [
+            102870084,
+            102870211
+          ]
+        },
+        {
+          "exon_number_in_full_reference": 4,
+          "start_1based": 102872448,
+          "end_1based": 102872598,
+          "exon_id": "ENSE00003661944.1",
+          "length_nt": 151,
+          "cds_including_stop_1based": [
+            102872448,
+            102872598
+          ]
+        },
+        {
+          "exon_number_in_full_reference": 5,
+          "start_1based": 102873097,
+          "end_1based": 102873233,
+          "exon_id": "ENSE00003587396.1",
+          "length_nt": 137,
+          "cds_including_stop_1based": [
+            102873097,
+            102873233
+          ]
+        },
+        {
+          "exon_number_in_full_reference": 6,
+          "start_1based": 102874592,
+          "end_1based": 102874661,
+          "exon_id": "ENSE00003529361.1",
+          "length_nt": 70,
+          "cds_including_stop_1based": [
+            102874592,
+            102874661
+          ]
+        },
+        {
+          "exon_number_in_full_reference": 7,
+          "start_1based": 102876954,
+          "end_1based": 102877035,
+          "exon_id": "ENSE00003576807.1",
+          "length_nt": 82,
+          "cds_including_stop_1based": [
+            102876954,
+            102877035
+          ]
+        },
+        {
+          "exon_number_in_full_reference": 8,
+          "start_1based": 102878379,
+          "end_1based": 102878510,
+          "exon_id": "ENSE00003680896.1",
+          "length_nt": 132,
+          "cds_including_stop_1based": [
+            102878379,
+            102878510
+          ]
+        },
+        {
+          "exon_number_in_full_reference": 9,
+          "start_1based": 102878849,
+          "end_1based": 102878991,
+          "exon_id": "ENSE00003506800.1",
+          "length_nt": 143,
+          "cds_including_stop_1based": [
+            102878849,
+            102878991
+          ]
+        },
+        {
+          "exon_number_in_full_reference": 10,
+          "start_1based": 102890544,
+          "end_1based": 102890678,
+          "exon_id": "ENSE00003551016.1",
+          "length_nt": 135,
+          "cds_including_stop_1based": [
+            102890544,
+            102890678
+          ]
+        },
+        {
+          "exon_number_in_full_reference": 11,
+          "start_1based": 102900593,
+          "end_1based": 102901899,
+          "exon_id": "ENSE00003649607.1",
+          "length_nt": 1307,
+          "cds_including_stop_1based": [
+            102900593,
+            102900700
+          ]
+        }
+      ]
+    },
+    {
+      "model_id": "human_AS3MTd2d3_paper_defined_reconstruction",
+      "assembly": "GRCh38",
+      "chromosome": "chr10",
+      "strand": "+",
+      "status": "Paper-defined E2/E3 skipping and assigned ORF, reconstructed using current canonical transcript ends; no stable accession assigned",
+      "transcript_bounds_1based": [
+        102869470,
+        102901899
+      ],
+      "coding_start_1based": 102872584,
+      "coding_stop_end_1based": 102900700,
+      "exons": [
+        {
+          "exon_number_in_full_reference": 1,
+          "start_1based": 102869470,
+          "end_1based": 102869593,
+          "exon_id": "ENSE00003851131.1",
+          "length_nt": 124,
+          "cds_including_stop_1based": null
+        },
+        {
+          "exon_number_in_full_reference": 4,
+          "start_1based": 102872448,
+          "end_1based": 102872598,
+          "exon_id": "ENSE00003661944.1",
+          "length_nt": 151,
+          "cds_including_stop_1based": [
+            102872584,
+            102872598
+          ]
+        },
+        {
+          "exon_number_in_full_reference": 5,
+          "start_1based": 102873097,
+          "end_1based": 102873233,
+          "exon_id": "ENSE00003587396.1",
+          "length_nt": 137,
+          "cds_including_stop_1based": [
+            102873097,
+            102873233
+          ]
+        },
+        {
+          "exon_number_in_full_reference": 6,
+          "start_1based": 102874592,
+          "end_1based": 102874661,
+          "exon_id": "ENSE00003529361.1",
+          "length_nt": 70,
+          "cds_including_stop_1based": [
+            102874592,
+            102874661
+          ]
+        },
+        {
+          "exon_number_in_full_reference": 7,
+          "start_1based": 102876954,
+          "end_1based": 102877035,
+          "exon_id": "ENSE00003576807.1",
+          "length_nt": 82,
+          "cds_including_stop_1based": [
+            102876954,
+            102877035
+          ]
+        },
+        {
+          "exon_number_in_full_reference": 8,
+          "start_1based": 102878379,
+          "end_1based": 102878510,
+          "exon_id": "ENSE00003680896.1",
+          "length_nt": 132,
+          "cds_including_stop_1based": [
+            102878379,
+            102878510
+          ]
+        },
+        {
+          "exon_number_in_full_reference": 9,
+          "start_1based": 102878849,
+          "end_1based": 102878991,
+          "exon_id": "ENSE00003506800.1",
+          "length_nt": 143,
+          "cds_including_stop_1based": [
+            102878849,
+            102878991
+          ]
+        },
+        {
+          "exon_number_in_full_reference": 10,
+          "start_1based": 102890544,
+          "end_1based": 102890678,
+          "exon_id": "ENSE00003551016.1",
+          "length_nt": 135,
+          "cds_including_stop_1based": [
+            102890544,
+            102890678
+          ]
+        },
+        {
+          "exon_number_in_full_reference": 11,
+          "start_1based": 102900593,
+          "end_1based": 102901899,
+          "exon_id": "ENSE00003649607.1",
+          "length_nt": 1307,
+          "cds_including_stop_1based": [
+            102900593,
+            102900700
+          ]
+        }
+      ]
+    },
+    {
+      "model_id": "chimp_AS3MT_full_ENSPTRT00000007262.6",
+      "assembly": "Pan_tro_3.0",
+      "chromosome": "chr10",
+      "strand": "+",
+      "status": "Direct selected Ensembl reference annotation; not a measured expression track",
+      "transcript_bounds_1based": [
+        104324156,
+        104356197
+      ],
+      "coding_start_1based": 104324234,
+      "coding_stop_end_1based": 104354993,
+      "exons": [
+        {
+          "exon_number_in_full_reference": 1,
+          "start_1based": 104324156,
+          "end_1based": 104324234,
+          "exon_id": "ENSPTRE00000456519.1",
+          "length_nt": 79,
+          "cds_including_stop_1based": [
+            104324234,
+            104324234
+          ]
+        },
+        {
+          "exon_number_in_full_reference": 2,
+          "start_1based": 104324447,
+          "end_1based": 104324487,
+          "exon_id": "ENSPTRE00000390733.1",
+          "length_nt": 41,
+          "cds_including_stop_1based": [
+            104324447,
+            104324487
+          ]
+        },
+        {
+          "exon_number_in_full_reference": 3,
+          "start_1based": 104324726,
+          "end_1based": 104324853,
+          "exon_id": "ENSPTRE00000375723.1",
+          "length_nt": 128,
+          "cds_including_stop_1based": [
+            104324726,
+            104324853
+          ]
+        },
+        {
+          "exon_number_in_full_reference": 4,
+          "start_1based": 104327055,
+          "end_1based": 104327205,
+          "exon_id": "ENSPTRE00000386081.1",
+          "length_nt": 151,
+          "cds_including_stop_1based": [
+            104327055,
+            104327205
+          ]
+        },
+        {
+          "exon_number_in_full_reference": 5,
+          "start_1based": 104327704,
+          "end_1based": 104327840,
+          "exon_id": "ENSPTRE00000390158.1",
+          "length_nt": 137,
+          "cds_including_stop_1based": [
+            104327704,
+            104327840
+          ]
+        },
+        {
+          "exon_number_in_full_reference": 6,
+          "start_1based": 104329200,
+          "end_1based": 104329269,
+          "exon_id": "ENSPTRE00000394129.2",
+          "length_nt": 70,
+          "cds_including_stop_1based": [
+            104329200,
+            104329269
+          ]
+        },
+        {
+          "exon_number_in_full_reference": 7,
+          "start_1based": 104331561,
+          "end_1based": 104331642,
+          "exon_id": "ENSPTRE00000395594.1",
+          "length_nt": 82,
+          "cds_including_stop_1based": [
+            104331561,
+            104331642
+          ]
+        },
+        {
+          "exon_number_in_full_reference": 8,
+          "start_1based": 104332978,
+          "end_1based": 104333109,
+          "exon_id": "ENSPTRE00000387121.1",
+          "length_nt": 132,
+          "cds_including_stop_1based": [
+            104332978,
+            104333109
+          ]
+        },
+        {
+          "exon_number_in_full_reference": 9,
+          "start_1based": 104333448,
+          "end_1based": 104333590,
+          "exon_id": "ENSPTRE00000384871.1",
+          "length_nt": 143,
+          "cds_including_stop_1based": [
+            104333448,
+            104333590
+          ]
+        },
+        {
+          "exon_number_in_full_reference": 10,
+          "start_1based": 104344864,
+          "end_1based": 104344998,
+          "exon_id": "ENSPTRE00000395105.1",
+          "length_nt": 135,
+          "cds_including_stop_1based": [
+            104344864,
+            104344998
+          ]
+        },
+        {
+          "exon_number_in_full_reference": 11,
+          "start_1based": 104354886,
+          "end_1based": 104356197,
+          "exon_id": "ENSPTRE00000386715.2",
+          "length_nt": 1312,
+          "cds_including_stop_1based": [
+            104354886,
+            104354993
+          ]
+        }
+      ]
+    }
+  ],
+  "species_evidence": {
+    "human": "E1-E4 junction detected in human DLPFC in Li2016",
+    "chimpanzee": "E1-E4 not detected in the examined pooled-tissue RNA-seq, which included brain; full E2-E3 detected",
+    "limitations": "Different tissues and coverage; not a matched quantitative human-chimp experiment; no universal absence claim for all apes or all tissues"
+  },
+  "genomic_VNTR": {
+    "motif": "CCTGAGTCGCAGGCCGAGGAGACAGTGAGTGCGCGC",
+    "motif_length_bp": 36,
+    "reference_motif_matches_GRCh38_1based": [
+      [
+        102869498,
+        102869533
+      ],
+      [
+        102869534,
+        102869569
+      ],
+      [
+        102869570,
+        102869605
+      ]
+    ],
+    "reference_match_count": 3,
+    "derivation": "Exact motif search in NC_000010.11; motif shown in Li2016 Supplementary Figure3a",
+    "last_match_donor_split": {
+      "exonic_1based": [
+        102869570,
+        102869593
+      ],
+      "intronic_1based": [
+        102869594,
+        102869605
+      ]
+    },
+    "note": "Selected reference sequence only. Published human alleles have 2, 3, or 4 repeats. The final repeat spans the E1 splice donor; show that overlap when drawing the genomic array."
+  },
+  "human_organoid_fate": {
+    "source": "Kim2025 Supplementary Figure S8B-C; Table S5",
+    "system": "H9/WA09 human forebrain organoids; control versus human AS3MTd2d3 construct",
+    "electroporation_day": 50,
+    "interval_to_fixation": null,
+    "sample_unit_note": "The paper gives 7 control and 11 overexpression values but does not explicitly define their unit. Label these reported sample values; they are not established as independent donors or organoids.",
+    "plot": "Individual reported values with mean +/- SEM; separate marker panels on a 0-100 percent scale.",
+    "endpoints": [
+      {
+        "source_sheet": "Figure S8B",
+        "endpoint": "SOX2+ cells among GFP+ cells",
+        "unit": "percent",
+        "control": {
+          "values": [
+            55.55556,
+            38.54167,
+            41.1215,
+            53.08642,
+            56.52174,
+            51.35135,
+            51.66667
+          ],
+          "n_reported_values": 7,
+          "mean": 49.69213,
+          "sem": 2.6591480230186146
+        },
+        "AS3MTd2d3_overexpression": {
+          "values": [
+            46.42857,
+            31.64557,
+            34.95146,
+            35.61644,
+            30.0,
+            46.39175,
+            40.74074,
+            33.33333,
+            39.02439,
+            35.57047,
+            39.65517
+          ],
+          "n_reported_values": 11,
+          "mean": 37.57799,
+          "sem": 1.6454842386328383
+        },
+        "reported_p_value": 0.0008,
+        "reported_test": "two-sided unpaired t test",
+        "source_cells": {
+          "control": "A34:A40",
+          "overexpression": "B34:B44"
+        }
+      },
+      {
+        "source_sheet": "Figure S8C",
+        "endpoint": "TUJ1+ cells among GFP+ cells",
+        "unit": "percent",
+        "control": {
+          "values": [
+            34.78261,
+            45.94595,
+            43.33333,
+            49.23077,
+            52.17391,
+            46.57534,
+            44.24779
+          ],
+          "n_reported_values": 7,
+          "mean": 45.184242857142856,
+          "sem": 2.0715876484068865
+        },
+        "AS3MTd2d3_overexpression": {
+          "values": [
+            55.17241,
+            64.10256,
+            68.49315,
+            79.16667,
+            59.45946,
+            47.31183,
+            50.25126,
+            60.6383,
+            50.58824,
+            62.66667,
+            63.26531
+          ],
+          "n_reported_values": 11,
+          "mean": 60.10144181818182,
+          "sem": 2.767670614280279
+        },
+        "reported_p_value": 0.0014,
+        "reported_test": "two-sided unpaired t test",
+        "source_cells": {
+          "control": "A34:A40",
+          "overexpression": "B34:B44"
+        }
+      }
+    ]
+  },
+  "human_organoid_spindle_optional": {
+    "source": "Kim2025 Figure5F, TableS4",
+    "system": "H9/WA09-derived AS3MTd2d3-inducible clone 1",
+    "doxycycline_micromolar": 2,
+    "induction_start_day": 20,
+    "measurement_day": 42,
+    "angle_definition": "Cleavage-plane angle relative to the apical ventricular-zone surface",
+    "reported_interaction_p": 0.0004,
+    "reported_test": "two-way ANOVA with Bonferroni comparisons",
+    "sample_unit_note": "8 untreated and 9 induced percentage values; underlying 77 and 83 mitotic cells pooled from more than 5 organoids. Fractions within a sample sum to 100%; do not treat bins as independent replicates.",
+    "endpoints": [
+      {
+        "angle_bin": "0-30 degrees",
+        "unit": "percent",
+        "dox_minus": {
+          "values": [
+            9.09090909,
+            0.0,
+            23.0769231,
+            0.0,
+            12.5,
+            0.0,
+            0.0,
+            18.1818182
+          ],
+          "n_reported_values": 8,
+          "mean": 7.856206298749999,
+          "sem": 3.295716109143093
+        },
+        "dox_plus": {
+          "values": [
+            16.6666667,
+            25.0,
+            28.5714286,
+            44.4444444,
+            14.2857143,
+            10.0,
+            42.8571429,
+            20.0,
+            28.5714286
+          ],
+          "n_reported_values": 9,
+          "mean": 25.599647277777777,
+          "sem": 4.002565748810908
+        },
+        "reported_Bonferroni_comparison": "P < 0.05",
+        "source_cells": {
+          "dox_minus": "B32:I32",
+          "dox_plus": "J32:R32"
+        }
+      },
+      {
+        "angle_bin": "30-60 degrees",
+        "unit": "percent",
+        "dox_minus": {
+          "values": [
+            36.3636364,
+            0.0,
+            23.0769231,
+            33.3333333,
+            12.5,
+            36.3636364,
+            33.3333333,
+            9.09090909
+          ],
+          "n_reported_values": 8,
+          "mean": 23.007721448749997,
+          "sem": 5.006152214990035
+        },
+        "dox_plus": {
+          "values": [
+            33.3333333,
+            25.0,
+            14.2857143,
+            22.2222222,
+            14.2857143,
+            20.0,
+            14.2857143,
+            40.0,
+            28.5714286
+          ],
+          "n_reported_values": 9,
+          "mean": 23.553791888888888,
+          "sem": 3.040192996244557
+        },
+        "reported_Bonferroni_comparison": "not significant",
+        "source_cells": {
+          "dox_minus": "B33:I33",
+          "dox_plus": "J33:R33"
+        }
+      },
+      {
+        "angle_bin": "60-90 degrees",
+        "unit": "percent",
+        "dox_minus": {
+          "values": [
+            54.5454545,
+            100.0,
+            53.8461538,
+            66.6666667,
+            75.0,
+            63.6363636,
+            66.6666667,
+            72.7272727
+          ],
+          "n_reported_values": 8,
+          "mean": 69.13607225,
+          "sem": 5.1564364438957195
+        },
+        "dox_plus": {
+          "values": [
+            50.0,
+            50.0,
+            57.1428571,
+            33.3333333,
+            71.4285714,
+            70.0,
+            42.8571429,
+            40.0,
+            42.8571429
+          ],
+          "n_reported_values": 9,
+          "mean": 50.84656084444445,
+          "sem": 4.383638592692544
+        },
+        "reported_Bonferroni_comparison": "P < 0.05",
+        "source_cells": {
+          "dox_minus": "B34:I34",
+          "dox_plus": "J34:R34"
+        }
+      }
+    ]
+  },
+  "rat_neuron_spines_optional": {
+    "source": "Cai2021 Figure3",
+    "system": "Rat primary hippocampal neurons expressing human AS3MTd2d3 versus empty vector",
+    "transfection_DIV": [
+      14,
+      15
+    ],
+    "fixation_days_after_transfection": 3,
+    "plot": "Published group means only; no invented individual points or error bars",
+    "endpoints": [
+      {
+        "endpoint": "total",
+        "unit": "spines per 10 micrometers",
+        "control_mean": 4.192,
+        "AS3MTd2d3_overexpression_mean": 3.877,
+        "reported_p_value": 0.231,
+        "reported_test": "two-sided t test",
+        "n_control_neurons": 20,
+        "n_overexpression_neurons": 19,
+        "raw_values": null,
+        "error_bars": null
+      },
+      {
+        "endpoint": "mushroom",
+        "unit": "spines per 10 micrometers",
+        "control_mean": 1.278,
+        "AS3MTd2d3_overexpression_mean": 0.852,
+        "reported_p_value": 0.0091,
+        "reported_test": "Bonferroni multiple comparison after two-way ANOVA",
+        "n_control_neurons": 20,
+        "n_overexpression_neurons": 19,
+        "raw_values": null,
+        "error_bars": null
+      },
+      {
+        "endpoint": "thin",
+        "unit": "spines per 10 micrometers",
+        "control_mean": 1.981,
+        "AS3MTd2d3_overexpression_mean": 1.743,
+        "reported_p_value": 0.279,
+        "reported_test": "Bonferroni multiple comparison after two-way ANOVA",
+        "n_control_neurons": 20,
+        "n_overexpression_neurons": 19,
+        "raw_values": null,
+        "error_bars": null
+      },
+      {
+        "endpoint": "stubby",
+        "unit": "spines per 10 micrometers",
+        "control_mean": 0.933,
+        "AS3MTd2d3_overexpression_mean": 1.247,
+        "reported_p_value": 0.0819,
+        "reported_test": "Bonferroni multiple comparison after two-way ANOVA",
+        "n_control_neurons": 20,
+        "n_overexpression_neurons": 19,
+        "raw_values": null,
+        "error_bars": null
+      }
+    ]
+  },
+  "disease_annotation": {
+    "text": "Schizophrenia-associated AS3MTd2d3 expression; higher in affected human DLPFC in Li2016",
+    "reported_schizophrenia_vs_control_p": 0.0079,
+    "reference_panel": "Li2016 Figure3d",
+    "scope": "Association in humans; experimental phenotypes test increased expression. These data do not establish a human-versus-ape disease incidence difference."
+  },
+  "recommended_plot": {
+    "A": "Three reference/model tracks: chimp full, human full, and human d2d3. Emphasize E1-E4 and skipped E2/E3. Use separate assembly axes or an explicitly schematic alignment by corresponding exon number.",
+    "B": "Protein bars aligned to canonical residues 1-375: full residues 1-375; d2d3 assigned protein residues 103-375. Label the missing 102 N-terminal amino acids and lack of arsenite methyltransferase activity.",
+    "C": "Human organoid SOX2 and TUJ1 fractions, original points plus mean and SEM. Keep the experimental model and sample-unit note visible.",
+    "optional": "Add a VNTR feature at the E1 donor, a spindle-angle panel, rat-neuron mushroom-spine means, or human diagnosis-associated expression from the original Figure 3 source workbook.",
+    "design": {
+      "human_full": "#0072B2",
+      "human_d2d3": "#D55E00",
+      "chimp_full": "#64748B",
+      "CDS": "thick boxes",
+      "UTR": "thin boxes",
+      "introns": "thin connectors; if compressed, label explicitly",
+      "important_zoom": "E1-E4 region; the full genomic window spans approximately 32 kb and makes small E2/E3 difficult to distinguish."
+    }
+  },
+  "sources": {
+    "Li2016": {
+      "doi": "10.1038/nm.4096",
+      "url": "https://doi.org/10.1038/nm.4096",
+      "figures": {
+        "2a": "transcript and translation-start architecture",
+        "3d": "human diagnosis-associated expression",
+        "Supplementary Figure 3a": "VNTR sequence",
+        "Supplementary Figure 4": "species comparison",
+        "Supplementary Table 4": "original hg19 junction boundaries",
+        "Supplementary Table 12": "arsenite methylation assay"
+      },
+      "supplement_pdf": "https://media.springernature.com/original/springer-static/esm/art%3A10.1038%2Fnm.4096/MediaObjects/41591_2016_BFnm4096_MOESM43_ESM.pdf",
+      "figure2_source_data": "https://media.springernature.com/original/springer-static/esm/art%3A10.1038%2Fnm.4096/MediaObjects/41591_2016_BFnm4096_MOESM39_ESM.xlsx",
+      "figure3_source_data": "https://media.springernature.com/original/springer-static/esm/art%3A10.1038%2Fnm.4096/MediaObjects/41591_2016_BFnm4096_MOESM40_ESM.xlsx",
+      "dataset1": "https://media.springernature.com/original/springer-static/esm/art%3A10.1038%2Fnm.4096/MediaObjects/41591_2016_BFnm4096_MOESM44_ESM.csv",
+      "dataset1_note": "Human RNA-seq demographic information, BAM paths and expression metrics; exact source workbook contents not reanalyzed in this handoff"
+    },
+    "Cai2021": {
+      "doi": "10.1093/schbul/sbaa098",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7825093/",
+      "figure": "3",
+      "values_source": "Results paragraph, exact published rounded means"
+    },
+    "Kim2025": {
+      "doi": "10.1126/sciadv.adp8271",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11952104/",
+      "supplement_archive": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC11952104/supplementaryFiles",
+      "workbooks": {
+        "S4": "adp8271_table_s4.xlsx",
+        "S5": "adp8271_table_s5.xlsx"
+      },
+      "sequencing_accession": "GSE274763",
+      "proteomics_accessions": [
+        "PXD057242",
+        "JPST003437"
+      ]
+    },
+    "annotations": {
+      "human_ensembl": "https://rest.ensembl.org/lookup/id/ENSG00000214435?expand=1&content-type=application/json",
+      "human_transcript_Ensembl": "https://www.ensembl.org/Homo_sapiens/Transcript/Summary?t=ENST00000369880",
+      "human_RefSeq": "https://www.ncbi.nlm.nih.gov/nuccore/NM_020682.4",
+      "chimp_ensembl": "https://rest.ensembl.org/lookup/symbol/pan_troglodytes/AS3MT?expand=1&content-type=application/json",
+      "GRCh37_ensembl": "https://grch37.rest.ensembl.org/lookup/id/ENST00000369880?expand=1&content-type=application/json"
+    },
+    "human_genomic_sequence": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000010.11?from=102869470&to=102901899",
+    "NHPRTR": {
+      "url": "https://nhprtr.org/phase1.html",
+      "related_bioproject": "PRJNA197258",
+      "note": "Related pooled-tissue source resource; exact run used in Li2016 chimp track was not independently identified"
+    }
+  }
+}

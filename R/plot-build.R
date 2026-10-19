@@ -85,10 +85,18 @@ apply_panel_xlim_to_trained_scales <- function(layout) {
     if (is.na(scale_id) || scale_id < 1L || scale_id > length(panel_scales_x)) {
       next
     }
-    panel_scales_x[[scale_id]]$range$range <- c(
+    limits <- c(
       as.numeric(layout_df$xlim_min[[i]]),
       as.numeric(layout_df$xlim_max[[i]])
     )
+    # After piecewise scaling, train against the displayed window while keeping
+    # the original genomic limits in the layout for filtering and provenance.
+    if (!is.null(layout$genomic_x_transforms) && "PANEL" %in% names(layout_df)) {
+      panel_id <- as.character(as.integer(layout_df$PANEL[[i]]))
+      transform <- layout$genomic_x_transforms[[panel_id]]
+      if (!is.null(transform)) limits <- ggexon_genomic_to_plot_x(limits, transform)
+    }
+    panel_scales_x[[scale_id]]$range$range <- limits
   }
 
   layout$panel_scales_x <- panel_scales_x

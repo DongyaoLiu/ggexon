@@ -60,6 +60,10 @@ genomic coordinates.
 This scale is intended for exon-structure layers such as \code{\link[=geom_exon]{geom_exon()}} and
 \code{\link[=geom_exon2]{geom_exon2()}}. It builds one transform per panel from the union of exon-like
 intervals, so multiple transcripts in the same panel stay aligned.
+Nucleotide links drawn with \code{\link[=geom_nuclink]{geom_nuclink()}} are automatically subdivided
+at source-panel scale boundaries and transformed with the same maps. Supply
+their original genomic coordinates; no manual link-coordinate conversion is
+needed. Explicit panel windows are also mapped to compressed display limits.
 
 Use \code{\link[=guide_x_ggexon_piecewise]{guide_x_ggexon_piecewise()}} in \code{guide} when the axis should display
 representative exon and intron scale bars instead of ordinary genomic ticks.

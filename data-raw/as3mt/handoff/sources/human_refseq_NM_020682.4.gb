@@ -1,0 +1,305 @@
+LOCUS       NM_020682               2450 bp    mRNA    linear   PRI 04-AUG-2025
+DEFINITION  Homo sapiens arsenite methyltransferase (AS3MT), mRNA.
+ACCESSION   NM_020682
+VERSION     NM_020682.4
+KEYWORDS    RefSeq; MANE Select.
+SOURCE      Homo sapiens (human)
+  ORGANISM  Homo sapiens
+            Eukaryota; Metazoa; Chordata; Craniata; Vertebrata; Euteleostomi;
+            Mammalia; Eutheria; Euarchontoglires; Primates; Haplorrhini;
+            Catarrhini; Hominidae; Homo.
+REFERENCE   1  (bases 1 to 2450)
+  AUTHORS   Zhang,M., Xu,H., Lou,Q., Zhang,Z., Zhang,X., Yin,F., Lv,M.,
+            Zhang,Y., Yin,Y., Gao,Y., Liu,X. and Yang,Y.
+  TITLE     Association between arsenic (+3 oxidation state) methyltransferase
+            gene polymorphisms and arsenic methylation capacity in rural
+            residents of northern China: a cross-sectional study
+  JOURNAL   Arch Toxicol 97 (11), 2919-2928 (2023)
+   PUBMED   37658865
+  REMARK    GeneRIF: Association between arsenic (+3 oxidation state)
+            methyltransferase gene polymorphisms and arsenic methylation
+            capacity in rural residents of northern China: a cross-sectional
+            study.
+REFERENCE   2  (bases 1 to 2450)
+  AUTHORS   Qiu,T., Wu,C., Yao,X., Han,Q., Wang,N., Yuan,W., Zhang,J., Shi,Y.,
+            Jiang,L., Liu,X., Yang,G. and Sun,X.
+  TITLE     AS3MT facilitates NLRP3 inflammasome activation by m6A modification
+            during arsenic-induced hepatic insulin resistance
+  JOURNAL   Cell Biol Toxicol 39 (5), 2165-2181 (2023)
+   PUBMED   35226250
+  REMARK    GeneRIF: AS3MT facilitates NLRP3 inflammasome activation by m[6]A
+            modification during arsenic-induced hepatic insulin resistance.
+REFERENCE   3  (bases 1 to 2450)
+  AUTHORS   Wen,W., Zha,S., Cheng,H., Qi,J., Chen,Q. and Gu,Y.
+  TITLE     As3MT is related to relative RNAs and base modifications of p53 in
+            workers exposed to arsenic
+  JOURNAL   Environ Sci Pollut Res Int 30 (22), 62094-62103 (2023)
+   PUBMED   36940027
+  REMARK    GeneRIF: As3MT is related to relative RNAs and base modifications
+            of p53 in workers exposed to arsenic.
+REFERENCE   4  (bases 1 to 2450)
+  AUTHORS   Liang,X., Guo,G., Wang,Y., Wang,M., Chen,X., Zhang,J., Li,S.,
+            Liu,L., Huang,Q., Cui,B., Zhang,M., Sun,G., Tang,N., Zhang,X. and
+            Zhang,Q.
+  TITLE     Arsenic metabolism, N6AMT1 and AS3MT single nucleotide
+            polymorphisms, and their interaction on gestational diabetes
+            mellitus in Chinese pregnant women
+  JOURNAL   Environ Res 221, 115331 (2023)
+   PUBMED   36681142
+  REMARK    GeneRIF: Arsenic metabolism, N6AMT1 and AS3MT single nucleotide
+            polymorphisms, and their interaction on gestational diabetes
+            mellitus in Chinese pregnant women.
+REFERENCE   5  (bases 1 to 2450)
+  AUTHORS   Washer,S.J., Flynn,R., Oguro-Ando,A., Hannon,E., Burrage,J.,
+            Jeffries,A., Mill,J. and Dempster,E.L.
+  TITLE     Functional characterization of the schizophrenia associated gene
+            AS3MT identifies a role in neuronal development
+  JOURNAL   Am J Med Genet B Neuropsychiatr Genet 189 (5), 151-162 (2022)
+   PUBMED   35719055
+  REMARK    GeneRIF: Functional characterization of the schizophrenia
+            associated gene AS3MT identifies a role in neuronal development.
+REFERENCE   6  (bases 1 to 2450)
+  AUTHORS   Wood,T.C., Salavagionne,O.E., Mukherjee,B., Wang,L., Klumpp,A.F.,
+            Thomae,B.A., Eckloff,B.W., Schaid,D.J., Wieben,E.D. and
+            Weinshilboum,R.M.
+  TITLE     Human arsenic methyltransferase (AS3MT) pharmacogenetics: gene
+            resequencing and functional genomics studies
+  JOURNAL   J Biol Chem 281 (11), 7364-7373 (2006)
+   PUBMED   16407288
+  REMARK    GeneRIF: inherited variation in AS3MT may contribute to variation
+            in arsenic metabolism
+REFERENCE   7  (bases 1 to 2450)
+  AUTHORS   Grupe,A., Li,Y., Rowland,C., Nowotny,P., Hinrichs,A.L., Smemo,S.,
+            Kauwe,J.S., Maxwell,T.J., Cherny,S., Doil,L., Tacey,K., van
+            Luchene,R., Myers,A., Wavrant-De Vrieze,F., Kaleem,M.,
+            Hollingworth,P., Jehu,L., Foy,C., Archer,N., Hamilton,G.,
+            Holmans,P., Morris,C.M., Catanese,J., Sninsky,J., White,T.J.,
+            Powell,J., Hardy,J., O'Donovan,M., Lovestone,S., Jones,L.,
+            Morris,J.C., Thal,L., Owen,M., Williams,J. and Goate,A.
+  TITLE     A scan of chromosome 10 identifies a novel locus showing strong
+            association with late-onset Alzheimer disease
+  JOURNAL   Am J Hum Genet 78 (1), 78-88 (2006)
+   PUBMED   16385451
+  REMARK    GeneRIF: Observational study of gene-disease association. (HuGE
+            Navigator)
+REFERENCE   8  (bases 1 to 2450)
+  AUTHORS   Meza,M.M., Yu,L., Rodriguez,Y.Y., Guild,M., Thompson,D.,
+            Gandolfi,A.J. and Klimecki,W.T.
+  TITLE     Developmentally restricted genetic determinants of human arsenic
+            metabolism: association between urinary methylated arsenic and
+            CYT19 polymorphisms in children
+  JOURNAL   Environ Health Perspect 113 (6), 775-781 (2005)
+   PUBMED   15929903
+  REMARK    GeneRIF: a strong genetic association between polymorphisms of
+            CYT19 and D:M ratio (urinary dimethylarsenic(V) to
+            monomethylarsenic(V))in drinking water exposed Mexican children,
+            not adults.
+            GeneRIF: Observational study of gene-disease association and
+            pharmacogenomic / toxicogenomic. (HuGE Navigator)
+REFERENCE   9  (bases 1 to 2450)
+  AUTHORS   Li,J., Waters,S.B., Drobna,Z., Devesa,V., Styblo,M. and Thomas,D.J.
+  TITLE     Arsenic (+3 oxidation state) methyltransferase and the inorganic
+            arsenic methylation phenotype
+  JOURNAL   Toxicol Appl Pharmacol 204 (2), 164-169 (2005)
+   PUBMED   15808521
+  REMARK    GeneRIF: Heterologous expression of rat AS3MT in human urothelial
+            cells...confers capacity to methylate inorganic arsenic and alters
+            its cytotoxicity and that of methylated arsenicals.
+REFERENCE   10 (bases 1 to 2450)
+  AUTHORS   Lin,S., Shi,Q., Nix,F.B., Styblo,M., Beck,M.A., Herbin-Davis,K.M.,
+            Hall,L.L., Simeonsson,J.B. and Thomas,D.J.
+  TITLE     A novel S-adenosyl-L-methionine:arsenic(III) methyltransferase from
+            rat liver cytosol
+  JOURNAL   J Biol Chem 277 (13), 10795-10803 (2002)
+   PUBMED   11790780
+COMMENT     VALIDATED REFSEQ: This record has undergone validation or
+            preliminary review. The reference sequence was derived from
+            DA368970.1, BC119638.2, AL358790.22 and AW139845.1.
+            
+            On Nov 23, 2018 this sequence version replaced NM_020682.3.
+            
+            Summary: AS3MT catalyzes the transfer of a methyl group from
+            S-adenosyl-L-methionine (AdoMet) to trivalent arsenical and may
+            play a role in arsenic metabolism (Lin et al., 2002 [PubMed
+            11790780]).[supplied by OMIM, Mar 2008].
+            
+            Sequence Note: This RefSeq record was created from transcript and
+            genomic sequence data to make the sequence consistent with the
+            reference genome assembly. The genomic coordinates used for the
+            transcript record were based on transcript alignments.
+            
+            Publication Note:  This RefSeq record includes a subset of the
+            publications that are available for this gene. Please see the Gene
+            record to access additional publications.
+            
+            ##Evidence-Data-START##
+            Transcript exon combination :: SRR1803615.53989.1,
+                                           SRR3476690.844720.1 [ECO:0000332]
+            RNAseq introns              :: single sample supports all introns
+                                           SAMEA1965299, SAMEA1968189
+                                           [ECO:0000348]
+            ##Evidence-Data-END##
+            
+            ##RefSeq-Attributes-START##
+            MANE Ensembl match     :: ENST00000369880.8/ ENSP00000358896.3
+            RefSeq Select criteria :: based on single protein-coding transcript
+            ##RefSeq-Attributes-END##
+            COMPLETENESS: full length.
+PRIMARY     REFSEQ_SPAN         PRIMARY_IDENTIFIER PRIMARY_SPAN        COMP
+            1-79                DA368970.1         18-96
+            80-1222             BC119638.2         1-1143
+            1223-2278           AL358790.22        127722-128777
+            2279-2450           AW139845.1         15-186              c
+FEATURES             Location/Qualifiers
+     source          1..2450
+                     /organism="Homo sapiens"
+                     /mol_type="mRNA"
+                     /db_xref="taxon:9606"
+                     /chromosome="10"
+                     /map="10q24.32"
+     gene            1..2450
+                     /gene="AS3MT"
+                     /gene_synonym="CYT19"
+                     /note="arsenite methyltransferase"
+                     /db_xref="GeneID:57412"
+                     /db_xref="HGNC:HGNC:17452"
+                     /db_xref="MIM:611806"
+     exon            1..124
+                     /gene="AS3MT"
+                     /gene_synonym="CYT19"
+                     /inference="alignment:Splign:2.1.0"
+     misc_feature    103..105
+                     /gene="AS3MT"
+                     /gene_synonym="CYT19"
+                     /note="upstream in-frame stop codon"
+     CDS             124..1251
+                     /gene="AS3MT"
+                     /gene_synonym="CYT19"
+                     /EC_number="2.1.1.137"
+                     /note="S-adenosylmethionine:arsenic (III)
+                     methyltransferase; arsenic (+3 oxidation state)
+                     methyltransferase; methylarsonite methyltransferase;
+                     arsenite methyltransferase isoform; methyltransferase
+                     cyt19; S-adenosyl-L-methionine:arsenic(III)
+                     methyltransferase"
+                     /codon_start=1
+                     /product="arsenite methyltransferase"
+                     /protein_id="NP_065733.2"
+                     /db_xref="CCDS:CCDS41567.1"
+                     /db_xref="GeneID:57412"
+                     /db_xref="HGNC:HGNC:17452"
+                     /db_xref="MIM:611806"
+                     /translation="MAALRDAEIQKDVQTYYGQVLKRSADLQTNGCVTTARPVPKHIR
+                     EALQNVHEEVALRYYGCGLVIPEHLENCWILDLGSGSGRDCYVLSQLVGEKGHVTGID
+                     MTKGQVEVAEKYLDYHMEKYGFQASNVTFIHGYIEKLGEAGIKNESHDIVVSNCVINL
+                     VPDKQQVLQEAYRVLKHGGELYFSDVYTSLELPEEIRTHKVLWGECLGGALYWKELAV
+                     LAQKIGFCPPRLVTANLITIQNKELERVIGDCRFVSATFRLFKHSKTGPTKRCQVIYN
+                     GGITGHEKELMFDANFTFKEGEIVEVDEETAAILKNSRFAQDFLIRPIGEKLPTSGGC
+                     SALELKDIITDPFKLAEESDSMKSRCVPDAAGGCCGTKKSC"
+     misc_feature    1126..1128
+                     /gene="AS3MT"
+                     /gene_synonym="CYT19"
+                     /note="Phosphoserine.
+                     /evidence=ECO:0007744|PubMed:24275569; propagated from
+                     UniProtKB/Swiss-Prot (Q9HBK9.3); phosphorylation site"
+     exon            125..165
+                     /gene="AS3MT"
+                     /gene_synonym="CYT19"
+                     /inference="alignment:Splign:2.1.0"
+     exon            166..293
+                     /gene="AS3MT"
+                     /gene_synonym="CYT19"
+                     /inference="alignment:Splign:2.1.0"
+     exon            294..444
+                     /gene="AS3MT"
+                     /gene_synonym="CYT19"
+                     /inference="alignment:Splign:2.1.0"
+     exon            445..581
+                     /gene="AS3MT"
+                     /gene_synonym="CYT19"
+                     /inference="alignment:Splign:2.1.0"
+     exon            582..651
+                     /gene="AS3MT"
+                     /gene_synonym="CYT19"
+                     /inference="alignment:Splign:2.1.0"
+     exon            652..733
+                     /gene="AS3MT"
+                     /gene_synonym="CYT19"
+                     /inference="alignment:Splign:2.1.0"
+     exon            734..865
+                     /gene="AS3MT"
+                     /gene_synonym="CYT19"
+                     /inference="alignment:Splign:2.1.0"
+     exon            866..1008
+                     /gene="AS3MT"
+                     /gene_synonym="CYT19"
+                     /inference="alignment:Splign:2.1.0"
+     exon            1009..1143
+                     /gene="AS3MT"
+                     /gene_synonym="CYT19"
+                     /inference="alignment:Splign:2.1.0"
+     exon            1144..2450
+                     /gene="AS3MT"
+                     /gene_synonym="CYT19"
+                     /inference="alignment:Splign:2.1.0"
+     regulatory      2391..2396
+                     /regulatory_class="polyA_signal_sequence"
+                     /gene="AS3MT"
+                     /gene_synonym="CYT19"
+                     /note="hexamer: AACAAA"
+     regulatory      2434..2439
+                     /regulatory_class="polyA_signal_sequence"
+                     /gene="AS3MT"
+                     /gene_synonym="CYT19"
+                     /note="hexamer: AACAAA"
+     polyA_site      2435
+                     /gene="AS3MT"
+                     /gene_synonym="CYT19"
+     polyA_site      2450
+                     /gene="AS3MT"
+                     /gene_synonym="CYT19"
+                     /note="major polyA site"
+ORIGIN      
+        1 acaggagctg gctgcgggag cccgccgtcc tgagtcgcag gccgaggaga cagtgagtgc
+       61 gcgccctgag tcgcaggccg aggagacagt gagtgcgcgc cctgagtcgc aggccgagga
+      121 gacatggctg cacttcgtga cgctgagata cagaaggacg tgcagaccta ctacgggcag
+      181 gtgctgaaga gatcggcaga cctccagacc aacggctgtg tcaccacagc caggccggtc
+      241 cccaagcaca tccgggaagc cttgcaaaat gtacacgaag aagtagccct aagatattat
+      301 ggctgtggtc tggtgatccc tgagcatcta gaaaactgct ggattttgga tctgggtagt
+      361 ggaagtggca gagattgcta tgtacttagc cagctggttg gtgaaaaagg acacgtgact
+      421 ggaatagaca tgaccaaagg ccaggtggaa gtggctgaaa agtatcttga ctatcacatg
+      481 gaaaaatatg gcttccaggc atctaatgtg acttttattc atggctacat tgagaagttg
+      541 ggagaggctg gaatcaagaa tgagagccat gatattgttg tatcaaactg tgttattaac
+      601 cttgtgcctg ataaacaaca agtgcttcag gaggcatatc gggtgctgaa gcatggtggg
+      661 gagttatatt tcagtgacgt ctatacgagc cttgaactgc cagaagaaat caggacacac
+      721 aaagttttat ggggtgagtg tctgggtggt gctttatact ggaaggaact tgctgtcctt
+      781 gctcaaaaaa ttgggttctg ccctccacgt ttggtcactg ccaatctcat tacaattcaa
+      841 aacaaggaac tggaaagagt tatcggtgac tgtcgttttg tttctgcaac atttcgcctc
+      901 ttcaaacact ctaagacagg accaaccaag agatgccaag ttatttacaa tggaggaatt
+      961 acaggacatg aaaaagaact aatgtttgat gccaatttta catttaagga aggtgaaatt
+     1021 gttgaagtgg atgaagaaac agcagctatc ttgaagaatt caagatttgc tcaagatttt
+     1081 ctgatcagac caattggaga gaagttgcca acatctggag gctgttctgc tttggagtta
+     1141 aaggatataa tcacagatcc atttaagctt gcagaagagt ctgacagtat gaagtccaga
+     1201 tgtgtccctg atgctgctgg aggctgctgt ggcacaaaga aaagctgcta aatctatagc
+     1261 caaccagggg accacagtag tgggcaagag tgatctgcat gttttttaac ctgcttttcc
+     1321 ccatagcaca gaccataaga aacaacaaat ggggccgggc acagtggctc atgcctataa
+     1381 tcccagcact ttgggaggcc gaggcaggca gatcacctga ggtcaggagt ttgataccag
+     1441 cctggccaac atggtgaaat cctgtctcta ccaaaaatac aaaaaaaatt agctgggcat
+     1501 ggtggtgcac acctatagtc tcagctactc gggaggctga ggcaggagaa ttgcttgaac
+     1561 ccaggaagta gaggctgcag tgagtaagca tcacgccact gtactccagc ctgggcaaca
+     1621 gagcaagact ctgtctcaaa agcaaaaaaa aaaaaaaaaa aagaaagaaa gaaaaagaaa
+     1681 acaacaaatg gcagagagcc accatattcc aaatcactga aaaaaataaa tgaattattt
+     1741 ttatttattt atttattttt ttgagatgga gtctcggtct gttgcccagg ctgaagtgca
+     1801 gtggccccat ctcaactcac tgcaagctcc acctcctggg ttcacgccat tctcctgcct
+     1861 cagactccca agtagctggg actacaggca cctaccacca tgcccagcta attttttgta
+     1921 tttttagtag agacggggtt tcaccatgtt agccaggatg gtcttgatct cctgacctcg
+     1981 tgatccgccc gcctcggcct cccaaagtgc tgggattaca agcatgagcc actgcgcccg
+     2041 gccataaatg aattattttt aagaggcatt gattaaagat tcacagcaaa tcactagtta
+     2101 agcagatttt ttttctattt cctacttcaa agttctggtg ccacatagtg gtcagaaatg
+     2161 gaacagagaa gctgtcttaa gccttgttca agaagcagga aaggcatcag aagaagtaac
+     2221 agttggcaga gggtctcagg aaaaacatct tccttctgat cttttgcata gcaccttttg
+     2281 gaattttcat catgtttgct tattaaacaa agctcctact gccatcatac taatcatgca
+     2341 aaaagattgc caaatcatgt ttggtaggag gacttttgag gtagcttttg aacaaatgtt
+     2401 tttttctttt ttcttttttt ttgcaataaa gaaaacaaat taatcataaa
+//
+

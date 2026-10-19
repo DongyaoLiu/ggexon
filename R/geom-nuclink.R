@@ -19,6 +19,19 @@
 #' with [facet_genomics()], which creates the annotation panels and middle link
 #' panels that `geom_nuclink()` needs.
 #'
+#' With [scale_x_ggexon_genomic()], links automatically follow the piecewise
+#' exon/intron scales of their two source annotation panels. A link is divided
+#' at every scale boundary crossed in either panel, and each piece is mapped
+#' independently. Keep input link coordinates genomic; do not pre-compress them.
+#' The built vertex data retain `genomic_x`, `parent_group`, and `link_piece`
+#' for inspecting subdivision without modifying the input alignment table.
+#'
+#' Subdivision uses proportional correspondence between interval endpoints,
+#' reversing the query direction for reverse-strand links. This preserves the
+#' correspondence within equal-length ungapped blocks. Interval-only gapped
+#' links do not supply an internal alignment path; split those into ungapped
+#' blocks first when exact within-block nucleotide correspondence is required.
+#'
 #' @param mapping Set of aesthetic mappings created by [`ggplot2::aes()`].
 #'   `colour`, `fill`, and `alpha` can be mapped in the standard ggplot2 way.
 #' @param data A data frame or a `SynSpecies` object.

@@ -1,4 +1,6 @@
 *
+!as3mt/
+!as3mt/**
 !.gitignore
 !compact_synspecies/
 !compact_synspecies/**

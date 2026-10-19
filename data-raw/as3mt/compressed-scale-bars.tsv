@@ -1,0 +1,5 @@
+PANEL	track	transcripts	axis_group	region_type	genomic_start	genomic_end	plot_start	plot_end	genomic_width	plot_width	label	axis_group_index	axis_group_count
+1	human	human_full	1	exon	102869469.5	102869593.5	102869469.5	102869593.5	124	124	exon 124 bp	1	1
+1	human	human_full	1	intron	102869593.5	102869804.5	102869593.5	102869600.533333	211	7.03333333134651	intron 211 bp /30	1	1
+3	chimp	chimp	3	exon	104324155.5	104324234.5	104324155.5	104324234.5	79	79	exon 79 bp	1	1
+3	chimp	chimp	3	intron	104324234.5	104324446.5	104324234.5	104324241.566667	212	7.06666666269302	intron 212 bp /30	1	1

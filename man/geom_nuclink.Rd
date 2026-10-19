@@ -85,4 +85,17 @@ for the plotted species order and dispatches them to the corresponding
 middle link panels. In practice this layer is intended to be used together
 with \code{\link[=facet_genomics]{facet_genomics()}}, which creates the annotation panels and middle link
 panels that \code{geom_nuclink()} needs.
+
+With \code{\link[=scale_x_ggexon_genomic]{scale_x_ggexon_genomic()}}, links automatically follow the piecewise
+exon/intron scales of their two source annotation panels. A link is divided
+at every scale boundary crossed in either panel, and each piece is mapped
+independently. Keep input link coordinates genomic; do not pre-compress them.
+The built vertex data retain \code{genomic_x}, \code{parent_group}, and \code{link_piece}
+for inspecting subdivision without modifying the input alignment table.
+
+Subdivision uses proportional correspondence between interval endpoints,
+reversing the query direction for reverse-strand links. This preserves the
+correspondence within equal-length ungapped blocks. Interval-only gapped
+links do not supply an internal alignment path; split those into ungapped
+blocks first when exact within-block nucleotide correspondence is required.
 }

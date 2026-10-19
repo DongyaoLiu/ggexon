@@ -29,6 +29,8 @@ navbar:
         href: articles/hox-cluster-expansion-demo.html
       - text: CD44 splice variant alignment
         href: articles/cd44-splice-variants-demo.html
+      - text: AS3MT exon skipping and neural phenotypes
+        href: articles/as3mt-splice-variants-demo.html
       - text: HLA-A protein variant lollipops
         href: articles/hla-a-lollipop-demo.html
       - text: PEEL-1 raw BigWig coverage
@@ -43,6 +45,7 @@ articles:
   - ggexon-workflow
   - hox-cluster-expansion-demo
   - cd44-splice-variants-demo
+  - as3mt-splice-variants-demo
   - hla-a-lollipop-demo
   - bigwig-coverage-demo
   - cox1-yeast-demo
