@@ -96,6 +96,34 @@ database representation, not population frequencies.
 See the [HLA-A protein and gene-model
 tutorial](https://dongyaoliu.github.io/ggexon/articles/hla-a-lollipop-demo.html).
 
+## AS3MT Exon Skipping with Intron-Compressed Alignment Links
+
+![Human and chimpanzee AS3MT transcripts with native exon widths,
+30-fold intron compression, and ungapped genomic alignment links
+following the same piecewise
+scale](reference/figures/as3mt-splice-variants-demo.png)
+
+Human and chimpanzee AS3MT transcripts with native exon widths, 30-fold
+intron compression, and ungapped genomic alignment links following the
+same piecewise scale
+
+The AS3MT tutorial compares the human and chimpanzee full-length
+transcripts with a paper-defined human AS3MTd2d3 reconstruction.
+[`geom_exon2()`](https://dongyaoliu.github.io/ggexon/reference/geom_exon2.md)
+distinguishes CDS from UTR, and
+`scale_x_ggexon_genomic(intron_factor = 30)` compresses introns while
+retaining exon widths.
+[`geom_nuclink()`](https://dongyaoliu.github.io/ggexon/reference/geom_nuclink.md)
+automatically subdivides raw genomic alignment blocks at both panels’
+scale boundaries and maps the pieces to the same exon/intron scales. The
+plot retains only the two highest identity categories of the ungapped
+LASTZ alignment.
+
+See the [AS3MT transcript and neural-phenotype
+tutorial](https://dongyaoliu.github.io/ggexon/articles/as3mt-splice-variants-demo.html)
+for the reproducible offline example, protein mapping, reported organoid
+values, and reconstruction and sampling-unit caveats.
+
 ## Installation
 
 `ggexon` is currently a development package.
@@ -779,6 +807,8 @@ and reexports.
   Chordates](https://dongyaoliu.github.io/ggexon/articles/hox-cluster-expansion-demo.md):
 - [CD44 Splice Variant Alignment
   Demo](https://dongyaoliu.github.io/ggexon/articles/cd44-splice-variants-demo.md):
+- [Human AS3MTd2d3: Exon Skipping and Neural
+  Phenotypes](https://dongyaoliu.github.io/ggexon/articles/as3mt-splice-variants-demo.md):
 - [HLA-A Protein Variants: Dense Multiallelic
   Lollipops](https://dongyaoliu.github.io/ggexon/articles/hla-a-lollipop-demo.md):
 - [PEEL-1 Raw BigWig

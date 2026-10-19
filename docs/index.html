@@ -41,6 +41,7 @@
 <li><a class="dropdown-item" href="articles/ggexon-workflow.html">Complete workflow</a></li>
     <li><a class="dropdown-item" href="articles/hox-cluster-expansion-demo.html">HOX cluster expansion</a></li>
     <li><a class="dropdown-item" href="articles/cd44-splice-variants-demo.html">CD44 splice variant alignment</a></li>
+    <li><a class="dropdown-item" href="articles/as3mt-splice-variants-demo.html">AS3MT exon skipping and neural phenotypes</a></li>
     <li><a class="dropdown-item" href="articles/hla-a-lollipop-demo.html">HLA-A protein variant lollipops</a></li>
     <li><a class="dropdown-item" href="articles/bigwig-coverage-demo.html">PEEL-1 raw BigWig coverage</a></li>
     <li><a class="dropdown-item" href="articles/ggexon-classes-and-verbs.html">Classes, geoms, facets, and guides</a></li>
@@ -90,6 +91,15 @@
 </div>
 <p>The HLA-A tutorial summarizes 5,998 eligible named alleles as 1,212 amino-acid substitutions. It shows both a protein-domain view and a splice-aware projection onto the exact A*02:01:01:01 reference gene. Exons retain their native scale; <code>scale_x_ggexon_genomic(intron_factor = 3)</code> compresses introns three-fold, with separate exon and intron scale bars. Counts describe database representation, not population frequencies.</p>
 <p>See the <a href="https://dongyaoliu.github.io/ggexon/articles/hla-a-lollipop-demo.html">HLA-A protein and gene-model tutorial</a>.</p>
+</div>
+<div class="section level2">
+<h2 id="as3mt-exon-skipping-with-intron-compressed-alignment-links">AS3MT Exon Skipping with Intron-Compressed Alignment Links<a class="anchor" aria-label="anchor" href="#as3mt-exon-skipping-with-intron-compressed-alignment-links"></a>
+</h2>
+<div class="float">
+<img src="reference/figures/as3mt-splice-variants-demo.png" alt="Human and chimpanzee AS3MT transcripts with native exon widths, 30-fold intron compression, and ungapped genomic alignment links following the same piecewise scale"><div class="figcaption">Human and chimpanzee AS3MT transcripts with native exon widths, 30-fold intron compression, and ungapped genomic alignment links following the same piecewise scale</div>
+</div>
+<p>The AS3MT tutorial compares the human and chimpanzee full-length transcripts with a paper-defined human AS3MTd2d3 reconstruction. <code><a href="reference/geom_exon2.html">geom_exon2()</a></code> distinguishes CDS from UTR, and <code>scale_x_ggexon_genomic(intron_factor = 30)</code> compresses introns while retaining exon widths. <code><a href="reference/geom_nuclink.html">geom_nuclink()</a></code> automatically subdivides raw genomic alignment blocks at both panels’ scale boundaries and maps the pieces to the same exon/intron scales. The plot retains only the two highest identity categories of the ungapped LASTZ alignment.</p>
+<p>See the <a href="https://dongyaoliu.github.io/ggexon/articles/as3mt-splice-variants-demo.html">AS3MT transcript and neural-phenotype tutorial</a> for the reproducible offline example, protein mapping, reported organoid values, and reconstruction and sampling-unit caveats.</p>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>

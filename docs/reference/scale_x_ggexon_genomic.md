@@ -85,7 +85,13 @@ This scale is intended for exon-structure layers such as
 and
 [`geom_exon2()`](https://dongyaoliu.github.io/ggexon/reference/geom_exon2.md).
 It builds one transform per panel from the union of exon-like intervals,
-so multiple transcripts in the same panel stay aligned.
+so multiple transcripts in the same panel stay aligned. Nucleotide links
+drawn with
+[`geom_nuclink()`](https://dongyaoliu.github.io/ggexon/reference/geom_nuclink.md)
+are automatically subdivided at source-panel scale boundaries and
+transformed with the same maps. Supply their original genomic
+coordinates; no manual link-coordinate conversion is needed. Explicit
+panel windows are also mapped to compressed display limits.
 
 Use
 [`guide_x_ggexon_piecewise()`](https://dongyaoliu.github.io/ggexon/reference/guide_x_ggexon_piecewise.md)

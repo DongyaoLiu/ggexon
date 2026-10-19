@@ -8,6 +8,8 @@
   Chordates](https://dongyaoliu.github.io/ggexon/articles/hox-cluster-expansion-demo.md):
 - [CD44 Splice Variant Alignment
   Demo](https://dongyaoliu.github.io/ggexon/articles/cd44-splice-variants-demo.md):
+- [Human AS3MTd2d3: Exon Skipping and Neural
+  Phenotypes](https://dongyaoliu.github.io/ggexon/articles/as3mt-splice-variants-demo.md):
 - [HLA-A Protein Variants: Dense Multiallelic
   Lollipops](https://dongyaoliu.github.io/ggexon/articles/hla-a-lollipop-demo.md):
 - [PEEL-1 Raw BigWig

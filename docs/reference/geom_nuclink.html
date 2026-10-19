@@ -26,6 +26,7 @@ object where link rows are resolved lazily from stored alignments."></head><body
   <ul class="dropdown-menu" aria-labelledby="dropdown-tutorials"><li><a class="dropdown-item" href="../articles/ggexon-workflow.html">Complete workflow</a></li>
     <li><a class="dropdown-item" href="../articles/hox-cluster-expansion-demo.html">HOX cluster expansion</a></li>
     <li><a class="dropdown-item" href="../articles/cd44-splice-variants-demo.html">CD44 splice variant alignment</a></li>
+    <li><a class="dropdown-item" href="../articles/as3mt-splice-variants-demo.html">AS3MT exon skipping and neural phenotypes</a></li>
     <li><a class="dropdown-item" href="../articles/hla-a-lollipop-demo.html">HLA-A protein variant lollipops</a></li>
     <li><a class="dropdown-item" href="../articles/bigwig-coverage-demo.html">PEEL-1 raw BigWig coverage</a></li>
     <li><a class="dropdown-item" href="../articles/ggexon-classes-and-verbs.html">Classes, geoms, facets, and guides</a></li>
@@ -157,6 +158,17 @@ for the plotted species order and dispatches them to the corresponding
 middle link panels. In practice this layer is intended to be used together
 with <code><a href="facet_genomics.html">facet_genomics()</a></code>, which creates the annotation panels and middle link
 panels that <code>geom_nuclink()</code> needs.</p>
+<p>With <code><a href="scale_x_ggexon_genomic.html">scale_x_ggexon_genomic()</a></code>, links automatically follow the piecewise
+exon/intron scales of their two source annotation panels. A link is divided
+at every scale boundary crossed in either panel, and each piece is mapped
+independently. Keep input link coordinates genomic; do not pre-compress them.
+The built vertex data retain <code>genomic_x</code>, <code>parent_group</code>, and <code>link_piece</code>
+for inspecting subdivision without modifying the input alignment table.</p>
+<p>Subdivision uses proportional correspondence between interval endpoints,
+reversing the query direction for reverse-strand links. This preserves the
+correspondence within equal-length ungapped blocks. Interval-only gapped
+links do not supply an internal alignment path; split those into ungapped
+blocks first when exact within-block nucleotide correspondence is required.</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
