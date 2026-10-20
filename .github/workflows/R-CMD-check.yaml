@@ -18,9 +18,10 @@ jobs:
         config:
           - {os: macos-latest, r: release}
           - {os: windows-latest, r: release}
-          - {os: ubuntu-latest, r: devel, http-user-agent: release}
-          - {os: ubuntu-latest, r: release}
-          - {os: ubuntu-latest, r: oldrel-1}
+          # Ubuntu 26.04 drops sudo -E variables needed by the pinned R action.
+          - {os: ubuntu-24.04, r: devel, http-user-agent: release}
+          - {os: ubuntu-24.04, r: release}
+          - {os: ubuntu-24.04, r: oldrel-1}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
