@@ -93,6 +93,8 @@ reference:
   - geom_motif
   - geom_mutation_label
   - geom_aa_variant
+  - geom_alignseq
+  - alignseq_data
   - geom_nuclink
   - geom_synteny_link
   - geom_genelink

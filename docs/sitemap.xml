@@ -67,6 +67,7 @@
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/add_protein_mutation_annotation.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/add_tree.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/aes_eval.html</loc></url>
+<url><loc>https://dongyaoliu.github.io/ggexon/reference/alignseq_data.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/annotate_cross_panel.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/annotation_data-set.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/annotation_data.html</loc></url>
@@ -103,6 +104,7 @@
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/filter_pairwise_alignment.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/genome_waiver.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/geom_aa_variant.html</loc></url>
+<url><loc>https://dongyaoliu.github.io/ggexon/reference/geom_alignseq.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/geom_coverage.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/geom_exon.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/geom_exon2.html</loc></url>

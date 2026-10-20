@@ -109,6 +109,8 @@ claim is made. Optional rat-neuron and spindle-angle panels are not included.
 
 - Li et al. (2016), *Nature Medicine*, doi:
   [10.1038/nm.4096](https://doi.org/10.1038/nm.4096).
+- Cai et al. (2021), *Schizophrenia Bulletin*, doi:
+  [10.1093/schbul/sbaa098](https://doi.org/10.1093/schbul/sbaa098), Fig. 1 minigene assays.
 - Kim et al. (2025), *Science Advances*, doi:
   [10.1126/sciadv.adp8271](https://doi.org/10.1126/sciadv.adp8271),
   Supplementary Fig. S8B–C and Table S5, cells A34:A40 and B34:B44.
@@ -119,3 +121,39 @@ claim is made. Optional rat-neuron and spindle-angle panels are not included.
 The example requires this checkout's native piecewise link-scaling support.
 The bundling step refreshes the portable installed inputs for the pkgdown
 tutorial. The example helper is `inst/extdata/as3mt/load-as3mt-example.R`.
+
+## Anchored DNA differences
+
+`prepare-alignseq.R` expands the original longest forward `human_chimp.paf`
+CIGAR against the two offline FASTAs, checks genomic endpoints and the PAF
+matching-base count, and writes `inst/extdata/as3mt/aligned-dna.rds` plus an
+inspectable `alignseq-events.tsv`. Run it with the development package loaded.
+The payload records the full PAF row and input FASTA MD5 hashes.
+
+The gapped payload retains the earlier generic E2/E3 illustrative selection
+for audit. It is not used to infer the complete VNTR: the longest LASTZ block
+begins within the human repeat array. `render-alignseq.R` now renders the
+VNTR-focused feature below, as vector PDF and PNG. Each species keeps its
+own DNA callout on its own compact annotation panel, with smooth anchored
+connectors and two calibrated exon/intron bars in the external legend.
+
+## Functionally supported exon-1 VNTR (current sequence figure)
+
+`prepare-vntr.R` reads the supplied `genomic_VNTR` specification, checks all
+three 36-bp human GRCh38 units against `human.fa`, and extracts the chimp
+imperfect homolog using its independently annotated E1 donor. It saves
+`inst/extdata/as3mt/vntr-dna.rds`, `vntr-repeat-units.tsv` and explicitly labelled
+motif-level two/three-repeat reconstructions. No full experimental plasmid
+sequences or new expression measurements are implied.
+
+The human terminal unit is 102869570–102869605; the E1 donor is after 102869593.
+The chimp homolog is 104324211–104324246; donor after 104324234. Both have 24
+exonic plus 12 intronic bases and a conserved GT donor. The donor-anchored
+comparison puts 72 gap columns opposite the other two human copies; equivalent
+placements among identical copies are not evolutionarily distinguishable.
+
+Cai2021 minigenes establish repeat-dependent regulation (three repeats produce
+more d2d3 than two) in the tested cells. The figure distinguishes this human
+allele contrast from the human/chimp reference comparison. Evolutionary
+sufficiency of the expansion is not established. Original LASTZ audit data
+remain unchanged; only the sequence feature used in the figure is replaced.
