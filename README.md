@@ -84,9 +84,9 @@ genomic alignment blocks at both panels' scale boundaries and maps the pieces
 to the same exon/intron scales. The plot retains only the two highest identity
 categories of the ungapped LASTZ alignment.
 
-See the [AS3MT transcript and neural-phenotype tutorial](https://dongyaoliu.github.io/ggexon/articles/as3mt-splice-variants-demo.html)
-for the reproducible offline example, protein mapping, reported organoid values,
-and reconstruction and sampling-unit caveats.
+See the [AS3MT transcript, protein and DNA tutorial](https://dongyaoliu.github.io/ggexon/articles/as3mt-splice-variants-demo.html)
+for the reproducible offline example, projected protein-start lollipop,
+and aligned DNA repeat detail.
 
 ## Installation
 

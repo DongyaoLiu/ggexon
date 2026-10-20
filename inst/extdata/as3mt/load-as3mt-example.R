@@ -49,8 +49,43 @@ load_as3mt_example <- function(demo_dir = system.file("extdata", "as3mt", packag
     organoid_summary = read_table("organoid-summary.tsv"))
 }
 
+# Project the assigned protein start through the full-length reference CDS.
+# This is an isoform consequence, not a substitution or a causal DNA variant.
+as3mt_protein_change <- function(example) {
+  assigned <- example$specification$reference_validation$paper_defined_d2d3_reconstruction
+  event <- data.frame(gene_id = "AS3MT", position = assigned$lost_N_terminal_residues + 1L,
+    mutation = "d2d3 assigned start", lost_aa = assigned$lost_N_terminal_residues)
+  human <- suppressMessages(ggexon::subset_individual(example$comparison,
+    individual = "human", chr = "chr10"))
+  human <- ggexon::add_annotation(human, ggexon::SynProteinMutationAnnotation(
+    name = "d2d3_start", mutation_file = "<paper-defined protein start>",
+    mutation_data = event, keytype = "gene_id", lazy = FALSE), set_active = FALSE)
+  projected <- ggexon::project_mutations_to_genome(human, annotation = "d2d3_start",
+    transcripts = "human_full")
+  stopifnot(nrow(projected) == 1L,
+    identical(as.numeric(c(projected$xmin, projected$xmax)),
+      as.numeric(assigned$translation_start_genomic_1based)))
+  projected$anchor <- (projected$xmin + projected$xmax) / 2
+  projected$track <- "human"
+  projected$label <- sprintf("d2d3 start: aa%d (\u2212%d aa)", projected$position, projected$lost_aa)
+  projected
+}
+
+as3mt_protein_layers <- function(change, base_size = 8, base_family = "serif") {
+  layers <- ggexon::geom_protein_lollipop(change, position = "anchor",
+    spread_threshold = 0, track_ymax = 1.8, mutation_y = 1.57,
+    show_backbone = FALSE, show_domains = FALSE, stem_linewidth = .35,
+    point_size = 1.8, point_colour = "#D55E00", stem_colour = "#D55E00")
+  # Generated stem tables lack the input facet key: set it on every component.
+  for (i in seq_along(layers)) layers[[i]]$data$track <- "human"
+  c(layers, list(ggplot2::geom_text(data = change,
+    ggplot2::aes(x = anchor, label = label), y = 1.64, hjust = -.06,
+    family = base_family, size = base_size / (72.27 / 25.4),
+    colour = "#D55E00", inherit.aes = FALSE)))
+}
+
 plot_as3mt_example <- function(example, intron_factor = 30, base_size = 8, base_family = "serif",
-                               link_data = NULL) {
+                               link_data = NULL, show_protein = TRUE) {
   stopifnot(is.numeric(intron_factor), length(intron_factor) == 1L, intron_factor > 0)
   palette <- c(human_full = "#0072B2", human_short = "#D55E00", chimp = "#64748B",
     skipped_exons = "#E69F00")
@@ -106,7 +141,9 @@ plot_as3mt_example <- function(example, intron_factor = 30, base_size = 8, base_
       legend.text = ggplot2::element_text(size = base_size),
       legend.title = ggplot2::element_text(size = base_size),
       legend.position = "bottom", panel.spacing.y = grid::unit(.35, "lines"))
-  list(plot = plot, build = ggexon::ggexon_build(plot))
+  change <- as3mt_protein_change(example)
+  if (isTRUE(show_protein)) plot <- plot + as3mt_protein_layers(change, base_size, base_family)
+  list(plot = plot, build = ggexon::ggexon_build(plot), protein_change = change)
 }
 
 # Explicit DNA differences; the overview's ungapped ribbons are not variant calls.

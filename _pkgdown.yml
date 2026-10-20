@@ -29,7 +29,7 @@ navbar:
         href: articles/hox-cluster-expansion-demo.html
       - text: CD44 splice variant alignment
         href: articles/cd44-splice-variants-demo.html
-      - text: AS3MT exon skipping and neural phenotypes
+      - text: AS3MT transcripts, protein start and DNA repeats
         href: articles/as3mt-splice-variants-demo.html
       - text: HLA-A protein variant lollipops
         href: articles/hla-a-lollipop-demo.html

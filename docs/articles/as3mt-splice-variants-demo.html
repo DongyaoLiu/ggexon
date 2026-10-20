@@ -5,14 +5,14 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Human AS3MTd2d3: Exon Skipping and Neural Phenotypes • ggexon</title>
+<title>AS3MT: transcripts, protein start and DNA repeats • ggexon</title>
 <script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_3-0.4.10/font.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_3-0.4.10/font.css" rel="stylesheet">
 <link href="../deps/Source_Code_Pro-0.4.10/font.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Human AS3MTd2d3: Exon Skipping and Neural Phenotypes">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="AS3MT: transcripts, protein start and DNA repeats">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -31,13 +31,13 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="active nav-item dropdown">
+<li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-tutorials" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Tutorials</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-tutorials">
 <li><a class="dropdown-item" href="../articles/ggexon-workflow.html">Complete workflow</a></li>
     <li><a class="dropdown-item" href="../articles/hox-cluster-expansion-demo.html">HOX cluster expansion</a></li>
     <li><a class="dropdown-item" href="../articles/cd44-splice-variants-demo.html">CD44 splice variant alignment</a></li>
-    <li><a class="dropdown-item" href="../articles/as3mt-splice-variants-demo.html">AS3MT exon skipping and neural phenotypes</a></li>
+    <li><a class="dropdown-item" href="../articles/as3mt-splice-variants-demo.html">AS3MT transcripts, protein start and DNA repeats</a></li>
     <li><a class="dropdown-item" href="../articles/hla-a-lollipop-demo.html">HLA-A protein variant lollipops</a></li>
     <li><a class="dropdown-item" href="../articles/bigwig-coverage-demo.html">PEEL-1 raw BigWig coverage</a></li>
     <li><a class="dropdown-item" href="../articles/ggexon-classes-and-verbs.html">Classes, geoms, facets, and guides</a></li>
@@ -63,397 +63,181 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
-      <h1>Human AS3MTd2d3: Exon Skipping and Neural Phenotypes</h1>
+      <h1>AS3MT: transcripts, protein start and DNA repeats</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/DongyaoLiu/ggexon/blob/main/vignettes/as3mt-splice-variants-demo.Rmd" class="external-link"><code>vignettes/as3mt-splice-variants-demo.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/DongyaoLiu/ggexon/blob/HEAD/vignettes/as3mt-splice-variants-demo.Rmd" class="external-link"><code>vignettes/as3mt-splice-variants-demo.Rmd</code></a></small>
       <div class="d-none name"><code>as3mt-splice-variants-demo.Rmd</code></div>
     </div>
 
     
     
 <div class="section level2">
-<h2 id="what-this-example-compares">What this example compares<a class="anchor" aria-label="anchor" href="#what-this-example-compares"></a>
+<h2 id="load-the-example">Load the example<a class="anchor" aria-label="anchor" href="#load-the-example"></a>
 </h2>
-<p>This example compares the selected human full-length
-<strong>AS3MT</strong> transcript, a <strong>paper-defined AS3MTd2d3
-reconstruction</strong>, and the selected chimpanzee full-length
-reference. Full-reference exon numbers are retained: the short human
-model contains <strong>E1 and E4–E11</strong>. Its transcript ends are
-reconstructed from the current canonical reference; no stable accession
-for that exact reconstruction was independently established.</p>
-<p>Human coordinates are from <strong>GRCh38</strong>, and chimpanzee
-coordinates from <strong>Pan_tro_3.0</strong>, using the supplied
-Ensembl release-116 annotation snapshot. The models retain their own
-assembly coordinates. They are neither measured expression tracks nor a
-matched human–chimpanzee phenotype experiment.</p>
-</div>
-<div class="section level2">
-<h2 id="load-one-offline-comparison">Load one offline comparison<a class="anchor" aria-label="anchor" href="#load-one-offline-comparison"></a>
-</h2>
-<p>The bundled loader constructs a <code>SynSpecies</code> containing
-two <code>SynIndividual</code> objects, their CDS/UTR annotations, a
-<code>SynPairAlignment</code>, and stored genomic windows. No network
-access, LASTZ installation, or working-directory paths are needed to
-render the tutorial. These helpers are example-level code, not new
-exported package functions.</p>
+<p>Compare human full-length AS3MT, a <strong>paper-defined d2d3
+reconstruction</strong>, and chimpanzee full-length AS3MT. Coordinates
+use <strong>GRCh38</strong> and <strong>Pan_tro_3.0</strong>,
+respectively. All inputs are bundled; no downloads are needed.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dongyaoliu.github.io/ggexon/">ggexon</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: package 'ggplot2' was built under R version 4.4.3</span></span>
 <span><span class="va">demo_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"as3mt"</span>, package <span class="op">=</span> <span class="st">"ggexon"</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/source.html" class="external-link">source</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">demo_dir</span>, <span class="st">"load-as3mt-example.R"</span><span class="op">)</span>, local <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="va">as3mt</span> <span class="op">&lt;-</span> <span class="fu">load_as3mt_example</span><span class="op">(</span><span class="va">demo_dir</span><span class="op">)</span></span>
-<span><span class="va">as3mt</span><span class="op">$</span><span class="va">comparison</span></span>
-<span><span class="co">#&gt; An object of class "SynSpecies"</span></span>
-<span><span class="co">#&gt;   name: AS3MT human-chimpanzee transcript comparison </span></span>
-<span><span class="co">#&gt;   individuals: 2 </span></span>
-<span><span class="co">#&gt;   pairwise_alignments: 1 </span></span>
-<span><span class="co">#&gt;   multiple_alignments: 0 </span></span>
-<span><span class="co">#&gt;   homology_annotations: 0 </span></span>
-<span><span class="co">#&gt;   locus_sets: 0 </span></span>
-<span><span class="co">#&gt;   tree: FALSE </span></span>
-<span><span class="co">#&gt;   tree_plot: FALSE</span></span></code></pre></div>
-<p>The selected human references are
-<code>NM_020682.4 / ENST00000369880.8</code> and
-<code>NP_065733.2</code>; the selected chimpanzee transcript is
-<code>ENSPTRT00000007262.6</code>. Original annotation snapshots,
-sequence hashes, the specification and source cells are preserved under
-the bundled <code>extdata/as3mt</code> directory.</p>
+<span><span class="va">as3mt</span> <span class="op">&lt;-</span> <span class="fu">load_as3mt_example</span><span class="op">(</span><span class="va">demo_dir</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="one-full-locus-view-with-smaller-introns">One full-locus view with smaller introns<a class="anchor" aria-label="anchor" href="#one-full-locus-view-with-smaller-introns"></a>
+<h2 id="transcripts-and-compressed-introns">1. Transcripts and compressed introns<a class="anchor" aria-label="anchor" href="#transcripts-and-compressed-introns"></a>
 </h2>
+<p><code><a href="../reference/geom_exon2.html">geom_exon2()</a></code> shows CDS as thick boxes and UTR as thin
+boxes. Keep the full-reference exon numbering: d2d3 retains <strong>E1
+and E4–E11</strong>; dashed boxes mark skipped E2/E3.
+<code>scale_x_ggexon_genomic(intron_factor = 30)</code> compresses
+introns 30-fold while keeping exon widths. <code><a href="../reference/geom_nuclink.html">geom_nuclink()</a></code>
+automatically follows that same piecewise scale in both annotation
+panels.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">as3mt_plot</span> <span class="op">&lt;-</span> <span class="fu">plot_as3mt_example</span><span class="op">(</span><span class="va">as3mt</span>, intron_factor <span class="op">=</span> <span class="fl">30</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">as3mt_plot</span> <span class="op">&lt;-</span> <span class="fu">plot_as3mt_example</span><span class="op">(</span><span class="va">as3mt</span>, intron_factor <span class="op">=</span> <span class="fl">30</span>, show_protein <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="va">as3mt_plot</span><span class="op">$</span><span class="va">plot</span></span></code></pre></div>
 <div class="figure">
-<img src="as3mt-splice-variants-demo_files/figure-html/as3mt-pairwise-1.png" class="r-plt" alt="Human full-length and reconstructed AS3MTd2d3 transcript rows above a chimpanzee full-length row. Gold E2 and E3 are skipped in the reconstructed row. Ungapped DNA ribbons in the two highest identity categories follow the same 30-fold intron-compressed piecewise scale as the exon annotations." width="1980"><p class="caption">
-AS3MT transcripts with introns compressed 30-fold.
+<img src="as3mt-splice-variants-demo_files/figure-html/as3mt-pairwise-1.png" class="r-plt" alt="Human full-length and paper-defined d2d3 transcript rows above the chimpanzee reference. Gold E2/E3 are skipped in d2d3; ribbons follow 30-fold intron compression." width="1980"><p class="caption">
+Transcript comparison; introns compressed 30-fold.
 </p>
 </div>
-<p><strong>Gold E2/E3</strong> occur in the human full-length
-transcript. Dashed outlines mark their skipped positions in d2d3. E1–E4
-remain distinguishable without a second zoom panel. Separate exon/intron
-scale bars state their actual base-pair widths and the compression
-factor.</p>
-<p>Thick boxes show CDS including the stop codon; thin boxes show UTR.
-Only the two highest LASTZ identity categories are shown. The ungapped
-DNA blocks contain no within-block indels and do not measure expression.
-Links follow the exon/intron scale boundaries automatically.</p>
-<p>The core grammar used inside the helper is:</p>
+<p>The helper uses this grammar:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">as3mt</span><span class="op">$</span><span class="va">comparison</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/geom_exon2.html">geom_exon2</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>xmin <span class="op">=</span> <span class="va">xmin</span> <span class="op">-</span> <span class="fl">0.5</span>, xmax <span class="op">=</span> <span class="va">xmax</span> <span class="op">+</span> <span class="fl">0.5</span>,</span>
-<span>        ymin <span class="op">=</span> <span class="va">isoform_y</span>, transcripts <span class="op">=</span> <span class="va">transcript_name</span>, fill <span class="op">=</span> <span class="va">exon_class</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="../reference/geom_exon2.html">geom_exon2</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>xmin <span class="op">=</span> <span class="va">xmin</span> <span class="op">-</span> <span class="fl">0.5</span>, xmax <span class="op">=</span> <span class="va">xmax</span> <span class="op">+</span> <span class="fl">0.5</span>,</span>
+<span>    ymin <span class="op">=</span> <span class="va">isoform_y</span>, transcripts <span class="op">=</span> <span class="va">transcript_name</span>, fill <span class="op">=</span> <span class="va">exon_class</span><span class="op">)</span>,</span>
 <span>    annotation_type <span class="op">=</span> <span class="st">"all"</span>, compress_introns <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>    utr_height <span class="op">=</span> <span class="fl">0.35</span>, cds_height <span class="op">=</span> <span class="fl">1</span></span>
-<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>    utr_height <span class="op">=</span> <span class="fl">0.35</span>, cds_height <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_nuclink.html">geom_nuclink</a></span><span class="op">(</span>alignment <span class="op">=</span> <span class="st">"human_chimp"</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">identity_band</span><span class="op">)</span>,</span>
-<span>               inherit.aes <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    inherit.aes <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/facet_genomics.html">facet_genomics</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">track</span><span class="op">)</span>, scales <span class="op">=</span> <span class="st">"free_x"</span>, ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/scale_x_ggexon_genomic.html">scale_x_ggexon_genomic</a></span><span class="op">(</span></span>
-<span>    intron_factor <span class="op">=</span> <span class="fl">30</span>,</span>
-<span>    guide <span class="op">=</span> <span class="fu"><a href="../reference/guide_x_ggexon_piecewise.html">guide_x_ggexon_piecewise</a></span><span class="op">(</span>by <span class="op">=</span> <span class="st">"panel"</span><span class="op">)</span></span>
-<span>  <span class="op">)</span></span></code></pre></div>
-<p>The half-base box edges preserve inclusive exon lengths. Setting
-<code>compress_introns = FALSE</code> on the geom leaves compression to
-the scale, avoiding a second schematic transformation.</p>
-<div class="section level3">
-<h3 id="links-follow-the-mosaic-exonintron-scale">Links follow the mosaic exon/intron scale<a class="anchor" aria-label="anchor" href="#links-follow-the-mosaic-exonintron-scale"></a>
-</h3>
-<p><code><a href="../reference/geom_nuclink.html">geom_nuclink()</a></code> automatically splits each link at the
-union of scale boundaries crossed in <strong>either</strong> annotation
-panel. Each resulting piece uses its target panel’s map at one end and
-its query panel’s map at the other. Changing <code>intron_factor</code>
-therefore updates both the annotations and links. Raw alignment
-coordinates remain genomic; no example-specific endpoint conversion is
-used. Stored genomic windows are also mapped into display limits
-automatically.</p>
-<p>Within an ungapped alignment block this preserves nucleotide
-correspondence. For general interval-only gapped links, subdivision
-retains proportional endpoint correspondence; use ungapped blocks when
-exact internal nucleotide correspondence is needed.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">link_layer</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">vapply</a></span><span class="op">(</span><span class="va">as3mt_plot</span><span class="op">$</span><span class="va">plot</span><span class="op">$</span><span class="va">layers</span>,</span>
-<span>  <span class="kw">function</span><span class="op">(</span><span class="va">layer</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">inherits</a></span><span class="op">(</span><span class="va">layer</span><span class="op">$</span><span class="va">geom</span>, <span class="st">"GeomPanel"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">vertices</span> <span class="op">&lt;-</span> <span class="va">as3mt_plot</span><span class="op">$</span><span class="va">build</span><span class="op">$</span><span class="va">data</span><span class="op">[[</span><span class="va">link_layer</span><span class="op">]</span><span class="op">]</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
-<span>  original_blocks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">vertices</span><span class="op">$</span><span class="va">parent_group</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  native_polygon_pieces <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">vertices</span><span class="op">$</span><span class="va">group</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt;   original_blocks native_polygon_pieces</span></span>
-<span><span class="co">#&gt; 1              37                    57</span></span></code></pre></div>
-<p>The <strong>37 original blocks become 57 polygon pieces</strong>.
-Built vertices retain <code>genomic_x</code>, <code>parent_group</code>
-and <code>link_piece</code> for inspection.</p>
-</div>
-<div class="section level3">
-<h3 id="how-the-alignment-was-generated">How the alignment was generated<a class="anchor" aria-label="anchor" href="#how-the-alignment-was-generated"></a>
-</h3>
-<p>Reference chromosome-10 windows were downloaded from Ensembl and
-assembly checked: human <code>102869470–102901899</code> and chimpanzee
-<code>104324156–104356197</code>. The recorded LASTZ 1.04.52 command
-is:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="ex">lastz</span> human.fa chimp.fa <span class="at">--strand</span><span class="op">=</span>both <span class="at">--nogapped</span> <span class="at">--chain</span> <span class="dt">\</span></span>
-<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  <span class="at">--format</span><span class="op">=</span>paf:minimap2 <span class="at">--output</span><span class="op">=</span>human_chimp.nogap.paf</span></code></pre></div>
-<p>Every one of the <strong>124 raw blocks</strong> was checked for a
-single gap-free CIGAR, equal query/target/alignment spans, and a
-matching-base count agreeing with the input DNA. Filtering for length
-≥80 bp and identity ≥50% retained <strong>93 blocks</strong>. The plot
-keeps only the two highest identity quantile categories:
-<strong>97.1–98.3%</strong> and <strong>98.3–100.0%</strong> (rounded
-labels), totaling <strong>37 blocks</strong>. Those category boundaries
-were calculated before this final selection and were not recalculated
-afterward. Reverse-strand sequence matches can occur; links are not
-themselves evidence for exon correspondence or exon skipping.</p>
-</div>
+<span>  <span class="fu"><a href="../reference/scale_x_ggexon_genomic.html">scale_x_ggexon_genomic</a></span><span class="op">(</span>intron_factor <span class="op">=</span> <span class="fl">30</span>,</span>
+<span>    guide <span class="op">=</span> <span class="fu"><a href="../reference/guide_x_ggexon_piecewise.html">guide_x_ggexon_piecewise</a></span><span class="op">(</span>by <span class="op">=</span> <span class="st">"panel"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>Ribbons retain the two highest LASTZ identity categories,
+<strong>97.1–98.3%</strong> and <strong>98.3–100%</strong>. The 37
+ungapped blocks split into 57 polygon pieces at scale boundaries. They
+show DNA similarity, not expression or proof of exon skipping.</p>
 </div>
 <div class="section level2">
-<h2 id="anchored-dna-differences-with-geom_alignseq">Anchored DNA differences with <code>geom_alignseq()</code><a class="anchor" aria-label="anchor" href="#anchored-dna-differences-with-geom_alignseq"></a>
+<h2 id="protein-change-on-the-human-reference">2. Protein change on the human reference<a class="anchor" aria-label="anchor" href="#protein-change-on-the-human-reference"></a>
 </h2>
-<div class="section level3">
-<h3 id="display-the-experimentally-supported-exon-1-vntr">Display the experimentally supported exon-1 VNTR<a class="anchor" aria-label="anchor" href="#display-the-experimentally-supported-exon-1-vntr"></a>
-</h3>
-<p>This example focuses on the <strong>36-bp exon-1 tandem repeat
-(VNTR)</strong>, which has functional evidence for regulating AS3MTd2d3
-splicing. It replaces the arbitrary substitution and one-base indel
-formerly used to demonstrate sequence drawing.</p>
-<p>Li et al. (2016), Supplementary Fig. 3a, identifies the repeat
-sequence. The supplied handoff maps three exact copies in the selected
-<strong>GRCh38</strong> reference:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">v</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">demo_dir</span>, <span class="st">"vntr-dna.rds"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">v</span><span class="op">$</span><span class="va">motif</span></span>
-<span><span class="co">#&gt; [1] "CCTGAGTCGCAGGCCGAGGAGACAGTGAGTGCGCGC"</span></span>
-<span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">v</span><span class="op">$</span><span class="va">human_units</span>, col.names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"GRCh38 start"</span>, <span class="st">"GRCh38 end"</span>, <span class="st">"Repeat"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>The assigned d2d3 protein contains <strong>273 aa</strong>,
+corresponding to canonical human residues <strong>103–375</strong>
+instead of 1–375. Its loss of <strong>102 N-terminal aa</strong> is a
+consequence of the assigned downstream start; E2/E3 skipping removes 169
+RNA bases, not a 306-nt in-frame deletion.</p>
+<p>Project residue 103 through the <strong>full-length human
+CDS</strong> with <code><a href="../reference/project_mutations_to_genome.html">project_mutations_to_genome()</a></code>. Its codon
+is <strong>GRCh38 chr10:102872584–102872586</strong> in E4. The example
+helper returns that projection:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">protein_change</span> <span class="op">&lt;-</span> <span class="fu">as3mt_protein_change</span><span class="op">(</span><span class="va">as3mt</span><span class="op">)</span></span>
+<span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">protein_change</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"position"</span>, <span class="st">"xmin"</span>, <span class="st">"xmax"</span>, <span class="st">"lost_aa"</span><span class="op">)</span><span class="op">]</span>,</span>
+<span>  col.names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Canonical residue"</span>, <span class="st">"Codon start"</span>, <span class="st">"Codon end"</span>, <span class="st">"Lost aa"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
-<th align="right">GRCh38 start</th>
-<th align="right">GRCh38 end</th>
-<th align="right">Repeat</th>
+<th align="right">Canonical residue</th>
+<th align="right">Codon start</th>
+<th align="right">Codon end</th>
+<th align="right">Lost aa</th>
 </tr></thead>
-<tbody>
-<tr class="odd">
-<td align="right">102869498</td>
-<td align="right">102869533</td>
-<td align="right">1</td>
-</tr>
-<tr class="even">
-<td align="right">102869534</td>
-<td align="right">102869569</td>
-<td align="right">2</td>
-</tr>
-<tr class="odd">
-<td align="right">102869570</td>
-<td align="right">102869605</td>
-<td align="right">3</td>
-</tr>
-</tbody>
+<tbody><tr class="odd">
+<td align="right">103</td>
+<td align="right">102872584</td>
+<td align="right">102872586</td>
+<td align="right">102</td>
+</tr></tbody>
 </table>
-<p>The unit is <strong>CCTGAGTCGCAGGCCGAGGAGACAGTGAGTGCGCGC</strong>.
-Each of the three copies was checked base for base against the offline
-human genomic FASTA. The last copy spans
-<strong>102869570–102869605</strong>: its first <strong>24 bases are in
-E1</strong>, and its last <strong>12 bases are in intron 1</strong>. The
-E1 donor lies between <strong>102869593 and 102869594</strong>,
-immediately before the conserved <strong>GT</strong>:</p>
-<pre class="text"><code>CCTGAGTCGCAGGCCGAGGAGACA | GTGAGTGCGCGC
-            exon 1      | intron 1</code></pre>
-<p>The selected <strong>Pan_tro_3.0</strong> reference has one imperfect
-homologous unit at <strong>104324211–104324246</strong>, matching
-<strong>34 of 36</strong> human bases. Its donor also lies after unit
-base 24 (between <strong>104324234 and 104324235</strong>), with the
-same <strong>GT</strong>. This is a single homologous segment, rather
-than an exact copy of the human motif. An exact-motif search returning
-zero in chimp would not establish that the homologous sequence is
-absent.</p>
+<p><code><a href="../reference/geom_protein_lollipop.html">geom_protein_lollipop()</a></code> accepts the projected genomic
+anchor. Its stem starts on the human reference CDS; the head labels the
+new start and amino-acid loss. The helper assigns <strong>every
+generated layer</strong> to <code>track = "human"</code>, so the event
+is not repeated on the chimp panel. The genomic scale moves the anchor
+with the exon when intron compression changes.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">protein_layers</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/geom_protein_lollipop.html">geom_protein_lollipop</a></span><span class="op">(</span><span class="va">protein_change</span>, position <span class="op">=</span> <span class="st">"anchor"</span>,</span>
+<span>  spread_threshold <span class="op">=</span> <span class="fl">0</span>, track_ymax <span class="op">=</span> <span class="fl">1.8</span>, mutation_y <span class="op">=</span> <span class="fl">1.57</span>,</span>
+<span>  show_backbone <span class="op">=</span> <span class="cn">FALSE</span>, show_domains <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">protein_layers</span><span class="op">)</span><span class="op">)</span> <span class="va">protein_layers</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">data</span><span class="op">$</span><span class="va">track</span> <span class="op">&lt;-</span> <span class="st">"human"</span></span>
+<span><span class="va">as3mt_plot</span><span class="op">$</span><span class="va">plot</span> <span class="op">+</span> <span class="va">protein_layers</span></span></code></pre></div>
+<p>The label marks an <strong>isoform protein-start change</strong>, not
+a splicing-causal SNV.</p>
 </div>
-<div class="section level3">
-<h3 id="functional-evidence-two-human-repeat-alleles">Functional evidence: two human repeat alleles<a class="anchor" aria-label="anchor" href="#functional-evidence-two-human-repeat-alleles"></a>
-</h3>
-<p>Cai et al. tested human <strong>two-repeat and three-repeat
-minigenes</strong>, constructed to differ only at the VNTR. The
-three-repeat constructs produced more d2d3 in the tested cell lines.
-This is the experimentally supported regulatory variant shown in the
-figure: <strong>repeat-number variation</strong>, rather than a
-demonstrated causal SNV at E2/E3. <a href="https://doi.org/10.1093/schbul/sbaa098" class="external-link">Cai et al., 2021</a>.</p>
-<p>The figure separates the human/chimp reference comparison from this
-human allele experiment. The selected human reference contains three
-repeats; it is not a claim that all humans have three. Published human
-repeat counts include two, three and four. The evidence strip depicts
-<strong>motif-count reconstructions</strong> of the tested
-two/three-repeat contrast, not deposited full plasmid sequences or newly
-measured expression values. Functional regulation does not by itself
-establish that this expansion was sufficient for the evolutionary origin
-of the reported human-specific isoform.</p>
+<div class="section level2">
+<h2 id="dna-detail-at-the-exon-1-repeat">3. DNA detail at the exon-1 repeat<a class="anchor" aria-label="anchor" href="#dna-detail-at-the-exon-1-repeat"></a>
+</h2>
+<p>The selected human reference contains three <strong>36-bp
+VNTR</strong> units; the chimp reference has one imperfect homolog
+(34/36 matching bases). The terminal unit contains 24 exonic and 12
+intronic bases. Both references retain the <strong>GT</strong>
+donor:</p>
+<pre class="text"><code>CCTGAGTCGCAGGCCGAGGAGACA | GTGAGTGCGCGC
+         human exon 1  | intron 1</code></pre>
+<p>Prepare two aligned strings with an explicitly named human reference.
+<code>-</code> denotes a gap and does not consume genomic bases. The
+strings are verified against the bundled FASTAs; the donor-anchored
+alignment places 72 chimp gap columns opposite two human repeat
+copies.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">v</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">demo_dir</span>, <span class="st">"vntr-dna.rds"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">sequence_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/alignseq_data.html">alignseq_data</a></span><span class="op">(</span><span class="va">v</span><span class="op">$</span><span class="va">aligned</span>, <span class="va">v</span><span class="op">$</span><span class="va">anchors</span>, reference <span class="op">=</span> <span class="st">"human"</span>,</span>
+<span>  regions <span class="op">=</span> <span class="va">v</span><span class="op">$</span><span class="va">regions</span>, details <span class="op">=</span> <span class="va">v</span><span class="op">$</span><span class="va">details</span>, flank <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div>
+<p><code><a href="../reference/geom_alignseq.html">geom_alignseq()</a></code> places each species’ DNA on its own
+panel. Default markers show differences, with DNA callouts for selected
+details. Letters are equally spaced schematically; smooth connectors
+retain genomic anchors. For a short window, <code>mode = "rows"</code>
+shows all selected bases:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sequence_example</span> <span class="op">&lt;-</span> <span class="fu">plot_as3mt_alignseq</span><span class="op">(</span><span class="va">demo_dir</span>, intron_factor <span class="op">=</span> <span class="fl">30</span><span class="op">)</span></span>
-<span><span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/grid.newpage.html" class="external-link">grid.newpage</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/grid.draw.html" class="external-link">grid.draw</a></span><span class="op">(</span><span class="va">sequence_example</span><span class="op">$</span><span class="va">grob</span><span class="op">)</span></span></code></pre></div>
-<div class="figure">
-<img src="as3mt-splice-variants-demo_files/figure-html/as3mt-alignseq-1.png" class="r-plt" alt="Human AS3MT reference with three purple-outlined 36-base VNTR copies, compared with the chimp single imperfect homolog. Each annotation panel displays its own terminal repeat DNA, with the E1 donor marked after base 24. Two external scale bars and a separate schematic summarize the experimentally tested human two-repeat and three-repeat minigene comparison." width="1980"><p class="caption">
-Exon-1 VNTR and the human two-/three-repeat minigene comparison.
-</p>
-</div>
-<p>Purple outlines identify the repeat units in the genomic annotation.
-The <strong>−72</strong> marker means chimp has 72 fewer aligned repeat
-bases relative to this human reference. It does not assign ancestral
-insertion/deletion direction, and it is not the experimentally tested
-<strong>36-bp difference between two and three human repeats</strong>.
-The two base differences within the chimp homolog are sequence context,
-not labelled as splicing-causal SNVs.</p>
-<p>Human DNA remains on the human annotation panel and chimp DNA on the
-chimp panel. Smooth connectors retain genomic anchors while equally
-spaced letters are schematic. The vertical boundary in each sequence row
-marks the verified E1 donor without altering the DNA. Two scale bars sit
-below the colour legend: <strong>500 exon bp</strong> and <strong>15
-intron kb at 30-fold compression</strong> have equal displayed lengths,
-calibrated to the common annotation-panel scale.</p>
-</div>
-<div class="section level3">
-<h3 id="how-the-sequence-layer-is-prepared">How the sequence layer is prepared<a class="anchor" aria-label="anchor" href="#how-the-sequence-layer-is-prepared"></a>
-</h3>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">sequence_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/alignseq_data.html">alignseq_data</a></span><span class="op">(</span></span>
-<span>  aligned <span class="op">=</span> <span class="va">v</span><span class="op">$</span><span class="va">aligned</span>, anchors <span class="op">=</span> <span class="va">v</span><span class="op">$</span><span class="va">anchors</span>, reference <span class="op">=</span> <span class="st">"human"</span>,</span>
-<span>  regions <span class="op">=</span> <span class="va">v</span><span class="op">$</span><span class="va">regions</span>, details <span class="op">=</span> <span class="va">v</span><span class="op">$</span><span class="va">details</span>, flank <span class="op">=</span> <span class="fl">0</span></span>
-<span><span class="op">)</span></span>
-<span><span class="va">sequence_data</span><span class="op">$</span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">sequence_data</span><span class="op">$</span><span class="va">sequence</span> <span class="op">==</span> <span class="st">"human"</span>, <span class="fl">2.65</span>, <span class="fl">1.5</span><span class="op">)</span></span>
-<span><span class="va">sequence_data</span><span class="op">$</span><span class="va">boundary_after</span> <span class="op">&lt;-</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">sequence_data</span><span class="op">$</span><span class="va">position</span><span class="op">)</span> <span class="op">&amp;</span></span>
-<span>  <span class="va">sequence_data</span><span class="op">$</span><span class="va">position</span> <span class="op">==</span> <span class="va">v</span><span class="op">$</span><span class="va">donor_after</span><span class="op">[</span><span class="va">sequence_data</span><span class="op">$</span><span class="va">sequence</span><span class="op">]</span></span>
-<span><span class="va">sequence_data</span><span class="op">$</span><span class="va">boundary_label</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">sequence_data</span><span class="op">$</span><span class="va">boundary_after</span>,</span>
-<span>  <span class="st">"E1 donor | intron 1"</span>, <span class="st">""</span><span class="op">)</span></span>
-<span><span class="co"># Only repeat-copy difference markers are emphasized; base differences remain</span></span>
-<span><span class="co"># visible in the terminal-unit sequence as comparative context.</span></span>
-<span><span class="va">sequence_data</span><span class="op">$</span><span class="va">event_id</span><span class="op">[</span><span class="va">sequence_data</span><span class="op">$</span><span class="va">event_type</span> <span class="op">==</span> <span class="st">"substitution"</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA_integer_</span></span>
-<span><span class="va">as3mt_plot</span><span class="op">$</span><span class="va">plot</span> <span class="op">+</span> <span class="fu"><a href="../reference/geom_alignseq.html">geom_alignseq</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">sequence_data</span><span class="op">)</span></span></code></pre></div>
-<p><code><a href="../reference/geom_alignseq.html">geom_alignseq()</a></code> takes two prealigned strings, an
-explicit reference and one one-based genomic anchor per sequence. Gaps
-(<code>-</code>) do not consume genomic bases. Minus-strand strings must
-already be oriented for comparison; anchors represent contiguous genomic
-DNA. Optional <code>boundary_after</code> and
-<code>boundary_label</code> columns mark verified splice boundaries in
-the callouts.</p>
-<p>This VNTR uses an explicit <strong>donor-anchored repeat
-alignment</strong>: the chimp unit aligns to the human terminal,
-donor-containing unit, with 72 gap columns opposite the other two human
-copies. Identical repeat copies make equivalent gap placements possible;
-this alignment does not identify the individual history of the repeated
-copies. Both ungapped strings were verified against the offline assembly
-FASTAs. The original longest gapped LASTZ block starts within the human
-array and is therefore not used to infer the complete VNTR copy
-difference. It remains bundled separately as
-<code>aligned-dna.rds</code> for audit; the overview’s ungapped ribbons
-are unchanged.</p>
-</div>
-<div class="section level3">
-<h3 id="optional-row-mode-the-donor-containing-unit">Optional row mode: the donor-containing unit<a class="anchor" aria-label="anchor" href="#optional-row-mode-the-donor-containing-unit"></a>
-</h3>
-<p>For a short window, <code>mode = "rows"</code> displays every
-selected base on its own annotation panel. Here each row contains the
-36-base terminal unit/homolog. The grey exon segment covers 24 bases and
-the intron backbone the remaining 12, using each assembly’s genomic
-coordinates.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">sequence_example</span><span class="op">$</span><span class="va">rows</span></span></code></pre></div>
-<p><img src="as3mt-splice-variants-demo_files/figure-html/as3mt-alignseq-rows-1.png" class="r-plt" alt="Separate human and chimp annotation panels display their 36-base terminal repeat or homolog. A donor boundary separates 24 exonic bases from 12 intronic bases, and GT is conserved in both references." width="1980"></p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">short</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/alignseq_data.html">alignseq_data</a></span><span class="op">(</span><span class="va">v</span><span class="op">$</span><span class="va">aligned</span>, <span class="va">v</span><span class="op">$</span><span class="va">anchors</span>, reference <span class="op">=</span> <span class="st">"human"</span>,</span>
-<span>  regions <span class="op">=</span> <span class="va">v</span><span class="op">$</span><span class="va">details</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/geom_alignseq.html">geom_alignseq</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">short</span>, mode <span class="op">=</span> <span class="st">"rows"</span><span class="op">)</span></span></code></pre></div>
-<p>The layer uses <code>GeomText</code> with optional nucleotide
-backgrounds. Selected nearby detail windows merge when their flanking
-columns overlap. Omitted columns split callouts; row mode requires one
-contiguous window. The default maximum detail length is 60 columns; the
-VNTR terminal unit uses 36.</p>
-</div>
-</div>
-<div class="section level2">
-<h2 id="transcript-protein-and-organoid-interpretation">Transcript, protein and organoid interpretation<a class="anchor" aria-label="anchor" href="#transcript-protein-and-organoid-interpretation"></a>
-</h2>
-<p><img src="as3mt/AS3MT-exon-skipping-neural-phenotypes.png" class="r-plt" alt="Three-panel figure showing schematic AS3MT exon skipping, full-length protein residues 1–375 versus the assigned d2d3 protein at 103–375, and human organoid SOX2 and TUJ1 reported percentages with mean and SEM." width="100%"></p>
-<p>The overview’s exon slots are <strong>schematic</strong>, unlike the
-assembly-specific, piecewise genomic scale in the comparison above.
-Skipping E2/E3 removes <strong>169 RNA nucleotides</strong>, destroys
-the original E1/E2-split start codon, and uses the handoff-assigned
-downstream start in E4. The assigned <strong>273-aa</strong> protein
-corresponds to full-length residues <strong>103–375</strong>, losing 102
-N-terminal amino acids. This is not a 306-nt in-frame exon deletion. The
-reconstructed 2,281-nt RNA length is conditional on the selected ends
-and reference repeat allele.</p>
-<p>The organoid data compare control with AS3MTd2d3 overexpression in
-H9/WA09 human forebrain organoids, electroporated at day 50. Each SOX2
-or TUJ1 endpoint has <strong>7 control and 11 overexpression reported
-values</strong>. Points show every supplied percentage; summaries use
-the arithmetic mean and sample SD divided by √n. The publication
-<strong>does not define the sampling unit</strong>: these counts must
-not be described as independent donors or organoids. The reported
-two-sided unpaired-t-test P values are <strong>0.0008</strong> for SOX2
-and <strong>0.0014</strong> for TUJ1.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">summary</span> <span class="op">&lt;-</span> <span class="va">as3mt</span><span class="op">$</span><span class="va">organoid_summary</span></span>
-<span><span class="va">summary</span><span class="op">$</span><span class="va">group</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Control"</span>, <span class="st">"AS3MTd2d3 overexpression"</span><span class="op">)</span><span class="op">[</span><span class="va">summary</span><span class="op">$</span><span class="va">group</span><span class="op">]</span></span>
-<span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">summary</span>, digits <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
-<table class="table">
-<thead><tr class="header">
-<th align="left">marker</th>
-<th align="left">group</th>
-<th align="right">mean</th>
-<th align="right">sem</th>
-<th align="right">n</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">SOX2+ / GFP+</td>
-<td align="left">Control</td>
-<td align="right">49.692</td>
-<td align="right">2.659</td>
-<td align="right">7</td>
-</tr>
-<tr class="even">
-<td align="left">SOX2+ / GFP+</td>
-<td align="left">AS3MTd2d3 overexpression</td>
-<td align="right">37.578</td>
-<td align="right">1.645</td>
-<td align="right">11</td>
-</tr>
-<tr class="odd">
-<td align="left">TUJ1+ / GFP+</td>
-<td align="left">Control</td>
-<td align="right">45.184</td>
-<td align="right">2.072</td>
-<td align="right">7</td>
-</tr>
-<tr class="even">
-<td align="left">TUJ1+ / GFP+</td>
-<td align="left">AS3MTd2d3 overexpression</td>
-<td align="right">60.101</td>
-<td align="right">2.768</td>
-<td align="right">11</td>
-</tr>
-</tbody>
-</table>
-<p>Li et al. did not detect the chimp E1–E4 junction in the examined
-pooled-tissue RNA-seq, which included brain. This is not proof of
-absence in every tissue. Healthy humans also express the short isoform;
-the experiment does not measure species-specific disease rates.</p>
+<span><span class="va">sequence_example</span><span class="op">$</span><span class="va">rows</span></span></code></pre></div>
+<p><img src="as3mt-splice-variants-demo_files/figure-html/as3mt-alignseq-rows-1.png" class="r-plt" alt="Human and chimp terminal repeat DNA on separate annotation panels. The donor divides 24 exonic from 12 intronic bases." width="1980"></p>
+<p>Cai et al. tested otherwise matched <strong>two- and three-repeat
+human minigenes</strong>; three repeats produced more d2d3. This
+supports repeat-dependent splicing regulation, but does not establish
+sufficiency for the isoform’s evolutionary origin. The human allele
+experiment differs by <strong>36 bp</strong>; the figure’s <strong>−72
+bp</strong> marker instead compares the selected chimp and human
+references. Two base differences in the chimp homolog are context, not
+demonstrated causal SNVs.</p>
 </div>
 <div class="section level2">
 <h2 id="sources-and-reproducibility">Sources and reproducibility<a class="anchor" aria-label="anchor" href="#sources-and-reproducibility"></a>
 </h2>
 <ul>
-<li>Li et al. (2016), <em>Nature Medicine</em>, <a href="https://doi.org/10.1038/nm.4096" class="external-link">doi:10.1038/nm.4096</a>.</li>
-<li>Cai et al. (2021), <em>Schizophrenia Bulletin</em>, <a href="https://doi.org/10.1093/schbul/sbaa098" class="external-link">doi:10.1093/schbul/sbaa098</a>,
-VNTR minigene experiments on AS3MTd2d3 splicing.</li>
-<li>Kim et al. (2025), <em>Science Advances</em>, <a href="https://doi.org/10.1126/sciadv.adp8271" class="external-link">doi:10.1126/sciadv.adp8271</a>,
-Supplementary Fig. S8B–C and Table S5, cells A34:A40 and B34:B44.</li>
+<li>
+<a href="https://doi.org/10.1038/nm.4096" class="external-link">Li et al. (2016),
+doi:10.1038/nm.4096</a>: d2d3 reconstruction, protein assignment and
+repeat sequence.</li>
+<li>
+<a href="https://doi.org/10.1093/schbul/sbaa098" class="external-link">Cai et al. (2021),
+doi:10.1093/schbul/sbaa098</a>: human VNTR minigene comparison.</li>
 </ul>
-<p>The repository’s <code>data-raw/as3mt</code> directory contains the
-alignment-preparation and figure-export scripts. The loader and all
-plotting inputs are bundled in the installed package under
-<code>extdata/as3mt</code>. The optional rat-neuron and spindle-angle
-panels are not included in these figures.</p>
+<p>The installed <code>extdata/as3mt</code> directory contains the
+plotting helper, input snapshots and provenance. Repository
+preparation/export scripts are in <code>data-raw/as3mt</code>; the
+genomic ribbons use LASTZ <code>--nogapped --chain</code> blocks.</p>
+</div>
+<div class="section level2">
+<h2 id="combined-result">Combined result<a class="anchor" aria-label="anchor" href="#combined-result"></a>
+</h2>
+<p>The human reference lollipop marks <strong>aa103 (−102 aa)</strong>.
+Purple outlines locate the VNTR; each species keeps its own DNA callout.
+Separate bars below the legend show exon and compressed-intron scales.
+The lower human transcript remains a <strong>paper-defined
+reconstruction</strong>; the repeat-count strip summarizes the tested
+human alleles schematically.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/grid.newpage.html" class="external-link">grid.newpage</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/grid.draw.html" class="external-link">grid.draw</a></span><span class="op">(</span><span class="va">sequence_example</span><span class="op">$</span><span class="va">grob</span><span class="op">)</span></span></code></pre></div>
+<div class="figure">
+<img src="as3mt-splice-variants-demo_files/figure-html/as3mt-alignseq-1.png" class="r-plt" alt="Combined AS3MT transcript comparison with an orange lollipop on the human reference at the E4 codon for canonical residue 103, labelled minus 102 amino acids. Purple VNTR units, species-specific DNA callouts, and separate exon/intron scale bars complete the figure." width="1980"><p class="caption">
+AS3MT transcripts, assigned protein-start change and exon-1 VNTR.
+</p>
+</div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
@@ -466,7 +250,7 @@ panels are not included in these figures.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

@@ -119,3 +119,37 @@ test_that("AS3MT sequence example highlights the experimentally supported VNTR",
   expect_true(any(result$grob$layout$name == "as3mt-vntr-evidence"))
   expect_equal(result$vntr$constructs$repeat_count, c(2L, 3L))
 })
+
+test_that("AS3MT protein-start lollipop projects onto only the human reference CDS", {
+  demo_dir <- system.file("extdata", "as3mt", package = "ggexon")
+  env <- new.env(parent = globalenv())
+  sys.source(file.path(demo_dir, "load-as3mt-example.R"), envir = env)
+  example <- env$load_as3mt_example(demo_dir)
+  change <- env$as3mt_protein_change(example)
+  expect_equal(change$position, 103L)
+  expect_equal(change$xmin, 102872584)
+  expect_equal(change$xmax, 102872586)
+  expect_equal(change$anchor, 102872585)
+  expect_equal(change$track, "human")
+  expect_equal(change$transcripts, "human_full")
+  expect_equal(change$lost_aa, 102L)
+  for (factor in c(1, 30)) {
+    result <- env$plot_as3mt_example(example, intron_factor = factor)
+    b <- result$build
+    i <- which(vapply(result$plot$layers, function(l)
+      inherits(l$geom, "GeomPoint") && "lollipop_position" %in% names(l$data), logical(1)))
+    expect_length(i, 1L)
+    protein_layers <- Filter(function(l) "lollipop_x" %in% names(l$data), result$plot$layers)
+    expect_true(all(vapply(protein_layers, function(l)
+      identical(unique(l$data$track), "human"), logical(1))))
+    point <- b$data[[i]]
+    human_panel <- b$layout$layout$PANEL[b$layout$layout$track == "human"]
+    expect_equal(as.character(point$PANEL), as.character(human_panel))
+    transform <- b$layout$genomic_x_transforms[[as.character(human_panel)]]
+    piece <- transform[transform$genomic_start <= change$anchor &
+      transform$genomic_end >= change$anchor, ]
+    expected <- piece$plot_start + (change$anchor - piece$genomic_start) *
+      (piece$plot_end - piece$plot_start) / (piece$genomic_end - piece$genomic_start)
+    expect_equal(point$x, expected)
+  }
+})
