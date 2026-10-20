@@ -1,0 +1,50 @@
+[
+  {
+    "track": "HSAh1",
+    "source_pdf": "mhc_continuous.pdf",
+    "dpi": 220,
+    "crop_mm": {
+      "left": 105.0632918211576,
+      "right": 172.1521807100462,
+      "bottom": 38.9933504635395,
+      "top": 92.09335046353951
+    },
+    "interpretation": "Native-scale crop of the full figure; axes and genomic geometry unchanged."
+  },
+  {
+    "track": "GGOh1",
+    "source_pdf": "mhc_continuous.pdf",
+    "dpi": 220,
+    "crop_mm": {
+      "left": 105.96774801445,
+      "right": 170.4566369033392,
+      "bottom": 340.199780517504,
+      "top": 393.299780517504
+    },
+    "interpretation": "Native-scale crop of the full figure; axes and genomic geometry unchanged."
+  },
+  {
+    "track": "GGOh2+GGOh1",
+    "source_pdf": "mhc_continuous.pdf",
+    "dpi": 220,
+    "crop_mm": {
+      "left": 104.7834394635404,
+      "right": 170.4566369033392,
+      "bottom": 340.199780517504,
+      "top": 453.541066528297
+    },
+    "interpretation": "Native-scale crop of the full figure; axes and genomic geometry unchanged."
+  },
+  {
+    "track": "GGOh2+GGOh1",
+    "source_pdf": "mhc_continuous.pdf",
+    "dpi": 220,
+    "crop_mm": {
+      "left": 0,
+      "right": 179.91666666666666,
+      "bottom": 340.199780517504,
+      "top": 453.541066528297
+    },
+    "interpretation": "Native-scale crop of the full figure; axes and genomic geometry unchanged."
+  }
+]

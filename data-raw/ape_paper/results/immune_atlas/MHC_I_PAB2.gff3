@@ -1,0 +1,10 @@
+##gff-version 3
+MHC_I	source	gene	1	12581	.	+	.	ID=g1
+MHC_I	source	gene	112794	115823	.	+	.	ID=g2
+MHC_I	source	gene	172429	175148	.	+	.	ID=g3
+MHC_I	source	gene	222903	225752	.	+	.	ID=g4
+MHC_I	source	gene	287206	291824	.	+	.	ID=g5
+MHC_I	source	gene	883610	886681	.	+	.	ID=g6
+MHC_I	source	gene	1667912	1670599	.	-	.	ID=g7
+MHC_I	source	gene	1800451	1803131	.	-	.	ID=g8
+MHC_I	source	gene	1926439	1929126	.	-	.	ID=g9

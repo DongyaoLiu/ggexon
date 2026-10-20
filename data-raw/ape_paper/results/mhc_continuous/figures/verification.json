@@ -1,0 +1,46 @@
+{
+  "status": "PASS",
+  "native_tracks": 13,
+  "source_exon_tracks": 13,
+  "released_annotation_tracks": 7,
+  "projected_context_tracks": [
+    "GGOh2",
+    "PABh2",
+    "PPAh1",
+    "PPYh2",
+    "PTRh2",
+    "SSYh2"
+  ],
+  "curated_only_tracks": [],
+  "curated_mhc_genes": 285,
+  "representative_models": 2463,
+  "display_ribbons": 624,
+  "raw_alignments_audited": 273,
+  "reverse_alignments": 9,
+  "aligned_target_bp_audited": 63160232,
+  "common_bp_scale": true,
+  "vector_pdf": true,
+  "lollipop_heads": 285,
+  "context_native_gene_arrows": 2320,
+  "native_mhc_gene_arrows": 285,
+  "native_mhc_ortholog_colors": true,
+  "head_width_mm_by_device": {
+    "pdf": 12.1722222222222,
+    "png": 11.9323333333333
+  },
+  "max_head_rows_by_device": {
+    "pdf": 6,
+    "png": 6
+  },
+  "head_overlap": false,
+  "heads_inside_panels": true,
+  "labels_inside_heads": true,
+  "max_shift_mm": 25.0,
+  "ordered_columns": true,
+  "leader_crossings": 0,
+  "leader_other_head_intersections": 0,
+  "genomic_anchors_unchanged": true,
+  "shared_gene_rows": true,
+  "shared_row_count": 6,
+  "source_gene_keys_with_fixed_rows": 41
+}

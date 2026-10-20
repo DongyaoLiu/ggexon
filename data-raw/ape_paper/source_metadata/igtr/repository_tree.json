@@ -1,0 +1,1937 @@
+{
+  "sha": "22685e8819da7cf98d5e8b7c4b4c2495802468ce",
+  "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/trees/22685e8819da7cf98d5e8b7c4b4c2495802468ce",
+  "tree": [
+    {
+      "path": ".gitignore",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e43b0f988953ae3a84b00331d0ccf5f7d51cb3cf",
+      "size": 10,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/e43b0f988953ae3a84b00331d0ccf5f7d51cb3cf"
+    },
+    {
+      "path": "README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "adbf8999fea2bab16aa8343b23950a181a183607",
+      "size": 1840,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/adbf8999fea2bab16aa8343b23950a181a183607"
+    },
+    {
+      "path": "aux_scripts",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "23d01358ea4d664aba0885ad08fbd714339e373f",
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/trees/23d01358ea4d664aba0885ad08fbd714339e373f"
+    },
+    {
+      "path": "aux_scripts/generate_gene_table_by_locus.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "245bab9f48f109feeb36d24f4014be84c8cc5b19",
+      "size": 3596,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/245bab9f48f109feeb36d24f4014be84c8cc5b19"
+    },
+    {
+      "path": "aux_scripts/generate_pairwise_alignments.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c4ba614c9f2db7d35231a416af3287af3d9db9db",
+      "size": 1902,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/c4ba614c9f2db7d35231a416af3287af3d9db9db"
+    },
+    {
+      "path": "aux_scripts/ncbi_bed_files",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "7af659cacd6053c9155f3a30dd8a1ef9ca1712c0",
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/trees/7af659cacd6053c9155f3a30dd8a1ef9ca1712c0"
+    },
+    {
+      "path": "aux_scripts/ncbi_bed_files/IGH_annotation.BED",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "06cb1cbb3e0c4a4396be7e35d6c1a1e0c177d164",
+      "size": 9165,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/06cb1cbb3e0c4a4396be7e35d6c1a1e0c177d164"
+    },
+    {
+      "path": "aux_scripts/ncbi_bed_files/IGK_annotation.BED",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8ea5152e02f500a3a05f6ae951d404f1c73db0cc",
+      "size": 4598,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/8ea5152e02f500a3a05f6ae951d404f1c73db0cc"
+    },
+    {
+      "path": "aux_scripts/ncbi_bed_files/IGL_annotation.BED",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7d564e9bb427f4230f20e368d82e2a17fbf1a923",
+      "size": 5463,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/7d564e9bb427f4230f20e368d82e2a17fbf1a923"
+    },
+    {
+      "path": "aux_scripts/ncbi_bed_files/TRA_annotation.BED",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "852972d91aa27675e2f187ceb554341755d8ae97",
+      "size": 5873,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/852972d91aa27675e2f187ceb554341755d8ae97"
+    },
+    {
+      "path": "aux_scripts/ncbi_bed_files/TRB_annotation.BED",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9470b9e966cb07d51094761e8c267fa858fc7654",
+      "size": 4273,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/9470b9e966cb07d51094761e8c267fa858fc7654"
+    },
+    {
+      "path": "aux_scripts/ncbi_bed_files/TRG_annotation.BED",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b9d1648f997ff886c1703fc8b535de294ca08131",
+      "size": 1036,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/b9d1648f997ff886c1703fc8b535de294ca08131"
+    },
+    {
+      "path": "configs",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "0116ac87477fb08b49315ffe0af8a9e3e975a11e",
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/trees/0116ac87477fb08b49315ffe0af8a9e3e975a11e"
+    },
+    {
+      "path": "configs/config_IGH.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2b363f67f9937e783d1c6bf9b391fad017a7d042",
+      "size": 1792,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/2b363f67f9937e783d1c6bf9b391fad017a7d042"
+    },
+    {
+      "path": "configs/config_IGK.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ac6008c49be607ab21daadfb2677e1e60f40fbbd",
+      "size": 1801,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/ac6008c49be607ab21daadfb2677e1e60f40fbbd"
+    },
+    {
+      "path": "configs/config_IGL.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8b66b7eb6f6750a1c1eb6b3da305b89d18240553",
+      "size": 1807,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/8b66b7eb6f6750a1c1eb6b3da305b89d18240553"
+    },
+    {
+      "path": "configs/config_TRA.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "224c57260c5a4bc819137a980ad5a41e8495d326",
+      "size": 1805,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/224c57260c5a4bc819137a980ad5a41e8495d326"
+    },
+    {
+      "path": "configs/config_TRB.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "64697a9f4be9ce1e391fc2fa5e646f5bea4f037e",
+      "size": 1793,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/64697a9f4be9ce1e391fc2fa5e646f5bea4f037e"
+    },
+    {
+      "path": "configs/config_TRG.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3371d76de1891f5d12b037119045b5ab9bc0be45",
+      "size": 1803,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/3371d76de1891f5d12b037119045b5ab9bc0be45"
+    },
+    {
+      "path": "data_SV_block_positions",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "c17065fe4a3972c1d7f0427708745422cb26fc8d",
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/trees/c17065fe4a3972c1d7f0427708745422cb26fc8d"
+    },
+    {
+      "path": "data_SV_block_positions/block_IGH_bonobo_hap_1.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "48a94b5154e62f7d2998eee09d72127c1d48aac8",
+      "size": 952,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/48a94b5154e62f7d2998eee09d72127c1d48aac8"
+    },
+    {
+      "path": "data_SV_block_positions/block_IGH_bonobo_hap_2.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "69d9744819d2626da770337282f53d56666e8d70",
+      "size": 1063,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/69d9744819d2626da770337282f53d56666e8d70"
+    },
+    {
+      "path": "data_SV_block_positions/block_IGH_bornean_orangutan_hap_1.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "07ff64fc5af417ef25f55e144c7286b6dff947bd",
+      "size": 1042,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/07ff64fc5af417ef25f55e144c7286b6dff947bd"
+    },
+    {
+      "path": "data_SV_block_positions/block_IGH_bornean_orangutan_hap_2.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "57a9117fafc18af674b38ea44ccf4d5cc3a9f1d6",
+      "size": 1092,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/57a9117fafc18af674b38ea44ccf4d5cc3a9f1d6"
+    },
+    {
+      "path": "data_SV_block_positions/block_IGH_gorilla_hap_1.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fee204b6d21bb6f1edd4dec552773b9de10ca76e",
+      "size": 776,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/fee204b6d21bb6f1edd4dec552773b9de10ca76e"
+    },
+    {
+      "path": "data_SV_block_positions/block_IGH_gorilla_hap_2.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "084de97f65c3bb87d69870d44e10fed94cf01c10",
+      "size": 754,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/084de97f65c3bb87d69870d44e10fed94cf01c10"
+    },
+    {
+      "path": "data_SV_block_positions/block_IGH_human_t2t.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6e49d9901ecc5396b8ae1aea6b0b99e035c1ff63",
+      "size": 738,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/6e49d9901ecc5396b8ae1aea6b0b99e035c1ff63"
+    },
+    {
+      "path": "data_SV_block_positions/block_IGH_sumatran_orangutan_hap_1.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f981968fa4aa5f184b0b1ba98d6c9d20bebafb4c",
+      "size": 926,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/f981968fa4aa5f184b0b1ba98d6c9d20bebafb4c"
+    },
+    {
+      "path": "data_SV_block_positions/block_IGH_sumatran_orangutan_hap_2.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6d574e51ec4021fad8a9f7b240ea128d523ea51f",
+      "size": 897,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/6d574e51ec4021fad8a9f7b240ea128d523ea51f"
+    },
+    {
+      "path": "data_SV_block_positions/block_IGK_bonobo_hap_1.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f7ac2b326c93db8cdefc8e238646a02ce24160c0",
+      "size": 320,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/f7ac2b326c93db8cdefc8e238646a02ce24160c0"
+    },
+    {
+      "path": "data_SV_block_positions/block_IGK_bonobo_hap_2.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "eeccefd3182a124f8b187decc443644b68ae0df6",
+      "size": 342,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/eeccefd3182a124f8b187decc443644b68ae0df6"
+    },
+    {
+      "path": "data_SV_block_positions/block_IGK_bornean_orangutan_hap_1.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d09e72dc9248dcaf06a93c1a667275e9b5a82e97",
+      "size": 346,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/d09e72dc9248dcaf06a93c1a667275e9b5a82e97"
+    },
+    {
+      "path": "data_SV_block_positions/block_IGK_bornean_orangutan_hap_2.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "71fc6a6fb43810c6b0172a4ea786e0c0365db38a",
+      "size": 346,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/71fc6a6fb43810c6b0172a4ea786e0c0365db38a"
+    },
+    {
+      "path": "data_SV_block_positions/block_IGK_gorilla_hap_1.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "196e9b52aab4d509b01b3b9d11e968083d1f9586",
+      "size": 456,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/196e9b52aab4d509b01b3b9d11e968083d1f9586"
+    },
+    {
+      "path": "data_SV_block_positions/block_IGK_gorilla_hap_2.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "03ca6cc22de16b02ea0351bbb8f4829c8a77774b",
+      "size": 364,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/03ca6cc22de16b02ea0351bbb8f4829c8a77774b"
+    },
+    {
+      "path": "data_SV_block_positions/block_IGK_human_t2t.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "45e761cd11adda31206b4c6235f242f5b12c5032",
+      "size": 841,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/45e761cd11adda31206b4c6235f242f5b12c5032"
+    },
+    {
+      "path": "data_SV_block_positions/block_IGK_sumatran_orangutan_hap_1.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b2d0d9830e52b41d89814eb20b2767c830c9ba9e",
+      "size": 346,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/b2d0d9830e52b41d89814eb20b2767c830c9ba9e"
+    },
+    {
+      "path": "data_SV_block_positions/block_IGK_sumatran_orangutan_hap_2.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "200ff079716ccb38b09ae9a00524501e7cce51c2",
+      "size": 368,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/200ff079716ccb38b09ae9a00524501e7cce51c2"
+    },
+    {
+      "path": "data_SV_block_positions/block_IGL_bonobo_hap_1.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a7c04cd2a80cfc4bec7e6c1af4b1dc0ddeb34d7f",
+      "size": 786,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/a7c04cd2a80cfc4bec7e6c1af4b1dc0ddeb34d7f"
+    },
+    {
+      "path": "data_SV_block_positions/block_IGL_bonobo_hap_2.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "774f94526dc1373c2edb34b495b0645855c74c30",
+      "size": 775,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/774f94526dc1373c2edb34b495b0645855c74c30"
+    },
+    {
+      "path": "data_SV_block_positions/block_IGL_bornean_orangutan_hap_1.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d9c9ba7b2939c929c735a34696ed54229c5a2656",
+      "size": 642,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/d9c9ba7b2939c929c735a34696ed54229c5a2656"
+    },
+    {
+      "path": "data_SV_block_positions/block_IGL_bornean_orangutan_hap_2.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f5c2c24b3d8ea642ef9b5c929ec643f65f425517",
+      "size": 620,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/f5c2c24b3d8ea642ef9b5c929ec643f65f425517"
+    },
+    {
+      "path": "data_SV_block_positions/block_IGL_gorilla_hap_1.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0423063ed273f51dbdcdcdb428032b49ca99b42d",
+      "size": 236,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/0423063ed273f51dbdcdcdb428032b49ca99b42d"
+    },
+    {
+      "path": "data_SV_block_positions/block_IGL_gorilla_hap_2.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "301978575ea8c885d6355e41ae0ef87c89b1f339",
+      "size": 280,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/301978575ea8c885d6355e41ae0ef87c89b1f339"
+    },
+    {
+      "path": "data_SV_block_positions/block_IGL_human_t2t.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a68312317a75eeda127336984005b85b4e07eb09",
+      "size": 302,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/a68312317a75eeda127336984005b85b4e07eb09"
+    },
+    {
+      "path": "data_SV_block_positions/block_IGL_sumatran_orangutan_hap_1.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "482b70de56077632c89b9e5b1c41def5985b8598",
+      "size": 368,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/482b70de56077632c89b9e5b1c41def5985b8598"
+    },
+    {
+      "path": "data_SV_block_positions/block_IGL_sumatran_orangutan_hap_2.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "62e40a91922956ef8691ac99fec9eb684d646e7f",
+      "size": 368,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/62e40a91922956ef8691ac99fec9eb684d646e7f"
+    },
+    {
+      "path": "data_SV_block_positions/block_TRA_bonobo_hap_1.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0589d6341c394b6576e904de017444c9f92f6e09",
+      "size": 96,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/0589d6341c394b6576e904de017444c9f92f6e09"
+    },
+    {
+      "path": "data_SV_block_positions/block_TRA_bonobo_hap_2.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d92d772508385ce9af78dbc8a463fbe609bbb258",
+      "size": 99,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/d92d772508385ce9af78dbc8a463fbe609bbb258"
+    },
+    {
+      "path": "data_SV_block_positions/block_TRA_bornean_orangutan_hap_1.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5966ca6406a52b68fe8bdac74023e09fe1fa2031",
+      "size": 97,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/5966ca6406a52b68fe8bdac74023e09fe1fa2031"
+    },
+    {
+      "path": "data_SV_block_positions/block_TRA_bornean_orangutan_hap_2.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e10b72d2b80068aa1ed6876d9ae913a09878ee77",
+      "size": 97,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/e10b72d2b80068aa1ed6876d9ae913a09878ee77"
+    },
+    {
+      "path": "data_SV_block_positions/block_TRA_gorilla_hap_1.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d571eef304e87797864fa265ecb38d6b4ee3b1d6",
+      "size": 60,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/d571eef304e87797864fa265ecb38d6b4ee3b1d6"
+    },
+    {
+      "path": "data_SV_block_positions/block_TRA_gorilla_hap_2.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "72af82eb67c3edea11c8502936203d0ab5148e46",
+      "size": 60,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/72af82eb67c3edea11c8502936203d0ab5148e46"
+    },
+    {
+      "path": "data_SV_block_positions/block_TRA_human_t2t.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7699b2c97c416e58861bb1151baf67b791af834b",
+      "size": 60,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/7699b2c97c416e58861bb1151baf67b791af834b"
+    },
+    {
+      "path": "data_SV_block_positions/block_TRA_sumatran_orangutan_hap_1.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b25f5caf3f0985eb24d9c20258d999e9376a4423",
+      "size": 97,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/b25f5caf3f0985eb24d9c20258d999e9376a4423"
+    },
+    {
+      "path": "data_SV_block_positions/block_TRA_sumatran_orangutan_hap_2.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "161eda4d9c44a7227030fdc76a7fb8deb6c5b993",
+      "size": 97,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/161eda4d9c44a7227030fdc76a7fb8deb6c5b993"
+    },
+    {
+      "path": "data_SV_block_positions/block_TRB_bonobo_hap_1.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b4197ebfe5ae2b793c1baa27b0b66ff28a48644e",
+      "size": 302,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/b4197ebfe5ae2b793c1baa27b0b66ff28a48644e"
+    },
+    {
+      "path": "data_SV_block_positions/block_TRB_bonobo_hap_2.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a607170791e38450bddfeb8543310836c210891e",
+      "size": 302,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/a607170791e38450bddfeb8543310836c210891e"
+    },
+    {
+      "path": "data_SV_block_positions/block_TRB_bornean_orangutan_hap_1.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "688ad202c3ff75a0e782b44f4810261575e8396f",
+      "size": 470,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/688ad202c3ff75a0e782b44f4810261575e8396f"
+    },
+    {
+      "path": "data_SV_block_positions/block_TRB_bornean_orangutan_hap_2.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4ab964f8af8805f91b9b6c7e549bc427b31235ac",
+      "size": 470,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/4ab964f8af8805f91b9b6c7e549bc427b31235ac"
+    },
+    {
+      "path": "data_SV_block_positions/block_TRB_gorilla_hap_1.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8207cc6b386ec89886a21c13bc06085e31cac67b",
+      "size": 340,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/8207cc6b386ec89886a21c13bc06085e31cac67b"
+    },
+    {
+      "path": "data_SV_block_positions/block_TRB_gorilla_hap_2.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4b3569333ea37c6bff1d6e1a27b4b341bce6c870",
+      "size": 340,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/4b3569333ea37c6bff1d6e1a27b4b341bce6c870"
+    },
+    {
+      "path": "data_SV_block_positions/block_TRB_human_t2t.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "df3f3899835d3bc4f7b6e075231afad17086b965",
+      "size": 321,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/df3f3899835d3bc4f7b6e075231afad17086b965"
+    },
+    {
+      "path": "data_SV_block_positions/block_TRB_sumatran_orangutan_hap_1.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d4a37bca356fe0ab0764b86663ca46e6025f349c",
+      "size": 426,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/d4a37bca356fe0ab0764b86663ca46e6025f349c"
+    },
+    {
+      "path": "data_SV_block_positions/block_TRB_sumatran_orangutan_hap_2.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e72335e283afbbacf86b426e55a4d5058cba6c28",
+      "size": 469,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/e72335e283afbbacf86b426e55a4d5058cba6c28"
+    },
+    {
+      "path": "data_SV_block_positions/block_TRG_bonobo_hap_1.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3084036b1d2bb6d88daac468a471d609b0fe6ff0",
+      "size": 170,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/3084036b1d2bb6d88daac468a471d609b0fe6ff0"
+    },
+    {
+      "path": "data_SV_block_positions/block_TRG_bonobo_hap_2.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "83a8ca5d3a183e2405a2b6d16465c79e995c49c6",
+      "size": 148,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/83a8ca5d3a183e2405a2b6d16465c79e995c49c6"
+    },
+    {
+      "path": "data_SV_block_positions/block_TRG_bornean_orangutan_hap_1.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "509830a8118effbb6a54002ce909683539258287",
+      "size": 156,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/509830a8118effbb6a54002ce909683539258287"
+    },
+    {
+      "path": "data_SV_block_positions/block_TRG_bornean_orangutan_hap_2.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3707c4db05f16c8697e74eb6b15c32e51813656d",
+      "size": 156,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/3707c4db05f16c8697e74eb6b15c32e51813656d"
+    },
+    {
+      "path": "data_SV_block_positions/block_TRG_gorilla_hap_1.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "50504f84130381ef48a9cccac4fb333c965b5db2",
+      "size": 147,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/50504f84130381ef48a9cccac4fb333c965b5db2"
+    },
+    {
+      "path": "data_SV_block_positions/block_TRG_gorilla_hap_2.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7869fc7201c070846775d69d7769dbe3181ed861",
+      "size": 147,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/7869fc7201c070846775d69d7769dbe3181ed861"
+    },
+    {
+      "path": "data_SV_block_positions/block_TRG_human_t2t.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "553dd88955c4a2da4ab97ca7841c62a5c5628122",
+      "size": 192,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/553dd88955c4a2da4ab97ca7841c62a5c5628122"
+    },
+    {
+      "path": "data_SV_block_positions/block_TRG_sumatran_orangutan_hap_1.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "947679620b2b2cfb093373f907c4be1ea249bafb",
+      "size": 156,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/947679620b2b2cfb093373f907c4be1ea249bafb"
+    },
+    {
+      "path": "data_SV_block_positions/block_TRG_sumatran_orangutan_hap_2.tsv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3d7e8748fe930b6e5f2a1164d7416909dfd6ba46",
+      "size": 176,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/3d7e8748fe930b6e5f2a1164d7416909dfd6ba46"
+    },
+    {
+      "path": "data_human_t2t_gene_positions",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "17e50f6a1de717db56b5dafa4c83613b122a5260",
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/trees/17e50f6a1de717db56b5dafa4c83613b122a5260"
+    },
+    {
+      "path": "data_human_t2t_gene_positions/human_IGH.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "38391acf8600e42b73a26b4b9dbaf240fc19566c",
+      "size": 21262,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/38391acf8600e42b73a26b4b9dbaf240fc19566c"
+    },
+    {
+      "path": "data_human_t2t_gene_positions/human_IGH.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4c52964ad3cbd5df73871690df3f90a2117a8fca",
+      "size": 1046794,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/4c52964ad3cbd5df73871690df3f90a2117a8fca"
+    },
+    {
+      "path": "data_human_t2t_gene_positions/human_IGK.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f264448e65cce4e8078dd26d6a2bac0f1ad0896c",
+      "size": 18545,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/f264448e65cce4e8078dd26d6a2bac0f1ad0896c"
+    },
+    {
+      "path": "data_human_t2t_gene_positions/human_IGK.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3dfcbcdb090ab3cd0a21be64cbacc3a6dec786fb",
+      "size": 2096514,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/3dfcbcdb090ab3cd0a21be64cbacc3a6dec786fb"
+    },
+    {
+      "path": "data_human_t2t_gene_positions/human_IGL.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0683514cdbc3df8093057534b43e2d56d56569f0",
+      "size": 12752,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/0683514cdbc3df8093057534b43e2d56d56569f0"
+    },
+    {
+      "path": "data_human_t2t_gene_positions/human_IGL.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "def1846dd8f01db3eb570750a0d20855c1e39e62",
+      "size": 939629,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/def1846dd8f01db3eb570750a0d20855c1e39e62"
+    },
+    {
+      "path": "data_human_t2t_gene_positions/human_TRA.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "220484d9574dccb465e2811bd80c746e24ce4d0e",
+      "size": 22126,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/220484d9574dccb465e2811bd80c746e24ce4d0e"
+    },
+    {
+      "path": "data_human_t2t_gene_positions/human_TRA.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2631c5f1c7f86fe839fa489bade038fa1c7dca38",
+      "size": 962946,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/2631c5f1c7f86fe839fa489bade038fa1c7dca38"
+    },
+    {
+      "path": "data_human_t2t_gene_positions/human_TRB.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c64d0f9c7bec9d78f684180590da2d8b4ddf188b",
+      "size": 20126,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/c64d0f9c7bec9d78f684180590da2d8b4ddf188b"
+    },
+    {
+      "path": "data_human_t2t_gene_positions/human_TRB.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ac2a51f534c6ac102fca4de5502b94e0e8267eb3",
+      "size": 578978,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/ac2a51f534c6ac102fca4de5502b94e0e8267eb3"
+    },
+    {
+      "path": "data_human_t2t_gene_positions/human_TRG.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "60ea264e14b1f96c322f7050f8cad80a46eef834",
+      "size": 4090,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/60ea264e14b1f96c322f7050f8cad80a46eef834"
+    },
+    {
+      "path": "data_human_t2t_gene_positions/human_TRG.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4dbf29e45ecc0bd0ce42378387f03d1f300c9325",
+      "size": 79010,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/4dbf29e45ecc0bd0ce42378387f03d1f300c9325"
+    },
+    {
+      "path": "data_locus_alignments",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "19f6969817b2c67343f896e06dedf360d2f7327e",
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/trees/19f6969817b2c67343f896e06dedf360d2f7327e"
+    },
+    {
+      "path": "data_locus_alignments/alignments_IGH",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "194c5180a9557a1d86181e44b0df36c47b037b56",
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/trees/194c5180a9557a1d86181e44b0df36c47b037b56"
+    },
+    {
+      "path": "data_locus_alignments/alignments_IGH/human_T2T_mGorGor1_mat_range.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e52434a06e0943dc5f6a7d220dceed7c86068f70",
+      "size": 204,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/e52434a06e0943dc5f6a7d220dceed7c86068f70"
+    },
+    {
+      "path": "data_locus_alignments/alignments_IGH/mGorGor1_mat_mGorGor1_pat_range.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6ce2429d528d3937c77ba6936ceeaff83b841823",
+      "size": 366,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/6ce2429d528d3937c77ba6936ceeaff83b841823"
+    },
+    {
+      "path": "data_locus_alignments/alignments_IGH/mGorGor1_pat_mPonAbe1_hap1_range.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bca41132c6c6ceb7b2fbec83be4990a1e02bb173",
+      "size": 308,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/bca41132c6c6ceb7b2fbec83be4990a1e02bb173"
+    },
+    {
+      "path": "data_locus_alignments/alignments_IGH/mPanPan1_mat_mPanPan1_pat_range.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1635a0c2b0eacf35b8716bcc8758c67f4d5364cc",
+      "size": 441,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/1635a0c2b0eacf35b8716bcc8758c67f4d5364cc"
+    },
+    {
+      "path": "data_locus_alignments/alignments_IGH/mPanPan1_pat_human_T2T_range.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "831bbde3904e31231a01d1d6de28da64fe344a2a",
+      "size": 269,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/831bbde3904e31231a01d1d6de28da64fe344a2a"
+    },
+    {
+      "path": "data_locus_alignments/alignments_IGH/mPonAbe1_hap1_mPonAbe1_hap2_range.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cdb7517b570409a3017e386d597410c84f5cb025",
+      "size": 346,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/cdb7517b570409a3017e386d597410c84f5cb025"
+    },
+    {
+      "path": "data_locus_alignments/alignments_IGH/mPonAbe1_hap2_mPonPyg2_hap1_range.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1352bfc931ab3f9cf818c38a357714e279dcec40",
+      "size": 416,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/1352bfc931ab3f9cf818c38a357714e279dcec40"
+    },
+    {
+      "path": "data_locus_alignments/alignments_IGH/mPonPyg2_hap1_mPonPyg2_hap2_range.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "49d806d5ad3a7f049358ac3293943bdbc8a92ba0",
+      "size": 663,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/49d806d5ad3a7f049358ac3293943bdbc8a92ba0"
+    },
+    {
+      "path": "data_locus_alignments/alignments_IGK",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "f450ef4699f148146d097bb5ac4934c50cc1acc8",
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/trees/f450ef4699f148146d097bb5ac4934c50cc1acc8"
+    },
+    {
+      "path": "data_locus_alignments/alignments_IGK/human_T2T_mGorGor1_mat_range.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b8b58145a4dcea589b1e6baae0cc081212dce10c",
+      "size": 248,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/b8b58145a4dcea589b1e6baae0cc081212dce10c"
+    },
+    {
+      "path": "data_locus_alignments/alignments_IGK/mGorGor1_mat_mGorGor1_pat_range.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3c82a5adfd896994240360520472173f23af0e1c",
+      "size": 379,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/3c82a5adfd896994240360520472173f23af0e1c"
+    },
+    {
+      "path": "data_locus_alignments/alignments_IGK/mGorGor1_pat_mPonAbe1_hap1_range.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ec7b4781a9be83820eb67b32565b3ad5dda32202",
+      "size": 237,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/ec7b4781a9be83820eb67b32565b3ad5dda32202"
+    },
+    {
+      "path": "data_locus_alignments/alignments_IGK/mPanPan1_mat_mPanPan1_pat_range.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4bd42b49c2f68b07c08b94e649c2e1a98de196f6",
+      "size": 260,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/4bd42b49c2f68b07c08b94e649c2e1a98de196f6"
+    },
+    {
+      "path": "data_locus_alignments/alignments_IGK/mPanPan1_pat_human_T2T_range.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "715f5cb6a937ff9177f33abac9edb36c0ca546eb",
+      "size": 171,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/715f5cb6a937ff9177f33abac9edb36c0ca546eb"
+    },
+    {
+      "path": "data_locus_alignments/alignments_IGK/mPonAbe1_hap1_mPonAbe1_hap2_range.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "68862a5bb99d336b800c08e25cd3684119bcc9c0",
+      "size": 434,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/68862a5bb99d336b800c08e25cd3684119bcc9c0"
+    },
+    {
+      "path": "data_locus_alignments/alignments_IGK/mPonAbe1_hap2_mPonPyg2_hap1_range.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7ff8c70cb1934584497442d0849a8b735b21396a",
+      "size": 360,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/7ff8c70cb1934584497442d0849a8b735b21396a"
+    },
+    {
+      "path": "data_locus_alignments/alignments_IGK/mPonPyg2_hap1_mPonPyg2_hap2_range.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7e7bdab1245263577eb86e6d727d2698ebce579f",
+      "size": 394,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/7e7bdab1245263577eb86e6d727d2698ebce579f"
+    },
+    {
+      "path": "data_locus_alignments/alignments_IGL",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "9737473b385da2cb3011cff55afacb8405abbac8",
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/trees/9737473b385da2cb3011cff55afacb8405abbac8"
+    },
+    {
+      "path": "data_locus_alignments/alignments_IGL/human_T2T_mGorGor1_mat_range.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6610cef2cf4169965d12476052bb3563914ba059",
+      "size": 294,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/6610cef2cf4169965d12476052bb3563914ba059"
+    },
+    {
+      "path": "data_locus_alignments/alignments_IGL/mGorGor1_mat_mGorGor1_pat_range.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f6007dde3c965d4d2a20e16387f8aa90e54bcdbe",
+      "size": 394,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/f6007dde3c965d4d2a20e16387f8aa90e54bcdbe"
+    },
+    {
+      "path": "data_locus_alignments/alignments_IGL/mGorGor1_pat_mPonAbe1_hap1_range.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7da450a2a9d3adb601d3f2bb8b4db5f36bb4d1d3",
+      "size": 234,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/7da450a2a9d3adb601d3f2bb8b4db5f36bb4d1d3"
+    },
+    {
+      "path": "data_locus_alignments/alignments_IGL/mPanPan1_mat_mPanPan1_pat_range.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "219ddc133a8c5f7384378faa7f7a341969e6fe9e",
+      "size": 674,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/219ddc133a8c5f7384378faa7f7a341969e6fe9e"
+    },
+    {
+      "path": "data_locus_alignments/alignments_IGL/mPanPan1_pat_human_T2T_range.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b57e33bf387b93ab021b3dc33946d98b2774ca5b",
+      "size": 265,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/b57e33bf387b93ab021b3dc33946d98b2774ca5b"
+    },
+    {
+      "path": "data_locus_alignments/alignments_IGL/mPonAbe1_hap1_mPonAbe1_hap2_range.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "531f700abc82777b1380e352fa3bc59569f4ff9c",
+      "size": 270,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/531f700abc82777b1380e352fa3bc59569f4ff9c"
+    },
+    {
+      "path": "data_locus_alignments/alignments_IGL/mPonAbe1_hap2_mPonPyg2_hap1_range.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a2c945cdfbb329771772ff5ac59a1b3df9582b6c",
+      "size": 300,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/a2c945cdfbb329771772ff5ac59a1b3df9582b6c"
+    },
+    {
+      "path": "data_locus_alignments/alignments_IGL/mPonPyg2_hap1_mPonPyg2_hap2_range.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e0da7eb8cb86068fa96232c2af7458ae663df86d",
+      "size": 521,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/e0da7eb8cb86068fa96232c2af7458ae663df86d"
+    },
+    {
+      "path": "data_locus_alignments/alignments_TRA",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "7bd2ccfe89ceba6845ead4b6c2b4d0b28b90b0f8",
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/trees/7bd2ccfe89ceba6845ead4b6c2b4d0b28b90b0f8"
+    },
+    {
+      "path": "data_locus_alignments/alignments_TRA/human_T2T_mGorGor1_mat_range.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bc2518924529024429cfddc2492ea0edd08b5d52",
+      "size": 161,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/bc2518924529024429cfddc2492ea0edd08b5d52"
+    },
+    {
+      "path": "data_locus_alignments/alignments_TRA/mGorGor1_mat_mGorGor1_pat_range.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d01637fdd7bb998295e5d7c2c2bf0dd9662552c4",
+      "size": 502,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/d01637fdd7bb998295e5d7c2c2bf0dd9662552c4"
+    },
+    {
+      "path": "data_locus_alignments/alignments_TRA/mGorGor1_pat_mPonAbe1_hap1_range.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "571fd974f255c9c571cb35147c25341ca6e74b7b",
+      "size": 301,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/571fd974f255c9c571cb35147c25341ca6e74b7b"
+    },
+    {
+      "path": "data_locus_alignments/alignments_TRA/mPanPan1_mat_mPanPan1_pat_range.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c526f67966319f9ad8d781df42ae694f3c68cf4f",
+      "size": 464,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/c526f67966319f9ad8d781df42ae694f3c68cf4f"
+    },
+    {
+      "path": "data_locus_alignments/alignments_TRA/mPanPan1_pat_human_T2T_range.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e0e6906a636e695d94394c5e497e4f84c24b8e4a",
+      "size": 129,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/e0e6906a636e695d94394c5e497e4f84c24b8e4a"
+    },
+    {
+      "path": "data_locus_alignments/alignments_TRA/mPonAbe1_hap1_mPonAbe1_hap2_range.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0930933a7d3aa600b3b4fe402ecec78c7eaf934b",
+      "size": 330,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/0930933a7d3aa600b3b4fe402ecec78c7eaf934b"
+    },
+    {
+      "path": "data_locus_alignments/alignments_TRA/mPonAbe1_hap2_mPonPyg2_hap1_range.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d2f5696f348419475af2a4e6bed6c722c6255661",
+      "size": 502,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/d2f5696f348419475af2a4e6bed6c722c6255661"
+    },
+    {
+      "path": "data_locus_alignments/alignments_TRA/mPonPyg2_hap1_mPonPyg2_hap2_range.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e7347f5c167af4bfebab47981ad480acf7111c5d",
+      "size": 394,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/e7347f5c167af4bfebab47981ad480acf7111c5d"
+    },
+    {
+      "path": "data_locus_alignments/alignments_TRB",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "bd40be5a203f420395e6375a8bf926bad387e11f",
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/trees/bd40be5a203f420395e6375a8bf926bad387e11f"
+    },
+    {
+      "path": "data_locus_alignments/alignments_TRB/human_T2T_mGorGor1_mat_range.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ebb69382a1098429d34fa1e3d04461c851781499",
+      "size": 129,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/ebb69382a1098429d34fa1e3d04461c851781499"
+    },
+    {
+      "path": "data_locus_alignments/alignments_TRB/mGorGor1_mat_mGorGor1_pat_range.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f5939e328ea9d2bfc870eeebb8a81abc1cf9b29b",
+      "size": 161,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/f5939e328ea9d2bfc870eeebb8a81abc1cf9b29b"
+    },
+    {
+      "path": "data_locus_alignments/alignments_TRB/mGorGor1_pat_mPonAbe1_hap1_range.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "df8450ebce31eb90672b76f1ac643ddf8b0f6680",
+      "size": 238,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/df8450ebce31eb90672b76f1ac643ddf8b0f6680"
+    },
+    {
+      "path": "data_locus_alignments/alignments_TRB/mPanPan1_mat_mPanPan1_pat_range.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c873526af19260c2b2c8b4c19a0981c58d9f9b5a",
+      "size": 326,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/c873526af19260c2b2c8b4c19a0981c58d9f9b5a"
+    },
+    {
+      "path": "data_locus_alignments/alignments_TRB/mPanPan1_pat_human_T2T_range.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5037b0dde199fdd1f03a5bf6c6635229e9a3976b",
+      "size": 268,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/5037b0dde199fdd1f03a5bf6c6635229e9a3976b"
+    },
+    {
+      "path": "data_locus_alignments/alignments_TRB/mPonAbe1_hap1_mPonAbe1_hap2_range.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f978905785fea90b2de00f3c5ddfdef6e0a3f518",
+      "size": 271,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/f978905785fea90b2de00f3c5ddfdef6e0a3f518"
+    },
+    {
+      "path": "data_locus_alignments/alignments_TRB/mPonAbe1_hap2_mPonPyg2_hap1_range.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7f1f8cb7f2439065eb668612cd5bdbc66808718f",
+      "size": 293,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/7f1f8cb7f2439065eb668612cd5bdbc66808718f"
+    },
+    {
+      "path": "data_locus_alignments/alignments_TRB/mPonPyg2_hap1_mPonPyg2_hap2_range.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ac3598bf0fce7c82862b9311dc6564bbe1455fde",
+      "size": 429,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/ac3598bf0fce7c82862b9311dc6564bbe1455fde"
+    },
+    {
+      "path": "data_locus_alignments/alignments_TRG",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "a1aad1382d1f74051d1c7f2e2e6d6416db562b37",
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/trees/a1aad1382d1f74051d1c7f2e2e6d6416db562b37"
+    },
+    {
+      "path": "data_locus_alignments/alignments_TRG/human_T2T_mGorGor1_mat_range.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b847481309d622d63121e82a93e843b8c7d8ad63",
+      "size": 65,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/b847481309d622d63121e82a93e843b8c7d8ad63"
+    },
+    {
+      "path": "data_locus_alignments/alignments_TRG/mGorGor1_mat_mGorGor1_pat_range.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "27b12fd1653b5441154721ee662a2bc639c7e6d3",
+      "size": 125,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/27b12fd1653b5441154721ee662a2bc639c7e6d3"
+    },
+    {
+      "path": "data_locus_alignments/alignments_TRG/mGorGor1_pat_mPonAbe1_hap1_range.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4bfb991787a8bc570fd7bf317dc12c0888291e99",
+      "size": 62,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/4bfb991787a8bc570fd7bf317dc12c0888291e99"
+    },
+    {
+      "path": "data_locus_alignments/alignments_TRG/mPanPan1_mat_mPanPan1_pat_range.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e9af4c1880b0e7b70366450724dbb34ccc2f28af",
+      "size": 67,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/e9af4c1880b0e7b70366450724dbb34ccc2f28af"
+    },
+    {
+      "path": "data_locus_alignments/alignments_TRG/mPanPan1_pat_human_T2T_range.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cc1a1aa9444899689250234adff1fe5a6f0ed237",
+      "size": 65,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/cc1a1aa9444899689250234adff1fe5a6f0ed237"
+    },
+    {
+      "path": "data_locus_alignments/alignments_TRG/mPonAbe1_hap1_mPonAbe1_hap2_range.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f99a9d5f21bdb94d79601cee710668af04d58fe3",
+      "size": 97,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/f99a9d5f21bdb94d79601cee710668af04d58fe3"
+    },
+    {
+      "path": "data_locus_alignments/alignments_TRG/mPonAbe1_hap2_mPonPyg2_hap1_range.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e7a10302808128e71d9dc7466ab838ba9ca35a0b",
+      "size": 97,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/e7a10302808128e71d9dc7466ab838ba9ca35a0b"
+    },
+    {
+      "path": "data_locus_alignments/alignments_TRG/mPonPyg2_hap1_mPonPyg2_hap2_range.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "14b0b964dc3b98a2b02d72be5b8a869364800878",
+      "size": 95,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/14b0b964dc3b98a2b02d72be5b8a869364800878"
+    },
+    {
+      "path": "data_primate_gene_positions",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "4e20b50f9b97fd6d59b2df9e283fd2caceaa88df",
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/trees/4e20b50f9b97fd6d59b2df9e283fd2caceaa88df"
+    },
+    {
+      "path": "data_primate_gene_positions/mGorGor1_mat_IGH.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "00ecdbb32ad9d87a3775c6b7f082bfb9fcb5013d",
+      "size": 24950,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/00ecdbb32ad9d87a3775c6b7f082bfb9fcb5013d"
+    },
+    {
+      "path": "data_primate_gene_positions/mGorGor1_mat_IGK.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7ef2d233058faaf8f6c4f79163e983d38855deeb",
+      "size": 12690,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/7ef2d233058faaf8f6c4f79163e983d38855deeb"
+    },
+    {
+      "path": "data_primate_gene_positions/mGorGor1_mat_IGL.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0c07dbfabf083e44c8037e8178d861bfbd8309c7",
+      "size": 12539,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/0c07dbfabf083e44c8037e8178d861bfbd8309c7"
+    },
+    {
+      "path": "data_primate_gene_positions/mGorGor1_mat_TRA.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "df14aba946208df517b1090e1666379133a317f3",
+      "size": 27007,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/df14aba946208df517b1090e1666379133a317f3"
+    },
+    {
+      "path": "data_primate_gene_positions/mGorGor1_mat_TRB.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2ad349b4c7bc851983849b1495995e33e61101ba",
+      "size": 20571,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/2ad349b4c7bc851983849b1495995e33e61101ba"
+    },
+    {
+      "path": "data_primate_gene_positions/mGorGor1_mat_TRG.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "14fd2a507fe4d18be464979129809e7bfff13d3d",
+      "size": 3530,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/14fd2a507fe4d18be464979129809e7bfff13d3d"
+    },
+    {
+      "path": "data_primate_gene_positions/mGorGor1_pat_IGH.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9b67fddebd049da16002bd855a21fa94c582de8c",
+      "size": 25431,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/9b67fddebd049da16002bd855a21fa94c582de8c"
+    },
+    {
+      "path": "data_primate_gene_positions/mGorGor1_pat_IGK.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7d983cbce0127688807b9288782a1266dd39729a",
+      "size": 11892,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/7d983cbce0127688807b9288782a1266dd39729a"
+    },
+    {
+      "path": "data_primate_gene_positions/mGorGor1_pat_IGL.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "71783f73b91dba518362be5827a1cf8a71919144",
+      "size": 13798,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/71783f73b91dba518362be5827a1cf8a71919144"
+    },
+    {
+      "path": "data_primate_gene_positions/mGorGor1_pat_TRA.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "84f8dc2d01bb1ae4479bcf156e554ae17d6075b1",
+      "size": 26639,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/84f8dc2d01bb1ae4479bcf156e554ae17d6075b1"
+    },
+    {
+      "path": "data_primate_gene_positions/mGorGor1_pat_TRB.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "16fe0bec4a3fad960c3efee87ce67032288aed42",
+      "size": 20571,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/16fe0bec4a3fad960c3efee87ce67032288aed42"
+    },
+    {
+      "path": "data_primate_gene_positions/mGorGor1_pat_TRG.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4bbee095118dda171d5665458d1458f02a070306",
+      "size": 3530,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/4bbee095118dda171d5665458d1458f02a070306"
+    },
+    {
+      "path": "data_primate_gene_positions/mPanPan1_mat_IGH.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b5cfbcf99887aae38ec1275aaa6a93681d73986c",
+      "size": 27671,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/b5cfbcf99887aae38ec1275aaa6a93681d73986c"
+    },
+    {
+      "path": "data_primate_gene_positions/mPanPan1_mat_IGK.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7da4f6747584036d1813850cc63cd71acba3bd1e",
+      "size": 13442,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/7da4f6747584036d1813850cc63cd71acba3bd1e"
+    },
+    {
+      "path": "data_primate_gene_positions/mPanPan1_mat_IGL.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a6c85fb35a352a8e2051cf3dcfb3d2c1399cf35f",
+      "size": 15280,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/a6c85fb35a352a8e2051cf3dcfb3d2c1399cf35f"
+    },
+    {
+      "path": "data_primate_gene_positions/mPanPan1_mat_TRA.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "32873ec80ef708f0098c1bace2919875c143f6a7",
+      "size": 25562,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/32873ec80ef708f0098c1bace2919875c143f6a7"
+    },
+    {
+      "path": "data_primate_gene_positions/mPanPan1_mat_TRB.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "07ab1a5f4699bca9e3aba2646c913bab8cf9f3f9",
+      "size": 22079,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/07ab1a5f4699bca9e3aba2646c913bab8cf9f3f9"
+    },
+    {
+      "path": "data_primate_gene_positions/mPanPan1_mat_TRG.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "baa9fddbcb8b35f5f51ead9f2ead974a3d209157",
+      "size": 4316,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/baa9fddbcb8b35f5f51ead9f2ead974a3d209157"
+    },
+    {
+      "path": "data_primate_gene_positions/mPanPan1_pat_IGH.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2d5a07f106a001b037662651425c1514180affa8",
+      "size": 30136,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/2d5a07f106a001b037662651425c1514180affa8"
+    },
+    {
+      "path": "data_primate_gene_positions/mPanPan1_pat_IGK.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9d36fc113ec7017f0d535c341e94289a4fbea3e5",
+      "size": 13063,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/9d36fc113ec7017f0d535c341e94289a4fbea3e5"
+    },
+    {
+      "path": "data_primate_gene_positions/mPanPan1_pat_IGL.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2b66fe0f81ef490530d1084880ad1258c85f6521",
+      "size": 14482,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/2b66fe0f81ef490530d1084880ad1258c85f6521"
+    },
+    {
+      "path": "data_primate_gene_positions/mPanPan1_pat_TRA.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f1937a5c5e39ee187dd07cba854ab7583241ce45",
+      "size": 25562,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/f1937a5c5e39ee187dd07cba854ab7583241ce45"
+    },
+    {
+      "path": "data_primate_gene_positions/mPanPan1_pat_TRB.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c7924a79a553a732920fc09af13acb289be5cb33",
+      "size": 21703,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/c7924a79a553a732920fc09af13acb289be5cb33"
+    },
+    {
+      "path": "data_primate_gene_positions/mPanPan1_pat_TRG.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f90b07582282a22d592d6220ec978fc4c5aab4c9",
+      "size": 3927,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/f90b07582282a22d592d6220ec978fc4c5aab4c9"
+    },
+    {
+      "path": "data_primate_gene_positions/mPonAbe1_hap1_IGH.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8f5ee617637e16e08b6aa353644df590f0d7ee29",
+      "size": 30823,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/8f5ee617637e16e08b6aa353644df590f0d7ee29"
+    },
+    {
+      "path": "data_primate_gene_positions/mPonAbe1_hap1_IGK.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f9dde06fc6d0bba893f220e7f0920c9bbfb7ef08",
+      "size": 15451,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/f9dde06fc6d0bba893f220e7f0920c9bbfb7ef08"
+    },
+    {
+      "path": "data_primate_gene_positions/mPonAbe1_hap1_IGL.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "25c14bff38ec631fd4ae3f492390f4ab8298a225",
+      "size": 12618,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/25c14bff38ec631fd4ae3f492390f4ab8298a225"
+    },
+    {
+      "path": "data_primate_gene_positions/mPonAbe1_hap1_TRA.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b77d2c2037d1277fd96f08de11867c05ad1e6702",
+      "size": 26329,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/b77d2c2037d1277fd96f08de11867c05ad1e6702"
+    },
+    {
+      "path": "data_primate_gene_positions/mPonAbe1_hap1_TRB.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "849a44532551fb0a52dddd9c9763be191c91ecd6",
+      "size": 23052,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/849a44532551fb0a52dddd9c9763be191c91ecd6"
+    },
+    {
+      "path": "data_primate_gene_positions/mPonAbe1_hap1_TRG.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a8a3906e4dcc2b8a2ebe00d5f161794ca43ea313",
+      "size": 4357,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/a8a3906e4dcc2b8a2ebe00d5f161794ca43ea313"
+    },
+    {
+      "path": "data_primate_gene_positions/mPonAbe1_hap2_IGH.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ffd915accf6c1add192114594bbdd6db9d27dc07",
+      "size": 27671,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/ffd915accf6c1add192114594bbdd6db9d27dc07"
+    },
+    {
+      "path": "data_primate_gene_positions/mPonAbe1_hap2_IGK.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3634d13f7e14c7069200353be179db4007bab832",
+      "size": 15067,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/3634d13f7e14c7069200353be179db4007bab832"
+    },
+    {
+      "path": "data_primate_gene_positions/mPonAbe1_hap2_IGL.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e827e5dcc68dae752b6305713262a15a6f234d3f",
+      "size": 11548,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/e827e5dcc68dae752b6305713262a15a6f234d3f"
+    },
+    {
+      "path": "data_primate_gene_positions/mPonAbe1_hap2_TRA.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6b49ac88bd192e6a0a4e224469df8cd8840fe2af",
+      "size": 26315,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/6b49ac88bd192e6a0a4e224469df8cd8840fe2af"
+    },
+    {
+      "path": "data_primate_gene_positions/mPonAbe1_hap2_TRB.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "69764786607e46ec46c7dc2c39b7f27428f4b13a",
+      "size": 25333,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/69764786607e46ec46c7dc2c39b7f27428f4b13a"
+    },
+    {
+      "path": "data_primate_gene_positions/mPonAbe1_hap2_TRG.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "af804537c97ba49ad5e603e757587be34583ddbb",
+      "size": 4748,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/af804537c97ba49ad5e603e757587be34583ddbb"
+    },
+    {
+      "path": "data_primate_gene_positions/mPonPyg2_hap1_IGH.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "76c21f3728a0e5c904c42c90dc5076ca5b9d1603",
+      "size": 32922,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/76c21f3728a0e5c904c42c90dc5076ca5b9d1603"
+    },
+    {
+      "path": "data_primate_gene_positions/mPonPyg2_hap1_IGK.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3b95c9b44559db7daf404e1a6ea722aea671dd95",
+      "size": 15067,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/3b95c9b44559db7daf404e1a6ea722aea671dd95"
+    },
+    {
+      "path": "data_primate_gene_positions/mPonPyg2_hap1_IGL.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5650b55232102d4de1d2b73d0f120667b58099a1",
+      "size": 15373,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/5650b55232102d4de1d2b73d0f120667b58099a1"
+    },
+    {
+      "path": "data_primate_gene_positions/mPonPyg2_hap1_TRA.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "90892847d15594b407e527c47c27006afb934c95",
+      "size": 26692,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/90892847d15594b407e527c47c27006afb934c95"
+    },
+    {
+      "path": "data_primate_gene_positions/mPonPyg2_hap1_TRB.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "12e9bf6201ff2c5a580e658d100e05ed0bda105b",
+      "size": 23053,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/12e9bf6201ff2c5a580e658d100e05ed0bda105b"
+    },
+    {
+      "path": "data_primate_gene_positions/mPonPyg2_hap1_TRG.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4372fc29fee14dbe72da122ffbfc9daf06d44c25",
+      "size": 4355,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/4372fc29fee14dbe72da122ffbfc9daf06d44c25"
+    },
+    {
+      "path": "data_primate_gene_positions/mPonPyg2_hap2_IGH.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2880c33ebe78253df178c70f60a1ba761f2b8b0d",
+      "size": 33962,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/2880c33ebe78253df178c70f60a1ba761f2b8b0d"
+    },
+    {
+      "path": "data_primate_gene_positions/mPonPyg2_hap2_IGK.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d1f89fcad76f140ba4202216ebd940359bd71c40",
+      "size": 15434,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/d1f89fcad76f140ba4202216ebd940359bd71c40"
+    },
+    {
+      "path": "data_primate_gene_positions/mPonPyg2_hap2_IGL.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5ce5fad1d3a705b9c62145ae6fdedb4217a9cc08",
+      "size": 14989,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/5ce5fad1d3a705b9c62145ae6fdedb4217a9cc08"
+    },
+    {
+      "path": "data_primate_gene_positions/mPonPyg2_hap2_TRA.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ee663aa253ce0c681731756cb221d49181c231ce",
+      "size": 26302,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/ee663aa253ce0c681731756cb221d49181c231ce"
+    },
+    {
+      "path": "data_primate_gene_positions/mPonPyg2_hap2_TRB.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7547d9f4d6a4e14cbd3fda7e51802d1ad7add96e",
+      "size": 22293,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/7547d9f4d6a4e14cbd3fda7e51802d1ad7add96e"
+    },
+    {
+      "path": "data_primate_gene_positions/mPonPyg2_hap2_TRG.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ad1a33fef0436118ba8c2eced74a9f607c5a413d",
+      "size": 4355,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/ad1a33fef0436118ba8c2eced74a9f607c5a413d"
+    },
+    {
+      "path": "data_primate_igtrloci_fasta",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "4df23e7631d20ca31fa75e0d2a255687cf359c5e",
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/trees/4df23e7631d20ca31fa75e0d2a255687cf359c5e"
+    },
+    {
+      "path": "data_primate_igtrloci_fasta/mGorGor1_chr12_mat_hsa2a_IGK.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "534c6ce23cd29cced5f147702ba75ff3d2220072",
+      "size": 1390435,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/534c6ce23cd29cced5f147702ba75ff3d2220072"
+    },
+    {
+      "path": "data_primate_igtrloci_fasta/mGorGor1_chr12_pat_hsa2a_IGK.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b1d612394a50c539da6d48585cc6577beced8f5b",
+      "size": 910380,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/b1d612394a50c539da6d48585cc6577beced8f5b"
+    },
+    {
+      "path": "data_primate_igtrloci_fasta/mGorGor1_chr15_mat_hsa14_IGH.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1fa56baf7dd9decdc64f1017f4465811771b8903",
+      "size": 977286,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/1fa56baf7dd9decdc64f1017f4465811771b8903"
+    },
+    {
+      "path": "data_primate_igtrloci_fasta/mGorGor1_chr15_mat_hsa14_TRA.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a7e1e5ec8b2df6c09ae920e3ee9776a4f62cc5cc",
+      "size": 974509,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/a7e1e5ec8b2df6c09ae920e3ee9776a4f62cc5cc"
+    },
+    {
+      "path": "data_primate_igtrloci_fasta/mGorGor1_chr15_pat_hsa14_IGH.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f80d6b238e7a209d4dd63bc350853238ca99902c",
+      "size": 981264,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/f80d6b238e7a209d4dd63bc350853238ca99902c"
+    },
+    {
+      "path": "data_primate_igtrloci_fasta/mGorGor1_chr15_pat_hsa14_TRA.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8efcd6d064af444d6378a407512a978028f9b7a7",
+      "size": 978107,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/8efcd6d064af444d6378a407512a978028f9b7a7"
+    },
+    {
+      "path": "data_primate_igtrloci_fasta/mGorGor1_chr23_mat_hsa22_IGL.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "37dbbea5cf25d1ef7cd0371c496e1873c6c207ea",
+      "size": 833612,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/37dbbea5cf25d1ef7cd0371c496e1873c6c207ea"
+    },
+    {
+      "path": "data_primate_igtrloci_fasta/mGorGor1_chr23_pat_hsa22_IGL.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "acb619046919c93ff08b51b2d7e3683202e6338c",
+      "size": 879082,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/acb619046919c93ff08b51b2d7e3683202e6338c"
+    },
+    {
+      "path": "data_primate_igtrloci_fasta/mGorGor1_chr6_mat_hsa7_TRB.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c4633c746ab19eaaccc21669fa7437d763d2ea9f",
+      "size": 582672,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/c4633c746ab19eaaccc21669fa7437d763d2ea9f"
+    },
+    {
+      "path": "data_primate_igtrloci_fasta/mGorGor1_chr6_mat_hsa7_TRG.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a7867c69bef1fa1d95238ef4aa183dd03730ab46",
+      "size": 146743,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/a7867c69bef1fa1d95238ef4aa183dd03730ab46"
+    },
+    {
+      "path": "data_primate_igtrloci_fasta/mGorGor1_chr6_pat_hsa7_TRB.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "088dcec7d3325f106125a83366185446aeda7a5d",
+      "size": 582514,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/088dcec7d3325f106125a83366185446aeda7a5d"
+    },
+    {
+      "path": "data_primate_igtrloci_fasta/mGorGor1_chr6_pat_hsa7_TRG.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cfe448877edd6b71571fd9f4b78f3ea6b2dae985",
+      "size": 146722,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/cfe448877edd6b71571fd9f4b78f3ea6b2dae985"
+    },
+    {
+      "path": "data_primate_igtrloci_fasta/mPanPan1_chr12_mat_hsa2a_IGK.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fd97246f4a24c7eb790b8a97cf9ff865598eb682",
+      "size": 604182,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/fd97246f4a24c7eb790b8a97cf9ff865598eb682"
+    },
+    {
+      "path": "data_primate_igtrloci_fasta/mPanPan1_chr12_pat_hsa2a_IGK.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bf25b36378df549a316b3ea1cfc2be228f3bf15d",
+      "size": 610164,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/bf25b36378df549a316b3ea1cfc2be228f3bf15d"
+    },
+    {
+      "path": "data_primate_igtrloci_fasta/mPanPan1_chr15_mat_hsa14_IGH.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4ffdf2fb0c404ef486e9c7416afdde6fcfe09f6f",
+      "size": 1051496,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/4ffdf2fb0c404ef486e9c7416afdde6fcfe09f6f"
+    },
+    {
+      "path": "data_primate_igtrloci_fasta/mPanPan1_chr15_mat_hsa14_TRA.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0b051b237d4fedf2107cdbed4beaa36eeb50964d",
+      "size": 954580,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/0b051b237d4fedf2107cdbed4beaa36eeb50964d"
+    },
+    {
+      "path": "data_primate_igtrloci_fasta/mPanPan1_chr15_pat_hsa14_IGH.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "729be513653174fe00e18ac584317cf26ebd9b23",
+      "size": 1115087,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/729be513653174fe00e18ac584317cf26ebd9b23"
+    },
+    {
+      "path": "data_primate_igtrloci_fasta/mPanPan1_chr15_pat_hsa14_TRA.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "981480a2345b52aedbe93e3eeb27cf074eae4bb2",
+      "size": 956027,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/981480a2345b52aedbe93e3eeb27cf074eae4bb2"
+    },
+    {
+      "path": "data_primate_igtrloci_fasta/mPanPan1_chr23_mat_hsa22_IGL.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "500ac3d90fe5affae195f83e0b37bb2295ac311b",
+      "size": 2057126,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/500ac3d90fe5affae195f83e0b37bb2295ac311b"
+    },
+    {
+      "path": "data_primate_igtrloci_fasta/mPanPan1_chr23_pat_hsa22_IGL.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "70ca9f3b2a54523127fcfd0b7baab62cc93574f9",
+      "size": 1924089,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/70ca9f3b2a54523127fcfd0b7baab62cc93574f9"
+    },
+    {
+      "path": "data_primate_igtrloci_fasta/mPanPan1_chr6_mat_hsa7_TRB.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "044c46833aeb9699d548c2cf3d29c44d7f4fc37b",
+      "size": 608533,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/044c46833aeb9699d548c2cf3d29c44d7f4fc37b"
+    },
+    {
+      "path": "data_primate_igtrloci_fasta/mPanPan1_chr6_mat_hsa7_TRG.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "96fa4195eaedf25bfccb46b2bac8ef7a7619a555",
+      "size": 154794,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/96fa4195eaedf25bfccb46b2bac8ef7a7619a555"
+    },
+    {
+      "path": "data_primate_igtrloci_fasta/mPanPan1_chr6_pat_hsa7_TRB.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d4f76057592bb1c77cae0dd61c11c953d4353295",
+      "size": 608695,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/d4f76057592bb1c77cae0dd61c11c953d4353295"
+    },
+    {
+      "path": "data_primate_igtrloci_fasta/mPanPan1_chr6_pat_hsa7_TRG.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "423d64f70175bbce8e60f2468e44a4033de8348b",
+      "size": 150486,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/423d64f70175bbce8e60f2468e44a4033de8348b"
+    },
+    {
+      "path": "data_primate_igtrloci_fasta/mPonAbe1_chr12_hap1_hsa2a_IGK.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "766b325265c41a4db3bc4d4932d7e03315a8ccbf",
+      "size": 840434,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/766b325265c41a4db3bc4d4932d7e03315a8ccbf"
+    },
+    {
+      "path": "data_primate_igtrloci_fasta/mPonAbe1_chr12_hap2_hsa2a_IGK.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fc8bb2042d1936badbd3d156fc09e81e8e1b6201",
+      "size": 777856,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/fc8bb2042d1936badbd3d156fc09e81e8e1b6201"
+    },
+    {
+      "path": "data_primate_igtrloci_fasta/mPonAbe1_chr15_hap1_hsa14_IGH.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8700a4080a93e3c38fd350bd15e6a0781c1de647",
+      "size": 1341673,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/8700a4080a93e3c38fd350bd15e6a0781c1de647"
+    },
+    {
+      "path": "data_primate_igtrloci_fasta/mPonAbe1_chr15_hap1_hsa14_TRA.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2221edaac8818c1ebaba84e6a5fc8a1b49b53ec8",
+      "size": 1061551,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/2221edaac8818c1ebaba84e6a5fc8a1b49b53ec8"
+    },
+    {
+      "path": "data_primate_igtrloci_fasta/mPonAbe1_chr15_hap2_hsa14_IGH.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c30288505e9bf0e3b89fb9b552f7fa00563c05fa",
+      "size": 1235839,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/c30288505e9bf0e3b89fb9b552f7fa00563c05fa"
+    },
+    {
+      "path": "data_primate_igtrloci_fasta/mPonAbe1_chr15_hap2_hsa14_TRA.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "205548ca157fa0216af78f47cb433ba2be4f2ab0",
+      "size": 1064067,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/205548ca157fa0216af78f47cb433ba2be4f2ab0"
+    },
+    {
+      "path": "data_primate_igtrloci_fasta/mPonAbe1_chr23_hap1_hsa22_IGL.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ffca75aa313200b82651d2e4c8653ec70c353f36",
+      "size": 851533,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/ffca75aa313200b82651d2e4c8653ec70c353f36"
+    },
+    {
+      "path": "data_primate_igtrloci_fasta/mPonAbe1_chr23_hap2_hsa22_IGL.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a74a1ac9975bba03ad3cce7335be3b6e55a12d13",
+      "size": 726211,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/a74a1ac9975bba03ad3cce7335be3b6e55a12d13"
+    },
+    {
+      "path": "data_primate_igtrloci_fasta/mPonAbe1_chr6_hap1_hsa7_TRB.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b0caf7609037fdae58e6ec2cc5e4b450a8479d86",
+      "size": 722830,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/b0caf7609037fdae58e6ec2cc5e4b450a8479d86"
+    },
+    {
+      "path": "data_primate_igtrloci_fasta/mPonAbe1_chr6_hap1_hsa7_TRG.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "98945daf97af9bcb392bf2196e0828596eba3849",
+      "size": 157648,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/98945daf97af9bcb392bf2196e0828596eba3849"
+    },
+    {
+      "path": "data_primate_igtrloci_fasta/mPonAbe1_chr6_hap2_hsa7_TRB.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d0c39d328bc39628a4c05461bc8ac139bab41d7a",
+      "size": 763548,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/d0c39d328bc39628a4c05461bc8ac139bab41d7a"
+    },
+    {
+      "path": "data_primate_igtrloci_fasta/mPonAbe1_chr6_hap2_hsa7_TRG.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4453b4ced6d76236d95245e859a6ba2019e8bb47",
+      "size": 161946,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/4453b4ced6d76236d95245e859a6ba2019e8bb47"
+    },
+    {
+      "path": "data_primate_igtrloci_fasta/mPonPyg2_chr12_hap1_hsa2a_IGK.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "80470df8fac144c11a07cbf80e7c69cc0ab55cd8",
+      "size": 791160,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/80470df8fac144c11a07cbf80e7c69cc0ab55cd8"
+    },
+    {
+      "path": "data_primate_igtrloci_fasta/mPonPyg2_chr12_hap2_hsa2a_IGK.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6bd42fda98c7f0d859e43091de7a6105ef4943c9",
+      "size": 826283,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/6bd42fda98c7f0d859e43091de7a6105ef4943c9"
+    },
+    {
+      "path": "data_primate_igtrloci_fasta/mPonPyg2_chr15_hap1_hsa14_IGH.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2d9d6b5ec3a838c5a45e71be2a2a298c16ecd3fa",
+      "size": 1365564,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/2d9d6b5ec3a838c5a45e71be2a2a298c16ecd3fa"
+    },
+    {
+      "path": "data_primate_igtrloci_fasta/mPonPyg2_chr15_hap1_hsa14_TRA.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d8b02caef020edb2d883e38aed1f4e623cad4efe",
+      "size": 1065182,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/d8b02caef020edb2d883e38aed1f4e623cad4efe"
+    },
+    {
+      "path": "data_primate_igtrloci_fasta/mPonPyg2_chr15_hap2_hsa14_IGH.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e4e663c163b3d01f5f21253ccc486e1cffa2b70b",
+      "size": 1432053,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/e4e663c163b3d01f5f21253ccc486e1cffa2b70b"
+    },
+    {
+      "path": "data_primate_igtrloci_fasta/mPonPyg2_chr15_hap2_hsa14_TRA.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "99698dd16d9030cdf1e8244ccbd8e69f800cb47d",
+      "size": 1058143,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/99698dd16d9030cdf1e8244ccbd8e69f800cb47d"
+    },
+    {
+      "path": "data_primate_igtrloci_fasta/mPonPyg2_chr23_hap1_hsa22_IGL.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7afb75c5b53ae40aa18e907831a64c588b355e6e",
+      "size": 1378355,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/7afb75c5b53ae40aa18e907831a64c588b355e6e"
+    },
+    {
+      "path": "data_primate_igtrloci_fasta/mPonPyg2_chr23_hap2_hsa22_IGL.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f438b889fa85cef28cfd8c280b09fd023d690954",
+      "size": 1289039,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/f438b889fa85cef28cfd8c280b09fd023d690954"
+    },
+    {
+      "path": "data_primate_igtrloci_fasta/mPonPyg2_chr6_hap1_hsa7_TRB.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5a079a4494c0e5ac7dfd0cbd13dd1d715c9e798e",
+      "size": 740909,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/5a079a4494c0e5ac7dfd0cbd13dd1d715c9e798e"
+    },
+    {
+      "path": "data_primate_igtrloci_fasta/mPonPyg2_chr6_hap1_hsa7_TRG.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "320de5d625d4c0c21cc289de5e59b6ffe402de12",
+      "size": 157630,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/320de5d625d4c0c21cc289de5e59b6ffe402de12"
+    },
+    {
+      "path": "data_primate_igtrloci_fasta/mPonPyg2_chr6_hap2_hsa7_TRB.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "00391fe6706106daa723fd923e6d1ab7f97cbdf0",
+      "size": 743997,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/00391fe6706106daa723fd923e6d1ab7f97cbdf0"
+    },
+    {
+      "path": "data_primate_igtrloci_fasta/mPonPyg2_chr6_hap2_hsa7_TRG.fasta",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a7486f7329b2164b164c67f159b17e60a22ffd69",
+      "size": 157585,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/a7486f7329b2164b164c67f159b17e60a22ffd69"
+    },
+    {
+      "path": "data_primate_igtrloci_locus_config.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "478d1ac5c9068b9c4c9932c6f4c255f44418afdf",
+      "size": 5203,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/478d1ac5c9068b9c4c9932c6f4c255f44418afdf"
+    },
+    {
+      "path": "visualize_gene_counts.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4b28339f1afc16b94dd3320b42d5f8922dd6dcb7",
+      "size": 1145,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/4b28339f1afc16b94dd3320b42d5f8922dd6dcb7"
+    },
+    {
+      "path": "visualize_genome_diagram.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f3e9b4227dbb15d26261ad3de79875dfe01ef6e9",
+      "size": 4863,
+      "url": "https://api.github.com/repos/yana-safonova/primate_t2t_igtr/git/blobs/f3e9b4227dbb15d26261ad3de79875dfe01ef6e9"
+    }
+  ],
+  "truncated": false
+}

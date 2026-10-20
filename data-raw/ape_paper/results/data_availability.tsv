@@ -1,0 +1,6 @@
+example	individual	assay	status	reason
+mhc	human	methylation	available	CHM13 cell-line ONT methylation; not neuronal
+mhc	chimp_h1	methylation	available	mPanTro3 source ONT methylation; not neuronal
+mhc	chimp_h2	methylation	unavailable	No observed source BigWig intervals in the selected haplotype-2 window; omitted
+mhc	chimp_h2	exon models	unavailable	RefSeq track contains primary chromosomes only; curated gene spans shown instead
+mhc	all	local phylogenetic topology	unavailable	Original window-level topology calls not acquired; omitted

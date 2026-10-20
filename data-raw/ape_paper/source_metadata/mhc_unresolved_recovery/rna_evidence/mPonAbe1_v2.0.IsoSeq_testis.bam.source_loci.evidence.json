@@ -1,0 +1,8271 @@
+[
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR12D3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29307722,
+    "source_end0": 29309591,
+    "read_name": "SRR22452368.1563462",
+    "flag": 0,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29152374,
+    "read_end0": 29347810,
+    "strand": "+",
+    "cigar": "173=194517N402=1X343=",
+    "query_length": 919,
+    "aligned_overlap_bp": 0,
+    "blocks_bed0": [
+      [
+        29152374,
+        29152547
+      ],
+      [
+        29347064,
+        29347466
+      ],
+      [
+        29347466,
+        29347467
+      ],
+      [
+        29347467,
+        29347810
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29152547,
+        29347064
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR5V1",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29286783,
+    "source_end0": 29301596,
+    "read_name": "SRR22452368.1563462",
+    "flag": 0,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29152374,
+    "read_end0": 29347810,
+    "strand": "+",
+    "cigar": "173=194517N402=1X343=",
+    "query_length": 919,
+    "aligned_overlap_bp": 0,
+    "blocks_bed0": [
+      [
+        29152374,
+        29152547
+      ],
+      [
+        29347064,
+        29347466
+      ],
+      [
+        29347466,
+        29347467
+      ],
+      [
+        29347467,
+        29347810
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29152547,
+        29347064
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR12D2",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29335452,
+    "source_end0": 29337672,
+    "read_name": "SRR22452368.1563462",
+    "flag": 0,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29152374,
+    "read_end0": 29347810,
+    "strand": "+",
+    "cigar": "173=194517N402=1X343=",
+    "query_length": 919,
+    "aligned_overlap_bp": 0,
+    "blocks_bed0": [
+      [
+        29152374,
+        29152547
+      ],
+      [
+        29347064,
+        29347466
+      ],
+      [
+        29347466,
+        29347467
+      ],
+      [
+        29347467,
+        29347810
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29152547,
+        29347064
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR12D3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29307722,
+    "source_end0": 29309591,
+    "read_name": "SRR22452368.2877377",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29238684,
+    "read_end0": 29397182,
+    "strand": "-",
+    "cigar": "74=1X62=1X503=1X850=1242N118=22543N131=132922N50=",
+    "query_length": 1791,
+    "aligned_overlap_bp": 0,
+    "blocks_bed0": [
+      [
+        29238684,
+        29238758
+      ],
+      [
+        29238758,
+        29238759
+      ],
+      [
+        29238759,
+        29238821
+      ],
+      [
+        29238821,
+        29238822
+      ],
+      [
+        29238822,
+        29239325
+      ],
+      [
+        29239325,
+        29239326
+      ],
+      [
+        29239326,
+        29240176
+      ],
+      [
+        29241418,
+        29241536
+      ],
+      [
+        29264079,
+        29264210
+      ],
+      [
+        29397132,
+        29397182
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29240176,
+        29241418
+      ],
+      [
+        29241536,
+        29264079
+      ],
+      [
+        29264210,
+        29397132
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR5V1",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29286783,
+    "source_end0": 29301596,
+    "read_name": "SRR22452368.2877377",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29238684,
+    "read_end0": 29397182,
+    "strand": "-",
+    "cigar": "74=1X62=1X503=1X850=1242N118=22543N131=132922N50=",
+    "query_length": 1791,
+    "aligned_overlap_bp": 0,
+    "blocks_bed0": [
+      [
+        29238684,
+        29238758
+      ],
+      [
+        29238758,
+        29238759
+      ],
+      [
+        29238759,
+        29238821
+      ],
+      [
+        29238821,
+        29238822
+      ],
+      [
+        29238822,
+        29239325
+      ],
+      [
+        29239325,
+        29239326
+      ],
+      [
+        29239326,
+        29240176
+      ],
+      [
+        29241418,
+        29241536
+      ],
+      [
+        29264079,
+        29264210
+      ],
+      [
+        29397132,
+        29397182
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29240176,
+        29241418
+      ],
+      [
+        29241536,
+        29264079
+      ],
+      [
+        29264210,
+        29397132
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR12D2",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29335452,
+    "source_end0": 29337672,
+    "read_name": "SRR22452368.2877377",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29238684,
+    "read_end0": 29397182,
+    "strand": "-",
+    "cigar": "74=1X62=1X503=1X850=1242N118=22543N131=132922N50=",
+    "query_length": 1791,
+    "aligned_overlap_bp": 0,
+    "blocks_bed0": [
+      [
+        29238684,
+        29238758
+      ],
+      [
+        29238758,
+        29238759
+      ],
+      [
+        29238759,
+        29238821
+      ],
+      [
+        29238821,
+        29238822
+      ],
+      [
+        29238822,
+        29239325
+      ],
+      [
+        29239325,
+        29239326
+      ],
+      [
+        29239326,
+        29240176
+      ],
+      [
+        29241418,
+        29241536
+      ],
+      [
+        29264079,
+        29264210
+      ],
+      [
+        29397132,
+        29397182
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29240176,
+        29241418
+      ],
+      [
+        29241536,
+        29264079
+      ],
+      [
+        29264210,
+        29397132
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR12D3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29307722,
+    "source_end0": 29309591,
+    "read_name": "SRR22452368.1130803",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29264040,
+    "read_end0": 29397184,
+    "strand": "-",
+    "cigar": "170=2581N76=128415N86=1764N52=",
+    "query_length": 384,
+    "aligned_overlap_bp": 0,
+    "blocks_bed0": [
+      [
+        29264040,
+        29264210
+      ],
+      [
+        29266791,
+        29266867
+      ],
+      [
+        29395282,
+        29395368
+      ],
+      [
+        29397132,
+        29397184
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29264210,
+        29266791
+      ],
+      [
+        29266867,
+        29395282
+      ],
+      [
+        29395368,
+        29397132
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR5V1",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29286783,
+    "source_end0": 29301596,
+    "read_name": "SRR22452368.1130803",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29264040,
+    "read_end0": 29397184,
+    "strand": "-",
+    "cigar": "170=2581N76=128415N86=1764N52=",
+    "query_length": 384,
+    "aligned_overlap_bp": 0,
+    "blocks_bed0": [
+      [
+        29264040,
+        29264210
+      ],
+      [
+        29266791,
+        29266867
+      ],
+      [
+        29395282,
+        29395368
+      ],
+      [
+        29397132,
+        29397184
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29264210,
+        29266791
+      ],
+      [
+        29266867,
+        29395282
+      ],
+      [
+        29395368,
+        29397132
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR12D2",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29335452,
+    "source_end0": 29337672,
+    "read_name": "SRR22452368.1130803",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29264040,
+    "read_end0": 29397184,
+    "strand": "-",
+    "cigar": "170=2581N76=128415N86=1764N52=",
+    "query_length": 384,
+    "aligned_overlap_bp": 0,
+    "blocks_bed0": [
+      [
+        29264040,
+        29264210
+      ],
+      [
+        29266791,
+        29266867
+      ],
+      [
+        29395282,
+        29395368
+      ],
+      [
+        29397132,
+        29397184
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29264210,
+        29266791
+      ],
+      [
+        29266867,
+        29395282
+      ],
+      [
+        29395368,
+        29397132
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR12D3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29307722,
+    "source_end0": 29309591,
+    "read_name": "SRR22452368.635494",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29284161,
+    "read_end0": 29397191,
+    "strand": "-",
+    "cigar": "411=1X135=1X824=1X177=1X46=3190N303=106031N86=1764N59=",
+    "query_length": 2045,
+    "aligned_overlap_bp": 0,
+    "blocks_bed0": [
+      [
+        29284161,
+        29284572
+      ],
+      [
+        29284572,
+        29284573
+      ],
+      [
+        29284573,
+        29284708
+      ],
+      [
+        29284708,
+        29284709
+      ],
+      [
+        29284709,
+        29285533
+      ],
+      [
+        29285533,
+        29285534
+      ],
+      [
+        29285534,
+        29285711
+      ],
+      [
+        29285711,
+        29285712
+      ],
+      [
+        29285712,
+        29285758
+      ],
+      [
+        29288948,
+        29289251
+      ],
+      [
+        29395282,
+        29395368
+      ],
+      [
+        29397132,
+        29397191
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29285758,
+        29288948
+      ],
+      [
+        29289251,
+        29395282
+      ],
+      [
+        29395368,
+        29397132
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR5V1",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29286783,
+    "source_end0": 29301596,
+    "read_name": "SRR22452368.635494",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29284161,
+    "read_end0": 29397191,
+    "strand": "-",
+    "cigar": "411=1X135=1X824=1X177=1X46=3190N303=106031N86=1764N59=",
+    "query_length": 2045,
+    "aligned_overlap_bp": 303,
+    "blocks_bed0": [
+      [
+        29284161,
+        29284572
+      ],
+      [
+        29284572,
+        29284573
+      ],
+      [
+        29284573,
+        29284708
+      ],
+      [
+        29284708,
+        29284709
+      ],
+      [
+        29284709,
+        29285533
+      ],
+      [
+        29285533,
+        29285534
+      ],
+      [
+        29285534,
+        29285711
+      ],
+      [
+        29285711,
+        29285712
+      ],
+      [
+        29285712,
+        29285758
+      ],
+      [
+        29288948,
+        29289251
+      ],
+      [
+        29395282,
+        29395368
+      ],
+      [
+        29397132,
+        29397191
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29285758,
+        29288948
+      ],
+      [
+        29289251,
+        29395282
+      ],
+      [
+        29395368,
+        29397132
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR12D2",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29335452,
+    "source_end0": 29337672,
+    "read_name": "SRR22452368.635494",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29284161,
+    "read_end0": 29397191,
+    "strand": "-",
+    "cigar": "411=1X135=1X824=1X177=1X46=3190N303=106031N86=1764N59=",
+    "query_length": 2045,
+    "aligned_overlap_bp": 0,
+    "blocks_bed0": [
+      [
+        29284161,
+        29284572
+      ],
+      [
+        29284572,
+        29284573
+      ],
+      [
+        29284573,
+        29284708
+      ],
+      [
+        29284708,
+        29284709
+      ],
+      [
+        29284709,
+        29285533
+      ],
+      [
+        29285533,
+        29285534
+      ],
+      [
+        29285534,
+        29285711
+      ],
+      [
+        29285711,
+        29285712
+      ],
+      [
+        29285712,
+        29285758
+      ],
+      [
+        29288948,
+        29289251
+      ],
+      [
+        29395282,
+        29395368
+      ],
+      [
+        29397132,
+        29397191
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29285758,
+        29288948
+      ],
+      [
+        29289251,
+        29395282
+      ],
+      [
+        29395368,
+        29397132
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR5V1",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29286783,
+    "source_end0": 29301596,
+    "read_name": "SRR22452368.2030380",
+    "flag": 0,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29287433,
+    "read_end0": 29289320,
+    "strand": "+",
+    "cigar": "804=1X106=1D107=1D146=1I70=1D379=1D123=1D79=1X66=",
+    "query_length": 1883,
+    "aligned_overlap_bp": 1882,
+    "blocks_bed0": [
+      [
+        29287433,
+        29288237
+      ],
+      [
+        29288237,
+        29288238
+      ],
+      [
+        29288238,
+        29288344
+      ],
+      [
+        29288345,
+        29288452
+      ],
+      [
+        29288453,
+        29288599
+      ],
+      [
+        29288599,
+        29288669
+      ],
+      [
+        29288670,
+        29289049
+      ],
+      [
+        29289050,
+        29289173
+      ],
+      [
+        29289174,
+        29289253
+      ],
+      [
+        29289253,
+        29289254
+      ],
+      [
+        29289254,
+        29289320
+      ]
+    ],
+    "junctions_bed0": []
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR5V1",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29286783,
+    "source_end0": 29301596,
+    "read_name": "SRR22452368.3017303",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29288955,
+    "read_end0": 29289314,
+    "strand": "-",
+    "cigar": "298=1X60=",
+    "query_length": 359,
+    "aligned_overlap_bp": 359,
+    "blocks_bed0": [
+      [
+        29288955,
+        29289253
+      ],
+      [
+        29289253,
+        29289254
+      ],
+      [
+        29289254,
+        29289314
+      ]
+    ],
+    "junctions_bed0": []
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR12D3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29307722,
+    "source_end0": 29309591,
+    "read_name": "SRR22452368.16210",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29289094,
+    "read_end0": 29397238,
+    "strand": "-",
+    "cigar": "159=1X63=57902N69=47994N86=1764N106=",
+    "query_length": 484,
+    "aligned_overlap_bp": 0,
+    "blocks_bed0": [
+      [
+        29289094,
+        29289253
+      ],
+      [
+        29289253,
+        29289254
+      ],
+      [
+        29289254,
+        29289317
+      ],
+      [
+        29347219,
+        29347288
+      ],
+      [
+        29395282,
+        29395368
+      ],
+      [
+        29397132,
+        29397238
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29289317,
+        29347219
+      ],
+      [
+        29347288,
+        29395282
+      ],
+      [
+        29395368,
+        29397132
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR5V1",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29286783,
+    "source_end0": 29301596,
+    "read_name": "SRR22452368.16210",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29289094,
+    "read_end0": 29397238,
+    "strand": "-",
+    "cigar": "159=1X63=57902N69=47994N86=1764N106=",
+    "query_length": 484,
+    "aligned_overlap_bp": 223,
+    "blocks_bed0": [
+      [
+        29289094,
+        29289253
+      ],
+      [
+        29289253,
+        29289254
+      ],
+      [
+        29289254,
+        29289317
+      ],
+      [
+        29347219,
+        29347288
+      ],
+      [
+        29395282,
+        29395368
+      ],
+      [
+        29397132,
+        29397238
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29289317,
+        29347219
+      ],
+      [
+        29347288,
+        29395282
+      ],
+      [
+        29395368,
+        29397132
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR12D2",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29335452,
+    "source_end0": 29337672,
+    "read_name": "SRR22452368.16210",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29289094,
+    "read_end0": 29397238,
+    "strand": "-",
+    "cigar": "159=1X63=57902N69=47994N86=1764N106=",
+    "query_length": 484,
+    "aligned_overlap_bp": 0,
+    "blocks_bed0": [
+      [
+        29289094,
+        29289253
+      ],
+      [
+        29289253,
+        29289254
+      ],
+      [
+        29289254,
+        29289317
+      ],
+      [
+        29347219,
+        29347288
+      ],
+      [
+        29395282,
+        29395368
+      ],
+      [
+        29397132,
+        29397238
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29289317,
+        29347219
+      ],
+      [
+        29347288,
+        29395282
+      ],
+      [
+        29395368,
+        29397132
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR5V1",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29286783,
+    "source_end0": 29301596,
+    "read_name": "SRR22452368.1163501",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29289094,
+    "read_end0": 29290788,
+    "strand": "-",
+    "cigar": "159=1X73=1X55=1X36=1X172=1X1072=1X121=",
+    "query_length": 1694,
+    "aligned_overlap_bp": 1694,
+    "blocks_bed0": [
+      [
+        29289094,
+        29289253
+      ],
+      [
+        29289253,
+        29289254
+      ],
+      [
+        29289254,
+        29289327
+      ],
+      [
+        29289327,
+        29289328
+      ],
+      [
+        29289328,
+        29289383
+      ],
+      [
+        29289383,
+        29289384
+      ],
+      [
+        29289384,
+        29289420
+      ],
+      [
+        29289420,
+        29289421
+      ],
+      [
+        29289421,
+        29289593
+      ],
+      [
+        29289593,
+        29289594
+      ],
+      [
+        29289594,
+        29290666
+      ],
+      [
+        29290666,
+        29290667
+      ],
+      [
+        29290667,
+        29290788
+      ]
+    ],
+    "junctions_bed0": []
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR12D3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29307722,
+    "source_end0": 29309591,
+    "read_name": "SRR22452368.1707709",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29289094,
+    "read_end0": 29397231,
+    "strand": "-",
+    "cigar": "159=1X63=57437N203=262N69=47994N86=1764N99=",
+    "query_length": 680,
+    "aligned_overlap_bp": 0,
+    "blocks_bed0": [
+      [
+        29289094,
+        29289253
+      ],
+      [
+        29289253,
+        29289254
+      ],
+      [
+        29289254,
+        29289317
+      ],
+      [
+        29346754,
+        29346957
+      ],
+      [
+        29347219,
+        29347288
+      ],
+      [
+        29395282,
+        29395368
+      ],
+      [
+        29397132,
+        29397231
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29289317,
+        29346754
+      ],
+      [
+        29346957,
+        29347219
+      ],
+      [
+        29347288,
+        29395282
+      ],
+      [
+        29395368,
+        29397132
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR5V1",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29286783,
+    "source_end0": 29301596,
+    "read_name": "SRR22452368.1707709",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29289094,
+    "read_end0": 29397231,
+    "strand": "-",
+    "cigar": "159=1X63=57437N203=262N69=47994N86=1764N99=",
+    "query_length": 680,
+    "aligned_overlap_bp": 223,
+    "blocks_bed0": [
+      [
+        29289094,
+        29289253
+      ],
+      [
+        29289253,
+        29289254
+      ],
+      [
+        29289254,
+        29289317
+      ],
+      [
+        29346754,
+        29346957
+      ],
+      [
+        29347219,
+        29347288
+      ],
+      [
+        29395282,
+        29395368
+      ],
+      [
+        29397132,
+        29397231
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29289317,
+        29346754
+      ],
+      [
+        29346957,
+        29347219
+      ],
+      [
+        29347288,
+        29395282
+      ],
+      [
+        29395368,
+        29397132
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR12D2",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29335452,
+    "source_end0": 29337672,
+    "read_name": "SRR22452368.1707709",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29289094,
+    "read_end0": 29397231,
+    "strand": "-",
+    "cigar": "159=1X63=57437N203=262N69=47994N86=1764N99=",
+    "query_length": 680,
+    "aligned_overlap_bp": 0,
+    "blocks_bed0": [
+      [
+        29289094,
+        29289253
+      ],
+      [
+        29289253,
+        29289254
+      ],
+      [
+        29289254,
+        29289317
+      ],
+      [
+        29346754,
+        29346957
+      ],
+      [
+        29347219,
+        29347288
+      ],
+      [
+        29395282,
+        29395368
+      ],
+      [
+        29397132,
+        29397231
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29289317,
+        29346754
+      ],
+      [
+        29346957,
+        29347219
+      ],
+      [
+        29347288,
+        29395282
+      ],
+      [
+        29395368,
+        29397132
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR12D3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29307722,
+    "source_end0": 29309591,
+    "read_name": "SRR22452368.2054100",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29289094,
+    "read_end0": 29397216,
+    "strand": "-",
+    "cigar": "159=1X63=57902N69=47994N86=1764N84=",
+    "query_length": 462,
+    "aligned_overlap_bp": 0,
+    "blocks_bed0": [
+      [
+        29289094,
+        29289253
+      ],
+      [
+        29289253,
+        29289254
+      ],
+      [
+        29289254,
+        29289317
+      ],
+      [
+        29347219,
+        29347288
+      ],
+      [
+        29395282,
+        29395368
+      ],
+      [
+        29397132,
+        29397216
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29289317,
+        29347219
+      ],
+      [
+        29347288,
+        29395282
+      ],
+      [
+        29395368,
+        29397132
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR5V1",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29286783,
+    "source_end0": 29301596,
+    "read_name": "SRR22452368.2054100",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29289094,
+    "read_end0": 29397216,
+    "strand": "-",
+    "cigar": "159=1X63=57902N69=47994N86=1764N84=",
+    "query_length": 462,
+    "aligned_overlap_bp": 223,
+    "blocks_bed0": [
+      [
+        29289094,
+        29289253
+      ],
+      [
+        29289253,
+        29289254
+      ],
+      [
+        29289254,
+        29289317
+      ],
+      [
+        29347219,
+        29347288
+      ],
+      [
+        29395282,
+        29395368
+      ],
+      [
+        29397132,
+        29397216
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29289317,
+        29347219
+      ],
+      [
+        29347288,
+        29395282
+      ],
+      [
+        29395368,
+        29397132
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR12D2",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29335452,
+    "source_end0": 29337672,
+    "read_name": "SRR22452368.2054100",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29289094,
+    "read_end0": 29397216,
+    "strand": "-",
+    "cigar": "159=1X63=57902N69=47994N86=1764N84=",
+    "query_length": 462,
+    "aligned_overlap_bp": 0,
+    "blocks_bed0": [
+      [
+        29289094,
+        29289253
+      ],
+      [
+        29289253,
+        29289254
+      ],
+      [
+        29289254,
+        29289317
+      ],
+      [
+        29347219,
+        29347288
+      ],
+      [
+        29395282,
+        29395368
+      ],
+      [
+        29397132,
+        29397216
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29289317,
+        29347219
+      ],
+      [
+        29347288,
+        29395282
+      ],
+      [
+        29395368,
+        29397132
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR12D3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29307722,
+    "source_end0": 29309591,
+    "read_name": "SRR22452368.1361377",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29289095,
+    "read_end0": 29397224,
+    "strand": "-",
+    "cigar": "158=1X63=57437N203=262N69=47994N86=1764N92=",
+    "query_length": 672,
+    "aligned_overlap_bp": 0,
+    "blocks_bed0": [
+      [
+        29289095,
+        29289253
+      ],
+      [
+        29289253,
+        29289254
+      ],
+      [
+        29289254,
+        29289317
+      ],
+      [
+        29346754,
+        29346957
+      ],
+      [
+        29347219,
+        29347288
+      ],
+      [
+        29395282,
+        29395368
+      ],
+      [
+        29397132,
+        29397224
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29289317,
+        29346754
+      ],
+      [
+        29346957,
+        29347219
+      ],
+      [
+        29347288,
+        29395282
+      ],
+      [
+        29395368,
+        29397132
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR5V1",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29286783,
+    "source_end0": 29301596,
+    "read_name": "SRR22452368.1361377",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29289095,
+    "read_end0": 29397224,
+    "strand": "-",
+    "cigar": "158=1X63=57437N203=262N69=47994N86=1764N92=",
+    "query_length": 672,
+    "aligned_overlap_bp": 222,
+    "blocks_bed0": [
+      [
+        29289095,
+        29289253
+      ],
+      [
+        29289253,
+        29289254
+      ],
+      [
+        29289254,
+        29289317
+      ],
+      [
+        29346754,
+        29346957
+      ],
+      [
+        29347219,
+        29347288
+      ],
+      [
+        29395282,
+        29395368
+      ],
+      [
+        29397132,
+        29397224
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29289317,
+        29346754
+      ],
+      [
+        29346957,
+        29347219
+      ],
+      [
+        29347288,
+        29395282
+      ],
+      [
+        29395368,
+        29397132
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR12D2",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29335452,
+    "source_end0": 29337672,
+    "read_name": "SRR22452368.1361377",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29289095,
+    "read_end0": 29397224,
+    "strand": "-",
+    "cigar": "158=1X63=57437N203=262N69=47994N86=1764N92=",
+    "query_length": 672,
+    "aligned_overlap_bp": 0,
+    "blocks_bed0": [
+      [
+        29289095,
+        29289253
+      ],
+      [
+        29289253,
+        29289254
+      ],
+      [
+        29289254,
+        29289317
+      ],
+      [
+        29346754,
+        29346957
+      ],
+      [
+        29347219,
+        29347288
+      ],
+      [
+        29395282,
+        29395368
+      ],
+      [
+        29397132,
+        29397224
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29289317,
+        29346754
+      ],
+      [
+        29346957,
+        29347219
+      ],
+      [
+        29347288,
+        29395282
+      ],
+      [
+        29395368,
+        29397132
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR12D3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29307722,
+    "source_end0": 29309591,
+    "read_name": "SRR22452368.1452733",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29289142,
+    "read_end0": 29397176,
+    "strand": "-",
+    "cigar": "111=1X63=57902N69=49844N44=",
+    "query_length": 288,
+    "aligned_overlap_bp": 0,
+    "blocks_bed0": [
+      [
+        29289142,
+        29289253
+      ],
+      [
+        29289253,
+        29289254
+      ],
+      [
+        29289254,
+        29289317
+      ],
+      [
+        29347219,
+        29347288
+      ],
+      [
+        29397132,
+        29397176
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29289317,
+        29347219
+      ],
+      [
+        29347288,
+        29397132
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR5V1",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29286783,
+    "source_end0": 29301596,
+    "read_name": "SRR22452368.1452733",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29289142,
+    "read_end0": 29397176,
+    "strand": "-",
+    "cigar": "111=1X63=57902N69=49844N44=",
+    "query_length": 288,
+    "aligned_overlap_bp": 175,
+    "blocks_bed0": [
+      [
+        29289142,
+        29289253
+      ],
+      [
+        29289253,
+        29289254
+      ],
+      [
+        29289254,
+        29289317
+      ],
+      [
+        29347219,
+        29347288
+      ],
+      [
+        29397132,
+        29397176
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29289317,
+        29347219
+      ],
+      [
+        29347288,
+        29397132
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR12D2",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29335452,
+    "source_end0": 29337672,
+    "read_name": "SRR22452368.1452733",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29289142,
+    "read_end0": 29397176,
+    "strand": "-",
+    "cigar": "111=1X63=57902N69=49844N44=",
+    "query_length": 288,
+    "aligned_overlap_bp": 0,
+    "blocks_bed0": [
+      [
+        29289142,
+        29289253
+      ],
+      [
+        29289253,
+        29289254
+      ],
+      [
+        29289254,
+        29289317
+      ],
+      [
+        29347219,
+        29347288
+      ],
+      [
+        29397132,
+        29397176
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29289317,
+        29347219
+      ],
+      [
+        29347288,
+        29397132
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR12D3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29307722,
+    "source_end0": 29309591,
+    "read_name": "SRR22452368.265659",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29289151,
+    "read_end0": 29397184,
+    "strand": "-",
+    "cigar": "102=1X63=105965N86=1764N52=1S",
+    "query_length": 305,
+    "aligned_overlap_bp": 0,
+    "blocks_bed0": [
+      [
+        29289151,
+        29289253
+      ],
+      [
+        29289253,
+        29289254
+      ],
+      [
+        29289254,
+        29289317
+      ],
+      [
+        29395282,
+        29395368
+      ],
+      [
+        29397132,
+        29397184
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29289317,
+        29395282
+      ],
+      [
+        29395368,
+        29397132
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR5V1",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29286783,
+    "source_end0": 29301596,
+    "read_name": "SRR22452368.265659",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29289151,
+    "read_end0": 29397184,
+    "strand": "-",
+    "cigar": "102=1X63=105965N86=1764N52=1S",
+    "query_length": 305,
+    "aligned_overlap_bp": 166,
+    "blocks_bed0": [
+      [
+        29289151,
+        29289253
+      ],
+      [
+        29289253,
+        29289254
+      ],
+      [
+        29289254,
+        29289317
+      ],
+      [
+        29395282,
+        29395368
+      ],
+      [
+        29397132,
+        29397184
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29289317,
+        29395282
+      ],
+      [
+        29395368,
+        29397132
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR12D2",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29335452,
+    "source_end0": 29337672,
+    "read_name": "SRR22452368.265659",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29289151,
+    "read_end0": 29397184,
+    "strand": "-",
+    "cigar": "102=1X63=105965N86=1764N52=1S",
+    "query_length": 305,
+    "aligned_overlap_bp": 0,
+    "blocks_bed0": [
+      [
+        29289151,
+        29289253
+      ],
+      [
+        29289253,
+        29289254
+      ],
+      [
+        29289254,
+        29289317
+      ],
+      [
+        29395282,
+        29395368
+      ],
+      [
+        29397132,
+        29397184
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29289317,
+        29395282
+      ],
+      [
+        29395368,
+        29397132
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR12D3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29307722,
+    "source_end0": 29309591,
+    "read_name": "SRR22452368.609931",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29289151,
+    "read_end0": 29397216,
+    "strand": "-",
+    "cigar": "102=1X63=105965N86=1764N84=1S",
+    "query_length": 337,
+    "aligned_overlap_bp": 0,
+    "blocks_bed0": [
+      [
+        29289151,
+        29289253
+      ],
+      [
+        29289253,
+        29289254
+      ],
+      [
+        29289254,
+        29289317
+      ],
+      [
+        29395282,
+        29395368
+      ],
+      [
+        29397132,
+        29397216
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29289317,
+        29395282
+      ],
+      [
+        29395368,
+        29397132
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR5V1",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29286783,
+    "source_end0": 29301596,
+    "read_name": "SRR22452368.609931",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29289151,
+    "read_end0": 29397216,
+    "strand": "-",
+    "cigar": "102=1X63=105965N86=1764N84=1S",
+    "query_length": 337,
+    "aligned_overlap_bp": 166,
+    "blocks_bed0": [
+      [
+        29289151,
+        29289253
+      ],
+      [
+        29289253,
+        29289254
+      ],
+      [
+        29289254,
+        29289317
+      ],
+      [
+        29395282,
+        29395368
+      ],
+      [
+        29397132,
+        29397216
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29289317,
+        29395282
+      ],
+      [
+        29395368,
+        29397132
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR12D2",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29335452,
+    "source_end0": 29337672,
+    "read_name": "SRR22452368.609931",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29289151,
+    "read_end0": 29397216,
+    "strand": "-",
+    "cigar": "102=1X63=105965N86=1764N84=1S",
+    "query_length": 337,
+    "aligned_overlap_bp": 0,
+    "blocks_bed0": [
+      [
+        29289151,
+        29289253
+      ],
+      [
+        29289253,
+        29289254
+      ],
+      [
+        29289254,
+        29289317
+      ],
+      [
+        29395282,
+        29395368
+      ],
+      [
+        29397132,
+        29397216
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29289317,
+        29395282
+      ],
+      [
+        29395368,
+        29397132
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR12D3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29307722,
+    "source_end0": 29309591,
+    "read_name": "SRR22452368.833908",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29289151,
+    "read_end0": 29397205,
+    "strand": "-",
+    "cigar": "102=1X63=105965N86=1764N73=",
+    "query_length": 325,
+    "aligned_overlap_bp": 0,
+    "blocks_bed0": [
+      [
+        29289151,
+        29289253
+      ],
+      [
+        29289253,
+        29289254
+      ],
+      [
+        29289254,
+        29289317
+      ],
+      [
+        29395282,
+        29395368
+      ],
+      [
+        29397132,
+        29397205
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29289317,
+        29395282
+      ],
+      [
+        29395368,
+        29397132
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR5V1",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29286783,
+    "source_end0": 29301596,
+    "read_name": "SRR22452368.833908",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29289151,
+    "read_end0": 29397205,
+    "strand": "-",
+    "cigar": "102=1X63=105965N86=1764N73=",
+    "query_length": 325,
+    "aligned_overlap_bp": 166,
+    "blocks_bed0": [
+      [
+        29289151,
+        29289253
+      ],
+      [
+        29289253,
+        29289254
+      ],
+      [
+        29289254,
+        29289317
+      ],
+      [
+        29395282,
+        29395368
+      ],
+      [
+        29397132,
+        29397205
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29289317,
+        29395282
+      ],
+      [
+        29395368,
+        29397132
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR12D2",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29335452,
+    "source_end0": 29337672,
+    "read_name": "SRR22452368.833908",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29289151,
+    "read_end0": 29397205,
+    "strand": "-",
+    "cigar": "102=1X63=105965N86=1764N73=",
+    "query_length": 325,
+    "aligned_overlap_bp": 0,
+    "blocks_bed0": [
+      [
+        29289151,
+        29289253
+      ],
+      [
+        29289253,
+        29289254
+      ],
+      [
+        29289254,
+        29289317
+      ],
+      [
+        29395282,
+        29395368
+      ],
+      [
+        29397132,
+        29397205
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29289317,
+        29395282
+      ],
+      [
+        29395368,
+        29397132
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR12D3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29307722,
+    "source_end0": 29309591,
+    "read_name": "SRR22452368.944842",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29289151,
+    "read_end0": 29397225,
+    "strand": "-",
+    "cigar": "102=1X63=57437N203=262N69=47994N86=1764N93=",
+    "query_length": 617,
+    "aligned_overlap_bp": 0,
+    "blocks_bed0": [
+      [
+        29289151,
+        29289253
+      ],
+      [
+        29289253,
+        29289254
+      ],
+      [
+        29289254,
+        29289317
+      ],
+      [
+        29346754,
+        29346957
+      ],
+      [
+        29347219,
+        29347288
+      ],
+      [
+        29395282,
+        29395368
+      ],
+      [
+        29397132,
+        29397225
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29289317,
+        29346754
+      ],
+      [
+        29346957,
+        29347219
+      ],
+      [
+        29347288,
+        29395282
+      ],
+      [
+        29395368,
+        29397132
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR5V1",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29286783,
+    "source_end0": 29301596,
+    "read_name": "SRR22452368.944842",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29289151,
+    "read_end0": 29397225,
+    "strand": "-",
+    "cigar": "102=1X63=57437N203=262N69=47994N86=1764N93=",
+    "query_length": 617,
+    "aligned_overlap_bp": 166,
+    "blocks_bed0": [
+      [
+        29289151,
+        29289253
+      ],
+      [
+        29289253,
+        29289254
+      ],
+      [
+        29289254,
+        29289317
+      ],
+      [
+        29346754,
+        29346957
+      ],
+      [
+        29347219,
+        29347288
+      ],
+      [
+        29395282,
+        29395368
+      ],
+      [
+        29397132,
+        29397225
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29289317,
+        29346754
+      ],
+      [
+        29346957,
+        29347219
+      ],
+      [
+        29347288,
+        29395282
+      ],
+      [
+        29395368,
+        29397132
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR12D2",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29335452,
+    "source_end0": 29337672,
+    "read_name": "SRR22452368.944842",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29289151,
+    "read_end0": 29397225,
+    "strand": "-",
+    "cigar": "102=1X63=57437N203=262N69=47994N86=1764N93=",
+    "query_length": 617,
+    "aligned_overlap_bp": 0,
+    "blocks_bed0": [
+      [
+        29289151,
+        29289253
+      ],
+      [
+        29289253,
+        29289254
+      ],
+      [
+        29289254,
+        29289317
+      ],
+      [
+        29346754,
+        29346957
+      ],
+      [
+        29347219,
+        29347288
+      ],
+      [
+        29395282,
+        29395368
+      ],
+      [
+        29397132,
+        29397225
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29289317,
+        29346754
+      ],
+      [
+        29346957,
+        29347219
+      ],
+      [
+        29347288,
+        29395282
+      ],
+      [
+        29395368,
+        29397132
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR12D3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29307722,
+    "source_end0": 29309591,
+    "read_name": "SRR22452368.1666326",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29289151,
+    "read_end0": 29397216,
+    "strand": "-",
+    "cigar": "102=1X63=51435N175=54355N86=1764N84=",
+    "query_length": 511,
+    "aligned_overlap_bp": 0,
+    "blocks_bed0": [
+      [
+        29289151,
+        29289253
+      ],
+      [
+        29289253,
+        29289254
+      ],
+      [
+        29289254,
+        29289317
+      ],
+      [
+        29340752,
+        29340927
+      ],
+      [
+        29395282,
+        29395368
+      ],
+      [
+        29397132,
+        29397216
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29289317,
+        29340752
+      ],
+      [
+        29340927,
+        29395282
+      ],
+      [
+        29395368,
+        29397132
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR5V1",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29286783,
+    "source_end0": 29301596,
+    "read_name": "SRR22452368.1666326",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29289151,
+    "read_end0": 29397216,
+    "strand": "-",
+    "cigar": "102=1X63=51435N175=54355N86=1764N84=",
+    "query_length": 511,
+    "aligned_overlap_bp": 166,
+    "blocks_bed0": [
+      [
+        29289151,
+        29289253
+      ],
+      [
+        29289253,
+        29289254
+      ],
+      [
+        29289254,
+        29289317
+      ],
+      [
+        29340752,
+        29340927
+      ],
+      [
+        29395282,
+        29395368
+      ],
+      [
+        29397132,
+        29397216
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29289317,
+        29340752
+      ],
+      [
+        29340927,
+        29395282
+      ],
+      [
+        29395368,
+        29397132
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR12D2",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29335452,
+    "source_end0": 29337672,
+    "read_name": "SRR22452368.1666326",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29289151,
+    "read_end0": 29397216,
+    "strand": "-",
+    "cigar": "102=1X63=51435N175=54355N86=1764N84=",
+    "query_length": 511,
+    "aligned_overlap_bp": 0,
+    "blocks_bed0": [
+      [
+        29289151,
+        29289253
+      ],
+      [
+        29289253,
+        29289254
+      ],
+      [
+        29289254,
+        29289317
+      ],
+      [
+        29340752,
+        29340927
+      ],
+      [
+        29395282,
+        29395368
+      ],
+      [
+        29397132,
+        29397216
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29289317,
+        29340752
+      ],
+      [
+        29340927,
+        29395282
+      ],
+      [
+        29395368,
+        29397132
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR12D3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29307722,
+    "source_end0": 29309591,
+    "read_name": "SRR22452368.1765422",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29289151,
+    "read_end0": 29397243,
+    "strand": "-",
+    "cigar": "102=1X63=105965N86=1764N111=1S",
+    "query_length": 364,
+    "aligned_overlap_bp": 0,
+    "blocks_bed0": [
+      [
+        29289151,
+        29289253
+      ],
+      [
+        29289253,
+        29289254
+      ],
+      [
+        29289254,
+        29289317
+      ],
+      [
+        29395282,
+        29395368
+      ],
+      [
+        29397132,
+        29397243
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29289317,
+        29395282
+      ],
+      [
+        29395368,
+        29397132
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR5V1",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29286783,
+    "source_end0": 29301596,
+    "read_name": "SRR22452368.1765422",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29289151,
+    "read_end0": 29397243,
+    "strand": "-",
+    "cigar": "102=1X63=105965N86=1764N111=1S",
+    "query_length": 364,
+    "aligned_overlap_bp": 166,
+    "blocks_bed0": [
+      [
+        29289151,
+        29289253
+      ],
+      [
+        29289253,
+        29289254
+      ],
+      [
+        29289254,
+        29289317
+      ],
+      [
+        29395282,
+        29395368
+      ],
+      [
+        29397132,
+        29397243
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29289317,
+        29395282
+      ],
+      [
+        29395368,
+        29397132
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR12D2",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29335452,
+    "source_end0": 29337672,
+    "read_name": "SRR22452368.1765422",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29289151,
+    "read_end0": 29397243,
+    "strand": "-",
+    "cigar": "102=1X63=105965N86=1764N111=1S",
+    "query_length": 364,
+    "aligned_overlap_bp": 0,
+    "blocks_bed0": [
+      [
+        29289151,
+        29289253
+      ],
+      [
+        29289253,
+        29289254
+      ],
+      [
+        29289254,
+        29289317
+      ],
+      [
+        29395282,
+        29395368
+      ],
+      [
+        29397132,
+        29397243
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29289317,
+        29395282
+      ],
+      [
+        29395368,
+        29397132
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR12D3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29307722,
+    "source_end0": 29309591,
+    "read_name": "SRR22452368.2568070",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29289151,
+    "read_end0": 29401768,
+    "strand": "-",
+    "cigar": "102=1X63=111973N28=1X53=1X3=259N52=1X80=",
+    "query_length": 385,
+    "aligned_overlap_bp": 0,
+    "blocks_bed0": [
+      [
+        29289151,
+        29289253
+      ],
+      [
+        29289253,
+        29289254
+      ],
+      [
+        29289254,
+        29289317
+      ],
+      [
+        29401290,
+        29401318
+      ],
+      [
+        29401318,
+        29401319
+      ],
+      [
+        29401319,
+        29401372
+      ],
+      [
+        29401372,
+        29401373
+      ],
+      [
+        29401373,
+        29401376
+      ],
+      [
+        29401635,
+        29401687
+      ],
+      [
+        29401687,
+        29401688
+      ],
+      [
+        29401688,
+        29401768
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29289317,
+        29401290
+      ],
+      [
+        29401376,
+        29401635
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR5V1",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29286783,
+    "source_end0": 29301596,
+    "read_name": "SRR22452368.2568070",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29289151,
+    "read_end0": 29401768,
+    "strand": "-",
+    "cigar": "102=1X63=111973N28=1X53=1X3=259N52=1X80=",
+    "query_length": 385,
+    "aligned_overlap_bp": 166,
+    "blocks_bed0": [
+      [
+        29289151,
+        29289253
+      ],
+      [
+        29289253,
+        29289254
+      ],
+      [
+        29289254,
+        29289317
+      ],
+      [
+        29401290,
+        29401318
+      ],
+      [
+        29401318,
+        29401319
+      ],
+      [
+        29401319,
+        29401372
+      ],
+      [
+        29401372,
+        29401373
+      ],
+      [
+        29401373,
+        29401376
+      ],
+      [
+        29401635,
+        29401687
+      ],
+      [
+        29401687,
+        29401688
+      ],
+      [
+        29401688,
+        29401768
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29289317,
+        29401290
+      ],
+      [
+        29401376,
+        29401635
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR12D2",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29335452,
+    "source_end0": 29337672,
+    "read_name": "SRR22452368.2568070",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29289151,
+    "read_end0": 29401768,
+    "strand": "-",
+    "cigar": "102=1X63=111973N28=1X53=1X3=259N52=1X80=",
+    "query_length": 385,
+    "aligned_overlap_bp": 0,
+    "blocks_bed0": [
+      [
+        29289151,
+        29289253
+      ],
+      [
+        29289253,
+        29289254
+      ],
+      [
+        29289254,
+        29289317
+      ],
+      [
+        29401290,
+        29401318
+      ],
+      [
+        29401318,
+        29401319
+      ],
+      [
+        29401319,
+        29401372
+      ],
+      [
+        29401372,
+        29401373
+      ],
+      [
+        29401373,
+        29401376
+      ],
+      [
+        29401635,
+        29401687
+      ],
+      [
+        29401687,
+        29401688
+      ],
+      [
+        29401688,
+        29401768
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29289317,
+        29401290
+      ],
+      [
+        29401376,
+        29401635
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR12D3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29307722,
+    "source_end0": 29309591,
+    "read_name": "SRR22452368.532500",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29289152,
+    "read_end0": 29397234,
+    "strand": "-",
+    "cigar": "101=1X63=107815N102=",
+    "query_length": 267,
+    "aligned_overlap_bp": 0,
+    "blocks_bed0": [
+      [
+        29289152,
+        29289253
+      ],
+      [
+        29289253,
+        29289254
+      ],
+      [
+        29289254,
+        29289317
+      ],
+      [
+        29397132,
+        29397234
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29289317,
+        29397132
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR5V1",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29286783,
+    "source_end0": 29301596,
+    "read_name": "SRR22452368.532500",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29289152,
+    "read_end0": 29397234,
+    "strand": "-",
+    "cigar": "101=1X63=107815N102=",
+    "query_length": 267,
+    "aligned_overlap_bp": 165,
+    "blocks_bed0": [
+      [
+        29289152,
+        29289253
+      ],
+      [
+        29289253,
+        29289254
+      ],
+      [
+        29289254,
+        29289317
+      ],
+      [
+        29397132,
+        29397234
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29289317,
+        29397132
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR12D2",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29335452,
+    "source_end0": 29337672,
+    "read_name": "SRR22452368.532500",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29289152,
+    "read_end0": 29397234,
+    "strand": "-",
+    "cigar": "101=1X63=107815N102=",
+    "query_length": 267,
+    "aligned_overlap_bp": 0,
+    "blocks_bed0": [
+      [
+        29289152,
+        29289253
+      ],
+      [
+        29289253,
+        29289254
+      ],
+      [
+        29289254,
+        29289317
+      ],
+      [
+        29397132,
+        29397234
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29289317,
+        29397132
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR12D3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29307722,
+    "source_end0": 29309591,
+    "read_name": "SRR22452368.957974",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29289155,
+    "read_end0": 29397183,
+    "strand": "-",
+    "cigar": "98=1X63=107815N51=",
+    "query_length": 213,
+    "aligned_overlap_bp": 0,
+    "blocks_bed0": [
+      [
+        29289155,
+        29289253
+      ],
+      [
+        29289253,
+        29289254
+      ],
+      [
+        29289254,
+        29289317
+      ],
+      [
+        29397132,
+        29397183
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29289317,
+        29397132
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR5V1",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29286783,
+    "source_end0": 29301596,
+    "read_name": "SRR22452368.957974",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29289155,
+    "read_end0": 29397183,
+    "strand": "-",
+    "cigar": "98=1X63=107815N51=",
+    "query_length": 213,
+    "aligned_overlap_bp": 162,
+    "blocks_bed0": [
+      [
+        29289155,
+        29289253
+      ],
+      [
+        29289253,
+        29289254
+      ],
+      [
+        29289254,
+        29289317
+      ],
+      [
+        29397132,
+        29397183
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29289317,
+        29397132
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR12D2",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29335452,
+    "source_end0": 29337672,
+    "read_name": "SRR22452368.957974",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29289155,
+    "read_end0": 29397183,
+    "strand": "-",
+    "cigar": "98=1X63=107815N51=",
+    "query_length": 213,
+    "aligned_overlap_bp": 0,
+    "blocks_bed0": [
+      [
+        29289155,
+        29289253
+      ],
+      [
+        29289253,
+        29289254
+      ],
+      [
+        29289254,
+        29289317
+      ],
+      [
+        29397132,
+        29397183
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29289317,
+        29397132
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR5V1",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29286783,
+    "source_end0": 29301596,
+    "read_name": "SRR22452368.2663337",
+    "flag": 0,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29290485,
+    "read_end0": 29292402,
+    "strand": "+",
+    "cigar": "1174=1X742=1S",
+    "query_length": 1918,
+    "aligned_overlap_bp": 1917,
+    "blocks_bed0": [
+      [
+        29290485,
+        29291659
+      ],
+      [
+        29291659,
+        29291660
+      ],
+      [
+        29291660,
+        29292402
+      ]
+    ],
+    "junctions_bed0": []
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR5V1",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29286783,
+    "source_end0": 29301596,
+    "read_name": "SRR22452368.345483",
+    "flag": 0,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29296184,
+    "read_end0": 29297242,
+    "strand": "+",
+    "cigar": "1058=",
+    "query_length": 1058,
+    "aligned_overlap_bp": 1058,
+    "blocks_bed0": [
+      [
+        29296184,
+        29297242
+      ]
+    ],
+    "junctions_bed0": []
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR5V1",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29286783,
+    "source_end0": 29301596,
+    "read_name": "SRR22452368.1686310",
+    "flag": 0,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29296184,
+    "read_end0": 29297242,
+    "strand": "+",
+    "cigar": "1058=",
+    "query_length": 1058,
+    "aligned_overlap_bp": 1058,
+    "blocks_bed0": [
+      [
+        29296184,
+        29297242
+      ]
+    ],
+    "junctions_bed0": []
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR12D2",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29335452,
+    "source_end0": 29337672,
+    "read_name": "SRR22452368.2343055",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29322761,
+    "read_end0": 29397224,
+    "strand": "-",
+    "cigar": "110=23883N203=50175N92=",
+    "query_length": 405,
+    "aligned_overlap_bp": 0,
+    "blocks_bed0": [
+      [
+        29322761,
+        29322871
+      ],
+      [
+        29346754,
+        29346957
+      ],
+      [
+        29397132,
+        29397224
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29322871,
+        29346754
+      ],
+      [
+        29346957,
+        29397132
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR12D2",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 29335452,
+    "source_end0": 29337672,
+    "read_name": "SRR22452368.367035",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 29331850,
+    "read_end0": 29397209,
+    "strand": "-",
+    "cigar": "270=701N118=64193N77=",
+    "query_length": 465,
+    "aligned_overlap_bp": 0,
+    "blocks_bed0": [
+      [
+        29331850,
+        29332120
+      ],
+      [
+        29332821,
+        29332939
+      ],
+      [
+        29397132,
+        29397209
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        29332120,
+        29332821
+      ],
+      [
+        29332939,
+        29397132
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 30987577,
+    "source_end0": 31008651,
+    "read_name": "SRR22452368.508781",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30984429,
+    "read_end0": 31026858,
+    "strand": "-",
+    "cigar": "126=1X57=1X35=133N89=21924N32=1X59=1X77=523N142=18944N103=1X45=1X88=1X45=",
+    "query_length": 905,
+    "aligned_overlap_bp": 312,
+    "blocks_bed0": [
+      [
+        30984429,
+        30984555
+      ],
+      [
+        30984555,
+        30984556
+      ],
+      [
+        30984556,
+        30984613
+      ],
+      [
+        30984613,
+        30984614
+      ],
+      [
+        30984614,
+        30984649
+      ],
+      [
+        30984782,
+        30984871
+      ],
+      [
+        31006795,
+        31006827
+      ],
+      [
+        31006827,
+        31006828
+      ],
+      [
+        31006828,
+        31006887
+      ],
+      [
+        31006887,
+        31006888
+      ],
+      [
+        31006888,
+        31006965
+      ],
+      [
+        31007488,
+        31007630
+      ],
+      [
+        31026574,
+        31026677
+      ],
+      [
+        31026677,
+        31026678
+      ],
+      [
+        31026678,
+        31026723
+      ],
+      [
+        31026723,
+        31026724
+      ],
+      [
+        31026724,
+        31026812
+      ],
+      [
+        31026812,
+        31026813
+      ],
+      [
+        31026813,
+        31026858
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30984649,
+        30984782
+      ],
+      [
+        30984871,
+        31006795
+      ],
+      [
+        31006965,
+        31007488
+      ],
+      [
+        31007630,
+        31026574
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 30987577,
+    "source_end0": 31008651,
+    "read_name": "SRR22452368.969044",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30984429,
+    "read_end0": 31006946,
+    "strand": "-",
+    "cigar": "107=3D17=1X56=1X35=133N89=13254N210=8460N32=1X59=1X58=",
+    "query_length": 667,
+    "aligned_overlap_bp": 361,
+    "blocks_bed0": [
+      [
+        30984429,
+        30984536
+      ],
+      [
+        30984539,
+        30984556
+      ],
+      [
+        30984556,
+        30984557
+      ],
+      [
+        30984557,
+        30984613
+      ],
+      [
+        30984613,
+        30984614
+      ],
+      [
+        30984614,
+        30984649
+      ],
+      [
+        30984782,
+        30984871
+      ],
+      [
+        30998125,
+        30998335
+      ],
+      [
+        31006795,
+        31006827
+      ],
+      [
+        31006827,
+        31006828
+      ],
+      [
+        31006828,
+        31006887
+      ],
+      [
+        31006887,
+        31006888
+      ],
+      [
+        31006888,
+        31006946
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30984649,
+        30984782
+      ],
+      [
+        30984871,
+        30998125
+      ],
+      [
+        30998335,
+        31006795
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 30987577,
+    "source_end0": 31008651,
+    "read_name": "SRR22452368.1256121",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30984429,
+    "read_end0": 31026865,
+    "strand": "-",
+    "cigar": "75=1D9=1D26=1I14=1X57=1X19=1D15=133N48=1D40=21924N32=1X35=1D23=1X21=1I3=1D5=1D46=532N53=1D11=1D67=18944N103=1X34=1D10=1X5=1D69=1D12=1X34=1D17=",
+    "query_length": 892,
+    "aligned_overlap_bp": 298,
+    "blocks_bed0": [
+      [
+        30984429,
+        30984504
+      ],
+      [
+        30984505,
+        30984514
+      ],
+      [
+        30984515,
+        30984541
+      ],
+      [
+        30984541,
+        30984555
+      ],
+      [
+        30984555,
+        30984556
+      ],
+      [
+        30984556,
+        30984613
+      ],
+      [
+        30984613,
+        30984614
+      ],
+      [
+        30984614,
+        30984633
+      ],
+      [
+        30984634,
+        30984649
+      ],
+      [
+        30984782,
+        30984830
+      ],
+      [
+        30984831,
+        30984871
+      ],
+      [
+        31006795,
+        31006827
+      ],
+      [
+        31006827,
+        31006828
+      ],
+      [
+        31006828,
+        31006863
+      ],
+      [
+        31006864,
+        31006887
+      ],
+      [
+        31006887,
+        31006888
+      ],
+      [
+        31006888,
+        31006909
+      ],
+      [
+        31006909,
+        31006912
+      ],
+      [
+        31006913,
+        31006918
+      ],
+      [
+        31006919,
+        31006965
+      ],
+      [
+        31007497,
+        31007550
+      ],
+      [
+        31007551,
+        31007562
+      ],
+      [
+        31007563,
+        31007630
+      ],
+      [
+        31026574,
+        31026677
+      ],
+      [
+        31026677,
+        31026678
+      ],
+      [
+        31026678,
+        31026712
+      ],
+      [
+        31026713,
+        31026723
+      ],
+      [
+        31026723,
+        31026724
+      ],
+      [
+        31026724,
+        31026729
+      ],
+      [
+        31026730,
+        31026799
+      ],
+      [
+        31026800,
+        31026812
+      ],
+      [
+        31026812,
+        31026813
+      ],
+      [
+        31026813,
+        31026847
+      ],
+      [
+        31026848,
+        31026865
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30984649,
+        30984782
+      ],
+      [
+        30984871,
+        31006795
+      ],
+      [
+        31006965,
+        31007497
+      ],
+      [
+        31007630,
+        31026574
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 30987577,
+    "source_end0": 31008651,
+    "read_name": "SRR22452368.2407858",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30984429,
+    "read_end0": 31010086,
+    "strand": "-",
+    "cigar": "22=1D84=3D17=1X56=1X35=133N89=21924N32=1X59=1X77=532N133=1575N6=1X102=1X10=1X43=1X145=1X89=1X27=1X48=1I404=",
+    "query_length": 1490,
+    "aligned_overlap_bp": 303,
+    "blocks_bed0": [
+      [
+        30984429,
+        30984451
+      ],
+      [
+        30984452,
+        30984536
+      ],
+      [
+        30984539,
+        30984556
+      ],
+      [
+        30984556,
+        30984557
+      ],
+      [
+        30984557,
+        30984613
+      ],
+      [
+        30984613,
+        30984614
+      ],
+      [
+        30984614,
+        30984649
+      ],
+      [
+        30984782,
+        30984871
+      ],
+      [
+        31006795,
+        31006827
+      ],
+      [
+        31006827,
+        31006828
+      ],
+      [
+        31006828,
+        31006887
+      ],
+      [
+        31006887,
+        31006888
+      ],
+      [
+        31006888,
+        31006965
+      ],
+      [
+        31007497,
+        31007630
+      ],
+      [
+        31009205,
+        31009211
+      ],
+      [
+        31009211,
+        31009212
+      ],
+      [
+        31009212,
+        31009314
+      ],
+      [
+        31009314,
+        31009315
+      ],
+      [
+        31009315,
+        31009325
+      ],
+      [
+        31009325,
+        31009326
+      ],
+      [
+        31009326,
+        31009369
+      ],
+      [
+        31009369,
+        31009370
+      ],
+      [
+        31009370,
+        31009515
+      ],
+      [
+        31009515,
+        31009516
+      ],
+      [
+        31009516,
+        31009605
+      ],
+      [
+        31009605,
+        31009606
+      ],
+      [
+        31009606,
+        31009633
+      ],
+      [
+        31009633,
+        31009634
+      ],
+      [
+        31009634,
+        31009682
+      ],
+      [
+        31009682,
+        31010086
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30984649,
+        30984782
+      ],
+      [
+        30984871,
+        31006795
+      ],
+      [
+        31006965,
+        31007497
+      ],
+      [
+        31007630,
+        31009205
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 30987577,
+    "source_end0": 31008651,
+    "read_name": "SRR22452368.2580266",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30984429,
+    "read_end0": 31006877,
+    "strand": "-",
+    "cigar": "126=1X57=1X35=133N89=21924N32=1X49=",
+    "query_length": 391,
+    "aligned_overlap_bp": 82,
+    "blocks_bed0": [
+      [
+        30984429,
+        30984555
+      ],
+      [
+        30984555,
+        30984556
+      ],
+      [
+        30984556,
+        30984613
+      ],
+      [
+        30984613,
+        30984614
+      ],
+      [
+        30984614,
+        30984649
+      ],
+      [
+        30984782,
+        30984871
+      ],
+      [
+        31006795,
+        31006827
+      ],
+      [
+        31006827,
+        31006828
+      ],
+      [
+        31006828,
+        31006877
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30984649,
+        30984782
+      ],
+      [
+        30984871,
+        31006795
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 30987577,
+    "source_end0": 31008651,
+    "read_name": "SRR22452368.2645840",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30984429,
+    "read_end0": 31010121,
+    "strand": "-",
+    "cigar": "126=1X57=1X35=133N89=21924N32=1X59=1X77=523N142=2379N112=",
+    "query_length": 733,
+    "aligned_overlap_bp": 312,
+    "blocks_bed0": [
+      [
+        30984429,
+        30984555
+      ],
+      [
+        30984555,
+        30984556
+      ],
+      [
+        30984556,
+        30984613
+      ],
+      [
+        30984613,
+        30984614
+      ],
+      [
+        30984614,
+        30984649
+      ],
+      [
+        30984782,
+        30984871
+      ],
+      [
+        31006795,
+        31006827
+      ],
+      [
+        31006827,
+        31006828
+      ],
+      [
+        31006828,
+        31006887
+      ],
+      [
+        31006887,
+        31006888
+      ],
+      [
+        31006888,
+        31006965
+      ],
+      [
+        31007488,
+        31007630
+      ],
+      [
+        31010009,
+        31010121
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30984649,
+        30984782
+      ],
+      [
+        30984871,
+        31006795
+      ],
+      [
+        31006965,
+        31007488
+      ],
+      [
+        31007630,
+        31010009
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 30987577,
+    "source_end0": 31008651,
+    "read_name": "SRR22452368.3103018",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30984429,
+    "read_end0": 31010103,
+    "strand": "-",
+    "cigar": "107=3D12=1D4=1X56=1X35=133N89=21924N32=1X11=1D47=1X77=532N40=1D92=1575N6=1X102=1X7=1D2=1X26=657N14=1D79=",
+    "query_length": 845,
+    "aligned_overlap_bp": 301,
+    "blocks_bed0": [
+      [
+        30984429,
+        30984536
+      ],
+      [
+        30984539,
+        30984551
+      ],
+      [
+        30984552,
+        30984556
+      ],
+      [
+        30984556,
+        30984557
+      ],
+      [
+        30984557,
+        30984613
+      ],
+      [
+        30984613,
+        30984614
+      ],
+      [
+        30984614,
+        30984649
+      ],
+      [
+        30984782,
+        30984871
+      ],
+      [
+        31006795,
+        31006827
+      ],
+      [
+        31006827,
+        31006828
+      ],
+      [
+        31006828,
+        31006839
+      ],
+      [
+        31006840,
+        31006887
+      ],
+      [
+        31006887,
+        31006888
+      ],
+      [
+        31006888,
+        31006965
+      ],
+      [
+        31007497,
+        31007537
+      ],
+      [
+        31007538,
+        31007630
+      ],
+      [
+        31009205,
+        31009211
+      ],
+      [
+        31009211,
+        31009212
+      ],
+      [
+        31009212,
+        31009314
+      ],
+      [
+        31009314,
+        31009315
+      ],
+      [
+        31009315,
+        31009322
+      ],
+      [
+        31009323,
+        31009325
+      ],
+      [
+        31009325,
+        31009326
+      ],
+      [
+        31009326,
+        31009352
+      ],
+      [
+        31010009,
+        31010023
+      ],
+      [
+        31010024,
+        31010103
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30984649,
+        30984782
+      ],
+      [
+        30984871,
+        31006795
+      ],
+      [
+        31006965,
+        31007497
+      ],
+      [
+        31007630,
+        31009205
+      ],
+      [
+        31009352,
+        31010009
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 30987577,
+    "source_end0": 31008651,
+    "read_name": "SRR22452368.83354",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30984434,
+    "read_end0": 31010120,
+    "strand": "-",
+    "cigar": "102=3D17=1X56=1X35=133N89=21924N32=1X59=1X77=532N34=1X78=1D19=2379N10=1D78=1D21=",
+    "query_length": 712,
+    "aligned_overlap_bp": 302,
+    "blocks_bed0": [
+      [
+        30984434,
+        30984536
+      ],
+      [
+        30984539,
+        30984556
+      ],
+      [
+        30984556,
+        30984557
+      ],
+      [
+        30984557,
+        30984613
+      ],
+      [
+        30984613,
+        30984614
+      ],
+      [
+        30984614,
+        30984649
+      ],
+      [
+        30984782,
+        30984871
+      ],
+      [
+        31006795,
+        31006827
+      ],
+      [
+        31006827,
+        31006828
+      ],
+      [
+        31006828,
+        31006887
+      ],
+      [
+        31006887,
+        31006888
+      ],
+      [
+        31006888,
+        31006965
+      ],
+      [
+        31007497,
+        31007531
+      ],
+      [
+        31007531,
+        31007532
+      ],
+      [
+        31007532,
+        31007610
+      ],
+      [
+        31007611,
+        31007630
+      ],
+      [
+        31010009,
+        31010019
+      ],
+      [
+        31010020,
+        31010098
+      ],
+      [
+        31010099,
+        31010120
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30984649,
+        30984782
+      ],
+      [
+        30984871,
+        31006795
+      ],
+      [
+        31006965,
+        31007497
+      ],
+      [
+        31007630,
+        31010009
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 30987577,
+    "source_end0": 31008651,
+    "read_name": "SRR22452368.129803",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30984434,
+    "read_end0": 31010179,
+    "strand": "-",
+    "cigar": "102=3D17=1X56=1X22=1X12=133N89=21924N32=1X59=1X77=532N33=1I100=2379N170=",
+    "query_length": 775,
+    "aligned_overlap_bp": 303,
+    "blocks_bed0": [
+      [
+        30984434,
+        30984536
+      ],
+      [
+        30984539,
+        30984556
+      ],
+      [
+        30984556,
+        30984557
+      ],
+      [
+        30984557,
+        30984613
+      ],
+      [
+        30984613,
+        30984614
+      ],
+      [
+        30984614,
+        30984636
+      ],
+      [
+        30984636,
+        30984637
+      ],
+      [
+        30984637,
+        30984649
+      ],
+      [
+        30984782,
+        30984871
+      ],
+      [
+        31006795,
+        31006827
+      ],
+      [
+        31006827,
+        31006828
+      ],
+      [
+        31006828,
+        31006887
+      ],
+      [
+        31006887,
+        31006888
+      ],
+      [
+        31006888,
+        31006965
+      ],
+      [
+        31007497,
+        31007530
+      ],
+      [
+        31007530,
+        31007630
+      ],
+      [
+        31010009,
+        31010179
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30984649,
+        30984782
+      ],
+      [
+        30984871,
+        31006795
+      ],
+      [
+        31006965,
+        31007497
+      ],
+      [
+        31007630,
+        31010009
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 30987577,
+    "source_end0": 31008651,
+    "read_name": "SRR22452368.216831",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30984434,
+    "read_end0": 31006839,
+    "strand": "-",
+    "cigar": "121=1X57=1X35=133N89=21924N32=1X11=",
+    "query_length": 348,
+    "aligned_overlap_bp": 44,
+    "blocks_bed0": [
+      [
+        30984434,
+        30984555
+      ],
+      [
+        30984555,
+        30984556
+      ],
+      [
+        30984556,
+        30984613
+      ],
+      [
+        30984613,
+        30984614
+      ],
+      [
+        30984614,
+        30984649
+      ],
+      [
+        30984782,
+        30984871
+      ],
+      [
+        31006795,
+        31006827
+      ],
+      [
+        31006827,
+        31006828
+      ],
+      [
+        31006828,
+        31006839
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30984649,
+        30984782
+      ],
+      [
+        30984871,
+        31006795
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 30987577,
+    "source_end0": 31008651,
+    "read_name": "SRR22452368.320161",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30984434,
+    "read_end0": 31010106,
+    "strand": "-",
+    "cigar": "102=3D17=1X56=1X35=133N89=21924N32=1X59=1X77=523N142=1575N6=1X102=1X10=1X43=1X145=1X89=1X27=1X255=1D216=",
+    "query_length": 1513,
+    "aligned_overlap_bp": 312,
+    "blocks_bed0": [
+      [
+        30984434,
+        30984536
+      ],
+      [
+        30984539,
+        30984556
+      ],
+      [
+        30984556,
+        30984557
+      ],
+      [
+        30984557,
+        30984613
+      ],
+      [
+        30984613,
+        30984614
+      ],
+      [
+        30984614,
+        30984649
+      ],
+      [
+        30984782,
+        30984871
+      ],
+      [
+        31006795,
+        31006827
+      ],
+      [
+        31006827,
+        31006828
+      ],
+      [
+        31006828,
+        31006887
+      ],
+      [
+        31006887,
+        31006888
+      ],
+      [
+        31006888,
+        31006965
+      ],
+      [
+        31007488,
+        31007630
+      ],
+      [
+        31009205,
+        31009211
+      ],
+      [
+        31009211,
+        31009212
+      ],
+      [
+        31009212,
+        31009314
+      ],
+      [
+        31009314,
+        31009315
+      ],
+      [
+        31009315,
+        31009325
+      ],
+      [
+        31009325,
+        31009326
+      ],
+      [
+        31009326,
+        31009369
+      ],
+      [
+        31009369,
+        31009370
+      ],
+      [
+        31009370,
+        31009515
+      ],
+      [
+        31009515,
+        31009516
+      ],
+      [
+        31009516,
+        31009605
+      ],
+      [
+        31009605,
+        31009606
+      ],
+      [
+        31009606,
+        31009633
+      ],
+      [
+        31009633,
+        31009634
+      ],
+      [
+        31009634,
+        31009889
+      ],
+      [
+        31009890,
+        31010106
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30984649,
+        30984782
+      ],
+      [
+        30984871,
+        31006795
+      ],
+      [
+        31006965,
+        31007488
+      ],
+      [
+        31007630,
+        31009205
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 30987577,
+    "source_end0": 31008651,
+    "read_name": "SRR22452368.973635",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30984434,
+    "read_end0": 31010130,
+    "strand": "-",
+    "cigar": "102=3D17=1X56=1X35=133N89=21924N32=1X59=1X77=532N133=2379N121=",
+    "query_length": 725,
+    "aligned_overlap_bp": 303,
+    "blocks_bed0": [
+      [
+        30984434,
+        30984536
+      ],
+      [
+        30984539,
+        30984556
+      ],
+      [
+        30984556,
+        30984557
+      ],
+      [
+        30984557,
+        30984613
+      ],
+      [
+        30984613,
+        30984614
+      ],
+      [
+        30984614,
+        30984649
+      ],
+      [
+        30984782,
+        30984871
+      ],
+      [
+        31006795,
+        31006827
+      ],
+      [
+        31006827,
+        31006828
+      ],
+      [
+        31006828,
+        31006887
+      ],
+      [
+        31006887,
+        31006888
+      ],
+      [
+        31006888,
+        31006965
+      ],
+      [
+        31007497,
+        31007630
+      ],
+      [
+        31010009,
+        31010130
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30984649,
+        30984782
+      ],
+      [
+        30984871,
+        31006795
+      ],
+      [
+        31006965,
+        31007497
+      ],
+      [
+        31007630,
+        31010009
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 30987577,
+    "source_end0": 31008651,
+    "read_name": "SRR22452368.1268200",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30984434,
+    "read_end0": 31006838,
+    "strand": "-",
+    "cigar": "121=1X57=1X35=133N89=21924N32=1X10=",
+    "query_length": 347,
+    "aligned_overlap_bp": 43,
+    "blocks_bed0": [
+      [
+        30984434,
+        30984555
+      ],
+      [
+        30984555,
+        30984556
+      ],
+      [
+        30984556,
+        30984613
+      ],
+      [
+        30984613,
+        30984614
+      ],
+      [
+        30984614,
+        30984649
+      ],
+      [
+        30984782,
+        30984871
+      ],
+      [
+        31006795,
+        31006827
+      ],
+      [
+        31006827,
+        31006828
+      ],
+      [
+        31006828,
+        31006838
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30984649,
+        30984782
+      ],
+      [
+        30984871,
+        31006795
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 30987577,
+    "source_end0": 31008651,
+    "read_name": "SRR22452368.1324449",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30984434,
+    "read_end0": 31010121,
+    "strand": "-",
+    "cigar": "102=3D17=1X56=1X35=133N89=21924N32=1X59=1X77=532N133=2379N112=",
+    "query_length": 716,
+    "aligned_overlap_bp": 303,
+    "blocks_bed0": [
+      [
+        30984434,
+        30984536
+      ],
+      [
+        30984539,
+        30984556
+      ],
+      [
+        30984556,
+        30984557
+      ],
+      [
+        30984557,
+        30984613
+      ],
+      [
+        30984613,
+        30984614
+      ],
+      [
+        30984614,
+        30984649
+      ],
+      [
+        30984782,
+        30984871
+      ],
+      [
+        31006795,
+        31006827
+      ],
+      [
+        31006827,
+        31006828
+      ],
+      [
+        31006828,
+        31006887
+      ],
+      [
+        31006887,
+        31006888
+      ],
+      [
+        31006888,
+        31006965
+      ],
+      [
+        31007497,
+        31007630
+      ],
+      [
+        31010009,
+        31010121
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30984649,
+        30984782
+      ],
+      [
+        30984871,
+        31006795
+      ],
+      [
+        31006965,
+        31007497
+      ],
+      [
+        31007630,
+        31010009
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 30987577,
+    "source_end0": 31008651,
+    "read_name": "SRR22452368.1453019",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30984434,
+    "read_end0": 31026906,
+    "strand": "-",
+    "cigar": "121=1X57=1X5=1D29=133N48=1D40=21924N32=1X59=1X20=1D56=532N133=18944N103=1X45=1X30=1D57=1X93=",
+    "query_length": 935,
+    "aligned_overlap_bp": 302,
+    "blocks_bed0": [
+      [
+        30984434,
+        30984555
+      ],
+      [
+        30984555,
+        30984556
+      ],
+      [
+        30984556,
+        30984613
+      ],
+      [
+        30984613,
+        30984614
+      ],
+      [
+        30984614,
+        30984619
+      ],
+      [
+        30984620,
+        30984649
+      ],
+      [
+        30984782,
+        30984830
+      ],
+      [
+        30984831,
+        30984871
+      ],
+      [
+        31006795,
+        31006827
+      ],
+      [
+        31006827,
+        31006828
+      ],
+      [
+        31006828,
+        31006887
+      ],
+      [
+        31006887,
+        31006888
+      ],
+      [
+        31006888,
+        31006908
+      ],
+      [
+        31006909,
+        31006965
+      ],
+      [
+        31007497,
+        31007630
+      ],
+      [
+        31026574,
+        31026677
+      ],
+      [
+        31026677,
+        31026678
+      ],
+      [
+        31026678,
+        31026723
+      ],
+      [
+        31026723,
+        31026724
+      ],
+      [
+        31026724,
+        31026754
+      ],
+      [
+        31026755,
+        31026812
+      ],
+      [
+        31026812,
+        31026813
+      ],
+      [
+        31026813,
+        31026906
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30984649,
+        30984782
+      ],
+      [
+        30984871,
+        31006795
+      ],
+      [
+        31006965,
+        31007497
+      ],
+      [
+        31007630,
+        31026574
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 30987577,
+    "source_end0": 31008651,
+    "read_name": "SRR22452368.1528023",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30984434,
+    "read_end0": 31010185,
+    "strand": "-",
+    "cigar": "102=3D17=1X56=1X35=133N89=21943N13=1X59=1X77=523N142=2379N176=",
+    "query_length": 770,
+    "aligned_overlap_bp": 293,
+    "blocks_bed0": [
+      [
+        30984434,
+        30984536
+      ],
+      [
+        30984539,
+        30984556
+      ],
+      [
+        30984556,
+        30984557
+      ],
+      [
+        30984557,
+        30984613
+      ],
+      [
+        30984613,
+        30984614
+      ],
+      [
+        30984614,
+        30984649
+      ],
+      [
+        30984782,
+        30984871
+      ],
+      [
+        31006814,
+        31006827
+      ],
+      [
+        31006827,
+        31006828
+      ],
+      [
+        31006828,
+        31006887
+      ],
+      [
+        31006887,
+        31006888
+      ],
+      [
+        31006888,
+        31006965
+      ],
+      [
+        31007488,
+        31007630
+      ],
+      [
+        31010009,
+        31010185
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30984649,
+        30984782
+      ],
+      [
+        30984871,
+        31006814
+      ],
+      [
+        31006965,
+        31007488
+      ],
+      [
+        31007630,
+        31010009
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 30987577,
+    "source_end0": 31008651,
+    "read_name": "SRR22452368.1579942",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30984434,
+    "read_end0": 31006877,
+    "strand": "-",
+    "cigar": "121=1X57=1X35=133N89=21943N13=1X49=",
+    "query_length": 367,
+    "aligned_overlap_bp": 63,
+    "blocks_bed0": [
+      [
+        30984434,
+        30984555
+      ],
+      [
+        30984555,
+        30984556
+      ],
+      [
+        30984556,
+        30984613
+      ],
+      [
+        30984613,
+        30984614
+      ],
+      [
+        30984614,
+        30984649
+      ],
+      [
+        30984782,
+        30984871
+      ],
+      [
+        31006814,
+        31006827
+      ],
+      [
+        31006827,
+        31006828
+      ],
+      [
+        31006828,
+        31006877
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30984649,
+        30984782
+      ],
+      [
+        30984871,
+        31006814
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 30987577,
+    "source_end0": 31008651,
+    "read_name": "SRR22452368.1649024",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30984434,
+    "read_end0": 31007617,
+    "strand": "-",
+    "cigar": "102=3D17=1X56=1X35=133N89=21924N32=1X59=1X77=532N120=",
+    "query_length": 591,
+    "aligned_overlap_bp": 290,
+    "blocks_bed0": [
+      [
+        30984434,
+        30984536
+      ],
+      [
+        30984539,
+        30984556
+      ],
+      [
+        30984556,
+        30984557
+      ],
+      [
+        30984557,
+        30984613
+      ],
+      [
+        30984613,
+        30984614
+      ],
+      [
+        30984614,
+        30984649
+      ],
+      [
+        30984782,
+        30984871
+      ],
+      [
+        31006795,
+        31006827
+      ],
+      [
+        31006827,
+        31006828
+      ],
+      [
+        31006828,
+        31006887
+      ],
+      [
+        31006887,
+        31006888
+      ],
+      [
+        31006888,
+        31006965
+      ],
+      [
+        31007497,
+        31007617
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30984649,
+        30984782
+      ],
+      [
+        30984871,
+        31006795
+      ],
+      [
+        31006965,
+        31007497
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 30987577,
+    "source_end0": 31008651,
+    "read_name": "SRR22452368.1741181",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30984434,
+    "read_end0": 31010098,
+    "strand": "-",
+    "cigar": "102=3D17=1X56=1X35=133N89=21924N32=1X59=1X77=532N133=1575N6=1X102=1X10=1X18=665N89=",
+    "query_length": 832,
+    "aligned_overlap_bp": 303,
+    "blocks_bed0": [
+      [
+        30984434,
+        30984536
+      ],
+      [
+        30984539,
+        30984556
+      ],
+      [
+        30984556,
+        30984557
+      ],
+      [
+        30984557,
+        30984613
+      ],
+      [
+        30984613,
+        30984614
+      ],
+      [
+        30984614,
+        30984649
+      ],
+      [
+        30984782,
+        30984871
+      ],
+      [
+        31006795,
+        31006827
+      ],
+      [
+        31006827,
+        31006828
+      ],
+      [
+        31006828,
+        31006887
+      ],
+      [
+        31006887,
+        31006888
+      ],
+      [
+        31006888,
+        31006965
+      ],
+      [
+        31007497,
+        31007630
+      ],
+      [
+        31009205,
+        31009211
+      ],
+      [
+        31009211,
+        31009212
+      ],
+      [
+        31009212,
+        31009314
+      ],
+      [
+        31009314,
+        31009315
+      ],
+      [
+        31009315,
+        31009325
+      ],
+      [
+        31009325,
+        31009326
+      ],
+      [
+        31009326,
+        31009344
+      ],
+      [
+        31010009,
+        31010098
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30984649,
+        30984782
+      ],
+      [
+        30984871,
+        31006795
+      ],
+      [
+        31006965,
+        31007497
+      ],
+      [
+        31007630,
+        31009205
+      ],
+      [
+        31009344,
+        31010009
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 30987577,
+    "source_end0": 31008651,
+    "read_name": "SRR22452368.1757332",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30984434,
+    "read_end0": 31026865,
+    "strand": "-",
+    "cigar": "102=3D17=1X56=1X35=133N89=21924N32=1X59=1X77=523N142=18949N98=1X45=1X88=1X24=1X27=",
+    "query_length": 899,
+    "aligned_overlap_bp": 312,
+    "blocks_bed0": [
+      [
+        30984434,
+        30984536
+      ],
+      [
+        30984539,
+        30984556
+      ],
+      [
+        30984556,
+        30984557
+      ],
+      [
+        30984557,
+        30984613
+      ],
+      [
+        30984613,
+        30984614
+      ],
+      [
+        30984614,
+        30984649
+      ],
+      [
+        30984782,
+        30984871
+      ],
+      [
+        31006795,
+        31006827
+      ],
+      [
+        31006827,
+        31006828
+      ],
+      [
+        31006828,
+        31006887
+      ],
+      [
+        31006887,
+        31006888
+      ],
+      [
+        31006888,
+        31006965
+      ],
+      [
+        31007488,
+        31007630
+      ],
+      [
+        31026579,
+        31026677
+      ],
+      [
+        31026677,
+        31026678
+      ],
+      [
+        31026678,
+        31026723
+      ],
+      [
+        31026723,
+        31026724
+      ],
+      [
+        31026724,
+        31026812
+      ],
+      [
+        31026812,
+        31026813
+      ],
+      [
+        31026813,
+        31026837
+      ],
+      [
+        31026837,
+        31026838
+      ],
+      [
+        31026838,
+        31026865
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30984649,
+        30984782
+      ],
+      [
+        30984871,
+        31006795
+      ],
+      [
+        31006965,
+        31007488
+      ],
+      [
+        31007630,
+        31026579
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 30987577,
+    "source_end0": 31008651,
+    "read_name": "SRR22452368.1913204",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30984434,
+    "read_end0": 31009475,
+    "strand": "-",
+    "cigar": "102=3D17=1X56=1X35=133N89=21924N32=1X59=1X77=532N133=1575N6=1X102=1X10=1X43=1X105=",
+    "query_length": 874,
+    "aligned_overlap_bp": 303,
+    "blocks_bed0": [
+      [
+        30984434,
+        30984536
+      ],
+      [
+        30984539,
+        30984556
+      ],
+      [
+        30984556,
+        30984557
+      ],
+      [
+        30984557,
+        30984613
+      ],
+      [
+        30984613,
+        30984614
+      ],
+      [
+        30984614,
+        30984649
+      ],
+      [
+        30984782,
+        30984871
+      ],
+      [
+        31006795,
+        31006827
+      ],
+      [
+        31006827,
+        31006828
+      ],
+      [
+        31006828,
+        31006887
+      ],
+      [
+        31006887,
+        31006888
+      ],
+      [
+        31006888,
+        31006965
+      ],
+      [
+        31007497,
+        31007630
+      ],
+      [
+        31009205,
+        31009211
+      ],
+      [
+        31009211,
+        31009212
+      ],
+      [
+        31009212,
+        31009314
+      ],
+      [
+        31009314,
+        31009315
+      ],
+      [
+        31009315,
+        31009325
+      ],
+      [
+        31009325,
+        31009326
+      ],
+      [
+        31009326,
+        31009369
+      ],
+      [
+        31009369,
+        31009370
+      ],
+      [
+        31009370,
+        31009475
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30984649,
+        30984782
+      ],
+      [
+        30984871,
+        31006795
+      ],
+      [
+        31006965,
+        31007497
+      ],
+      [
+        31007630,
+        31009205
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 30987577,
+    "source_end0": 31008651,
+    "read_name": "SRR22452368.1947632",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30984434,
+    "read_end0": 31010186,
+    "strand": "-",
+    "cigar": "102=3D17=1X56=1X35=133N89=21924N32=1X59=1X77=523N142=2379N177=",
+    "query_length": 790,
+    "aligned_overlap_bp": 312,
+    "blocks_bed0": [
+      [
+        30984434,
+        30984536
+      ],
+      [
+        30984539,
+        30984556
+      ],
+      [
+        30984556,
+        30984557
+      ],
+      [
+        30984557,
+        30984613
+      ],
+      [
+        30984613,
+        30984614
+      ],
+      [
+        30984614,
+        30984649
+      ],
+      [
+        30984782,
+        30984871
+      ],
+      [
+        31006795,
+        31006827
+      ],
+      [
+        31006827,
+        31006828
+      ],
+      [
+        31006828,
+        31006887
+      ],
+      [
+        31006887,
+        31006888
+      ],
+      [
+        31006888,
+        31006965
+      ],
+      [
+        31007488,
+        31007630
+      ],
+      [
+        31010009,
+        31010186
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30984649,
+        30984782
+      ],
+      [
+        30984871,
+        31006795
+      ],
+      [
+        31006965,
+        31007488
+      ],
+      [
+        31007630,
+        31010009
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 30987577,
+    "source_end0": 31008651,
+    "read_name": "SRR22452368.1965269",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30984434,
+    "read_end0": 31010121,
+    "strand": "-",
+    "cigar": "102=3D17=1X56=1X35=133N89=21924N32=1X59=1X77=523N142=1575N6=1X102=1X10=1X18=665N112=",
+    "query_length": 864,
+    "aligned_overlap_bp": 312,
+    "blocks_bed0": [
+      [
+        30984434,
+        30984536
+      ],
+      [
+        30984539,
+        30984556
+      ],
+      [
+        30984556,
+        30984557
+      ],
+      [
+        30984557,
+        30984613
+      ],
+      [
+        30984613,
+        30984614
+      ],
+      [
+        30984614,
+        30984649
+      ],
+      [
+        30984782,
+        30984871
+      ],
+      [
+        31006795,
+        31006827
+      ],
+      [
+        31006827,
+        31006828
+      ],
+      [
+        31006828,
+        31006887
+      ],
+      [
+        31006887,
+        31006888
+      ],
+      [
+        31006888,
+        31006965
+      ],
+      [
+        31007488,
+        31007630
+      ],
+      [
+        31009205,
+        31009211
+      ],
+      [
+        31009211,
+        31009212
+      ],
+      [
+        31009212,
+        31009314
+      ],
+      [
+        31009314,
+        31009315
+      ],
+      [
+        31009315,
+        31009325
+      ],
+      [
+        31009325,
+        31009326
+      ],
+      [
+        31009326,
+        31009344
+      ],
+      [
+        31010009,
+        31010121
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30984649,
+        30984782
+      ],
+      [
+        30984871,
+        31006795
+      ],
+      [
+        31006965,
+        31007488
+      ],
+      [
+        31007630,
+        31009205
+      ],
+      [
+        31009344,
+        31010009
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 30987577,
+    "source_end0": 31008651,
+    "read_name": "SRR22452368.1970423",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30984434,
+    "read_end0": 31007531,
+    "strand": "-",
+    "cigar": "102=3D17=1X56=1X35=133N89=21943N13=1X59=1X77=532N34=",
+    "query_length": 486,
+    "aligned_overlap_bp": 185,
+    "blocks_bed0": [
+      [
+        30984434,
+        30984536
+      ],
+      [
+        30984539,
+        30984556
+      ],
+      [
+        30984556,
+        30984557
+      ],
+      [
+        30984557,
+        30984613
+      ],
+      [
+        30984613,
+        30984614
+      ],
+      [
+        30984614,
+        30984649
+      ],
+      [
+        30984782,
+        30984871
+      ],
+      [
+        31006814,
+        31006827
+      ],
+      [
+        31006827,
+        31006828
+      ],
+      [
+        31006828,
+        31006887
+      ],
+      [
+        31006887,
+        31006888
+      ],
+      [
+        31006888,
+        31006965
+      ],
+      [
+        31007497,
+        31007531
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30984649,
+        30984782
+      ],
+      [
+        30984871,
+        31006814
+      ],
+      [
+        31006965,
+        31007497
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 30987577,
+    "source_end0": 31008651,
+    "read_name": "SRR22452368.2392454",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30984434,
+    "read_end0": 31010102,
+    "strand": "-",
+    "cigar": "38=1D33=1X48=1X28=1I25=1I4=1X12=1D22=133N1I12=1I73=1D3=21924N8=1X23=1X59=1X77=523N35=1I14=1I30=1I63=1575N6=1X102=1X10=1X18=665N78=1I15=",
+    "query_length": 853,
+    "aligned_overlap_bp": 312,
+    "blocks_bed0": [
+      [
+        30984434,
+        30984472
+      ],
+      [
+        30984473,
+        30984506
+      ],
+      [
+        30984506,
+        30984507
+      ],
+      [
+        30984507,
+        30984555
+      ],
+      [
+        30984555,
+        30984556
+      ],
+      [
+        30984556,
+        30984584
+      ],
+      [
+        30984584,
+        30984609
+      ],
+      [
+        30984609,
+        30984613
+      ],
+      [
+        30984613,
+        30984614
+      ],
+      [
+        30984614,
+        30984626
+      ],
+      [
+        30984627,
+        30984649
+      ],
+      [
+        30984782,
+        30984794
+      ],
+      [
+        30984794,
+        30984867
+      ],
+      [
+        30984868,
+        30984871
+      ],
+      [
+        31006795,
+        31006803
+      ],
+      [
+        31006803,
+        31006804
+      ],
+      [
+        31006804,
+        31006827
+      ],
+      [
+        31006827,
+        31006828
+      ],
+      [
+        31006828,
+        31006887
+      ],
+      [
+        31006887,
+        31006888
+      ],
+      [
+        31006888,
+        31006965
+      ],
+      [
+        31007488,
+        31007523
+      ],
+      [
+        31007523,
+        31007537
+      ],
+      [
+        31007537,
+        31007567
+      ],
+      [
+        31007567,
+        31007630
+      ],
+      [
+        31009205,
+        31009211
+      ],
+      [
+        31009211,
+        31009212
+      ],
+      [
+        31009212,
+        31009314
+      ],
+      [
+        31009314,
+        31009315
+      ],
+      [
+        31009315,
+        31009325
+      ],
+      [
+        31009325,
+        31009326
+      ],
+      [
+        31009326,
+        31009344
+      ],
+      [
+        31010009,
+        31010087
+      ],
+      [
+        31010087,
+        31010102
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30984649,
+        30984782
+      ],
+      [
+        30984871,
+        31006795
+      ],
+      [
+        31006965,
+        31007488
+      ],
+      [
+        31007630,
+        31009205
+      ],
+      [
+        31009344,
+        31010009
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 30987577,
+    "source_end0": 31008651,
+    "read_name": "SRR22452368.2593836",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30984434,
+    "read_end0": 31010097,
+    "strand": "-",
+    "cigar": "102=3D17=1X56=1X35=133N89=21924N32=1X59=1X77=532N133=1575N6=1X102=1X10=1X18=665N88=",
+    "query_length": 831,
+    "aligned_overlap_bp": 303,
+    "blocks_bed0": [
+      [
+        30984434,
+        30984536
+      ],
+      [
+        30984539,
+        30984556
+      ],
+      [
+        30984556,
+        30984557
+      ],
+      [
+        30984557,
+        30984613
+      ],
+      [
+        30984613,
+        30984614
+      ],
+      [
+        30984614,
+        30984649
+      ],
+      [
+        30984782,
+        30984871
+      ],
+      [
+        31006795,
+        31006827
+      ],
+      [
+        31006827,
+        31006828
+      ],
+      [
+        31006828,
+        31006887
+      ],
+      [
+        31006887,
+        31006888
+      ],
+      [
+        31006888,
+        31006965
+      ],
+      [
+        31007497,
+        31007630
+      ],
+      [
+        31009205,
+        31009211
+      ],
+      [
+        31009211,
+        31009212
+      ],
+      [
+        31009212,
+        31009314
+      ],
+      [
+        31009314,
+        31009315
+      ],
+      [
+        31009315,
+        31009325
+      ],
+      [
+        31009325,
+        31009326
+      ],
+      [
+        31009326,
+        31009344
+      ],
+      [
+        31010009,
+        31010097
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30984649,
+        30984782
+      ],
+      [
+        30984871,
+        31006795
+      ],
+      [
+        31006965,
+        31007497
+      ],
+      [
+        31007630,
+        31009205
+      ],
+      [
+        31009344,
+        31010009
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 30987577,
+    "source_end0": 31008651,
+    "read_name": "SRR22452368.2624734",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30984434,
+    "read_end0": 31010087,
+    "strand": "-",
+    "cigar": "102=3D17=1X56=1X35=133N89=21924N32=1X59=1X77=532N133=1575N6=1X102=1X10=1X18=665N78=",
+    "query_length": 821,
+    "aligned_overlap_bp": 303,
+    "blocks_bed0": [
+      [
+        30984434,
+        30984536
+      ],
+      [
+        30984539,
+        30984556
+      ],
+      [
+        30984556,
+        30984557
+      ],
+      [
+        30984557,
+        30984613
+      ],
+      [
+        30984613,
+        30984614
+      ],
+      [
+        30984614,
+        30984649
+      ],
+      [
+        30984782,
+        30984871
+      ],
+      [
+        31006795,
+        31006827
+      ],
+      [
+        31006827,
+        31006828
+      ],
+      [
+        31006828,
+        31006887
+      ],
+      [
+        31006887,
+        31006888
+      ],
+      [
+        31006888,
+        31006965
+      ],
+      [
+        31007497,
+        31007630
+      ],
+      [
+        31009205,
+        31009211
+      ],
+      [
+        31009211,
+        31009212
+      ],
+      [
+        31009212,
+        31009314
+      ],
+      [
+        31009314,
+        31009315
+      ],
+      [
+        31009315,
+        31009325
+      ],
+      [
+        31009325,
+        31009326
+      ],
+      [
+        31009326,
+        31009344
+      ],
+      [
+        31010009,
+        31010087
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30984649,
+        30984782
+      ],
+      [
+        30984871,
+        31006795
+      ],
+      [
+        31006965,
+        31007497
+      ],
+      [
+        31007630,
+        31009205
+      ],
+      [
+        31009344,
+        31010009
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 30987577,
+    "source_end0": 31008651,
+    "read_name": "SRR22452368.2781139",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30984434,
+    "read_end0": 31010129,
+    "strand": "-",
+    "cigar": "102=3D17=1X56=1X35=133N89=21924N32=1X59=1X77=532N133=2379N120=",
+    "query_length": 724,
+    "aligned_overlap_bp": 303,
+    "blocks_bed0": [
+      [
+        30984434,
+        30984536
+      ],
+      [
+        30984539,
+        30984556
+      ],
+      [
+        30984556,
+        30984557
+      ],
+      [
+        30984557,
+        30984613
+      ],
+      [
+        30984613,
+        30984614
+      ],
+      [
+        30984614,
+        30984649
+      ],
+      [
+        30984782,
+        30984871
+      ],
+      [
+        31006795,
+        31006827
+      ],
+      [
+        31006827,
+        31006828
+      ],
+      [
+        31006828,
+        31006887
+      ],
+      [
+        31006887,
+        31006888
+      ],
+      [
+        31006888,
+        31006965
+      ],
+      [
+        31007497,
+        31007630
+      ],
+      [
+        31010009,
+        31010129
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30984649,
+        30984782
+      ],
+      [
+        30984871,
+        31006795
+      ],
+      [
+        31006965,
+        31007497
+      ],
+      [
+        31007630,
+        31010009
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 30987577,
+    "source_end0": 31008651,
+    "read_name": "SRR22452368.26896",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30984435,
+    "read_end0": 31010118,
+    "strand": "-",
+    "cigar": "120=1X57=1X35=133N89=21924N32=1X59=1X77=523N142=1575N6=1X102=1X10=1X18=665N109=",
+    "query_length": 863,
+    "aligned_overlap_bp": 312,
+    "blocks_bed0": [
+      [
+        30984435,
+        30984555
+      ],
+      [
+        30984555,
+        30984556
+      ],
+      [
+        30984556,
+        30984613
+      ],
+      [
+        30984613,
+        30984614
+      ],
+      [
+        30984614,
+        30984649
+      ],
+      [
+        30984782,
+        30984871
+      ],
+      [
+        31006795,
+        31006827
+      ],
+      [
+        31006827,
+        31006828
+      ],
+      [
+        31006828,
+        31006887
+      ],
+      [
+        31006887,
+        31006888
+      ],
+      [
+        31006888,
+        31006965
+      ],
+      [
+        31007488,
+        31007630
+      ],
+      [
+        31009205,
+        31009211
+      ],
+      [
+        31009211,
+        31009212
+      ],
+      [
+        31009212,
+        31009314
+      ],
+      [
+        31009314,
+        31009315
+      ],
+      [
+        31009315,
+        31009325
+      ],
+      [
+        31009325,
+        31009326
+      ],
+      [
+        31009326,
+        31009344
+      ],
+      [
+        31010009,
+        31010118
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30984649,
+        30984782
+      ],
+      [
+        30984871,
+        31006795
+      ],
+      [
+        31006965,
+        31007488
+      ],
+      [
+        31007630,
+        31009205
+      ],
+      [
+        31009344,
+        31010009
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 30987577,
+    "source_end0": 31008651,
+    "read_name": "SRR22452368.779420",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30984435,
+    "read_end0": 31009766,
+    "strand": "-",
+    "cigar": "120=1X57=1X35=133N89=21924N32=1X59=1X77=532N133=1575N6=1X102=1X10=1X43=1X145=1X117=1X132=",
+    "query_length": 1167,
+    "aligned_overlap_bp": 303,
+    "blocks_bed0": [
+      [
+        30984435,
+        30984555
+      ],
+      [
+        30984555,
+        30984556
+      ],
+      [
+        30984556,
+        30984613
+      ],
+      [
+        30984613,
+        30984614
+      ],
+      [
+        30984614,
+        30984649
+      ],
+      [
+        30984782,
+        30984871
+      ],
+      [
+        31006795,
+        31006827
+      ],
+      [
+        31006827,
+        31006828
+      ],
+      [
+        31006828,
+        31006887
+      ],
+      [
+        31006887,
+        31006888
+      ],
+      [
+        31006888,
+        31006965
+      ],
+      [
+        31007497,
+        31007630
+      ],
+      [
+        31009205,
+        31009211
+      ],
+      [
+        31009211,
+        31009212
+      ],
+      [
+        31009212,
+        31009314
+      ],
+      [
+        31009314,
+        31009315
+      ],
+      [
+        31009315,
+        31009325
+      ],
+      [
+        31009325,
+        31009326
+      ],
+      [
+        31009326,
+        31009369
+      ],
+      [
+        31009369,
+        31009370
+      ],
+      [
+        31009370,
+        31009515
+      ],
+      [
+        31009515,
+        31009516
+      ],
+      [
+        31009516,
+        31009633
+      ],
+      [
+        31009633,
+        31009634
+      ],
+      [
+        31009634,
+        31009766
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30984649,
+        30984782
+      ],
+      [
+        30984871,
+        31006795
+      ],
+      [
+        31006965,
+        31007497
+      ],
+      [
+        31007630,
+        31009205
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 30987577,
+    "source_end0": 31008651,
+    "read_name": "SRR22452368.1229209",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30984435,
+    "read_end0": 31026635,
+    "strand": "-",
+    "cigar": "101=3D17=1X56=1X35=133N89=21924N32=1X59=1X77=532N133=3874N151=14919N61=",
+    "query_length": 815,
+    "aligned_overlap_bp": 303,
+    "blocks_bed0": [
+      [
+        30984435,
+        30984536
+      ],
+      [
+        30984539,
+        30984556
+      ],
+      [
+        30984556,
+        30984557
+      ],
+      [
+        30984557,
+        30984613
+      ],
+      [
+        30984613,
+        30984614
+      ],
+      [
+        30984614,
+        30984649
+      ],
+      [
+        30984782,
+        30984871
+      ],
+      [
+        31006795,
+        31006827
+      ],
+      [
+        31006827,
+        31006828
+      ],
+      [
+        31006828,
+        31006887
+      ],
+      [
+        31006887,
+        31006888
+      ],
+      [
+        31006888,
+        31006965
+      ],
+      [
+        31007497,
+        31007630
+      ],
+      [
+        31011504,
+        31011655
+      ],
+      [
+        31026574,
+        31026635
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30984649,
+        30984782
+      ],
+      [
+        30984871,
+        31006795
+      ],
+      [
+        31006965,
+        31007497
+      ],
+      [
+        31007630,
+        31011504
+      ],
+      [
+        31011655,
+        31026574
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 30987577,
+    "source_end0": 31008651,
+    "read_name": "SRR22452368.2219164",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30984436,
+    "read_end0": 31026776,
+    "strand": "-",
+    "cigar": "119=1X57=1X35=133N89=21924N32=1X59=1X77=532N133=18944N103=1X45=1X52=",
+    "query_length": 807,
+    "aligned_overlap_bp": 303,
+    "blocks_bed0": [
+      [
+        30984436,
+        30984555
+      ],
+      [
+        30984555,
+        30984556
+      ],
+      [
+        30984556,
+        30984613
+      ],
+      [
+        30984613,
+        30984614
+      ],
+      [
+        30984614,
+        30984649
+      ],
+      [
+        30984782,
+        30984871
+      ],
+      [
+        31006795,
+        31006827
+      ],
+      [
+        31006827,
+        31006828
+      ],
+      [
+        31006828,
+        31006887
+      ],
+      [
+        31006887,
+        31006888
+      ],
+      [
+        31006888,
+        31006965
+      ],
+      [
+        31007497,
+        31007630
+      ],
+      [
+        31026574,
+        31026677
+      ],
+      [
+        31026677,
+        31026678
+      ],
+      [
+        31026678,
+        31026723
+      ],
+      [
+        31026723,
+        31026724
+      ],
+      [
+        31026724,
+        31026776
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30984649,
+        30984782
+      ],
+      [
+        30984871,
+        31006795
+      ],
+      [
+        31006965,
+        31007497
+      ],
+      [
+        31007630,
+        31026574
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 30987577,
+    "source_end0": 31008651,
+    "read_name": "SRR22452368.2487321",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30984436,
+    "read_end0": 31026852,
+    "strand": "-",
+    "cigar": "3S10=1I31=2I10=1I10=1I12=2I1X13=3I18=2I3=1I7=1I4=1X13=1I15=1I25=1I4=1X28=5I7=133N1=1I13=1I18=1I6=2I1=1X12=1I19=1I6=3I1X11=21924N1I32=1I1X18=1I9=1I8=1I5=1I5=2I1X13=1X2=1I22=1I12=1I13=2I12=1I6=1I7=1I3=532N40=2I17=2I1X32=1I43=18944N36=2I3=2I1X12=1I6=1I10=1I6=1I7=2I10=1I6=1I6=1X4=1I7=1I18=1I16=1X2=2I3=1I8=1I14=2I21=1I17=1I4=1I6=2I13=1X6=1I10=1I23=7S",
+    "query_length": 974,
+    "aligned_overlap_bp": 303,
+    "blocks_bed0": [
+      [
+        30984436,
+        30984446
+      ],
+      [
+        30984446,
+        30984477
+      ],
+      [
+        30984477,
+        30984487
+      ],
+      [
+        30984487,
+        30984497
+      ],
+      [
+        30984497,
+        30984509
+      ],
+      [
+        30984509,
+        30984510
+      ],
+      [
+        30984510,
+        30984523
+      ],
+      [
+        30984523,
+        30984541
+      ],
+      [
+        30984541,
+        30984544
+      ],
+      [
+        30984544,
+        30984551
+      ],
+      [
+        30984551,
+        30984555
+      ],
+      [
+        30984555,
+        30984556
+      ],
+      [
+        30984556,
+        30984569
+      ],
+      [
+        30984569,
+        30984584
+      ],
+      [
+        30984584,
+        30984609
+      ],
+      [
+        30984609,
+        30984613
+      ],
+      [
+        30984613,
+        30984614
+      ],
+      [
+        30984614,
+        30984642
+      ],
+      [
+        30984642,
+        30984649
+      ],
+      [
+        30984782,
+        30984783
+      ],
+      [
+        30984783,
+        30984796
+      ],
+      [
+        30984796,
+        30984814
+      ],
+      [
+        30984814,
+        30984820
+      ],
+      [
+        30984820,
+        30984821
+      ],
+      [
+        30984821,
+        30984822
+      ],
+      [
+        30984822,
+        30984834
+      ],
+      [
+        30984834,
+        30984853
+      ],
+      [
+        30984853,
+        30984859
+      ],
+      [
+        30984859,
+        30984860
+      ],
+      [
+        30984860,
+        30984871
+      ],
+      [
+        31006795,
+        31006827
+      ],
+      [
+        31006827,
+        31006828
+      ],
+      [
+        31006828,
+        31006846
+      ],
+      [
+        31006846,
+        31006855
+      ],
+      [
+        31006855,
+        31006863
+      ],
+      [
+        31006863,
+        31006868
+      ],
+      [
+        31006868,
+        31006873
+      ],
+      [
+        31006873,
+        31006874
+      ],
+      [
+        31006874,
+        31006887
+      ],
+      [
+        31006887,
+        31006888
+      ],
+      [
+        31006888,
+        31006890
+      ],
+      [
+        31006890,
+        31006912
+      ],
+      [
+        31006912,
+        31006924
+      ],
+      [
+        31006924,
+        31006937
+      ],
+      [
+        31006937,
+        31006949
+      ],
+      [
+        31006949,
+        31006955
+      ],
+      [
+        31006955,
+        31006962
+      ],
+      [
+        31006962,
+        31006965
+      ],
+      [
+        31007497,
+        31007537
+      ],
+      [
+        31007537,
+        31007554
+      ],
+      [
+        31007554,
+        31007555
+      ],
+      [
+        31007555,
+        31007587
+      ],
+      [
+        31007587,
+        31007630
+      ],
+      [
+        31026574,
+        31026610
+      ],
+      [
+        31026610,
+        31026613
+      ],
+      [
+        31026613,
+        31026614
+      ],
+      [
+        31026614,
+        31026626
+      ],
+      [
+        31026626,
+        31026632
+      ],
+      [
+        31026632,
+        31026642
+      ],
+      [
+        31026642,
+        31026648
+      ],
+      [
+        31026648,
+        31026655
+      ],
+      [
+        31026655,
+        31026665
+      ],
+      [
+        31026665,
+        31026671
+      ],
+      [
+        31026671,
+        31026677
+      ],
+      [
+        31026677,
+        31026678
+      ],
+      [
+        31026678,
+        31026682
+      ],
+      [
+        31026682,
+        31026689
+      ],
+      [
+        31026689,
+        31026707
+      ],
+      [
+        31026707,
+        31026723
+      ],
+      [
+        31026723,
+        31026724
+      ],
+      [
+        31026724,
+        31026726
+      ],
+      [
+        31026726,
+        31026729
+      ],
+      [
+        31026729,
+        31026737
+      ],
+      [
+        31026737,
+        31026751
+      ],
+      [
+        31026751,
+        31026772
+      ],
+      [
+        31026772,
+        31026789
+      ],
+      [
+        31026789,
+        31026793
+      ],
+      [
+        31026793,
+        31026799
+      ],
+      [
+        31026799,
+        31026812
+      ],
+      [
+        31026812,
+        31026813
+      ],
+      [
+        31026813,
+        31026819
+      ],
+      [
+        31026819,
+        31026829
+      ],
+      [
+        31026829,
+        31026852
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30984649,
+        30984782
+      ],
+      [
+        30984871,
+        31006795
+      ],
+      [
+        31006965,
+        31007497
+      ],
+      [
+        31007630,
+        31026574
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 30987577,
+    "source_end0": 31008651,
+    "read_name": "SRR22452368.2687107",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30984436,
+    "read_end0": 31010130,
+    "strand": "-",
+    "cigar": "1S26=1I10=1I51=1I32=1X17=1X39=1X35=133N1=1D45=1I42=21924N32=1X17=1I12=1I24=1D5=1X5=1I2=1X53=1D12=1D2=532N1X12=3I22=1I30=1D15=1I16=1X25=1I1X9=1575N6=1X1=1D1=1X12=2X3=2D16=1I27=4X11=1X2=3X5=1D9=1X10=1X2=1I16=665N10=3I26=2D1=1X15=1D7=1D2=2I8=1X4=1I18=2I24=",
+    "query_length": 876,
+    "aligned_overlap_bp": 299,
+    "blocks_bed0": [
+      [
+        30984436,
+        30984462
+      ],
+      [
+        30984462,
+        30984472
+      ],
+      [
+        30984472,
+        30984523
+      ],
+      [
+        30984523,
+        30984555
+      ],
+      [
+        30984555,
+        30984556
+      ],
+      [
+        30984556,
+        30984573
+      ],
+      [
+        30984573,
+        30984574
+      ],
+      [
+        30984574,
+        30984613
+      ],
+      [
+        30984613,
+        30984614
+      ],
+      [
+        30984614,
+        30984649
+      ],
+      [
+        30984782,
+        30984783
+      ],
+      [
+        30984784,
+        30984829
+      ],
+      [
+        30984829,
+        30984871
+      ],
+      [
+        31006795,
+        31006827
+      ],
+      [
+        31006827,
+        31006828
+      ],
+      [
+        31006828,
+        31006845
+      ],
+      [
+        31006845,
+        31006857
+      ],
+      [
+        31006857,
+        31006881
+      ],
+      [
+        31006882,
+        31006887
+      ],
+      [
+        31006887,
+        31006888
+      ],
+      [
+        31006888,
+        31006893
+      ],
+      [
+        31006893,
+        31006895
+      ],
+      [
+        31006895,
+        31006896
+      ],
+      [
+        31006896,
+        31006949
+      ],
+      [
+        31006950,
+        31006962
+      ],
+      [
+        31006963,
+        31006965
+      ],
+      [
+        31007497,
+        31007498
+      ],
+      [
+        31007498,
+        31007510
+      ],
+      [
+        31007510,
+        31007532
+      ],
+      [
+        31007532,
+        31007562
+      ],
+      [
+        31007563,
+        31007578
+      ],
+      [
+        31007578,
+        31007594
+      ],
+      [
+        31007594,
+        31007595
+      ],
+      [
+        31007595,
+        31007620
+      ],
+      [
+        31007620,
+        31007621
+      ],
+      [
+        31007621,
+        31007630
+      ],
+      [
+        31009205,
+        31009211
+      ],
+      [
+        31009211,
+        31009212
+      ],
+      [
+        31009212,
+        31009213
+      ],
+      [
+        31009214,
+        31009215
+      ],
+      [
+        31009215,
+        31009216
+      ],
+      [
+        31009216,
+        31009228
+      ],
+      [
+        31009228,
+        31009230
+      ],
+      [
+        31009230,
+        31009233
+      ],
+      [
+        31009235,
+        31009251
+      ],
+      [
+        31009251,
+        31009278
+      ],
+      [
+        31009278,
+        31009282
+      ],
+      [
+        31009282,
+        31009293
+      ],
+      [
+        31009293,
+        31009294
+      ],
+      [
+        31009294,
+        31009296
+      ],
+      [
+        31009296,
+        31009299
+      ],
+      [
+        31009299,
+        31009304
+      ],
+      [
+        31009305,
+        31009314
+      ],
+      [
+        31009314,
+        31009315
+      ],
+      [
+        31009315,
+        31009325
+      ],
+      [
+        31009325,
+        31009326
+      ],
+      [
+        31009326,
+        31009328
+      ],
+      [
+        31009328,
+        31009344
+      ],
+      [
+        31010009,
+        31010019
+      ],
+      [
+        31010019,
+        31010045
+      ],
+      [
+        31010047,
+        31010048
+      ],
+      [
+        31010048,
+        31010049
+      ],
+      [
+        31010049,
+        31010064
+      ],
+      [
+        31010065,
+        31010072
+      ],
+      [
+        31010073,
+        31010075
+      ],
+      [
+        31010075,
+        31010083
+      ],
+      [
+        31010083,
+        31010084
+      ],
+      [
+        31010084,
+        31010088
+      ],
+      [
+        31010088,
+        31010106
+      ],
+      [
+        31010106,
+        31010130
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30984649,
+        30984782
+      ],
+      [
+        30984871,
+        31006795
+      ],
+      [
+        31006965,
+        31007497
+      ],
+      [
+        31007630,
+        31009205
+      ],
+      [
+        31009344,
+        31010009
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 30987577,
+    "source_end0": 31008651,
+    "read_name": "SRR22452368.2252701",
+    "flag": 0,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30990113,
+    "read_end0": 31003686,
+    "strand": "+",
+    "cigar": "1S131=1D99=11397N254=1X475=1X84=1X375=57N15=1X455=171N12=1X23=1X18=",
+    "query_length": 1948,
+    "aligned_overlap_bp": 1947,
+    "blocks_bed0": [
+      [
+        30990113,
+        30990244
+      ],
+      [
+        30990245,
+        30990344
+      ],
+      [
+        31001741,
+        31001995
+      ],
+      [
+        31001995,
+        31001996
+      ],
+      [
+        31001996,
+        31002471
+      ],
+      [
+        31002471,
+        31002472
+      ],
+      [
+        31002472,
+        31002556
+      ],
+      [
+        31002556,
+        31002557
+      ],
+      [
+        31002557,
+        31002932
+      ],
+      [
+        31002989,
+        31003004
+      ],
+      [
+        31003004,
+        31003005
+      ],
+      [
+        31003005,
+        31003460
+      ],
+      [
+        31003631,
+        31003643
+      ],
+      [
+        31003643,
+        31003644
+      ],
+      [
+        31003644,
+        31003667
+      ],
+      [
+        31003667,
+        31003668
+      ],
+      [
+        31003668,
+        31003686
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30990344,
+        31001741
+      ],
+      [
+        31002932,
+        31002989
+      ],
+      [
+        31003460,
+        31003631
+      ]
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 30987577,
+    "source_end0": 31008651,
+    "read_name": "SRR22452368.176119",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30995122,
+    "read_end0": 30995284,
+    "strand": "-",
+    "cigar": "86=1X48=1X26=",
+    "query_length": 162,
+    "aligned_overlap_bp": 162,
+    "blocks_bed0": [
+      [
+        30995122,
+        30995208
+      ],
+      [
+        30995208,
+        30995209
+      ],
+      [
+        30995209,
+        30995257
+      ],
+      [
+        30995257,
+        30995258
+      ],
+      [
+        30995258,
+        30995284
+      ]
+    ],
+    "junctions_bed0": []
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 30987577,
+    "source_end0": 31008651,
+    "read_name": "SRR22452368.1412970",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30997077,
+    "read_end0": 30998658,
+    "strand": "-",
+    "cigar": "200=1X22=1X9=1X288=1X70=1X709=1X20=1X122=1X133=",
+    "query_length": 1581,
+    "aligned_overlap_bp": 1581,
+    "blocks_bed0": [
+      [
+        30997077,
+        30997277
+      ],
+      [
+        30997277,
+        30997278
+      ],
+      [
+        30997278,
+        30997300
+      ],
+      [
+        30997300,
+        30997301
+      ],
+      [
+        30997301,
+        30997310
+      ],
+      [
+        30997310,
+        30997311
+      ],
+      [
+        30997311,
+        30997599
+      ],
+      [
+        30997599,
+        30997600
+      ],
+      [
+        30997600,
+        30997670
+      ],
+      [
+        30997670,
+        30997671
+      ],
+      [
+        30997671,
+        30998380
+      ],
+      [
+        30998380,
+        30998381
+      ],
+      [
+        30998381,
+        30998401
+      ],
+      [
+        30998401,
+        30998402
+      ],
+      [
+        30998402,
+        30998524
+      ],
+      [
+        30998524,
+        30998525
+      ],
+      [
+        30998525,
+        30998658
+      ]
+    ],
+    "junctions_bed0": []
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 30987577,
+    "source_end0": 31008651,
+    "read_name": "SRR22452368.2963691",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30999034,
+    "read_end0": 30999663,
+    "strand": "-",
+    "cigar": "72S9=1D38=1I8=1D6=1I10=1I1=1X80=1X20=1D17=1X2=1D95=1D83=1D72=1D85=1I58=1D34=",
+    "query_length": 697,
+    "aligned_overlap_bp": 621,
+    "blocks_bed0": [
+      [
+        30999034,
+        30999043
+      ],
+      [
+        30999044,
+        30999082
+      ],
+      [
+        30999082,
+        30999090
+      ],
+      [
+        30999091,
+        30999097
+      ],
+      [
+        30999097,
+        30999107
+      ],
+      [
+        30999107,
+        30999108
+      ],
+      [
+        30999108,
+        30999109
+      ],
+      [
+        30999109,
+        30999189
+      ],
+      [
+        30999189,
+        30999190
+      ],
+      [
+        30999190,
+        30999210
+      ],
+      [
+        30999211,
+        30999228
+      ],
+      [
+        30999228,
+        30999229
+      ],
+      [
+        30999229,
+        30999231
+      ],
+      [
+        30999232,
+        30999327
+      ],
+      [
+        30999328,
+        30999411
+      ],
+      [
+        30999412,
+        30999484
+      ],
+      [
+        30999485,
+        30999570
+      ],
+      [
+        30999570,
+        30999628
+      ],
+      [
+        30999629,
+        30999663
+      ]
+    ],
+    "junctions_bed0": []
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 30987577,
+    "source_end0": 31008651,
+    "read_name": "SRR22452368.977973",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30999170,
+    "read_end0": 30999697,
+    "strand": "-",
+    "cigar": "205=16I322=",
+    "query_length": 543,
+    "aligned_overlap_bp": 527,
+    "blocks_bed0": [
+      [
+        30999170,
+        30999375
+      ],
+      [
+        30999375,
+        30999697
+      ]
+    ],
+    "junctions_bed0": []
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 30987577,
+    "source_end0": 31008651,
+    "read_name": "SRR22452368.1993818",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 31008097,
+    "read_end0": 31008328,
+    "strand": "-",
+    "cigar": "39=1X47=1X143=",
+    "query_length": 231,
+    "aligned_overlap_bp": 231,
+    "blocks_bed0": [
+      [
+        31008097,
+        31008136
+      ],
+      [
+        31008136,
+        31008137
+      ],
+      [
+        31008137,
+        31008184
+      ],
+      [
+        31008184,
+        31008185
+      ],
+      [
+        31008185,
+        31008328
+      ]
+    ],
+    "junctions_bed0": []
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "LY6G6E",
+    "source_track": "PABh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054684.2",
+    "source_start0": 31926151,
+    "source_end0": 31928472,
+    "read_name": "SRR22452368.1499805",
+    "flag": 0,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 31926603,
+    "read_end0": 31927500,
+    "strand": "+",
+    "cigar": "217=3I77=1I61=2D36=1X408=1D20=1X12=1X52=1X7=",
+    "query_length": 898,
+    "aligned_overlap_bp": 894,
+    "blocks_bed0": [
+      [
+        31926603,
+        31926820
+      ],
+      [
+        31926820,
+        31926897
+      ],
+      [
+        31926897,
+        31926958
+      ],
+      [
+        31926960,
+        31926996
+      ],
+      [
+        31926996,
+        31926997
+      ],
+      [
+        31926997,
+        31927405
+      ],
+      [
+        31927406,
+        31927426
+      ],
+      [
+        31927426,
+        31927427
+      ],
+      [
+        31927427,
+        31927439
+      ],
+      [
+        31927439,
+        31927440
+      ],
+      [
+        31927440,
+        31927492
+      ],
+      [
+        31927492,
+        31927493
+      ],
+      [
+        31927493,
+        31927500
+      ]
+    ],
+    "junctions_bed0": []
+  }
+]

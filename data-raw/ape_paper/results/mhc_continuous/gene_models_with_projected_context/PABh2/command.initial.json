@@ -1,0 +1,25 @@
+{
+  "command": [
+    "/private/tmp/ggexon-mhc-liftoff-venv/bin/liftoff",
+    "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/PABh2.fa",
+    "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/PABh1.fa",
+    "-g",
+    "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/PABh2/source.gff3",
+    "-o",
+    "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/PABh2/projected.gff3",
+    "-u",
+    "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/PABh2/unmapped.txt",
+    "-dir",
+    "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/PABh2/intermediates",
+    "-p",
+    "2",
+    "-a",
+    "0.95",
+    "-s",
+    "0.95",
+    "-exclude_partial"
+  ],
+  "source_gff_sha256": "ae9b6f6438e602bb898e1b0f57e93c68b5cfe1490c0430c2fdcaefabbea36026",
+  "target_fasta_sha256": "05d9dbf81c8e77a706e09b714c7693cba2e2ab2593e2a04e7e16322e73dc04b8",
+  "source_fasta_sha256": "12df0120fbc0f49b91e5e352fbe52e2bc40ea43d541c36ed6847e191474b907f"
+}

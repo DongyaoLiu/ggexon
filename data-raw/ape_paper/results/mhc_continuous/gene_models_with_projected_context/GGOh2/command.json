@@ -1,0 +1,61 @@
+{
+  "command": [
+    "/private/tmp/ggexon-mhc-liftoff-venv/bin/liftoff",
+    "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/GGOh2.fa",
+    "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/GGOh1.fa",
+    "-g",
+    "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/GGOh2/source.gff3",
+    "-o",
+    "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/GGOh2/projected.gff3",
+    "-u",
+    "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/GGOh2/unmapped.txt",
+    "-dir",
+    "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/GGOh2/intermediates",
+    "-p",
+    "2",
+    "-a",
+    "0.95",
+    "-s",
+    "0.95",
+    "-exclude_partial"
+  ],
+  "tools": {
+    "version": "1.6.3",
+    "direct_url": {
+      "url": "https://github.com/agshumate/Liftoff.git",
+      "vcs_info": {
+        "commit_id": "94d6073ee2400c438d181a67d3af1e362197d839",
+        "vcs": "git"
+      }
+    },
+    "minimap2_version": "2.31-r1302",
+    "minimap2_sha256": "233e289649c6886531810b3917ac1180c72beb432c3e64ba1d918f3ed3365907"
+  },
+  "source_window": {
+    "track": "GGOh1",
+    "species_id": "GGO",
+    "haplotype": "h1",
+    "label": "Gorilla h1",
+    "chr": "chr5_mat_hsa6",
+    "start0": "46448788",
+    "end0": "51895738",
+    "length": "5446950",
+    "orientation": "+",
+    "twoBit_url": "https://genomeark.s3.amazonaws.com/species/Gorilla_gorilla/mGorGor1/assembly_curated/mGorGor1_v2.0.2bit"
+  },
+  "target_window": {
+    "track": "GGOh2",
+    "species_id": "GGO",
+    "haplotype": "h2",
+    "label": "Gorilla h2",
+    "chr": "chr5_pat_hsa6",
+    "start0": "38874988",
+    "end0": "44233933",
+    "length": "5358945",
+    "orientation": "+",
+    "twoBit_url": "https://genomeark.s3.amazonaws.com/species/Gorilla_gorilla/mGorGor1/assembly_curated/mGorGor1_v2.0.2bit"
+  },
+  "source_gff_sha256": "e19e8b177f1215d0ab948a49de74b094df06f53ee0c5e74e98eb292992ed54ab",
+  "target_fasta_sha256": "455679c22a121557706cc551b2d6ea6e0acd8810221499042a62f977c52bff1c",
+  "source_fasta_sha256": "8d1d7c898ae074b893a342e88e939119892e21d9a49591904ad922981f558bd0"
+}

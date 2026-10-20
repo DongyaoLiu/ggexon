@@ -1,0 +1,20 @@
+2026-10-20 22:14:21,955 - INFO - Populating features
+Populating features table and first-order relations: 0 featuresPopulating features table and first-order relations: 1000 features2026-10-20 22:14:21,999 - INFO - Populating features table and first-order relations: 1896 features
+2026-10-20 22:14:21,999 - INFO - Updating relations
+2026-10-20 22:14:22,011 - INFO - Creating relations(parent) index
+2026-10-20 22:14:22,012 - INFO - Creating relations(child) index
+2026-10-20 22:14:22,013 - INFO - Creating features(featuretype) index
+2026-10-20 22:14:22,013 - INFO - Creating features (seqid, start, end) index
+2026-10-20 22:14:22,014 - INFO - Creating features (seqid, start, end, strand) index
+2026-10-20 22:14:22,015 - INFO - Running ANALYZE features
+extracting features
+[M::main::0.054*0.97] loaded/built the index for 1 target sequence(s)
+[M::mm_mapopt_update::0.066*0.97] mid_occ = 96
+[M::mm_idx_stat] kmer size: 15; skip: 10; is_hpc: 0; #seq: 1
+[M::mm_idx_stat::0.073*0.98] distinct minimizers: 827875 (93.06% are singletons); average occurrences: 1.219; average spacing: 5.310; total length: 5358945
+[M::worker_pipeline::0.425*1.81] mapped 164 sequences
+[M::main] Version: 2.31-r1302
+[M::main] CMD: minimap2 -o /Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/context_recovery/diagnostics/GGOh2/intermediates/reference_all_to_target_all.sam -a --end-bonus 5 --eqx -N 50 -p 0.5 -t 2 /Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/GGOh2.fa.mmi /Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/context_recovery/diagnostics/GGOh2/intermediates/reference_all_genes.fa
+[M::main] Real time: 0.429 sec; CPU: 0.772 sec; Peak RSS: 0.046 GB
+aligning features
+lifting features

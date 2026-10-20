@@ -1,0 +1,4 @@
+locus	annotation	rows	owner_match	below_gene
+TRG	orf	50	TRUE	TRUE
+TRG	species_specific	4	TRUE	TRUE
+TRG	sv	62	TRUE	TRUE

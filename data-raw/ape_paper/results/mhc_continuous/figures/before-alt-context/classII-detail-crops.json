@@ -1,0 +1,38 @@
+[
+  {
+    "track": "HSAh1",
+    "source_pdf": "mhc_continuous.pdf",
+    "dpi": 220,
+    "crop_mm": {
+      "left": 105.0632918211576,
+      "right": 172.1521807100462,
+      "bottom": 35.8818504635396,
+      "top": 88.9818504635396
+    },
+    "interpretation": "Native-scale crop of the full figure; axes and genomic geometry unchanged."
+  },
+  {
+    "track": "GGOh1",
+    "source_pdf": "mhc_continuous.pdf",
+    "dpi": 220,
+    "crop_mm": {
+      "left": 105.96774801445,
+      "right": 170.4566369033392,
+      "bottom": 337.088280517504,
+      "top": 390.18828051750404
+    },
+    "interpretation": "Native-scale crop of the full figure; axes and genomic geometry unchanged."
+  },
+  {
+    "track": "GGOh2+GGOh1",
+    "source_pdf": "mhc_continuous.pdf",
+    "dpi": 220,
+    "crop_mm": {
+      "left": 104.7834394635404,
+      "right": 170.4566369033392,
+      "bottom": 337.088280517504,
+      "top": 450.429566528297
+    },
+    "interpretation": "Native-scale crop of the full figure; axes and genomic geometry unchanged."
+  }
+]

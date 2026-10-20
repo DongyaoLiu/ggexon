@@ -1,0 +1,14 @@
+track	x	y	label
+PPA1	1	-0.5	F 12; pseudo 0
+PPA2	1	-0.5	F 13; pseudo 0
+HSA1	1	-0.5	F 13; pseudo 0
+GGO1	1	-0.5	F 14; pseudo 1
+GGO2	1	-0.5	F 11; pseudo 2
+PAB1	1	-0.5	F 12; pseudo 1
+PAB2	1	-0.5	F 11; pseudo 2
+PPY1	1	-0.5	F 12; pseudo 1
+PPY2	1	-0.5	F 14; pseudo 0
+PTR1	1	-0.5	F 13; pseudo 2
+PTR2	1	-0.5	F 12; pseudo 1
+SSY1	1	-0.5	F 13; pseudo 0
+SSY2	1	-0.5	F 13; pseudo 0

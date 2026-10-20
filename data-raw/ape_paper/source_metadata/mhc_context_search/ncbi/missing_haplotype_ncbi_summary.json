@@ -1,0 +1,86 @@
+[
+  {
+    "track": "SSYh2",
+    "accession": "GCA_028878085.3",
+    "name": "NHGRI_mSymSyn1-v2.0_alt",
+    "annotation_info": null,
+    "paired_accession": null,
+    "dataset_report_url": "https://api.ncbi.nlm.nih.gov/datasets/v2/genome/accession/GCA_028878085.3/dataset_report",
+    "ftp_url": "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/028/878/085/GCA_028878085.3_NHGRI_mSymSyn1-v2.0_alt/",
+    "gene_related_files": [],
+    "mhc_chromosome_rows": [
+      "chr23_hap2\tassembled-molecule\t23\tChromosome\tCM054556.2\t<>\tna\tPrimary Assembly\t71145118\tna"
+    ],
+    "feature_count": "# Feature\tClass\tFull Assembly\tAssembly-unit accession\tAssembly-unit name\tUnique Ids\tPlacements\ngene\tprotein_coding\tGCA_028878085.3\tGCA_028878095.3\tPrimary Assembly\t0\t0\n"
+  },
+  {
+    "track": "PABh2",
+    "accession": "GCA_028885685.2",
+    "name": "NHGRI_mPonAbe1-v2.0_alt",
+    "annotation_info": null,
+    "paired_accession": null,
+    "dataset_report_url": "https://api.ncbi.nlm.nih.gov/datasets/v2/genome/accession/GCA_028885685.2/dataset_report",
+    "ftp_url": "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/028/885/685/GCA_028885685.2_NHGRI_mPonAbe1-v2.0_alt/",
+    "gene_related_files": [],
+    "mhc_chromosome_rows": [
+      "chr5_hap2_hsa6\tassembled-molecule\t5\tChromosome\tCM054661.2\t<>\tna\tPrimary Assembly\t172332327\tna"
+    ],
+    "feature_count": "# Feature\tClass\tFull Assembly\tAssembly-unit accession\tAssembly-unit name\tUnique Ids\tPlacements\ngene\tprotein_coding\tGCA_028885685.2\tGCA_028885695.2\tPrimary Assembly\t0\t0\n"
+  },
+  {
+    "track": "PPYh2",
+    "accession": "GCA_028885525.2",
+    "name": "NHGRI_mPonPyg2-v2.0_alt",
+    "annotation_info": null,
+    "paired_accession": null,
+    "dataset_report_url": "https://api.ncbi.nlm.nih.gov/datasets/v2/genome/accession/GCA_028885525.2/dataset_report",
+    "ftp_url": "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/028/885/525/GCA_028885525.2_NHGRI_mPonPyg2-v2.0_alt/",
+    "gene_related_files": [],
+    "mhc_chromosome_rows": [
+      "chr5_hap2_hsa6\tassembled-molecule\t5\tChromosome\tCM054612.2\t<>\tna\tPrimary Assembly\t172531923\tna"
+    ],
+    "feature_count": "# Feature\tClass\tFull Assembly\tAssembly-unit accession\tAssembly-unit name\tUnique Ids\tPlacements\ngene\tprotein_coding\tGCA_028885525.2\tGCA_028885535.2\tPrimary Assembly\t0\t0\n"
+  },
+  {
+    "track": "GGOh2",
+    "accession": "GCA_028885475.2",
+    "name": "NHGRI_mGorGor1-v2.0_pat",
+    "annotation_info": null,
+    "paired_accession": null,
+    "dataset_report_url": "https://api.ncbi.nlm.nih.gov/datasets/v2/genome/accession/GCA_028885475.2/dataset_report",
+    "ftp_url": "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/028/885/475/GCA_028885475.2_NHGRI_mGorGor1-v2.0_pat/",
+    "gene_related_files": [],
+    "mhc_chromosome_rows": [
+      "chr5_pat_hsa6\tassembled-molecule\t5\tChromosome\tCM054563.2\t<>\tna\tPrimary Assembly\t188221671\tna"
+    ],
+    "feature_count": "# Feature\tClass\tFull Assembly\tAssembly-unit accession\tAssembly-unit name\tUnique Ids\tPlacements\ngene\tprotein_coding\tGCA_028885475.2\tGCA_028885485.2\tPrimary Assembly\t0\t0\n"
+  },
+  {
+    "track": "PPAh1",
+    "accession": "GCA_028858845.2",
+    "name": "NHGRI_mPanPan1-v2.0_mat",
+    "annotation_info": null,
+    "paired_accession": null,
+    "dataset_report_url": "https://api.ncbi.nlm.nih.gov/datasets/v2/genome/accession/GCA_028858845.2/dataset_report",
+    "ftp_url": "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/028/858/845/GCA_028858845.2_NHGRI_mPanPan1-v2.0_mat/",
+    "gene_related_files": [],
+    "mhc_chromosome_rows": [
+      "chr5_mat_hsa6\tassembled-molecule\t5\tChromosome\tCM054489.2\t<>\tna\tPrimary Assembly\t189052245\tna"
+    ],
+    "feature_count": "# Feature\tClass\tFull Assembly\tAssembly-unit accession\tAssembly-unit name\tUnique Ids\tPlacements\ngene\tprotein_coding\tGCA_028858845.2\tGCA_028858855.2\tPrimary Assembly\t0\t0\n"
+  },
+  {
+    "track": "PTRh2",
+    "accession": "GCA_028858805.2",
+    "name": "NHGRI_mPanTro3-v2.0_alt",
+    "annotation_info": null,
+    "paired_accession": null,
+    "dataset_report_url": "https://api.ncbi.nlm.nih.gov/datasets/v2/genome/accession/GCA_028858805.2/dataset_report",
+    "ftp_url": "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/028/858/805/GCA_028858805.2_NHGRI_mPanTro3-v2.0_alt/",
+    "gene_related_files": [],
+    "mhc_chromosome_rows": [
+      "chr5_hap2_hsa6\tassembled-molecule\t5\tChromosome\tCM054416.2\t<>\tna\tPrimary Assembly\t180078680\tna"
+    ],
+    "feature_count": "# Feature\tClass\tFull Assembly\tAssembly-unit accession\tAssembly-unit name\tUnique Ids\tPlacements\ngene\tprotein_coding\tGCA_028858805.2\tGCA_028858815.2\tPrimary Assembly\t0\t0\n"
+  }
+]

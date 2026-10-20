@@ -1,0 +1,459 @@
+{
+  "reference": {
+    "chr": "chr6",
+    "start0": 28669878,
+    "end0": 33979214,
+    "length": 5309336
+  },
+  "window_definition": "Reconstruction: union of TableXI59 VR1\u20133 and CHM13RefSeq ZNF311\u2013GRM4 landmark gene spans; original ED3c extraction endpoints unavailable. This interval rounds to5.31Mb but is not an exact reproduction.",
+  "source_query": {
+    "chr": "chr6",
+    "start0": 28000000,
+    "end0": 34000000
+  },
+  "coordinate_convention": "BED0. TableXI59 indexing unstated; operationally treat End\u2212Start as half-open to match reported sizes. Preserve original values.",
+  "sources": {
+    "SSYh2": {
+      "parent": "wfmash",
+      "type": "bigChain mSymSyn1_v2.0",
+      "shortLabel": "mSymSyn1#hap2",
+      "longLabel": "mSymSyn1_v2.0 hap2 to T2T-CHM13v2.0",
+      "visibility": "dense",
+      "mouseOverField": "name",
+      "bigDataUrl": "https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/browser/CHM13/bbi/wfmash_v0.13.0.mSymSyn1hap2.bigChain.bb",
+      "linkDataUrl": "https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/browser/CHM13/bbi/wfmash_v0.13.0.mSymSyn1hap2.bigChain.link.bb",
+      "otherDb": "mSymSyn1_v2.0",
+      "otherTwoBitUrl": "https://genomeark.s3.amazonaws.com/species/Symphalangus_syndactylus/mSymSyn1/assembly_curated/mSymSyn1_v2.0.2bit",
+      "priority": "120"
+    },
+    "SSYh1": {
+      "parent": "wfmash",
+      "type": "bigChain mSymSyn1_v2.0",
+      "shortLabel": "mSymSyn1#hap1",
+      "longLabel": "mSymSyn1_v2.0 hap1 to T2T-CHM13v2.0",
+      "visibility": "dense",
+      "mouseOverField": "name",
+      "bigDataUrl": "https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/browser/CHM13/bbi/wfmash_v0.13.0.mSymSyn1hap1.bigChain.bb",
+      "linkDataUrl": "https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/browser/CHM13/bbi/wfmash_v0.13.0.mSymSyn1hap1.bigChain.link.bb",
+      "otherDb": "mSymSyn1_v2.0",
+      "otherTwoBitUrl": "https://genomeark.s3.amazonaws.com/species/Symphalangus_syndactylus/mSymSyn1/assembly_curated/mSymSyn1_v2.0.2bit",
+      "priority": "120"
+    },
+    "PABh2": {
+      "parent": "wfmash",
+      "type": "bigChain mPonAbe1_v2.0",
+      "shortLabel": "mPonAbe1#hap2",
+      "longLabel": "mPonAbe1_v2.0 hap2 to T2T-CHM13v2.0",
+      "visibility": "dense",
+      "mouseOverField": "name",
+      "bigDataUrl": "https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/browser/CHM13/bbi/wfmash_v0.13.0.mPonAbe1hap2.bigChain.bb",
+      "linkDataUrl": "https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/browser/CHM13/bbi/wfmash_v0.13.0.mPonAbe1hap2.bigChain.link.bb",
+      "otherDb": "mPonAbe1_v2.0",
+      "otherTwoBitUrl": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/mPonAbe1_v2.0.2bit",
+      "priority": "120"
+    },
+    "PABh1": {
+      "parent": "wfmash",
+      "type": "bigChain mPonAbe1_v2.0",
+      "shortLabel": "mPonAbe1#hap1",
+      "longLabel": "mPonAbe1_v2.0 hap1 to T2T-CHM13v2.0",
+      "visibility": "dense",
+      "mouseOverField": "name",
+      "bigDataUrl": "https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/browser/CHM13/bbi/wfmash_v0.13.0.mPonAbe1hap1.bigChain.bb",
+      "linkDataUrl": "https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/browser/CHM13/bbi/wfmash_v0.13.0.mPonAbe1hap1.bigChain.link.bb",
+      "otherDb": "mPonAbe1_v2.0",
+      "otherTwoBitUrl": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/mPonAbe1_v2.0.2bit",
+      "priority": "120"
+    },
+    "PPYh2": {
+      "parent": "wfmash",
+      "type": "bigChain mPonPyg2_v2.0",
+      "shortLabel": "mPonPyg2#hap2",
+      "longLabel": "mPonPyg2_v2.0 hap2 to T2T-CHM13v2.0",
+      "visibility": "dense",
+      "mouseOverField": "name",
+      "bigDataUrl": "https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/browser/CHM13/bbi/wfmash_v0.13.0.mPonPyg2hap2.bigChain.bb",
+      "linkDataUrl": "https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/browser/CHM13/bbi/wfmash_v0.13.0.mPonPyg2hap2.bigChain.link.bb",
+      "otherDb": "mPonPyg2_v2.0",
+      "otherTwoBitUrl": "https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/mPonPyg2_v2.0.2bit",
+      "priority": "120"
+    },
+    "PPYh1": {
+      "parent": "wfmash",
+      "type": "bigChain mPonPyg2_v2.0",
+      "shortLabel": "mPonPyg2#hap1",
+      "longLabel": "mPonPyg2_v2.0 hap1 to T2T-CHM13v2.0",
+      "visibility": "dense",
+      "mouseOverField": "name",
+      "bigDataUrl": "https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/browser/CHM13/bbi/wfmash_v0.13.0.mPonPyg2hap1.bigChain.bb",
+      "linkDataUrl": "https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/browser/CHM13/bbi/wfmash_v0.13.0.mPonPyg2hap1.bigChain.link.bb",
+      "otherDb": "mPonPyg2_v2.0",
+      "otherTwoBitUrl": "https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/mPonPyg2_v2.0.2bit",
+      "priority": "120"
+    },
+    "GGOh2": {
+      "parent": "wfmash",
+      "type": "bigChain mGorGor1_v2.0",
+      "shortLabel": "mGorGor1#pat",
+      "longLabel": "mGorGor1_v2.0 pat to T2T-CHM13v2.0",
+      "visibility": "dense",
+      "mouseOverField": "name",
+      "bigDataUrl": "https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/browser/CHM13/bbi/wfmash_v0.13.0.mGorGor1pat.bigChain.bb",
+      "linkDataUrl": "https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/browser/CHM13/bbi/wfmash_v0.13.0.mGorGor1pat.bigChain.link.bb",
+      "otherDb": "mGorGor1_v2.0",
+      "otherTwoBitUrl": "https://genomeark.s3.amazonaws.com/species/Gorilla_gorilla/mGorGor1/assembly_curated/mGorGor1_v2.0.2bit",
+      "priority": "120"
+    },
+    "GGOh1": {
+      "parent": "wfmash",
+      "type": "bigChain mGorGor1_v2.0",
+      "shortLabel": "mGorGor1#mat",
+      "longLabel": "mGorGor1_v2.0 mat to T2T-CHM13v2.0",
+      "visibility": "dense",
+      "mouseOverField": "name",
+      "bigDataUrl": "https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/browser/CHM13/bbi/wfmash_v0.13.0.mGorGor1mat.bigChain.bb",
+      "linkDataUrl": "https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/browser/CHM13/bbi/wfmash_v0.13.0.mGorGor1mat.bigChain.link.bb",
+      "otherDb": "mGorGor1_v2.0",
+      "otherTwoBitUrl": "https://genomeark.s3.amazonaws.com/species/Gorilla_gorilla/mGorGor1/assembly_curated/mGorGor1_v2.0.2bit",
+      "priority": "120"
+    },
+    "PPAh2": {
+      "parent": "wfmash",
+      "type": "bigChain mPanPan1_v2.0",
+      "shortLabel": "mPanPan1#pat",
+      "longLabel": "mPanPan1_v2.0 pat to T2T-CHM13v2.0",
+      "visibility": "dense",
+      "mouseOverField": "name",
+      "bigDataUrl": "https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/browser/CHM13/bbi/wfmash_v0.13.0.mPanPan1pat.bigChain.bb",
+      "linkDataUrl": "https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/browser/CHM13/bbi/wfmash_v0.13.0.mPanPan1pat.bigChain.link.bb",
+      "otherDb": "mPanPan1_v2.0",
+      "otherTwoBitUrl": "https://genomeark.s3.amazonaws.com/species/Pan_paniscus/mPanPan1/assembly_curated/mPanPan1_v2.0.2bit",
+      "priority": "120"
+    },
+    "PPAh1": {
+      "parent": "wfmash",
+      "type": "bigChain mPanPan1_v2.0",
+      "shortLabel": "mPanPan1#mat",
+      "longLabel": "mPanPan1_v2.0 mat to T2T-CHM13v2.0",
+      "visibility": "dense",
+      "mouseOverField": "name",
+      "bigDataUrl": "https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/browser/CHM13/bbi/wfmash_v0.13.0.mPanPan1mat.bigChain.bb",
+      "linkDataUrl": "https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/browser/CHM13/bbi/wfmash_v0.13.0.mPanPan1mat.bigChain.link.bb",
+      "otherDb": "mPanPan1_v2.0",
+      "otherTwoBitUrl": "https://genomeark.s3.amazonaws.com/species/Pan_paniscus/mPanPan1/assembly_curated/mPanPan1_v2.0.2bit",
+      "priority": "120"
+    },
+    "PTRh2": {
+      "parent": "wfmash",
+      "type": "bigChain mPanTro3_v2.0",
+      "shortLabel": "mPanTro3#hap2",
+      "longLabel": "mPanTro3_v2.0 hap2 to T2T-CHM13v2.0",
+      "visibility": "dense",
+      "mouseOverField": "name",
+      "bigDataUrl": "https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/browser/CHM13/bbi/wfmash_v0.13.0.mPanTro3hap2.bigChain.bb",
+      "linkDataUrl": "https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/browser/CHM13/bbi/wfmash_v0.13.0.mPanTro3hap2.bigChain.link.bb",
+      "otherDb": "mPanTro3_v2.0",
+      "otherTwoBitUrl": "https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/mPanTro3_v2.0.2bit",
+      "priority": "120"
+    },
+    "PTRh1": {
+      "parent": "wfmash",
+      "type": "bigChain mPanTro3_v2.0",
+      "shortLabel": "mPanTro3#hap1",
+      "longLabel": "mPanTro3_v2.0 hap1 to T2T-CHM13v2.0",
+      "visibility": "dense",
+      "mouseOverField": "name",
+      "bigDataUrl": "https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/browser/CHM13/bbi/wfmash_v0.13.0.mPanTro3hap1.bigChain.bb",
+      "linkDataUrl": "https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/browser/CHM13/bbi/wfmash_v0.13.0.mPanTro3hap1.bigChain.link.bb",
+      "otherDb": "mPanTro3_v2.0",
+      "otherTwoBitUrl": "https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/mPanTro3_v2.0.2bit",
+      "priority": "120"
+    }
+  },
+  "raw_files": [
+    {
+      "file": "source_metadata/mhc_continuous/mGorGor1_mat.chains.bed",
+      "sha256": "ec8b34d55e50cddbb2820ce3d9f7a6c20fc892be4174f73239557e51e7429714"
+    },
+    {
+      "file": "source_metadata/mhc_continuous/mGorGor1_mat.links.bed",
+      "sha256": "58a37c51c58766b2c4cc95f4a0fd1fb94e7bac382e9f24275a0a924d10f4ec1d"
+    },
+    {
+      "file": "source_metadata/mhc_continuous/mGorGor1_pat.chains.bed",
+      "sha256": "674f47ec6a01cc49a847148b06cae987e9be83e26433672f301b5934a8357a44"
+    },
+    {
+      "file": "source_metadata/mhc_continuous/mGorGor1_pat.links.bed",
+      "sha256": "928c1b63668974bc524ab2d162f632989d15cf21a4014cc470ba7e3226b22623"
+    },
+    {
+      "file": "source_metadata/mhc_continuous/mPanPan1_mat.chains.bed",
+      "sha256": "29ff6ca51c4e994d22b51ddd5fadb3ffa5e8f30f2b846f6aa5b4792cf7c7d2f9"
+    },
+    {
+      "file": "source_metadata/mhc_continuous/mPanPan1_mat.links.bed",
+      "sha256": "a303a33ed0fddc697bdba8dddfe724239f78a8981e68ba8754c483b3bf8bc332"
+    },
+    {
+      "file": "source_metadata/mhc_continuous/mPanPan1_pat.chains.bed",
+      "sha256": "1dff9d6ec54804545b082d799c5a46189be29344d3605d658f828e85c2a1be20"
+    },
+    {
+      "file": "source_metadata/mhc_continuous/mPanPan1_pat.links.bed",
+      "sha256": "3add7c5dc35a1080d0b0a16899cb8b800dab2a2cdfec495db1c801e95d8ab3b9"
+    },
+    {
+      "file": "source_metadata/mhc_continuous/mPanTro3_hap1.chains.bed",
+      "sha256": "f2153e64fbba91d47b4198ec265c8884e76d69f86bd1dcf6cf06392032b6730b"
+    },
+    {
+      "file": "source_metadata/mhc_continuous/mPanTro3_hap1.links.bed",
+      "sha256": "712d83d53bc1f17784bc8f986ee34d5dd6866bda4ee51bb368751f653bb5bc95"
+    },
+    {
+      "file": "source_metadata/mhc_continuous/mPanTro3_hap2.chains.bed",
+      "sha256": "f489b7ecdc75b6169428fec4f9b1972fc9557a982fe52ffbc95f28676150b95f"
+    },
+    {
+      "file": "source_metadata/mhc_continuous/mPanTro3_hap2.links.bed",
+      "sha256": "c8f31e3a7fdacc35c833261563cbf5e671dc8c8a3ab5a635a9c69db80569cd37"
+    },
+    {
+      "file": "source_metadata/mhc_continuous/mPonAbe1_hap1.chains.bed",
+      "sha256": "d3116ca51e9bdcadc04777b35f5060d0314b35d2c4b699f8e73653fa7921d631"
+    },
+    {
+      "file": "source_metadata/mhc_continuous/mPonAbe1_hap1.links.bed",
+      "sha256": "be0f57f2233fca62a52a17aa11caff5cbd813bb4688f3f88af23e48bb365f1ad"
+    },
+    {
+      "file": "source_metadata/mhc_continuous/mPonAbe1_hap2.chains.bed",
+      "sha256": "c0b319cf6b81371a9bd9cc9f907c5b46bb38f75d3b65adb47b02f10237f9c9b4"
+    },
+    {
+      "file": "source_metadata/mhc_continuous/mPonAbe1_hap2.links.bed",
+      "sha256": "45e5ab5e4c1a945c8f4729a4ed167d9e0e55b63eedb8899a1312ed1d159d6afd"
+    },
+    {
+      "file": "source_metadata/mhc_continuous/mPonPyg2_hap1.chains.bed",
+      "sha256": "ecd09ccf14414d35b0e1b8104ba22ef1a41110d4942e03135131f6de8bbc588b"
+    },
+    {
+      "file": "source_metadata/mhc_continuous/mPonPyg2_hap1.links.bed",
+      "sha256": "06c6afa319527b4630cb80d41c868d316691e0bd6dd35c1f73537bfd50403ce9"
+    },
+    {
+      "file": "source_metadata/mhc_continuous/mPonPyg2_hap2.chains.bed",
+      "sha256": "96235b17330abf7256d1100e14d50dabf099364b07de713c3aa87a3777f8a6a3"
+    },
+    {
+      "file": "source_metadata/mhc_continuous/mPonPyg2_hap2.links.bed",
+      "sha256": "1067b3c8af4d0c5a5ac64d62811776934367d32a7c41077b1dd94440e5e00542"
+    },
+    {
+      "file": "source_metadata/mhc_continuous/mSymSyn1_hap1.chains.bed",
+      "sha256": "b228afb6930d7ceb2b354cdf60fe7d055dd3746b72f70dc90edc46991adfbb42"
+    },
+    {
+      "file": "source_metadata/mhc_continuous/mSymSyn1_hap1.links.bed",
+      "sha256": "761dcc90804ce51fa97d88ff4651262be80260517c4d761e2ca5b18bde2a5ddc"
+    },
+    {
+      "file": "source_metadata/mhc_continuous/mSymSyn1_hap2.chains.bed",
+      "sha256": "ae2805234cc98c1e12b50199bee11a0ee622bbca6819702a60734b07af0bc333"
+    },
+    {
+      "file": "source_metadata/mhc_continuous/mSymSyn1_hap2.links.bed",
+      "sha256": "a516ff7f65a9d2326b8498158411dc665d2c93b44e3748eac29a32cd841580cb"
+    }
+  ],
+  "limitations": [
+    "Released general exon models cover one haplotype per ape species. Additional same-species context projections are documented separately in gene_models_with_projected_context/projection_manifest.json.",
+    "Projected variable regions label shared comparative findings and preserve chain gaps.",
+    "Adjacent nucleotide alignments regenerated using minimap2 on extracted exact native sequences, not recovered original ED3c plot data."
+  ],
+  "sequence_files": [
+    {
+      "track": "SSYh2",
+      "file": "SSYh2.fa",
+      "length": 4787690,
+      "chr": "chr23_hap2",
+      "start0": 33263362,
+      "end0": 38051052,
+      "orientation": "-",
+      "sha256": "f4a2c8a2754492f390127f3e2fcbf1be9168881531979eb1b08ee33e6616614e"
+    },
+    {
+      "track": "SSYh1",
+      "file": "SSYh1.fa",
+      "length": 4834809,
+      "chr": "chr23_hap1",
+      "start0": 37530567,
+      "end0": 42365376,
+      "orientation": "-",
+      "sha256": "d2bed4a2f3c98732ba7a83e35bc55af1ff7fc6154f2e7da66c97ca6670d65304"
+    },
+    {
+      "track": "PABh2",
+      "file": "PABh2.fa",
+      "length": 5624490,
+      "chr": "chr5_hap2_hsa6",
+      "start0": 28697494,
+      "end0": 34321984,
+      "orientation": "+",
+      "sha256": "05d9dbf81c8e77a706e09b714c7693cba2e2ab2593e2a04e7e16322e73dc04b8"
+    },
+    {
+      "track": "PABh1",
+      "file": "PABh1.fa",
+      "length": 5704276,
+      "chr": "chr5_hap1_hsa6",
+      "start0": 28698133,
+      "end0": 34402409,
+      "orientation": "+",
+      "sha256": "12df0120fbc0f49b91e5e352fbe52e2bc40ea43d541c36ed6847e191474b907f"
+    },
+    {
+      "track": "PPYh2",
+      "file": "PPYh2.fa",
+      "length": 5798609,
+      "chr": "chr5_hap2_hsa6",
+      "start0": 28710772,
+      "end0": 34509381,
+      "orientation": "+",
+      "sha256": "b9b697eca6e691d762fb2c95a9a90567e926646c4fad0d02fd667896b7dbbdcf"
+    },
+    {
+      "track": "PPYh1",
+      "file": "PPYh1.fa",
+      "length": 5804842,
+      "chr": "chr5_hap1_hsa6",
+      "start0": 28708357,
+      "end0": 34513199,
+      "orientation": "+",
+      "sha256": "0a7c1cd3b2d0987adfa68158d21447280395553948a4e807f02216d3b8564905"
+    },
+    {
+      "track": "GGOh2",
+      "file": "GGOh2.fa",
+      "length": 5358945,
+      "chr": "chr5_pat_hsa6",
+      "start0": 38874988,
+      "end0": 44233933,
+      "orientation": "+",
+      "sha256": "455679c22a121557706cc551b2d6ea6e0acd8810221499042a62f977c52bff1c"
+    },
+    {
+      "track": "GGOh1",
+      "file": "GGOh1.fa",
+      "length": 5446950,
+      "chr": "chr5_mat_hsa6",
+      "start0": 46448788,
+      "end0": 51895738,
+      "orientation": "+",
+      "sha256": "8d1d7c898ae074b893a342e88e939119892e21d9a49591904ad922981f558bd0"
+    },
+    {
+      "track": "PPAh2",
+      "file": "PPAh2.fa",
+      "length": 5211907,
+      "chr": "chr5_pat_hsa6",
+      "start0": 43421688,
+      "end0": 48633595,
+      "orientation": "+",
+      "sha256": "638470a2636163748aacfc2fec40719f196471492be25d35410cd7cbf1615197"
+    },
+    {
+      "track": "PPAh1",
+      "file": "PPAh1.fa",
+      "length": 5078696,
+      "chr": "chr5_mat_hsa6",
+      "start0": 39408542,
+      "end0": 44487238,
+      "orientation": "+",
+      "sha256": "409ccde1cc1c72db505f6a6ece29e3e6242106de5850ecd75f421d397412b1ed"
+    },
+    {
+      "track": "PTRh2",
+      "file": "PTRh2.fa",
+      "length": 5434535,
+      "chr": "chr5_hap2_hsa6",
+      "start0": 33350131,
+      "end0": 38784666,
+      "orientation": "+",
+      "sha256": "190f4db34dfe994bb4d3fb877b762d9379f07551cf89aa91e430359ff9d60c16"
+    },
+    {
+      "track": "PTRh1",
+      "file": "PTRh1.fa",
+      "length": 5289304,
+      "chr": "chr5_hap1_hsa6",
+      "start0": 34745920,
+      "end0": 40035224,
+      "orientation": "+",
+      "sha256": "1032767c45c773b4decbaaf2cecadc34acd1de6a43e15bcf1f85f748b05721a9"
+    },
+    {
+      "track": "HSAh1",
+      "file": "HSAh1.fa",
+      "length": 5309336,
+      "chr": "chr6",
+      "start0": 28669878,
+      "end0": 33979214,
+      "orientation": "+",
+      "sha256": "5b0edc59ff60c1d41c767a02d74c4b0edd0bbe52fc1ad02f06e0aca5bc400bc7"
+    }
+  ],
+  "alignment_files": [
+    {
+      "file": "GGOh1__PPAh2.paf",
+      "sha256": "3eb3f7364a2b3923c79f13b165699a80f76b6381bc636e73256f5240fcf87f2c"
+    },
+    {
+      "file": "GGOh2__GGOh1.paf",
+      "sha256": "e914227213ec1bee392a760d20fdb0f3ccb5a656b4c5edd0b2af9363ca8d34ec"
+    },
+    {
+      "file": "PABh1__PPYh2.paf",
+      "sha256": "e85850984ced7d3ba111500328fffeac98e10af3edc58da10982181fb34d41bd"
+    },
+    {
+      "file": "PABh2__PABh1.paf",
+      "sha256": "d8a25ae369aba992b77804ca392d9e6147a9a744c20e153a34df73916a6f41f6"
+    },
+    {
+      "file": "PPAh1__PTRh2.paf",
+      "sha256": "5b8bce94d16912c2701bed22c4ca27a8a78aaea4b301f8000bf02811cbe7966e"
+    },
+    {
+      "file": "PPAh2__PPAh1.paf",
+      "sha256": "09df2eb349fc3d7830372c282b774ba60dc8237fd5b95519c3344fab9789d757"
+    },
+    {
+      "file": "PPYh1__GGOh2.paf",
+      "sha256": "16dbaab0f017deb68b341c183a8bfd3ec56032f2a0352d8708ec8021e4b9d2e5"
+    },
+    {
+      "file": "PPYh2__PPYh1.paf",
+      "sha256": "0b4fa1efcfb330cca141b0047c2dabc08167d9645984e99b2daff42257fd3267"
+    },
+    {
+      "file": "PTRh1__HSAh1.paf",
+      "sha256": "312f772c051712958e3433276546f5e2027fdd41db4ffca2cf72604ac7a19130"
+    },
+    {
+      "file": "PTRh2__PTRh1.paf",
+      "sha256": "819ce038a5cc1f0228ff47d510fc3c28d3b0a627868f07c3acf4dbd04ef1ee1c"
+    },
+    {
+      "file": "SSYh1__PABh2.paf",
+      "sha256": "3626004e81f985c0ac7fcd271977ecf58ead691f8606bb989ad374047fe1afe9"
+    },
+    {
+      "file": "SSYh2__SSYh1.paf",
+      "sha256": "9b9ce2e2ecb87bd60f157f7528de56a5196433983ec8a11e4f1379ea3358823d"
+    }
+  ],
+  "context_projection_manifest": "gene_models_with_projected_context/projection_manifest.json"
+}

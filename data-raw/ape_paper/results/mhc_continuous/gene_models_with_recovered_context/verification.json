@@ -1,0 +1,47 @@
+{
+  "status": "PASS",
+  "unchanged_existing_models": 9850,
+  "unchanged_existing_exons": 74839,
+  "recovered_alternative_models": 5,
+  "new_exons": 15,
+  "remaining_unresolved": 9,
+  "all_cases_audited": 14,
+  "all_curated_head_anchors_rows_and_native_axes_unchanged": true,
+  "recoveries": [
+    {
+      "track": "GGOh2",
+      "gene_symbol": "MUCL3",
+      "independent_global_identity": 0.9883327060594655,
+      "native_start0": "41050748",
+      "native_end0": "41064051"
+    },
+    {
+      "track": "PABh2",
+      "gene_symbol": "LY6G6E",
+      "independent_global_identity": 1.0,
+      "native_start0": "31873686",
+      "native_end0": "31875156"
+    },
+    {
+      "track": "PABh2",
+      "gene_symbol": "MUCL3",
+      "independent_global_identity": 0.9947308995107264,
+      "native_start0": "30916709",
+      "native_end0": "30931606"
+    },
+    {
+      "track": "PABh2",
+      "gene_symbol": "OR5V1",
+      "independent_global_identity": 0.9961722488038277,
+      "native_start0": "29251321",
+      "native_end0": "29252366"
+    },
+    {
+      "track": "PPYh2",
+      "gene_symbol": "MUCL3",
+      "independent_global_identity": 0.9951072638313888,
+      "native_start0": "30991567",
+      "native_end0": "31006322"
+    }
+  ]
+}

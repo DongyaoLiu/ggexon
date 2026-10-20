@@ -1,0 +1,163 @@
+{
+  "reports": [
+    {
+      "accession": "GCA_028885685.2",
+      "current_accession": "GCA_028885685.2",
+      "source_database": "SOURCE_DATABASE_GENBANK",
+      "organism": {
+        "tax_id": 9601,
+        "organism_name": "Pongo abelii",
+        "common_name": "Sumatran orangutan",
+        "infraspecific_names": {
+          "isolate": "AG06213",
+          "sex": "male"
+        }
+      },
+      "assembly_info": {
+        "assembly_level": "Chromosome",
+        "assembly_status": "current",
+        "assembly_name": "NHGRI_mPonAbe1-v2.0_alt",
+        "assembly_type": "alternate-pseudohaplotype",
+        "bioproject_lineage": [
+          {
+            "bioprojects": [
+              {
+                "accession": "PRJNA916741",
+                "title": "Pongo abelii Genome sequencing and assembly",
+                "parent_accessions": [
+                  "PRJNA930875"
+                ]
+              },
+              {
+                "accession": "PRJNA930875",
+                "title": "Pongo abelii Umbrella project",
+                "parent_accessions": [
+                  "PRJNA489243"
+                ]
+              },
+              {
+                "accession": "PRJNA489243",
+                "title": "Vertebrate Genomes Project",
+                "parent_accessions": [
+                  "PRJNA533106"
+                ]
+              },
+              {
+                "accession": "PRJNA533106",
+                "title": "Earth BioGenome Project (EBP)"
+              }
+            ]
+          }
+        ],
+        "bioproject_accession": "PRJNA916741",
+        "release_date": "2024-01-05",
+        "submitter": "National Human Genome Research Institute, National Institutes of Health",
+        "linked_assemblies": [
+          {
+            "linked_assembly": "GCA_028885655.2",
+            "assembly_type": "principal_pseudohaplotype_of_diploid"
+          }
+        ],
+        "atypical": {
+          "is_atypical": true,
+          "warnings": [
+            "partial"
+          ]
+        },
+        "genome_notes": [
+          "partial"
+        ],
+        "sequencing_tech": "PacBio Sequel; Oxford Nanopore PromethION",
+        "assembly_method": "Verkko v. 1.4",
+        "biosample": {
+          "accession": "SAMN10521808",
+          "last_updated": "2020-01-29T15:50:24.987",
+          "publication_date": "2019-12-02T00:00:00.000",
+          "submission_date": "2018-12-04T16:20:04.290",
+          "sample_ids": [
+            {
+              "label": "Sample name",
+              "value": "04"
+            },
+            {
+              "db": "SRA",
+              "value": "SRS4115496"
+            }
+          ],
+          "description": {
+            "title": "Model organism or animal sample from Pongo abelii",
+            "organism": {
+              "tax_id": 9601,
+              "organism_name": "Pongo abelii"
+            }
+          },
+          "owner": {
+            "name": "Penn State",
+            "contacts": [
+              {}
+            ]
+          },
+          "models": [
+            "Model organism or animal"
+          ],
+          "bioprojects": [
+            {
+              "accession": "PRJNA505331"
+            }
+          ],
+          "package": "Model.organism.animal.1.0",
+          "attributes": [
+            {
+              "name": "isolate",
+              "value": "AG06213"
+            },
+            {
+              "name": "age",
+              "value": "missing"
+            },
+            {
+              "name": "sex",
+              "value": "male"
+            },
+            {
+              "name": "tissue",
+              "value": "fibroblast"
+            }
+          ],
+          "status": {
+            "status": "live",
+            "when": "2019-12-02T18:38:15.783"
+          },
+          "age": "missing",
+          "isolate": "AG06213",
+          "sex": "male",
+          "tissue": "fibroblast"
+        },
+        "blast_url": "https://blast.ncbi.nlm.nih.gov/Blast.cgi?PAGE_TYPE=BlastSearch&PROG_DEF=blastn&BLAST_SPEC=GDH_GCA_028885685.2",
+        "diploid_role": "alternate_pseudohaplotype_of_diploid"
+      },
+      "assembly_stats": {
+        "total_number_of_chromosomes": 23,
+        "total_sequence_length": "3000996708",
+        "total_ungapped_length": "2993481708",
+        "number_of_contigs": 58,
+        "contig_n50": 140600164,
+        "contig_l50": 9,
+        "number_of_scaffolds": 48,
+        "scaffold_n50": 140600164,
+        "scaffold_l50": 9,
+        "number_of_component_sequences": 48,
+        "atgc_count": "2993481708",
+        "gc_count": "1225749509",
+        "gc_percent": 41,
+        "genome_coverage": "89"
+      },
+      "wgs_info": {
+        "wgs_project_accession": "JAQQLR02",
+        "master_wgs_url": "https://www.ncbi.nlm.nih.gov/nuccore/JAQQLR000000000.2",
+        "wgs_contigs_url": "https://www.ncbi.nlm.nih.gov/Traces/wgs/JAQQLR02"
+      }
+    }
+  ],
+  "total_count": 1
+}

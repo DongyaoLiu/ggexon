@@ -1,0 +1,3306 @@
+[
+  {
+    "accession": "NM_000247.3",
+    "primary_accession": "NM_000247",
+    "definition": "Homo sapiens MHC class I polypeptide-related sequence A (MICA), transcript variant 1*001, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "MICA"
+    ],
+    "gene_ids": [
+      "GeneID:100507436"
+    ]
+  },
+  {
+    "accession": "NM_000544.3",
+    "primary_accession": "NM_000544",
+    "definition": "Homo sapiens transporter 2, ATP binding cassette subfamily B member (TAP2), transcript variant 1, B allele, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "TAP2"
+    ],
+    "gene_ids": [
+      "GeneID:6891"
+    ]
+  },
+  {
+    "accession": "NM_000593.6",
+    "primary_accession": "NM_000593",
+    "definition": "Homo sapiens transporter 1, ATP binding cassette subfamily B member (TAP1), transcript variant 1, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "TAP1"
+    ],
+    "gene_ids": [
+      "GeneID:6890"
+    ]
+  },
+  {
+    "accession": "NM_001001110.1",
+    "primary_accession": "NM_001001110",
+    "definition": "Rattus norvegicus olfactory receptor family 2 subfamily B member 4 (Or2b4), mRNA",
+    "organism": "Rattus norvegicus",
+    "gene_symbols": [
+      "Or2b4"
+    ],
+    "gene_ids": [
+      "GeneID:406008"
+    ]
+  },
+  {
+    "accession": "NM_001001717.1",
+    "primary_accession": "NM_001001717",
+    "definition": "Rattus norvegicus RT1 class Ib, locus M2 (RT1-M2), mRNA",
+    "organism": "Rattus norvegicus",
+    "gene_symbols": [
+      "RT1-M2"
+    ],
+    "gene_ids": [
+      "GeneID:24988"
+    ]
+  },
+  {
+    "accession": "NM_001005481.1",
+    "primary_accession": "NM_001005481",
+    "definition": "Mus musculus olfactory receptor family 2 subfamily H member 15 (Or2h15), mRNA",
+    "organism": "Mus musculus",
+    "gene_symbols": [
+      "Or2h15"
+    ],
+    "gene_ids": [
+      "GeneID:257889"
+    ]
+  },
+  {
+    "accession": "NM_001009009.3",
+    "primary_accession": "NM_001009009",
+    "definition": "Pan troglodytes coiled-coil alpha-helical rod protein 1 (CCHCR1), mRNA",
+    "organism": "Pan troglodytes",
+    "gene_symbols": [
+      "CCHCR1"
+    ],
+    "gene_ids": [
+      "GeneID:449588"
+    ]
+  },
+  {
+    "accession": "NM_001011518.1",
+    "primary_accession": "NM_001011518",
+    "definition": "Mus musculus olfactory receptor family 2 subfamily I member 1 (Or2i1), mRNA",
+    "organism": "Mus musculus",
+    "gene_symbols": [
+      "Or2i1"
+    ],
+    "gene_ids": [
+      "GeneID:258219"
+    ]
+  },
+  {
+    "accession": "NM_001011700.3",
+    "primary_accession": "NM_001011700",
+    "definition": "Homo sapiens mitochondrial coiled-coil domain 1 (MCCD1), mRNA; nuclear gene for mitochondrial product",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "MCCD1"
+    ],
+    "gene_ids": [
+      "GeneID:401250"
+    ]
+  },
+  {
+    "accession": "NM_001012679.1",
+    "primary_accession": "NM_001012679",
+    "definition": "Bos taurus major histocompatibility complex, class II, DY beta (BOLA-DYB), mRNA",
+    "organism": "Bos taurus",
+    "gene_symbols": [
+      "BOLA-DYB"
+    ],
+    "gene_ids": [
+      "GeneID:282498"
+    ]
+  },
+  {
+    "accession": "NM_001015607.1",
+    "primary_accession": "NM_001015607",
+    "definition": "Bos taurus tripartite motif containing 10 (TRIM10), mRNA",
+    "organism": "Bos taurus",
+    "gene_symbols": [
+      "TRIM10"
+    ],
+    "gene_ids": [
+      "GeneID:515628"
+    ]
+  },
+  {
+    "accession": "NM_001016266.2",
+    "primary_accession": "NM_001016266",
+    "definition": "Xenopus tropicalis lin-28 homolog A (lin28a), transcript variant 2, mRNA",
+    "organism": "Xenopus tropicalis",
+    "gene_symbols": [
+      "lin28a"
+    ],
+    "gene_ids": [
+      "GeneID:548523"
+    ]
+  },
+  {
+    "accession": "NM_001025091.2",
+    "primary_accession": "NM_001025091",
+    "definition": "Homo sapiens ATP binding cassette subfamily F member 1 (ABCF1), transcript variant 1, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "ABCF1"
+    ],
+    "gene_ids": [
+      "GeneID:23"
+    ]
+  },
+  {
+    "accession": "NM_001025846.5",
+    "primary_accession": "NM_001025846",
+    "definition": "Caenorhabditis elegans 60S ribosomal protein L13 (rpl-13), mRNA",
+    "organism": "Caenorhabditis elegans",
+    "gene_symbols": [
+      "rpl-13"
+    ],
+    "gene_ids": [
+      "GeneID:171949"
+    ]
+  },
+  {
+    "accession": "NM_001030023.1",
+    "primary_accession": "NM_001030023",
+    "definition": "Rattus norvegicus mitogen activated protein kinase kinase 4 (Map2k4), mRNA",
+    "organism": "Rattus norvegicus",
+    "gene_symbols": [
+      "Map2k4"
+    ],
+    "gene_ids": [
+      "GeneID:287398"
+    ]
+  },
+  {
+    "accession": "NM_001032807.2",
+    "primary_accession": "NM_001032807",
+    "definition": "Macaca mulatta motilin (MLN), mRNA",
+    "organism": "Macaca mulatta",
+    "gene_symbols": [
+      "MLN"
+    ],
+    "gene_ids": [
+      "GeneID:574099"
+    ]
+  },
+  {
+    "accession": "NM_001034705.2",
+    "primary_accession": "NM_001034705",
+    "definition": "Bos taurus RAN, member RAS oncogene family (RAN), mRNA",
+    "organism": "Bos taurus",
+    "gene_symbols": [
+      "RAN"
+    ],
+    "gene_ids": [
+      "GeneID:540457"
+    ]
+  },
+  {
+    "accession": "NM_001041242.1",
+    "primary_accession": "NM_001041242",
+    "definition": "Encephalitozoon cuniculi GB-M1 translation termination factor eRF1 (ECU05_0360), partial mRNA",
+    "organism": "Encephalitozoon cuniculi GB-M1",
+    "gene_symbols": [],
+    "gene_ids": [
+      "GeneID:859040"
+    ]
+  },
+  {
+    "accession": "NM_001041927.1",
+    "primary_accession": "NM_001041927",
+    "definition": "Encephalitozoon cuniculi GB-M1 60S RIBOSOMAL PROTEIN L23A (L25 in yeast) (ECU08_1910) partial mRNA",
+    "organism": "Encephalitozoon cuniculi GB-M1",
+    "gene_symbols": [],
+    "gene_ids": [
+      "GeneID:859740"
+    ]
+  },
+  {
+    "accession": "NM_001041936.1",
+    "primary_accession": "NM_001041936",
+    "definition": "Encephalitozoon cuniculi GB-M1 60S ribosomal protein L12 (ECU08_2010), partial mRNA",
+    "organism": "Encephalitozoon cuniculi GB-M1",
+    "gene_symbols": [],
+    "gene_ids": [
+      "GeneID:859749"
+    ]
+  },
+  {
+    "accession": "NM_001042382.1",
+    "primary_accession": "NM_001042382",
+    "definition": "Pan troglodytes mediator of DNA damage checkpoint 1 (MDC1), mRNA",
+    "organism": "Pan troglodytes",
+    "gene_symbols": [
+      "MDC1"
+    ],
+    "gene_ids": [
+      "GeneID:471959"
+    ]
+  },
+  {
+    "accession": "NM_001045494.1",
+    "primary_accession": "NM_001045494",
+    "definition": "Pan troglodytes MHC class I polypeptide-related sequence B (MICB), mRNA",
+    "organism": "Pan troglodytes",
+    "gene_symbols": [
+      "MICB"
+    ],
+    "gene_ids": [
+      "GeneID:450199"
+    ]
+  },
+  {
+    "accession": "NM_001045504.1",
+    "primary_accession": "NM_001045504",
+    "definition": "Pan troglodytes corneodesmosin (CDSN), mRNA",
+    "organism": "Pan troglodytes",
+    "gene_symbols": [
+      "CDSN"
+    ],
+    "gene_ids": [
+      "GeneID:462553"
+    ]
+  },
+  {
+    "accession": "NM_001046199.1",
+    "primary_accession": "NM_001046199",
+    "definition": "Bos taurus collagen type XI alpha 2 chain (COL11A2), mRNA",
+    "organism": "Bos taurus",
+    "gene_symbols": [
+      "COL11A2"
+    ],
+    "gene_ids": [
+      "GeneID:515435"
+    ]
+  },
+  {
+    "accession": "NM_001047956.1",
+    "primary_accession": "NM_001047956",
+    "definition": "Rattus norvegicus immediate early response 3 interacting protein 1 (Ier3ip1), mRNA",
+    "organism": "Rattus norvegicus",
+    "gene_symbols": [
+      "Ier3ip1"
+    ],
+    "gene_ids": [
+      "GeneID:500270"
+    ]
+  },
+  {
+    "accession": "NM_001076468.1",
+    "primary_accession": "NM_001076468",
+    "definition": "Bos taurus G-patch domain and ankyrin repeats 1 (GPANK1), mRNA",
+    "organism": "Bos taurus",
+    "gene_symbols": [
+      "GPANK1"
+    ],
+    "gene_ids": [
+      "GeneID:617553"
+    ]
+  },
+  {
+    "accession": "NM_001081520.2",
+    "primary_accession": "NM_001081520",
+    "definition": "Bos taurus lymphocyte antigen 6 complex, locus G6E (LY6G6E), mRNA",
+    "organism": "Bos taurus",
+    "gene_symbols": [
+      "LY6G6E"
+    ],
+    "gene_ids": [
+      "GeneID:512743"
+    ]
+  },
+  {
+    "accession": "NM_001083683.1",
+    "primary_accession": "NM_001083683",
+    "definition": "Bos taurus activating transcription factor 6 beta (ATF6B), mRNA",
+    "organism": "Bos taurus",
+    "gene_symbols": [
+      "ATF6B"
+    ],
+    "gene_ids": [
+      "GeneID:513928"
+    ]
+  },
+  {
+    "accession": "NM_001087341.1",
+    "primary_accession": "NM_001087341",
+    "definition": "Xenopus laevis keratin 18, type I, gene 1 L homeolog (krt18.L), mRNA",
+    "organism": "Xenopus laevis",
+    "gene_symbols": [
+      "krt18.L"
+    ],
+    "gene_ids": [
+      "GeneID:380504"
+    ]
+  },
+  {
+    "accession": "NM_001094215.1",
+    "primary_accession": "NM_001094215",
+    "definition": "Xenopus laevis secretion associated, Ras related GTPase 1A S homeolog (sar1a.S), mRNA",
+    "organism": "Xenopus laevis",
+    "gene_symbols": [
+      "sar1a.S"
+    ],
+    "gene_ids": [
+      "GeneID:447508"
+    ]
+  },
+  {
+    "accession": "NM_001098479.2",
+    "primary_accession": "NM_001098479",
+    "definition": "Homo sapiens major histocompatibility complex, class I, F (HLA-F), transcript variant 1, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "HLA-F"
+    ],
+    "gene_ids": [
+      "GeneID:3134"
+    ]
+  },
+  {
+    "accession": "NM_001098993.2",
+    "primary_accession": "NM_001098993",
+    "definition": "Bos taurus gametogenetin binding protein 1 (GGNBP1), mRNA",
+    "organism": "Bos taurus",
+    "gene_symbols": [
+      "GGNBP1"
+    ],
+    "gene_ids": [
+      "GeneID:516410"
+    ]
+  },
+  {
+    "accession": "NM_001099187.2",
+    "primary_accession": "NM_001099187",
+    "definition": "Bos taurus EGF like domain multiple 8 (EGFL8), mRNA",
+    "organism": "Bos taurus",
+    "gene_symbols": [
+      "EGFL8"
+    ],
+    "gene_ids": [
+      "GeneID:782820"
+    ]
+  },
+  {
+    "accession": "NM_001101817.1",
+    "primary_accession": "NM_001101817",
+    "definition": "Sus scrofa SKI2 subunit of superkiller complex (SKIC2), mRNA",
+    "organism": "Sus scrofa",
+    "gene_symbols": [
+      "SKIC2"
+    ],
+    "gene_ids": [
+      "GeneID:100124376"
+    ]
+  },
+  {
+    "accession": "NM_001105164.1",
+    "primary_accession": "NM_001105164",
+    "definition": "Macaca mulatta protein phosphatase 1 regulatory subunit 18 (PPP1R18), mRNA",
+    "organism": "Macaca mulatta",
+    "gene_symbols": [
+      "PPP1R18"
+    ],
+    "gene_ids": [
+      "GeneID:712176"
+    ]
+  },
+  {
+    "accession": "NM_001108259.1",
+    "primary_accession": "NM_001108259",
+    "definition": "Rattus norvegicus HIV-1 Tat specific factor 1 (Htatsf1), mRNA",
+    "organism": "Rattus norvegicus",
+    "gene_symbols": [
+      "Htatsf1"
+    ],
+    "gene_ids": [
+      "GeneID:317612"
+    ]
+  },
+  {
+    "accession": "NM_001109809.5",
+    "primary_accession": "NM_001109809",
+    "definition": "Homo sapiens ZFP57 zinc finger protein (ZFP57), transcript variant 1, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "ZFP57"
+    ],
+    "gene_ids": [
+      "GeneID:346171"
+    ]
+  },
+  {
+    "accession": "NM_001113168.2",
+    "primary_accession": "NM_001113168",
+    "definition": "Canis lupus familiaris protein phosphatase 1 regulatory inhibitor subunit 2 (PPP1R2), mRNA",
+    "organism": "Canis lupus familiaris",
+    "gene_symbols": [
+      "PPP1R2"
+    ],
+    "gene_ids": [
+      "GeneID:478605"
+    ]
+  },
+  {
+    "accession": "NM_001114274.1",
+    "primary_accession": "NM_001114274",
+    "definition": "Sus scrofa MHC class I related antigen 2 (MIC-2), mRNA",
+    "organism": "Sus scrofa",
+    "gene_symbols": [
+      "MIC-2"
+    ],
+    "gene_ids": [
+      "GeneID:100135034"
+    ]
+  },
+  {
+    "accession": "NM_001114523.2",
+    "primary_accession": "NM_001114523",
+    "definition": "Bos taurus surfactant associated 2 (SFTA2), mRNA",
+    "organism": "Bos taurus",
+    "gene_symbols": [
+      "SFTA2"
+    ],
+    "gene_ids": [
+      "GeneID:616978"
+    ]
+  },
+  {
+    "accession": "NM_001114947.1",
+    "primary_accession": "NM_001114947",
+    "definition": "Macaca mulatta mediator of DNA damage checkpoint 1 (MDC1), mRNA",
+    "organism": "Macaca mulatta",
+    "gene_symbols": [
+      "MDC1"
+    ],
+    "gene_ids": [
+      "GeneID:712318"
+    ]
+  },
+  {
+    "accession": "NM_001123133.1",
+    "primary_accession": "NM_001123133",
+    "definition": "Sus scrofa lin-28 homolog A (LIN28A), mRNA",
+    "organism": "Sus scrofa",
+    "gene_symbols": [
+      "LIN28A"
+    ],
+    "gene_ids": [
+      "GeneID:100142662"
+    ]
+  },
+  {
+    "accession": "NM_001132355.1",
+    "primary_accession": "NM_001132355",
+    "definition": "Pongo abelii G protein nucleolar 1 (GNL1), mRNA",
+    "organism": "Pongo abelii",
+    "gene_symbols": [
+      "GNL1"
+    ],
+    "gene_ids": [
+      "GeneID:100172755"
+    ]
+  },
+  {
+    "accession": "NM_001132609.1",
+    "primary_accession": "NM_001132609",
+    "definition": "Pongo abelii complement C2 (C2), mRNA",
+    "organism": "Pongo abelii",
+    "gene_symbols": [
+      "C2"
+    ],
+    "gene_ids": [
+      "GeneID:100173033"
+    ]
+  },
+  {
+    "accession": "NM_001135739.1",
+    "primary_accession": "NM_001135739",
+    "definition": "Pan troglodytes chromosome 6 C6orf15 homolog (C6H6orf15), mRNA",
+    "organism": "Pan troglodytes",
+    "gene_symbols": [
+      "C6H6orf15"
+    ],
+    "gene_ids": [
+      "GeneID:100190903"
+    ]
+  },
+  {
+    "accession": "NM_001141291.1",
+    "primary_accession": "NM_001141291",
+    "definition": "Salmo salar ribosomal protein L13 (rpl13), mRNA",
+    "organism": "Salmo salar",
+    "gene_symbols": [
+      "rpl13"
+    ],
+    "gene_ids": [
+      "GeneID:100196262"
+    ]
+  },
+  {
+    "accession": "NM_001141901.1",
+    "primary_accession": "NM_001141901",
+    "definition": "Salmo salar dihydrofolate reductase (dhfr), mRNA",
+    "organism": "Salmo salar",
+    "gene_symbols": [
+      "dhfr"
+    ],
+    "gene_ids": [
+      "GeneID:100196879"
+    ]
+  },
+  {
+    "accession": "NM_001141970.2",
+    "primary_accession": "NM_001141970",
+    "definition": "Homo sapiens death domain associated protein (DAXX), transcript variant 3, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "DAXX"
+    ],
+    "gene_ids": [
+      "GeneID:1616"
+    ]
+  },
+  {
+    "accession": "NM_001155624.2",
+    "primary_accession": "NM_001155624",
+    "definition": "Zea mays 40S ribosomal protein S3a (LOC100282717), mRNA",
+    "organism": "Zea mays",
+    "gene_symbols": [
+      "LOC100282717"
+    ],
+    "gene_ids": [
+      "GeneID:100282717"
+    ]
+  },
+  {
+    "accession": "NM_001157721.1",
+    "primary_accession": "NM_001157721",
+    "definition": "Zea mays succinyl-CoA ligase beta-chain (LOC100284826), mRNA",
+    "organism": "Zea mays",
+    "gene_symbols": [
+      "LOC100284826"
+    ],
+    "gene_ids": [
+      "GeneID:100284826"
+    ]
+  },
+  {
+    "accession": "NM_001159740.2",
+    "primary_accession": "NM_001159740",
+    "definition": "Homo sapiens lymphotoxin alpha (LTA), transcript variant 1, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "LTA"
+    ],
+    "gene_ids": [
+      "GeneID:4049"
+    ]
+  },
+  {
+    "accession": "NM_001160087.1",
+    "primary_accession": "NM_001160087",
+    "definition": "Sus scrofa tripartite motif containing 40 (TRIM40), mRNA",
+    "organism": "Sus scrofa",
+    "gene_symbols": [
+      "TRIM40"
+    ],
+    "gene_ids": [
+      "GeneID:100294687"
+    ]
+  },
+  {
+    "accession": "NM_001161376.2",
+    "primary_accession": "NM_001161376",
+    "definition": "Homo sapiens chromosome 6 open reading frame 136 (C6orf136), transcript variant 3, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "C6orf136"
+    ],
+    "gene_ids": [
+      "GeneID:221545"
+    ]
+  },
+  {
+    "accession": "NM_001166303.1",
+    "primary_accession": "NM_001166303",
+    "definition": "Rattus norvegicus ZNRD1 antisense RNA 1 (Znrd1as1), mRNA",
+    "organism": "Rattus norvegicus",
+    "gene_symbols": [
+      "Znrd1as1"
+    ],
+    "gene_ids": [
+      "GeneID:499401"
+    ]
+  },
+  {
+    "accession": "NM_001167734.1",
+    "primary_accession": "NM_001167734",
+    "definition": "Homo sapiens valyl-tRNA synthetase 2, mitochondrial (VARS2), transcript variant 1, mRNA; nuclear gene for mitochondrial product",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "VARS2"
+    ],
+    "gene_ids": [
+      "GeneID:57176"
+    ]
+  },
+  {
+    "accession": "NM_001168332.1",
+    "primary_accession": "NM_001168332",
+    "definition": "Rattus norvegicus RT1 class I, M1, gene 5 (RT1-M1-5), mRNA",
+    "organism": "Rattus norvegicus",
+    "gene_symbols": [
+      "RT1-M1-5"
+    ],
+    "gene_ids": [
+      "GeneID:680842"
+    ]
+  },
+  {
+    "accession": "NM_001182422.1",
+    "primary_accession": "NM_001182422",
+    "definition": "Saccharomyces cerevisiae S288C 40S ribosomal protein eS1 RPS1B (RPS1B), partial mRNA",
+    "organism": "Saccharomyces cerevisiae S288C",
+    "gene_symbols": [
+      "RPS1B"
+    ],
+    "gene_ids": [
+      "GeneID:854939"
+    ]
+  },
+  {
+    "accession": "NM_001182907.1",
+    "primary_accession": "NM_001182907",
+    "definition": "Saccharomyces cerevisiae S288C 60S ribosomal protein uL13 RPL16B (RPL16B), partial mRNA",
+    "organism": "Saccharomyces cerevisiae S288C",
+    "gene_symbols": [
+      "RPL16B"
+    ],
+    "gene_ids": [
+      "GeneID:855655"
+    ]
+  },
+  {
+    "accession": "NM_001194193.2",
+    "primary_accession": "NM_001194193",
+    "definition": "Macaca mulatta olfactory receptor family 2 subfamily B member 3 (OR2B3), mRNA",
+    "organism": "Macaca mulatta",
+    "gene_symbols": [
+      "OR2B3"
+    ],
+    "gene_ids": [
+      "GeneID:708747"
+    ]
+  },
+  {
+    "accession": "NM_001194199.3",
+    "primary_accession": "NM_001194199",
+    "definition": "Macaca mulatta olfactory receptor, family 2, subfamily J, member 3 (OR2J3), mRNA",
+    "organism": "Macaca mulatta",
+    "gene_symbols": [
+      "OR2J3"
+    ],
+    "gene_ids": [
+      "GeneID:708943"
+    ]
+  },
+  {
+    "accession": "NM_001194528.3",
+    "primary_accession": "NM_001194528",
+    "definition": "Macaca mulatta mitochondrial coiled-coil domain 1 (MCCD1), mRNA; nuclear gene for mitochondrial product",
+    "organism": "Macaca mulatta",
+    "gene_symbols": [
+      "MCCD1"
+    ],
+    "gene_ids": [
+      "GeneID:715379"
+    ]
+  },
+  {
+    "accession": "NM_001194586.1",
+    "primary_accession": "NM_001194586",
+    "definition": "Macaca mulatta suppressor APC domain containing 1 (SAPCD1), mRNA",
+    "organism": "Macaca mulatta",
+    "gene_symbols": [
+      "SAPCD1"
+    ],
+    "gene_ids": [
+      "GeneID:716394"
+    ]
+  },
+  {
+    "accession": "NM_001194627.2",
+    "primary_accession": "NM_001194627",
+    "definition": "Macaca mulatta cytochrome P450 family 21 subfamily A member 2 (CYP21A2), mRNA",
+    "organism": "Macaca mulatta",
+    "gene_symbols": [
+      "CYP21A2"
+    ],
+    "gene_ids": [
+      "GeneID:717020"
+    ]
+  },
+  {
+    "accession": "NM_001194694.2",
+    "primary_accession": "NM_001194694",
+    "definition": "Macaca mulatta major histocompatibility complex, class II, DO alpha (MAMU-DOA), mRNA",
+    "organism": "Macaca mulatta",
+    "gene_symbols": [
+      "MAMU-DOA"
+    ],
+    "gene_ids": [
+      "GeneID:717947"
+    ]
+  },
+  {
+    "accession": "NM_001198815.1",
+    "primary_accession": "NM_001198815",
+    "definition": "Homo sapiens mucin 22 (MUC22), transcript variant 2, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "MUC22"
+    ],
+    "gene_ids": [
+      "GeneID:100507679"
+    ]
+  },
+  {
+    "accession": "NM_001199455.1",
+    "primary_accession": "NM_001199455",
+    "definition": "Homo sapiens bromodomain containing 2 (BRD2), transcript variant 3, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "BRD2"
+    ],
+    "gene_ids": [
+      "GeneID:6046"
+    ]
+  },
+  {
+    "accession": "NM_001206909.1",
+    "primary_accession": "NM_001206909",
+    "definition": "Bos taurus ATP binding cassette subfamily F member 1 (ABCF1), mRNA",
+    "organism": "Bos taurus",
+    "gene_symbols": [
+      "ABCF1"
+    ],
+    "gene_ids": [
+      "GeneID:281589"
+    ]
+  },
+  {
+    "accession": "NM_001206929.1",
+    "primary_accession": "NM_001206929",
+    "definition": "Homo sapiens advanced glycosylation end-product specific receptor (AGER), transcript variant 2, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "AGER"
+    ],
+    "gene_ids": [
+      "GeneID:177"
+    ]
+  },
+  {
+    "accession": "NM_001243451.1",
+    "primary_accession": "NM_001243451",
+    "definition": "Sus scrofa ubiquinol-cytochrome c reductase complex assembly factor 2 (UQCC2), mRNA",
+    "organism": "Sus scrofa",
+    "gene_symbols": [
+      "UQCC2"
+    ],
+    "gene_ids": [
+      "GeneID:100153818"
+    ]
+  },
+  {
+    "accession": "NM_001243961.2",
+    "primary_accession": "NM_001243961",
+    "definition": "Homo sapiens major histocompatibility complex, class II, DQ beta 1 (HLA-DQB1), transcript variant 2, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "HLA-DQB1"
+    ],
+    "gene_ids": [
+      "GeneID:3119"
+    ]
+  },
+  {
+    "accession": "NM_001244144.1",
+    "primary_accession": "NM_001244144",
+    "definition": "Cricetulus griseus small ubiquitin like modifier 2 (Sumo2), mRNA",
+    "organism": "Cricetulus griseus",
+    "gene_symbols": [
+      "Sumo2"
+    ],
+    "gene_ids": [
+      "GeneID:100689105"
+    ]
+  },
+  {
+    "accession": "NM_001244799.1",
+    "primary_accession": "NM_001244799",
+    "definition": "Sus scrofa butyrophilin, subfamily 1, member (LOC100513291), mRNA",
+    "organism": "Sus scrofa",
+    "gene_symbols": [
+      "LOC100513291"
+    ],
+    "gene_ids": [
+      "GeneID:100513291"
+    ]
+  },
+  {
+    "accession": "NM_001251759.3",
+    "primary_accession": "NM_001251759",
+    "definition": "Glycine max peptidyl-prolyl cis-trans isomerase CYP3 (CYP3), mRNA",
+    "organism": "Glycine max",
+    "gene_symbols": [
+      "CYP3"
+    ],
+    "gene_ids": [
+      "GeneID:100527355"
+    ]
+  },
+  {
+    "accession": "NM_001254016.3",
+    "primary_accession": "NM_001254016",
+    "definition": "Glycine max ribosomal protein L11 family protein (LOC100811654), mRNA",
+    "organism": "Glycine max",
+    "gene_symbols": [
+      "LOC100811654"
+    ],
+    "gene_ids": [
+      "GeneID:100811654"
+    ]
+  },
+  {
+    "accession": "NM_001255379.2",
+    "primary_accession": "NM_001255379",
+    "definition": "Glycine max 60S ribosomal protein L32-1-like (LOC100802667), mRNA",
+    "organism": "Glycine max",
+    "gene_symbols": [
+      "LOC100802667"
+    ],
+    "gene_ids": [
+      "GeneID:100802667"
+    ]
+  },
+  {
+    "accession": "NM_001265646.2",
+    "primary_accession": "NM_001265646",
+    "definition": "Macaca mulatta cutA divalent cation tolerance homolog (CUTA), mRNA",
+    "organism": "Macaca mulatta",
+    "gene_symbols": [
+      "CUTA"
+    ],
+    "gene_ids": [
+      "GeneID:718364"
+    ]
+  },
+  {
+    "accession": "NM_001266298.1",
+    "primary_accession": "NM_001266298",
+    "definition": "Macaca mulatta neuraminidase 1 (NEU1), mRNA",
+    "organism": "Macaca mulatta",
+    "gene_symbols": [
+      "NEU1"
+    ],
+    "gene_ids": [
+      "GeneID:716740"
+    ]
+  },
+  {
+    "accession": "NM_001266731.1",
+    "primary_accession": "NM_001266731",
+    "definition": "Macaca mulatta BCL2 antagonist/killer 1 (BAK1), mRNA",
+    "organism": "Macaca mulatta",
+    "gene_symbols": [
+      "BAK1"
+    ],
+    "gene_ids": [
+      "GeneID:706534"
+    ]
+  },
+  {
+    "accession": "NM_001270401.2",
+    "primary_accession": "NM_001270401",
+    "definition": "Homo sapiens retinoid X receptor beta (RXRB), transcript variant 1, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "RXRB"
+    ],
+    "gene_ids": [
+      "GeneID:6257"
+    ]
+  },
+  {
+    "accession": "NM_001270707.2",
+    "primary_accession": "NM_001270707",
+    "definition": "Homo sapiens nurim (NRM), transcript variant 2, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "NRM"
+    ],
+    "gene_ids": [
+      "GeneID:11270"
+    ]
+  },
+  {
+    "accession": "NM_001272082.2",
+    "primary_accession": "NM_001272082",
+    "definition": "Homo sapiens shisa family member 5 (SHISA5), transcript variant 6, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "SHISA5"
+    ],
+    "gene_ids": [
+      "GeneID:51246"
+    ]
+  },
+  {
+    "accession": "NM_001279682.1",
+    "primary_accession": "NM_001279682",
+    "definition": "Gorilla gorilla gorilla transporter 2, ATP binding cassette subfamily B member (TAP2), mRNA",
+    "organism": "Gorilla gorilla gorilla",
+    "gene_symbols": [
+      "TAP2"
+    ],
+    "gene_ids": [
+      "GeneID:101135772"
+    ]
+  },
+  {
+    "accession": "NM_001280855.1",
+    "primary_accession": "NM_001280855",
+    "definition": "Sarcophilus harrisii class I histocompatibility antigen, Gogo-OKO alpha chain-like (SAHAI-01), mRNA",
+    "organism": "Sarcophilus harrisii",
+    "gene_symbols": [
+      "SAHAI-01"
+    ],
+    "gene_ids": [
+      "GeneID:100913535"
+    ]
+  },
+  {
+    "accession": "NM_001281907.1",
+    "primary_accession": "NM_001281907",
+    "definition": "Bos taurus CD99 molecule (MIC2), mRNA",
+    "organism": "Bos taurus",
+    "gene_symbols": [
+      "MIC2"
+    ],
+    "gene_ids": [
+      "GeneID:104976701"
+    ]
+  },
+  {
+    "accession": "NM_001283605.1",
+    "primary_accession": "NM_001283605",
+    "definition": "Macaca fascicularis type-1 protein phosphatase inhibitor 4 (PPP1R2C), mRNA",
+    "organism": "Macaca fascicularis",
+    "gene_symbols": [
+      "PPP1R2C"
+    ],
+    "gene_ids": [
+      "GeneID:101925705"
+    ]
+  },
+  {
+    "accession": "NM_001283915.1",
+    "primary_accession": "NM_001283915",
+    "definition": "Macaca fascicularis WD repeat domain 46 (WDR46), mRNA",
+    "organism": "Macaca fascicularis",
+    "gene_symbols": [
+      "WDR46"
+    ],
+    "gene_ids": [
+      "GeneID:101865582"
+    ]
+  },
+  {
+    "accession": "NM_001286474.2",
+    "primary_accession": "NM_001286474",
+    "definition": "Homo sapiens testis expressed basic protein 1 (TSBP1), transcript variant 2, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "TSBP1"
+    ],
+    "gene_ids": [
+      "GeneID:10665"
+    ]
+  },
+  {
+    "accession": "NM_001286633.2",
+    "primary_accession": "NM_001286633",
+    "definition": "Homo sapiens tripartite motif containing 40 (TRIM40), transcript variant 1, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "TRIM40"
+    ],
+    "gene_ids": [
+      "GeneID:135644"
+    ]
+  },
+  {
+    "accession": "NM_001289340.2",
+    "primary_accession": "NM_001289340",
+    "definition": "Glycine max 60S ribosomal protein L3 (LOC100819132), mRNA",
+    "organism": "Glycine max",
+    "gene_symbols": [
+      "LOC100819132"
+    ],
+    "gene_ids": [
+      "GeneID:100819132"
+    ]
+  },
+  {
+    "accession": "NM_001303476.1",
+    "primary_accession": "NM_001303476",
+    "definition": "Mus musculus casein kinase 2, beta polypeptide (Csnk2b), transcript variant 4, mRNA",
+    "organism": "Mus musculus",
+    "gene_symbols": [
+      "Csnk2b"
+    ],
+    "gene_ids": [
+      "GeneID:13001"
+    ]
+  },
+  {
+    "accession": "NM_001303931.1",
+    "primary_accession": "NM_001303931",
+    "definition": "Esox lucius dihydrofolate reductase (dhfr), mRNA",
+    "organism": "Esox lucius",
+    "gene_symbols": [
+      "dhfr"
+    ],
+    "gene_ids": [
+      "GeneID:105025402"
+    ]
+  },
+  {
+    "accession": "NM_001304561.1",
+    "primary_accession": "NM_001304561",
+    "definition": "Homo sapiens butyrophilin like 2 (BTNL2), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "BTNL2"
+    ],
+    "gene_ids": [
+      "GeneID:56244"
+    ]
+  },
+  {
+    "accession": "NM_001304605.1",
+    "primary_accession": "NM_001304605",
+    "definition": "Solenopsis invicta Ribosomal protein L32 (RpL32), mRNA",
+    "organism": "Solenopsis invicta",
+    "gene_symbols": [
+      "RpL32"
+    ],
+    "gene_ids": [
+      "GeneID:105205973"
+    ]
+  },
+  {
+    "accession": "NM_001305512.1",
+    "primary_accession": "NM_001305512",
+    "definition": "Plutella xylostella ribosomal protein S17 (RpS17), mRNA",
+    "organism": "Plutella xylostella",
+    "gene_symbols": [
+      "RpS17"
+    ],
+    "gene_ids": [
+      "GeneID:105392771"
+    ]
+  },
+  {
+    "accession": "NM_001305957.1",
+    "primary_accession": "NM_001305957",
+    "definition": "Cercocebus atys tumor necrosis factor (TNF), mRNA",
+    "organism": "Cercocebus atys",
+    "gene_symbols": [
+      "TNF"
+    ],
+    "gene_ids": [
+      "GeneID:105573465"
+    ]
+  },
+  {
+    "accession": "NM_001311396.1",
+    "primary_accession": "NM_001311396",
+    "definition": "Papilio polytes ribosomal protein S17 (RpS17), mRNA",
+    "organism": "Papilio polytes",
+    "gene_symbols": [
+      "RpS17"
+    ],
+    "gene_ids": [
+      "GeneID:106105115"
+    ]
+  },
+  {
+    "accession": "NM_001311668.1",
+    "primary_accession": "NM_001311668",
+    "definition": "Papilio polytes ribosomal protein L12 (RpL12), mRNA",
+    "organism": "Papilio polytes",
+    "gene_symbols": [
+      "RpL12"
+    ],
+    "gene_ids": [
+      "GeneID:106102454"
+    ]
+  },
+  {
+    "accession": "NM_001311857.1",
+    "primary_accession": "NM_001311857",
+    "definition": "Papilio xuthus RAN, member RAS oncogene family (Ran), mRNA",
+    "organism": "Papilio xuthus",
+    "gene_symbols": [
+      "Ran"
+    ],
+    "gene_ids": [
+      "GeneID:106127119"
+    ]
+  },
+  {
+    "accession": "NM_001312190.1",
+    "primary_accession": "NM_001312190",
+    "definition": "Papilio xuthus ribosomal protein L3 (RpL3), mRNA",
+    "organism": "Papilio xuthus",
+    "gene_symbols": [
+      "RpL3"
+    ],
+    "gene_ids": [
+      "GeneID:106127711"
+    ]
+  },
+  {
+    "accession": "NM_001312365.1",
+    "primary_accession": "NM_001312365",
+    "definition": "Papilio xuthus ribosomal protein L13 (RpL13), mRNA",
+    "organism": "Papilio xuthus",
+    "gene_symbols": [
+      "RpL13"
+    ],
+    "gene_ids": [
+      "GeneID:106124431"
+    ]
+  },
+  {
+    "accession": "NM_001316299.1",
+    "primary_accession": "NM_001316299",
+    "definition": "Brassica napus 60S ribosomal protein L13-1 (LOC106447867), mRNA",
+    "organism": "Brassica napus",
+    "gene_symbols": [
+      "LOC106447867"
+    ],
+    "gene_ids": [
+      "GeneID:106447867"
+    ]
+  },
+  {
+    "accession": "NM_001318355.1",
+    "primary_accession": "NM_001318355",
+    "definition": "Macaca mulatta HLA class I histocompatibility antigen, A-11 alpha chain (LOC715737), mRNA",
+    "organism": "Macaca mulatta",
+    "gene_symbols": [
+      "LOC715737"
+    ],
+    "gene_ids": [
+      "GeneID:715737"
+    ]
+  },
+  {
+    "accession": "NM_001319889.2",
+    "primary_accession": "NM_001319889",
+    "definition": "Bos taurus SLA class II histocompatibility antigen, DQ haplotype D alpha chain-like (LOC100848815), mRNA",
+    "organism": "Bos taurus",
+    "gene_symbols": [
+      "LOC100848815"
+    ],
+    "gene_ids": [
+      "GeneID:100848815"
+    ]
+  },
+  {
+    "accession": "NM_001322370.2",
+    "primary_accession": "NM_001322370",
+    "definition": "Homo sapiens mucin 21, cell surface associated (MUC21), transcript variant 3, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "MUC21"
+    ],
+    "gene_ids": [
+      "GeneID:394263"
+    ]
+  },
+  {
+    "accession": "NM_001322371.2",
+    "primary_accession": "NM_001322371",
+    "definition": "Homo sapiens mucin 21, cell surface associated (MUC21), transcript variant 4, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "MUC21"
+    ],
+    "gene_ids": [
+      "GeneID:394263"
+    ]
+  },
+  {
+    "accession": "NM_001322469.1",
+    "primary_accession": "NM_001322469",
+    "definition": "Homo sapiens mucin 22 (MUC22), transcript variant 3, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "MUC22"
+    ],
+    "gene_ids": [
+      "GeneID:100507679"
+    ]
+  },
+  {
+    "accession": "NM_001348208.1",
+    "primary_accession": "NM_001348208",
+    "definition": "Homo sapiens olfactory receptor family 12 subfamily D member 1 (gene/pseudogene) (OR12D1), transcript variant 1, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "OR12D1"
+    ],
+    "gene_ids": [
+      "GeneID:26530"
+    ]
+  },
+  {
+    "accession": "NM_001348249.1",
+    "primary_accession": "NM_001348249",
+    "definition": "Homo sapiens HLA complex group 22 (gene/pseudogene) (HCG22), transcript variant 2, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "HCG22"
+    ],
+    "gene_ids": [
+      "GeneID:285834"
+    ]
+  },
+  {
+    "accession": "NM_001353334.2",
+    "primary_accession": "NM_001353334",
+    "definition": "Homo sapiens LY6G6F-LY6G6D readthrough (LY6G6F-LY6G6D), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "LY6G6F-LY6G6D"
+    ],
+    "gene_ids": [
+      "GeneID:110599563"
+    ]
+  },
+  {
+    "accession": "NM_001363610.2",
+    "primary_accession": "NM_001363610",
+    "definition": "Homo sapiens myelin oligodendrocyte glycoprotein (MOG), transcript variant 10, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "MOG"
+    ],
+    "gene_ids": [
+      "GeneID:4340"
+    ]
+  },
+  {
+    "accession": "NM_001363689.1",
+    "primary_accession": "NM_001363689",
+    "definition": "Homo sapiens euchromatic histone lysine methyltransferase 2 (EHMT2), transcript variant 5, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "EHMT2"
+    ],
+    "gene_ids": [
+      "GeneID:10919"
+    ]
+  },
+  {
+    "accession": "NM_001364202.1",
+    "primary_accession": "NM_001364202",
+    "definition": "Glycine max succinyl-CoA ligase [ADP-forming] subunit beta, mitochondrial (LOC100527938), mRNA; nuclear gene for mitochondrial product",
+    "organism": "Glycine max",
+    "gene_symbols": [
+      "LOC100527938"
+    ],
+    "gene_ids": [
+      "GeneID:100527938"
+    ]
+  },
+  {
+    "accession": "NM_001365276.2",
+    "primary_accession": "NM_001365276",
+    "definition": "Homo sapiens tenascin XB (TNXB), transcript variant 3, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "TNXB"
+    ],
+    "gene_ids": [
+      "GeneID:7148"
+    ]
+  },
+  {
+    "accession": "NM_001368426.1",
+    "primary_accession": "NM_001368426",
+    "definition": "Mus musculus RNA polymerase I subunit H, antisense (Polr1has), transcript variant 4, mRNA",
+    "organism": "Mus musculus",
+    "gene_symbols": [
+      "Polr1has"
+    ],
+    "gene_ids": [
+      "GeneID:76416"
+    ]
+  },
+  {
+    "accession": "NM_001368729.1",
+    "primary_accession": "NM_001368729",
+    "definition": "Mus musculus proline-rich transmembrane protein 1 (Prrt1), transcript variant 3, mRNA",
+    "organism": "Mus musculus",
+    "gene_symbols": [
+      "Prrt1"
+    ],
+    "gene_ids": [
+      "GeneID:260297"
+    ]
+  },
+  {
+    "accession": "NM_001369203.1",
+    "primary_accession": "NM_001369203",
+    "definition": "Homo sapiens small integral membrane protein 40 (SMIM40), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "SMIM40"
+    ],
+    "gene_ids": [
+      "GeneID:113523636"
+    ]
+  },
+  {
+    "accession": "NM_001371437.1",
+    "primary_accession": "NM_001371437",
+    "definition": "Homo sapiens 1-acylglycerol-3-phosphate O-acyltransferase 1 (AGPAT1), transcript variant 3, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "AGPAT1"
+    ],
+    "gene_ids": [
+      "GeneID:10554"
+    ]
+  },
+  {
+    "accession": "NM_001372260.1",
+    "primary_accession": "NM_001372260",
+    "definition": "Mus musculus BCL2-associated athanogene 6 (Bag6), transcript variant 4, mRNA",
+    "organism": "Mus musculus",
+    "gene_symbols": [
+      "Bag6"
+    ],
+    "gene_ids": [
+      "GeneID:224727"
+    ]
+  },
+  {
+    "accession": "NM_001376986.1",
+    "primary_accession": "NM_001376986",
+    "definition": "Macaca mulatta proteasome 20S subunit beta 9 (PSMB9), transcript variant 1, mRNA",
+    "organism": "Macaca mulatta",
+    "gene_symbols": [
+      "PSMB9"
+    ],
+    "gene_ids": [
+      "GeneID:716980"
+    ]
+  },
+  {
+    "accession": "NM_001378775.1",
+    "primary_accession": "NM_001378775",
+    "definition": "Physcomitrium patens 60S ribosomal protein L17-like (LOC112288138), mRNA",
+    "organism": "Physcomitrium patens",
+    "gene_symbols": [
+      "LOC112288138"
+    ],
+    "gene_ids": [
+      "GeneID:112288138"
+    ]
+  },
+  {
+    "accession": "NM_001379410.1",
+    "primary_accession": "NM_001379410",
+    "definition": "Mus musculus VPS52 GARP complex subunit (Vps52), transcript variant 4, mRNA",
+    "organism": "Mus musculus",
+    "gene_symbols": [
+      "Vps52"
+    ],
+    "gene_ids": [
+      "GeneID:224705"
+    ]
+  },
+  {
+    "accession": "NM_001382360.1",
+    "primary_accession": "NM_001382360",
+    "definition": "Homo sapiens zinc finger protein 311 (ZNF311), transcript variant 6, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "ZNF311"
+    ],
+    "gene_ids": [
+      "GeneID:282890"
+    ]
+  },
+  {
+    "accession": "NM_001470.4",
+    "primary_accession": "NM_001470",
+    "definition": "Homo sapiens gamma-aminobutyric acid type B receptor subunit 1 (GABBR1), transcript variant 1, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "GABBR1"
+    ],
+    "gene_ids": [
+      "GeneID:2550"
+    ]
+  },
+  {
+    "accession": "NM_001517.5",
+    "primary_accession": "NM_001517",
+    "definition": "Homo sapiens general transcription factor IIH subunit 4 (GTF2H4), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "GTF2H4"
+    ],
+    "gene_ids": [
+      "GeneID:2968"
+    ]
+  },
+  {
+    "accession": "NM_001623.5",
+    "primary_accession": "NM_001623",
+    "definition": "Homo sapiens allograft inflammatory factor 1 (AIF1), transcript variant 3, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "AIF1"
+    ],
+    "gene_ids": [
+      "GeneID:199"
+    ]
+  },
+  {
+    "accession": "NM_001710.6",
+    "primary_accession": "NM_001710",
+    "definition": "Homo sapiens complement factor B (CFB), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "CFB"
+    ],
+    "gene_ids": [
+      "GeneID:629"
+    ]
+  },
+  {
+    "accession": "NM_002117.6",
+    "primary_accession": "NM_002117",
+    "definition": "Homo sapiens major histocompatibility complex, class I, C (HLA-C), transcript variant 1, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "HLA-C"
+    ],
+    "gene_ids": [
+      "GeneID:3107"
+    ]
+  },
+  {
+    "accession": "NM_002118.5",
+    "primary_accession": "NM_002118",
+    "definition": "Homo sapiens major histocompatibility complex, class II, DM beta (HLA-DMB), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "HLA-DMB"
+    ],
+    "gene_ids": [
+      "GeneID:3109"
+    ]
+  },
+  {
+    "accession": "NM_002119.4",
+    "primary_accession": "NM_002119",
+    "definition": "Homo sapiens major histocompatibility complex, class II, DO alpha (HLA-DOA), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "HLA-DOA"
+    ],
+    "gene_ids": [
+      "GeneID:3111"
+    ]
+  },
+  {
+    "accession": "NM_002120.4",
+    "primary_accession": "NM_002120",
+    "definition": "Homo sapiens major histocompatibility complex, class II, DO beta (HLA-DOB), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "HLA-DOB"
+    ],
+    "gene_ids": [
+      "GeneID:3112"
+    ]
+  },
+  {
+    "accession": "NM_002121.6",
+    "primary_accession": "NM_002121",
+    "definition": "Homo sapiens major histocompatibility complex, class II, DP beta 1 (HLA-DPB1), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "HLA-DPB1"
+    ],
+    "gene_ids": [
+      "GeneID:3115"
+    ]
+  },
+  {
+    "accession": "NM_002122.5",
+    "primary_accession": "NM_002122",
+    "definition": "Homo sapiens major histocompatibility complex, class II, DQ alpha 1 (HLA-DQA1), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "HLA-DQA1"
+    ],
+    "gene_ids": [
+      "GeneID:3117"
+    ]
+  },
+  {
+    "accession": "NM_002224.4",
+    "primary_accession": "NM_002224",
+    "definition": "Homo sapiens inositol 1,4,5-trisphosphate receptor type 3 (ITPR3), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "ITPR3"
+    ],
+    "gene_ids": [
+      "GeneID:3710"
+    ]
+  },
+  {
+    "accession": "NM_002263.4",
+    "primary_accession": "NM_002263",
+    "definition": "Homo sapiens kinesin family member C1 (KIFC1), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "KIFC1"
+    ],
+    "gene_ids": [
+      "GeneID:3833"
+    ]
+  },
+  {
+    "accession": "NM_002341.2",
+    "primary_accession": "NM_002341",
+    "definition": "Homo sapiens lymphotoxin beta (LTB), transcript variant 1, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "LTB"
+    ],
+    "gene_ids": [
+      "GeneID:4050"
+    ]
+  },
+  {
+    "accession": "NM_002418.3",
+    "primary_accession": "NM_002418",
+    "definition": "Homo sapiens motilin (MLN), transcript variant 1, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "MLN"
+    ],
+    "gene_ids": [
+      "GeneID:4295"
+    ]
+  },
+  {
+    "accession": "NM_002714.4",
+    "primary_accession": "NM_002714",
+    "definition": "Homo sapiens protein phosphatase 1 regulatory subunit 10 (PPP1R10), transcript variant 1, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "PPP1R10"
+    ],
+    "gene_ids": [
+      "GeneID:5514"
+    ]
+  },
+  {
+    "accession": "NM_002800.5",
+    "primary_accession": "NM_002800",
+    "definition": "Homo sapiens proteasome 20S subunit beta 9 (PSMB9), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "PSMB9"
+    ],
+    "gene_ids": [
+      "GeneID:5698"
+    ]
+  },
+  {
+    "accession": "NM_002904.6",
+    "primary_accession": "NM_002904",
+    "definition": "Homo sapiens negative elongation factor complex member E (NELFE), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "NELFE"
+    ],
+    "gene_ids": [
+      "GeneID:7936"
+    ]
+  },
+  {
+    "accession": "NM_002931.4",
+    "primary_accession": "NM_002931",
+    "definition": "Homo sapiens ring finger protein 1 (RING1), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "RING1"
+    ],
+    "gene_ids": [
+      "GeneID:6015"
+    ]
+  },
+  {
+    "accession": "NM_003449.5",
+    "primary_accession": "NM_003449",
+    "definition": "Homo sapiens tripartite motif containing 26 (TRIM26), transcript variant 1, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "TRIM26"
+    ],
+    "gene_ids": [
+      "GeneID:7726"
+    ]
+  },
+  {
+    "accession": "NM_003587.5",
+    "primary_accession": "NM_003587",
+    "definition": "Homo sapiens DEAH-box helicase 16 (DHX16), transcript variant 1, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "DHX16"
+    ],
+    "gene_ids": [
+      "GeneID:8449"
+    ]
+  },
+  {
+    "accession": "NM_003782.4",
+    "primary_accession": "NM_003782",
+    "definition": "Homo sapiens beta-1,3-galactosyltransferase 4 (B3GALT4), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "B3GALT4"
+    ],
+    "gene_ids": [
+      "GeneID:8705"
+    ]
+  },
+  {
+    "accession": "NM_003897.4",
+    "primary_accession": "NM_003897",
+    "definition": "Homo sapiens immediate early response 3 (IER3), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "IER3"
+    ],
+    "gene_ids": [
+      "GeneID:8870"
+    ]
+  },
+  {
+    "accession": "NM_004381.5",
+    "primary_accession": "NM_004381",
+    "definition": "Homo sapiens activating transcription factor 6 beta (ATF6B), transcript variant 1, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "ATF6B"
+    ],
+    "gene_ids": [
+      "GeneID:1388"
+    ]
+  },
+  {
+    "accession": "NM_004557.4",
+    "primary_accession": "NM_004557",
+    "definition": "Homo sapiens notch receptor 4 (NOTCH4), transcript variant 1, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "NOTCH4"
+    ],
+    "gene_ids": [
+      "GeneID:4855"
+    ]
+  },
+  {
+    "accession": "NM_004761.5",
+    "primary_accession": "NM_004761",
+    "definition": "Homo sapiens ral guanine nucleotide dissociation stimulator like 2 (RGL2), transcript variant 1, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "RGL2"
+    ],
+    "gene_ids": [
+      "GeneID:5863"
+    ]
+  },
+  {
+    "accession": "NM_005275.3",
+    "primary_accession": "NM_005275",
+    "definition": "Homo sapiens G protein nucleolar 1 (putative) (GNL1), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "GNL1"
+    ],
+    "gene_ids": [
+      "GeneID:2794"
+    ]
+  },
+  {
+    "accession": "NM_005452.6",
+    "primary_accession": "NM_005452",
+    "definition": "Homo sapiens WD repeat domain 46 (WDR46), transcript variant 1, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "WDR46"
+    ],
+    "gene_ids": [
+      "GeneID:9277"
+    ]
+  },
+  {
+    "accession": "NM_005453.5",
+    "primary_accession": "NM_005453",
+    "definition": "Homo sapiens zinc finger and BTB domain containing 22 (ZBTB22), transcript variant 1, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "ZBTB22"
+    ],
+    "gene_ids": [
+      "GeneID:9278"
+    ]
+  },
+  {
+    "accession": "NM_005514.8",
+    "primary_accession": "NM_005514",
+    "definition": "Homo sapiens major histocompatibility complex, class I, B (HLA-B), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "HLA-B"
+    ],
+    "gene_ids": [
+      "GeneID:3106"
+    ]
+  },
+  {
+    "accession": "NM_005803.4",
+    "primary_accession": "NM_005803",
+    "definition": "Homo sapiens flotillin 1 (FLOT1), transcript variant 1, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "FLOT1"
+    ],
+    "gene_ids": [
+      "GeneID:10211"
+    ]
+  },
+  {
+    "accession": "NM_005931.5",
+    "primary_accession": "NM_005931",
+    "definition": "Homo sapiens MHC class I polypeptide-related sequence B (MICB), transcript variant 1, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "MICB"
+    ],
+    "gene_ids": [
+      "GeneID:4277"
+    ]
+  },
+  {
+    "accession": "NM_006120.4",
+    "primary_accession": "NM_006120",
+    "definition": "Homo sapiens major histocompatibility complex, class II, DM alpha (HLA-DMA), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "HLA-DMA"
+    ],
+    "gene_ids": [
+      "GeneID:3108"
+    ]
+  },
+  {
+    "accession": "NM_006295.3",
+    "primary_accession": "NM_006295",
+    "definition": "Homo sapiens valyl-tRNA synthetase 1 (VARS1), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "VARS1"
+    ],
+    "gene_ids": [
+      "GeneID:7407"
+    ]
+  },
+  {
+    "accession": "NM_006398.4",
+    "primary_accession": "NM_006398",
+    "definition": "Homo sapiens ubiquitin like modifier D (UBD), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "UBD"
+    ],
+    "gene_ids": [
+      "GeneID:10537"
+    ]
+  },
+  {
+    "accession": "NM_006772.3",
+    "primary_accession": "NM_006772",
+    "definition": "Homo sapiens synaptic Ras GTPase activating protein 1 (SYNGAP1), transcript variant 1, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "SYNGAP1"
+    ],
+    "gene_ids": [
+      "GeneID:8831"
+    ]
+  },
+  {
+    "accession": "NM_006778.4",
+    "primary_accession": "NM_006778",
+    "definition": "Homo sapiens tripartite motif containing 10 (TRIM10), transcript variant 1, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "TRIM10"
+    ],
+    "gene_ids": [
+      "GeneID:10107"
+    ]
+  },
+  {
+    "accession": "NM_006781.5",
+    "primary_accession": "NM_006781",
+    "definition": "Homo sapiens testis expressed basic protein 1 (TSBP1), transcript variant 1, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "TSBP1"
+    ],
+    "gene_ids": [
+      "GeneID:10665"
+    ]
+  },
+  {
+    "accession": "NM_006913.4",
+    "primary_accession": "NM_006913",
+    "definition": "Homo sapiens ring finger protein 5 (RNF5), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "RNF5"
+    ],
+    "gene_ids": [
+      "GeneID:6048"
+    ]
+  },
+  {
+    "accession": "NM_006929.5",
+    "primary_accession": "NM_006929",
+    "definition": "Homo sapiens SKI2 subunit of superkiller complex (SKIC2), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "SKIC2"
+    ],
+    "gene_ids": [
+      "GeneID:6499"
+    ]
+  },
+  {
+    "accession": "NM_006979.3",
+    "primary_accession": "NM_006979",
+    "definition": "Homo sapiens solute carrier family 39 member 7 (SLC39A7), transcript variant 1, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "SLC39A7"
+    ],
+    "gene_ids": [
+      "GeneID:7922"
+    ]
+  },
+  {
+    "accession": "NM_007028.5",
+    "primary_accession": "NM_007028",
+    "definition": "Homo sapiens tripartite motif containing 31 (TRIM31), transcript variant 1, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "TRIM31"
+    ],
+    "gene_ids": [
+      "GeneID:11074"
+    ]
+  },
+  {
+    "accession": "NM_007109.3",
+    "primary_accession": "NM_007109",
+    "definition": "Homo sapiens transcription factor 19 (TCF19), transcript variant 1, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "TCF19"
+    ],
+    "gene_ids": [
+      "GeneID:6941"
+    ]
+  },
+  {
+    "accession": "NM_007161.3",
+    "primary_accession": "NM_007161",
+    "definition": "Homo sapiens leukocyte specific transcript 1 (LST1), transcript variant 1, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "LST1"
+    ],
+    "gene_ids": [
+      "GeneID:7940"
+    ]
+  },
+  {
+    "accession": "NM_007293.3",
+    "primary_accession": "NM_007293",
+    "definition": "Homo sapiens complement C4A (Chido/Rodgers blood group) (C4A), transcript variant 1, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "C4A"
+    ],
+    "gene_ids": [
+      "GeneID:720"
+    ]
+  },
+  {
+    "accession": "NM_008518.2",
+    "primary_accession": "NM_008518",
+    "definition": "Mus musculus lymphotoxin B (Ltb), mRNA",
+    "organism": "Mus musculus",
+    "gene_symbols": [
+      "Ltb"
+    ],
+    "gene_ids": [
+      "GeneID:16994"
+    ]
+  },
+  {
+    "accession": "NM_009054.3",
+    "primary_accession": "NM_009054",
+    "definition": "Mus musculus tripartite motif-containing 27 (Trim27), mRNA",
+    "organism": "Mus musculus",
+    "gene_symbols": [
+      "Trim27"
+    ],
+    "gene_ids": [
+      "GeneID:19720"
+    ]
+  },
+  {
+    "accession": "NM_011942.1",
+    "primary_accession": "NM_011942",
+    "definition": "Mus musculus lysophospholipase 2 (Lypla2), mRNA",
+    "organism": "Mus musculus",
+    "gene_symbols": [
+      "Lypla2"
+    ],
+    "gene_ids": [
+      "GeneID:26394"
+    ]
+  },
+  {
+    "accession": "NM_012708.2",
+    "primary_accession": "NM_012708",
+    "definition": "Rattus norvegicus proteasome 20S subunit beta 9 (Psmb9), mRNA",
+    "organism": "Rattus norvegicus",
+    "gene_symbols": [
+      "Psmb9"
+    ],
+    "gene_ids": [
+      "GeneID:24967"
+    ]
+  },
+  {
+    "accession": "NM_013937.4",
+    "primary_accession": "NM_013937",
+    "definition": "Homo sapiens olfactory receptor family 11 subfamily A member 1 (OR11A1), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "OR11A1"
+    ],
+    "gene_ids": [
+      "GeneID:26531"
+    ]
+  },
+  {
+    "accession": "NM_013941.3",
+    "primary_accession": "NM_013941",
+    "definition": "Homo sapiens olfactory receptor family 10 subfamily C member 1 (OR10C1), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "OR10C1"
+    ],
+    "gene_ids": [
+      "GeneID:442194"
+    ]
+  },
+  {
+    "accession": "NM_013994.2",
+    "primary_accession": "NM_013994",
+    "definition": "Homo sapiens discoidin domain receptor tyrosine kinase 1 (DDR1), transcript variant 3, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "DDR1"
+    ],
+    "gene_ids": [
+      "GeneID:780"
+    ]
+  },
+  {
+    "accession": "NM_014046.4",
+    "primary_accession": "NM_014046",
+    "definition": "Homo sapiens mitochondrial ribosomal protein S18B (MRPS18B), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "MRPS18B"
+    ],
+    "gene_ids": [
+      "GeneID:28973"
+    ]
+  },
+  {
+    "accession": "NM_014068.3",
+    "primary_accession": "NM_014068",
+    "definition": "Homo sapiens psoriasis susceptibility 1 candidate 1 (PSORS1C1), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "PSORS1C1"
+    ],
+    "gene_ids": [
+      "GeneID:170679"
+    ]
+  },
+  {
+    "accession": "NM_014069.3",
+    "primary_accession": "NM_014069",
+    "definition": "Homo sapiens psoriasis susceptibility 1 candidate 2 (PSORS1C2), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "PSORS1C2"
+    ],
+    "gene_ids": [
+      "GeneID:170680"
+    ]
+  },
+  {
+    "accession": "NM_014070.3",
+    "primary_accession": "NM_014070",
+    "definition": "Homo sapiens chromosome 6 open reading frame 15 (C6orf15), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "C6orf15"
+    ],
+    "gene_ids": [
+      "GeneID:29113"
+    ]
+  },
+  {
+    "accession": "NM_014234.5",
+    "primary_accession": "NM_014234",
+    "definition": "Homo sapiens hydroxysteroid 17-beta dehydrogenase 8 (HSD17B8), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "HSD17B8"
+    ],
+    "gene_ids": [
+      "GeneID:7923"
+    ]
+  },
+  {
+    "accession": "NM_014260.3",
+    "primary_accession": "NM_014260",
+    "definition": "Homo sapiens prefoldin subunit 6 (PFDN6), transcript variant 2, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "PFDN6"
+    ],
+    "gene_ids": [
+      "GeneID:10471"
+    ]
+  },
+  {
+    "accession": "NM_014500.5",
+    "primary_accession": "NM_014500",
+    "definition": "Homo sapiens HIV-1 Tat specific factor 1 (HTATSF1), transcript variant 2, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "HTATSF1"
+    ],
+    "gene_ids": [
+      "GeneID:27336"
+    ]
+  },
+  {
+    "accession": "NM_014641.3",
+    "primary_accession": "NM_014641",
+    "definition": "Homo sapiens mediator of DNA damage checkpoint 1 (MDC1), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "MDC1"
+    ],
+    "gene_ids": [
+      "GeneID:9656"
+    ]
+  },
+  {
+    "accession": "NM_016531.6",
+    "primary_accession": "NM_016531",
+    "definition": "Homo sapiens KLF transcription factor 3 (KLF3), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "KLF3"
+    ],
+    "gene_ids": [
+      "GeneID:51274"
+    ]
+  },
+  {
+    "accession": "NM_017463.3",
+    "primary_accession": "NM_017463",
+    "definition": "Mus musculus pre B cell leukemia homeobox 2 (Pbx2), mRNA",
+    "organism": "Mus musculus",
+    "gene_symbols": [
+      "Pbx2"
+    ],
+    "gene_ids": [
+      "GeneID:18515"
+    ]
+  },
+  {
+    "accession": "NM_019101.3",
+    "primary_accession": "NM_019101",
+    "definition": "Homo sapiens apolipoprotein M (APOM), transcript variant 1, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "APOM"
+    ],
+    "gene_ids": [
+      "GeneID:55937"
+    ]
+  },
+  {
+    "accession": "NM_019403.3",
+    "primary_accession": "NM_019403",
+    "definition": "Mus musculus ring finger protein 5 (Rnf5), mRNA",
+    "organism": "Mus musculus",
+    "gene_symbols": [
+      "Rnf5"
+    ],
+    "gene_ids": [
+      "GeneID:54197"
+    ]
+  },
+  {
+    "accession": "NM_019439.3",
+    "primary_accession": "NM_019439",
+    "definition": "Mus musculus gamma-aminobutyric acid (GABA) B receptor, 1 (Gabbr1), mRNA",
+    "organism": "Mus musculus",
+    "gene_symbols": [
+      "Gabbr1"
+    ],
+    "gene_ids": [
+      "GeneID:54393"
+    ]
+  },
+  {
+    "accession": "NM_019467.3",
+    "primary_accession": "NM_019467",
+    "definition": "Mus musculus allograft inflammatory factor 1 (Aif1), transcript variant 2, mRNA",
+    "organism": "Mus musculus",
+    "gene_symbols": [
+      "Aif1"
+    ],
+    "gene_ids": [
+      "GeneID:11629"
+    ]
+  },
+  {
+    "accession": "NM_020056.5",
+    "primary_accession": "NM_020056",
+    "definition": "Homo sapiens major histocompatibility complex, class II, DQ alpha 2 (HLA-DQA2), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "HLA-DQA2"
+    ],
+    "gene_ids": [
+      "GeneID:3118"
+    ]
+  },
+  {
+    "accession": "NM_021160.3",
+    "primary_accession": "NM_021160",
+    "definition": "Homo sapiens abhydrolase domain containing 16A, phospholipase (ABHD16A), transcript variant 1, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "ABHD16A"
+    ],
+    "gene_ids": [
+      "GeneID:7920"
+    ]
+  },
+  {
+    "accession": "NM_021177.5",
+    "primary_accession": "NM_021177",
+    "definition": "Homo sapiens LSM2 homolog, U6 small nuclear RNA and mRNA degradation associated (LSM2), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "LSM2"
+    ],
+    "gene_ids": [
+      "GeneID:57819"
+    ]
+  },
+  {
+    "accession": "NM_021184.4",
+    "primary_accession": "NM_021184",
+    "definition": "Homo sapiens chromosome 6 open reading frame 47 (C6orf47), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "C6orf47"
+    ],
+    "gene_ids": [
+      "GeneID:57827"
+    ]
+  },
+  {
+    "accession": "NM_021221.2",
+    "primary_accession": "NM_021221",
+    "definition": "Homo sapiens lymphocyte antigen 6 family member G5B (LY6G5B), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "LY6G5B"
+    ],
+    "gene_ids": [
+      "GeneID:58496"
+    ]
+  },
+  {
+    "accession": "NM_021253.4",
+    "primary_accession": "NM_021253",
+    "definition": "Homo sapiens tripartite motif containing 39 (TRIM39), transcript variant 1, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "TRIM39"
+    ],
+    "gene_ids": [
+      "GeneID:56658"
+    ]
+  },
+  {
+    "accession": "NM_022107.2",
+    "primary_accession": "NM_022107",
+    "definition": "Homo sapiens G protein signaling modulator 3 (GPSM3), transcript variant 2, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "GPSM3"
+    ],
+    "gene_ids": [
+      "GeneID:63940"
+    ]
+  },
+  {
+    "accession": "NM_022110.4",
+    "primary_accession": "NM_022110",
+    "definition": "Homo sapiens FKBP prolyl isomerase like (FKBPL), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "FKBPL"
+    ],
+    "gene_ids": [
+      "GeneID:63943"
+    ]
+  },
+  {
+    "accession": "NM_022555.3",
+    "primary_accession": "NM_022555",
+    "definition": "Homo sapiens major histocompatibility complex, class II, DR beta 3 (HLA-DRB3), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "HLA-DRB3"
+    ],
+    "gene_ids": [
+      "GeneID:3125"
+    ]
+  },
+  {
+    "accession": "NM_022666.1",
+    "primary_accession": "NM_022666",
+    "definition": "Rattus norvegicus glutamate metabotropic receptor 4 (Grm4), mRNA",
+    "organism": "Rattus norvegicus",
+    "gene_symbols": [
+      "Grm4"
+    ],
+    "gene_ids": [
+      "GeneID:24417"
+    ]
+  },
+  {
+    "accession": "NM_024165.3",
+    "primary_accession": "NM_024165",
+    "definition": "Homo sapiens PHD finger protein 1 (PHF1), transcript variant 2, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "PHF1"
+    ],
+    "gene_ids": [
+      "GeneID:5252"
+    ]
+  },
+  {
+    "accession": "NM_025236.3",
+    "primary_accession": "NM_025236",
+    "definition": "Homo sapiens ring finger protein 39 (RNF39), transcript variant 1, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "RNF39"
+    ],
+    "gene_ids": [
+      "GeneID:80352"
+    ]
+  },
+  {
+    "accession": "NM_025257.3",
+    "primary_accession": "NM_025257",
+    "definition": "Homo sapiens solute carrier family 44 member 4 (SLC44A4), transcript variant 1, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "SLC44A4"
+    ],
+    "gene_ids": [
+      "GeneID:80736"
+    ]
+  },
+  {
+    "accession": "NM_025258.3",
+    "primary_accession": "NM_025258",
+    "definition": "Homo sapiens von Willebrand factor A domain containing 7 (VWA7), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "VWA7"
+    ],
+    "gene_ids": [
+      "GeneID:80737"
+    ]
+  },
+  {
+    "accession": "NM_025261.3",
+    "primary_accession": "NM_025261",
+    "definition": "Homo sapiens lymphocyte antigen 6 family member G6C (LY6G6C), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "LY6G6C"
+    ],
+    "gene_ids": [
+      "GeneID:80740"
+    ]
+  },
+  {
+    "accession": "NM_025262.3",
+    "primary_accession": "NM_025262",
+    "definition": "Homo sapiens lymphocyte antigen 6 family member G5C (LY6G5C), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "LY6G5C"
+    ],
+    "gene_ids": [
+      "GeneID:80741"
+    ]
+  },
+  {
+    "accession": "NM_025263.4",
+    "primary_accession": "NM_025263",
+    "definition": "Homo sapiens proline rich 3 (PRR3), transcript variant 1, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "PRR3"
+    ],
+    "gene_ids": [
+      "GeneID:80742"
+    ]
+  },
+  {
+    "accession": "NM_025800.3",
+    "primary_accession": "NM_025800",
+    "definition": "Mus musculus protein phosphatase 1, regulatory inhibitor subunit 2 (Ppp1r2), mRNA",
+    "organism": "Mus musculus",
+    "gene_symbols": [
+      "Ppp1r2"
+    ],
+    "gene_ids": [
+      "GeneID:66849"
+    ]
+  },
+  {
+    "accession": "NM_026063.2",
+    "primary_accession": "NM_026063",
+    "definition": "Mus musculus ubiquinol-cytochrome c reductase complex assembly factor 2 (Uqcc2), transcript variant 1, mRNA",
+    "organism": "Mus musculus",
+    "gene_symbols": [
+      "Uqcc2"
+    ],
+    "gene_ids": [
+      "GeneID:67267"
+    ]
+  },
+  {
+    "accession": "NM_029602.1",
+    "primary_accession": "NM_029602",
+    "definition": "Mus musculus RNA polymerase I subunit H, antisense (Polr1has), transcript variant 1, mRNA",
+    "organism": "Mus musculus",
+    "gene_symbols": [
+      "Polr1has"
+    ],
+    "gene_ids": [
+      "GeneID:76416"
+    ]
+  },
+  {
+    "accession": "NM_030652.4",
+    "primary_accession": "NM_030652",
+    "definition": "Homo sapiens EGF like domain multiple 8 (EGFL8), transcript variant 1, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "EGFL8"
+    ],
+    "gene_ids": [
+      "GeneID:80864"
+    ]
+  },
+  {
+    "accession": "NM_030876.6",
+    "primary_accession": "NM_030876",
+    "definition": "Homo sapiens olfactory receptor family 5 subfamily V member 1 (OR5V1), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "OR5V1"
+    ],
+    "gene_ids": [
+      "GeneID:81696"
+    ]
+  },
+  {
+    "accession": "NM_030883.4",
+    "primary_accession": "NM_030883",
+    "definition": "Homo sapiens olfactory receptor family 2 subfamily H member 1 (OR2H1), transcript variant 2, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "OR2H1"
+    ],
+    "gene_ids": [
+      "GeneID:26716"
+    ]
+  },
+  {
+    "accession": "NM_030903.3",
+    "primary_accession": "NM_030903",
+    "definition": "Homo sapiens olfactory receptor family 2 subfamily W member 1 (OR2W1), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "OR2W1"
+    ],
+    "gene_ids": [
+      "GeneID:26692"
+    ]
+  },
+  {
+    "accession": "NM_030905.2",
+    "primary_accession": "NM_030905",
+    "definition": "Homo sapiens olfactory receptor family 2 subfamily J member 2 (OR2J2), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "OR2J2"
+    ],
+    "gene_ids": [
+      "GeneID:26707"
+    ]
+  },
+  {
+    "accession": "NM_030946.2",
+    "primary_accession": "NM_030946",
+    "definition": "Homo sapiens olfactory receptor family 14 subfamily J member 1 (OR14J1), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "OR14J1"
+    ],
+    "gene_ids": [
+      "GeneID:442191"
+    ]
+  },
+  {
+    "accession": "NM_032454.1",
+    "primary_accession": "NM_032454",
+    "definition": "Homo sapiens winged helix repair factor 1 (WHR1), transcript variant 2, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "WHR1"
+    ],
+    "gene_ids": [
+      "GeneID:8859"
+    ]
+  },
+  {
+    "accession": "NM_032470.3",
+    "primary_accession": "NM_032470",
+    "definition": "Homo sapiens tenascin XB (TNXB), transcript variant XB-S, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "TNXB"
+    ],
+    "gene_ids": [
+      "GeneID:7148"
+    ]
+  },
+  {
+    "accession": "NM_033177.4",
+    "primary_accession": "NM_033177",
+    "definition": "Homo sapiens G-patch domain and ankyrin repeats 1 (GPANK1), transcript variant 2, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "GPANK1"
+    ],
+    "gene_ids": [
+      "GeneID:7918"
+    ]
+  },
+  {
+    "accession": "NM_033229.3",
+    "primary_accession": "NM_033229",
+    "definition": "Homo sapiens tripartite motif containing 15 (TRIM15), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "TRIM15"
+    ],
+    "gene_ids": [
+      "GeneID:89870"
+    ]
+  },
+  {
+    "accession": "NM_033444.2",
+    "primary_accession": "NM_033444",
+    "definition": "Mus musculus chloride intracellular channel 1 (Clic1), mRNA",
+    "organism": "Mus musculus",
+    "gene_symbols": [
+      "Clic1"
+    ],
+    "gene_ids": [
+      "GeneID:114584"
+    ]
+  },
+  {
+    "accession": "NM_033477.2",
+    "primary_accession": "NM_033477",
+    "definition": "Mus musculus DNA segment, Chr 17, human D6S53E (D17H6S53E), mRNA",
+    "organism": "Mus musculus",
+    "gene_symbols": [
+      "D17H6S53E"
+    ],
+    "gene_ids": [
+      "GeneID:114585"
+    ]
+  },
+  {
+    "accession": "NM_033554.3",
+    "primary_accession": "NM_033554",
+    "definition": "Homo sapiens major histocompatibility complex, class II, DP alpha 1 (HLA-DPA1), transcript variant 1, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "HLA-DPA1"
+    ],
+    "gene_ids": [
+      "GeneID:3113"
+    ]
+  },
+  {
+    "accession": "NM_052967.2",
+    "primary_accession": "NM_052967",
+    "definition": "Homo sapiens MAS1 proto-oncogene like, G protein-coupled receptor (MAS1L), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "MAS1L"
+    ],
+    "gene_ids": [
+      "GeneID:116511"
+    ]
+  },
+  {
+    "accession": "NM_053292.1",
+    "primary_accession": "NM_053292",
+    "definition": "Rattus norvegicus valyl-tRNA synthetase 1 (Vars1), mRNA",
+    "organism": "Rattus norvegicus",
+    "gene_symbols": [
+      "Vars1"
+    ],
+    "gene_ids": [
+      "GeneID:25009"
+    ]
+  },
+  {
+    "accession": "NM_054111.5",
+    "primary_accession": "NM_054111",
+    "definition": "Homo sapiens inositol hexakisphosphate kinase 3 (IP6K3), transcript variant 1, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "IP6K3"
+    ],
+    "gene_ids": [
+      "GeneID:117283"
+    ]
+  },
+  {
+    "accession": "NM_074350.9",
+    "primary_accession": "NM_074350",
+    "definition": "Caenorhabditis elegans Peptidyl-prolyl cis-trans isomerase 3 (cyn-3), mRNA",
+    "organism": "Caenorhabditis elegans",
+    "gene_symbols": [
+      "cyn-3"
+    ],
+    "gene_ids": [
+      "GeneID:180028"
+    ]
+  },
+  {
+    "accession": "NM_078427.9",
+    "primary_accession": "NM_078427",
+    "definition": "Caenorhabditis elegans Myosin regulatory light chain 2 (mlc-2), mRNA",
+    "organism": "Caenorhabditis elegans",
+    "gene_symbols": [
+      "mlc-2"
+    ],
+    "gene_ids": [
+      "GeneID:181775"
+    ]
+  },
+  {
+    "accession": "NM_080680.3",
+    "primary_accession": "NM_080680",
+    "definition": "Homo sapiens collagen type XI alpha 2 chain (COL11A2), transcript variant 1, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "COL11A2"
+    ],
+    "gene_ids": [
+      "GeneID:1302"
+    ]
+  },
+  {
+    "accession": "NM_080686.3",
+    "primary_accession": "NM_080686",
+    "definition": "Homo sapiens proline rich coiled-coil 2A (PRRC2A), transcript variant 1, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "PRRC2A"
+    ],
+    "gene_ids": [
+      "GeneID:7916"
+    ]
+  },
+  {
+    "accession": "NM_080870.4",
+    "primary_accession": "NM_080870",
+    "definition": "Homo sapiens mucin like 3 (MUCL3), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "MUCL3"
+    ],
+    "gene_ids": [
+      "GeneID:135656"
+    ]
+  },
+  {
+    "accession": "NM_119653.4",
+    "primary_accession": "NM_119653",
+    "definition": "Arabidopsis thaliana rotamase cyclophilin 5 (ROC5), mRNA",
+    "organism": "Arabidopsis thaliana",
+    "gene_symbols": [
+      "ROC5"
+    ],
+    "gene_ids": [
+      "GeneID:829639"
+    ]
+  },
+  {
+    "accession": "NM_123801.2",
+    "primary_accession": "NM_123801",
+    "definition": "Arabidopsis thaliana tubulin beta chain 4 (TUB4), mRNA",
+    "organism": "Arabidopsis thaliana",
+    "gene_symbols": [
+      "TUB4"
+    ],
+    "gene_ids": [
+      "GeneID:834459"
+    ]
+  },
+  {
+    "accession": "NM_127683.3",
+    "primary_accession": "NM_127683",
+    "definition": "Arabidopsis thaliana Cyclophilin-like peptidyl-prolyl cis-trans isomerase family protein (AT2G21130), mRNA",
+    "organism": "Arabidopsis thaliana",
+    "gene_symbols": [],
+    "gene_ids": [
+      "GeneID:816648"
+    ]
+  },
+  {
+    "accession": "NM_130463.4",
+    "primary_accession": "NM_130463",
+    "definition": "Homo sapiens ATPase H+ transporting V1 subunit G2 (ATP6V1G2), transcript variant 1, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "ATP6V1G2"
+    ],
+    "gene_ids": [
+      "GeneID:534"
+    ]
+  },
+  {
+    "accession": "NM_133300.3",
+    "primary_accession": "NM_133300",
+    "definition": "Rattus norvegicus DExD-box helicase 39B (Ddx39b), mRNA",
+    "organism": "Rattus norvegicus",
+    "gene_symbols": [
+      "Ddx39b"
+    ],
+    "gene_ids": [
+      "GeneID:114612"
+    ]
+  },
+  {
+    "accession": "NM_133471.4",
+    "primary_accession": "NM_133471",
+    "definition": "Homo sapiens protein phosphatase 1 regulatory subunit 18 (PPP1R18), transcript variant 1, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "PPP1R18"
+    ],
+    "gene_ids": [
+      "GeneID:170954"
+    ]
+  },
+  {
+    "accession": "NM_138272.3",
+    "primary_accession": "NM_138272",
+    "definition": "Homo sapiens megakaryocyte and platelet inhibitory receptor G6b (MPIG6B), transcript variant 2, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "MPIG6B"
+    ],
+    "gene_ids": [
+      "GeneID:80739"
+    ]
+  },
+  {
+    "accession": "NM_138717.3",
+    "primary_accession": "NM_138717",
+    "definition": "Homo sapiens palmitoyl-protein thioesterase 2 (PPT2), transcript variant 2, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "PPT2"
+    ],
+    "gene_ids": [
+      "GeneID:9374"
+    ]
+  },
+  {
+    "accession": "NM_138823.2",
+    "primary_accession": "NM_138823",
+    "definition": "Rattus norvegicus protein phosphatase 1, regulatory (inhibitor) subunit 2 (Ppp1r2), mRNA",
+    "organism": "Rattus norvegicus",
+    "gene_symbols": [
+      "Ppp1r2"
+    ],
+    "gene_ids": [
+      "GeneID:192361"
+    ]
+  },
+  {
+    "accession": "NM_145487.4",
+    "primary_accession": "NM_145487",
+    "definition": "Mus musculus proline-rich polypeptide 3 (Prr3), transcript variant 1, mRNA",
+    "organism": "Mus musculus",
+    "gene_symbols": [
+      "Prr3"
+    ],
+    "gene_ids": [
+      "GeneID:75210"
+    ]
+  },
+  {
+    "accession": "NM_145833.1",
+    "primary_accession": "NM_145833",
+    "definition": "Mus musculus lin-28 homolog A (Lin28a), mRNA",
+    "organism": "Mus musculus",
+    "gene_symbols": [
+      "Lin28a"
+    ],
+    "gene_ids": [
+      "GeneID:83557"
+    ]
+  },
+  {
+    "accession": "NM_146535.1",
+    "primary_accession": "NM_146535",
+    "definition": "Mus musculus olfactory receptor family 2 subfamily P member 2 (Or2p2), mRNA",
+    "organism": "Mus musculus",
+    "gene_symbols": [
+      "Or2p2"
+    ],
+    "gene_ids": [
+      "GeneID:258528"
+    ]
+  },
+  {
+    "accession": "NM_146832.1",
+    "primary_accession": "NM_146832",
+    "definition": "Mus musculus olfactory receptor family 2 subfamily N member 1 (Or2n1), mRNA",
+    "organism": "Mus musculus",
+    "gene_symbols": [
+      "Or2n1"
+    ],
+    "gene_ids": [
+      "GeneID:258829"
+    ]
+  },
+  {
+    "accession": "NM_147062.2",
+    "primary_accession": "NM_147062",
+    "definition": "Mus musculus olfactory receptor family 2 subfamily B member 4 (Or2b4), mRNA",
+    "organism": "Mus musculus",
+    "gene_symbols": [
+      "Or2b4"
+    ],
+    "gene_ids": [
+      "GeneID:259064"
+    ]
+  },
+  {
+    "accession": "NM_147130.3",
+    "primary_accession": "NM_147130",
+    "definition": "Homo sapiens natural cytotoxicity triggering receptor 3 (NCR3), transcript variant 1, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "NCR3"
+    ],
+    "gene_ids": [
+      "GeneID:259197"
+    ]
+  },
+  {
+    "accession": "NM_148919.4",
+    "primary_accession": "NM_148919",
+    "definition": "Homo sapiens proteasome 20S subunit beta 8 (PSMB8), transcript variant 2, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "PSMB8"
+    ],
+    "gene_ids": [
+      "GeneID:5696"
+    ]
+  },
+  {
+    "accession": "NM_152735.4",
+    "primary_accession": "NM_152735",
+    "definition": "Homo sapiens zinc finger and BTB domain containing 9 (ZBTB9), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "ZBTB9"
+    ],
+    "gene_ids": [
+      "GeneID:221504"
+    ]
+  },
+  {
+    "accession": "NM_169377.2",
+    "primary_accession": "NM_169377",
+    "definition": "Drosophila melanogaster ribosomal protein L3, transcript variant D (RpL3), mRNA",
+    "organism": "Drosophila melanogaster",
+    "gene_symbols": [
+      "RpL3"
+    ],
+    "gene_ids": [
+      "GeneID:41347"
+    ]
+  },
+  {
+    "accession": "NM_170001.3",
+    "primary_accession": "NM_170001",
+    "definition": "Drosophila melanogaster Secretion-associated Ras-related 1 (Sar1), transcript variant C, mRNA",
+    "organism": "Drosophila melanogaster",
+    "gene_symbols": [
+      "Sar1"
+    ],
+    "gene_ids": [
+      "GeneID:42615"
+    ]
+  },
+  {
+    "accession": "NM_170783.4",
+    "primary_accession": "NM_170783",
+    "definition": "Homo sapiens RNA polymerase I subunit H (POLR1H), transcript variant a, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "POLR1H"
+    ],
+    "gene_ids": [
+      "GeneID:30834"
+    ]
+  },
+  {
+    "accession": "NM_171316.8",
+    "primary_accession": "NM_171316",
+    "definition": "Caenorhabditis elegans 60S ribosomal protein L7a (rpl-7A), mRNA",
+    "organism": "Caenorhabditis elegans",
+    "gene_symbols": [
+      "rpl-7A"
+    ],
+    "gene_ids": [
+      "GeneID:177203"
+    ]
+  },
+  {
+    "accession": "NM_172165.3",
+    "primary_accession": "NM_172165",
+    "definition": "Homo sapiens mutS homolog 5 (MSH5), transcript variant 2, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "MSH5"
+    ],
+    "gene_ids": [
+      "GeneID:4439"
+    ]
+  },
+  {
+    "accession": "NM_172208.2",
+    "primary_accession": "NM_172208",
+    "definition": "Homo sapiens TAP binding protein (TAPBP), transcript variant 2, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "TAPBP"
+    ],
+    "gene_ids": [
+      "GeneID:6892"
+    ]
+  },
+  {
+    "accession": "NM_174580.3",
+    "primary_accession": "NM_174580",
+    "definition": "Bos taurus POU class 5 homeobox 1 (POU5F1), mRNA",
+    "organism": "Bos taurus",
+    "gene_symbols": [
+      "POU5F1"
+    ],
+    "gene_ids": [
+      "GeneID:282316"
+    ]
+  },
+  {
+    "accession": "NM_174769.2",
+    "primary_accession": "NM_174769",
+    "definition": "Bos taurus small ubiquitin like modifier 2 (LOC286807), mRNA",
+    "organism": "Bos taurus",
+    "gene_symbols": [
+      "LOC286807"
+    ],
+    "gene_ids": [
+      "GeneID:286807"
+    ]
+  },
+  {
+    "accession": "NM_178014.4",
+    "primary_accession": "NM_178014",
+    "definition": "Homo sapiens tubulin beta class I (TUBB), transcript variant 2, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "TUBB"
+    ],
+    "gene_ids": [
+      "GeneID:203068"
+    ]
+  },
+  {
+    "accession": "NM_178437.2",
+    "primary_accession": "NM_178437",
+    "definition": "Danio rerio keratin 18a, tandem duplicate 1 (krt18a.1), mRNA",
+    "organism": "Danio rerio",
+    "gene_symbols": [
+      "krt18a.1"
+    ],
+    "gene_ids": [
+      "GeneID:352912"
+    ]
+  },
+  {
+    "accession": "NM_181336.4",
+    "primary_accession": "NM_181336",
+    "definition": "Homo sapiens LEM domain nuclear envelope protein 2 (LEMD2), transcript variant 1, mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "LEMD2"
+    ],
+    "gene_ids": [
+      "GeneID:221496"
+    ]
+  },
+  {
+    "accession": "NM_203956.1",
+    "primary_accession": "NM_203956",
+    "definition": "Xenopus tropicalis lysophospholipase 2 (lypla2), mRNA",
+    "organism": "Xenopus tropicalis",
+    "gene_symbols": [
+      "lypla2"
+    ],
+    "gene_ids": [
+      "GeneID:394905"
+    ]
+  },
+  {
+    "accession": "NM_205258.2",
+    "primary_accession": "NM_205258",
+    "definition": "Gallus gallus RAN, member RAS oncogene family (RAN), mRNA",
+    "organism": "Gallus gallus",
+    "gene_symbols": [
+      "RAN"
+    ],
+    "gene_ids": [
+      "GeneID:396193"
+    ]
+  },
+  {
+    "accession": "NM_205854.3",
+    "primary_accession": "NM_205854",
+    "definition": "Homo sapiens surfactant associated 2 (SFTA2), mRNA",
+    "organism": "Homo sapiens",
+    "gene_symbols": [
+      "SFTA2"
+    ],
+    "gene_ids": [
+      "GeneID:389376"
+    ]
+  },
+  {
+    "accession": "NM_212490.2",
+    "primary_accession": "NM_212490",
+    "definition": "Rattus norvegicus ATPase H+ transporting V1 subunit G2 (Atp6v1g2), mRNA",
+    "organism": "Rattus norvegicus",
+    "gene_symbols": [
+      "Atp6v1g2"
+    ],
+    "gene_ids": [
+      "GeneID:368044"
+    ]
+  },
+  {
+    "accession": "NM_212498.1",
+    "primary_accession": "NM_212498",
+    "definition": "Rattus norvegicus alpha tubulin acetyltransferase 1 (Atat1), mRNA",
+    "organism": "Rattus norvegicus",
+    "gene_symbols": [
+      "Atat1"
+    ],
+    "gene_ids": [
+      "GeneID:361789"
+    ]
+  },
+  {
+    "accession": "NM_212505.2",
+    "primary_accession": "NM_212505",
+    "definition": "Rattus norvegicus immediate early response 3 (Ier3), mRNA",
+    "organism": "Rattus norvegicus",
+    "gene_symbols": [
+      "Ier3"
+    ],
+    "gene_ids": [
+      "GeneID:294235"
+    ]
+  },
+  {
+    "accession": "NM_212507.2",
+    "primary_accession": "NM_212507",
+    "definition": "Rattus norvegicus lymphotoxin beta (Ltb), mRNA",
+    "organism": "Rattus norvegicus",
+    "gene_symbols": [
+      "Ltb"
+    ],
+    "gene_ids": [
+      "GeneID:361795"
+    ]
+  },
+  {
+    "accession": "NM_212509.2",
+    "primary_accession": "NM_212509",
+    "definition": "Rattus norvegicus NFKB inhibitor like 1 (Nfkbil1), mRNA",
+    "organism": "Rattus norvegicus",
+    "gene_symbols": [
+      "Nfkbil1"
+    ],
+    "gene_ids": [
+      "GeneID:361794"
+    ]
+  },
+  {
+    "accession": "NM_212529.1",
+    "primary_accession": "NM_212529",
+    "definition": "Rattus norvegicus hydroxysteroid (17-beta) dehydrogenase 8 (Hsd17b8), mRNA",
+    "organism": "Rattus norvegicus",
+    "gene_symbols": [
+      "Hsd17b8"
+    ],
+    "gene_ids": [
+      "GeneID:361802"
+    ]
+  },
+  {
+    "accession": "NM_212532.2",
+    "primary_accession": "NM_212532",
+    "definition": "Rattus norvegicus DDAH family member 2, ADMA-independent (Ddah2), transcript variant 1, mRNA",
+    "organism": "Rattus norvegicus",
+    "gene_symbols": [
+      "Ddah2"
+    ],
+    "gene_ids": [
+      "GeneID:294239"
+    ]
+  },
+  {
+    "accession": "NM_212542.3",
+    "primary_accession": "NM_212542",
+    "definition": "Rattus norvegicus protein phosphatase 1, regulatory (inhibitor) subunit 11 (Ppp1r11), mRNA",
+    "organism": "Rattus norvegicus",
+    "gene_symbols": [
+      "Ppp1r11"
+    ],
+    "gene_ids": [
+      "GeneID:294207"
+    ]
+  },
+  {
+    "accession": "NM_212546.4",
+    "primary_accession": "NM_212546",
+    "definition": "Rattus norvegicus heat shock protein family A (Hsp70) member 1 like (Hspa1l), mRNA",
+    "organism": "Rattus norvegicus",
+    "gene_symbols": [
+      "Hspa1l"
+    ],
+    "gene_ids": [
+      "GeneID:24963"
+    ]
+  },
+  {
+    "accession": "NM_212547.3",
+    "primary_accession": "NM_212547",
+    "definition": "Rattus norvegicus ral guanine nucleotide dissociation stimulator like 2 (Rgl2), mRNA",
+    "organism": "Rattus norvegicus",
+    "gene_symbols": [
+      "Rgl2"
+    ],
+    "gene_ids": [
+      "GeneID:294283"
+    ]
+  },
+  {
+    "accession": "NM_212549.2",
+    "primary_accession": "NM_212549",
+    "definition": "Rattus norvegicus ring finger protein 1 (Ring1), mRNA",
+    "organism": "Rattus norvegicus",
+    "gene_symbols": [
+      "Ring1"
+    ],
+    "gene_ids": [
+      "GeneID:309626"
+    ]
+  },
+  {
+    "accession": "NM_213113.2",
+    "primary_accession": "NM_213113",
+    "definition": "Danio rerio ribosomal protein L26 (rpl26), mRNA",
+    "organism": "Danio rerio",
+    "gene_symbols": [
+      "rpl26"
+    ],
+    "gene_ids": [
+      "GeneID:406387"
+    ]
+  },
+  {
+    "accession": "NM_213557.1",
+    "primary_accession": "NM_213557",
+    "definition": "Rattus norvegicus ribosomal protein S18 (Rps18), mRNA",
+    "organism": "Rattus norvegicus",
+    "gene_symbols": [
+      "Rps18"
+    ],
+    "gene_ids": [
+      "GeneID:294282"
+    ]
+  },
+  {
+    "accession": "NM_213731.1",
+    "primary_accession": "NM_213731",
+    "definition": "Rattus norvegicus olfactory receptor family 12 subfamily D member 17 (Or12d17), mRNA",
+    "organism": "Rattus norvegicus",
+    "gene_symbols": [
+      "Or12d17"
+    ],
+    "gene_ids": [
+      "GeneID:408030"
+    ]
+  },
+  {
+    "accession": "NM_213766.1",
+    "primary_accession": "NM_213766",
+    "definition": "Sus scrofa heat shock protein family A (Hsp70) member 1B (HSPA1B), mRNA",
+    "organism": "Sus scrofa",
+    "gene_symbols": [
+      "HSPA1B"
+    ],
+    "gene_ids": [
+      "GeneID:396648"
+    ]
+  },
+  {
+    "accession": "NM_213935.2",
+    "primary_accession": "NM_213935",
+    "definition": "Sus scrofa proteasome 20S subunit beta 8 (PSMB8), mRNA",
+    "organism": "Sus scrofa",
+    "gene_symbols": [
+      "PSMB8"
+    ],
+    "gene_ids": [
+      "GeneID:396975"
+    ]
+  },
+  {
+    "accession": "NM_213940.1",
+    "primary_accession": "NM_213940",
+    "definition": "Sus scrofa ribosomal protein S18 (RPS18), mRNA",
+    "organism": "Sus scrofa",
+    "gene_symbols": [
+      "RPS18"
+    ],
+    "gene_ids": [
+      "GeneID:396980"
+    ]
+  }
+]

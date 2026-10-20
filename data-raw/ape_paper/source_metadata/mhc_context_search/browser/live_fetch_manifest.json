@@ -1,0 +1,169 @@
+[
+  {
+    "name": "marbl_primates_readme",
+    "url": "https://raw.githubusercontent.com/marbl/Primates/main/README.md",
+    "bytes": 13426,
+    "status": 200
+  },
+  {
+    "name": "cgl_apes_page",
+    "url": "https://cglgenomics.ucsc.edu/february-2024-t2t-apes/",
+    "error": "Remote end closed connection without response"
+  },
+  {
+    "name": "cgl_16_apes_index",
+    "url": "https://cgl.gi.ucsc.edu/data/cactus/t2t-apes/16-t2t-apes-2023v2/",
+    "bytes": 14630,
+    "status": 200
+  },
+  {
+    "name": "cgl_8_apes_index",
+    "url": "https://cgl.gi.ucsc.edu/data/cactus/t2t-apes/8-t2t-apes-2023v2/",
+    "bytes": 19006,
+    "status": 200
+  },
+  {
+    "name": "T2Tgenomes_mGorGor1_v2.0_gen.trackDb.txt",
+    "url": "https://research.nhgri.nih.gov/CustomTracks/T2T_hubs/T2Tgenomes/mGorGor1_v2.0/gen.trackDb.txt",
+    "bytes": 3312,
+    "status": 200
+  },
+  {
+    "name": "T2Tgenomes_mGorGor1_v2.0_trackDb.txt",
+    "url": "https://research.nhgri.nih.gov/CustomTracks/T2T_hubs/T2Tgenomes/mGorGor1_v2.0/trackDb.txt",
+    "bytes": 377,
+    "status": 200
+  },
+  {
+    "name": "T2T_test_mGorGor1_v2.0_gen.trackDb.txt",
+    "url": "https://research.nhgri.nih.gov/CustomTracks/T2T_hubs/T2T_test/mGorGor1_v2.0/gen.trackDb.txt",
+    "bytes": 3312,
+    "status": 200
+  },
+  {
+    "name": "T2T_test_mGorGor1_v2.0_trackDb.txt",
+    "url": "https://research.nhgri.nih.gov/CustomTracks/T2T_hubs/T2T_test/mGorGor1_v2.0/trackDb.txt",
+    "bytes": 377,
+    "status": 200
+  },
+  {
+    "name": "T2Tgenomes_mPanPan1_v2.0_gen.trackDb.txt",
+    "url": "https://research.nhgri.nih.gov/CustomTracks/T2T_hubs/T2Tgenomes/mPanPan1_v2.0/gen.trackDb.txt",
+    "bytes": 3233,
+    "status": 200
+  },
+  {
+    "name": "T2Tgenomes_mPanPan1_v2.0_trackDb.txt",
+    "url": "https://research.nhgri.nih.gov/CustomTracks/T2T_hubs/T2Tgenomes/mPanPan1_v2.0/trackDb.txt",
+    "bytes": 471,
+    "status": 200
+  },
+  {
+    "name": "T2T_test_mPanPan1_v2.0_gen.trackDb.txt",
+    "url": "https://research.nhgri.nih.gov/CustomTracks/T2T_hubs/T2T_test/mPanPan1_v2.0/gen.trackDb.txt",
+    "bytes": 3233,
+    "status": 200
+  },
+  {
+    "name": "T2T_test_mPanPan1_v2.0_trackDb.txt",
+    "url": "https://research.nhgri.nih.gov/CustomTracks/T2T_hubs/T2T_test/mPanPan1_v2.0/trackDb.txt",
+    "bytes": 471,
+    "status": 200
+  },
+  {
+    "name": "T2Tgenomes_mPanTro3_v2.0_gen.trackDb.txt",
+    "url": "https://research.nhgri.nih.gov/CustomTracks/T2T_hubs/T2Tgenomes/mPanTro3_v2.0/gen.trackDb.txt",
+    "bytes": 3259,
+    "status": 200
+  },
+  {
+    "name": "T2Tgenomes_mPanTro3_v2.0_trackDb.txt",
+    "url": "https://research.nhgri.nih.gov/CustomTracks/T2T_hubs/T2Tgenomes/mPanTro3_v2.0/trackDb.txt",
+    "bytes": 475,
+    "status": 200
+  },
+  {
+    "name": "T2T_test_mPanTro3_v2.0_gen.trackDb.txt",
+    "url": "https://research.nhgri.nih.gov/CustomTracks/T2T_hubs/T2T_test/mPanTro3_v2.0/gen.trackDb.txt",
+    "bytes": 3259,
+    "status": 200
+  },
+  {
+    "name": "T2T_test_mPanTro3_v2.0_trackDb.txt",
+    "url": "https://research.nhgri.nih.gov/CustomTracks/T2T_hubs/T2T_test/mPanTro3_v2.0/trackDb.txt",
+    "bytes": 475,
+    "status": 200
+  },
+  {
+    "name": "T2Tgenomes_mPonAbe1_v2.0_gen.trackDb.txt",
+    "url": "https://research.nhgri.nih.gov/CustomTracks/T2T_hubs/T2Tgenomes/mPonAbe1_v2.0/gen.trackDb.txt",
+    "bytes": 3233,
+    "status": 200
+  },
+  {
+    "name": "T2Tgenomes_mPonAbe1_v2.0_trackDb.txt",
+    "url": "https://research.nhgri.nih.gov/CustomTracks/T2T_hubs/T2Tgenomes/mPonAbe1_v2.0/trackDb.txt",
+    "bytes": 377,
+    "status": 200
+  },
+  {
+    "name": "T2T_test_mPonAbe1_v2.0_gen.trackDb.txt",
+    "url": "https://research.nhgri.nih.gov/CustomTracks/T2T_hubs/T2T_test/mPonAbe1_v2.0/gen.trackDb.txt",
+    "bytes": 3233,
+    "status": 200
+  },
+  {
+    "name": "T2T_test_mPonAbe1_v2.0_trackDb.txt",
+    "url": "https://research.nhgri.nih.gov/CustomTracks/T2T_hubs/T2T_test/mPonAbe1_v2.0/trackDb.txt",
+    "bytes": 377,
+    "status": 200
+  },
+  {
+    "name": "T2Tgenomes_mPonPyg2_v2.0_gen.trackDb.txt",
+    "url": "https://research.nhgri.nih.gov/CustomTracks/T2T_hubs/T2Tgenomes/mPonPyg2_v2.0/gen.trackDb.txt",
+    "bytes": 3253,
+    "status": 200
+  },
+  {
+    "name": "T2Tgenomes_mPonPyg2_v2.0_trackDb.txt",
+    "url": "https://research.nhgri.nih.gov/CustomTracks/T2T_hubs/T2Tgenomes/mPonPyg2_v2.0/trackDb.txt",
+    "bytes": 377,
+    "status": 200
+  },
+  {
+    "name": "T2T_test_mPonPyg2_v2.0_gen.trackDb.txt",
+    "url": "https://research.nhgri.nih.gov/CustomTracks/T2T_hubs/T2T_test/mPonPyg2_v2.0/gen.trackDb.txt",
+    "bytes": 3253,
+    "status": 200
+  },
+  {
+    "name": "T2T_test_mPonPyg2_v2.0_trackDb.txt",
+    "url": "https://research.nhgri.nih.gov/CustomTracks/T2T_hubs/T2T_test/mPonPyg2_v2.0/trackDb.txt",
+    "bytes": 377,
+    "status": 200
+  },
+  {
+    "name": "T2Tgenomes_mSymSyn1_v2.0_gen.trackDb.txt",
+    "url": "https://research.nhgri.nih.gov/CustomTracks/T2T_hubs/T2Tgenomes/mSymSyn1_v2.0/gen.trackDb.txt",
+    "bytes": 3398,
+    "status": 200
+  },
+  {
+    "name": "T2Tgenomes_mSymSyn1_v2.0_trackDb.txt",
+    "url": "https://research.nhgri.nih.gov/CustomTracks/T2T_hubs/T2Tgenomes/mSymSyn1_v2.0/trackDb.txt",
+    "bytes": 380,
+    "status": 200
+  },
+  {
+    "name": "T2T_test_mSymSyn1_v2.0_gen.trackDb.txt",
+    "url": "https://research.nhgri.nih.gov/CustomTracks/T2T_hubs/T2T_test/mSymSyn1_v2.0/gen.trackDb.txt",
+    "bytes": 3398,
+    "status": 200
+  },
+  {
+    "name": "T2T_test_mSymSyn1_v2.0_trackDb.txt",
+    "url": "https://research.nhgri.nih.gov/CustomTracks/T2T_hubs/T2T_test/mSymSyn1_v2.0/trackDb.txt",
+    "bytes": 380,
+    "status": 200
+  }
+]

@@ -1,0 +1,41 @@
+track	chr	xmin	xmax	kind	label
+human	chr6	32323853	32327897	Segmental duplication	chr6:32419677-32423415
+human	chr6	32323872	32328138	Segmental duplication	chr6:32355664-32359928
+human	chr6	32328459	32359693	Segmental duplication	chr6:32388120-32423420
+human	chr6	32331663	32350733	Segmental duplication	chr6:32391061-32414441
+human	chr6	32355665	32359928	Segmental duplication	chr6:32323871-32328138
+human	chr6	32388121	32423420	Segmental duplication	chr6:32328458-32359693
+human	chr6	32391062	32414441	Segmental duplication	chr6:32331662-32350733
+human	chr6	32419678	32423415	Segmental duplication	chr6:32323852-32327897
+chimp_h1	chr5_hap1_hsa6	38246682	38250644	Coding gene	Patr-DRA
+chimp_h1	chr5_hap1_hsa6	38327992	38340401	Coding gene	Patr-DRB5
+chimp_h1	chr5_hap1_hsa6	38363857	38383453	Pseudogene	Patr-DRB
+chimp_h1	chr5_hap1_hsa6	38393864	38406585	Pseudogene	Patr-DRB
+chimp_h1	chr5_hap1_hsa6	38476619	38486952	Coding gene	Patr-DRB1
+chimp_h1	chr5_hap1_hsa6	38277470	38281524	Segmental duplication	chr5_hap1_hsa6:38337686-38341704
+chimp_h1	chr5_hap1_hsa6	38282189	38297711	Segmental duplication	chr5_hap1_hsa6:38461082-38470973
+chimp_h1	chr5_hap1_hsa6	38282191	38297278	Segmental duplication	chr5_hap1_hsa6:38374321-38388216
+chimp_h1	chr5_hap1_hsa6	38337687	38341704	Segmental duplication	chr5_hap1_hsa6:38277469-38281524
+chimp_h1	chr5_hap1_hsa6	38339614	38397909	Segmental duplication	chr5_hap1_hsa6:38435041-38480704
+chimp_h1	chr5_hap1_hsa6	38339614	38407697	Segmental duplication	chr5_hap1_hsa6:38435041-38488111
+chimp_h1	chr5_hap1_hsa6	38374322	38388216	Segmental duplication	chr5_hap1_hsa6:38282190-38297278
+chimp_h1	chr5_hap1_hsa6	38435042	38437251	Segmental duplication	chr5_hap1_hsa6:38486182-38488092
+chimp_h1	chr5_hap1_hsa6	38435042	38480704	Segmental duplication	chr5_hap1_hsa6:38339613-38397909
+chimp_h1	chr5_hap1_hsa6	38435042	38488111	Segmental duplication	chr5_hap1_hsa6:38339613-38407697
+chimp_h1	chr5_hap1_hsa6	38461083	38470973	Segmental duplication	chr5_hap1_hsa6:38282188-38297711
+chimp_h1	chr5_hap1_hsa6	38486183	38488092	Segmental duplication	chr5_hap1_hsa6:38435041-38437251
+chimp_h2	chr5_hap2_hsa6	36995127	36999083	Coding gene	Patr-DRA
+chimp_h2	chr5_hap2_hsa6	37076413	37088822	Coding gene	Patr-DRB5
+chimp_h2	chr5_hap2_hsa6	37142284	37155006	Pseudogene	Patr-DRB
+chimp_h2	chr5_hap2_hsa6	37025888	37029943	Segmental duplication	chr5_hap2_hsa6:37086107-37090125
+chimp_h2	chr5_hap2_hsa6	37030604	37046131	Segmental duplication	chr5_hap2_hsa6:37209503-37219394
+chimp_h2	chr5_hap2_hsa6	37030606	37045698	Segmental duplication	chr5_hap2_hsa6:37122742-37136637
+chimp_h2	chr5_hap2_hsa6	37086108	37090125	Segmental duplication	chr5_hap2_hsa6:37025887-37029943
+chimp_h2	chr5_hap2_hsa6	37088035	37146693	Segmental duplication	chr5_hap2_hsa6:37183463-37229487
+chimp_h2	chr5_hap2_hsa6	37088035	37156118	Segmental duplication	chr5_hap2_hsa6:37183463-37236532
+chimp_h2	chr5_hap2_hsa6	37122743	37136637	Segmental duplication	chr5_hap2_hsa6:37030605-37045698
+chimp_h2	chr5_hap2_hsa6	37183464	37185673	Segmental duplication	chr5_hap2_hsa6:37234603-37236513
+chimp_h2	chr5_hap2_hsa6	37183464	37229487	Segmental duplication	chr5_hap2_hsa6:37088034-37146693
+chimp_h2	chr5_hap2_hsa6	37183464	37236532	Segmental duplication	chr5_hap2_hsa6:37088034-37156118
+chimp_h2	chr5_hap2_hsa6	37209504	37219394	Segmental duplication	chr5_hap2_hsa6:37030603-37046131
+chimp_h2	chr5_hap2_hsa6	37234604	37236513	Segmental duplication	chr5_hap2_hsa6:37183463-37185673

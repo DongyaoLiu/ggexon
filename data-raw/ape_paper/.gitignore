@@ -1,0 +1,22 @@
+# Regenerable runtime caches and regional genome sequences; keep local copies.
+__pycache__/
+*.py[cod]
+*.fa
+*.fasta
+*.fai
+*.mmi
+*_db
+*.rds
+intermediates/
+
+# External release downloads are identified by URL/hash in source manifests.
+/source_metadata/igtr/repo/
+/source_metadata/igtr/supplementary_data_1.csv
+/source_metadata/*.xlsx
+/source_metadata/mhc_continuous/paper_c/*.pdf
+/source_metadata/mhc_continuous/paper_c/supplementary_information.txt
+
+# Historical rendered variants stay local; retain their regression audit tables.
+/results/mhc_continuous/figures/before-*/*.pdf
+/results/mhc_continuous/figures/before-*/*.png
+/results/mhc_continuous/figures/before-*/source-representative-exons.tsv

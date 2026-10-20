@@ -1,0 +1,100 @@
+[
+  {
+    "filename": "mGorGor1_v2.0.IsoSeq_2_v0.9.bam.bai",
+    "bytes": 2347464,
+    "sha256": "8f8ba9e22c13f9672a825c3fdeb11488de0323b659131fe9fc067a3361a5bacd",
+    "source_url": "https://genomeark.s3.amazonaws.com/species/Gorilla_gorilla/mGorGor1/assembly_curated/expression/mGorGor1_v2.0.IsoSeq_2_v0.9.bam.bai",
+    "retained": false
+  },
+  {
+    "filename": "mPanPan1_v2.0.IsoSeq_1_v0.9.bam.bai",
+    "bytes": 2287768,
+    "sha256": "7767ac74e4f6da39bb50dcc6bb336fb8d801728baf7e51c3c17689ee469cd7b8",
+    "source_url": "https://genomeark.s3.amazonaws.com/species/Pan_paniscus/mPanPan1/assembly_curated/expression/mPanPan1_v2.0.IsoSeq_1_v0.9.bam.bai",
+    "retained": false
+  },
+  {
+    "filename": "mSymSyn1_v2.0.IsoSeq_2_v0.9.bam.bai",
+    "bytes": 2376064,
+    "sha256": "dbc85d33ed1e9988e2def0244c9614957d20b724aa1a0fa4e467fba45dc15c1d",
+    "source_url": "https://genomeark.s3.amazonaws.com/species/Symphalangus_syndactylus/mSymSyn1/assembly_curated/expression/mSymSyn1_v2.0.IsoSeq_2_v0.9.bam.bai",
+    "retained": false
+  },
+  {
+    "filename": "mPanPan1_v2.0.IsoSeq_testis.bam.bai",
+    "bytes": 24186648,
+    "sha256": "f6d7146bc6108baee4513c55d3c049edafca7b1dcb46ef4b507b11fb0e56eb1a",
+    "source_url": "https://genomeark.s3.amazonaws.com/species/Pan_paniscus/mPanPan1/assembly_curated/expression/mPanPan1_v2.0.IsoSeq_testis.bam.bai",
+    "retained": false
+  },
+  {
+    "filename": "mPonAbe1_v2.0.IsoSeq_2_v0.9.bam.bai",
+    "bytes": 2356416,
+    "sha256": "f9ed263d3fcb1a346c3dc20c1ae2b47dd1344158e32a6122c89adb20456a1240",
+    "source_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_2_v0.9.bam.bai",
+    "retained": false
+  },
+  {
+    "filename": "mPonPyg2_v2.0.IsoSeq_2_v0.9.bam.bai",
+    "bytes": 2639968,
+    "sha256": "9ef687b01b546dda8352bd33a2d968e0b1ab27857b380dcc3d5f668244d10c76",
+    "source_url": "https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/expression/mPonPyg2_v2.0.IsoSeq_2_v0.9.bam.bai",
+    "retained": false
+  },
+  {
+    "filename": "mSymSyn1_v2.0.IsoSeq_1_v0.9.bam.bai",
+    "bytes": 2134984,
+    "sha256": "c02a03a1ab1260b9a71b8536e90452b74dfd63a8fbb98fe71ba56009a1b826d3",
+    "source_url": "https://genomeark.s3.amazonaws.com/species/Symphalangus_syndactylus/mSymSyn1/assembly_curated/expression/mSymSyn1_v2.0.IsoSeq_1_v0.9.bam.bai",
+    "retained": false
+  },
+  {
+    "filename": "mPonAbe1_v2.0.IsoSeq_1_v0.9.bam.bai",
+    "bytes": 2051072,
+    "sha256": "0c0295b1598f5b04c62626abc9810e8ac8fb2c95683be877f5aebe703b8d0d53",
+    "source_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_1_v0.9.bam.bai",
+    "retained": false
+  },
+  {
+    "filename": "mPonPyg2_v2.0.IsoSeq_1_v0.9.bam.bai",
+    "bytes": 2199728,
+    "sha256": "2d1c7d435030ee7d3dc5b6794e3a0ef94b8b7ee5841cc7d0e4d430c51df704e6",
+    "source_url": "https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/expression/mPonPyg2_v2.0.IsoSeq_1_v0.9.bam.bai",
+    "retained": false
+  },
+  {
+    "filename": "mGorGor1_v2.0.IsoSeq_testis.bam.bai",
+    "bytes": 3928760,
+    "sha256": "9ef90fe1809c90652832ea55317a98c42968a0a80ee3d75a47572c8dd244fd13",
+    "source_url": "https://genomeark.s3.amazonaws.com/species/Gorilla_gorilla/mGorGor1/assembly_curated/expression/mGorGor1_v2.0.IsoSeq_testis.bam.bai",
+    "retained": false
+  },
+  {
+    "filename": "mGorGor1_v2.0.IsoSeq_1_v0.9.bam.bai",
+    "bytes": 2133144,
+    "sha256": "4e59020957efb1c2ac7e8c71af3f4a81759a3437d3d6575dc0b1efbea4911521",
+    "source_url": "https://genomeark.s3.amazonaws.com/species/Gorilla_gorilla/mGorGor1/assembly_curated/expression/mGorGor1_v2.0.IsoSeq_1_v0.9.bam.bai",
+    "retained": false
+  },
+  {
+    "filename": "mPanPan1_v2.0.IsoSeq_2_v0.9.bam.bai",
+    "bytes": 2881976,
+    "sha256": "8b56555b23efb156495dce6182e664599e119d570ece4dbbb7a6976569957916",
+    "source_url": "https://genomeark.s3.amazonaws.com/species/Pan_paniscus/mPanPan1/assembly_curated/expression/mPanPan1_v2.0.IsoSeq_2_v0.9.bam.bai",
+    "retained": false
+  },
+  {
+    "filename": "mPonAbe1_v2.0.IsoSeq_testis.bam.bai",
+    "bytes": 2663120,
+    "sha256": "2f69418fc03841a27e0df61debb6cc0e13004824cd63107597bd8a87dd25a963",
+    "source_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam.bai",
+    "retained": false
+  },
+  {
+    "filename": "mPonPyg2_v2.0.IsoSeq_testis.bam.bai",
+    "bytes": 3649920,
+    "sha256": "ea47fdd5b0a1a705dfda71016bab7e630b5070bb0c2ee28f4d8a7c3a7a24b582",
+    "source_url": "https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/expression/mPonPyg2_v2.0.IsoSeq_testis.bam.bai",
+    "retained": false
+  }
+]

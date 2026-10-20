@@ -685,6 +685,7 @@ collect_syn_annotation_requests <- function(layer, syn_data, plot_data) {
         identical(layer$geom, GeomGene) ||
         identical(layer$geom, GeomGeneLabel) ||
         identical(layer$geom, GeomGeneBox) ||
+        identical(layer$geom, GeomGeneLollipop) ||
         identical(layer$geom, GeomGeneTag) ||
         identical(layer$geom, GeomMotif))) {
     return(list())

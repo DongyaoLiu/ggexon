@@ -1,0 +1,1507 @@
+[
+  {
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Gorilla_gorilla/mGorGor1/assembly_curated/expression/mGorGor1_v2.0.IsoSeq_1_v0.9.bam",
+    "species": "GGO",
+    "source_chrom": "CM055451.2",
+    "target_chrom_present": false,
+    "index_bytes": 2133144,
+    "bam_bytes_fetched": 491070,
+    "range_requests": [
+      {
+        "byte_start": 327397900,
+        "byte_end": 327692361,
+        "virtual_start": 21456348789773,
+        "virtual_end": 21471351697667,
+        "fetched_bytes": 294462
+      },
+      {
+        "byte_start": 328074767,
+        "byte_end": 328140302,
+        "virtual_start": 21500707955720,
+        "virtual_end": 21500707958357,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 329248472,
+        "byte_end": 329314007,
+        "virtual_start": 21577627896850,
+        "virtual_end": 21577627907371,
+        "fetched_bytes": 65536
+      }
+    ],
+    "read_gene_overlaps": 0,
+    "unique_primary_mapq20_reads": 0,
+    "per_gene": {
+      "MUC21": 0,
+      "MUC22": 0,
+      "MUCL3": 0
+    }
+  },
+  {
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Gorilla_gorilla/mGorGor1/assembly_curated/expression/mGorGor1_v2.0.IsoSeq_2_v0.9.bam",
+    "species": "GGO",
+    "source_chrom": "CM055451.2",
+    "target_chrom_present": false,
+    "index_bytes": 2347464,
+    "bam_bytes_fetched": 565396,
+    "range_requests": [
+      {
+        "byte_start": 509052324,
+        "byte_end": 509272751,
+        "virtual_start": 33361253115708,
+        "virtual_end": 33371404155768,
+        "fetched_bytes": 220428
+      },
+      {
+        "byte_start": 509321095,
+        "byte_end": 509403918,
+        "virtual_start": 33378867314039,
+        "virtual_end": 33380000287945,
+        "fetched_bytes": 82824
+      },
+      {
+        "byte_start": 510132412,
+        "byte_end": 510197947,
+        "virtual_start": 33432037781320,
+        "virtual_end": 33432037788084,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 511107721,
+        "byte_end": 511173256,
+        "virtual_start": 33495955611976,
+        "virtual_end": 33495955615252,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 511199292,
+        "byte_end": 511264827,
+        "virtual_start": 33501956823315,
+        "virtual_end": 33501956828559,
+        "fetched_bytes": 65536
+      }
+    ],
+    "read_gene_overlaps": 1,
+    "unique_primary_mapq20_reads": 1,
+    "per_gene": {
+      "MUC21": 0,
+      "MUC22": 0,
+      "MUCL3": 1
+    }
+  },
+  {
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Gorilla_gorilla/mGorGor1/assembly_curated/expression/mGorGor1_v2.0.IsoSeq_testis.bam",
+    "species": "GGO",
+    "source_chrom": "CM055451.2",
+    "target_chrom_present": false,
+    "index_bytes": 3928760,
+    "bam_bytes_fetched": 851319,
+    "range_requests": [
+      {
+        "byte_start": 1217298188,
+        "byte_end": 1217730466,
+        "virtual_start": 79776854064049,
+        "virtual_end": 79800888942910,
+        "fetched_bytes": 432279
+      },
+      {
+        "byte_start": 1218006452,
+        "byte_end": 1218071987,
+        "virtual_start": 79823270867663,
+        "virtual_end": 79823270875219,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 1218021308,
+        "byte_end": 1218086843,
+        "virtual_start": 79824244441088,
+        "virtual_end": 79824244495216,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 1218609015,
+        "byte_end": 1218700374,
+        "virtual_start": 79862760426438,
+        "virtual_end": 79864452868668,
+        "fetched_bytes": 91360
+      },
+      {
+        "byte_start": 1220165869,
+        "byte_end": 1220231404,
+        "virtual_start": 79964790408202,
+        "virtual_end": 79964790412399,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 1257187087,
+        "byte_end": 1257252622,
+        "virtual_start": 82391012952114,
+        "virtual_end": 82391012993013,
+        "fetched_bytes": 65536
+      }
+    ],
+    "read_gene_overlaps": 5,
+    "unique_primary_mapq20_reads": 5,
+    "per_gene": {
+      "MUC21": 0,
+      "MUC22": 2,
+      "MUCL3": 3
+    }
+  },
+  {
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pan_paniscus/mPanPan1/assembly_curated/expression/mPanPan1_v2.0.IsoSeq_1_v0.9.bam",
+    "species": "PPA",
+    "source_chrom": "CM055477.2",
+    "target_chrom_present": false,
+    "index_bytes": 2287768,
+    "bam_bytes_fetched": 751165,
+    "range_requests": [
+      {
+        "byte_start": 173768751,
+        "byte_end": 173936657,
+        "virtual_start": 11388108888256,
+        "virtual_end": 11394817872426,
+        "fetched_bytes": 167907
+      },
+      {
+        "byte_start": 173977330,
+        "byte_end": 174042865,
+        "virtual_start": 11401778323921,
+        "virtual_end": 11401778325869,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 174659584,
+        "byte_end": 174725119,
+        "virtual_start": 11446490532753,
+        "virtual_end": 11446490539262,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 174694865,
+        "byte_end": 174778855,
+        "virtual_start": 11448802727119,
+        "virtual_end": 11450012139520,
+        "fetched_bytes": 83991
+      },
+      {
+        "byte_start": 174933933,
+        "byte_end": 175039983,
+        "virtual_start": 11464470246847,
+        "virtual_end": 11467125455508,
+        "fetched_bytes": 106051
+      },
+      {
+        "byte_start": 178191615,
+        "byte_end": 178257150,
+        "virtual_start": 11677965705934,
+        "virtual_end": 11677965738948,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 178599425,
+        "byte_end": 178664960,
+        "virtual_start": 11704691946553,
+        "virtual_end": 11704691969636,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 178612695,
+        "byte_end": 178678230,
+        "virtual_start": 11705561579520,
+        "virtual_end": 11705561586573,
+        "fetched_bytes": 65536
+      }
+    ],
+    "read_gene_overlaps": 0,
+    "unique_primary_mapq20_reads": 0,
+    "per_gene": {
+      "C6orf15": 0,
+      "OR2J2": 0
+    }
+  },
+  {
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pan_paniscus/mPanPan1/assembly_curated/expression/mPanPan1_v2.0.IsoSeq_2_v0.9.bam",
+    "species": "PPA",
+    "source_chrom": "CM055477.2",
+    "target_chrom_present": false,
+    "index_bytes": 2881976,
+    "bam_bytes_fetched": 1418281,
+    "range_requests": [
+      {
+        "byte_start": 330608598,
+        "byte_end": 330802647,
+        "virtual_start": 21666765136199,
+        "virtual_end": 21675187386242,
+        "fetched_bytes": 194050
+      },
+      {
+        "byte_start": 331172190,
+        "byte_end": 331237725,
+        "virtual_start": 21703700690916,
+        "virtual_end": 21703700693585,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 331283313,
+        "byte_end": 331348848,
+        "virtual_start": 21710983219253,
+        "virtual_end": 21710983221546,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 331321761,
+        "byte_end": 331387296,
+        "virtual_start": 21713502933178,
+        "virtual_end": 21713502962881,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 332183013,
+        "byte_end": 332248548,
+        "virtual_start": 21769945978566,
+        "virtual_end": 21769945980166,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 332700771,
+        "byte_end": 332766306,
+        "virtual_start": 21803877740814,
+        "virtual_end": 21803877749622,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 332743680,
+        "byte_end": 332829803,
+        "virtual_start": 21806689823065,
+        "virtual_end": 21808039067648,
+        "fetched_bytes": 86124
+      },
+      {
+        "byte_start": 332878437,
+        "byte_end": 332943972,
+        "virtual_start": 21815521267057,
+        "virtual_end": 21815521270289,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 332904522,
+        "byte_end": 332982346,
+        "virtual_start": 21817230758269,
+        "virtual_end": 21818036182502,
+        "fetched_bytes": 77825
+      },
+      {
+        "byte_start": 332927797,
+        "byte_end": 332993332,
+        "virtual_start": 21818756104192,
+        "virtual_end": 21818756162976,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 332936043,
+        "byte_end": 333056483,
+        "virtual_start": 21819296514048,
+        "virtual_end": 21822894772612,
+        "fetched_bytes": 120441
+      },
+      {
+        "byte_start": 338741574,
+        "byte_end": 338807109,
+        "virtual_start": 22199767834194,
+        "virtual_end": 22199767838020,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 339148267,
+        "byte_end": 339213802,
+        "virtual_start": 22226420859042,
+        "virtual_end": 22226420887854,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 339160893,
+        "byte_end": 339226428,
+        "virtual_start": 22227248283648,
+        "virtual_end": 22227248334031,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 339933454,
+        "byte_end": 339998989,
+        "virtual_start": 22277878857485,
+        "virtual_end": 22277878897165,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 339946802,
+        "byte_end": 340034674,
+        "virtual_start": 22278753615872,
+        "virtual_end": 22280217498742,
+        "fetched_bytes": 87873
+      },
+      {
+        "byte_start": 352844831,
+        "byte_end": 352910366,
+        "virtual_start": 23124038873810,
+        "virtual_end": 23124038877010,
+        "fetched_bytes": 65536
+      }
+    ],
+    "read_gene_overlaps": 0,
+    "unique_primary_mapq20_reads": 0,
+    "per_gene": {
+      "C6orf15": 0,
+      "OR2J2": 0
+    }
+  },
+  {
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pan_paniscus/mPanPan1/assembly_curated/expression/mPanPan1_v2.0.IsoSeq_testis.bam",
+    "species": "PPA",
+    "source_chrom": "CM055477.2",
+    "index_bytes": 24186648,
+    "planned_bam_bytes": 151601139,
+    "planned_range_count": 1135,
+    "status": "skipped_indexed_range_budget",
+    "reason": "Source loci require more than 10 MB or 100 indexed byte ranges; no RNA absence conclusion"
+  },
+  {
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Symphalangus_syndactylus/mSymSyn1/assembly_curated/expression/mSymSyn1_v2.0.IsoSeq_1_v0.9.bam",
+    "species": "SSY",
+    "source_chrom": "CM054531.2",
+    "target_chrom_present": false,
+    "index_bytes": 2134984,
+    "bam_bytes_fetched": 3199272,
+    "range_requests": [
+      {
+        "byte_start": 1141729770,
+        "byte_end": 1142490664,
+        "virtual_start": 74824402241891,
+        "virtual_end": 74869973290878,
+        "fetched_bytes": 760895
+      },
+      {
+        "byte_start": 1142524714,
+        "byte_end": 1144356473,
+        "virtual_start": 74876499671032,
+        "virtual_end": 74992250974170,
+        "fetched_bytes": 1831760
+      },
+      {
+        "byte_start": 1144302701,
+        "byte_end": 1144612034,
+        "virtual_start": 74993021812736,
+        "virtual_end": 75008999365585,
+        "fetched_bytes": 309334
+      },
+      {
+        "byte_start": 1149101207,
+        "byte_end": 1149247801,
+        "virtual_start": 75307496748407,
+        "virtual_end": 75312809023346,
+        "fetched_bytes": 146595
+      },
+      {
+        "byte_start": 1149202329,
+        "byte_end": 1149287480,
+        "virtual_start": 75314123833344,
+        "virtual_end": 75315409412922,
+        "fetched_bytes": 85152
+      }
+    ],
+    "read_gene_overlaps": 1,
+    "unique_primary_mapq20_reads": 1,
+    "per_gene": {
+      "MUC21": 1
+    }
+  },
+  {
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Symphalangus_syndactylus/mSymSyn1/assembly_curated/expression/mSymSyn1_v2.0.IsoSeq_2_v0.9.bam",
+    "species": "SSY",
+    "source_chrom": "CM054531.2",
+    "target_chrom_present": false,
+    "index_bytes": 2376064,
+    "bam_bytes_fetched": 5831488,
+    "range_requests": [
+      {
+        "byte_start": 1779321126,
+        "byte_end": 1779386661,
+        "virtual_start": 116609589339861,
+        "virtual_end": 116609589345718,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 1779470369,
+        "byte_end": 1779951269,
+        "virtual_start": 116619370113770,
+        "virtual_end": 116646591523846,
+        "fetched_bytes": 480901
+      },
+      {
+        "byte_start": 1779904514,
+        "byte_end": 1780038806,
+        "virtual_start": 116647822229504,
+        "virtual_end": 116652328348153,
+        "fetched_bytes": 134293
+      },
+      {
+        "byte_start": 1779986058,
+        "byte_end": 1780107707,
+        "virtual_start": 116653166297088,
+        "virtual_end": 116656843784192,
+        "fetched_bytes": 121650
+      },
+      {
+        "byte_start": 1780564630,
+        "byte_end": 1780756218,
+        "virtual_start": 116691083594449,
+        "virtual_end": 116699344661562,
+        "fetched_bytes": 191589
+      },
+      {
+        "byte_start": 1780700826,
+        "byte_end": 1780802131,
+        "virtual_start": 116700009336169,
+        "virtual_end": 116702353616078,
+        "fetched_bytes": 101306
+      },
+      {
+        "byte_start": 1780743273,
+        "byte_end": 1781226840,
+        "virtual_start": 116702791139328,
+        "virtual_end": 116730187344712,
+        "fetched_bytes": 483568
+      },
+      {
+        "byte_start": 1781175006,
+        "byte_end": 1781271649,
+        "virtual_start": 116731085193216,
+        "virtual_end": 116733123946329,
+        "fetched_bytes": 96644
+      },
+      {
+        "byte_start": 1781219410,
+        "byte_end": 1782101520,
+        "virtual_start": 116733995253760,
+        "virtual_end": 116787510372828,
+        "fetched_bytes": 882111
+      },
+      {
+        "byte_start": 1782046155,
+        "byte_end": 1782344974,
+        "virtual_start": 116788176814080,
+        "virtual_end": 116803465374827,
+        "fetched_bytes": 298820
+      },
+      {
+        "byte_start": 1782298035,
+        "byte_end": 1782440342,
+        "virtual_start": 116804684021760,
+        "virtual_end": 116809715412072,
+        "fetched_bytes": 142308
+      },
+      {
+        "byte_start": 1782388446,
+        "byte_end": 1782464147,
+        "virtual_start": 116810609197056,
+        "virtual_end": 116811275494871,
+        "fetched_bytes": 75702
+      },
+      {
+        "byte_start": 1782413344,
+        "byte_end": 1783146565,
+        "virtual_start": 116812240912384,
+        "virtual_end": 116855998439919,
+        "fetched_bytes": 733222
+      },
+      {
+        "byte_start": 1783096663,
+        "byte_end": 1783233622,
+        "virtual_start": 116857022906368,
+        "virtual_end": 116861703809424,
+        "fetched_bytes": 136960
+      },
+      {
+        "byte_start": 1783176400,
+        "byte_end": 1783366916,
+        "virtual_start": 116862248550400,
+        "virtual_end": 116870439362027,
+        "fetched_bytes": 190517
+      },
+      {
+        "byte_start": 1783316153,
+        "byte_end": 1783561535,
+        "virtual_start": 116871407406605,
+        "virtual_end": 116883193915005,
+        "fetched_bytes": 245383
+      },
+      {
+        "byte_start": 1783504395,
+        "byte_end": 1783688688,
+        "virtual_start": 116883744030720,
+        "virtual_end": 116891527015274,
+        "fetched_bytes": 184294
+      },
+      {
+        "byte_start": 1783633766,
+        "byte_end": 1783976282,
+        "virtual_start": 116892222488576,
+        "virtual_end": 116910374774513,
+        "fetched_bytes": 342517
+      },
+      {
+        "byte_start": 1783919737,
+        "byte_end": 1784261262,
+        "virtual_start": 116910963884032,
+        "virtual_end": 116929051225940,
+        "fetched_bytes": 341526
+      },
+      {
+        "byte_start": 1784205040,
+        "byte_end": 1784488397,
+        "virtual_start": 116929661501440,
+        "virtual_end": 116943936731804,
+        "fetched_bytes": 283358
+      },
+      {
+        "byte_start": 1791787732,
+        "byte_end": 1791934711,
+        "virtual_start": 117426600826443,
+        "virtual_end": 117431938352524,
+        "fetched_bytes": 146980
+      },
+      {
+        "byte_start": 1800643979,
+        "byte_end": 1800730745,
+        "virtual_start": 118007003869651,
+        "virtual_end": 118008395202560,
+        "fetched_bytes": 86767
+      }
+    ],
+    "read_gene_overlaps": 3,
+    "unique_primary_mapq20_reads": 3,
+    "per_gene": {
+      "MUC21": 3
+    }
+  },
+  {
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_1_v0.9.bam",
+    "species": "PAB",
+    "source_chrom": "CM054684.2",
+    "target_chrom_present": false,
+    "index_bytes": 2051072,
+    "bam_bytes_fetched": 1003576,
+    "range_requests": [
+      {
+        "byte_start": 191030090,
+        "byte_end": 191187683,
+        "virtual_start": 12519348026109,
+        "virtual_end": 12525381135887,
+        "fetched_bytes": 157594
+      },
+      {
+        "byte_start": 192249672,
+        "byte_end": 192414346,
+        "virtual_start": 12599274530343,
+        "virtual_end": 12605771677696,
+        "fetched_bytes": 164675
+      },
+      {
+        "byte_start": 193255407,
+        "byte_end": 193339858,
+        "virtual_start": 12665186412523,
+        "virtual_end": 12666426041571,
+        "fetched_bytes": 84452
+      },
+      {
+        "byte_start": 193620638,
+        "byte_end": 193708223,
+        "virtual_start": 12689122137998,
+        "virtual_end": 12690567234118,
+        "fetched_bytes": 87586
+      },
+      {
+        "byte_start": 193759341,
+        "byte_end": 193824876,
+        "virtual_start": 12698212192296,
+        "virtual_end": 12698212198308,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 194270866,
+        "byte_end": 194356862,
+        "virtual_start": 12731735483446,
+        "virtual_end": 12733076459095,
+        "fetched_bytes": 85997
+      },
+      {
+        "byte_start": 194312798,
+        "byte_end": 194408495,
+        "virtual_start": 12734483553054,
+        "virtual_end": 12736460249083,
+        "fetched_bytes": 95698
+      },
+      {
+        "byte_start": 194367260,
+        "byte_end": 194498225,
+        "virtual_start": 12738052777265,
+        "virtual_end": 12742340812858,
+        "fetched_bytes": 130966
+      },
+      {
+        "byte_start": 198264009,
+        "byte_end": 198329544,
+        "virtual_start": 12993430099197,
+        "virtual_end": 12993430155402,
+        "fetched_bytes": 65536
+      }
+    ],
+    "read_gene_overlaps": 0,
+    "unique_primary_mapq20_reads": 0,
+    "per_gene": {
+      "LY6G6E": 0,
+      "OR12D3": 0,
+      "OR5V1": 0,
+      "MUC21": 0,
+      "MUCL3": 0,
+      "OR12D2": 0
+    }
+  },
+  {
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_2_v0.9.bam",
+    "species": "PAB",
+    "source_chrom": "CM054684.2",
+    "target_chrom_present": false,
+    "index_bytes": 2356416,
+    "bam_bytes_fetched": 1852464,
+    "range_requests": [
+      {
+        "byte_start": 357543677,
+        "byte_end": 357744600,
+        "virtual_start": 23431982439887,
+        "virtual_end": 23440855259463,
+        "fetched_bytes": 200924
+      },
+      {
+        "byte_start": 357837012,
+        "byte_end": 357914393,
+        "virtual_start": 23451206438002,
+        "virtual_end": 23451982814179,
+        "fetched_bytes": 77382
+      },
+      {
+        "byte_start": 357856858,
+        "byte_end": 357922393,
+        "virtual_start": 23452507045888,
+        "virtual_end": 23452507048481,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 358873077,
+        "byte_end": 359102556,
+        "virtual_start": 23519105992219,
+        "virtual_end": 23529850261944,
+        "fetched_bytes": 229480
+      },
+      {
+        "byte_start": 359060540,
+        "byte_end": 359226586,
+        "virtual_start": 23531391588005,
+        "virtual_end": 23537978645509,
+        "fetched_bytes": 166047
+      },
+      {
+        "byte_start": 360531415,
+        "byte_end": 360596950,
+        "virtual_start": 23627786822232,
+        "virtual_end": 23627786834500,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 361006846,
+        "byte_end": 361187815,
+        "virtual_start": 23658944682954,
+        "virtual_end": 23666509759099,
+        "fetched_bytes": 180970
+      },
+      {
+        "byte_start": 361658503,
+        "byte_end": 361724038,
+        "virtual_start": 23701651701995,
+        "virtual_end": 23701651712331,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 362739665,
+        "byte_end": 362805200,
+        "virtual_start": 23772506696641,
+        "virtual_end": 23772506737788,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 362753960,
+        "byte_end": 362836611,
+        "virtual_start": 23773443531989,
+        "virtual_end": 23774565266756,
+        "fetched_bytes": 82652
+      },
+      {
+        "byte_start": 362783739,
+        "byte_end": 362849274,
+        "virtual_start": 23775395119104,
+        "virtual_end": 23775395180202,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 362798468,
+        "byte_end": 362864003,
+        "virtual_start": 23776360413683,
+        "virtual_end": 23776360439168,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 362817514,
+        "byte_end": 362883049,
+        "virtual_start": 23777608622949,
+        "virtual_end": 23777608651348,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 362832777,
+        "byte_end": 362898312,
+        "virtual_start": 23778608873472,
+        "virtual_end": 23778608925422,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 362842247,
+        "byte_end": 362907782,
+        "virtual_start": 23779229499392,
+        "virtual_end": 23779229550677,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 362854160,
+        "byte_end": 362932153,
+        "virtual_start": 23780010229760,
+        "virtual_end": 23780826738509,
+        "fetched_bytes": 77994
+      },
+      {
+        "byte_start": 362883530,
+        "byte_end": 362967336,
+        "virtual_start": 23781935043600,
+        "virtual_end": 23783132484531,
+        "fetched_bytes": 83807
+      },
+      {
+        "byte_start": 370794828,
+        "byte_end": 370892675,
+        "virtual_start": 24300409893235,
+        "virtual_end": 24302527485336,
+        "fetched_bytes": 97848
+      }
+    ],
+    "read_gene_overlaps": 0,
+    "unique_primary_mapq20_reads": 0,
+    "per_gene": {
+      "LY6G6E": 0,
+      "OR12D3": 0,
+      "OR5V1": 0,
+      "MUC21": 0,
+      "MUCL3": 0,
+      "OR12D2": 0
+    }
+  },
+  {
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/expression/mPonAbe1_v2.0.IsoSeq_testis.bam",
+    "species": "PAB",
+    "source_chrom": "CM054684.2",
+    "target_chrom_present": false,
+    "index_bytes": 2663120,
+    "bam_bytes_fetched": 3586810,
+    "range_requests": [
+      {
+        "byte_start": 242280311,
+        "byte_end": 242345846,
+        "virtual_start": 15878082503403,
+        "virtual_end": 15878082524799,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 242295833,
+        "byte_end": 242361368,
+        "virtual_start": 15879099715559,
+        "virtual_end": 15879099731549,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 242313478,
+        "byte_end": 242379013,
+        "virtual_start": 15880256097860,
+        "virtual_end": 15880256099637,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 242333496,
+        "byte_end": 242440756,
+        "virtual_start": 15881568000870,
+        "virtual_end": 15884302508323,
+        "fetched_bytes": 107261
+      },
+      {
+        "byte_start": 243994235,
+        "byte_end": 244169436,
+        "virtual_start": 15990406233646,
+        "virtual_end": 15997593320230,
+        "fetched_bytes": 175202
+      },
+      {
+        "byte_start": 244116508,
+        "byte_end": 244192300,
+        "virtual_start": 15998419468288,
+        "virtual_end": 15999091734949,
+        "fetched_bytes": 75793
+      },
+      {
+        "byte_start": 244138960,
+        "byte_end": 244204495,
+        "virtual_start": 15999890882560,
+        "virtual_end": 15999890943869,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 244151244,
+        "byte_end": 244227380,
+        "virtual_start": 16000695926784,
+        "virtual_end": 16001390734194,
+        "fetched_bytes": 76137
+      },
+      {
+        "byte_start": 244182876,
+        "byte_end": 244367857,
+        "virtual_start": 16002768961536,
+        "virtual_end": 16010597037650,
+        "fetched_bytes": 184982
+      },
+      {
+        "byte_start": 244316439,
+        "byte_end": 244381974,
+        "virtual_start": 16011522146304,
+        "virtual_end": 16011522208428,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 244327364,
+        "byte_end": 244516397,
+        "virtual_start": 16012238127104,
+        "virtual_end": 16020331756311,
+        "fetched_bytes": 189034
+      },
+      {
+        "byte_start": 244467815,
+        "byte_end": 244542817,
+        "virtual_start": 16021442725390,
+        "virtual_end": 16022063217130,
+        "fetched_bytes": 75003
+      },
+      {
+        "byte_start": 244489846,
+        "byte_end": 244677688,
+        "virtual_start": 16022886548296,
+        "virtual_end": 16030902119248,
+        "fetched_bytes": 187843
+      },
+      {
+        "byte_start": 244625282,
+        "byte_end": 244715622,
+        "virtual_start": 16031762481152,
+        "virtual_end": 16033388164848,
+        "fetched_bytes": 90341
+      },
+      {
+        "byte_start": 244664914,
+        "byte_end": 244786503,
+        "virtual_start": 16034359803904,
+        "virtual_end": 16038033423009,
+        "fetched_bytes": 121590
+      },
+      {
+        "byte_start": 244737442,
+        "byte_end": 244869702,
+        "virtual_start": 16039112998912,
+        "virtual_end": 16043485951245,
+        "fetched_bytes": 132261
+      },
+      {
+        "byte_start": 244823038,
+        "byte_end": 245222888,
+        "virtual_start": 16044722618368,
+        "virtual_end": 16066632299322,
+        "fetched_bytes": 399851
+      },
+      {
+        "byte_start": 245177935,
+        "byte_end": 245243470,
+        "virtual_start": 16067981158905,
+        "virtual_end": 16067981209334,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 245199622,
+        "byte_end": 245265157,
+        "virtual_start": 16069402481995,
+        "virtual_end": 16069402484443,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 245223328,
+        "byte_end": 245304131,
+        "virtual_start": 16070956028369,
+        "virtual_end": 16071956663421,
+        "fetched_bytes": 80804
+      },
+      {
+        "byte_start": 246665808,
+        "byte_end": 247022535,
+        "virtual_start": 16165490402680,
+        "virtual_end": 16184573971766,
+        "fetched_bytes": 356728
+      },
+      {
+        "byte_start": 248253280,
+        "byte_end": 248318815,
+        "virtual_start": 16269527009044,
+        "virtual_end": 16269527010965,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 249151341,
+        "byte_end": 249216876,
+        "virtual_start": 16328382331963,
+        "virtual_end": 16328382344698,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 249167847,
+        "byte_end": 249233382,
+        "virtual_start": 16329464020992,
+        "virtual_end": 16329464083912,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 249181155,
+        "byte_end": 249272913,
+        "virtual_start": 16330336174080,
+        "virtual_end": 16332054784399,
+        "fetched_bytes": 91759
+      },
+      {
+        "byte_start": 249221925,
+        "byte_end": 249328440,
+        "virtual_start": 16333008076800,
+        "virtual_end": 16335693787491,
+        "fetched_bytes": 106516
+      },
+      {
+        "byte_start": 249410565,
+        "byte_end": 249476100,
+        "virtual_start": 16345370819882,
+        "virtual_end": 16345370847532,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 249431069,
+        "byte_end": 249508569,
+        "virtual_start": 16346714538795,
+        "virtual_end": 16347498738461,
+        "fetched_bytes": 77501
+      },
+      {
+        "byte_start": 249458953,
+        "byte_end": 249584460,
+        "virtual_start": 16348541970417,
+        "virtual_end": 16352472276912,
+        "fetched_bytes": 125508
+      },
+      {
+        "byte_start": 250316369,
+        "byte_end": 250397096,
+        "virtual_start": 16404733608745,
+        "virtual_end": 16405729219465,
+        "fetched_bytes": 80728
+      },
+      {
+        "byte_start": 263315512,
+        "byte_end": 263381047,
+        "virtual_start": 17256645428428,
+        "virtual_end": 17256645431311,
+        "fetched_bytes": 65536
+      }
+    ],
+    "read_gene_overlaps": 103,
+    "unique_primary_mapq20_reads": 67,
+    "per_gene": {
+      "LY6G6E": 1,
+      "OR12D3": 18,
+      "OR5V1": 24,
+      "MUC21": 0,
+      "MUCL3": 40,
+      "OR12D2": 20
+    }
+  },
+  {
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/expression/mPonPyg2_v2.0.IsoSeq_1_v0.9.bam",
+    "species": "PPY",
+    "source_chrom": "CM054635.2",
+    "target_chrom_present": false,
+    "index_bytes": 2199728,
+    "bam_bytes_fetched": 790469,
+    "range_requests": [
+      {
+        "byte_start": 183708159,
+        "byte_end": 183919964,
+        "virtual_start": 12039497937221,
+        "virtual_end": 12049083915993,
+        "fetched_bytes": 211806
+      },
+      {
+        "byte_start": 183862143,
+        "byte_end": 183927678,
+        "virtual_start": 12049589419566,
+        "virtual_end": 12049589441345,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 183869636,
+        "byte_end": 183935171,
+        "virtual_start": 12050080475598,
+        "virtual_end": 12050080514589,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 183879362,
+        "byte_end": 183944897,
+        "virtual_start": 12050717873193,
+        "virtual_end": 12050717921324,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 183894411,
+        "byte_end": 183970613,
+        "virtual_start": 12051704127243,
+        "virtual_end": 12052403209771,
+        "fetched_bytes": 76203
+      },
+      {
+        "byte_start": 188206296,
+        "byte_end": 188381075,
+        "virtual_start": 12334287862254,
+        "virtual_end": 12341447240374,
+        "fetched_bytes": 174780
+      },
+      {
+        "byte_start": 192075905,
+        "byte_end": 192141440,
+        "virtual_start": 12587886526931,
+        "virtual_end": 12587886532630,
+        "fetched_bytes": 65536
+      }
+    ],
+    "read_gene_overlaps": 0,
+    "unique_primary_mapq20_reads": 0,
+    "per_gene": {
+      "MUC21": 0,
+      "MUCL3": 0
+    }
+  },
+  {
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/expression/mPonPyg2_v2.0.IsoSeq_2_v0.9.bam",
+    "species": "PPY",
+    "source_chrom": "CM054635.2",
+    "target_chrom_present": false,
+    "index_bytes": 2639968,
+    "bam_bytes_fetched": 3257724,
+    "range_requests": [
+      {
+        "byte_start": 320597923,
+        "byte_end": 320754767,
+        "virtual_start": 21010705522787,
+        "virtual_end": 21016689561123,
+        "fetched_bytes": 156845
+      },
+      {
+        "byte_start": 320786820,
+        "byte_end": 320852355,
+        "virtual_start": 21023085045111,
+        "virtual_end": 21023085096155,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 320801870,
+        "byte_end": 320867405,
+        "virtual_start": 21024071361505,
+        "virtual_end": 21024071395926,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 320813346,
+        "byte_end": 320878881,
+        "virtual_start": 21024823475139,
+        "virtual_end": 21024823477801,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 320823922,
+        "byte_end": 320889457,
+        "virtual_start": 21025516557431,
+        "virtual_end": 21025516611211,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 320833814,
+        "byte_end": 320899349,
+        "virtual_start": 21026164850207,
+        "virtual_end": 21026164890906,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 320842646,
+        "byte_end": 320908181,
+        "virtual_start": 21026743695429,
+        "virtual_end": 21026743701340,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 320849370,
+        "byte_end": 320914905,
+        "virtual_start": 21027184328534,
+        "virtual_end": 21027184370771,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 320860936,
+        "byte_end": 320926471,
+        "virtual_start": 21027942312304,
+        "virtual_end": 21027942358193,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 320869629,
+        "byte_end": 320935164,
+        "virtual_start": 21028512048805,
+        "virtual_end": 21028512068104,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 320877782,
+        "byte_end": 320943317,
+        "virtual_start": 21029046326489,
+        "virtual_end": 21029046360905,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 320888209,
+        "byte_end": 320953744,
+        "virtual_start": 21029729678358,
+        "virtual_end": 21029729718801,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 320897071,
+        "byte_end": 320962606,
+        "virtual_start": 21030310453136,
+        "virtual_end": 21030310496559,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 320908219,
+        "byte_end": 320973754,
+        "virtual_start": 21031041073082,
+        "virtual_end": 21031041102852,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 320920306,
+        "byte_end": 320985841,
+        "virtual_start": 21031833200821,
+        "virtual_end": 21031833235734,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 320930446,
+        "byte_end": 320995981,
+        "virtual_start": 21032497743498,
+        "virtual_end": 21032497760137,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 320940654,
+        "byte_end": 321006189,
+        "virtual_start": 21033166713749,
+        "virtual_end": 21033166735684,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 320948246,
+        "byte_end": 321028305,
+        "virtual_start": 21033664249856,
+        "virtual_end": 21034616129980,
+        "fetched_bytes": 80060
+      },
+      {
+        "byte_start": 320972508,
+        "byte_end": 321038043,
+        "virtual_start": 21035254300162,
+        "virtual_end": 21035254343266,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 320980689,
+        "byte_end": 321046224,
+        "virtual_start": 21035790447477,
+        "virtual_end": 21035790487495,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 320988597,
+        "byte_end": 321054132,
+        "virtual_start": 21036308737935,
+        "virtual_end": 21036308749143,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 320997322,
+        "byte_end": 321062857,
+        "virtual_start": 21036880497253,
+        "virtual_end": 21036880537494,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 321006418,
+        "byte_end": 321071953,
+        "virtual_start": 21037476612676,
+        "virtual_end": 21037476671236,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 321013604,
+        "byte_end": 321079139,
+        "virtual_start": 21037947591332,
+        "virtual_end": 21037947609998,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 321022627,
+        "byte_end": 321088162,
+        "virtual_start": 21038538937729,
+        "virtual_end": 21038538937932,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 321030393,
+        "byte_end": 321095928,
+        "virtual_start": 21039047857209,
+        "virtual_end": 21039047877455,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 321042698,
+        "byte_end": 321108233,
+        "virtual_start": 21039854271920,
+        "virtual_end": 21039854316429,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 321054158,
+        "byte_end": 321119693,
+        "virtual_start": 21040605322302,
+        "virtual_end": 21040605356852,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 321066083,
+        "byte_end": 321131618,
+        "virtual_start": 21041386852533,
+        "virtual_end": 21041386866091,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 321076843,
+        "byte_end": 321153856,
+        "virtual_start": 21042091993539,
+        "virtual_end": 21042844267544,
+        "fetched_bytes": 77014
+      },
+      {
+        "byte_start": 321100599,
+        "byte_end": 321166134,
+        "virtual_start": 21043648879930,
+        "virtual_end": 21043648883332,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 321109635,
+        "byte_end": 321175170,
+        "virtual_start": 21044241052700,
+        "virtual_end": 21044241087666,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 321121795,
+        "byte_end": 321187330,
+        "virtual_start": 21045037957120,
+        "virtual_end": 21045037970504,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 321135097,
+        "byte_end": 321200632,
+        "virtual_start": 21045909722270,
+        "virtual_end": 21045909757476,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 321149383,
+        "byte_end": 321214918,
+        "virtual_start": 21046845972283,
+        "virtual_end": 21046846022745,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 321167766,
+        "byte_end": 321233301,
+        "virtual_start": 21048050725272,
+        "virtual_end": 21048050770700,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 321178507,
+        "byte_end": 321253470,
+        "virtual_start": 21048754637223,
+        "virtual_end": 21049372521376,
+        "fetched_bytes": 74964
+      },
+      {
+        "byte_start": 328071729,
+        "byte_end": 328137264,
+        "virtual_start": 21500508879115,
+        "virtual_end": 21500508882487,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 328909557,
+        "byte_end": 328975092,
+        "virtual_start": 21555416773762,
+        "virtual_end": 21555416782549,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 328985117,
+        "byte_end": 329265302,
+        "virtual_start": 21560368627712,
+        "virtual_end": 21574435992526,
+        "fetched_bytes": 280186
+      },
+      {
+        "byte_start": 336973900,
+        "byte_end": 337039435,
+        "virtual_start": 22083921544332,
+        "virtual_end": 22083921549015,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 347599200,
+        "byte_end": 347664735,
+        "virtual_start": 22780261192484,
+        "virtual_end": 22780261220476,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 347616080,
+        "byte_end": 347714366,
+        "virtual_start": 22781367418880,
+        "virtual_end": 22783513816944,
+        "fetched_bytes": 98287
+      }
+    ],
+    "read_gene_overlaps": 0,
+    "unique_primary_mapq20_reads": 0,
+    "per_gene": {
+      "MUC21": 0,
+      "MUCL3": 0
+    }
+  },
+  {
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/expression/mPonPyg2_v2.0.IsoSeq_testis.bam",
+    "species": "PPY",
+    "source_chrom": "CM054635.2",
+    "target_chrom_present": false,
+    "index_bytes": 3649920,
+    "bam_bytes_fetched": 954692,
+    "range_requests": [
+      {
+        "byte_start": 527851482,
+        "byte_end": 527917017,
+        "virtual_start": 34593274766734,
+        "virtual_end": 34593274777225,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 527868329,
+        "byte_end": 528108760,
+        "virtual_start": 34594378820650,
+        "virtual_end": 34605840805470,
+        "fetched_bytes": 240432
+      },
+      {
+        "byte_start": 528930458,
+        "byte_end": 528995993,
+        "virtual_start": 34663986547967,
+        "virtual_end": 34663986549931,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 529161468,
+        "byte_end": 529258369,
+        "virtual_start": 34679125972351,
+        "virtual_end": 34681181621933,
+        "fetched_bytes": 96902
+      },
+      {
+        "byte_start": 539438870,
+        "byte_end": 539568855,
+        "virtual_start": 35352665838729,
+        "virtual_end": 35356889592484,
+        "fetched_bytes": 129986
+      },
+      {
+        "byte_start": 541876466,
+        "byte_end": 542036157,
+        "virtual_start": 35512416093350,
+        "virtual_end": 35518586725893,
+        "fetched_bytes": 159692
+      },
+      {
+        "byte_start": 556372812,
+        "byte_end": 556438347,
+        "virtual_start": 36462448629190,
+        "virtual_end": 36462448653966,
+        "fetched_bytes": 65536
+      },
+      {
+        "byte_start": 611684770,
+        "byte_end": 611750305,
+        "virtual_start": 40087373098345,
+        "virtual_end": 40087373142937,
+        "fetched_bytes": 65536
+      }
+    ],
+    "read_gene_overlaps": 18,
+    "unique_primary_mapq20_reads": 18,
+    "per_gene": {
+      "MUC21": 0,
+      "MUCL3": 18
+    }
+  }
+]

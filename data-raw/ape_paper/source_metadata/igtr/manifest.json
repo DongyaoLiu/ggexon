@@ -1,0 +1,1373 @@
+{
+  "repository_commit": "22685e8819da7cf98d5e8b7c4b4c2495802468ce",
+  "sources": [
+    {
+      "path": "supplementary_data_1.csv",
+      "bytes": 14380748,
+      "sha256": "7f6c9c3d5ff43f1bd6e5e32673fb3c4ea4e450308792865a340619e94c8b003b",
+      "url": "https://media.springernature.com/original/springer-static/esm/art%3A10.1038%2Fs41586-025-08816-3/MediaObjects/41586_2025_8816_MOESM5_ESM.csv"
+    },
+    {
+      "path": "repo/data_primate_igtrloci_locus_config.csv",
+      "bytes": 5203,
+      "sha256": "c5e318afd5b0f340796e1c0a4ec43622abaf9c9a4080e9f341e95529973e2e96",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_igtrloci_locus_config.csv"
+    },
+    {
+      "path": "repo/README.md",
+      "bytes": 1840,
+      "sha256": "0a75fd62439be3c470ac48c609f405a2e3f38795820f85f1099e013a08723cb8",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/README.md"
+    },
+    {
+      "path": "repo/visualize_genome_diagram.py",
+      "bytes": 4863,
+      "sha256": "1ed812d6e511a1d52ed982db301474a832889367f60565226e52f66ebe91d7bf",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/visualize_genome_diagram.py"
+    },
+    {
+      "path": "repo/data_primate_gene_positions/mPonAbe1_hap2_TRA.csv",
+      "bytes": 26315,
+      "sha256": "427ebc4d91f21ee845c42ab0b6c8f7c2caab1014967c98db952e485fff1846a6",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_gene_positions/mPonAbe1_hap2_TRA.csv"
+    },
+    {
+      "path": "repo/data_primate_gene_positions/mPonAbe1_hap2_TRB.csv",
+      "bytes": 25333,
+      "sha256": "b0fe1c2b8c0036c5069ac7ffefd286579042390cc64433b2253d54de96584821",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_gene_positions/mPonAbe1_hap2_TRB.csv"
+    },
+    {
+      "path": "repo/data_primate_gene_positions/mPonPyg2_hap1_TRG.csv",
+      "bytes": 4355,
+      "sha256": "3c70e88ccbdcfb79099c5fd46750a9fafa7de276220213e202427ff10e9196dd",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_gene_positions/mPonPyg2_hap1_TRG.csv"
+    },
+    {
+      "path": "repo/data_primate_gene_positions/mPonAbe1_hap2_TRG.csv",
+      "bytes": 4748,
+      "sha256": "e7ec24d57e2fd1c140e41d1dae47e12e14aa239c2b5184aa9b39c3aac39dea5e",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_gene_positions/mPonAbe1_hap2_TRG.csv"
+    },
+    {
+      "path": "repo/data_primate_gene_positions/mPonPyg2_hap1_TRB.csv",
+      "bytes": 23053,
+      "sha256": "1e776904c8eeb9e14562e9cac65a7329aaea3d8f73907a7987390fbd6304d734",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_gene_positions/mPonPyg2_hap1_TRB.csv"
+    },
+    {
+      "path": "repo/data_primate_gene_positions/mPonPyg2_hap1_TRA.csv",
+      "bytes": 26692,
+      "sha256": "fc6324ce2f06db743f2181ff7196dcedeb13859efa9a7e3eda571f0bbf25cadf",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_gene_positions/mPonPyg2_hap1_TRA.csv"
+    },
+    {
+      "path": "repo/data_primate_gene_positions/mPonPyg2_hap2_TRG.csv",
+      "bytes": 4355,
+      "sha256": "fbbecebfc333e658fa1b107cf8fc76159e44e62bcd90f76caf5f12c382d3cc94",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_gene_positions/mPonPyg2_hap2_TRG.csv"
+    },
+    {
+      "path": "repo/data_primate_gene_positions/mGorGor1_mat_TRG.csv",
+      "bytes": 3530,
+      "sha256": "65704d763cfb477de177ddf99229ab440141cb5fd3fc8d4f90efb2ac3c29955e",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_gene_positions/mGorGor1_mat_TRG.csv"
+    },
+    {
+      "path": "repo/data_primate_gene_positions/mPonAbe1_hap1_TRB.csv",
+      "bytes": 23052,
+      "sha256": "09af0941189be1c0416df39d9b140bf5a289f8b232991c4a8b7f420a3ef82046",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_gene_positions/mPonAbe1_hap1_TRB.csv"
+    },
+    {
+      "path": "repo/data_primate_gene_positions/mGorGor1_pat_IGL.csv",
+      "bytes": 13798,
+      "sha256": "f3dbb1c506759e33b5dd285a2240f5c19f55bb0dbaadee4f2423eb68dd3c3d1d",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_gene_positions/mGorGor1_pat_IGL.csv"
+    },
+    {
+      "path": "repo/data_primate_gene_positions/mPanPan1_mat_IGH.csv",
+      "bytes": 27671,
+      "sha256": "ef182d6185e788a9d3f9e17a9df8df73fa7059f47f161261c628b8d3ed120f44",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_gene_positions/mPanPan1_mat_IGH.csv"
+    },
+    {
+      "path": "repo/data_primate_gene_positions/mPanPan1_pat_TRB.csv",
+      "bytes": 21703,
+      "sha256": "9582f71887665416134dd1dc1f4e78bb33016d282bc1dd11559be7ab9095d8f5",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_gene_positions/mPanPan1_pat_TRB.csv"
+    },
+    {
+      "path": "repo/data_primate_gene_positions/mPonAbe1_hap1_TRA.csv",
+      "bytes": 26329,
+      "sha256": "a0c720a4c524144e52eed82272f6b1177e593cad076bb0b6b57469070c11517a",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_gene_positions/mPonAbe1_hap1_TRA.csv"
+    },
+    {
+      "path": "repo/data_primate_gene_positions/mPanPan1_mat_IGK.csv",
+      "bytes": 13442,
+      "sha256": "f7e1cfb2793b2b27f961cbe873e58ed59c9495248b56c5d3695c8586909f91d6",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_gene_positions/mPanPan1_mat_IGK.csv"
+    },
+    {
+      "path": "repo/data_primate_gene_positions/mPanPan1_pat_TRA.csv",
+      "bytes": 25562,
+      "sha256": "c316c74b3e5699bdcce1934285e43522f720fae83849bb78dfd4fce36476f7bb",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_gene_positions/mPanPan1_pat_TRA.csv"
+    },
+    {
+      "path": "repo/data_primate_gene_positions/mPonPyg2_hap2_TRA.csv",
+      "bytes": 26302,
+      "sha256": "5c13ae5b588f102f0140e8ea10135ad0024bfcce40c4a3a5b190d830709e822d",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_gene_positions/mPonPyg2_hap2_TRA.csv"
+    },
+    {
+      "path": "repo/data_primate_gene_positions/mGorGor1_mat_TRA.csv",
+      "bytes": 27007,
+      "sha256": "b1fe54ab6222c0164941fc0742fd25ef2f093d9dfc87ce9e5d6cc3023b82f1af",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_gene_positions/mGorGor1_mat_TRA.csv"
+    },
+    {
+      "path": "repo/data_primate_gene_positions/mGorGor1_pat_IGK.csv",
+      "bytes": 11892,
+      "sha256": "df1eaa19857c176d8970180d54ef7aea0cafdd173912ca5277c7adfb192716cb",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_gene_positions/mGorGor1_pat_IGK.csv"
+    },
+    {
+      "path": "repo/data_primate_gene_positions/mPonPyg2_hap2_TRB.csv",
+      "bytes": 22293,
+      "sha256": "a3d988482de7c6ab1305ad431f7deb5b0bd4dcf88750880f3aec40bc30d20d2d",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_gene_positions/mPonPyg2_hap2_TRB.csv"
+    },
+    {
+      "path": "repo/data_primate_gene_positions/mGorGor1_mat_TRB.csv",
+      "bytes": 20571,
+      "sha256": "48983c03d3836337cdb0e90381b20a67953a1f1b58a5c63e080ad72a7a07bf4e",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_gene_positions/mGorGor1_mat_TRB.csv"
+    },
+    {
+      "path": "repo/data_primate_gene_positions/mPanPan1_mat_IGL.csv",
+      "bytes": 15280,
+      "sha256": "46ec766e9339c36957040487c3aab8be46ac5a8a666e7fed713defe8f536c5a5",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_gene_positions/mPanPan1_mat_IGL.csv"
+    },
+    {
+      "path": "repo/data_primate_gene_positions/mGorGor1_pat_IGH.csv",
+      "bytes": 25431,
+      "sha256": "42f650356defc578c57b6810702f580f36336b9f17af299303e9d76a58545041",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_gene_positions/mGorGor1_pat_IGH.csv"
+    },
+    {
+      "path": "repo/data_primate_gene_positions/mPonAbe1_hap1_TRG.csv",
+      "bytes": 4357,
+      "sha256": "c90fe40cd9a9c926f305cb4861738b501011a91a1afa556f861402c7dc0fc76e",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_gene_positions/mPonAbe1_hap1_TRG.csv"
+    },
+    {
+      "path": "repo/data_primate_gene_positions/mPanPan1_pat_TRG.csv",
+      "bytes": 3927,
+      "sha256": "da69428c3102b4b02b887d90246813e6969f98220501ba2173597a5f49ad2327",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_gene_positions/mPanPan1_pat_TRG.csv"
+    },
+    {
+      "path": "repo/data_primate_gene_positions/mPonAbe1_hap1_IGL.csv",
+      "bytes": 12618,
+      "sha256": "38d5a9a8097123bde0ef405f25684690bc643d51d28c63ab58509b8207e382ea",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_gene_positions/mPonAbe1_hap1_IGL.csv"
+    },
+    {
+      "path": "repo/data_primate_gene_positions/mPanPan1_mat_TRG.csv",
+      "bytes": 4316,
+      "sha256": "c2c3cd3b37441ccbb4b11b31960d6bc51249f7f28d08596bb860d3ba89b37f81",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_gene_positions/mPanPan1_mat_TRG.csv"
+    },
+    {
+      "path": "repo/data_primate_gene_positions/mPanPan1_pat_IGL.csv",
+      "bytes": 14482,
+      "sha256": "8237a3a0059830c21d227467cdb24622c0c0a9345e7c9c777998480388ba4166",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_gene_positions/mPanPan1_pat_IGL.csv"
+    },
+    {
+      "path": "repo/data_primate_gene_positions/mPonPyg2_hap2_IGH.csv",
+      "bytes": 33962,
+      "sha256": "94b911561c635277fd6cda550920f746bd2e666d6fb78b37dd67f1db3f894eca",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_gene_positions/mPonPyg2_hap2_IGH.csv"
+    },
+    {
+      "path": "repo/data_primate_gene_positions/mGorGor1_mat_IGH.csv",
+      "bytes": 24950,
+      "sha256": "00449272aed7d180b372387c9ca59dc42bffbb6f78b8bdc4e433780af164e3ac",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_gene_positions/mGorGor1_mat_IGH.csv"
+    },
+    {
+      "path": "repo/data_primate_gene_positions/mGorGor1_pat_TRB.csv",
+      "bytes": 20571,
+      "sha256": "67cabf0910c51185d5c1d5854816af2365b5dcdcbd69af3336db33ea7aa5c65c",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_gene_positions/mGorGor1_pat_TRB.csv"
+    },
+    {
+      "path": "repo/data_primate_gene_positions/mPonPyg2_hap2_IGK.csv",
+      "bytes": 15434,
+      "sha256": "02eaca73178eee440d1c6d2c3f47faf92e7812c7d644d8fdac3abfa912426b44",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_gene_positions/mPonPyg2_hap2_IGK.csv"
+    },
+    {
+      "path": "repo/data_primate_gene_positions/mGorGor1_mat_IGK.csv",
+      "bytes": 12690,
+      "sha256": "bc96407a07819333207c2ec2043ad1a188d21e705d0573afce0bcc88f6122f20",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_gene_positions/mGorGor1_mat_IGK.csv"
+    },
+    {
+      "path": "repo/data_primate_gene_positions/mGorGor1_pat_TRA.csv",
+      "bytes": 26639,
+      "sha256": "95462ea283509d9ff4e9e8b43135f004275a1f7a9d2c4b9b48fb5f5747b53ce7",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_gene_positions/mGorGor1_pat_TRA.csv"
+    },
+    {
+      "path": "repo/data_primate_gene_positions/mPanPan1_mat_TRA.csv",
+      "bytes": 25562,
+      "sha256": "df611c82cbbcb3cb008bbd8ba37b5f7e85b35b2b70925a6d778e9e3b337c3773",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_gene_positions/mPanPan1_mat_TRA.csv"
+    },
+    {
+      "path": "repo/data_primate_gene_positions/mPanPan1_pat_IGK.csv",
+      "bytes": 13063,
+      "sha256": "b3717c3d0531c7f77ce392516101052ed1ebd9f71f7bdf6e5c1882aff0ac6dd3",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_gene_positions/mPanPan1_pat_IGK.csv"
+    },
+    {
+      "path": "repo/data_primate_gene_positions/mPonAbe1_hap1_IGK.csv",
+      "bytes": 15451,
+      "sha256": "8128eeef0acaaf820783496ef45427cc91067c25120deafdc027c6dd8fbb24de",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_gene_positions/mPonAbe1_hap1_IGK.csv"
+    },
+    {
+      "path": "repo/data_primate_gene_positions/mPanPan1_mat_TRB.csv",
+      "bytes": 22079,
+      "sha256": "e071962a909c74cbedf393786fe8ef9d80273e8ac54e41503bf962b70a6f890a",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_gene_positions/mPanPan1_mat_TRB.csv"
+    },
+    {
+      "path": "repo/data_primate_gene_positions/mGorGor1_mat_IGL.csv",
+      "bytes": 12539,
+      "sha256": "473c45f708e9e0d9f8495bd923e5cdbb8197d9a1fcc22e47b01035e910e81c72",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_gene_positions/mGorGor1_mat_IGL.csv"
+    },
+    {
+      "path": "repo/data_primate_gene_positions/mPonPyg2_hap2_IGL.csv",
+      "bytes": 14989,
+      "sha256": "d2d0f45718f80ac553280f092d40ecef755d67e6c44f73bb5b72e8bf38599de1",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_gene_positions/mPonPyg2_hap2_IGL.csv"
+    },
+    {
+      "path": "repo/data_primate_gene_positions/mPanPan1_pat_IGH.csv",
+      "bytes": 30136,
+      "sha256": "eab626e2a54f12bc7dc3decda23567b8fc47f2c08bea1673cdd5062e227de8e4",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_gene_positions/mPanPan1_pat_IGH.csv"
+    },
+    {
+      "path": "repo/data_primate_gene_positions/mPonAbe1_hap1_IGH.csv",
+      "bytes": 30823,
+      "sha256": "4cf4d94d7b64b841135a252c74b515f0b57a4aa23537f86ad4b674b6a4744220",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_gene_positions/mPonAbe1_hap1_IGH.csv"
+    },
+    {
+      "path": "repo/data_primate_gene_positions/mGorGor1_pat_TRG.csv",
+      "bytes": 3530,
+      "sha256": "0c547d2a412f53fb209c531b7dac9b1a3dadeb892f772bbc281b2e48f6e34d7d",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_gene_positions/mGorGor1_pat_TRG.csv"
+    },
+    {
+      "path": "repo/data_primate_gene_positions/mPonPyg2_hap1_IGK.csv",
+      "bytes": 15067,
+      "sha256": "0fc883cf60d710d891dcd17999ccb9ccffa8f6a7ed40c1ba7b20d900ca47b1fa",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_gene_positions/mPonPyg2_hap1_IGK.csv"
+    },
+    {
+      "path": "repo/data_primate_gene_positions/mPonAbe1_hap2_IGL.csv",
+      "bytes": 11548,
+      "sha256": "f0fc1e78a9f3435633f5d2898b94c4f1e1f62999e7a200a18ffe0309097cde74",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_gene_positions/mPonAbe1_hap2_IGL.csv"
+    },
+    {
+      "path": "repo/data_primate_gene_positions/mPonPyg2_hap1_IGH.csv",
+      "bytes": 32922,
+      "sha256": "ea2a51906e7435aa59c8d778c98f0483018f3ab60a87b4c0a4c95003bea1b9c1",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_gene_positions/mPonPyg2_hap1_IGH.csv"
+    },
+    {
+      "path": "repo/data_primate_gene_positions/mPonPyg2_hap1_IGL.csv",
+      "bytes": 15373,
+      "sha256": "f1b2d94b9b7dfb9275680045085fefa52bda66be067a73bb4dfeecad6fce84ec",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_gene_positions/mPonPyg2_hap1_IGL.csv"
+    },
+    {
+      "path": "repo/data_primate_gene_positions/mPonAbe1_hap2_IGH.csv",
+      "bytes": 27671,
+      "sha256": "0e76033b1ce5dba14361fc0e3d5c9b67b0bb396fcc1a9ed7b7d28892df528ad6",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_gene_positions/mPonAbe1_hap2_IGH.csv"
+    },
+    {
+      "path": "repo/data_primate_gene_positions/mPonAbe1_hap2_IGK.csv",
+      "bytes": 15067,
+      "sha256": "799da68bbd8b919427f799c1d13ae54d71237223f95661ddab1363ccc5b102e1",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_gene_positions/mPonAbe1_hap2_IGK.csv"
+    },
+    {
+      "path": "repo/data_locus_alignments/alignments_IGH/mPanPan1_mat_mPanPan1_pat_range.txt",
+      "bytes": 441,
+      "sha256": "06aae31b74e1155ab3d3805ade0cc582353e67562d71a2d86254bd8fc9873358",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_locus_alignments/alignments_IGH/mPanPan1_mat_mPanPan1_pat_range.txt"
+    },
+    {
+      "path": "repo/data_locus_alignments/alignments_IGH/mPonPyg2_hap1_mPonPyg2_hap2_range.txt",
+      "bytes": 663,
+      "sha256": "49ba1dbc86f3fbb24317f77a9cc3ba24e6aec36d561c38cf8f2386437a61d915",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_locus_alignments/alignments_IGH/mPonPyg2_hap1_mPonPyg2_hap2_range.txt"
+    },
+    {
+      "path": "repo/data_locus_alignments/alignments_IGH/mPonAbe1_hap1_mPonAbe1_hap2_range.txt",
+      "bytes": 346,
+      "sha256": "e27d5aca72c12573d5b7f3d5971570e9a3bbc47c7fee0bce99b042863bfdad62",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_locus_alignments/alignments_IGH/mPonAbe1_hap1_mPonAbe1_hap2_range.txt"
+    },
+    {
+      "path": "repo/data_locus_alignments/alignments_IGH/mGorGor1_pat_mPonAbe1_hap1_range.txt",
+      "bytes": 308,
+      "sha256": "f7f9b228b612a93f066e678a068e45862ef1452b5688252c232a3b177a385ddc",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_locus_alignments/alignments_IGH/mGorGor1_pat_mPonAbe1_hap1_range.txt"
+    },
+    {
+      "path": "repo/data_locus_alignments/alignments_IGH/mPanPan1_pat_human_T2T_range.txt",
+      "bytes": 269,
+      "sha256": "80b20f430cd06a80aecf893ee28c0c82cff24103556002c1ccb419bf82828e57",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_locus_alignments/alignments_IGH/mPanPan1_pat_human_T2T_range.txt"
+    },
+    {
+      "path": "repo/data_locus_alignments/alignments_IGH/mPonAbe1_hap2_mPonPyg2_hap1_range.txt",
+      "bytes": 416,
+      "sha256": "313efc2d0800dab9abb0936c8470eaa676895b4dcbe3bcc06ff184f59b0986cc",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_locus_alignments/alignments_IGH/mPonAbe1_hap2_mPonPyg2_hap1_range.txt"
+    },
+    {
+      "path": "repo/data_locus_alignments/alignments_IGH/human_T2T_mGorGor1_mat_range.txt",
+      "bytes": 204,
+      "sha256": "7a54ffe8e67feab8095985c2c22efe2bdba7eff0d18bf7edd393a469ac77a2b0",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_locus_alignments/alignments_IGH/human_T2T_mGorGor1_mat_range.txt"
+    },
+    {
+      "path": "repo/data_locus_alignments/alignments_IGH/mGorGor1_mat_mGorGor1_pat_range.txt",
+      "bytes": 366,
+      "sha256": "e963c067d36c0fc4544e318b0acc31ad047ed56e2b843d6461b07fa2f69e7372",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_locus_alignments/alignments_IGH/mGorGor1_mat_mGorGor1_pat_range.txt"
+    },
+    {
+      "path": "repo/data_locus_alignments/alignments_TRB/mPanPan1_mat_mPanPan1_pat_range.txt",
+      "bytes": 326,
+      "sha256": "68cc17156058a5150bfaa0e12cffb6d9b5db169bbe659b113b1a420013763706",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_locus_alignments/alignments_TRB/mPanPan1_mat_mPanPan1_pat_range.txt"
+    },
+    {
+      "path": "repo/data_locus_alignments/alignments_TRB/mPonPyg2_hap1_mPonPyg2_hap2_range.txt",
+      "bytes": 429,
+      "sha256": "c29a5e18fc8f8f5dae8d72aee547e15c956a3596977f1111861c91ae6fc7b6a9",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_locus_alignments/alignments_TRB/mPonPyg2_hap1_mPonPyg2_hap2_range.txt"
+    },
+    {
+      "path": "repo/data_locus_alignments/alignments_TRB/mPonAbe1_hap1_mPonAbe1_hap2_range.txt",
+      "bytes": 271,
+      "sha256": "f22ef22d92b41291c603a76851c9373d30afc2a48706ae8d78c646f0dd3bdaee",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_locus_alignments/alignments_TRB/mPonAbe1_hap1_mPonAbe1_hap2_range.txt"
+    },
+    {
+      "path": "repo/data_locus_alignments/alignments_TRB/mGorGor1_pat_mPonAbe1_hap1_range.txt",
+      "bytes": 238,
+      "sha256": "95eb0314d79c39f6be2d32f826deebc122cef2d932fbc0ee63165ce3668f235d",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_locus_alignments/alignments_TRB/mGorGor1_pat_mPonAbe1_hap1_range.txt"
+    },
+    {
+      "path": "repo/data_locus_alignments/alignments_TRB/mPanPan1_pat_human_T2T_range.txt",
+      "bytes": 268,
+      "sha256": "43ea68631efa7b64f0b27d68c361da2c6d19f38612f835ec5b3260b2bf0a1b02",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_locus_alignments/alignments_TRB/mPanPan1_pat_human_T2T_range.txt"
+    },
+    {
+      "path": "repo/data_locus_alignments/alignments_TRB/mPonAbe1_hap2_mPonPyg2_hap1_range.txt",
+      "bytes": 293,
+      "sha256": "dd398ea7ad581a5fccd285b7e88f5b1ebfd580ba04ed9f139e0001fe85fe6864",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_locus_alignments/alignments_TRB/mPonAbe1_hap2_mPonPyg2_hap1_range.txt"
+    },
+    {
+      "path": "repo/data_locus_alignments/alignments_TRB/human_T2T_mGorGor1_mat_range.txt",
+      "bytes": 129,
+      "sha256": "22025cdfab7b68e5110fd1b21e3148af5659ad7d7612e78e506ca9b94d26d30d",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_locus_alignments/alignments_TRB/human_T2T_mGorGor1_mat_range.txt"
+    },
+    {
+      "path": "repo/data_locus_alignments/alignments_TRB/mGorGor1_mat_mGorGor1_pat_range.txt",
+      "bytes": 161,
+      "sha256": "557d74a1606f42ab260d0933a2176a4e41cac455b07f1209c504a7dd3558e642",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_locus_alignments/alignments_TRB/mGorGor1_mat_mGorGor1_pat_range.txt"
+    },
+    {
+      "path": "repo/data_locus_alignments/alignments_IGK/mPanPan1_mat_mPanPan1_pat_range.txt",
+      "bytes": 260,
+      "sha256": "d9399bda36c1c33a9b669c438fa8debfd7ea324309e512738c03b339f82406f7",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_locus_alignments/alignments_IGK/mPanPan1_mat_mPanPan1_pat_range.txt"
+    },
+    {
+      "path": "repo/data_locus_alignments/alignments_IGK/mPonPyg2_hap1_mPonPyg2_hap2_range.txt",
+      "bytes": 394,
+      "sha256": "7eb1c148b0602f3a9a4f5ae186c3cd0488cccc08af08ab137d096a507cbfcb3d",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_locus_alignments/alignments_IGK/mPonPyg2_hap1_mPonPyg2_hap2_range.txt"
+    },
+    {
+      "path": "repo/data_locus_alignments/alignments_IGK/mPonAbe1_hap1_mPonAbe1_hap2_range.txt",
+      "bytes": 434,
+      "sha256": "1167d95d865da51afcb4ef19df6f9ab78b603f8d017ca52fb471628a52fef72e",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_locus_alignments/alignments_IGK/mPonAbe1_hap1_mPonAbe1_hap2_range.txt"
+    },
+    {
+      "path": "repo/data_locus_alignments/alignments_IGK/mGorGor1_pat_mPonAbe1_hap1_range.txt",
+      "bytes": 237,
+      "sha256": "05128d49ab73bd3c15f64b7905fe1fe9d6548bff22e8cae1fd4283bd342769c4",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_locus_alignments/alignments_IGK/mGorGor1_pat_mPonAbe1_hap1_range.txt"
+    },
+    {
+      "path": "repo/data_locus_alignments/alignments_IGK/mPanPan1_pat_human_T2T_range.txt",
+      "bytes": 171,
+      "sha256": "47a4a21b82559f012cea96b65584667be8ad3b00caacef285610fd4aeeb87f09",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_locus_alignments/alignments_IGK/mPanPan1_pat_human_T2T_range.txt"
+    },
+    {
+      "path": "repo/data_locus_alignments/alignments_IGK/mPonAbe1_hap2_mPonPyg2_hap1_range.txt",
+      "bytes": 360,
+      "sha256": "bf0f5b5b5bca3def4334a67cb2d009dc52b562fb838e84a18256af6744ed42ad",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_locus_alignments/alignments_IGK/mPonAbe1_hap2_mPonPyg2_hap1_range.txt"
+    },
+    {
+      "path": "repo/data_locus_alignments/alignments_IGK/human_T2T_mGorGor1_mat_range.txt",
+      "bytes": 248,
+      "sha256": "9210d14b5d8dfbe8f3275ee74af9c8da179ce82604699a11c0ee9209315b0444",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_locus_alignments/alignments_IGK/human_T2T_mGorGor1_mat_range.txt"
+    },
+    {
+      "path": "repo/data_locus_alignments/alignments_IGK/mGorGor1_mat_mGorGor1_pat_range.txt",
+      "bytes": 379,
+      "sha256": "64858ed2ae616d37aace0769bdb686382bdce963e49937911bca570627c25c0c",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_locus_alignments/alignments_IGK/mGorGor1_mat_mGorGor1_pat_range.txt"
+    },
+    {
+      "path": "repo/data_locus_alignments/alignments_IGL/mPanPan1_mat_mPanPan1_pat_range.txt",
+      "bytes": 674,
+      "sha256": "d033ab9dded50b432f39565bc7b64bfc31af07b46888d6c709370252c717b76e",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_locus_alignments/alignments_IGL/mPanPan1_mat_mPanPan1_pat_range.txt"
+    },
+    {
+      "path": "repo/data_locus_alignments/alignments_IGL/mPonPyg2_hap1_mPonPyg2_hap2_range.txt",
+      "bytes": 521,
+      "sha256": "71a0556d68e9693325414e2c7ec723508a42f75d2fb1a63bdf2a5cd7c8db0785",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_locus_alignments/alignments_IGL/mPonPyg2_hap1_mPonPyg2_hap2_range.txt"
+    },
+    {
+      "path": "repo/data_locus_alignments/alignments_IGL/mPonAbe1_hap1_mPonAbe1_hap2_range.txt",
+      "bytes": 270,
+      "sha256": "13f54f0aa1e83a921a73acb2266e349971c167089da119cb7282e8019a9a7a26",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_locus_alignments/alignments_IGL/mPonAbe1_hap1_mPonAbe1_hap2_range.txt"
+    },
+    {
+      "path": "repo/data_locus_alignments/alignments_IGL/mGorGor1_pat_mPonAbe1_hap1_range.txt",
+      "bytes": 234,
+      "sha256": "13a5a048e7345a48c7a22d4b4f7c4520dc770b071698f15fcc791dc7a856bf5e",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_locus_alignments/alignments_IGL/mGorGor1_pat_mPonAbe1_hap1_range.txt"
+    },
+    {
+      "path": "repo/data_locus_alignments/alignments_IGL/mPanPan1_pat_human_T2T_range.txt",
+      "bytes": 265,
+      "sha256": "8c651f3539e7a2380579cf2b75243b2516019bef971517eed1494809919498ce",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_locus_alignments/alignments_IGL/mPanPan1_pat_human_T2T_range.txt"
+    },
+    {
+      "path": "repo/data_locus_alignments/alignments_IGL/mPonAbe1_hap2_mPonPyg2_hap1_range.txt",
+      "bytes": 300,
+      "sha256": "b56a100b60476b1dbb4aa6612d03e8420bebb15187953561c4b70c6126074c87",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_locus_alignments/alignments_IGL/mPonAbe1_hap2_mPonPyg2_hap1_range.txt"
+    },
+    {
+      "path": "repo/data_locus_alignments/alignments_IGL/human_T2T_mGorGor1_mat_range.txt",
+      "bytes": 294,
+      "sha256": "704bc1ef9584d76596b436c63ed6aa2e1c1dbd8a98d3b6f7f4fc64cef8496011",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_locus_alignments/alignments_IGL/human_T2T_mGorGor1_mat_range.txt"
+    },
+    {
+      "path": "repo/data_locus_alignments/alignments_IGL/mGorGor1_mat_mGorGor1_pat_range.txt",
+      "bytes": 394,
+      "sha256": "39b207c869c8df463a147d2efefa7a1cc118c78fd649bde08523dbe3741ef55f",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_locus_alignments/alignments_IGL/mGorGor1_mat_mGorGor1_pat_range.txt"
+    },
+    {
+      "path": "repo/data_locus_alignments/alignments_TRG/mPanPan1_mat_mPanPan1_pat_range.txt",
+      "bytes": 67,
+      "sha256": "1e5bd1e672c75548a38c13e12c043dbcc5bb15e7474870341bc3a1c9fedfd9c6",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_locus_alignments/alignments_TRG/mPanPan1_mat_mPanPan1_pat_range.txt"
+    },
+    {
+      "path": "repo/data_locus_alignments/alignments_TRG/mPonPyg2_hap1_mPonPyg2_hap2_range.txt",
+      "bytes": 95,
+      "sha256": "f2920b9c64abaacd13534736a10191a8ace105614d02603b760a2791b7b55bbb",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_locus_alignments/alignments_TRG/mPonPyg2_hap1_mPonPyg2_hap2_range.txt"
+    },
+    {
+      "path": "repo/data_locus_alignments/alignments_TRG/mPonAbe1_hap1_mPonAbe1_hap2_range.txt",
+      "bytes": 97,
+      "sha256": "5fcf47937f3a5b9fec54cdf56fb1eef7cefdaeb9c4a3f3a95a3c1ad672b8603c",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_locus_alignments/alignments_TRG/mPonAbe1_hap1_mPonAbe1_hap2_range.txt"
+    },
+    {
+      "path": "repo/data_locus_alignments/alignments_TRG/mGorGor1_pat_mPonAbe1_hap1_range.txt",
+      "bytes": 62,
+      "sha256": "888b3aebe3a0ad1ea20a05ec7916d0ddbb977fdbf722d141797a585034e2120c",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_locus_alignments/alignments_TRG/mGorGor1_pat_mPonAbe1_hap1_range.txt"
+    },
+    {
+      "path": "repo/data_locus_alignments/alignments_TRG/mPanPan1_pat_human_T2T_range.txt",
+      "bytes": 65,
+      "sha256": "5b7e51bb2e00a5e18e228d15c55a2b05bba253ee7174833380bddd1bafb7929d",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_locus_alignments/alignments_TRG/mPanPan1_pat_human_T2T_range.txt"
+    },
+    {
+      "path": "repo/data_locus_alignments/alignments_TRG/mPonAbe1_hap2_mPonPyg2_hap1_range.txt",
+      "bytes": 97,
+      "sha256": "451edbb345261facad327572cc14db6ea223c1298e42bdb38bff1790883d70ca",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_locus_alignments/alignments_TRG/mPonAbe1_hap2_mPonPyg2_hap1_range.txt"
+    },
+    {
+      "path": "repo/data_locus_alignments/alignments_TRG/human_T2T_mGorGor1_mat_range.txt",
+      "bytes": 65,
+      "sha256": "6d32d42828638c5467440e3f81304e4e780ed30e106950dcf1d9092b110f3e51",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_locus_alignments/alignments_TRG/human_T2T_mGorGor1_mat_range.txt"
+    },
+    {
+      "path": "repo/data_locus_alignments/alignments_TRG/mGorGor1_mat_mGorGor1_pat_range.txt",
+      "bytes": 125,
+      "sha256": "608edf1b1157b31b51f9a2d5fd3d92944dd38f63ad1eb50c1e13dda039e0075e",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_locus_alignments/alignments_TRG/mGorGor1_mat_mGorGor1_pat_range.txt"
+    },
+    {
+      "path": "repo/data_locus_alignments/alignments_TRA/mPanPan1_mat_mPanPan1_pat_range.txt",
+      "bytes": 464,
+      "sha256": "dd6a61c1c6c969b76d4f679d693fff4a59effe4d410f8113d6df6ccdef3e87ac",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_locus_alignments/alignments_TRA/mPanPan1_mat_mPanPan1_pat_range.txt"
+    },
+    {
+      "path": "repo/data_locus_alignments/alignments_TRA/mPonPyg2_hap1_mPonPyg2_hap2_range.txt",
+      "bytes": 394,
+      "sha256": "392a88118f162e7a2a6235ddc28bddb298097c2ad203cd67652a5a94d429b396",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_locus_alignments/alignments_TRA/mPonPyg2_hap1_mPonPyg2_hap2_range.txt"
+    },
+    {
+      "path": "repo/data_locus_alignments/alignments_TRA/mPonAbe1_hap1_mPonAbe1_hap2_range.txt",
+      "bytes": 330,
+      "sha256": "f917925cb2095fc34576a28cd5b75711f0cfdbc3a248f2882152309d3775ab7b",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_locus_alignments/alignments_TRA/mPonAbe1_hap1_mPonAbe1_hap2_range.txt"
+    },
+    {
+      "path": "repo/data_locus_alignments/alignments_TRA/mGorGor1_pat_mPonAbe1_hap1_range.txt",
+      "bytes": 301,
+      "sha256": "fb0c344ad9a64a417f86464dde8acb7310e991271d651043de9d7fe1312bc293",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_locus_alignments/alignments_TRA/mGorGor1_pat_mPonAbe1_hap1_range.txt"
+    },
+    {
+      "path": "repo/data_locus_alignments/alignments_TRA/mPanPan1_pat_human_T2T_range.txt",
+      "bytes": 129,
+      "sha256": "6b811744220b14d617ca87ac1a0fd84fc56376869651abf61bd72d3e9d01afa2",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_locus_alignments/alignments_TRA/mPanPan1_pat_human_T2T_range.txt"
+    },
+    {
+      "path": "repo/data_locus_alignments/alignments_TRA/mPonAbe1_hap2_mPonPyg2_hap1_range.txt",
+      "bytes": 502,
+      "sha256": "bc843ed0cd4a08c44729d8c12701a39f0dfc90f202331d5e2cc67a8c17a5c6ba",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_locus_alignments/alignments_TRA/mPonAbe1_hap2_mPonPyg2_hap1_range.txt"
+    },
+    {
+      "path": "repo/data_locus_alignments/alignments_TRA/human_T2T_mGorGor1_mat_range.txt",
+      "bytes": 161,
+      "sha256": "f996975f4333b9e38672aa066a9b84fe87da572c595354a46e77dc44ef083b7c",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_locus_alignments/alignments_TRA/human_T2T_mGorGor1_mat_range.txt"
+    },
+    {
+      "path": "repo/data_locus_alignments/alignments_TRA/mGorGor1_mat_mGorGor1_pat_range.txt",
+      "bytes": 502,
+      "sha256": "e0a8ab71ceafc64813ed686a34788bbb248d08c0f54643c801244a6bcd1278b3",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_locus_alignments/alignments_TRA/mGorGor1_mat_mGorGor1_pat_range.txt"
+    },
+    {
+      "path": "repo/aux_scripts/generate_pairwise_alignments.py",
+      "bytes": 1902,
+      "sha256": "37967eea02426b2f07a427899c588486f6047376efa0bdb35586314d388cf4e2",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/aux_scripts/generate_pairwise_alignments.py"
+    },
+    {
+      "path": "repo/aux_scripts/generate_gene_table_by_locus.py",
+      "bytes": 3596,
+      "sha256": "4506c0498e1ec12bdc3aee123761618952ae3839e969f032df73a5051956eed1",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/aux_scripts/generate_gene_table_by_locus.py"
+    },
+    {
+      "path": "repo/aux_scripts/ncbi_bed_files/TRA_annotation.BED",
+      "bytes": 5873,
+      "sha256": "67d60d3fc16a01d207b648ecc538bdfc440a4553f1a3b027853ce5692cc0c38f",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/aux_scripts/ncbi_bed_files/TRA_annotation.BED"
+    },
+    {
+      "path": "repo/aux_scripts/ncbi_bed_files/TRG_annotation.BED",
+      "bytes": 1036,
+      "sha256": "5c3667e9bd4bb1bf9221d01d074fc537b93a7c630f89c8ef9c0785045490440d",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/aux_scripts/ncbi_bed_files/TRG_annotation.BED"
+    },
+    {
+      "path": "repo/aux_scripts/ncbi_bed_files/TRB_annotation.BED",
+      "bytes": 4273,
+      "sha256": "995dba117db3075713375ce20c8c6b73257af6b96dbe895bc1e53939ba54f068",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/aux_scripts/ncbi_bed_files/TRB_annotation.BED"
+    },
+    {
+      "path": "repo/aux_scripts/ncbi_bed_files/IGH_annotation.BED",
+      "bytes": 9165,
+      "sha256": "5652c42da934f0cf1ef052588b82d63f2363250050f70b9a99b9f95e6bf03525",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/aux_scripts/ncbi_bed_files/IGH_annotation.BED"
+    },
+    {
+      "path": "repo/aux_scripts/ncbi_bed_files/IGK_annotation.BED",
+      "bytes": 4598,
+      "sha256": "c7ffce6ffb00be78693a0b17a70e4a0b4e6b3325cb6600d2e5de0e09e7c573c7",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/aux_scripts/ncbi_bed_files/IGK_annotation.BED"
+    },
+    {
+      "path": "repo/aux_scripts/ncbi_bed_files/IGL_annotation.BED",
+      "bytes": 5463,
+      "sha256": "147d73ef295cf6dd9b8a939cf73885c20931b4f8b04c32d5042da6d6738efd61",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/aux_scripts/ncbi_bed_files/IGL_annotation.BED"
+    },
+    {
+      "path": "repo/data_primate_igtrloci_fasta/mPonPyg2_chr6_hap2_hsa7_TRB.fasta",
+      "bytes": 743997,
+      "sha256": "f307bc874e97cb6c7b68c4a0130559d009163619ac71f249e0bde03fa301ddd1",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_igtrloci_fasta/mPonPyg2_chr6_hap2_hsa7_TRB.fasta"
+    },
+    {
+      "path": "repo/data_primate_igtrloci_fasta/mPonAbe1_chr6_hap2_hsa7_TRB.fasta",
+      "bytes": 763548,
+      "sha256": "8ee32a731f5ffa12b28ab8aa78f2ccbad4e9ac1e4612ffb08f2ee5057ab25bc0",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_igtrloci_fasta/mPonAbe1_chr6_hap2_hsa7_TRB.fasta"
+    },
+    {
+      "path": "repo/data_primate_igtrloci_fasta/mGorGor1_chr6_pat_hsa7_TRG.fasta",
+      "bytes": 146722,
+      "sha256": "0d77a6ed1962b2a6e9b776b5e807c1fc969c3d449120239242adffe99368ad2c",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_igtrloci_fasta/mGorGor1_chr6_pat_hsa7_TRG.fasta"
+    },
+    {
+      "path": "repo/data_primate_igtrloci_fasta/mPonPyg2_chr6_hap1_hsa7_TRG.fasta",
+      "bytes": 157630,
+      "sha256": "8117e3ff96581fdc2143e27ed1fa8bb0c1aadabad2c67d69374ab4d4f7c99dba",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_igtrloci_fasta/mPonPyg2_chr6_hap1_hsa7_TRG.fasta"
+    },
+    {
+      "path": "repo/data_primate_igtrloci_fasta/mPonAbe1_chr6_hap1_hsa7_TRG.fasta",
+      "bytes": 157648,
+      "sha256": "dac9464395dc68f4b330ef2b384665060d113cc59eefabd51b249d06949fd2cf",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_igtrloci_fasta/mPonAbe1_chr6_hap1_hsa7_TRG.fasta"
+    },
+    {
+      "path": "repo/data_primate_igtrloci_fasta/mPanPan1_chr6_pat_hsa7_TRB.fasta",
+      "bytes": 608695,
+      "sha256": "cb13932be794428c15ed9e6f074f201018ff41aef86e8649bd070cb5f17c6fc9",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_igtrloci_fasta/mPanPan1_chr6_pat_hsa7_TRB.fasta"
+    },
+    {
+      "path": "repo/data_primate_igtrloci_fasta/mPonPyg2_chr6_hap1_hsa7_TRB.fasta",
+      "bytes": 740909,
+      "sha256": "4e05e86cc02270bede91b7c150799099b9f8eca863c61426f80443a9af793d82",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_igtrloci_fasta/mPonPyg2_chr6_hap1_hsa7_TRB.fasta"
+    },
+    {
+      "path": "repo/data_primate_igtrloci_fasta/mGorGor1_chr6_pat_hsa7_TRB.fasta",
+      "bytes": 582514,
+      "sha256": "ee2abf50dac13e2e0d682381199e6b662d706bdf21a21a8376959aa13dc0d8b4",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_igtrloci_fasta/mGorGor1_chr6_pat_hsa7_TRB.fasta"
+    },
+    {
+      "path": "repo/data_primate_igtrloci_fasta/mPonPyg2_chr15_hap1_hsa14_TRA.fasta",
+      "bytes": 1065182,
+      "sha256": "2ca91ed8d0a5382b73a8dfb2d788889548fb68c819a393c9191ade8802edc385",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_igtrloci_fasta/mPonPyg2_chr15_hap1_hsa14_TRA.fasta"
+    },
+    {
+      "path": "repo/data_primate_igtrloci_fasta/mPonAbe1_chr15_hap1_hsa14_TRA.fasta",
+      "bytes": 1061551,
+      "sha256": "b4315b671fcfe68f8841fe8cee9e754475808392e73272b374492c832a467983",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_igtrloci_fasta/mPonAbe1_chr15_hap1_hsa14_TRA.fasta"
+    },
+    {
+      "path": "repo/data_primate_igtrloci_fasta/mPanPan1_chr6_pat_hsa7_TRG.fasta",
+      "bytes": 150486,
+      "sha256": "c7660f398ef15fb84defd6ce96d73e808db11a02e4b3d6b89476c7032ef4b046",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_igtrloci_fasta/mPanPan1_chr6_pat_hsa7_TRG.fasta"
+    },
+    {
+      "path": "repo/data_primate_igtrloci_fasta/mPonAbe1_chr6_hap1_hsa7_TRB.fasta",
+      "bytes": 722830,
+      "sha256": "00939408828b8abd607fad8e3e3994cc1893efcf95a2f581aa1d275f29f5b8ae",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_igtrloci_fasta/mPonAbe1_chr6_hap1_hsa7_TRB.fasta"
+    },
+    {
+      "path": "repo/data_primate_igtrloci_fasta/mPonPyg2_chr12_hap2_hsa2a_IGK.fasta",
+      "bytes": 826283,
+      "sha256": "d1e13f79a058215cd2dcbf4f6d039ff82c2be76b6f26062728ed0983f6d27204",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_igtrloci_fasta/mPonPyg2_chr12_hap2_hsa2a_IGK.fasta"
+    },
+    {
+      "path": "repo/data_primate_igtrloci_fasta/mPonAbe1_chr12_hap2_hsa2a_IGK.fasta",
+      "bytes": 777856,
+      "sha256": "4216126e72c9f808d290ab8743f5a4c4135c57b63cf94cd7d23c2e54704ca6a6",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_igtrloci_fasta/mPonAbe1_chr12_hap2_hsa2a_IGK.fasta"
+    },
+    {
+      "path": "repo/data_primate_igtrloci_fasta/mPonPyg2_chr6_hap2_hsa7_TRG.fasta",
+      "bytes": 157585,
+      "sha256": "4ea54374c073a0b85951754c6796ad9090a25977982d29e21e93a5336bebde57",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_igtrloci_fasta/mPonPyg2_chr6_hap2_hsa7_TRG.fasta"
+    },
+    {
+      "path": "repo/data_primate_igtrloci_fasta/mPonAbe1_chr23_hap2_hsa22_IGL.fasta",
+      "bytes": 726211,
+      "sha256": "dc965eb7a4bcc34f0cefdc0ecee75594bd73bcd310fe030a1b810352f6dc28e6",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_igtrloci_fasta/mPonAbe1_chr23_hap2_hsa22_IGL.fasta"
+    },
+    {
+      "path": "repo/data_primate_igtrloci_fasta/mPonPyg2_chr23_hap2_hsa22_IGL.fasta",
+      "bytes": 1289039,
+      "sha256": "e34fd05e9f6d3619e14d07d22482f3678d5410e0fbaa5a27f569299519d3db2c",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_igtrloci_fasta/mPonPyg2_chr23_hap2_hsa22_IGL.fasta"
+    },
+    {
+      "path": "repo/data_primate_igtrloci_fasta/mPonPyg2_chr15_hap1_hsa14_IGH.fasta",
+      "bytes": 1365564,
+      "sha256": "5ad698d3dcef4b8711ba51ebaa8a1ae25192ae7f44761015e0da2c6c5ad384b2",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_igtrloci_fasta/mPonPyg2_chr15_hap1_hsa14_IGH.fasta"
+    },
+    {
+      "path": "repo/data_primate_igtrloci_fasta/mPonAbe1_chr15_hap1_hsa14_IGH.fasta",
+      "bytes": 1341673,
+      "sha256": "8209d8cb487e09209419bcec630a38d103240efe536eaaed1b9f4105df59bb3c",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_igtrloci_fasta/mPonAbe1_chr15_hap1_hsa14_IGH.fasta"
+    },
+    {
+      "path": "repo/data_primate_igtrloci_fasta/mPonAbe1_chr6_hap2_hsa7_TRG.fasta",
+      "bytes": 161946,
+      "sha256": "27a9eadf87587d800f3c21b13ec63b3aa1c3fe13c6e7915e742d2bd0411121bc",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_igtrloci_fasta/mPonAbe1_chr6_hap2_hsa7_TRG.fasta"
+    },
+    {
+      "path": "repo/data_primate_igtrloci_fasta/mGorGor1_chr15_mat_hsa14_IGH.fasta",
+      "bytes": 977286,
+      "sha256": "cc3062108a3384c85eaeffdfe0470295c1d024ee16a68b626235fc2478b041bc",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_igtrloci_fasta/mGorGor1_chr15_mat_hsa14_IGH.fasta"
+    },
+    {
+      "path": "repo/data_primate_igtrloci_fasta/mPanPan1_chr23_pat_hsa22_IGL.fasta",
+      "bytes": 1924089,
+      "sha256": "bbb2fcbe67b7350991d625e7435167b7a6ac59fcd6f8f1274aa8563441c5cc4e",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_igtrloci_fasta/mPanPan1_chr23_pat_hsa22_IGL.fasta"
+    },
+    {
+      "path": "repo/data_primate_igtrloci_fasta/mPanPan1_chr12_pat_hsa2a_IGK.fasta",
+      "bytes": 610164,
+      "sha256": "e89e232d3f57e96b9e1f99f3b143078c064573939b981d31846d55722cf134cd",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_igtrloci_fasta/mPanPan1_chr12_pat_hsa2a_IGK.fasta"
+    },
+    {
+      "path": "repo/data_primate_igtrloci_fasta/mPanPan1_chr15_pat_hsa14_TRA.fasta",
+      "bytes": 956027,
+      "sha256": "3697194beec1bda6579709b89614fa2691554e302cc0bc3ca0177081d290cd81",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_igtrloci_fasta/mPanPan1_chr15_pat_hsa14_TRA.fasta"
+    },
+    {
+      "path": "repo/data_primate_igtrloci_fasta/mGorGor1_chr15_mat_hsa14_TRA.fasta",
+      "bytes": 974509,
+      "sha256": "64daec3139543c4fafcfb4051e7250709837f6ba741353b3c7c1a777c4fa72c3",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_igtrloci_fasta/mGorGor1_chr15_mat_hsa14_TRA.fasta"
+    },
+    {
+      "path": "repo/data_primate_igtrloci_fasta/mGorGor1_chr12_mat_hsa2a_IGK.fasta",
+      "bytes": 1390435,
+      "sha256": "80a26bb81072b1ba25a0d50ade99f2e76b624e9649525eb62a850616ea4d0133",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_igtrloci_fasta/mGorGor1_chr12_mat_hsa2a_IGK.fasta"
+    },
+    {
+      "path": "repo/data_primate_igtrloci_fasta/mGorGor1_chr6_mat_hsa7_TRG.fasta",
+      "bytes": 146743,
+      "sha256": "e9da4dee5b39553aeef0c5f28ffc9a0ce94b5c674257a70eb232bd8e0841282e",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_igtrloci_fasta/mGorGor1_chr6_mat_hsa7_TRG.fasta"
+    },
+    {
+      "path": "repo/data_primate_igtrloci_fasta/mPanPan1_chr6_mat_hsa7_TRB.fasta",
+      "bytes": 608533,
+      "sha256": "efcd8dfd3a9d10c3edc6b57192e450f0a617d377122eedde152836cf13c0e79c",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_igtrloci_fasta/mPanPan1_chr6_mat_hsa7_TRB.fasta"
+    },
+    {
+      "path": "repo/data_primate_igtrloci_fasta/mPanPan1_chr15_pat_hsa14_IGH.fasta",
+      "bytes": 1115087,
+      "sha256": "a5dbcff06574401fe0595bfa9e86c1e136b6ad2b2374eca9119d829fb5e41de3",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_igtrloci_fasta/mPanPan1_chr15_pat_hsa14_IGH.fasta"
+    },
+    {
+      "path": "repo/data_primate_igtrloci_fasta/mGorGor1_chr23_mat_hsa22_IGL.fasta",
+      "bytes": 833612,
+      "sha256": "9a23974a3d3304c3d8ea4a68a26e71f3b9620c94f1f7c655f0edc294be3f411f",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_igtrloci_fasta/mGorGor1_chr23_mat_hsa22_IGL.fasta"
+    },
+    {
+      "path": "repo/data_primate_igtrloci_fasta/mPonPyg2_chr23_hap1_hsa22_IGL.fasta",
+      "bytes": 1378355,
+      "sha256": "36b0adb5cf56405c58560b759498becd6f026e777d6f36f9d429275ecd75315e",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_igtrloci_fasta/mPonPyg2_chr23_hap1_hsa22_IGL.fasta"
+    },
+    {
+      "path": "repo/data_primate_igtrloci_fasta/mPonAbe1_chr23_hap1_hsa22_IGL.fasta",
+      "bytes": 851533,
+      "sha256": "210a0eb3f326f351900ab9ac376c2632f6fa5e2cf40567cc899a1b06050b32b4",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_igtrloci_fasta/mPonAbe1_chr23_hap1_hsa22_IGL.fasta"
+    },
+    {
+      "path": "repo/data_primate_igtrloci_fasta/mGorGor1_chr6_mat_hsa7_TRB.fasta",
+      "bytes": 582672,
+      "sha256": "637fec1346450aaa2f4cb80841fd1bd885c613b9c37b9f1bb0c67be6a4fbaca2",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_igtrloci_fasta/mGorGor1_chr6_mat_hsa7_TRB.fasta"
+    },
+    {
+      "path": "repo/data_primate_igtrloci_fasta/mGorGor1_chr12_pat_hsa2a_IGK.fasta",
+      "bytes": 910380,
+      "sha256": "ead832a44ab9e92d0aab68a8dc11ce850f18612543d2fb3b4512cea890aceb60",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_igtrloci_fasta/mGorGor1_chr12_pat_hsa2a_IGK.fasta"
+    },
+    {
+      "path": "repo/data_primate_igtrloci_fasta/mGorGor1_chr15_pat_hsa14_TRA.fasta",
+      "bytes": 978107,
+      "sha256": "479a6f7d490abba891f3418b5092085450f6f3e7c29cdb77a176b5fb0a55b57e",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_igtrloci_fasta/mGorGor1_chr15_pat_hsa14_TRA.fasta"
+    },
+    {
+      "path": "repo/data_primate_igtrloci_fasta/mPonAbe1_chr12_hap1_hsa2a_IGK.fasta",
+      "bytes": 840434,
+      "sha256": "abdebf48f675655fb8289ba5f9f24ebe39d8611da21de50d65d59ee59aac21fe",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_igtrloci_fasta/mPonAbe1_chr12_hap1_hsa2a_IGK.fasta"
+    },
+    {
+      "path": "repo/data_primate_igtrloci_fasta/mPonPyg2_chr12_hap1_hsa2a_IGK.fasta",
+      "bytes": 791160,
+      "sha256": "0ab14d63f935ad030e6a21050569f8f84fce057f862f2bc505ddbe873623df0e",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_igtrloci_fasta/mPonPyg2_chr12_hap1_hsa2a_IGK.fasta"
+    },
+    {
+      "path": "repo/data_primate_igtrloci_fasta/mGorGor1_chr23_pat_hsa22_IGL.fasta",
+      "bytes": 879082,
+      "sha256": "cb0c93d9080e9f17294c23212ab431d3e8ff3858b973b7e0702d12ce0d462bb3",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_igtrloci_fasta/mGorGor1_chr23_pat_hsa22_IGL.fasta"
+    },
+    {
+      "path": "repo/data_primate_igtrloci_fasta/mPanPan1_chr15_mat_hsa14_IGH.fasta",
+      "bytes": 1051496,
+      "sha256": "c809d1eba2d67683d8824408ebbbfb92c665fedc3fc31ed681d10f8c2873b3be",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_igtrloci_fasta/mPanPan1_chr15_mat_hsa14_IGH.fasta"
+    },
+    {
+      "path": "repo/data_primate_igtrloci_fasta/mPanPan1_chr6_mat_hsa7_TRG.fasta",
+      "bytes": 154794,
+      "sha256": "1177c65c75de69d3a94ca63734c2aa002895119616f94d48848ccb10e8ffc674",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_igtrloci_fasta/mPanPan1_chr6_mat_hsa7_TRG.fasta"
+    },
+    {
+      "path": "repo/data_primate_igtrloci_fasta/mPonAbe1_chr15_hap2_hsa14_IGH.fasta",
+      "bytes": 1235839,
+      "sha256": "3ee4d7e48be7573eaafa6c9b001d759dd7652e73c84c1a8b2a3fc135e5bf4aba",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_igtrloci_fasta/mPonAbe1_chr15_hap2_hsa14_IGH.fasta"
+    },
+    {
+      "path": "repo/data_primate_igtrloci_fasta/mPonPyg2_chr15_hap2_hsa14_IGH.fasta",
+      "bytes": 1432053,
+      "sha256": "09e9e029bc27b9fd87821d3f2f7ecd8fd3cd8600342998a754c88327abf45ab2",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_igtrloci_fasta/mPonPyg2_chr15_hap2_hsa14_IGH.fasta"
+    },
+    {
+      "path": "repo/data_primate_igtrloci_fasta/mPanPan1_chr23_mat_hsa22_IGL.fasta",
+      "bytes": 2057126,
+      "sha256": "5acdcf5ec6bddcabd193972a40a540a45bf465cdbc6ee2a4dc07b3011bc3706d",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_igtrloci_fasta/mPanPan1_chr23_mat_hsa22_IGL.fasta"
+    },
+    {
+      "path": "repo/data_primate_igtrloci_fasta/mGorGor1_chr15_pat_hsa14_IGH.fasta",
+      "bytes": 981264,
+      "sha256": "cefb3946e35216af2aab8c0477eb9a8946267ed1dfaf81f2aa62f2aabe171c61",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_igtrloci_fasta/mGorGor1_chr15_pat_hsa14_IGH.fasta"
+    },
+    {
+      "path": "repo/data_primate_igtrloci_fasta/mPanPan1_chr15_mat_hsa14_TRA.fasta",
+      "bytes": 954580,
+      "sha256": "bbadad64264b16d89366809e184b028c9aa69c57ddd2f9ed12cc383c5e75e0e0",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_igtrloci_fasta/mPanPan1_chr15_mat_hsa14_TRA.fasta"
+    },
+    {
+      "path": "repo/data_primate_igtrloci_fasta/mPanPan1_chr12_mat_hsa2a_IGK.fasta",
+      "bytes": 604182,
+      "sha256": "b3c156f114e93b6024aa542b5e492a7e5d712a088c4025280b6d6b810ac7596a",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_igtrloci_fasta/mPanPan1_chr12_mat_hsa2a_IGK.fasta"
+    },
+    {
+      "path": "repo/data_primate_igtrloci_fasta/mPonAbe1_chr15_hap2_hsa14_TRA.fasta",
+      "bytes": 1064067,
+      "sha256": "88f443f49165bb94c514c96a3f023501fd1087b2acc1af11587727ca016ac24f",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_igtrloci_fasta/mPonAbe1_chr15_hap2_hsa14_TRA.fasta"
+    },
+    {
+      "path": "repo/data_primate_igtrloci_fasta/mPonPyg2_chr15_hap2_hsa14_TRA.fasta",
+      "bytes": 1058143,
+      "sha256": "334fcab7d4e81daa46a342de660df74f65d50a4e4cc1962a3a745203e82f5df5",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_primate_igtrloci_fasta/mPonPyg2_chr15_hap2_hsa14_TRA.fasta"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_TRG_sumatran_orangutan_hap_1.tsv",
+      "bytes": 156,
+      "sha256": "cfe36daef2ddc238b3dfe78d0c1e6cdb7e5f7c9e19769f5927bb9f0857b2dfeb",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_TRG_sumatran_orangutan_hap_1.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_TRA_bonobo_hap_2.tsv",
+      "bytes": 99,
+      "sha256": "1dcdb63a417ff9254eba6c92cfbd3ce60510a5586c9ce2e712fdcff8520dda3e",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_TRA_bonobo_hap_2.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_IGH_gorilla_hap_1.tsv",
+      "bytes": 776,
+      "sha256": "d6616985503e052073a96807fce24e25b650c0e382dcda2da446e3003321be64",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_IGH_gorilla_hap_1.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_TRG_sumatran_orangutan_hap_2.tsv",
+      "bytes": 176,
+      "sha256": "7fc4aa4f8e9ddb9bb5a2a9e497c4e4f02021ce617e82de397f8aafe284567b11",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_TRG_sumatran_orangutan_hap_2.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_TRA_human_t2t.tsv",
+      "bytes": 60,
+      "sha256": "834d59e8a17dd05b5875b1aac91358ef5f8211d1cc48d3e5e4e02a77d6b16b17",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_TRA_human_t2t.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_TRA_bonobo_hap_1.tsv",
+      "bytes": 96,
+      "sha256": "df9e82b43c0a1f3f35f8d56bbad3dd8b137d6d43199e480738d92cfb53a4acfa",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_TRA_bonobo_hap_1.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_IGH_gorilla_hap_2.tsv",
+      "bytes": 754,
+      "sha256": "8ff52a6f8c8258e609b34e3c57abb305b80c8d6ac203bc577e31311876c7e920",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_IGH_gorilla_hap_2.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_TRB_gorilla_hap_2.tsv",
+      "bytes": 340,
+      "sha256": "6c35ae086de21cd58e631a2a296b903f9b22657ab43e5e678e7f6a44b5188c3a",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_TRB_gorilla_hap_2.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_TRG_gorilla_hap_1.tsv",
+      "bytes": 147,
+      "sha256": "c56466b41169d5e17e98683ade405c004a620bc1cb40c17c8edf105fefc78e8b",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_TRG_gorilla_hap_1.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_TRB_human_t2t.tsv",
+      "bytes": 321,
+      "sha256": "06d2f7429b031d40ec8d41907420214ac7fd805164d5af7be3bf162f8cd5a0dd",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_TRB_human_t2t.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_IGL_gorilla_hap_2.tsv",
+      "bytes": 280,
+      "sha256": "c7740ec790ffca9ef57b35b42744d2ffcc524e855942b2e14ca283bef0da48ff",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_IGL_gorilla_hap_2.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_TRB_gorilla_hap_1.tsv",
+      "bytes": 340,
+      "sha256": "f9450167f9814954a1cc6d8139ec5a0956d4aca114dc00eb42cbf23ca9705817",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_TRB_gorilla_hap_1.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_TRG_gorilla_hap_2.tsv",
+      "bytes": 147,
+      "sha256": "4ecc011ba4694e41956d5aad79bae78559c0ab90487abd4facdf3f5782c8c35e",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_TRG_gorilla_hap_2.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_IGL_gorilla_hap_1.tsv",
+      "bytes": 236,
+      "sha256": "402c6b8f631533b5f928d0d06932840a884691940153a832dab67a30c89b6843",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_IGL_gorilla_hap_1.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_TRA_gorilla_hap_2.tsv",
+      "bytes": 60,
+      "sha256": "cf6a1ef8c6d0b5f3e894e65fd96c91ea891c911c3b93e4f55c61eb0d268ba113",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_TRA_gorilla_hap_2.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_IGL_sumatran_orangutan_hap_2.tsv",
+      "bytes": 368,
+      "sha256": "c67ecf29756fb898e0482eb4911695a26311ee929ca0ea7a585ab382d191222e",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_IGL_sumatran_orangutan_hap_2.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_TRB_sumatran_orangutan_hap_2.tsv",
+      "bytes": 469,
+      "sha256": "f9ca09a211eceff4d174745862eb205f47b8672b4d1c6f3a7e85dbdca42d9e98",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_TRB_sumatran_orangutan_hap_2.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_IGK_bornean_orangutan_hap_2.tsv",
+      "bytes": 346,
+      "sha256": "e17de0205077cf87772eb1954a231b346b2ab6d9fc13c2a2427fe31e005a1030",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_IGK_bornean_orangutan_hap_2.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_TRA_gorilla_hap_1.tsv",
+      "bytes": 60,
+      "sha256": "778856fe89821205818e365d7e18dd9c73fd6998b5c7533a5aee3f504ea0781c",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_TRA_gorilla_hap_1.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_IGL_sumatran_orangutan_hap_1.tsv",
+      "bytes": 368,
+      "sha256": "1e86e80ca097afda12bf3c01b20c5572c6095e325a2d45a951921b3969cec5c3",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_IGL_sumatran_orangutan_hap_1.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_TRB_sumatran_orangutan_hap_1.tsv",
+      "bytes": 426,
+      "sha256": "3e00845137af6b5e0a6649c4145d55d9168c631cb377bc36b1ddfd59dc922881",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_TRB_sumatran_orangutan_hap_1.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_IGK_bornean_orangutan_hap_1.tsv",
+      "bytes": 346,
+      "sha256": "469a63b637fa49d25d33ed9352a5a3fd99afc380abf68bd71acfedb6b2b16f15",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_IGK_bornean_orangutan_hap_1.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_IGK_bonobo_hap_1.tsv",
+      "bytes": 320,
+      "sha256": "e7b0ae13b246d4e26352a568a8935257ae85de6d7865a2b101daeaef9e187468",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_IGK_bonobo_hap_1.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_TRG_bornean_orangutan_hap_1.tsv",
+      "bytes": 156,
+      "sha256": "73ce9ee1449663f1a0999caeecca11dc84ee44e1773711f3bf271fc09f8eaf27",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_TRG_bornean_orangutan_hap_1.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_TRA_sumatran_orangutan_hap_1.tsv",
+      "bytes": 97,
+      "sha256": "b2649317dbd5c50a9af582e0d3bc8b77c31f3d7b10b3e1ed02976ec7dc2f4773",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_TRA_sumatran_orangutan_hap_1.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_IGK_gorilla_hap_1.tsv",
+      "bytes": 456,
+      "sha256": "0db4b084c253d003eb5e01612b88dcc85cb148d6f2d85ec7b1f61ea807aa9f13",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_IGK_gorilla_hap_1.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_TRB_bornean_orangutan_hap_2.tsv",
+      "bytes": 470,
+      "sha256": "d9692bc8db745fe89ecd1faabd8c62a8880abefe2425dba4636e93eab5cfe51b",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_TRB_bornean_orangutan_hap_2.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_IGK_bonobo_hap_2.tsv",
+      "bytes": 342,
+      "sha256": "c5bab7458c4a846048d5470d701bae4db502c1c4d68cbe548e1f05a2d51c6e12",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_IGK_bonobo_hap_2.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_TRG_bornean_orangutan_hap_2.tsv",
+      "bytes": 156,
+      "sha256": "1501b885c5c553265e2c5d8fab215575d117af617bd657320731d63bb76e5a0b",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_TRG_bornean_orangutan_hap_2.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_TRA_sumatran_orangutan_hap_2.tsv",
+      "bytes": 97,
+      "sha256": "be41237e7a9682479d1da256cb9bddc65f5e4a03efd956d2896b1c0b70c0bd38",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_TRA_sumatran_orangutan_hap_2.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_IGK_gorilla_hap_2.tsv",
+      "bytes": 364,
+      "sha256": "d917c92ed89381cc84fba1935f29aab6562f0bbbaceeccb737c3d87fe28c094a",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_IGK_gorilla_hap_2.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_TRB_bornean_orangutan_hap_1.tsv",
+      "bytes": 470,
+      "sha256": "2701bf280f2bea10424164eec019a9e81c764f553b1c74b363bcd772b3d725e7",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_TRB_bornean_orangutan_hap_1.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_IGL_bonobo_hap_1.tsv",
+      "bytes": 786,
+      "sha256": "202dfa6091b5b679ba721ed323da5238215bf456f3bc9e798e1c080d607c1f24",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_IGL_bonobo_hap_1.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_IGK_human_t2t.tsv",
+      "bytes": 841,
+      "sha256": "8af8eb56b590fa24971db3190cb1d7fbf9ed895d704c8e2b87c3d1a63a6dad75",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_IGK_human_t2t.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_TRA_bornean_orangutan_hap_1.tsv",
+      "bytes": 97,
+      "sha256": "4a428a0d724c0355cac19cf4dbe9db6070de56c58d3898b0718fe92685076d3b",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_TRA_bornean_orangutan_hap_1.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_IGL_bonobo_hap_2.tsv",
+      "bytes": 775,
+      "sha256": "7c42a40240c96a6a091a10e4e1d7673b62149a7fefe91aa1617c01d4b9beb968",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_IGL_bonobo_hap_2.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_TRA_bornean_orangutan_hap_2.tsv",
+      "bytes": 97,
+      "sha256": "28e955fa65f75b52989201f2748934c6c7d1b41fe77f72c476010e406fd483a9",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_TRA_bornean_orangutan_hap_2.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_IGH_bonobo_hap_2.tsv",
+      "bytes": 1063,
+      "sha256": "33734975fbea6fa57c2dde48fef3e651d4681991b9ab1580454484283f521b24",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_IGH_bonobo_hap_2.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_IGH_bornean_orangutan_hap_1.tsv",
+      "bytes": 1042,
+      "sha256": "359e883f5730deef061598018cb1a2165dc62aadfdaeadcc16eda7131cbeffe3",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_IGH_bornean_orangutan_hap_1.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_TRG_bonobo_hap_2.tsv",
+      "bytes": 148,
+      "sha256": "a5cc1970db91db1e05736af9174735d5c9b15e214b392fbcdee492416a383598",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_TRG_bonobo_hap_2.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_IGH_bonobo_hap_1.tsv",
+      "bytes": 952,
+      "sha256": "f109058c7d46c1fc93aa9834b9d84c7ddb819bf8bd4c38841517ed044117bc83",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_IGH_bonobo_hap_1.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_IGL_human_t2t.tsv",
+      "bytes": 302,
+      "sha256": "bf798a396222e95bb596d853a0bad649d2865a063b488ff3a4feedbd1f6f9e2a",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_IGL_human_t2t.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_IGH_bornean_orangutan_hap_2.tsv",
+      "bytes": 1092,
+      "sha256": "55476a10d578fb64cb380e040d5ffd2a5c7081cb6ca7821d0013309b39f8f125",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_IGH_bornean_orangutan_hap_2.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_TRG_bonobo_hap_1.tsv",
+      "bytes": 170,
+      "sha256": "0c9f8c655a245d49bede2ed212411fc69bb2688dea0febb2d87f06ff736bcb74",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_TRG_bonobo_hap_1.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_IGH_human_t2t.tsv",
+      "bytes": 738,
+      "sha256": "5248b7fd79d19ad4b993454c506e65dec3f4f4ba69f4b96616fa0c36815bfc4a",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_IGH_human_t2t.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_TRG_human_t2t.tsv",
+      "bytes": 192,
+      "sha256": "6e6c0bd8f8f09c35060e90afabce3fdbb619e51b0686772738c26e728dcdd909",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_TRG_human_t2t.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_IGK_sumatran_orangutan_hap_2.tsv",
+      "bytes": 368,
+      "sha256": "2fe41cc64fdff6fdb8ee131e9bf1a87ce14efea98db756ca139449d752c23baf",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_IGK_sumatran_orangutan_hap_2.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_TRB_bonobo_hap_1.tsv",
+      "bytes": 302,
+      "sha256": "f1ab768485d748ef2c12a0e896c48f3677f6005f250049f9411a419341c8842e",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_TRB_bonobo_hap_1.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_IGK_sumatran_orangutan_hap_1.tsv",
+      "bytes": 346,
+      "sha256": "55058b0771f3b72ecb6d577ae734754fc0fed5cdd48954926b7daf5296b3d640",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_IGK_sumatran_orangutan_hap_1.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_TRB_bonobo_hap_2.tsv",
+      "bytes": 302,
+      "sha256": "80aa28fa5e85879086de70b2381fc33758ada77b6ddce5793816740f6adae225",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_TRB_bonobo_hap_2.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_IGL_bornean_orangutan_hap_1.tsv",
+      "bytes": 642,
+      "sha256": "790cc9b497fe1e9e614b331cbf44d285d329c196b18ae9fe7c99206e687e3b6a",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_IGL_bornean_orangutan_hap_1.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_IGH_sumatran_orangutan_hap_1.tsv",
+      "bytes": 926,
+      "sha256": "006a14d23fed22c444e21bf55e76caa434c1e29bca99a0775ccd8946b78adb12",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_IGH_sumatran_orangutan_hap_1.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_IGL_bornean_orangutan_hap_2.tsv",
+      "bytes": 620,
+      "sha256": "5ff94aef85f9a702e0fc73e7fc0fee7ad4b104c018cf2c83f188f64aa310056f",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_IGL_bornean_orangutan_hap_2.tsv"
+    },
+    {
+      "path": "repo/data_SV_block_positions/block_IGH_sumatran_orangutan_hap_2.tsv",
+      "bytes": 897,
+      "sha256": "f259bc6c44b845f80478e5065fb5cca8acb8519652f512c4c925b423f5a88acb",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_SV_block_positions/block_IGH_sumatran_orangutan_hap_2.tsv"
+    },
+    {
+      "path": "repo/configs/config_IGK.txt",
+      "bytes": 1801,
+      "sha256": "d01e048a4124ec26c3d28d12d75ad15cda953457a6a6183d0514231b69f65f9b",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/configs/config_IGK.txt"
+    },
+    {
+      "path": "repo/configs/config_IGH.txt",
+      "bytes": 1792,
+      "sha256": "494d16b5ff7e6e06d3f881130ed11ade4a5913d4b93afcc5c00a249c58b99f7d",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/configs/config_IGH.txt"
+    },
+    {
+      "path": "repo/configs/config_IGL.txt",
+      "bytes": 1807,
+      "sha256": "801aa09bd52ef7f010b63ae3822a560493cc5dd466b036e17dfd054f77684890",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/configs/config_IGL.txt"
+    },
+    {
+      "path": "repo/configs/config_TRG.txt",
+      "bytes": 1803,
+      "sha256": "5eab79f231d0f38aafc83f238a5a48db4fc658ef1b70b800ac935545eb508927",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/configs/config_TRG.txt"
+    },
+    {
+      "path": "repo/configs/config_TRB.txt",
+      "bytes": 1793,
+      "sha256": "90379e79e9d9c0ae6113b6dae17239b16094b7e2a73fdad9d381ab4a5e14e365",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/configs/config_TRB.txt"
+    },
+    {
+      "path": "repo/configs/config_TRA.txt",
+      "bytes": 1805,
+      "sha256": "87d88f2e450ab55bd681636c222af12064a22bd872ea4b3e099a0917de0b58fb",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/configs/config_TRA.txt"
+    },
+    {
+      "path": "repo/data_human_t2t_gene_positions/human_TRG.csv",
+      "bytes": 4090,
+      "sha256": "87a490ac0b3521b92169a4a1a95d48fc4a3f4b885ff3d8f54f1cf6d716970ec0",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_human_t2t_gene_positions/human_TRG.csv"
+    },
+    {
+      "path": "repo/data_human_t2t_gene_positions/human_TRB.csv",
+      "bytes": 20126,
+      "sha256": "00e4e1b0dea31bbcc496ed5882c00ddd6148072f1d224cdb1ff4b3b339751a54",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_human_t2t_gene_positions/human_TRB.csv"
+    },
+    {
+      "path": "repo/data_human_t2t_gene_positions/human_TRA.csv",
+      "bytes": 22126,
+      "sha256": "5d203ca989bcf1dc21ab8fcb324b3e1af1c92c21c541aac1d6d12081c9a0378d",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_human_t2t_gene_positions/human_TRA.csv"
+    },
+    {
+      "path": "repo/data_human_t2t_gene_positions/human_IGK.fasta",
+      "bytes": 2096514,
+      "sha256": "44172f8e31d68adac099b320216ea6d65672c22befdb78df96078dd3831567e0",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_human_t2t_gene_positions/human_IGK.fasta"
+    },
+    {
+      "path": "repo/data_human_t2t_gene_positions/human_TRB.fasta",
+      "bytes": 578978,
+      "sha256": "a90a6c7782ed928af023023f6655846de3fe7b1ba21ef5fe958fb09394f3c934",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_human_t2t_gene_positions/human_TRB.fasta"
+    },
+    {
+      "path": "repo/data_human_t2t_gene_positions/human_IGH.fasta",
+      "bytes": 1046794,
+      "sha256": "25ac69eeb4a1d8a1588f63dfdfb60e5552b3881bb6a4799f7efaff9626fdde5e",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_human_t2t_gene_positions/human_IGH.fasta"
+    },
+    {
+      "path": "repo/data_human_t2t_gene_positions/human_TRG.fasta",
+      "bytes": 79010,
+      "sha256": "44337798bd61fa94a5c6a22ab7f6893052a8be4eb049d7f43f3c6d481f0b8583",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_human_t2t_gene_positions/human_TRG.fasta"
+    },
+    {
+      "path": "repo/data_human_t2t_gene_positions/human_IGK.csv",
+      "bytes": 18545,
+      "sha256": "d528aee65d72e8c6b0849f524671415b611a812de3ff12fbb447bb11e82a73a4",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_human_t2t_gene_positions/human_IGK.csv"
+    },
+    {
+      "path": "repo/data_human_t2t_gene_positions/human_IGH.csv",
+      "bytes": 21262,
+      "sha256": "1d946703e3880f0ffbe754b077b6bb25d3ff739ba55d633583a15015b43dfd59",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_human_t2t_gene_positions/human_IGH.csv"
+    },
+    {
+      "path": "repo/data_human_t2t_gene_positions/human_TRA.fasta",
+      "bytes": 962946,
+      "sha256": "240ed9b9e343c0b42984db79bac21540b1e69f4fcc4aa544e77736bf7e16a944",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_human_t2t_gene_positions/human_TRA.fasta"
+    },
+    {
+      "path": "repo/data_human_t2t_gene_positions/human_IGL.csv",
+      "bytes": 12752,
+      "sha256": "5c537dcb4c2f67435939a29d4a2ac089f0aae8343906a47dee29810482523382",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_human_t2t_gene_positions/human_IGL.csv"
+    },
+    {
+      "path": "repo/data_human_t2t_gene_positions/human_IGL.fasta",
+      "bytes": 939629,
+      "sha256": "f697537b6156ae54d7f11e458f659a0810f3581837393db9582fe98cdcfb35b2",
+      "url": "https://raw.githubusercontent.com/yana-safonova/primate_t2t_igtr/22685e8819da7cf98d5e8b7c4b4c2495802468ce/data_human_t2t_gene_positions/human_IGL.fasta"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+[
+  "lastz",
+  "/Users/liudongyao/Downloads/repository/ggexon/data-raw/ape_paper/results/mhc/chimp_h1.fa",
+  "/Users/liudongyao/Downloads/repository/ggexon/data-raw/ape_paper/results/mhc/chimp_h2.fa",
+  "--format=paf:minimap2",
+  "--chain",
+  "--identity=75"
+]

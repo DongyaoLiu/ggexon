@@ -1,0 +1,158 @@
+{
+  "reports": [
+    {
+      "accession": "GCA_028885475.2",
+      "current_accession": "GCA_028885475.2",
+      "source_database": "SOURCE_DATABASE_GENBANK",
+      "organism": {
+        "tax_id": 9595,
+        "organism_name": "Gorilla gorilla gorilla",
+        "common_name": "western lowland gorilla",
+        "infraspecific_names": {
+          "isolate": "KB3781",
+          "sex": "male"
+        }
+      },
+      "assembly_info": {
+        "assembly_level": "Chromosome",
+        "assembly_status": "current",
+        "assembly_name": "NHGRI_mGorGor1-v2.0_pat",
+        "assembly_type": "haploid",
+        "bioproject_lineage": [
+          {
+            "bioprojects": [
+              {
+                "accession": "PRJNA916733",
+                "title": "Gorilla gorilla gorilla Genome sequencing and assembly",
+                "parent_accessions": [
+                  "PRJNA930782"
+                ]
+              },
+              {
+                "accession": "PRJNA930782",
+                "title": "Gorilla gorilla gorilla Umbrella project",
+                "parent_accessions": [
+                  "PRJNA489243"
+                ]
+              },
+              {
+                "accession": "PRJNA489243",
+                "title": "Vertebrate Genomes Project",
+                "parent_accessions": [
+                  "PRJNA533106"
+                ]
+              },
+              {
+                "accession": "PRJNA533106",
+                "title": "Earth BioGenome Project (EBP)"
+              }
+            ]
+          }
+        ],
+        "bioproject_accession": "PRJNA916733",
+        "release_date": "2024-01-08",
+        "submitter": "National Human Genome Research Institute, National Institutes of Health",
+        "linked_assemblies": [
+          {
+            "linked_assembly": "GCA_028885495.2",
+            "assembly_type": "maternal_haplotype_of_diploid"
+          }
+        ],
+        "atypical": {
+          "is_atypical": true,
+          "warnings": [
+            "partial"
+          ]
+        },
+        "genome_notes": [
+          "partial"
+        ],
+        "sequencing_tech": "PacBio Sequel; Oxford Nanopore PromethION",
+        "assembly_method": "Verkko v. 1.4",
+        "biosample": {
+          "accession": "SAMN04003007",
+          "last_updated": "2026-06-21T02:17:52.690",
+          "publication_date": "2015-11-01T00:00:00.000",
+          "submission_date": "2015-08-20T12:43:26.000",
+          "sample_ids": [
+            {
+              "label": "Sample name",
+              "value": "GgoY_KB3781"
+            },
+            {
+              "db": "SRA",
+              "value": "SRS1041398"
+            }
+          ],
+          "description": {
+            "title": "Gorilla Y flow-sorted DNA",
+            "organism": {
+              "tax_id": 9595,
+              "organism_name": "Gorilla gorilla gorilla"
+            }
+          },
+          "owner": {
+            "name": "The Pennsylvania State University",
+            "contacts": [
+              {}
+            ]
+          },
+          "models": [
+            "Model organism or animal"
+          ],
+          "package": "Model.organism.animal.1.0",
+          "attributes": [
+            {
+              "name": "isolate",
+              "value": "KB3781"
+            },
+            {
+              "name": "dev_stage",
+              "value": "Mature"
+            },
+            {
+              "name": "sex",
+              "value": "male"
+            },
+            {
+              "name": "tissue",
+              "value": "Fibroblast"
+            }
+          ],
+          "status": {
+            "status": "live",
+            "when": "2015-12-31T08:47:16"
+          },
+          "dev_stage": "Mature",
+          "isolate": "KB3781",
+          "sex": "male",
+          "tissue": "Fibroblast"
+        },
+        "blast_url": "https://blast.ncbi.nlm.nih.gov/Blast.cgi?PAGE_TYPE=BlastSearch&PROG_DEF=blastn&BLAST_SPEC=GDH_GCA_028885475.2",
+        "diploid_role": "paternal_haplotype_of_diploid"
+      },
+      "assembly_stats": {
+        "total_number_of_chromosomes": 24,
+        "total_sequence_length": "3351856267",
+        "total_ungapped_length": "3349856267",
+        "number_of_contigs": 26,
+        "contig_n50": 150804130,
+        "contig_l50": 9,
+        "number_of_scaffolds": 24,
+        "scaffold_n50": 150804130,
+        "scaffold_l50": 9,
+        "number_of_component_sequences": 24,
+        "atgc_count": "3349856267",
+        "gc_count": "1357769950",
+        "gc_percent": 40.5,
+        "genome_coverage": "109"
+      },
+      "wgs_info": {
+        "wgs_project_accession": "JAQQLK02",
+        "master_wgs_url": "https://www.ncbi.nlm.nih.gov/nuccore/JAQQLK000000000.2",
+        "wgs_contigs_url": "https://www.ncbi.nlm.nih.gov/Traces/wgs/JAQQLK02"
+      }
+    }
+  ],
+  "total_count": 1
+}

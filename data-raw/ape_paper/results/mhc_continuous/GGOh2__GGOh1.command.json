@@ -1,0 +1,12 @@
+[
+  "minimap2",
+  "-x",
+  "asm20",
+  "-c",
+  "--eqx",
+  "--secondary=no",
+  "-t",
+  "2",
+  "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/GGOh2.fa",
+  "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/GGOh1.fa"
+]

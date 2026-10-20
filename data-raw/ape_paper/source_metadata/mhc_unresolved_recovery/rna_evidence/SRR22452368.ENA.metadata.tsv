@@ -1,0 +1,2 @@
+run_accession	study_accession	sample_accession	experiment_accession	scientific_name	tax_id	library_strategy	library_source	sample_title
+SRR22452368	PRJNA902025	SAMN13178754	SRX18421142	Pongo abelii	9601	RNA-Seq	TRANSCRIPTOMIC	Testis sample from Pongo pygmaeus abelii

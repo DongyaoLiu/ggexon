@@ -1,0 +1,37 @@
+[
+  {
+    "file": "mGorGor1_v2.0.rna.trackDb.txt",
+    "url": "https://raw.githubusercontent.com/marbl/T2T-Browser/main/T2Tgenomes/mGorGor1_v2.0/rna.trackDb.txt",
+    "bytes": 1254
+  },
+  {
+    "file": "mPonAbe1_v2.0.rna.trackDb.txt",
+    "url": "https://raw.githubusercontent.com/marbl/T2T-Browser/main/T2Tgenomes/mPonAbe1_v2.0/rna.trackDb.txt",
+    "bytes": 1245
+  },
+  {
+    "file": "mPonPyg2_v2.0.rna.trackDb.txt",
+    "url": "https://raw.githubusercontent.com/marbl/T2T-Browser/main/T2Tgenomes/mPonPyg2_v2.0/rna.trackDb.txt",
+    "bytes": 1251
+  },
+  {
+    "file": "mPanPan1_v2.0.rna.trackDb.txt",
+    "url": "https://raw.githubusercontent.com/marbl/T2T-Browser/main/T2Tgenomes/mPanPan1_v2.0/rna.trackDb.txt",
+    "bytes": 1245
+  },
+  {
+    "file": "mSymSyn1_v2.0.rna.trackDb.txt",
+    "url": "https://raw.githubusercontent.com/marbl/T2T-Browser/main/T2Tgenomes/mSymSyn1_v2.0/rna.trackDb.txt",
+    "bytes": 792
+  },
+  {
+    "file": "canzarlab_README.md",
+    "url": "https://raw.githubusercontent.com/canzarlab/apes_transcriptome_analysis/main/README.md",
+    "bytes": 8105
+  },
+  {
+    "file": "marbl_browser_tree.json",
+    "url": "https://api.github.com/repos/marbl/T2T-Browser/git/trees/main?recursive=1",
+    "bytes": 178809
+  }
+]

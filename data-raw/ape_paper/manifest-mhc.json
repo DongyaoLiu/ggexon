@@ -1,0 +1,124 @@
+[
+  {
+    "url": "https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/browser/CHM13/chm13v2.0.2bit",
+    "file": "results/mhc/human.fa",
+    "sha256": "99067704561c7e4d87bb18afcd6aee7f91f13f6a3cc6dbba30d05a187802bf39",
+    "retrieved_utc": "2026-10-18T12:46:32Z",
+    "chrom": "chr6",
+    "start0": 32270000,
+    "end0": 32465000,
+    "assembly": "T2T-CHM13v2.0",
+    "coordinate_system": "0-based half-open source; FASTA local window"
+  },
+  {
+    "url": "https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/CHM13/browser/bbi/chm13v2.0_RefSeq_Liftoff_v5.2.bb",
+    "file": "results/mhc/human.genes.bed",
+    "sha256": "9cad7a4c388412d289e61a28ca362cfbc01935be8d7735f0a8ab589252106af7",
+    "retrieved_utc": "2026-10-18T12:46:32Z",
+    "chrom": "chr6",
+    "start0": 32270000,
+    "end0": 32465000,
+    "coordinate_system": "0-based half-open"
+  },
+  {
+    "url": "https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/browser/CHM13/bbi/segDups_2024.bb",
+    "file": "results/mhc/human.sd.bed",
+    "sha256": "08a62d66dac893fbc55dc707f98ab2532bff51eb19e0461175243fa316b04d03",
+    "retrieved_utc": "2026-10-18T12:46:32Z",
+    "chrom": "chr6",
+    "start0": 32270000,
+    "end0": 32465000,
+    "coordinate_system": "0-based half-open"
+  },
+  {
+    "url": "https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/CHM13/assemblies/annotation/regulation/chm13v2.0_CHM13_CpG_ont_guppy3.6.0_nanopolish0.13.2.bw",
+    "file": "results/mhc/human.methylation.tsv",
+    "sha256": "978ba45833dd7460028b8d175af1a2df34062c9d3a78eee9e2f80154eb4667d1",
+    "retrieved_utc": "2026-10-18T12:46:47Z",
+    "chrom": "chr6",
+    "start0": 32270000,
+    "end0": 32465000,
+    "coordinate_system": "1-based closed",
+    "bin_bp": 1000,
+    "operation": "observed-base weighted mean; missing omitted",
+    "scale": 1
+  },
+  {
+    "url": "https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/mPanTro3_v2.0.2bit",
+    "file": "results/mhc/chimp_h1.fa",
+    "sha256": "6c3bddb12e12e22ae9e41b16889ef95c8161e7aa67bf5365483fe7f37946aad1",
+    "retrieved_utc": "2026-10-18T12:46:47Z",
+    "chrom": "chr5_hap1_hsa6",
+    "start0": 38225000,
+    "end0": 38520000,
+    "assembly": "mPanTro3_v2.0",
+    "coordinate_system": "0-based half-open source; FASTA local window"
+  },
+  {
+    "url": "https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/gene/mPanTro3_refGene.bb",
+    "file": "results/mhc/chimp_h1.genes.bed",
+    "sha256": "8a5f1fbfaf121f94189bd05529c4bfc8fa9bdc88d016158680820186220a44e3",
+    "retrieved_utc": "2026-10-18T12:46:47Z",
+    "chrom": "chr5_hap1_hsa6",
+    "start0": 38225000,
+    "end0": 38520000,
+    "coordinate_system": "0-based half-open"
+  },
+  {
+    "url": "https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/repeats/mPanTro3_v2.0.SD_v1.0.bb",
+    "file": "results/mhc/chimp_h1.sd.bed",
+    "sha256": "f8f1db48a51607c1aff097fb521544aeda0e0b00cffa2dafffa535bab1befd2c",
+    "retrieved_utc": "2026-10-18T12:46:47Z",
+    "chrom": "chr5_hap1_hsa6",
+    "start0": 38225000,
+    "end0": 38520000,
+    "coordinate_system": "0-based half-open"
+  },
+  {
+    "url": "https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/epi/mPanTro3_v2.0.ONT_Guppy6.3.8_5mC.winnowmap_modkit_5mC_CpG_v1.0.bw",
+    "file": "results/mhc/chimp_h1.methylation.tsv",
+    "sha256": "b3cdc584e3ffc81e78236e81ebb2ff2af3863e1d21f823ad6e8537775c8381ec",
+    "retrieved_utc": "2026-10-18T12:46:55Z",
+    "chrom": "chr5_hap1_hsa6",
+    "start0": 38225000,
+    "end0": 38520000,
+    "coordinate_system": "1-based closed",
+    "bin_bp": 1000,
+    "operation": "observed-base weighted mean; missing omitted",
+    "scale": 1
+  },
+  {
+    "url": "https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/mPanTro3_v2.0.2bit",
+    "file": "results/mhc/chimp_h2.fa",
+    "sha256": "1c138f868e7f02854f1770e073c4bc172b5a0c6e92c101af343ca2b64f97301a",
+    "retrieved_utc": "2026-10-18T12:46:55Z",
+    "chrom": "chr5_hap2_hsa6",
+    "start0": 36975000,
+    "end0": 37270000,
+    "assembly": "mPanTro3_v2.0",
+    "coordinate_system": "0-based half-open source; FASTA local window"
+  },
+  {
+    "url": "https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/repeats/mPanTro3_v2.0.SD_v1.0.bb",
+    "file": "results/mhc/chimp_h2.sd.bed",
+    "sha256": "8fc00a4628a326ce19b5b8645ecc8e20d94aa8558cf3257410f5752637f0d06c",
+    "retrieved_utc": "2026-10-18T12:47:09Z",
+    "chrom": "chr5_hap2_hsa6",
+    "start0": 36975000,
+    "end0": 37270000,
+    "coordinate_system": "0-based half-open"
+  },
+  {
+    "url": "https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/epi/mPanTro3_v2.0.ONT_Guppy6.3.8_5mC.winnowmap_modkit_5mC_CpG_v1.0.bw",
+    "file": "results/mhc/chimp_h2.methylation.tsv",
+    "sha256": "426605dfe92f2a68085b4ed4d4fda9cbc9e524eb5a0255b10939a937e0747047",
+    "retrieved_utc": "2026-10-18T12:47:15Z",
+    "chrom": "chr5_hap2_hsa6",
+    "start0": 36975000,
+    "end0": 37270000,
+    "coordinate_system": "1-based closed",
+    "bin_bp": 1000,
+    "operation": "observed-base weighted mean; missing omitted",
+    "scale": 1
+  }
+]

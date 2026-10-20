@@ -1,0 +1,74 @@
+[
+  {
+    "filename": "SSYh2.genark.xenoRefGene.bb",
+    "cached_path": "/tmp/ggexon_mhc_genark_native_bigbeds/SSYh2.genark.xenoRefGene.bb",
+    "sha256": "467ef657e79061d6f5efbd571fa4e634d565e06d14d954657ddd275e03a7e40f",
+    "bytes": 3561951
+  },
+  {
+    "filename": "PPYh2.genark.xenoRefGene.bb",
+    "cached_path": "/tmp/ggexon_mhc_genark_native_bigbeds/PPYh2.genark.xenoRefGene.bb",
+    "sha256": "623fea51ff65f2f8002bd8d62b890145e790505d6830a582951780312c83e5e2",
+    "bytes": 3592478
+  },
+  {
+    "filename": "PTRh2.genark.xenoRefGene.bb",
+    "cached_path": "/tmp/ggexon_mhc_genark_native_bigbeds/PTRh2.genark.xenoRefGene.bb",
+    "sha256": "1ecad0c48922e319577012a184a56868115c33bfe7f6a6b25ce566369da14a39",
+    "bytes": 3622622
+  },
+  {
+    "filename": "PPAh1.genark.augustus.bb",
+    "cached_path": "/tmp/ggexon_mhc_genark_native_bigbeds/PPAh1.genark.augustus.bb",
+    "sha256": "5ffec10b0f50d827dd0dd7e641a2b21cdcf3f98e2834879950af2abdca95c96c",
+    "bytes": 2323707
+  },
+  {
+    "filename": "SSYh2.genark.augustus.bb",
+    "cached_path": "/tmp/ggexon_mhc_genark_native_bigbeds/SSYh2.genark.augustus.bb",
+    "sha256": "5fdc98013a020806b0d3e468401303f00534562662fc42d992f1c41e3f75309e",
+    "bytes": 2109956
+  },
+  {
+    "filename": "GGOh2.genark.xenoRefGene.bb",
+    "cached_path": "/tmp/ggexon_mhc_genark_native_bigbeds/GGOh2.genark.xenoRefGene.bb",
+    "sha256": "802e6e88287d1b275920fb4eb454bb633d0441cf6c8f8af4055df6cbf5da0671",
+    "bytes": 3673328
+  },
+  {
+    "filename": "PPAh1.genark.xenoRefGene.bb",
+    "cached_path": "/tmp/ggexon_mhc_genark_native_bigbeds/PPAh1.genark.xenoRefGene.bb",
+    "sha256": "d7b35510422c97e01e0c7eb45367820638c841525e204144ba75877c2178675f",
+    "bytes": 3792804
+  },
+  {
+    "filename": "GGOh2.genark.augustus.bb",
+    "cached_path": "/tmp/ggexon_mhc_genark_native_bigbeds/GGOh2.genark.augustus.bb",
+    "sha256": "67f86db1df27754f4ecb944dd7f57b2827dda78088113e7d0561c22aa64f780e",
+    "bytes": 3029706
+  },
+  {
+    "filename": "PABh2.genark.xenoRefGene.bb",
+    "cached_path": "/tmp/ggexon_mhc_genark_native_bigbeds/PABh2.genark.xenoRefGene.bb",
+    "sha256": "9aea2cf2e1f0043bb2866d920cee5963b54934ebac2f6fdb95c562fd1c7e5555",
+    "bytes": 3607612
+  },
+  {
+    "filename": "PPYh2.genark.augustus.bb",
+    "cached_path": "/tmp/ggexon_mhc_genark_native_bigbeds/PPYh2.genark.augustus.bb",
+    "sha256": "b757e775fe77c53cd3a0bc88009761ad04e98a442521f156577a7f1b4aa1126e",
+    "bytes": 2127247
+  },
+  {
+    "filename": "PTRh2.genark.augustus.bb",
+    "cached_path": "/tmp/ggexon_mhc_genark_native_bigbeds/PTRh2.genark.augustus.bb",
+    "sha256": "817314c439b4aff8fc4b6885e854c3367c5b2f01f928a155116b9bd021231813",
+    "bytes": 2166742
+  },
+  {
+    "filename": "PABh2.genark.augustus.bb",
+    "cached_path": "/tmp/ggexon_mhc_genark_native_bigbeds/PABh2.genark.augustus.bb",
+    "sha256": "959a473ccabf046c1857f0d50ccf95af46e3196c5164c5e4f87e60a006b22b5c",
+    "bytes": 2144963
+  }
+]

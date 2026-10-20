@@ -1,0 +1,27 @@
+species_id	haplotype	track	locus	chr	start	end	n_genes	boundary_definition
+HSA	h1	HSAh1	MHC_I	chr6	29595529	32717814	19	observed curated gene span
+HSA	h1	HSAh1	MHC_II	chr6	32292811	32952695	18	observed curated gene span
+PPA	h1	PPAh1	MHC_I	chr5_mat_hsa6	40289117	41873655	7	observed curated gene span
+PPA	h1	PPAh1	MHC_II	chr5_mat_hsa6	42869099	43422686	12	observed curated gene span
+PPA	h2	PPAh2	MHC_I	chr5_pat_hsa6	44339362	45925698	7	observed curated gene span
+PPA	h2	PPAh2	MHC_II	chr5_pat_hsa6	46921197	47564677	13	observed curated gene span
+GGO	h1	GGOh1	MHC_I	chr5_mat_hsa6	47377843	49054467	7	observed curated gene span
+GGO	h1	GGOh1	MHC_II	chr5_mat_hsa6	50037376	50806048	15	observed curated gene span
+GGO	h2	GGOh2	MHC_I	chr5_pat_hsa6	39803173	41471795	7	observed curated gene span
+GGO	h2	GGOh2	MHC_II	chr5_pat_hsa6	42507235	43131970	13	observed curated gene span
+PAB	h1	PABh1	MHC_I	chr5_hap1_hsa6	29662797	31567527	9	observed curated gene span
+PAB	h1	PABh1	MHC_II	chr5_hap1_hsa6	32683841	33370459	13	observed curated gene span
+PAB	h2	PABh2	MHC_I	chr5_hap2_hsa6	29582709	31511834	9	observed curated gene span
+PAB	h2	PABh2	MHC_II	chr5_hap2_hsa6	32621713	33258487	13	observed curated gene span
+PPY	h1	PPYh1	MHC_I	chr5_hap1_hsa6	29660036	31683559	9	observed curated gene span
+PPY	h1	PPYh1	MHC_II	chr5_hap1_hsa6	32785818	33434941	13	observed curated gene span
+PPY	h2	PPYh2	MHC_I	chr5_hap2_hsa6	29659613	31587770	9	observed curated gene span
+PPY	h2	PPYh2	MHC_II	chr5_hap2_hsa6	32693941	33441932	14	observed curated gene span
+PTR	h1	PTRh1	MHC_I	chr5_hap1_hsa6	35659410	37245889	7	observed curated gene span
+PTR	h1	PTRh1	MHC_II	chr5_hap1_hsa6	38246682	38970476	15	observed curated gene span
+PTR	h2	PTRh2	MHC_I	chr5_hap2_hsa6	34270090	35994411	7	observed curated gene span
+PTR	h2	PTRh2	MHC_II	chr5_hap2_hsa6	36995127	37721445	13	observed curated gene span
+SSY	h1	SSYh1	MHC_I	chr23_hap1	40327070	41733501	5	observed curated gene span
+SSY	h1	SSYh1	MHC_II	chr23_hap1	38642740	39281275	13	observed curated gene span
+SSY	h2	SSYh2	MHC_I	chr23_hap2	36032489	37433077	5	observed curated gene span
+SSY	h2	SSYh2	MHC_II	chr23_hap2	34379977	34968732	13	observed curated gene span

@@ -1,0 +1,4 @@
+##gff-version 3
+PPAh2	source	gene	390570	391841	.	+	.	ID=alternate;Name=OR2J2
+PPAh2	source	mRNA	390570	391841	.	+	.	ID=alternate.t1;Parent=alternate
+PPAh2	source	exon	390570	391841	.	+	.	ID=ex0;Parent=alternate.t1

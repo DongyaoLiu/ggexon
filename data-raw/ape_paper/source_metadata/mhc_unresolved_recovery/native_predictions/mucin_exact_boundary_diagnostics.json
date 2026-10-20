@@ -1,0 +1,654 @@
+[
+  {
+    "track": "PABh2",
+    "gene_symbol": "MUC21",
+    "source_track": "PABh1",
+    "source_model_id": "PABh1:368:GCA_028885655.2T00000377677",
+    "target_native_chrom": "CM054661.2",
+    "source_native_exons": [
+      [
+        31038096,
+        31038398
+      ],
+      [
+        31040566,
+        31041606
+      ],
+      [
+        31041924,
+        31043821
+      ]
+    ],
+    "target_native_exons": [
+      [
+        30960004,
+        30960306
+      ],
+      [
+        30962470,
+        30963825
+      ],
+      [
+        30964143,
+        30966052
+      ]
+    ],
+    "target_native_start0": 30960004,
+    "target_native_end0": 30966052,
+    "target_native_strand": "+",
+    "source_exon_count": 3,
+    "mapped_exon_count": 3,
+    "exact_endpoint_count": 6,
+    "full_exact_boundary_confidence": true,
+    "source_spliced_length": 3239,
+    "target_spliced_length": 3566,
+    "source_paf_aligned_fraction": 1.0,
+    "target_length_delta_bp": 327,
+    "global_alignment_parameters": {
+      "algorithm": "parasail.nw_trace_striped_32",
+      "match": 2,
+      "mismatch": -3,
+      "gap_open": 5,
+      "gap_extend": 1
+    },
+    "global_alignment_stats": {
+      "exact_matches": 3219,
+      "mismatches": 20,
+      "source_gap_bp": 327,
+      "target_gap_bp": 0,
+      "alignment_columns": 3566
+    },
+    "global_identity_including_all_gap_columns": 0.9026920919798093,
+    "source_base_pairing_fraction": 1.0,
+    "source_exact_match_fraction": 0.9938252547082432,
+    "cigar": "181=1X263=45D63=45D98=45D134=1X35=1X8=1X44=1X19=135D52=1X17=1X38=1X20=7D5=38D19=1X2=1X19=1X118=1X45=1X92=1X226=1X210=1X49=1X112=1X228=12D294=1X657=1X171=",
+    "interpretation": "Endpoint-mapped same-species syntenic candidate; indels inside an exon remain inside that exon. Not evidence of precise target splice use or expression; not accepted as a strict95 transfer.",
+    "target_intron_boundary_dinucleotides": [
+      {
+        "intron_start0": 30960306,
+        "intron_end0": 30962470,
+        "donor": "GT",
+        "acceptor": "AG"
+      },
+      {
+        "intron_start0": 30963825,
+        "intron_end0": 30964143,
+        "donor": "GT",
+        "acceptor": "AG"
+      }
+    ],
+    "human_refseq_locus_comparison": [
+      {
+        "refseq_accession": "NM_001322371.2",
+        "native_alignment_start0": 30959994,
+        "native_alignment_end0": 30965423,
+        "strand": "+",
+        "source_organism": "Homo sapiens",
+        "native_alignment_blocks": [
+          [
+            30959994,
+            30960306
+          ],
+          [
+            30962470,
+            30962818
+          ],
+          [
+            30962818,
+            30963825
+          ],
+          [
+            30964143,
+            30964194
+          ],
+          [
+            30964194,
+            30964907
+          ],
+          [
+            30964949,
+            30965423
+          ]
+        ],
+        "gene_span_start_delta_candidate_minus_human": 10,
+        "gene_span_end_delta_candidate_minus_human": 629,
+        "human_exonic_bp": 2905,
+        "human_aligned_exonic_overlap_with_candidate_bp": 2895,
+        "human_aligned_exonic_overlap_fraction": 0.9965576592082617,
+        "candidate_exon_starts_matching_a_human_block_start": [
+          30962470,
+          30964143
+        ],
+        "candidate_exon_ends_matching_a_human_block_end": [
+          30960306,
+          30963825
+        ],
+        "caution": "Human RefSeq native-target sequence alignment is locus evidence. It is not an ape target-haplotype RNA observation; block splits in repeats need not be true introns."
+      }
+    ],
+    "target_middle_exon_repeat_periodicity": {
+      "method": "Fraction of matching DNA bases at each shift15..180bp across complete middle exon. Descriptive evidence of sequence periodicity only.",
+      "top_shifts": [
+        {
+          "lag_bp": 45,
+          "base_match_fraction": 0.8244274809160306
+        },
+        {
+          "lag_bp": 135,
+          "base_match_fraction": 0.8221311475409836
+        },
+        {
+          "lag_bp": 90,
+          "base_match_fraction": 0.8205533596837945
+        },
+        {
+          "lag_bp": 180,
+          "base_match_fraction": 0.8195744680851064
+        },
+        {
+          "lag_bp": 69,
+          "base_match_fraction": 0.4595645412130638
+        },
+        {
+          "lag_bp": 159,
+          "base_match_fraction": 0.45484949832775917
+        }
+      ],
+      "lag45_base_match_fraction": 0.8244274809160306
+    }
+  },
+  {
+    "track": "PPYh2",
+    "gene_symbol": "MUC21",
+    "source_track": "PPYh1",
+    "source_model_id": "PPYh1:368:GCA_028885625.2T00001935266",
+    "target_native_chrom": "CM054612.2",
+    "source_native_exons": [
+      [
+        30995465,
+        30995767
+      ],
+      [
+        30997929,
+        30999059
+      ],
+      [
+        30999376,
+        31001285
+      ]
+    ],
+    "target_native_exons": [
+      [
+        31035739,
+        31036041
+      ],
+      [
+        31038209,
+        31039474
+      ],
+      [
+        31039792,
+        31041701
+      ]
+    ],
+    "target_native_start0": 31035739,
+    "target_native_end0": 31041701,
+    "target_native_strand": "+",
+    "source_exon_count": 3,
+    "mapped_exon_count": 3,
+    "exact_endpoint_count": 6,
+    "full_exact_boundary_confidence": true,
+    "source_spliced_length": 3341,
+    "target_spliced_length": 3476,
+    "source_paf_aligned_fraction": 0.9979048189164921,
+    "target_length_delta_bp": 135,
+    "global_alignment_parameters": {
+      "algorithm": "parasail.nw_trace_striped_32",
+      "match": 2,
+      "mismatch": -3,
+      "gap_open": 5,
+      "gap_extend": 1
+    },
+    "global_alignment_stats": {
+      "exact_matches": 3294,
+      "mismatches": 40,
+      "source_gap_bp": 142,
+      "target_gap_bp": 7,
+      "alignment_columns": 3483
+    },
+    "global_identity_including_all_gap_columns": 0.9457364341085271,
+    "source_base_pairing_fraction": 0.9979048189164921,
+    "source_exact_match_fraction": 0.9859323555821611,
+    "cigar": "181=1X290=1X3=1X2=1X3=3I1X3=3D9=3X19=1X6=5X13=1X37=1X6=1X35=1X13=1X2=1X32=1X14=1X86=1X22=2X23=1X19=1X1=1X44=1X154=1X67=1X66=1X22=1X16=13D1=122D29=1X577=4I79=1X14=1X82=1X7=1X187=4D585=1X518=1X27=",
+    "interpretation": "Endpoint-mapped same-species syntenic candidate; indels inside an exon remain inside that exon. Not evidence of precise target splice use or expression; not accepted as a strict95 transfer.",
+    "target_intron_boundary_dinucleotides": [
+      {
+        "intron_start0": 31036041,
+        "intron_end0": 31038209,
+        "donor": "GT",
+        "acceptor": "AG"
+      },
+      {
+        "intron_start0": 31039474,
+        "intron_end0": 31039792,
+        "donor": "GT",
+        "acceptor": "AG"
+      }
+    ],
+    "human_refseq_locus_comparison": [
+      {
+        "refseq_accession": "NM_001322370.2",
+        "native_alignment_start0": 31035729,
+        "native_alignment_end0": 31041072,
+        "strand": "+",
+        "source_organism": "Homo sapiens",
+        "native_alignment_blocks": [
+          [
+            31035729,
+            31036041
+          ],
+          [
+            31038205,
+            31039474
+          ],
+          [
+            31039792,
+            31039843
+          ],
+          [
+            31039843,
+            31040556
+          ],
+          [
+            31040598,
+            31041072
+          ]
+        ],
+        "gene_span_start_delta_candidate_minus_human": 10,
+        "gene_span_end_delta_candidate_minus_human": 629,
+        "human_exonic_bp": 2819,
+        "human_aligned_exonic_overlap_with_candidate_bp": 2805,
+        "human_aligned_exonic_overlap_fraction": 0.9950336998935793,
+        "candidate_exon_starts_matching_a_human_block_start": [
+          31039792
+        ],
+        "candidate_exon_ends_matching_a_human_block_end": [
+          31036041,
+          31039474
+        ],
+        "caution": "Human RefSeq native-target sequence alignment is locus evidence. It is not an ape target-haplotype RNA observation; block splits in repeats need not be true introns."
+      }
+    ],
+    "target_middle_exon_repeat_periodicity": {
+      "method": "Fraction of matching DNA bases at each shift15..180bp across complete middle exon. Descriptive evidence of sequence periodicity only.",
+      "top_shifts": [
+        {
+          "lag_bp": 45,
+          "base_match_fraction": 0.8418032786885246
+        },
+        {
+          "lag_bp": 135,
+          "base_match_fraction": 0.8362831858407079
+        },
+        {
+          "lag_bp": 90,
+          "base_match_fraction": 0.8306382978723404
+        },
+        {
+          "lag_bp": 180,
+          "base_match_fraction": 0.823963133640553
+        },
+        {
+          "lag_bp": 114,
+          "base_match_fraction": 0.45612510860121636
+        },
+        {
+          "lag_bp": 69,
+          "base_match_fraction": 0.45484949832775917
+        }
+      ],
+      "lag45_base_match_fraction": 0.8418032786885246
+    }
+  },
+  {
+    "track": "GGOh2",
+    "gene_symbol": "MUC21",
+    "source_track": "GGOh1",
+    "source_model_id": "GGOh1:368:GCA_029281585.2T00001617418",
+    "target_native_chrom": "CM054563.2",
+    "source_native_exons": [
+      [
+        48676804,
+        48677106
+      ],
+      [
+        48679330,
+        48680595
+      ],
+      [
+        48680913,
+        48682820
+      ]
+    ],
+    "target_native_exons": [
+      [
+        41093511,
+        41093813
+      ],
+      [
+        41096022,
+        41097917
+      ],
+      [
+        41098235,
+        41100141
+      ]
+    ],
+    "target_native_start0": 41093511,
+    "target_native_end0": 41100141,
+    "target_native_strand": "+",
+    "source_exon_count": 3,
+    "mapped_exon_count": 3,
+    "exact_endpoint_count": 6,
+    "full_exact_boundary_confidence": true,
+    "source_spliced_length": 3474,
+    "target_spliced_length": 4103,
+    "source_paf_aligned_fraction": 0.9997121473805411,
+    "target_length_delta_bp": 629,
+    "global_alignment_parameters": {
+      "algorithm": "parasail.nw_trace_striped_32",
+      "match": 2,
+      "mismatch": -3,
+      "gap_open": 5,
+      "gap_extend": 1
+    },
+    "global_alignment_stats": {
+      "exact_matches": 3434,
+      "mismatches": 39,
+      "source_gap_bp": 630,
+      "target_gap_bp": 1,
+      "alignment_columns": 4104
+    },
+    "global_identity_including_all_gap_columns": 0.8367446393762183,
+    "source_base_pairing_fraction": 0.9997121473805411,
+    "source_exact_match_fraction": 0.9884858952216465,
+    "cigar": "62=1X323=1X42=1X60=45D147=45D38=135D8=45D15=1X28=1X25=1X20=45D27=2X58=1X5=1X14=1X24=6D1=84D15=1X15=90D13=1X25=1X15=2X6=1X23=1X15=1X30=45D14=1X28=1X15=1X28=12D2=33D14=2X48=1X22=7D5=20D3=18D29=1X24=1X26=1X2=1X14=1X133=1X31=1X734=1X90=1I204=1X87=1X116=1X83=1X351=1X195=1X82=",
+    "interpretation": "Endpoint-mapped same-species syntenic candidate; indels inside an exon remain inside that exon. Not evidence of precise target splice use or expression; not accepted as a strict95 transfer.",
+    "target_intron_boundary_dinucleotides": [
+      {
+        "intron_start0": 41093813,
+        "intron_end0": 41096022,
+        "donor": "GT",
+        "acceptor": "AG"
+      },
+      {
+        "intron_start0": 41097917,
+        "intron_end0": 41098235,
+        "donor": "GT",
+        "acceptor": "AG"
+      }
+    ],
+    "human_refseq_locus_comparison": [
+      {
+        "refseq_accession": "NM_001322371.2",
+        "native_alignment_start0": 41093501,
+        "native_alignment_end0": 41099514,
+        "strand": "+",
+        "source_organism": "Homo sapiens",
+        "native_alignment_blocks": [
+          [
+            41093501,
+            41093813
+          ],
+          [
+            41096022,
+            41096297
+          ],
+          [
+            41096567,
+            41097917
+          ],
+          [
+            41098235,
+            41099017
+          ],
+          [
+            41099046,
+            41099514
+          ]
+        ],
+        "gene_span_start_delta_candidate_minus_human": 10,
+        "gene_span_end_delta_candidate_minus_human": 627,
+        "human_exonic_bp": 3187,
+        "human_aligned_exonic_overlap_with_candidate_bp": 3177,
+        "human_aligned_exonic_overlap_fraction": 0.996862252902416,
+        "candidate_exon_starts_matching_a_human_block_start": [
+          41096022,
+          41098235
+        ],
+        "candidate_exon_ends_matching_a_human_block_end": [
+          41093813,
+          41097917
+        ],
+        "caution": "Human RefSeq native-target sequence alignment is locus evidence. It is not an ape target-haplotype RNA observation; block splits in repeats need not be true introns."
+      }
+    ],
+    "target_middle_exon_repeat_periodicity": {
+      "method": "Fraction of matching DNA bases at each shift15..180bp across complete middle exon. Descriptive evidence of sequence periodicity only.",
+      "top_shifts": [
+        {
+          "lag_bp": 45,
+          "base_match_fraction": 0.8362162162162162
+        },
+        {
+          "lag_bp": 135,
+          "base_match_fraction": 0.8301136363636363
+        },
+        {
+          "lag_bp": 90,
+          "base_match_fraction": 0.8293628808864266
+        },
+        {
+          "lag_bp": 180,
+          "base_match_fraction": 0.8279883381924198
+        },
+        {
+          "lag_bp": 69,
+          "base_match_fraction": 0.463855421686747
+        },
+        {
+          "lag_bp": 21,
+          "base_match_fraction": 0.4626467449306297
+        }
+      ],
+      "lag45_base_match_fraction": 0.8362162162162162
+    }
+  },
+  {
+    "track": "GGOh2",
+    "gene_symbol": "MUC22",
+    "source_track": "GGOh1",
+    "source_model_id": "GGOh1:369:GCA_029281585.2T00001617430",
+    "target_native_chrom": "CM054563.2",
+    "source_native_exons": [
+      [
+        48704878,
+        48705181
+      ],
+      [
+        48719665,
+        48723844
+      ],
+      [
+        48725950,
+        48726336
+      ],
+      [
+        48728516,
+        48729247
+      ]
+    ],
+    "target_native_exons": [
+      [
+        41121114,
+        41121417
+      ],
+      [
+        41135903,
+        41142218
+      ],
+      [
+        41144324,
+        41144710
+      ],
+      [
+        41146886,
+        41147617
+      ]
+    ],
+    "target_native_start0": 41121114,
+    "target_native_end0": 41147617,
+    "target_native_strand": "+",
+    "source_exon_count": 4,
+    "mapped_exon_count": 4,
+    "exact_endpoint_count": 8,
+    "full_exact_boundary_confidence": true,
+    "source_spliced_length": 5599,
+    "target_spliced_length": 7735,
+    "source_paf_aligned_fraction": 1.0,
+    "target_length_delta_bp": 2136,
+    "global_alignment_parameters": {
+      "algorithm": "parasail.nw_trace_striped_32",
+      "match": 2,
+      "mismatch": -3,
+      "gap_open": 5,
+      "gap_extend": 1
+    },
+    "global_alignment_stats": {
+      "exact_matches": 5591,
+      "mismatches": 8,
+      "source_gap_bp": 2136,
+      "target_gap_bp": 0,
+      "alignment_columns": 7735
+    },
+    "global_identity_including_all_gap_columns": 0.7228183581124757,
+    "source_base_pairing_fraction": 1.0,
+    "source_exact_match_fraction": 0.9985711734238257,
+    "cigar": "252=1X29=1X6=1X334=3D75=1X1451=1320D733=1X260=1X7=1X122=1X128=813D2194=",
+    "interpretation": "Endpoint-mapped same-species syntenic candidate; indels inside an exon remain inside that exon. Not evidence of precise target splice use or expression; not accepted as a strict95 transfer.",
+    "target_intron_boundary_dinucleotides": [
+      {
+        "intron_start0": 41121417,
+        "intron_end0": 41135903,
+        "donor": "GT",
+        "acceptor": "AG"
+      },
+      {
+        "intron_start0": 41142218,
+        "intron_end0": 41144324,
+        "donor": "GT",
+        "acceptor": "AG"
+      },
+      {
+        "intron_start0": 41144710,
+        "intron_end0": 41146886,
+        "donor": "GT",
+        "acceptor": "AG"
+      }
+    ],
+    "human_refseq_locus_comparison": [
+      {
+        "refseq_accession": "NM_001198815.1",
+        "native_alignment_start0": 41121308,
+        "native_alignment_end0": 41147617,
+        "strand": "+",
+        "source_organism": "Homo sapiens",
+        "native_alignment_blocks": [
+          [
+            41121308,
+            41121417
+          ],
+          [
+            41135903,
+            41137751
+          ],
+          [
+            41137781,
+            41138667
+          ],
+          [
+            41138790,
+            41139025
+          ],
+          [
+            41140075,
+            41140641
+          ],
+          [
+            41141184,
+            41141815
+          ],
+          [
+            41141815,
+            41142218
+          ],
+          [
+            41144324,
+            41144710
+          ],
+          [
+            41146886,
+            41147617
+          ]
+        ],
+        "gene_span_start_delta_candidate_minus_human": -194,
+        "gene_span_end_delta_candidate_minus_human": 0,
+        "human_exonic_bp": 5795,
+        "human_aligned_exonic_overlap_with_candidate_bp": 5795,
+        "human_aligned_exonic_overlap_fraction": 1.0,
+        "candidate_exon_starts_matching_a_human_block_start": [
+          41135903,
+          41144324,
+          41146886
+        ],
+        "candidate_exon_ends_matching_a_human_block_end": [
+          41121417,
+          41142218,
+          41144710,
+          41147617
+        ],
+        "caution": "Human RefSeq native-target sequence alignment is locus evidence. It is not an ape target-haplotype RNA observation; block splits in repeats need not be true introns."
+      }
+    ],
+    "target_middle_exon_repeat_periodicity": {
+      "method": "Fraction of matching DNA bases at each shift15..180bp across complete middle exon. Descriptive evidence of sequence periodicity only.",
+      "top_shifts": [
+        {
+          "lag_bp": 30,
+          "base_match_fraction": 0.7298329355608592
+        },
+        {
+          "lag_bp": 60,
+          "base_match_fraction": 0.7267785771382894
+        },
+        {
+          "lag_bp": 90,
+          "base_match_fraction": 0.7092369477911646
+        },
+        {
+          "lag_bp": 150,
+          "base_match_fraction": 0.6846715328467153
+        },
+        {
+          "lag_bp": 120,
+          "base_match_fraction": 0.6841000807102502
+        },
+        {
+          "lag_bp": 180,
+          "base_match_fraction": 0.6645476772616137
+        }
+      ],
+      "lag45_base_match_fraction": 0.2850079744816587
+    }
+  }
+]

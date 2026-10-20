@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "igtr_genes": 3738,
+  "mhc_genes": 269,
+  "common_mhc_genes": 191,
+  "alignment_blocks": 370,
+  "sv_blocks": 961,
+  "genomic_facets": 8,
+  "nominal_loci": 9,
+  "common_annotation_panels": 72,
+  "vector_pdf_check": "PASS"
+}

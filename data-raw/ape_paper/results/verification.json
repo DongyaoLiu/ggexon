@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "examples": [
+    {
+      "example": "mhc",
+      "genomic_windows": 3,
+      "gff_records": 68,
+      "nucleotide_links": 116,
+      "feature_intervals": 40,
+      "checks": "PASS"
+    }
+  ],
+  "coordinate_convention": "Plotting TSV/GFF: 1-based closed; raw BED/PAF: 0-based half-open"
+}

@@ -1,0 +1,357 @@
+{
+  "sha": "a43cfc2a402e0c8727803064fe942806f369c72d",
+  "url": "https://api.github.com/repos/marbl/Primates/git/trees/a43cfc2a402e0c8727803064fe942806f369c72d",
+  "tree": [
+    {
+      "path": "LICENSE.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "11c32e4e45204820aa2c3d2db19cdab082d8f84b",
+      "size": 281,
+      "url": "https://api.github.com/repos/marbl/Primates/git/blobs/11c32e4e45204820aa2c3d2db19cdab082d8f84b"
+    },
+    {
+      "path": "README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "90269bd876cc96aec2ab6e20162b55be6de0e3c8",
+      "size": 13426,
+      "url": "https://api.github.com/repos/marbl/Primates/git/blobs/90269bd876cc96aec2ab6e20162b55be6de0e3c8"
+    },
+    {
+      "path": "README_dataset.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "193d7d0a6a5d754c28dece8c47977eb62d902aaf",
+      "size": 9661,
+      "url": "https://api.github.com/repos/marbl/Primates/git/blobs/193d7d0a6a5d754c28dece8c47977eb62d902aaf"
+    },
+    {
+      "path": "chain",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "c930051b1cc781bf08eab314e5c178f96c201e9c",
+      "url": "https://api.github.com/repos/marbl/Primates/git/trees/c930051b1cc781bf08eab314e5c178f96c201e9c"
+    },
+    {
+      "path": "chain/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "80f6e37b4efc7bce1153ecb0b3ae01214f748ce8",
+      "size": 4104,
+      "url": "https://api.github.com/repos/marbl/Primates/git/blobs/80f6e37b4efc7bce1153ecb0b3ae01214f748ce8"
+    },
+    {
+      "path": "chain/mGorGor1_XY_v1.1_to_v2.0.chain",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "037b52dd03f15e56f448d12c3c24bf4b5ba7f3b4",
+      "size": 13482,
+      "url": "https://api.github.com/repos/marbl/Primates/git/blobs/037b52dd03f15e56f448d12c3c24bf4b5ba7f3b4"
+    },
+    {
+      "path": "chain/mGorGor1_XY_v1.1_to_v2.0.paf",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bca78584c3aee85c5574527070fe86104e5da933",
+      "size": 1433275,
+      "url": "https://api.github.com/repos/marbl/Primates/git/blobs/bca78584c3aee85c5574527070fe86104e5da933"
+    },
+    {
+      "path": "chain/mGorGor1_XY_v2.0_to_v1.1.chain",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "90a0c8cbd263fc18ddf7d45f1edaf39deb05f3f3",
+      "size": 13482,
+      "url": "https://api.github.com/repos/marbl/Primates/git/blobs/90a0c8cbd263fc18ddf7d45f1edaf39deb05f3f3"
+    },
+    {
+      "path": "chain/mPanPan1_XY_v1.1_to_v2.0.chain",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1eae659f2ae984856be4c4b6b5160115a657ffb2",
+      "size": 9080,
+      "url": "https://api.github.com/repos/marbl/Primates/git/blobs/1eae659f2ae984856be4c4b6b5160115a657ffb2"
+    },
+    {
+      "path": "chain/mPanPan1_XY_v1.1_to_v2.0.paf",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e678abd3f8df3e2d366b04f03515a65592278705",
+      "size": 48980,
+      "url": "https://api.github.com/repos/marbl/Primates/git/blobs/e678abd3f8df3e2d366b04f03515a65592278705"
+    },
+    {
+      "path": "chain/mPanPan1_XY_v2.0_to_v1.1.chain",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9c78b3809c36ff98d50ba436a99f418c11ee36af",
+      "size": 9076,
+      "url": "https://api.github.com/repos/marbl/Primates/git/blobs/9c78b3809c36ff98d50ba436a99f418c11ee36af"
+    },
+    {
+      "path": "chain/mPanTro3_XY_v1.1_to_v2.0.chain",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1a594c42f390fe579842bc0806e726ba8119a423",
+      "size": 28149,
+      "url": "https://api.github.com/repos/marbl/Primates/git/blobs/1a594c42f390fe579842bc0806e726ba8119a423"
+    },
+    {
+      "path": "chain/mPanTro3_XY_v1.1_to_v2.0.paf",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ffc68f52f80ecccba892183ab72997435f38fc40",
+      "size": 203641,
+      "url": "https://api.github.com/repos/marbl/Primates/git/blobs/ffc68f52f80ecccba892183ab72997435f38fc40"
+    },
+    {
+      "path": "chain/mPanTro3_XY_v2.0_to_v1.1.chain",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9f0d1961054ff20e44be57f65cc9447b7965c622",
+      "size": 28143,
+      "url": "https://api.github.com/repos/marbl/Primates/git/blobs/9f0d1961054ff20e44be57f65cc9447b7965c622"
+    },
+    {
+      "path": "chain/mPonAbe1_XY_v1.1_to_v2.0.chain",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fd9886eb6126485938f721ef4e33d4e5b9b92c10",
+      "size": 6437,
+      "url": "https://api.github.com/repos/marbl/Primates/git/blobs/fd9886eb6126485938f721ef4e33d4e5b9b92c10"
+    },
+    {
+      "path": "chain/mPonAbe1_XY_v1.1_to_v2.0.paf",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4a080d8fd3f890bfdc105b8b29e296f1fdc545ca",
+      "size": 243049,
+      "url": "https://api.github.com/repos/marbl/Primates/git/blobs/4a080d8fd3f890bfdc105b8b29e296f1fdc545ca"
+    },
+    {
+      "path": "chain/mPonAbe1_XY_v2.0_to_v1.1.chain",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e06444482e65a14a6a39e4cb6771203585b1e96c",
+      "size": 6437,
+      "url": "https://api.github.com/repos/marbl/Primates/git/blobs/e06444482e65a14a6a39e4cb6771203585b1e96c"
+    },
+    {
+      "path": "chain/mPonPyg2_XY_v1.1_to_v2.0.chain",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "30f94f211b8f85e5e71ce85a0310ee74a7d18fe4",
+      "size": 7099,
+      "url": "https://api.github.com/repos/marbl/Primates/git/blobs/30f94f211b8f85e5e71ce85a0310ee74a7d18fe4"
+    },
+    {
+      "path": "chain/mPonPyg2_XY_v1.1_to_v2.0.paf",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "01fcc1136d80eb9d28961a5ca4c2463808cb4bd9",
+      "size": 166291,
+      "url": "https://api.github.com/repos/marbl/Primates/git/blobs/01fcc1136d80eb9d28961a5ca4c2463808cb4bd9"
+    },
+    {
+      "path": "chain/mPonPyg2_XY_v2.0_to_v1.1.chain",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "adfe3081dad3ab69829ad4142c72b98bc374d12d",
+      "size": 7099,
+      "url": "https://api.github.com/repos/marbl/Primates/git/blobs/adfe3081dad3ab69829ad4142c72b98bc374d12d"
+    },
+    {
+      "path": "chain/mSymSyn1_XY_v1.1_to_v2.0.chain",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6d01ec9dce7cc10c46b9afb192995ff3a313f935",
+      "size": 9846,
+      "url": "https://api.github.com/repos/marbl/Primates/git/blobs/6d01ec9dce7cc10c46b9afb192995ff3a313f935"
+    },
+    {
+      "path": "chain/mSymSyn1_XY_v1.1_to_v2.0.paf",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1984b00923aa522ac1ce69b5175a85b46d4de7a6",
+      "size": 233535,
+      "url": "https://api.github.com/repos/marbl/Primates/git/blobs/1984b00923aa522ac1ce69b5175a85b46d4de7a6"
+    },
+    {
+      "path": "chain/mSymSyn1_XY_v2.0_to_v1.1.chain",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c65ee5ea1444015a5bc2ac176ee4ba0159864ae3",
+      "size": 9846,
+      "url": "https://api.github.com/repos/marbl/Primates/git/blobs/c65ee5ea1444015a5bc2ac176ee4ba0159864ae3"
+    },
+    {
+      "path": "chain/mSynSyn1_XY_v1.1_to_v2.0.paf",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0,
+      "url": "https://api.github.com/repos/marbl/Primates/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "issues",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "36bef952fd2b4f55ee86b913eb68c36a4b3e7a58",
+      "url": "https://api.github.com/repos/marbl/Primates/git/trees/36bef952fd2b4f55ee86b913eb68c36a4b3e7a58"
+    },
+    {
+      "path": "issues/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f5daf0eddb3fb7491f21a8760e60dc74ccf92235",
+      "size": 5537,
+      "url": "https://api.github.com/repos/marbl/Primates/git/blobs/f5daf0eddb3fb7491f21a8760e60dc74ccf92235"
+    },
+    {
+      "path": "issues/mGorGor1_v2.0.issues.bed",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0af2f78d0d56655f8f51d00f64b9ea3dd0b9b54c",
+      "size": 9841,
+      "url": "https://api.github.com/repos/marbl/Primates/git/blobs/0af2f78d0d56655f8f51d00f64b9ea3dd0b9b54c"
+    },
+    {
+      "path": "issues/mGorGor1_v2.0.issues.no_rDNA.no_end.bb",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9254b5fdb0a96ed83dd4ae69dad08874cb588341",
+      "size": 58442,
+      "url": "https://api.github.com/repos/marbl/Primates/git/blobs/9254b5fdb0a96ed83dd4ae69dad08874cb588341"
+    },
+    {
+      "path": "issues/mGorGor1_v2.0.issues.no_rDNA.no_end.bed",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ddba0fa9821b6d1660179b619bfd2806e7efe5b8",
+      "size": 7132,
+      "url": "https://api.github.com/repos/marbl/Primates/git/blobs/ddba0fa9821b6d1660179b619bfd2806e7efe5b8"
+    },
+    {
+      "path": "issues/mPanPan1_v2.0.issues.bed",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "474c3051498b3ecfebb16001fb7e83e0c0db31d1",
+      "size": 7812,
+      "url": "https://api.github.com/repos/marbl/Primates/git/blobs/474c3051498b3ecfebb16001fb7e83e0c0db31d1"
+    },
+    {
+      "path": "issues/mPanPan1_v2.0.issues.no_rDNA.no_end.bb",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "93fdd8b6b4e6cd7a827772a229dd664cff32d31b",
+      "size": 27949,
+      "url": "https://api.github.com/repos/marbl/Primates/git/blobs/93fdd8b6b4e6cd7a827772a229dd664cff32d31b"
+    },
+    {
+      "path": "issues/mPanPan1_v2.0.issues.no_rDNA.no_end.bed",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3b5aa369f0460a1445f5f2de8e0fea64a102b762",
+      "size": 1599,
+      "url": "https://api.github.com/repos/marbl/Primates/git/blobs/3b5aa369f0460a1445f5f2de8e0fea64a102b762"
+    },
+    {
+      "path": "issues/mPanTro3_v2.0.issues.bed",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bc09a9832bb716e6a2697977181221cb4062c775",
+      "size": 9577,
+      "url": "https://api.github.com/repos/marbl/Primates/git/blobs/bc09a9832bb716e6a2697977181221cb4062c775"
+    },
+    {
+      "path": "issues/mPanTro3_v2.0.issues.no_rDNA.no_end.bb",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7334e092cbabda4427bb29483eff6255b745a284",
+      "size": 20932,
+      "url": "https://api.github.com/repos/marbl/Primates/git/blobs/7334e092cbabda4427bb29483eff6255b745a284"
+    },
+    {
+      "path": "issues/mPanTro3_v2.0.issues.no_rDNA.no_end.bed",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bced5fa708fc136c0af75ac851afc060b9121b3c",
+      "size": 968,
+      "url": "https://api.github.com/repos/marbl/Primates/git/blobs/bced5fa708fc136c0af75ac851afc060b9121b3c"
+    },
+    {
+      "path": "issues/mPonAbe1_v2.0.issues.bed",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f4f553d400fcc49ed2b8de1d6772b25ea01e3f6f",
+      "size": 9698,
+      "url": "https://api.github.com/repos/marbl/Primates/git/blobs/f4f553d400fcc49ed2b8de1d6772b25ea01e3f6f"
+    },
+    {
+      "path": "issues/mPonAbe1_v2.0.issues.no_rDNA.no_end.bb",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "533bd19b29d82ed6d168eda64751c2fea3e10d97",
+      "size": 29768,
+      "url": "https://api.github.com/repos/marbl/Primates/git/blobs/533bd19b29d82ed6d168eda64751c2fea3e10d97"
+    },
+    {
+      "path": "issues/mPonAbe1_v2.0.issues.no_rDNA.no_end.bed",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cf1015a9eeb32b84cb8e43700bc69f78f227cc63",
+      "size": 2454,
+      "url": "https://api.github.com/repos/marbl/Primates/git/blobs/cf1015a9eeb32b84cb8e43700bc69f78f227cc63"
+    },
+    {
+      "path": "issues/mPonPyg2_v2.0.issues.bed",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "799f97eeca76f385b65334f1f5c6c443264ff89d",
+      "size": 7578,
+      "url": "https://api.github.com/repos/marbl/Primates/git/blobs/799f97eeca76f385b65334f1f5c6c443264ff89d"
+    },
+    {
+      "path": "issues/mPonPyg2_v2.0.issues.no_rDNA.no_end.bb",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ea9c12468079c3c3364807321a133a7bf725bb71",
+      "size": 28076,
+      "url": "https://api.github.com/repos/marbl/Primates/git/blobs/ea9c12468079c3c3364807321a133a7bf725bb71"
+    },
+    {
+      "path": "issues/mPonPyg2_v2.0.issues.no_rDNA.no_end.bed",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bfc569dced8d34afed9972cd195ee460c3c2f4d6",
+      "size": 1377,
+      "url": "https://api.github.com/repos/marbl/Primates/git/blobs/bfc569dced8d34afed9972cd195ee460c3c2f4d6"
+    },
+    {
+      "path": "issues/mSymSyn1_v2.0.issues.bed",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7b956bdedaa222209b159ac1bf1343ee88c97df0",
+      "size": 5449,
+      "url": "https://api.github.com/repos/marbl/Primates/git/blobs/7b956bdedaa222209b159ac1bf1343ee88c97df0"
+    },
+    {
+      "path": "issues/mSymSyn1_v2.0.issues.no_rDNA.no_end.bb",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "777903906a86583611fa929e6c46a0efb924928f",
+      "size": 35007,
+      "url": "https://api.github.com/repos/marbl/Primates/git/blobs/777903906a86583611fa929e6c46a0efb924928f"
+    },
+    {
+      "path": "issues/mSymSyn1_v2.0.issues.no_rDNA.no_end.bed",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a1573ec6023c044e54d5b8b3edf2fabd972341e5",
+      "size": 2512,
+      "url": "https://api.github.com/repos/marbl/Primates/git/blobs/a1573ec6023c044e54d5b8b3edf2fabd972341e5"
+    }
+  ],
+  "truncated": false
+}

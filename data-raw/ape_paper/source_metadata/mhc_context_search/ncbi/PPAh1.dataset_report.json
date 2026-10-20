@@ -1,0 +1,181 @@
+{
+  "reports": [
+    {
+      "accession": "GCA_028858845.2",
+      "current_accession": "GCA_028858845.2",
+      "source_database": "SOURCE_DATABASE_GENBANK",
+      "organism": {
+        "tax_id": 9597,
+        "organism_name": "Pan paniscus",
+        "common_name": "pygmy chimpanzee",
+        "infraspecific_names": {
+          "sex": "male"
+        }
+      },
+      "assembly_info": {
+        "assembly_level": "Chromosome",
+        "assembly_status": "current",
+        "assembly_name": "NHGRI_mPanPan1-v2.0_mat",
+        "assembly_type": "haploid",
+        "bioproject_lineage": [
+          {
+            "bioprojects": [
+              {
+                "accession": "PRJNA916735",
+                "title": "Pan paniscus Genome sequencing and assembly",
+                "parent_accessions": [
+                  "PRJNA930783"
+                ]
+              },
+              {
+                "accession": "PRJNA930783",
+                "title": "Pan paniscus Umbrella project",
+                "parent_accessions": [
+                  "PRJNA489243"
+                ]
+              },
+              {
+                "accession": "PRJNA489243",
+                "title": "Vertebrate Genomes Project",
+                "parent_accessions": [
+                  "PRJNA533106"
+                ]
+              },
+              {
+                "accession": "PRJNA533106",
+                "title": "Earth BioGenome Project (EBP)"
+              }
+            ]
+          }
+        ],
+        "bioproject_accession": "PRJNA916735",
+        "release_date": "2024-01-08",
+        "submitter": "National Human Genome Research Institute, National Institutes of Health",
+        "linked_assemblies": [
+          {
+            "linked_assembly": "GCA_028858825.2",
+            "assembly_type": "paternal_haplotype_of_diploid"
+          }
+        ],
+        "sequencing_tech": "PacBio Sequel; Oxford Nanopore PromethION",
+        "assembly_method": "Verkko v. 1.4",
+        "biosample": {
+          "accession": "SAMN13935689",
+          "last_updated": "2020-09-18T10:44:02.227",
+          "publication_date": "2020-09-18T00:00:00.000",
+          "submission_date": "2020-01-28T11:13:03.986",
+          "sample_ids": [
+            {
+              "label": "Sample name",
+              "value": "Ppa_PR00251"
+            },
+            {
+              "db": "SRA",
+              "value": "SRS6111929"
+            }
+          ],
+          "description": {
+            "title": "bonobo",
+            "organism": {
+              "tax_id": 9597,
+              "organism_name": "Pan paniscus"
+            }
+          },
+          "owner": {
+            "name": "Penn State University",
+            "contacts": [
+              {}
+            ]
+          },
+          "models": [
+            "Model organism or animal"
+          ],
+          "bioprojects": [
+            {
+              "accession": "PRJNA602326"
+            }
+          ],
+          "package": "Model.organism.animal.1.0",
+          "attributes": [
+            {
+              "name": "breed",
+              "value": "not applicable"
+            },
+            {
+              "name": "cultivar",
+              "value": "not applicable"
+            },
+            {
+              "name": "ecotype",
+              "value": "not collected"
+            },
+            {
+              "name": "age",
+              "value": "missing"
+            },
+            {
+              "name": "dev_stage",
+              "value": "adult"
+            },
+            {
+              "name": "sex",
+              "value": "male"
+            },
+            {
+              "name": "tissue",
+              "value": "not applicable"
+            },
+            {
+              "name": "biomaterial_provider",
+              "value": "Oliver Ryder"
+            },
+            {
+              "name": "cell_line",
+              "value": "PR00251"
+            },
+            {
+              "name": "cell_type",
+              "value": "fibroblast"
+            }
+          ],
+          "status": {
+            "status": "live",
+            "when": "2020-09-18T10:44:02.227"
+          },
+          "age": "missing",
+          "biomaterial_provider": "Oliver Ryder",
+          "breed": "not applicable",
+          "cultivar": "not applicable",
+          "dev_stage": "adult",
+          "ecotype": "not collected",
+          "sex": "male",
+          "tissue": "not applicable"
+        },
+        "blast_url": "https://blast.ncbi.nlm.nih.gov/Blast.cgi?PAGE_TYPE=BlastSearch&PROG_DEF=blastn&BLAST_SPEC=GDH_GCA_028858845.2",
+        "diploid_role": "maternal_haplotype_of_diploid"
+      },
+      "assembly_stats": {
+        "total_number_of_chromosomes": 24,
+        "total_sequence_length": "3210032406",
+        "total_ungapped_length": "3206022406",
+        "number_of_contigs": 37,
+        "contig_n50": 147028407,
+        "contig_l50": 9,
+        "number_of_scaffolds": 32,
+        "scaffold_n50": 147028407,
+        "scaffold_l50": 9,
+        "number_of_component_sequences": 32,
+        "atgc_count": "3206022406",
+        "gc_count": "1294753311",
+        "gc_percent": 40.5,
+        "genome_coverage": "55"
+      },
+      "wgs_info": {
+        "wgs_project_accession": "JAQQLL02",
+        "master_wgs_url": "https://www.ncbi.nlm.nih.gov/nuccore/JAQQLL000000000.2",
+        "wgs_contigs_url": "https://www.ncbi.nlm.nih.gov/Traces/wgs/JAQQLL02"
+      }
+    }
+  ],
+  "total_count": 1
+}

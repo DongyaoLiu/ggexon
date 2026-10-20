@@ -1,0 +1,198 @@
+{
+  "reports": [
+    {
+      "accession": "GCA_028878085.3",
+      "current_accession": "GCA_028878085.3",
+      "source_database": "SOURCE_DATABASE_GENBANK",
+      "organism": {
+        "tax_id": 9590,
+        "organism_name": "Symphalangus syndactylus",
+        "common_name": "siamang",
+        "infraspecific_names": {
+          "isolate": "Jambi",
+          "sex": "male"
+        }
+      },
+      "assembly_info": {
+        "assembly_level": "Chromosome",
+        "assembly_status": "current",
+        "assembly_name": "NHGRI_mSymSyn1-v2.0_alt",
+        "assembly_type": "alternate-pseudohaplotype",
+        "bioproject_lineage": [
+          {
+            "bioprojects": [
+              {
+                "accession": "PRJNA916728",
+                "title": "Symphalangus syndactylus Genome sequencing and assembly",
+                "parent_accessions": [
+                  "PRJNA930781"
+                ]
+              },
+              {
+                "accession": "PRJNA930781",
+                "title": "Symphalangus syndactylus Umbrella project",
+                "parent_accessions": [
+                  "PRJNA489243"
+                ]
+              },
+              {
+                "accession": "PRJNA489243",
+                "title": "Vertebrate Genomes Project",
+                "parent_accessions": [
+                  "PRJNA533106"
+                ]
+              },
+              {
+                "accession": "PRJNA533106",
+                "title": "Earth BioGenome Project (EBP)"
+              }
+            ]
+          }
+        ],
+        "bioproject_accession": "PRJNA916728",
+        "release_date": "2024-01-05",
+        "submitter": "National Human Genome Research Institute, National Institutes of Health",
+        "atypical": {
+          "is_atypical": true,
+          "warnings": [
+            "partial"
+          ]
+        },
+        "genome_notes": [
+          "partial"
+        ],
+        "sequencing_tech": "PacBio Sequel; Oxford Nanopore PromethION",
+        "assembly_method": "Verkko v. 1.4",
+        "biosample": {
+          "accession": "SAMN30216103",
+          "last_updated": "2023-07-11T04:18:38.490",
+          "publication_date": "2022-08-09T00:00:00.000",
+          "submission_date": "2022-08-09T10:33:04.637",
+          "sample_ids": [
+            {
+              "label": "Sample name",
+              "value": "Jambi"
+            },
+            {
+              "db": "SRA",
+              "value": "SRS18242897"
+            }
+          ],
+          "description": {
+            "title": "Symphalangus syndactylus (Jambi) Cell Line",
+            "organism": {
+              "tax_id": 9590,
+              "organism_name": "Symphalangus syndactylus"
+            },
+            "comment": "Lymphoblastoid cell line of a male Symphalangus syndactylus (siamang gibbon) individual named Jambi"
+          },
+          "owner": {
+            "name": "Penn State University",
+            "contacts": [
+              {}
+            ]
+          },
+          "models": [
+            "Model organism or animal"
+          ],
+          "package": "Model.organism.animal.1.0",
+          "attributes": [
+            {
+              "name": "strain",
+              "value": "not applicable"
+            },
+            {
+              "name": "isolate",
+              "value": "Jambi"
+            },
+            {
+              "name": "breed",
+              "value": "not applicable"
+            },
+            {
+              "name": "cultivar",
+              "value": "not applicable"
+            },
+            {
+              "name": "ecotype",
+              "value": "not applicable"
+            },
+            {
+              "name": "age",
+              "value": "not applicable"
+            },
+            {
+              "name": "dev_stage",
+              "value": "not applicable"
+            },
+            {
+              "name": "sex",
+              "value": "male"
+            },
+            {
+              "name": "tissue",
+              "value": "blood"
+            },
+            {
+              "name": "biomaterial_provider",
+              "value": "Lucia Carbone, Oregon Health and Science University"
+            },
+            {
+              "name": "cell_line",
+              "value": "Jambi"
+            },
+            {
+              "name": "cell_type",
+              "value": "lymphoblastoid"
+            },
+            {
+              "name": "sample_type",
+              "value": "cell line"
+            },
+            {
+              "name": "store_cond",
+              "value": "liquid nitrogen"
+            }
+          ],
+          "status": {
+            "status": "live",
+            "when": "2022-08-09T10:33:04.638"
+          },
+          "age": "not applicable",
+          "biomaterial_provider": "Lucia Carbone, Oregon Health and Science University",
+          "breed": "not applicable",
+          "cultivar": "not applicable",
+          "dev_stage": "not applicable",
+          "ecotype": "not applicable",
+          "isolate": "Jambi",
+          "sex": "male",
+          "strain": "not applicable",
+          "tissue": "blood"
+        },
+        "blast_url": "https://blast.ncbi.nlm.nih.gov/Blast.cgi?PAGE_TYPE=BlastSearch&PROG_DEF=blastn&BLAST_SPEC=GDH_GCA_028878085.3"
+      },
+      "assembly_stats": {
+        "total_number_of_chromosomes": 24,
+        "total_sequence_length": "3097367794",
+        "total_ungapped_length": "3095217794",
+        "number_of_contigs": 43,
+        "contig_n50": 144673617,
+        "contig_l50": 10,
+        "number_of_scaffolds": 40,
+        "scaffold_n50": 144673617,
+        "scaffold_l50": 10,
+        "number_of_component_sequences": 40,
+        "atgc_count": "3095217794",
+        "gc_count": "1251869076",
+        "gc_percent": 40.5,
+        "genome_coverage": "76"
+      },
+      "wgs_info": {
+        "wgs_project_accession": "JAQQLH02",
+        "master_wgs_url": "https://www.ncbi.nlm.nih.gov/nuccore/JAQQLH000000000.2",
+        "wgs_contigs_url": "https://www.ncbi.nlm.nih.gov/Traces/wgs/JAQQLH02"
+      }
+    }
+  ],
+  "total_count": 1
+}

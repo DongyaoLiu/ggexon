@@ -1,0 +1,225 @@
+{
+  "retrieved": "2026-10-18",
+  "coordinate_system": "0-based half-open unless filename states original_1based",
+  "hub": "https://research.nhgri.nih.gov/CustomTracks/T2T_hubs/T2Tgenomes/hub.txt",
+  "paper": "https://www.nature.com/articles/s41586-025-08816-3",
+  "mhc_description_url": "https://research.nhgri.nih.gov/CustomTracks/T2T_hubs/T2Tgenomes/html/mhcGene.html",
+  "mhc_source_readme": "https://raw.githubusercontent.com/marbl/T2T-Browser/main/src/MHC/README.md",
+  "functionality_source": "MHC_manual_functionality_bed0.tsv",
+  "functionality_note": "Direct Coding gene or Pseudogene labels from original MHC.S1/S2-derived annotation. BED9 grey 180,180,180 denotes pseudogene. Coding gene describes annotation, not experimentally verified function.",
+  "assemblies": {
+    "mPanTro3_v2.0": {
+      "species": "Pan_troglodytes",
+      "mhc_gene_bounds": {
+        "chr5_hap1_hsa6": {
+          "start": 35659409,
+          "end": 38970476,
+          "count": 22
+        },
+        "chr5_hap2_hsa6": {
+          "start": 34270089,
+          "end": 37721445,
+          "count": 20
+        }
+      },
+      "manual_mhc": "https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/gene/mPanTro3_v2.0.MHC_manual_v0.1.bb",
+      "original_mhc_labels": "https://raw.githubusercontent.com/marbl/T2T-Browser/main/src/MHC/mPanTro3_MHC_manual_v0.1.txt",
+      "original_mhc_bed": "https://raw.githubusercontent.com/marbl/T2T-Browser/main/src/MHC/mPanTro3_MHC_manual_v0.1.bed",
+      "cat_gene": "https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/gene/mPanTro3_catAnnotation_v1.0.bb",
+      "refseq_gene": "https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/gene/mPanTro3_refGene.bb",
+      "consensus_gene": "https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/gene/mPanTro3_v2.0_CatRefConsensus_v3.bb",
+      "segmental_duplications": "https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/repeats/mPanTro3_v2.0.SD_v1.0.bb",
+      "repeat_masker": "https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/repeats/mPanTro3_v2.0.RepeatMasker_v1.2.bb",
+      "twoBit": "https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/mPanTro3_v2.0.2bit",
+      "trackDb": "https://research.nhgri.nih.gov/CustomTracks/T2T_hubs/T2Tgenomes/mPanTro3_v2.0/trackDb.txt"
+    },
+    "mPanPan1_v2.0": {
+      "species": "Pan_paniscus",
+      "mhc_gene_bounds": {
+        "chr5_mat_hsa6": {
+          "start": 40289116,
+          "end": 43422686,
+          "count": 19
+        },
+        "chr5_pat_hsa6": {
+          "start": 44339361,
+          "end": 47564677,
+          "count": 20
+        }
+      },
+      "manual_mhc": "https://genomeark.s3.amazonaws.com/species/Pan_paniscus/mPanPan1/assembly_curated/gene/mPanPan1_v2.0.MHC_manual_v0.1.bb",
+      "original_mhc_labels": "https://raw.githubusercontent.com/marbl/T2T-Browser/main/src/MHC/mPanPan1_MHC_manual_v0.1.txt",
+      "original_mhc_bed": "https://raw.githubusercontent.com/marbl/T2T-Browser/main/src/MHC/mPanPan1_MHC_manual_v0.1.bed",
+      "cat_gene": "https://genomeark.s3.amazonaws.com/species/Pan_paniscus/mPanPan1/assembly_curated/gene/mPanPan1_catAnnotation_v1.0.bb",
+      "refseq_gene": "https://genomeark.s3.amazonaws.com/species/Pan_paniscus/mPanPan1/assembly_curated/gene/mPanPan1_refGene.bb",
+      "consensus_gene": "https://genomeark.s3.amazonaws.com/species/Pan_paniscus/mPanPan1/assembly_curated/gene/mPanPan1_v2.0_CatRefConsensus_v3.bb",
+      "segmental_duplications": "https://genomeark.s3.amazonaws.com/species/Pan_paniscus/mPanPan1/assembly_curated/repeats/mPanPan1_v2.0.SD_v1.0.bb",
+      "repeat_masker": "https://genomeark.s3.amazonaws.com/species/Pan_paniscus/mPanPan1/assembly_curated/repeats/mPanPan1_v2.0.RepeatMasker_v1.2.1.bb",
+      "twoBit": "https://genomeark.s3.amazonaws.com/species/Pan_paniscus/mPanPan1/assembly_curated/mPanPan1_v2.0.2bit",
+      "trackDb": "https://research.nhgri.nih.gov/CustomTracks/T2T_hubs/T2Tgenomes/mPanPan1_v2.0/trackDb.txt"
+    },
+    "mGorGor1_v2.0": {
+      "species": "Gorilla_gorilla",
+      "mhc_gene_bounds": {
+        "chr5_mat_hsa6": {
+          "start": 47377842,
+          "end": 50806048,
+          "count": 22
+        },
+        "chr5_pat_hsa6": {
+          "start": 39803172,
+          "end": 43131970,
+          "count": 20
+        }
+      },
+      "manual_mhc": "https://genomeark.s3.amazonaws.com/species/Gorilla_gorilla/mGorGor1/assembly_curated/gene/mGorGor1_v2.0.MHC_manual_v0.1.bb",
+      "original_mhc_labels": "https://raw.githubusercontent.com/marbl/T2T-Browser/main/src/MHC/mGorGor1_MHC_manual_v0.1.txt",
+      "original_mhc_bed": "https://raw.githubusercontent.com/marbl/T2T-Browser/main/src/MHC/mGorGor1_MHC_manual_v0.1.bed",
+      "cat_gene": "https://genomeark.s3.amazonaws.com/species/Gorilla_gorilla/mGorGor1/assembly_curated/gene/mGorGor1_catAnnotation_v1.0.bb",
+      "refseq_gene": "https://genomeark.s3.amazonaws.com/species/Gorilla_gorilla/mGorGor1/assembly_curated/gene/mGorGor1_refGene.bb",
+      "consensus_gene": "https://genomeark.s3.amazonaws.com/species/Gorilla_gorilla/mGorGor1/assembly_curated/gene/mGorGor1_v2.0_CatRefConsensus_v3.bb",
+      "segmental_duplications": "https://genomeark.s3.amazonaws.com/species/Gorilla_gorilla/mGorGor1/assembly_curated/repeats/mGorGor1_v2.0.SD_v1.0.bb",
+      "repeat_masker": "https://genomeark.s3.amazonaws.com/species/Gorilla_gorilla/mGorGor1/assembly_curated/repeats/mGorGor1_v2.0.RepeatMasker_v1.2.bb",
+      "twoBit": "https://genomeark.s3.amazonaws.com/species/Gorilla_gorilla/mGorGor1/assembly_curated/mGorGor1_v2.0.2bit",
+      "trackDb": "https://research.nhgri.nih.gov/CustomTracks/T2T_hubs/T2Tgenomes/mGorGor1_v2.0/trackDb.txt"
+    },
+    "T2T-CHM13v2.0": {
+      "species": "Homo_sapiens",
+      "gene_models": "https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/CHM13/browser/bbi/chm13v2.0_RefSeq_Liftoff_v5.2.bb",
+      "segmental_duplications": "https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/browser/CHM13/bbi/segDups_2024.bb",
+      "repeat_masker": "https://hgdownload.soe.ucsc.edu/hubs/GCA/009/914/755/GCA_009914755.4/bbi/GCA_009914755.4_T2T-CHM13v2.0.t2tRepeatMasker/chm13v2.0_rmsk.bb",
+      "twoBit": "https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/browser/CHM13/chm13v2.0.2bit",
+      "mhc_gene_bounds": {
+        "chr6": {
+          "start": 29476948,
+          "end": 33231258,
+          "definition": "GABBR1 min txStart through KIFC1 max txEnd (v5.2)"
+        }
+      }
+    }
+  },
+  "extracts": [
+    {
+      "file": "CHM13_MHC_gene_models.bigGenePred.bed",
+      "bytes": 218596,
+      "lines": 968
+    },
+    {
+      "file": "CHM13_to_mPanTro3hap1.bigChain.bb.bed",
+      "bytes": 186,
+      "lines": 2
+    },
+    {
+      "file": "CHM13_to_mPanTro3hap1.bigChain.link.bb.bed",
+      "bytes": 30248,
+      "lines": 796
+    },
+    {
+      "file": "CHM13_to_mPanTro3hap2.bigChain.bb.bed",
+      "bytes": 186,
+      "lines": 2
+    },
+    {
+      "file": "MHC_manual_functionality_bed0.tsv",
+      "bytes": 9046,
+      "lines": 124
+    },
+    {
+      "file": "chr5_hap1_hsa6_SD.bed",
+      "bytes": 4248,
+      "lines": 14
+    },
+    {
+      "file": "chr5_hap1_hsa6_refseq.bigGenePred.bed",
+      "bytes": 7431,
+      "lines": 34
+    },
+    {
+      "file": "chr5_hap2_hsa6_SD.bed",
+      "bytes": 4322,
+      "lines": 14
+    },
+    {
+      "file": "human_haqers.bed",
+      "bytes": 94928,
+      "lines": 2444
+    },
+    {
+      "file": "mGorGor1_MHC_manual.bed",
+      "bytes": 3127,
+      "lines": 42
+    },
+    {
+      "file": "mGorGor1_MHC_manual_original_1based.tsv",
+      "bytes": 2465,
+      "lines": 42
+    },
+    {
+      "file": "mPanPan1_MHC_manual.bed",
+      "bytes": 2898,
+      "lines": 39
+    },
+    {
+      "file": "mPanPan1_MHC_manual_original_1based.tsv",
+      "bytes": 2288,
+      "lines": 39
+    },
+    {
+      "file": "mPanTro3_MHC_manual.bed",
+      "bytes": 3165,
+      "lines": 42
+    },
+    {
+      "file": "mPanTro3_MHC_manual_original_1based.tsv",
+      "bytes": 2503,
+      "lines": 42
+    }
+  ],
+  "plot_windows": [
+    {
+      "assembly": "T2T-CHM13v2.0",
+      "chrom": "chr6",
+      "start": 32200000,
+      "end": 32550000
+    },
+    {
+      "assembly": "mPanTro3_v2.0",
+      "chrom": "chr5_hap1_hsa6",
+      "start": 38180000,
+      "end": 38600000
+    },
+    {
+      "assembly": "mPanTro3_v2.0",
+      "chrom": "chr5_hap2_hsa6",
+      "start": 36930000,
+      "end": 37350000
+    }
+  ],
+  "alignments": {
+    "CHM13_to_mPanTro3hap1": {
+      "target": "T2T-CHM13v2.0",
+      "query": "mPanTro3_v2.0",
+      "query_haplotype": "hap1",
+      "bigChain": "https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/browser/CHM13/bbi/wfmash_v0.13.0.mPanTro3hap1.bigChain.bb",
+      "bigLink": "https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/browser/CHM13/bbi/wfmash_v0.13.0.mPanTro3hap1.bigChain.link.bb"
+    },
+    "CHM13_to_mPanTro3hap2": {
+      "target": "T2T-CHM13v2.0",
+      "query": "mPanTro3_v2.0",
+      "query_haplotype": "hap2",
+      "bigChain": "https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/browser/CHM13/bbi/wfmash_v0.13.0.mPanTro3hap2.bigChain.bb",
+      "bigLink": "https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/browser/CHM13/bbi/wfmash_v0.13.0.mPanTro3hap2.bigChain.link.bb"
+    },
+    "chimp_hap2_to_hap1": {
+      "bigChain": "https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/comparative/mPanTro3hap2_to_mPanTro3_v2.0.wfmash_v0.13.0.bigChain.bb",
+      "bigLink": "https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/comparative/mPanTro3hap2_to_mPanTro3_v2.0.wfmash_v0.13.0.bigChain.link.bb"
+    }
+  },
+  "cautions": [
+    "Manual MHC tracks are BED9 locus spans, not exon models. Use CAT/refSeq bigGenePred for exon structures.",
+    "Wfmash chains have gaps over DRB repeat area; show supported bigLink blocks only.",
+    "CAT may use chromosome names different from browser manual tracks; inspect b.chroms() first. RefSeq chr5_hap1_hsa6 query was validated.",
+    "Track HTML prints erroneous CHM13 bounds 2937649-3331258. Gene model-derived coordinates are provided instead.",
+    "Remote pyBigWig queries can take tens of seconds. Interpreter /Users/liudongyao/miniconda3/bin/python includes module."
+  ]
+}

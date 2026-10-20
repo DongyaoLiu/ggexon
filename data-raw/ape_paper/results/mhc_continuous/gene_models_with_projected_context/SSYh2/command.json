@@ -1,0 +1,61 @@
+{
+  "command": [
+    "/private/tmp/ggexon-mhc-liftoff-venv/bin/liftoff",
+    "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/SSYh2.fa",
+    "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/SSYh1.fa",
+    "-g",
+    "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/SSYh2/source.gff3",
+    "-o",
+    "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/SSYh2/projected.gff3",
+    "-u",
+    "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/SSYh2/unmapped.txt",
+    "-dir",
+    "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/SSYh2/intermediates",
+    "-p",
+    "2",
+    "-a",
+    "0.95",
+    "-s",
+    "0.95",
+    "-exclude_partial"
+  ],
+  "tools": {
+    "version": "1.6.3",
+    "direct_url": {
+      "url": "https://github.com/agshumate/Liftoff.git",
+      "vcs_info": {
+        "commit_id": "94d6073ee2400c438d181a67d3af1e362197d839",
+        "vcs": "git"
+      }
+    },
+    "minimap2_version": "2.31-r1302",
+    "minimap2_sha256": "233e289649c6886531810b3917ac1180c72beb432c3e64ba1d918f3ed3365907"
+  },
+  "source_window": {
+    "track": "SSYh1",
+    "species_id": "SSY",
+    "haplotype": "h1",
+    "label": "Siamang h1",
+    "chr": "chr23_hap1",
+    "start0": "37530567",
+    "end0": "42365376",
+    "length": "4834809",
+    "orientation": "-",
+    "twoBit_url": "https://genomeark.s3.amazonaws.com/species/Symphalangus_syndactylus/mSymSyn1/assembly_curated/mSymSyn1_v2.0.2bit"
+  },
+  "target_window": {
+    "track": "SSYh2",
+    "species_id": "SSY",
+    "haplotype": "h2",
+    "label": "Siamang h2",
+    "chr": "chr23_hap2",
+    "start0": "33263362",
+    "end0": "38051052",
+    "length": "4787690",
+    "orientation": "-",
+    "twoBit_url": "https://genomeark.s3.amazonaws.com/species/Symphalangus_syndactylus/mSymSyn1/assembly_curated/mSymSyn1_v2.0.2bit"
+  },
+  "source_gff_sha256": "26a09099e7a373af4c9083f900c6d305a18da81841d0ef27a08fe3e7e3a1a47f",
+  "target_fasta_sha256": "f4a2c8a2754492f390127f3e2fcbf1be9168881531979eb1b08ee33e6616614e",
+  "source_fasta_sha256": "d2bed4a2f3c98732ba7a83e35bc55af1ff7fc6154f2e7da66c97ca6670d65304"
+}

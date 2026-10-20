@@ -1,0 +1,4 @@
+id	label	assembly	chrom	start0	end0
+human	Human · CHM13	T2T-CHM13v2.0	chr6	32270000	32465000
+chimp_h1	Chimpanzee · haplotype 1	mPanTro3_v2.0	chr5_hap1_hsa6	38225000	38520000
+chimp_h2	Chimpanzee · haplotype 2	mPanTro3_v2.0	chr5_hap2_hsa6	36975000	37270000

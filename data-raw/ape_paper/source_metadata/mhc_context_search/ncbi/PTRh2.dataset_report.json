@@ -1,0 +1,205 @@
+{
+  "reports": [
+    {
+      "accession": "GCA_028858805.2",
+      "current_accession": "GCA_028858805.2",
+      "source_database": "SOURCE_DATABASE_GENBANK",
+      "organism": {
+        "tax_id": 9598,
+        "organism_name": "Pan troglodytes",
+        "common_name": "chimpanzee",
+        "infraspecific_names": {
+          "isolate": "AG18354",
+          "sex": "male"
+        }
+      },
+      "assembly_info": {
+        "assembly_level": "Chromosome",
+        "assembly_status": "current",
+        "assembly_name": "NHGRI_mPanTro3-v2.0_alt",
+        "assembly_type": "alternate-pseudohaplotype",
+        "bioproject_lineage": [
+          {
+            "bioprojects": [
+              {
+                "accession": "PRJNA916737",
+                "title": "Pan troglodytes Genome sequencing and assembly",
+                "parent_accessions": [
+                  "PRJNA930872"
+                ]
+              },
+              {
+                "accession": "PRJNA930872",
+                "title": "Pan troglodytes Umbrella project",
+                "parent_accessions": [
+                  "PRJNA489243"
+                ]
+              },
+              {
+                "accession": "PRJNA489243",
+                "title": "Vertebrate Genomes Project",
+                "parent_accessions": [
+                  "PRJNA533106"
+                ]
+              },
+              {
+                "accession": "PRJNA533106",
+                "title": "Earth BioGenome Project (EBP)"
+              }
+            ]
+          }
+        ],
+        "bioproject_accession": "PRJNA916737",
+        "release_date": "2024-01-08",
+        "submitter": "National Human Genome Research Institute, National Institutes of Health",
+        "linked_assemblies": [
+          {
+            "linked_assembly": "GCA_028858775.2",
+            "assembly_type": "principal_pseudohaplotype_of_diploid"
+          }
+        ],
+        "atypical": {
+          "is_atypical": true,
+          "warnings": [
+            "partial"
+          ]
+        },
+        "genome_notes": [
+          "partial"
+        ],
+        "sequencing_tech": "PacBio Sequel; Oxford Nanopore PromethION",
+        "assembly_method": "Verkko v. 1.4",
+        "biosample": {
+          "accession": "SAMN30216104",
+          "last_updated": "2023-07-11T04:16:54.670",
+          "publication_date": "2022-08-09T00:00:00.000",
+          "submission_date": "2022-08-09T10:33:04.657",
+          "sample_ids": [
+            {
+              "label": "Sample name",
+              "value": "Chimp2 (AG18354)"
+            },
+            {
+              "db": "SRA",
+              "value": "SRS18241964"
+            }
+          ],
+          "description": {
+            "title": "Pan troglodytes Cell Line",
+            "organism": {
+              "tax_id": 9598,
+              "organism_name": "Pan troglodytes"
+            },
+            "comment": "Lymphoblastoid cell line of a male Pan troglydytes (chimpanzee) individual"
+          },
+          "owner": {
+            "name": "Penn State University",
+            "contacts": [
+              {}
+            ]
+          },
+          "models": [
+            "Model organism or animal"
+          ],
+          "package": "Model.organism.animal.1.0",
+          "attributes": [
+            {
+              "name": "strain",
+              "value": "not applicable"
+            },
+            {
+              "name": "isolate",
+              "value": "AG18354"
+            },
+            {
+              "name": "breed",
+              "value": "not applicable"
+            },
+            {
+              "name": "cultivar",
+              "value": "not applicable"
+            },
+            {
+              "name": "ecotype",
+              "value": "not applicable"
+            },
+            {
+              "name": "age",
+              "value": "not applicable"
+            },
+            {
+              "name": "dev_stage",
+              "value": "not applicable"
+            },
+            {
+              "name": "sex",
+              "value": "male"
+            },
+            {
+              "name": "tissue",
+              "value": "blood"
+            },
+            {
+              "name": "biomaterial_provider",
+              "value": "Laura Carrel, Penn State Hershey College of Medicine & Coriell Institute"
+            },
+            {
+              "name": "cell_line",
+              "value": "AG18354"
+            },
+            {
+              "name": "cell_type",
+              "value": "lymphoblastoid"
+            },
+            {
+              "name": "sample_type",
+              "value": "cell line"
+            },
+            {
+              "name": "store_cond",
+              "value": "liquid nitrogen"
+            }
+          ],
+          "status": {
+            "status": "live",
+            "when": "2022-08-09T10:33:04.655"
+          },
+          "age": "not applicable",
+          "biomaterial_provider": "Laura Carrel, Penn State Hershey College of Medicine & Coriell Institute",
+          "breed": "not applicable",
+          "cultivar": "not applicable",
+          "dev_stage": "not applicable",
+          "ecotype": "not applicable",
+          "isolate": "AG18354",
+          "sex": "male",
+          "strain": "not applicable",
+          "tissue": "blood"
+        },
+        "blast_url": "https://blast.ncbi.nlm.nih.gov/Blast.cgi?PAGE_TYPE=BlastSearch&PROG_DEF=blastn&BLAST_SPEC=GDH_GCA_028858805.2",
+        "diploid_role": "alternate_pseudohaplotype_of_diploid"
+      },
+      "assembly_stats": {
+        "total_number_of_chromosomes": 23,
+        "total_sequence_length": "2998472174",
+        "total_ungapped_length": "2993472174",
+        "number_of_contigs": 28,
+        "contig_n50": 140842815,
+        "contig_l50": 9,
+        "number_of_scaffolds": 23,
+        "scaffold_n50": 140842815,
+        "scaffold_l50": 9,
+        "number_of_component_sequences": 23,
+        "atgc_count": "2993472174",
+        "gc_count": "1216393349",
+        "gc_percent": 40.5,
+        "genome_coverage": "60"
+      },
+      "wgs_info": {
+        "wgs_project_accession": "JAQQLO02",
+        "master_wgs_url": "https://www.ncbi.nlm.nih.gov/nuccore/JAQQLO000000000.2",
+        "wgs_contigs_url": "https://www.ncbi.nlm.nih.gov/Traces/wgs/JAQQLO02"
+      }
+    }
+  ],
+  "total_count": 1
+}

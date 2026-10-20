@@ -1,0 +1,13 @@
+##gff-version 3
+MHC_II	source	gene	1	3957	.	+	.	ID=g1
+MHC_II	source	gene	56268	69319	.	-	.	ID=g2
+MHC_II	source	gene	114029	119405	.	+	.	ID=g3
+MHC_II	source	gene	132207	138596	.	-	.	ID=g4
+MHC_II	source	gene	208610	213590	.	+	.	ID=g5
+MHC_II	source	gene	224400	230625	.	-	.	ID=g6
+MHC_II	source	gene	276389	280191	.	-	.	ID=g7
+MHC_II	source	gene	398915	404751	.	-	.	ID=g8
+MHC_II	source	gene	412814	417058	.	-	.	ID=g9
+MHC_II	source	gene	468533	473885	.	-	.	ID=g10
+MHC_II	source	gene	536034	540955	.	-	.	ID=g11
+MHC_II	source	gene	543422	553588	.	+	.	ID=g12

@@ -1,0 +1,32 @@
+@HD	VN:1.6	SO:coordinate
+@SQ	SN:CM054509.2	LN:167654734
+@SQ	SN:CM054510.2	LN:154079787
+@SQ	SN:CM054511.2	LN:160054556
+@SQ	SN:CM054512.2	LN:167252203
+@SQ	SN:CM054513.2	LN:161705797
+@SQ	SN:CM054514.2	LN:154842609
+@SQ	SN:CM054515.2	LN:154492986
+@SQ	SN:CM054516.2	LN:153293009
+@SQ	SN:CM054517.2	LN:147755551
+@SQ	SN:CM054518.2	LN:141396425
+@SQ	SN:CM054519.2	LN:142585216
+@SQ	SN:CM054520.2	LN:98029838
+@SQ	SN:CM054521.2	LN:136159655
+@SQ	SN:CM054522.2	LN:124962429
+@SQ	SN:CM054523.2	LN:120311650
+@SQ	SN:CM054524.2	LN:111298303
+@SQ	SN:CM054525.2	LN:106261908
+@SQ	SN:CM054526.2	LN:111959805
+@SQ	SN:CM054527.2	LN:146713733
+@SQ	SN:CM054528.2	LN:72981805
+@SQ	SN:CM054529.2	LN:95096135
+@SQ	SN:CM054530.2	LN:80751072
+@SQ	SN:CM054531.2	LN:78312223
+@SQ	SN:CM054532.2	LN:79424044
+@SQ	SN:CM054533.2	LN:165573899
+@SQ	SN:CM054534.2	LN:29938336
+@PG	ID:minimap2	PN:minimap2	VN:2.26-r1175	CL:minimap2 -t 28 -ax splice:hq -uf ../../cat_work/genome_files/GCA_028878055.2.fa SRR27178655.fastq
+@PG	ID:samtools	PN:samtools	PP:minimap2	VN:1.18	CL:samtools fixmate -O bam,level=1 -m symSyn_IsoSeq_1.sam symSyn_IsoSeq_1.bam
+@PG	ID:samtools.1	PN:samtools	PP:samtools	VN:1.18	CL:samtools sort -l 1 -@8 -o symSyn_IsoSeq_1.sorted.bam -T /tmp/example_prefix symSyn_IsoSeq_1.bam
+@PG	ID:samtools.2	PN:samtools	PP:samtools.1	VN:1.18	CL:samtools markdup -O bam,level=1 symSyn_IsoSeq_1.sorted.bam symSyn_IsoSeq_1.sorted.markdup.bam
+@PG	ID:samtools.3	PN:samtools	PP:samtools.2	VN:1.18	CL:samtools view -@8 -o symSyn_IsoSeq_1.final.bam symSyn_IsoSeq_1.sorted.markdup.bam

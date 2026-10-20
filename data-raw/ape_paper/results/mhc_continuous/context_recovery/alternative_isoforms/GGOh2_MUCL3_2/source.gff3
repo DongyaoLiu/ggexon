@@ -1,0 +1,7 @@
+##gff-version 3
+GGOh1	source	gene	2184564	2198496	.	+	.	ID=alternate;Name=MUCL3
+GGOh1	source	mRNA	2184564	2198496	.	+	.	ID=alternate.t1;Parent=alternate
+GGOh1	source	exon	2184564	2184645	.	+	.	ID=ex0;Parent=alternate.t1
+GGOh1	source	exon	2192054	2192917	.	+	.	ID=ex1;Parent=alternate.t1
+GGOh1	source	exon	2196317	2196777	.	+	.	ID=ex2;Parent=alternate.t1
+GGOh1	source	exon	2197249	2198496	.	+	.	ID=ex3;Parent=alternate.t1

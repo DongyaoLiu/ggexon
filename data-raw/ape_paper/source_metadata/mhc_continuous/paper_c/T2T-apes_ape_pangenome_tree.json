@@ -1,0 +1,1422 @@
+{
+  "sha": "cf0ec7ea24d5ea4219bd2904ba7a81adb80069be",
+  "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/trees/cf0ec7ea24d5ea4219bd2904ba7a81adb80069be",
+  "tree": [
+    {
+      "path": ".gitignore",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0cb1c0c39c5417b84c933fee0c08fef72db82913",
+      "size": 17,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/0cb1c0c39c5417b84c933fee0c08fef72db82913"
+    },
+    {
+      "path": "README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0b296adf40d7a173a3e4d6b9df75576f1b13b52a",
+      "size": 759,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/0b296adf40d7a173a3e4d6b9df75576f1b13b52a"
+    },
+    {
+      "path": "alignment",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "156c08754123f42fcd5e3e34b24c015e3539c661",
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/trees/156c08754123f42fcd5e3e34b24c015e3539c661"
+    },
+    {
+      "path": "alignment/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a6652434188feb559df7c76a70432cbfe18e7af2",
+      "size": 6897,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/a6652434188feb559df7c76a70432cbfe18e7af2"
+    },
+    {
+      "path": "alignment/wfmash.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8744d195f937a8293d11ec63bd26ce1156600700",
+      "size": 1708,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/8744d195f937a8293d11ec63bd26ce1156600700"
+    },
+    {
+      "path": "assemblies",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "93882c7bc8278af512a6b510ec1895db7366642d",
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/trees/93882c7bc8278af512a6b510ec1895db7366642d"
+    },
+    {
+      "path": "assemblies/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "00a1a3e9842da99a8d7fc568e604b55707fb39ad",
+      "size": 3201,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/00a1a3e9842da99a8d7fc568e604b55707fb39ad"
+    },
+    {
+      "path": "conservation",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "54707d51864d666769be799464bb7e7aabf10447",
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/trees/54707d51864d666769be799464bb7e7aabf10447"
+    },
+    {
+      "path": "conservation/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "20d601faf7b9fd37b1f9d1878e7377751ef58688",
+      "size": 19400,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/20d601faf7b9fd37b1f9d1878e7377751ef58688"
+    },
+    {
+      "path": "conservation/grid-search-results",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "4b9700cc1fbebe175c818ed6961b65705e560463",
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/trees/4b9700cc1fbebe175c818ed6961b65705e560463"
+    },
+    {
+      "path": "conservation/grid-search-results/approach2_with_exon",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "861ca1a8d960c26b5ed09336b181983ce38244ac",
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/trees/861ca1a8d960c26b5ed09336b181983ce38244ac"
+    },
+    {
+      "path": "conservation/grid-search-results/approach2_with_exon/jaccards",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "a122bde1eaa640d6d78b72ab63b6d5c42630b564",
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/trees/a122bde1eaa640d6d78b72ab63b6d5c42630b564"
+    },
+    {
+      "path": "conservation/grid-search-results/approach2_with_exon/jaccards/chr1.jaccards.tsv.gz",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0de767105a281e62bb859d0bea9e100e51dbf7a2",
+      "size": 160267,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/0de767105a281e62bb859d0bea9e100e51dbf7a2"
+    },
+    {
+      "path": "conservation/grid-search-results/approach2_with_exon/jaccards/chr10.jaccards.tsv.gz",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e9b775634c1d87a193ef640753f459b191ccf760",
+      "size": 136076,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/e9b775634c1d87a193ef640753f459b191ccf760"
+    },
+    {
+      "path": "conservation/grid-search-results/approach2_with_exon/jaccards/chr11.jaccards.tsv.gz",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "338898c3c7615dda45fc5276946d21999626c45d",
+      "size": 124154,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/338898c3c7615dda45fc5276946d21999626c45d"
+    },
+    {
+      "path": "conservation/grid-search-results/approach2_with_exon/jaccards/chr12.jaccards.tsv.gz",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8e3fca034824b78c6b74eb162bbbaef36e4b01cd",
+      "size": 145597,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/8e3fca034824b78c6b74eb162bbbaef36e4b01cd"
+    },
+    {
+      "path": "conservation/grid-search-results/approach2_with_exon/jaccards/chr13.jaccards.tsv.gz",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9386e3b1ad1f73c9e9ecd5d0cab0205727b98ce1",
+      "size": 103534,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/9386e3b1ad1f73c9e9ecd5d0cab0205727b98ce1"
+    },
+    {
+      "path": "conservation/grid-search-results/approach2_with_exon/jaccards/chr14.jaccards.tsv.gz",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "57e8475b6ea6aaac2a54bf8dc04a0453661b38ab",
+      "size": 86024,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/57e8475b6ea6aaac2a54bf8dc04a0453661b38ab"
+    },
+    {
+      "path": "conservation/grid-search-results/approach2_with_exon/jaccards/chr15.jaccards.tsv.gz",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "24ab76a0b51951acc11adcdaeea9a9fc7eef4ddf",
+      "size": 122794,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/24ab76a0b51951acc11adcdaeea9a9fc7eef4ddf"
+    },
+    {
+      "path": "conservation/grid-search-results/approach2_with_exon/jaccards/chr16.jaccards.tsv.gz",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bf0ccf039f68c6f126f85081baa94b9f21377d94",
+      "size": 152396,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/bf0ccf039f68c6f126f85081baa94b9f21377d94"
+    },
+    {
+      "path": "conservation/grid-search-results/approach2_with_exon/jaccards/chr17.jaccards.tsv.gz",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ac043b1d3a0e28df58a8f4de5017a517d9f8e1d0",
+      "size": 155593,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/ac043b1d3a0e28df58a8f4de5017a517d9f8e1d0"
+    },
+    {
+      "path": "conservation/grid-search-results/approach2_with_exon/jaccards/chr18.jaccards.tsv.gz",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "495de830b82a365ad3cb0fd2da48bd45cfaa6380",
+      "size": 107335,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/495de830b82a365ad3cb0fd2da48bd45cfaa6380"
+    },
+    {
+      "path": "conservation/grid-search-results/approach2_with_exon/jaccards/chr19.jaccards.tsv.gz",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3ee7a77d40a1874ab7f759bbb8910dcc72cb6317",
+      "size": 145457,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/3ee7a77d40a1874ab7f759bbb8910dcc72cb6317"
+    },
+    {
+      "path": "conservation/grid-search-results/approach2_with_exon/jaccards/chr20.jaccards.tsv.gz",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d5d3c955cd181df4bbe7c31500b09ad6163957a2",
+      "size": 137896,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/d5d3c955cd181df4bbe7c31500b09ad6163957a2"
+    },
+    {
+      "path": "conservation/grid-search-results/approach2_with_exon/jaccards/chr21.jaccards.tsv.gz",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "77674a4dc03cf4d7c7bbb1942f620a05d2b5ab9e",
+      "size": 119370,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/77674a4dc03cf4d7c7bbb1942f620a05d2b5ab9e"
+    },
+    {
+      "path": "conservation/grid-search-results/approach2_with_exon/jaccards/chr22.jaccards.tsv.gz",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c44c9121287ca472605ef701d503f145ecf833e6",
+      "size": 134551,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/c44c9121287ca472605ef701d503f145ecf833e6"
+    },
+    {
+      "path": "conservation/grid-search-results/approach2_with_exon/jaccards/chr3.jaccards.tsv.gz",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d5c69d9f9c48319def8a144d3fe59c4205e32ebd",
+      "size": 133064,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/d5c69d9f9c48319def8a144d3fe59c4205e32ebd"
+    },
+    {
+      "path": "conservation/grid-search-results/approach2_with_exon/jaccards/chr4.jaccards.tsv.gz",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "490f26a044cf5eda8d77fb7f5fe6dd9410cf399d",
+      "size": 101609,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/490f26a044cf5eda8d77fb7f5fe6dd9410cf399d"
+    },
+    {
+      "path": "conservation/grid-search-results/approach2_with_exon/jaccards/chr5.jaccards.tsv.gz",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3b1d88414530b4aa2ade1f56a282b2d6380cc8e1",
+      "size": 94082,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/3b1d88414530b4aa2ade1f56a282b2d6380cc8e1"
+    },
+    {
+      "path": "conservation/grid-search-results/approach2_with_exon/jaccards/chr6.jaccards.tsv.gz",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "53b2e87797b616480e066c7573ecac161c707b4a",
+      "size": 114333,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/53b2e87797b616480e066c7573ecac161c707b4a"
+    },
+    {
+      "path": "conservation/grid-search-results/approach2_with_exon/jaccards/chr7.jaccards.tsv.gz",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8423a5554d0f5f144e5440ddc83db1796bb3fc83",
+      "size": 168207,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/8423a5554d0f5f144e5440ddc83db1796bb3fc83"
+    },
+    {
+      "path": "conservation/grid-search-results/approach2_with_exon/jaccards/chr8.jaccards.tsv.gz",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "01a62e4bd69ceacb4a584bb84c8845ff260dc4a4",
+      "size": 162137,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/01a62e4bd69ceacb4a584bb84c8845ff260dc4a4"
+    },
+    {
+      "path": "conservation/grid-search-results/approach2_with_exon/jaccards/chr9.jaccards.tsv.gz",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "54d7bf9f5a03835c48b53c1c57d6f6e8524e382b",
+      "size": 158106,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/54d7bf9f5a03835c48b53c1c57d6f6e8524e382b"
+    },
+    {
+      "path": "conservation/grid-search-results/approach2_with_exon/jaccards/chrX.jaccards.tsv.gz",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ccc6ccb7553355f5aa87c35fb285b10b185e8602",
+      "size": 111196,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/ccc6ccb7553355f5aa87c35fb285b10b185e8602"
+    },
+    {
+      "path": "conservation/grid-search-results/approach2_with_exon/jaccards/chrY.jaccards.tsv.gz",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d8dfd9452ef1c0af6ff8bc787a729cb5ec9f8187",
+      "size": 56781,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/d8dfd9452ef1c0af6ff8bc787a729cb5ec9f8187"
+    },
+    {
+      "path": "conservation/grid-search-results/approach2_with_exon/plots",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "68a0f0424f516ec8e3bec1032f6a76e0e66afbb8",
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/trees/68a0f0424f516ec8e3bec1032f6a76e0e66afbb8"
+    },
+    {
+      "path": "conservation/grid-search-results/approach2_with_exon/plots/chr10_scatterplot.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "937bd5b44b9905f5b234dd2dd3e9d64dd237cc91",
+      "size": 35542,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/937bd5b44b9905f5b234dd2dd3e9d64dd237cc91"
+    },
+    {
+      "path": "conservation/grid-search-results/approach2_with_exon/plots/chr11_scatterplot.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4852e0e7b25cd4f1e84c45dbd6a6797bd8e1abb3",
+      "size": 39269,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/4852e0e7b25cd4f1e84c45dbd6a6797bd8e1abb3"
+    },
+    {
+      "path": "conservation/grid-search-results/approach2_with_exon/plots/chr12_scatterplot.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f3778c91cd6a9b9b33e58f45bbbfee9408b90867",
+      "size": 31004,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/f3778c91cd6a9b9b33e58f45bbbfee9408b90867"
+    },
+    {
+      "path": "conservation/grid-search-results/approach2_with_exon/plots/chr13_scatterplot.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a0158f21fd01c6412b70d352a55b6be208e67fbd",
+      "size": 35379,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/a0158f21fd01c6412b70d352a55b6be208e67fbd"
+    },
+    {
+      "path": "conservation/grid-search-results/approach2_with_exon/plots/chr14_scatterplot.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ea9c659dc70874562125aee9c318f1ab25575e64",
+      "size": 38622,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/ea9c659dc70874562125aee9c318f1ab25575e64"
+    },
+    {
+      "path": "conservation/grid-search-results/approach2_with_exon/plots/chr15_scatterplot.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ef9c744b8d97ed01c06ee2c7d6ed458d0b029e90",
+      "size": 34916,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/ef9c744b8d97ed01c06ee2c7d6ed458d0b029e90"
+    },
+    {
+      "path": "conservation/grid-search-results/approach2_with_exon/plots/chr16_scatterplot.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f064ad9f68006cdbe4e8d51b4c63b5b6ca0763e1",
+      "size": 32697,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/f064ad9f68006cdbe4e8d51b4c63b5b6ca0763e1"
+    },
+    {
+      "path": "conservation/grid-search-results/approach2_with_exon/plots/chr17_scatterplot.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a39c538cedfd943b0244bf75afdc79a4ed45db1d",
+      "size": 31179,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/a39c538cedfd943b0244bf75afdc79a4ed45db1d"
+    },
+    {
+      "path": "conservation/grid-search-results/approach2_with_exon/plots/chr18_scatterplot.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b51cf2b3a48de143a17893d2176c7ad09d75bcbf",
+      "size": 38509,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/b51cf2b3a48de143a17893d2176c7ad09d75bcbf"
+    },
+    {
+      "path": "conservation/grid-search-results/approach2_with_exon/plots/chr19_scatterplot.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "10dda250df2a305d9069ab81a88787b34cd1da21",
+      "size": 34609,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/10dda250df2a305d9069ab81a88787b34cd1da21"
+    },
+    {
+      "path": "conservation/grid-search-results/approach2_with_exon/plots/chr1_scatterplot.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8bfcff2988a7d536e35f8dd4b89d2a08865f9363",
+      "size": 36086,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/8bfcff2988a7d536e35f8dd4b89d2a08865f9363"
+    },
+    {
+      "path": "conservation/grid-search-results/approach2_with_exon/plots/chr20_scatterplot.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2e60ce2e67faaec92f8177b01aba8f5780672b34",
+      "size": 35979,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/2e60ce2e67faaec92f8177b01aba8f5780672b34"
+    },
+    {
+      "path": "conservation/grid-search-results/approach2_with_exon/plots/chr21_scatterplot.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7ccba461bffa603221335ba19df6bcd2a99fc8b3",
+      "size": 38455,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/7ccba461bffa603221335ba19df6bcd2a99fc8b3"
+    },
+    {
+      "path": "conservation/grid-search-results/approach2_with_exon/plots/chr22_scatterplot.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "27e900263c49ed9fcdab2160d5d32e219a25db43",
+      "size": 35514,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/27e900263c49ed9fcdab2160d5d32e219a25db43"
+    },
+    {
+      "path": "conservation/grid-search-results/approach2_with_exon/plots/chr3_scatterplot.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e72d9d1b36b4fa92237448dc41d46538e262deb0",
+      "size": 36519,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/e72d9d1b36b4fa92237448dc41d46538e262deb0"
+    },
+    {
+      "path": "conservation/grid-search-results/approach2_with_exon/plots/chr4_scatterplot.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "65e2b4883b6dde017386a1384eea0541edc2ab71",
+      "size": 36902,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/65e2b4883b6dde017386a1384eea0541edc2ab71"
+    },
+    {
+      "path": "conservation/grid-search-results/approach2_with_exon/plots/chr5_scatterplot.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "41ab207435f035792b65f7b08639fb34a3502b47",
+      "size": 42036,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/41ab207435f035792b65f7b08639fb34a3502b47"
+    },
+    {
+      "path": "conservation/grid-search-results/approach2_with_exon/plots/chr6_scatterplot.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "57ba9fac90d9bada71a4e94b988710e93ae1dc80",
+      "size": 40760,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/57ba9fac90d9bada71a4e94b988710e93ae1dc80"
+    },
+    {
+      "path": "conservation/grid-search-results/approach2_with_exon/plots/chr7_scatterplot.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3b4a2a6995eb83ed619af755891961ed20529107",
+      "size": 33884,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/3b4a2a6995eb83ed619af755891961ed20529107"
+    },
+    {
+      "path": "conservation/grid-search-results/approach2_with_exon/plots/chr8_scatterplot.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2c64a2f28504b8ed8b91deee24e24df0924f8029",
+      "size": 32698,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/2c64a2f28504b8ed8b91deee24e24df0924f8029"
+    },
+    {
+      "path": "conservation/grid-search-results/approach2_with_exon/plots/chr9_scatterplot.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7dc84c34f1ffc1c502fc1025fed6b7f112af80cd",
+      "size": 37936,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/7dc84c34f1ffc1c502fc1025fed6b7f112af80cd"
+    },
+    {
+      "path": "conservation/grid-search-results/approach2_with_exon/plots/chrX_scatterplot.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e8866f6cb453fd1a0b6f213a2d8720b754543419",
+      "size": 32220,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/e8866f6cb453fd1a0b6f213a2d8720b754543419"
+    },
+    {
+      "path": "conservation/grid-search-results/approach2_with_exon/plots/chrY_scatterplot.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "68fa682d3cd279bc25329aa1b2bcbde718b8b0de",
+      "size": 32143,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/68fa682d3cd279bc25329aa1b2bcbde718b8b0de"
+    },
+    {
+      "path": "data",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "be0a10790698b9bba53bda548750cf4bb121ae66",
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/trees/be0a10790698b9bba53bda548750cf4bb121ae66"
+    },
+    {
+      "path": "data/chm13#1.haplotypes_to_consider.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fdbbafb17392d004e5826eee6f5471c963acad58",
+      "size": 169,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/fdbbafb17392d004e5826eee6f5471c963acad58"
+    },
+    {
+      "path": "data/genomes_lookup.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fd90594d23e9200b9bf717643bbb4ac7aeb2b139",
+      "size": 413,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/fd90594d23e9200b9bf717643bbb4ac7aeb2b139"
+    },
+    {
+      "path": "data/grch38#1.haplotypes_to_consider.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "66ef8448b7c7b4304110fa8d9116cae5d79931b2",
+      "size": 170,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/66ef8448b7c7b4304110fa8d9116cae5d79931b2"
+    },
+    {
+      "path": "data/hg002#M.haplotypes_to_consider.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d26346b5a8768ee8897c400a90da146a61541860",
+      "size": 169,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/d26346b5a8768ee8897c400a90da146a61541860"
+    },
+    {
+      "path": "data/hg002#P.haplotypes_to_consider.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "20376673e65eae5bb67eb0cfddf443ede76d496c",
+      "size": 169,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/20376673e65eae5bb67eb0cfddf443ede76d496c"
+    },
+    {
+      "path": "data/mGorGor1#M.haplotypes_to_consider.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b6417d48922180bf6b9124fe45b6ce3a7c8fdd27",
+      "size": 153,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/b6417d48922180bf6b9124fe45b6ce3a7c8fdd27"
+    },
+    {
+      "path": "data/mGorGor1#P.haplotypes_to_consider.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a20f1e69a2f70d5c2492e2649c9c01362c800adc",
+      "size": 153,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/a20f1e69a2f70d5c2492e2649c9c01362c800adc"
+    },
+    {
+      "path": "data/mPanPan1#M.haplotypes_to_consider.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "dcf433d34e776557d7cef2ad2964643f6e4d3a55",
+      "size": 153,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/dcf433d34e776557d7cef2ad2964643f6e4d3a55"
+    },
+    {
+      "path": "data/mPanPan1#P.haplotypes_to_consider.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bcdac8580a48df8af3433129a6df76623e4e1130",
+      "size": 153,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/bcdac8580a48df8af3433129a6df76623e4e1130"
+    },
+    {
+      "path": "data/mPanTro3#1.haplotypes_to_consider.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9f95e1fd7610b3e4707c6ddaafa3214c19f76bf4",
+      "size": 153,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/9f95e1fd7610b3e4707c6ddaafa3214c19f76bf4"
+    },
+    {
+      "path": "data/mPanTro3#2.haplotypes_to_consider.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d36b8e478a7d315c593457c4423b01b83abf4954",
+      "size": 153,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/d36b8e478a7d315c593457c4423b01b83abf4954"
+    },
+    {
+      "path": "data/mPonAbe1#1.haplotypes_to_consider.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "abc0441dc83b066bceea82bf490e2442335f95e3",
+      "size": 153,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/abc0441dc83b066bceea82bf490e2442335f95e3"
+    },
+    {
+      "path": "data/mPonAbe1#2.haplotypes_to_consider.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5a933187a57d0648dcf67a84f539dfb35c07cc31",
+      "size": 153,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/5a933187a57d0648dcf67a84f539dfb35c07cc31"
+    },
+    {
+      "path": "data/mPonPyg2#1.haplotypes_to_consider.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7a2d6bccb43900042fea381ff26a08bd8f55cad1",
+      "size": 153,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/7a2d6bccb43900042fea381ff26a08bd8f55cad1"
+    },
+    {
+      "path": "data/mPonPyg2#2.haplotypes_to_consider.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8899d3403a37aaa0e7971989c3436ecc69688c3b",
+      "size": 153,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/8899d3403a37aaa0e7971989c3436ecc69688c3b"
+    },
+    {
+      "path": "data/mSymSyn1#1.haplotypes_to_consider.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "01c11ab416be703e7ec4ebe5d54536dbc82d7951",
+      "size": 153,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/01c11ab416be703e7ec4ebe5d54536dbc82d7951"
+    },
+    {
+      "path": "data/mSymSyn1#2.haplotypes_to_consider.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "420aae1af1db7c57d390d5ad77f78827d4efe9fc",
+      "size": 153,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/420aae1af1db7c57d390d5ad77f78827d4efe9fc"
+    },
+    {
+      "path": "data/primate_tree.nwk",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3a11856f7c4521518a5a24711de937d60d2a6f54",
+      "size": 278,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/3a11856f7c4521518a5a24711de937d60d2a6f54"
+    },
+    {
+      "path": "divergence",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "5d9cea5e7ae7b54ae784a03ce09c0c1362214750",
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/trees/5d9cea5e7ae7b54ae784a03ce09c0c1362214750"
+    },
+    {
+      "path": "divergence/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1776215c93fbea88055939c4d70ac297da498a3c",
+      "size": 3113,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/1776215c93fbea88055939c4d70ac297da498a3c"
+    },
+    {
+      "path": "divergence/basic-div",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "8301d47ca4158db366df163b850d755f64e52a68",
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/trees/8301d47ca4158db366df163b850d755f64e52a68"
+    },
+    {
+      "path": "divergence/basic-div/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fb5b0aa508b07182aee5a1bdad5d2d5a7d7b9c31",
+      "size": 1294,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/fb5b0aa508b07182aee5a1bdad5d2d5a7d7b9c31"
+    },
+    {
+      "path": "divergence/basic-div/basic-div-hg002#M-hg002#M-vs-hg002#P-autosomes.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b627c6c9218e66c2aeb37aac25cf6d7a4c7455cf",
+      "size": 371112,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/b627c6c9218e66c2aeb37aac25cf6d7a4c7455cf"
+    },
+    {
+      "path": "divergence/basic-div/basic-div-hg002#M-hg002#M-vs-mGorGor1#M-X.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "80cbcdb561d49961c7b576bc97c587c1f51c78a0",
+      "size": 20165,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/80cbcdb561d49961c7b576bc97c587c1f51c78a0"
+    },
+    {
+      "path": "divergence/basic-div/basic-div-hg002#M-hg002#M-vs-mGorGor1#M-autosomes.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "62b0660c6854d6f5b961ba581418ea1e1b010648",
+      "size": 378233,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/62b0660c6854d6f5b961ba581418ea1e1b010648"
+    },
+    {
+      "path": "divergence/basic-div/basic-div-hg002#M-hg002#M-vs-mPanPan1#M-X.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "dd15552cc1b6c0cbb93deb2c40fcf0e6730d8b11",
+      "size": 20177,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/dd15552cc1b6c0cbb93deb2c40fcf0e6730d8b11"
+    },
+    {
+      "path": "divergence/basic-div/basic-div-hg002#M-hg002#M-vs-mPanPan1#M-autosomes.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "42f3efa8e4c1d561f873e81124376f8536d45b2c",
+      "size": 379129,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/42f3efa8e4c1d561f873e81124376f8536d45b2c"
+    },
+    {
+      "path": "divergence/basic-div/basic-div-hg002#M-hg002#M-vs-mPanTro3#1-X.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "30cc1b26a34b11e88d5c1ccb50d1bafb1913a142",
+      "size": 20332,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/30cc1b26a34b11e88d5c1ccb50d1bafb1913a142"
+    },
+    {
+      "path": "divergence/basic-div/basic-div-hg002#M-hg002#M-vs-mPanTro3#1-autosomes.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e93daf5c52208295cb809cd7e68b5e3388689234",
+      "size": 381821,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/e93daf5c52208295cb809cd7e68b5e3388689234"
+    },
+    {
+      "path": "divergence/basic-div/basic-div-hg002#M-hg002#M-vs-mPonAbe1#1-X.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "959bbf3ff7ee3a686c012f3b54ebfcf76b4ad456",
+      "size": 20308,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/959bbf3ff7ee3a686c012f3b54ebfcf76b4ad456"
+    },
+    {
+      "path": "divergence/basic-div/basic-div-hg002#M-hg002#M-vs-mPonAbe1#1-autosomes.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "efbe160e1dfa5d0658e2a732b1ac3ee11a997dae",
+      "size": 381713,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/efbe160e1dfa5d0658e2a732b1ac3ee11a997dae"
+    },
+    {
+      "path": "divergence/basic-div/basic-div-hg002#M-hg002#M-vs-mPonPyg2#1-X.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a252c129cd2fc9729b2569cc879d62834d99edff",
+      "size": 20308,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/a252c129cd2fc9729b2569cc879d62834d99edff"
+    },
+    {
+      "path": "divergence/basic-div/basic-div-hg002#M-hg002#M-vs-mPonPyg2#1-autosomes.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "487ac3525e4e3f45dc6d1f958997a8668e783222",
+      "size": 381521,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/487ac3525e4e3f45dc6d1f958997a8668e783222"
+    },
+    {
+      "path": "divergence/basic-div/basic-div-hg002#P-hg002#P-vs-mGorGor1#P-Y.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0707acebbf5f5872b1ebcb9ba9a75d2178da47af",
+      "size": 7910,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/0707acebbf5f5872b1ebcb9ba9a75d2178da47af"
+    },
+    {
+      "path": "divergence/basic-div/basic-div-hg002#P-hg002#P-vs-mPanPan1#P-Y.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "680b8c5f71bbbb7bc34873abd55e3fb2d5b24aa5",
+      "size": 7742,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/680b8c5f71bbbb7bc34873abd55e3fb2d5b24aa5"
+    },
+    {
+      "path": "divergence/basic-div/basic-div-hg002#P-hg002#P-vs-mPanTro3#2-Y.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5c4d18e34911ba6e6256d2b85a87180058c9af11",
+      "size": 7805,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/5c4d18e34911ba6e6256d2b85a87180058c9af11"
+    },
+    {
+      "path": "divergence/basic-div/basic-div-hg002#P-hg002#P-vs-mPonAbe1#2-Y.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4faf6eeb654f882ae8e0aa320962189e2953503d",
+      "size": 7997,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/4faf6eeb654f882ae8e0aa320962189e2953503d"
+    },
+    {
+      "path": "divergence/basic-div/basic-div-hg002#P-hg002#P-vs-mPonPyg2#2-Y.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3dd79f557e9031ce57af78f9dc1dc6446cda106a",
+      "size": 7889,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/3dd79f557e9031ce57af78f9dc1dc6446cda106a"
+    },
+    {
+      "path": "divergence/basic-div/basic-div-mGorGor1#M-mGorGor1#M-vs-hg002#M-X.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "aea5051b25b794ddb100289e8b1aa559bc6db6c2",
+      "size": 22914,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/aea5051b25b794ddb100289e8b1aa559bc6db6c2"
+    },
+    {
+      "path": "divergence/basic-div/basic-div-mGorGor1#M-mGorGor1#M-vs-hg002#M-autosomes.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "253cab55f8db2bb82eeebd7aced35e53f0d7a9cf",
+      "size": 431505,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/253cab55f8db2bb82eeebd7aced35e53f0d7a9cf"
+    },
+    {
+      "path": "divergence/basic-div/basic-div-mGorGor1#M-mGorGor1#M-vs-mGorGor1#P-autosomes.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3a79cc3cf923e338eea36dcc835dfb4a0cf97e8f",
+      "size": 450328,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/3a79cc3cf923e338eea36dcc835dfb4a0cf97e8f"
+    },
+    {
+      "path": "divergence/basic-div/basic-div-mGorGor1#P-mGorGor1#P-vs-hg002#P-Y.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e873cc8ba7542bd27e598cf6c0d41309e7faa12a",
+      "size": 8375,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/e873cc8ba7542bd27e598cf6c0d41309e7faa12a"
+    },
+    {
+      "path": "divergence/basic-div/basic-div-mPanPan1#M-mPanPan1#M-vs-hg002#M-X.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bc2b00e5f87f1ae628fcca57f4dc1c4d32da18b6",
+      "size": 20891,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/bc2b00e5f87f1ae628fcca57f4dc1c4d32da18b6"
+    },
+    {
+      "path": "divergence/basic-div/basic-div-mPanPan1#M-mPanPan1#M-vs-hg002#M-autosomes.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "874a78b9fdf80bf9a1922697b417c8110d17d153",
+      "size": 398538,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/874a78b9fdf80bf9a1922697b417c8110d17d153"
+    },
+    {
+      "path": "divergence/basic-div/basic-div-mPanPan1#M-mPanPan1#M-vs-mPanPan1#P-autosomes.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6e67e908030ea6e42f58c337bcdd119cc6e72f9a",
+      "size": 412025,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/6e67e908030ea6e42f58c337bcdd119cc6e72f9a"
+    },
+    {
+      "path": "divergence/basic-div/basic-div-mPanPan1#M-mPanPan1#M-vs-mPanTro3#1-X.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "aec89201db3a91827c92617e48ba297cb6a6d968",
+      "size": 21559,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/aec89201db3a91827c92617e48ba297cb6a6d968"
+    },
+    {
+      "path": "divergence/basic-div/basic-div-mPanPan1#M-mPanPan1#M-vs-mPanTro3#1-autosomes.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "93c6a8b4b680345d2b72e1be76d92e74c83c1400",
+      "size": 413934,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/93c6a8b4b680345d2b72e1be76d92e74c83c1400"
+    },
+    {
+      "path": "divergence/basic-div/basic-div-mPanPan1#P-mPanPan1#P-vs-hg002#P-Y.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0e80d7013311aa81b2ee52f00289df74e32aac55",
+      "size": 5942,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/0e80d7013311aa81b2ee52f00289df74e32aac55"
+    },
+    {
+      "path": "divergence/basic-div/basic-div-mPanPan1#P-mPanPan1#P-vs-mPanTro3#2-Y.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "76d8e216e9ab5078299428beef8a6c331a806b25",
+      "size": 6250,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/76d8e216e9ab5078299428beef8a6c331a806b25"
+    },
+    {
+      "path": "divergence/basic-div/basic-div-mPanTro3#1-mPanTro3#1-vs-hg002#M-X.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8246b72743d7e2f55e6ce571f56bf51c92fc3c00",
+      "size": 20200,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/8246b72743d7e2f55e6ce571f56bf51c92fc3c00"
+    },
+    {
+      "path": "divergence/basic-div/basic-div-mPanTro3#1-mPanTro3#1-vs-hg002#M-autosomes.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5bac9e4d6fd9001fc49273286af5bececb053940",
+      "size": 393932,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/5bac9e4d6fd9001fc49273286af5bececb053940"
+    },
+    {
+      "path": "divergence/basic-div/basic-div-mPanTro3#1-mPanTro3#1-vs-mPanPan1#M-X.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fc27cd98e6bc7278832e1e5be5824b462833e4a0",
+      "size": 20662,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/fc27cd98e6bc7278832e1e5be5824b462833e4a0"
+    },
+    {
+      "path": "divergence/basic-div/basic-div-mPanTro3#1-mPanTro3#1-vs-mPanPan1#M-autosomes.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2b69b76e8b1c78857b803ebaaf209b59b7e729a4",
+      "size": 405272,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/2b69b76e8b1c78857b803ebaaf209b59b7e729a4"
+    },
+    {
+      "path": "divergence/basic-div/basic-div-mPanTro3#1-mPanTro3#1-vs-mPanTro3#2-autosomes.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "edb580a59a438be3b609afd3819bb799629d92f6",
+      "size": 408966,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/edb580a59a438be3b609afd3819bb799629d92f6"
+    },
+    {
+      "path": "divergence/basic-div/basic-div-mPanTro3#2-mPanTro3#2-vs-hg002#P-Y.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0c2e40f4eb40db3b711dd3970982b3a1a118b023",
+      "size": 4833,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/0c2e40f4eb40db3b711dd3970982b3a1a118b023"
+    },
+    {
+      "path": "divergence/basic-div/basic-div-mPanTro3#2-mPanTro3#2-vs-mPanPan1#P-Y.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f439c02dcfc429e8645daf6187dd6843bd059131",
+      "size": 4932,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/f439c02dcfc429e8645daf6187dd6843bd059131"
+    },
+    {
+      "path": "divergence/basic-div/basic-div-mPonAbe1#1-mPonAbe1#1-vs-hg002#M-X.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8205d1ade99b2465aa5d408a760778e96d89b2da",
+      "size": 21304,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/8205d1ade99b2465aa5d408a760778e96d89b2da"
+    },
+    {
+      "path": "divergence/basic-div/basic-div-mPonAbe1#1-mPonAbe1#1-vs-hg002#M-autosomes.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b805236c4524a49df30c3e87255388335a450b72",
+      "size": 399254,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/b805236c4524a49df30c3e87255388335a450b72"
+    },
+    {
+      "path": "divergence/basic-div/basic-div-mPonAbe1#1-mPonAbe1#1-vs-mPonAbe1#2-autosomes.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c133137fd26016c1e1b29e0ba9cfef6966fd516e",
+      "size": 414910,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/c133137fd26016c1e1b29e0ba9cfef6966fd516e"
+    },
+    {
+      "path": "divergence/basic-div/basic-div-mPonAbe1#1-mPonAbe1#1-vs-mPonPyg2#1-X.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "baee15b9e8e01c0dd6b466b66f1280069d60bcc7",
+      "size": 22040,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/baee15b9e8e01c0dd6b466b66f1280069d60bcc7"
+    },
+    {
+      "path": "divergence/basic-div/basic-div-mPonAbe1#1-mPonAbe1#1-vs-mPonPyg2#1-autosomes.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f1bf09ff277d2b4c11ffed367469de042fd73230",
+      "size": 414646,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/f1bf09ff277d2b4c11ffed367469de042fd73230"
+    },
+    {
+      "path": "divergence/basic-div/basic-div-mPonAbe1#2-mPonAbe1#2-vs-hg002#P-Y.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "86d26269dfccf8dbcf78da71c131ca29bf3a753c",
+      "size": 8515,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/86d26269dfccf8dbcf78da71c131ca29bf3a753c"
+    },
+    {
+      "path": "divergence/basic-div/basic-div-mPonAbe1#2-mPonAbe1#2-vs-mPonPyg2#2-Y.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "27b43db580fc662c3dbff0fe05264cbafa69ae99",
+      "size": 9003,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/27b43db580fc662c3dbff0fe05264cbafa69ae99"
+    },
+    {
+      "path": "divergence/basic-div/basic-div-mPonPyg2#1-mPonPyg2#1-vs-hg002#M-X.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d9ec3da8442686b0fbd077c3e17775701ba5dd21",
+      "size": 21064,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/d9ec3da8442686b0fbd077c3e17775701ba5dd21"
+    },
+    {
+      "path": "divergence/basic-div/basic-div-mPonPyg2#1-mPonPyg2#1-vs-hg002#M-autosomes.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "49237a6d3d718502f39fd9ea1dc4f9fba999868c",
+      "size": 397390,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/49237a6d3d718502f39fd9ea1dc4f9fba999868c"
+    },
+    {
+      "path": "divergence/basic-div/basic-div-mPonPyg2#1-mPonPyg2#1-vs-mPonAbe1#1-X.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "eace15a311111dee38e46f128d354a4c705d0899",
+      "size": 21768,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/eace15a311111dee38e46f128d354a4c705d0899"
+    },
+    {
+      "path": "divergence/basic-div/basic-div-mPonPyg2#1-mPonPyg2#1-vs-mPonAbe1#1-autosomes.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b54cb73a7338a73575b1b727f2b219f35f65190d",
+      "size": 412533,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/b54cb73a7338a73575b1b727f2b219f35f65190d"
+    },
+    {
+      "path": "divergence/basic-div/basic-div-mPonPyg2#1-mPonPyg2#1-vs-mPonPyg2#2-autosomes.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b49bf0f52d9021e598076698a58da7e9a6388789",
+      "size": 412905,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/b49bf0f52d9021e598076698a58da7e9a6388789"
+    },
+    {
+      "path": "divergence/basic-div/basic-div-mPonPyg2#2-mPonPyg2#2-vs-hg002#P-Y.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b57dc8e78d774a12e921f1e6e73c85a9e5c105e9",
+      "size": 6379,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/b57dc8e78d774a12e921f1e6e73c85a9e5c105e9"
+    },
+    {
+      "path": "divergence/basic-div/basic-div-mPonPyg2#2-mPonPyg2#2-vs-mPonAbe1#2-Y.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "60af92d5d6b943620345bd2d0dc65655ef2c84ce",
+      "size": 6735,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/60af92d5d6b943620345bd2d0dc65655ef2c84ce"
+    },
+    {
+      "path": "divergence/basic-div/plots-by-species",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "2edeac3b0f1ccb95c4df34c4851d714d765c132b",
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/trees/2edeac3b0f1ccb95c4df34c4851d714d765c132b"
+    },
+    {
+      "path": "divergence/basic-div/plots-by-species/div-by-species-ai-nonumbers.pdf",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5de80678642030a1768966cf3038df57ab44e7d6",
+      "size": 624769,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/5de80678642030a1768966cf3038df57ab44e7d6"
+    },
+    {
+      "path": "divergence/basic-div/plots-by-species/div-by-species-ai.pdf",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f54e1ddb7b72eaa775c81a69ed026eb9219f2ac2",
+      "size": 650044,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/f54e1ddb7b72eaa775c81a69ed026eb9219f2ac2"
+    },
+    {
+      "path": "divergence/basic-div/plots-by-species/div-by-species-zoomed-ai-nonumbers.pdf",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ea2f2f47943587f5b17ab38e05273a476552882e",
+      "size": 614429,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/ea2f2f47943587f5b17ab38e05273a476552882e"
+    },
+    {
+      "path": "divergence/basic-div/plots-by-species/div-by-species-zoomed-ai.pdf",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2cd5c86c70e8fc82292f3423c6ca832e10425da7",
+      "size": 639077,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/2cd5c86c70e8fc82292f3423c6ca832e10425da7"
+    },
+    {
+      "path": "divergence/basic-div/plots-by-species/div-by-species-zoomed.pdf",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "206b42d9b115e90d9c3c4ec8a1ddc5f0ddd247cb",
+      "size": 62503,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/206b42d9b115e90d9c3c4ec8a1ddc5f0ddd247cb"
+    },
+    {
+      "path": "divergence/basic-div/plots-by-species/div-by-species.pdf",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7d716e3d241e018c75c2d3be676078d05a0a246e",
+      "size": 60609,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/7d716e3d241e018c75c2d3be676078d05a0a246e"
+    },
+    {
+      "path": "divergence/basic-div/plots-by-species/interspecies_divergence.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3f77e7b23861ee0b509c99f2ef26d61ce679d9d1",
+      "size": 3791641,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/3f77e7b23861ee0b509c99f2ef26d61ce679d9d1"
+    },
+    {
+      "path": "divergence/basic-div/plots-by-species/intraspecies_divergence.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6727eed988afc95914ceb4cc31d397f4d9b08148",
+      "size": 3707435,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/6727eed988afc95914ceb4cc31d397f4d9b08148"
+    },
+    {
+      "path": "divergence/basic-div/plots-by-species/mean_summary-restrict-1MB.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bf8b3a6abad0a62cafa838471f7dfe59440af459",
+      "size": 2857,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/bf8b3a6abad0a62cafa838471f7dfe59440af459"
+    },
+    {
+      "path": "divergence/basic-div/plots-by-species/mean_summary.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2dd1d9d83e261c1a7c6dce8fdf4b3e7f45abf5d9",
+      "size": 2910,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/2dd1d9d83e261c1a7c6dce8fdf4b3e7f45abf5d9"
+    },
+    {
+      "path": "divergence/basic-div/plots-by-species/median_summary-restrict-1MB.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4d456247b042fbefc6f04b930ae2142c77abe354",
+      "size": 2022,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/4d456247b042fbefc6f04b930ae2142c77abe354"
+    },
+    {
+      "path": "divergence/basic-div/plots-by-species/median_summary.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c5795901d315b6adcdd9864afe58e38422706f8b",
+      "size": 1997,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/c5795901d315b6adcdd9864afe58e38422706f8b"
+    },
+    {
+      "path": "divergence/basic-div/plots-by-species/plot_divergence_by_species.R",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "dda287ed041382c0694fb070bcbb55676fac4167",
+      "size": 4497,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/dda287ed041382c0694fb070bcbb55676fac4167"
+    },
+    {
+      "path": "divergence/basic-div/plots-by-species/plot_divergence_by_species_from_iker.qmd",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "865608e0442637f505b4e48e3923350dbc1bf3df",
+      "size": 2407,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/865608e0442637f505b4e48e3923350dbc1bf3df"
+    },
+    {
+      "path": "divergence/basic-div/plots-by-species/plot_divergence_by_species_zoomed.R",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "af08c0c1bbf6a63099b1f876083fb9ae99fd4c64",
+      "size": 4587,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/af08c0c1bbf6a63099b1f876083fb9ae99fd4c64"
+    },
+    {
+      "path": "divergence/basic-div/plots-by-species/stage_data_part1.R",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d24434924a0c28a4103b48b60a153680748bd917",
+      "size": 9478,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/d24434924a0c28a4103b48b60a153680748bd917"
+    },
+    {
+      "path": "divergence/basic-div/plots-by-species/stage_data_part2.R",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "78e80e740c7c5c542b00e57052d145634e6e00ac",
+      "size": 1639,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/78e80e740c7c5c542b00e57052d145634e6e00ac"
+    },
+    {
+      "path": "divergence/basic-div/plots-by-species/stage_data_part3.R",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ac05a54e5694588528701ab5990b6b2433ec4f07",
+      "size": 1621,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/ac05a54e5694588528701ab5990b6b2433ec4f07"
+    },
+    {
+      "path": "divergence/basic-div/plots",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "2d3d9c16171555beadd7c501452b34a1f6288e81",
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/trees/2d3d9c16171555beadd7c501452b34a1f6288e81"
+    },
+    {
+      "path": "divergence/basic-div/plots/gap_divergence-final.pdf",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ef49a9825441b75789025267171cee054edd2acd",
+      "size": 37946,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/ef49a9825441b75789025267171cee054edd2acd"
+    },
+    {
+      "path": "divergence/basic-div/plots/gap_divergence-final.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9137bbd766af44a90705eb20f87da1e9196659b1",
+      "size": 162246,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/9137bbd766af44a90705eb20f87da1e9196659b1"
+    },
+    {
+      "path": "divergence/basic-div/plots/gap_divergence-v2.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "94b276c9b7d6bb08ff56544871d260c3b730ce5b",
+      "size": 351718,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/94b276c9b7d6bb08ff56544871d260c3b730ce5b"
+    },
+    {
+      "path": "divergence/basic-div/plots/gap_divergence.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "348c834187bb3e44f9163e393f58ab77eef5faf0",
+      "size": 340885,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/348c834187bb3e44f9163e393f58ab77eef5faf0"
+    },
+    {
+      "path": "divergence/basic-div/plots/gap_divergence_zoomed-v2.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cfab630276d756e495902ebb7bb3e63d766a3059",
+      "size": 369762,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/cfab630276d756e495902ebb7bb3e63d766a3059"
+    },
+    {
+      "path": "divergence/basic-div/plots/gap_divergence_zoomed.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "11408a01fbf189ed358f2da135c444e189525dda",
+      "size": 352784,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/11408a01fbf189ed358f2da135c444e189525dda"
+    },
+    {
+      "path": "divergence/basic-div/plots/plot_gap_divergence.R",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "98d6328279850341686a68cfea94daf6164054f3",
+      "size": 2925,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/98d6328279850341686a68cfea94daf6164054f3"
+    },
+    {
+      "path": "divergence/basic-div/plots/plot_gap_divergence_final.R",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f9ac105e4d517d5531ae7a71159aad321b2b1eca",
+      "size": 6907,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/f9ac105e4d517d5531ae7a71159aad321b2b1eca"
+    },
+    {
+      "path": "divergence/basic-div/plots/plot_snv_divergence.R",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3d3954fdfb4108d2b494e582ef873dbc17adf871",
+      "size": 2757,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/3d3954fdfb4108d2b494e582ef873dbc17adf871"
+    },
+    {
+      "path": "divergence/basic-div/plots/plot_snv_divergence_final.R",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a71e84260338ff2ba1e19b08e2e33bc7f2a7326d",
+      "size": 6839,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/a71e84260338ff2ba1e19b08e2e33bc7f2a7326d"
+    },
+    {
+      "path": "divergence/basic-div/plots/plot_snv_divergence_histogram.R",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8a16b82192aa244df4647dbc843150261f0d5030",
+      "size": 3237,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/8a16b82192aa244df4647dbc843150261f0d5030"
+    },
+    {
+      "path": "divergence/basic-div/plots/snv_divergence-final.pdf",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1fef8bd819515fbd65de2041254e823f76e48b33",
+      "size": 39569,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/1fef8bd819515fbd65de2041254e823f76e48b33"
+    },
+    {
+      "path": "divergence/basic-div/plots/snv_divergence-final.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5a3ded214e166e1735c3018b8f0ff68e04179481",
+      "size": 158672,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/5a3ded214e166e1735c3018b8f0ff68e04179481"
+    },
+    {
+      "path": "divergence/basic-div/plots/snv_divergence-v2.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bd6229207bb981aa27bf04bb6ae9e9cb196c9b8f",
+      "size": 299284,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/bd6229207bb981aa27bf04bb6ae9e9cb196c9b8f"
+    },
+    {
+      "path": "divergence/basic-div/plots/snv_divergence.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cc1b478b26aa20bab6ff1bf6b0e475f486435e47",
+      "size": 306869,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/cc1b478b26aa20bab6ff1bf6b0e475f486435e47"
+    },
+    {
+      "path": "divergence/basic-div/plots/stage_data.R",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e84df4d2c4e0414a6d0e3c77f3638f00143dcc64",
+      "size": 5143,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/e84df4d2c4e0414a6d0e3c77f3638f00143dcc64"
+    },
+    {
+      "path": "divergence/basic-div/run_basic.sbatch",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "016300ebdbdf9b772a01d433ea7ca48b7243b5a1",
+      "size": 464,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/016300ebdbdf9b772a01d433ea7ca48b7243b5a1"
+    },
+    {
+      "path": "divergence/basic-div/submit_basic.sh",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fd4c48f7dd6616a84257b01a48ab68879c20ac32",
+      "size": 244,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/fd4c48f7dd6616a84257b01a48ab68879c20ac32"
+    },
+    {
+      "path": "divergence/download.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b1e7eff2f097cc4c4833b586cb2264d96804ede4",
+      "size": 3602,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/b1e7eff2f097cc4c4833b586cb2264d96804ede4"
+    },
+    {
+      "path": "divergence/tools",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "9b5b928d635561a4cd9c2b9f0903ee399c2e245c",
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/trees/9b5b928d635561a4cd9c2b9f0903ee399c2e245c"
+    },
+    {
+      "path": "divergence/tools/compute_basic_div.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a60708982cc6dff1c2f4b82a0a570115b44881c4",
+      "size": 9932,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/a60708982cc6dff1c2f4b82a0a570115b44881c4"
+    },
+    {
+      "path": "ils",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "c57f95b110ef8e554b04abe40cf733ab61cfdbf0",
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/trees/c57f95b110ef8e554b04abe40cf733ab61cfdbf0"
+    },
+    {
+      "path": "ils/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b4dc749cd63384c09f75a3808f16eed01e1f546c",
+      "size": 6,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/b4dc749cd63384c09f75a3808f16eed01e1f546c"
+    },
+    {
+      "path": "impg",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "fd572807176789f49f8cd60bdd2d414bc3fa0a84",
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/trees/fd572807176789f49f8cd60bdd2d414bc3fa0a84"
+    },
+    {
+      "path": "impg/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fc7148a281c8c260aea13aa85debcb6ab2a0e13d",
+      "size": 7,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/fc7148a281c8c260aea13aa85debcb6ab2a0e13d"
+    },
+    {
+      "path": "scripts",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "2ff85ddeceacbca274ac82676d417c9725d34fb7",
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/trees/2ff85ddeceacbca274ac82676d417c9725d34fb7"
+    },
+    {
+      "path": "scripts/phastCons.sh",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2cc3e5c8dc3251e79df1e4fc7e3f617e44e32b48",
+      "size": 701,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/2cc3e5c8dc3251e79df1e4fc7e3f617e44e32b48"
+    },
+    {
+      "path": "wgatools",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "786a7ffd393dce5f6bce70ddb572948eeec0e2a4",
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/trees/786a7ffd393dce5f6bce70ddb572948eeec0e2a4"
+    },
+    {
+      "path": "wgatools/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d09b7af377de552ddb5582b1321c36bc60c63efa",
+      "size": 11,
+      "url": "https://api.github.com/repos/T2T-apes/ape_pangenome/git/blobs/d09b7af377de552ddb5582b1321c36bc60c63efa"
+    }
+  ],
+  "truncated": false
+}

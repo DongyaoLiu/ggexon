@@ -1,0 +1,1274 @@
+[
+  {
+    "track": "PPYh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PPYh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/expression/mPonPyg2_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054635.2",
+    "source_start0": 30944981,
+    "source_end0": 30966050,
+    "read_name": "SRR22452369.322489",
+    "flag": 0,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30926928,
+    "read_end0": 30970717,
+    "strand": "+",
+    "cigar": "1715=27800N2=1X14=1X17=1X5=1X7=1X7=1X9=1X1=3X11=1X11=1I6=2D5=14021N14=2X5=1X2=2X20=1X2=1X12=1X13=1X1=2X5=2X10=2X3=1D1X6=7D1X3=1X7=1X15=9S",
+    "query_length": 1968,
+    "aligned_overlap_bp": 106,
+    "blocks_bed0": [
+      [
+        30926928,
+        30928643
+      ],
+      [
+        30956443,
+        30956445
+      ],
+      [
+        30956445,
+        30956446
+      ],
+      [
+        30956446,
+        30956460
+      ],
+      [
+        30956460,
+        30956461
+      ],
+      [
+        30956461,
+        30956478
+      ],
+      [
+        30956478,
+        30956479
+      ],
+      [
+        30956479,
+        30956484
+      ],
+      [
+        30956484,
+        30956485
+      ],
+      [
+        30956485,
+        30956492
+      ],
+      [
+        30956492,
+        30956493
+      ],
+      [
+        30956493,
+        30956500
+      ],
+      [
+        30956500,
+        30956501
+      ],
+      [
+        30956501,
+        30956510
+      ],
+      [
+        30956510,
+        30956511
+      ],
+      [
+        30956511,
+        30956512
+      ],
+      [
+        30956512,
+        30956515
+      ],
+      [
+        30956515,
+        30956526
+      ],
+      [
+        30956526,
+        30956527
+      ],
+      [
+        30956527,
+        30956538
+      ],
+      [
+        30956538,
+        30956544
+      ],
+      [
+        30956546,
+        30956551
+      ],
+      [
+        30970572,
+        30970586
+      ],
+      [
+        30970586,
+        30970588
+      ],
+      [
+        30970588,
+        30970593
+      ],
+      [
+        30970593,
+        30970594
+      ],
+      [
+        30970594,
+        30970596
+      ],
+      [
+        30970596,
+        30970598
+      ],
+      [
+        30970598,
+        30970618
+      ],
+      [
+        30970618,
+        30970619
+      ],
+      [
+        30970619,
+        30970621
+      ],
+      [
+        30970621,
+        30970622
+      ],
+      [
+        30970622,
+        30970634
+      ],
+      [
+        30970634,
+        30970635
+      ],
+      [
+        30970635,
+        30970648
+      ],
+      [
+        30970648,
+        30970649
+      ],
+      [
+        30970649,
+        30970650
+      ],
+      [
+        30970650,
+        30970652
+      ],
+      [
+        30970652,
+        30970657
+      ],
+      [
+        30970657,
+        30970659
+      ],
+      [
+        30970659,
+        30970669
+      ],
+      [
+        30970669,
+        30970671
+      ],
+      [
+        30970671,
+        30970674
+      ],
+      [
+        30970675,
+        30970676
+      ],
+      [
+        30970676,
+        30970682
+      ],
+      [
+        30970689,
+        30970690
+      ],
+      [
+        30970690,
+        30970693
+      ],
+      [
+        30970693,
+        30970694
+      ],
+      [
+        30970694,
+        30970701
+      ],
+      [
+        30970701,
+        30970702
+      ],
+      [
+        30970702,
+        30970717
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30928643,
+        30956443
+      ],
+      [
+        30956551,
+        30970572
+      ]
+    ]
+  },
+  {
+    "track": "PPYh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PPYh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/expression/mPonPyg2_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054635.2",
+    "source_start0": 30944981,
+    "source_end0": 30966050,
+    "read_name": "SRR22452369.1095619",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30941838,
+    "read_end0": 30967644,
+    "strand": "-",
+    "cigar": "220=133N89=21914N170=523N142=2379N236=",
+    "query_length": 857,
+    "aligned_overlap_bp": 312,
+    "blocks_bed0": [
+      [
+        30941838,
+        30942058
+      ],
+      [
+        30942191,
+        30942280
+      ],
+      [
+        30964194,
+        30964364
+      ],
+      [
+        30964887,
+        30965029
+      ],
+      [
+        30967408,
+        30967644
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30942058,
+        30942191
+      ],
+      [
+        30942280,
+        30964194
+      ],
+      [
+        30964364,
+        30964887
+      ],
+      [
+        30965029,
+        30967408
+      ]
+    ]
+  },
+  {
+    "track": "PPYh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PPYh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/expression/mPonPyg2_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054635.2",
+    "source_start0": 30944981,
+    "source_end0": 30966050,
+    "read_name": "SRR22452369.3256087",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30941838,
+    "read_end0": 30967519,
+    "strand": "-",
+    "cigar": "220=133N89=21914N170=523N142=2379N111=",
+    "query_length": 732,
+    "aligned_overlap_bp": 312,
+    "blocks_bed0": [
+      [
+        30941838,
+        30942058
+      ],
+      [
+        30942191,
+        30942280
+      ],
+      [
+        30964194,
+        30964364
+      ],
+      [
+        30964887,
+        30965029
+      ],
+      [
+        30967408,
+        30967519
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30942058,
+        30942191
+      ],
+      [
+        30942280,
+        30964194
+      ],
+      [
+        30964364,
+        30964887
+      ],
+      [
+        30965029,
+        30967408
+      ]
+    ]
+  },
+  {
+    "track": "PPYh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PPYh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/expression/mPonPyg2_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054635.2",
+    "source_start0": 30944981,
+    "source_end0": 30966050,
+    "read_name": "SRR22452369.3331546",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30941838,
+    "read_end0": 30967519,
+    "strand": "-",
+    "cigar": "183=2I2=1D34=133N87=1D1=21914N24=1D91=1X53=523N55=1D86=2379N89=1I10=1D11=",
+    "query_length": 730,
+    "aligned_overlap_bp": 310,
+    "blocks_bed0": [
+      [
+        30941838,
+        30942021
+      ],
+      [
+        30942021,
+        30942023
+      ],
+      [
+        30942024,
+        30942058
+      ],
+      [
+        30942191,
+        30942278
+      ],
+      [
+        30942279,
+        30942280
+      ],
+      [
+        30964194,
+        30964218
+      ],
+      [
+        30964219,
+        30964310
+      ],
+      [
+        30964310,
+        30964311
+      ],
+      [
+        30964311,
+        30964364
+      ],
+      [
+        30964887,
+        30964942
+      ],
+      [
+        30964943,
+        30965029
+      ],
+      [
+        30967408,
+        30967497
+      ],
+      [
+        30967497,
+        30967507
+      ],
+      [
+        30967508,
+        30967519
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30942058,
+        30942191
+      ],
+      [
+        30942280,
+        30964194
+      ],
+      [
+        30964364,
+        30964887
+      ],
+      [
+        30965029,
+        30967408
+      ]
+    ]
+  },
+  {
+    "track": "PPYh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PPYh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/expression/mPonPyg2_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054635.2",
+    "source_start0": 30944981,
+    "source_end0": 30966050,
+    "read_name": "SRR22452369.3789853",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30941838,
+    "read_end0": 30984240,
+    "strand": "-",
+    "cigar": "28=2D1X189=133N89=10847N259=10808N170=532N133=18932N279=",
+    "query_length": 1148,
+    "aligned_overlap_bp": 562,
+    "blocks_bed0": [
+      [
+        30941838,
+        30941866
+      ],
+      [
+        30941868,
+        30941869
+      ],
+      [
+        30941869,
+        30942058
+      ],
+      [
+        30942191,
+        30942280
+      ],
+      [
+        30953127,
+        30953386
+      ],
+      [
+        30964194,
+        30964364
+      ],
+      [
+        30964896,
+        30965029
+      ],
+      [
+        30983961,
+        30984240
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30942058,
+        30942191
+      ],
+      [
+        30942280,
+        30953127
+      ],
+      [
+        30953386,
+        30964194
+      ],
+      [
+        30964364,
+        30964896
+      ],
+      [
+        30965029,
+        30983961
+      ]
+    ]
+  },
+  {
+    "track": "PPYh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PPYh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/expression/mPonPyg2_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054635.2",
+    "source_start0": 30944981,
+    "source_end0": 30966050,
+    "read_name": "SRR22452369.164420",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30941843,
+    "read_end0": 30967505,
+    "strand": "-",
+    "cigar": "215=133N89=21914N162=1I8=523N142=2379N97=",
+    "query_length": 714,
+    "aligned_overlap_bp": 312,
+    "blocks_bed0": [
+      [
+        30941843,
+        30942058
+      ],
+      [
+        30942191,
+        30942280
+      ],
+      [
+        30964194,
+        30964356
+      ],
+      [
+        30964356,
+        30964364
+      ],
+      [
+        30964887,
+        30965029
+      ],
+      [
+        30967408,
+        30967505
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30942058,
+        30942191
+      ],
+      [
+        30942280,
+        30964194
+      ],
+      [
+        30964364,
+        30964887
+      ],
+      [
+        30965029,
+        30967408
+      ]
+    ]
+  },
+  {
+    "track": "PPYh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PPYh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/expression/mPonPyg2_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054635.2",
+    "source_start0": 30944981,
+    "source_end0": 30966050,
+    "read_name": "SRR22452369.1132484",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30941843,
+    "read_end0": 30967499,
+    "strand": "-",
+    "cigar": "215=133N89=21914N170=523N142=2379N91=",
+    "query_length": 707,
+    "aligned_overlap_bp": 312,
+    "blocks_bed0": [
+      [
+        30941843,
+        30942058
+      ],
+      [
+        30942191,
+        30942280
+      ],
+      [
+        30964194,
+        30964364
+      ],
+      [
+        30964887,
+        30965029
+      ],
+      [
+        30967408,
+        30967499
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30942058,
+        30942191
+      ],
+      [
+        30942280,
+        30964194
+      ],
+      [
+        30964364,
+        30964887
+      ],
+      [
+        30965029,
+        30967408
+      ]
+    ]
+  },
+  {
+    "track": "PPYh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PPYh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/expression/mPonPyg2_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054635.2",
+    "source_start0": 30944981,
+    "source_end0": 30966050,
+    "read_name": "SRR22452369.1698576",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30941843,
+    "read_end0": 30967457,
+    "strand": "-",
+    "cigar": "215=133N89=21914N170=532N133=1575N139=665N49=",
+    "query_length": 795,
+    "aligned_overlap_bp": 303,
+    "blocks_bed0": [
+      [
+        30941843,
+        30942058
+      ],
+      [
+        30942191,
+        30942280
+      ],
+      [
+        30964194,
+        30964364
+      ],
+      [
+        30964896,
+        30965029
+      ],
+      [
+        30966604,
+        30966743
+      ],
+      [
+        30967408,
+        30967457
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30942058,
+        30942191
+      ],
+      [
+        30942280,
+        30964194
+      ],
+      [
+        30964364,
+        30964896
+      ],
+      [
+        30965029,
+        30966604
+      ],
+      [
+        30966743,
+        30967408
+      ]
+    ]
+  },
+  {
+    "track": "PPYh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PPYh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/expression/mPonPyg2_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054635.2",
+    "source_start0": 30944981,
+    "source_end0": 30966050,
+    "read_name": "SRR22452369.1871138",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30941843,
+    "read_end0": 30964276,
+    "strand": "-",
+    "cigar": "215=133N89=21933N63=",
+    "query_length": 367,
+    "aligned_overlap_bp": 63,
+    "blocks_bed0": [
+      [
+        30941843,
+        30942058
+      ],
+      [
+        30942191,
+        30942280
+      ],
+      [
+        30964213,
+        30964276
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30942058,
+        30942191
+      ],
+      [
+        30942280,
+        30964213
+      ]
+    ]
+  },
+  {
+    "track": "PPYh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PPYh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/expression/mPonPyg2_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054635.2",
+    "source_start0": 30944981,
+    "source_end0": 30966050,
+    "read_name": "SRR22452369.3048348",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30941843,
+    "read_end0": 30967517,
+    "strand": "-",
+    "cigar": "215=133N89=21914N170=532N133=2379N109=",
+    "query_length": 716,
+    "aligned_overlap_bp": 303,
+    "blocks_bed0": [
+      [
+        30941843,
+        30942058
+      ],
+      [
+        30942191,
+        30942280
+      ],
+      [
+        30964194,
+        30964364
+      ],
+      [
+        30964896,
+        30965029
+      ],
+      [
+        30967408,
+        30967517
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30942058,
+        30942191
+      ],
+      [
+        30942280,
+        30964194
+      ],
+      [
+        30964364,
+        30964896
+      ],
+      [
+        30965029,
+        30967408
+      ]
+    ]
+  },
+  {
+    "track": "PPYh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PPYh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/expression/mPonPyg2_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054635.2",
+    "source_start0": 30944981,
+    "source_end0": 30966050,
+    "read_name": "SRR22452369.4052504",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30941844,
+    "read_end0": 30967500,
+    "strand": "-",
+    "cigar": "214=133N89=21914N170=532N133=2379N92=",
+    "query_length": 698,
+    "aligned_overlap_bp": 303,
+    "blocks_bed0": [
+      [
+        30941844,
+        30942058
+      ],
+      [
+        30942191,
+        30942280
+      ],
+      [
+        30964194,
+        30964364
+      ],
+      [
+        30964896,
+        30965029
+      ],
+      [
+        30967408,
+        30967500
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30942058,
+        30942191
+      ],
+      [
+        30942280,
+        30964194
+      ],
+      [
+        30964364,
+        30964896
+      ],
+      [
+        30965029,
+        30967408
+      ]
+    ]
+  },
+  {
+    "track": "PPYh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PPYh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/expression/mPonPyg2_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054635.2",
+    "source_start0": 30944981,
+    "source_end0": 30966050,
+    "read_name": "SRR22452369.1206489",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30941858,
+    "read_end0": 30967591,
+    "strand": "-",
+    "cigar": "18S20=2I35=1D17=1X3=2X5=1X2=1X1=2I3=1X1=4I36=1I5=1I4=1I61=133N32=1D56=21914N75=1D94=523N126=1D10=1X4=2379N74=1I51=2X56=",
+    "query_length": 810,
+    "aligned_overlap_bp": 310,
+    "blocks_bed0": [
+      [
+        30941858,
+        30941878
+      ],
+      [
+        30941878,
+        30941913
+      ],
+      [
+        30941914,
+        30941931
+      ],
+      [
+        30941931,
+        30941932
+      ],
+      [
+        30941932,
+        30941935
+      ],
+      [
+        30941935,
+        30941937
+      ],
+      [
+        30941937,
+        30941942
+      ],
+      [
+        30941942,
+        30941943
+      ],
+      [
+        30941943,
+        30941945
+      ],
+      [
+        30941945,
+        30941946
+      ],
+      [
+        30941946,
+        30941947
+      ],
+      [
+        30941947,
+        30941950
+      ],
+      [
+        30941950,
+        30941951
+      ],
+      [
+        30941951,
+        30941952
+      ],
+      [
+        30941952,
+        30941988
+      ],
+      [
+        30941988,
+        30941993
+      ],
+      [
+        30941993,
+        30941997
+      ],
+      [
+        30941997,
+        30942058
+      ],
+      [
+        30942191,
+        30942223
+      ],
+      [
+        30942224,
+        30942280
+      ],
+      [
+        30964194,
+        30964269
+      ],
+      [
+        30964270,
+        30964364
+      ],
+      [
+        30964887,
+        30965013
+      ],
+      [
+        30965014,
+        30965024
+      ],
+      [
+        30965024,
+        30965025
+      ],
+      [
+        30965025,
+        30965029
+      ],
+      [
+        30967408,
+        30967482
+      ],
+      [
+        30967482,
+        30967533
+      ],
+      [
+        30967533,
+        30967535
+      ],
+      [
+        30967535,
+        30967591
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30942058,
+        30942191
+      ],
+      [
+        30942280,
+        30964194
+      ],
+      [
+        30964364,
+        30964887
+      ],
+      [
+        30965029,
+        30967408
+      ]
+    ]
+  },
+  {
+    "track": "PPYh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PPYh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/expression/mPonPyg2_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054635.2",
+    "source_start0": 30944981,
+    "source_end0": 30966050,
+    "read_name": "SRR22452369.2598573",
+    "flag": 0,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30943819,
+    "read_end0": 30960800,
+    "strand": "+",
+    "cigar": "64=2783N178=12296N670=1D202=1D167=1D618=",
+    "query_length": 1899,
+    "aligned_overlap_bp": 1835,
+    "blocks_bed0": [
+      [
+        30943819,
+        30943883
+      ],
+      [
+        30946666,
+        30946844
+      ],
+      [
+        30959140,
+        30959810
+      ],
+      [
+        30959811,
+        30960013
+      ],
+      [
+        30960014,
+        30960181
+      ],
+      [
+        30960182,
+        30960800
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30943883,
+        30946666
+      ],
+      [
+        30946844,
+        30959140
+      ]
+    ]
+  },
+  {
+    "track": "PPYh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PPYh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/expression/mPonPyg2_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054635.2",
+    "source_start0": 30944981,
+    "source_end0": 30966050,
+    "read_name": "SRR22452369.2752264",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30946126,
+    "read_end0": 30948144,
+    "strand": "-",
+    "cigar": "2018=",
+    "query_length": 2018,
+    "aligned_overlap_bp": 2018,
+    "blocks_bed0": [
+      [
+        30946126,
+        30948144
+      ]
+    ],
+    "junctions_bed0": []
+  },
+  {
+    "track": "PPYh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PPYh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/expression/mPonPyg2_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054635.2",
+    "source_start0": 30944981,
+    "source_end0": 30966050,
+    "read_name": "SRR22452369.1120762",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30956570,
+    "read_end0": 30967529,
+    "strand": "-",
+    "cigar": "1S879=6764N151=2240N925=",
+    "query_length": 1956,
+    "aligned_overlap_bp": 1030,
+    "blocks_bed0": [
+      [
+        30956570,
+        30957449
+      ],
+      [
+        30964213,
+        30964364
+      ],
+      [
+        30966604,
+        30967529
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30957449,
+        30964213
+      ],
+      [
+        30964364,
+        30966604
+      ]
+    ]
+  },
+  {
+    "track": "PPYh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PPYh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/expression/mPonPyg2_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054635.2",
+    "source_start0": 30944981,
+    "source_end0": 30966050,
+    "read_name": "SRR22452369.506825",
+    "flag": 0,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30960405,
+    "read_end0": 30965467,
+    "strand": "+",
+    "cigar": "3927=468N667=",
+    "query_length": 4594,
+    "aligned_overlap_bp": 4594,
+    "blocks_bed0": [
+      [
+        30960405,
+        30964332
+      ],
+      [
+        30964800,
+        30965467
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30964332,
+        30964800
+      ]
+    ]
+  },
+  {
+    "track": "PPYh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PPYh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/expression/mPonPyg2_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054635.2",
+    "source_start0": 30944981,
+    "source_end0": 30966050,
+    "read_name": "SRR22452369.3861876",
+    "flag": 0,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30961214,
+    "read_end0": 30962580,
+    "strand": "+",
+    "cigar": "93=2D128=1D73=5D1064=",
+    "query_length": 1358,
+    "aligned_overlap_bp": 1358,
+    "blocks_bed0": [
+      [
+        30961214,
+        30961307
+      ],
+      [
+        30961309,
+        30961437
+      ],
+      [
+        30961438,
+        30961511
+      ],
+      [
+        30961516,
+        30962580
+      ]
+    ],
+    "junctions_bed0": []
+  },
+  {
+    "track": "PPYh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PPYh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/expression/mPonPyg2_v2.0.IsoSeq_testis.bam",
+    "source_chrom": "CM054635.2",
+    "source_start0": 30944981,
+    "source_end0": 30966050,
+    "read_name": "SRR22452369.313734",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 30964238,
+    "read_end0": 30967401,
+    "strand": "-",
+    "cigar": "126=523N142=1575N797=",
+    "query_length": 1065,
+    "aligned_overlap_bp": 268,
+    "blocks_bed0": [
+      [
+        30964238,
+        30964364
+      ],
+      [
+        30964887,
+        30965029
+      ],
+      [
+        30966604,
+        30967401
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        30964364,
+        30964887
+      ],
+      [
+        30965029,
+        30966604
+      ]
+    ]
+  }
+]

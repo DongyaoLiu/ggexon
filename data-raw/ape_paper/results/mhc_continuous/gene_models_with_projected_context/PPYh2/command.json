@@ -1,0 +1,61 @@
+{
+  "command": [
+    "/private/tmp/ggexon-mhc-liftoff-venv/bin/liftoff",
+    "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/PPYh2.fa",
+    "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/PPYh1.fa",
+    "-g",
+    "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/PPYh2/source.gff3",
+    "-o",
+    "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/PPYh2/projected.gff3",
+    "-u",
+    "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/PPYh2/unmapped.txt",
+    "-dir",
+    "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/PPYh2/intermediates",
+    "-p",
+    "2",
+    "-a",
+    "0.95",
+    "-s",
+    "0.95",
+    "-exclude_partial"
+  ],
+  "tools": {
+    "version": "1.6.3",
+    "direct_url": {
+      "url": "https://github.com/agshumate/Liftoff.git",
+      "vcs_info": {
+        "commit_id": "94d6073ee2400c438d181a67d3af1e362197d839",
+        "vcs": "git"
+      }
+    },
+    "minimap2_version": "2.31-r1302",
+    "minimap2_sha256": "233e289649c6886531810b3917ac1180c72beb432c3e64ba1d918f3ed3365907"
+  },
+  "source_window": {
+    "track": "PPYh1",
+    "species_id": "PPY",
+    "haplotype": "h1",
+    "label": "Bornean orangutan h1",
+    "chr": "chr5_hap1_hsa6",
+    "start0": "28708357",
+    "end0": "34513199",
+    "length": "5804842",
+    "orientation": "+",
+    "twoBit_url": "https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/mPonPyg2_v2.0.2bit"
+  },
+  "target_window": {
+    "track": "PPYh2",
+    "species_id": "PPY",
+    "haplotype": "h2",
+    "label": "Bornean orangutan h2",
+    "chr": "chr5_hap2_hsa6",
+    "start0": "28710772",
+    "end0": "34509381",
+    "length": "5798609",
+    "orientation": "+",
+    "twoBit_url": "https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/mPonPyg2_v2.0.2bit"
+  },
+  "source_gff_sha256": "b904da9fd90787f1a964c71ffbd6a54cfe7506e81be5ddb6855adcdd752628d6",
+  "target_fasta_sha256": "b9b697eca6e691d762fb2c95a9a90567e926646c4fad0d02fd667896b7dbbdcf",
+  "source_fasta_sha256": "0a7c1cd3b2d0987adfa68158d21447280395553948a4e807f02216d3b8564905"
+}

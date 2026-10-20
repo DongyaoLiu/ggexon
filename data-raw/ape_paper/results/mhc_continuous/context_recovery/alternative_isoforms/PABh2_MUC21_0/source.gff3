@@ -1,0 +1,6 @@
+##gff-version 3
+PABh1	source	gene	2339964	2344417	.	+	.	ID=alternate;Name=MUC21
+PABh1	source	mRNA	2339964	2344417	.	+	.	ID=alternate.t1;Parent=alternate
+PABh1	source	exon	2339964	2340407	.	+	.	ID=ex0;Parent=alternate.t1
+PABh1	source	exon	2342434	2343473	.	+	.	ID=ex1;Parent=alternate.t1
+PABh1	source	exon	2343792	2344417	.	+	.	ID=ex2;Parent=alternate.t1

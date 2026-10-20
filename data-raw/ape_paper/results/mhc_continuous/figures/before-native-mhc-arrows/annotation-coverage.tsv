@@ -1,0 +1,14 @@
+track	source_gene_models	annotation_evidence	context_gene_arrows	curated_genes
+SSYh2	150	same-species Liftoff projection	150	18
+SSYh1	169	released annotation	152	18
+PABh2	161	same-species Liftoff projection	161	22
+PABh1	183	released annotation	166	22
+PPYh2	162	same-species Liftoff projection	162	23
+PPYh1	182	released annotation	166	22
+GGOh2	162	same-species Liftoff projection	162	20
+GGOh1	183	released annotation	164	22
+PPAh2	183	released annotation	165	20
+PPAh1	162	same-species Liftoff projection	162	19
+PTRh2	164	same-species Liftoff projection	164	20
+PTRh1	183	released annotation	164	22
+HSAh1	419	released annotation	382	37
