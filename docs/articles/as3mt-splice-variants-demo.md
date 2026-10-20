@@ -8,10 +8,8 @@ reconstruction**, and chimpanzee full-length AS3MT. Coordinates use
 downloads are needed.
 
 ``` r
-
 library(ggexon)
 library(ggplot2)
-#> Warning: package 'ggplot2' was built under R version 4.4.3
 demo_dir <- system.file("extdata", "as3mt", package = "ggexon")
 source(file.path(demo_dir, "load-as3mt-example.R"), local = TRUE)
 as3mt <- load_as3mt_example(demo_dir)
@@ -29,7 +27,6 @@ automatically follows that same piecewise scale in both annotation
 panels.
 
 ``` r
-
 as3mt_plot <- plot_as3mt_example(as3mt, intron_factor = 30, show_protein = FALSE)
 as3mt_plot$plot
 ```
@@ -44,7 +41,6 @@ Transcript comparison; introns compressed 30-fold.
 The helper uses this grammar:
 
 ``` r
-
 ggexon(as3mt$comparison) +
   geom_exon2(aes(xmin = xmin - 0.5, xmax = xmax + 0.5,
     ymin = isoform_y, transcripts = transcript_name, fill = exon_class),
@@ -75,7 +71,6 @@ Its codon is **GRCh38 chr10:102872584–102872586** in E4. The example
 helper returns that projection:
 
 ``` r
-
 protein_change <- as3mt_protein_change(as3mt)
 knitr::kable(protein_change[, c("position", "xmin", "xmax", "lost_aa")],
   col.names = c("Canonical residue", "Codon start", "Codon end", "Lost aa"))
@@ -96,7 +91,6 @@ Show the protein consequence with two distinct annotations:
   this site.
 
 ``` r
-
 protein_loss <- as3mt_protein_loss(as3mt)
 as3mt_plot$plot + as3mt_protein_layers(protein_change, protein_loss)
 ```
@@ -130,7 +124,6 @@ verified against the bundled FASTAs; the donor-anchored alignment places
 72 chimp gap columns opposite two human repeat copies.
 
 ``` r
-
 v <- readRDS(file.path(demo_dir, "vntr-dna.rds"))
 sequence_data <- alignseq_data(v$aligned, v$anchors, reference = "human",
   regions = v$regions, details = v$details, flank = 0)
@@ -143,7 +136,6 @@ spaced schematically; smooth connectors retain genomic anchors. For a
 short window, `mode = "rows"` shows all selected bases:
 
 ``` r
-
 sequence_example <- plot_as3mt_alignseq(demo_dir, intron_factor = 30)
 sequence_example$rows
 ```
@@ -184,7 +176,6 @@ compressed-intron scales. The lower human transcript remains a
 tested human alleles schematically.
 
 ``` r
-
 grid::grid.newpage()
 grid::grid.draw(sequence_example$grob)
 ```
