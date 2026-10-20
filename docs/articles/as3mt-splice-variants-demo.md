@@ -8,8 +8,10 @@ reconstruction**, and chimpanzee full-length AS3MT. Coordinates use
 downloads are needed.
 
 ``` r
+
 library(ggexon)
 library(ggplot2)
+#> Warning: package 'ggplot2' was built under R version 4.4.3
 demo_dir <- system.file("extdata", "as3mt", package = "ggexon")
 source(file.path(demo_dir, "load-as3mt-example.R"), local = TRUE)
 as3mt <- load_as3mt_example(demo_dir)
@@ -27,6 +29,7 @@ automatically follows that same piecewise scale in both annotation
 panels.
 
 ``` r
+
 as3mt_plot <- plot_as3mt_example(as3mt, intron_factor = 30, show_protein = FALSE)
 as3mt_plot$plot
 ```
@@ -41,6 +44,7 @@ Transcript comparison; introns compressed 30-fold.
 The helper uses this grammar:
 
 ``` r
+
 ggexon(as3mt$comparison) +
   geom_exon2(aes(xmin = xmin - 0.5, xmax = xmax + 0.5,
     ymin = isoform_y, transcripts = transcript_name, fill = exon_class),
@@ -71,6 +75,7 @@ Its codon is **GRCh38 chr10:102872584–102872586** in E4. The example
 helper returns that projection:
 
 ``` r
+
 protein_change <- as3mt_protein_change(as3mt)
 knitr::kable(protein_change[, c("position", "xmin", "xmax", "lost_aa")],
   col.names = c("Canonical residue", "Codon start", "Codon end", "Lost aa"))
@@ -80,23 +85,32 @@ knitr::kable(protein_change[, c("position", "xmin", "xmax", "lost_aa")],
 |------------------:|------------:|----------:|--------:|
 |               103 |   102872584 | 102872586 |     102 |
 
-[`geom_protein_lollipop()`](https://dongyaoliu.github.io/ggexon/reference/geom_protein_lollipop.md)
-accepts the projected genomic anchor. Its stem starts on the human
-reference CDS; the head labels the new start and amino-acid loss. The
-helper assigns **every generated layer** to `track = "human"`, so the
-event is not repeated on the chimp panel. The genomic scale moves the
-anchor with the exon when intron compression changes.
+Show the protein consequence with two distinct annotations:
+
+- An orange interval marks canonical **aa1–102 absent from d2d3**. It is
+  projected through the full-length CDS and split across coding exons;
+  introns are not highlighted. This is a protein loss, not a 306-bp
+  genomic deletion.
+- A vertical start tick marks **M103**, which becomes **M1 in d2d3**.
+  Both residues are methionine; there is no amino-acid substitution at
+  this site.
 
 ``` r
-protein_layers <- geom_protein_lollipop(protein_change, position = "anchor",
-  spread_threshold = 0, track_ymax = 1.8, mutation_y = 1.57,
-  show_backbone = FALSE, show_domains = FALSE)
-for (i in seq_along(protein_layers)) protein_layers[[i]]$data$track <- "human"
-as3mt_plot$plot + protein_layers
+
+protein_loss <- as3mt_protein_loss(as3mt)
+as3mt_plot$plot + as3mt_protein_layers(protein_change, protein_loss)
 ```
 
-The label marks an **isoform protein-start change**, not a
-splicing-causal SNV.
+The helpers use
+[`project_domains_to_genome()`](https://dongyaoliu.github.io/ggexon/reference/project_domains_to_genome.md)
+for the absent protein interval, then
+[`geom_rect()`](https://ggplot2.tidyverse.org/reference/geom_tile.html),
+[`geom_segment()`](https://ggplot2.tidyverse.org/reference/geom_segment.html)
+and
+[`geom_text()`](https://ggplot2.tidyverse.org/reference/geom_text.html)
+for its display. All layers stay on the human reference panel and follow
+the genomic scale. Substitution lollipops are reserved for actual
+reference/alternative residues.
 
 ## 3. DNA detail at the exon-1 repeat
 
@@ -116,6 +130,7 @@ verified against the bundled FASTAs; the donor-anchored alignment places
 72 chimp gap columns opposite two human repeat copies.
 
 ``` r
+
 v <- readRDS(file.path(demo_dir, "vntr-dna.rds"))
 sequence_data <- alignseq_data(v$aligned, v$anchors, reference = "human",
   regions = v$regions, details = v$details, flank = 0)
@@ -128,6 +143,7 @@ spaced schematically; smooth connectors retain genomic anchors. For a
 short window, `mode = "rows"` shows all selected bases:
 
 ``` r
+
 sequence_example <- plot_as3mt_alignseq(demo_dir, intron_factor = 30)
 sequence_example$rows
 ```
@@ -160,21 +176,24 @@ are in `data-raw/as3mt`; the genomic ribbons use LASTZ
 
 ## Combined result
 
-The human reference lollipop marks **aa103 (−102 aa)**. Purple outlines
-locate the VNTR; each species keeps its own DNA callout. Separate bars
-below the legend show exon and compressed-intron scales. The lower human
-transcript remains a **paper-defined reconstruction**; the repeat-count
-strip summarizes the tested human alleles schematically.
+The human reference shows **aa1–102 absent** and a **start tick at M103
+(d2d3 M1)**. Purple outlines locate the VNTR; each species keeps its own
+DNA callout. Separate bars below the legend show exon and
+compressed-intron scales. The lower human transcript remains a
+**paper-defined reconstruction**; the repeat-count strip summarizes the
+tested human alleles schematically.
 
 ``` r
+
 grid::grid.newpage()
 grid::grid.draw(sequence_example$grob)
 ```
 
-![Combined AS3MT transcript comparison with an orange lollipop on the
-human reference at the E4 codon for canonical residue 103, labelled
-minus 102 amino acids. Purple VNTR units, species-specific DNA callouts,
-and separate exon/intron scale bars complete the
+![Combined AS3MT transcript comparison with an orange interval split
+across human coding exons for canonical residues 1–102 absent from d2d3,
+and a separate E4 start tick labelled M103 to M1. Purple VNTR units,
+species-specific DNA callouts, and separate exon/intron scale bars
+complete the
 figure.](as3mt-splice-variants-demo_files/figure-html/as3mt-alignseq-1.png)
 
 AS3MT transcripts, assigned protein-start change and exon-1 VNTR.

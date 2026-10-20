@@ -75,21 +75,23 @@ knitr::kable(protein_change[, c("position", "xmin", "xmax", "lost_aa")],
   col.names = c("Canonical residue", "Codon start", "Codon end", "Lost aa"))
 ```
 
-`geom_protein_lollipop()` accepts the projected genomic anchor. Its stem starts
-on the human reference CDS; the head labels the new start and amino-acid loss.
-The helper assigns **every generated layer** to `track = "human"`, so the event
-is not repeated on the chimp panel. The genomic scale moves the anchor with
-the exon when intron compression changes.
+Show the protein consequence with two distinct annotations:
+
+- An orange interval marks canonical **aa1–102 absent from d2d3**. It is
+  projected through the full-length CDS and split across coding exons; introns
+  are not highlighted. This is a protein loss, not a 306-bp genomic deletion.
+- A vertical start tick marks **M103**, which becomes **M1 in d2d3**. Both
+  residues are methionine; there is no amino-acid substitution at this site.
 
 ```{r as3mt-protein-grammar, eval=FALSE}
-protein_layers <- geom_protein_lollipop(protein_change, position = "anchor",
-  spread_threshold = 0, track_ymax = 1.8, mutation_y = 1.57,
-  show_backbone = FALSE, show_domains = FALSE)
-for (i in seq_along(protein_layers)) protein_layers[[i]]$data$track <- "human"
-as3mt_plot$plot + protein_layers
+protein_loss <- as3mt_protein_loss(as3mt)
+as3mt_plot$plot + as3mt_protein_layers(protein_change, protein_loss)
 ```
 
-The label marks an **isoform protein-start change**, not a splicing-causal SNV.
+The helpers use `project_domains_to_genome()` for the absent protein interval,
+then `geom_rect()`, `geom_segment()` and `geom_text()` for its display. All
+layers stay on the human reference panel and follow the genomic scale.
+Substitution lollipops are reserved for actual reference/alternative residues.
 
 # 3. DNA detail at the exon-1 repeat
 
@@ -143,13 +145,14 @@ snapshots and provenance. Repository preparation/export scripts are in
 
 # Combined result
 
-The human reference lollipop marks **aa103 (−102 aa)**. Purple outlines locate
+The human reference shows **aa1–102 absent** and a **start tick at M103 (d2d3 M1)**.
+Purple outlines locate
 the VNTR; each species keeps its own DNA callout. Separate bars below the legend
 show exon and compressed-intron scales. The lower human transcript remains a
 **paper-defined reconstruction**; the repeat-count strip summarizes the tested
 human alleles schematically.
 
-```{r as3mt-alignseq, fig.height=6.5, fig.alt="Combined AS3MT transcript comparison with an orange lollipop on the human reference at the E4 codon for canonical residue 103, labelled minus 102 amino acids. Purple VNTR units, species-specific DNA callouts, and separate exon/intron scale bars complete the figure.", fig.cap="AS3MT transcripts, assigned protein-start change and exon-1 VNTR."}
+```{r as3mt-alignseq, fig.height=6.5, fig.alt="Combined AS3MT transcript comparison with an orange interval split across human coding exons for canonical residues 1–102 absent from d2d3, and a separate E4 start tick labelled M103 to M1. Purple VNTR units, species-specific DNA callouts, and separate exon/intron scale bars complete the figure.", fig.cap="AS3MT transcripts, assigned protein-start change and exon-1 VNTR."}
 grid::grid.newpage()
 grid::grid.draw(sequence_example$grob)
 ```

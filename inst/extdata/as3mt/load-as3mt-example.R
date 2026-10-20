@@ -67,21 +67,46 @@ as3mt_protein_change <- function(example) {
       as.numeric(assigned$translation_start_genomic_1based)))
   projected$anchor <- (projected$xmin + projected$xmax) / 2
   projected$track <- "human"
-  projected$label <- sprintf("d2d3 start: aa%d (\u2212%d aa)", projected$position, projected$lost_aa)
+  projected$protein_event <- "isoform_start"
+  projected$label <- sprintf("Start: M%d \u2192 M1", projected$position)
   projected
 }
 
-as3mt_protein_layers <- function(change, base_size = 8, base_family = "serif") {
-  layers <- ggexon::geom_protein_lollipop(change, position = "anchor",
-    spread_threshold = 0, track_ymax = 1.8, mutation_y = 1.57,
-    show_backbone = FALSE, show_domains = FALSE, stem_linewidth = .35,
-    point_size = 1.8, point_colour = "#D55E00", stem_colour = "#D55E00")
-  # Generated stem tables lack the input facet key: set it on every component.
-  for (i in seq_along(layers)) layers[[i]]$data$track <- "human"
-  c(layers, list(ggplot2::geom_text(data = change,
-    ggplot2::aes(x = anchor, label = label), y = 1.64, hjust = -.06,
-    family = base_family, size = base_size / (72.27 / 25.4),
-    colour = "#D55E00", inherit.aes = FALSE)))
+# Use the existing interval projector for the absent N-terminal protein region.
+# This annotation is a protein interval, not a functional-domain claim.
+as3mt_protein_loss <- function(example) {
+  lost <- example$specification$reference_validation$paper_defined_d2d3_reconstruction$lost_N_terminal_residues
+  human <- suppressMessages(ggexon::subset_individual(example$comparison,
+    individual = "human", chr = "chr10"))
+  interval <- methods::new("SynProteinDomainAnnotation", name = "d2d3_absent",
+    source_file = "<paper-defined absent protein interval>", keytype = "gene_id",
+    loaded = TRUE, lazy = FALSE, domain_data = S4Vectors::DataFrame(
+      gene_id = "AS3MT", domain = "Absent in d2d3", start = 1L, end = lost))
+  human <- ggexon::add_annotation(human, interval, set_active = FALSE)
+  projected <- ggexon::project_domains_to_genome(human, annotation = "d2d3_absent",
+    transcripts = "human_full")
+  projected <- projected[order(projected$xmin), , drop = FALSE]
+  stopifnot(sum(projected$xmax - projected$xmin + 1) == 3 * lost)
+  projected$track <- "human"
+  projected$protein_event <- "lost_residues"
+  projected
+}
+
+as3mt_protein_layers <- function(change, loss, base_size = 8, base_family = "serif") {
+  text_size <- base_size / (72.27 / 25.4)
+  lost_label <- loss[1, , drop = FALSE]
+  lost_label$label <- sprintf("aa1\u2013%d lost", change$lost_aa)
+  list(
+    ggplot2::geom_rect(data = loss, ggplot2::aes(xmin = xmin - .5, xmax = xmax + .5,
+      ymin = 1.70, ymax = 1.77), fill = "#D55E00", colour = NA, inherit.aes = FALSE),
+    ggplot2::geom_segment(data = change, ggplot2::aes(x = anchor, xend = anchor),
+      y = 1.74, yend = 2.28, colour = "#D55E00", linewidth = .55, inherit.aes = FALSE),
+    ggplot2::geom_text(data = lost_label, ggplot2::aes(x = xmin, label = label),
+      y = 1.53, hjust = 0, family = base_family, size = text_size,
+      colour = "#D55E00", inherit.aes = FALSE),
+    ggplot2::geom_text(data = change, ggplot2::aes(x = anchor, label = label),
+      y = 1.53, hjust = -.07, family = base_family, size = text_size,
+      colour = "#D55E00", inherit.aes = FALSE))
 }
 
 plot_as3mt_example <- function(example, intron_factor = 30, base_size = 8, base_family = "serif",
@@ -142,8 +167,9 @@ plot_as3mt_example <- function(example, intron_factor = 30, base_size = 8, base_
       legend.title = ggplot2::element_text(size = base_size),
       legend.position = "bottom", panel.spacing.y = grid::unit(.35, "lines"))
   change <- as3mt_protein_change(example)
-  if (isTRUE(show_protein)) plot <- plot + as3mt_protein_layers(change, base_size, base_family)
-  list(plot = plot, build = ggexon::ggexon_build(plot), protein_change = change)
+  loss <- as3mt_protein_loss(example)
+  if (isTRUE(show_protein)) plot <- plot + as3mt_protein_layers(change, loss, base_size, base_family)
+  list(plot = plot, build = ggexon::ggexon_build(plot), protein_change = change, protein_loss = loss)
 }
 
 # Explicit DNA differences; the overview's ungapped ribbons are not variant calls.

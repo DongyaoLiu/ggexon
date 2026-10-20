@@ -85,7 +85,7 @@ to the same exon/intron scales. The plot retains only the two highest identity
 categories of the ungapped LASTZ alignment.
 
 See the [AS3MT transcript, protein and DNA tutorial](https://dongyaoliu.github.io/ggexon/articles/as3mt-splice-variants-demo.html)
-for the reproducible offline example, projected protein-start lollipop,
+for the reproducible offline example, projected protein-loss interval and start marker,
 and aligned DNA repeat detail.
 
 ## Installation
