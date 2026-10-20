@@ -108,6 +108,10 @@ links, trees, and protein mutation summaries.
   : Draw mutation labels as a dedicated text layer
 - [`geom_aa_variant()`](https://dongyaoliu.github.io/ggexon/reference/geom_aa_variant.md)
   : Annotate amino-acid variants on the exon structure
+- [`geom_alignseq()`](https://dongyaoliu.github.io/ggexon/reference/geom_alignseq.md)
+  : Annotate pairwise DNA differences with anchored sequence detail
+- [`alignseq_data()`](https://dongyaoliu.github.io/ggexon/reference/alignseq_data.md)
+  : Prepare anchored pairwise DNA differences
 - [`geom_nuclink()`](https://dongyaoliu.github.io/ggexon/reference/geom_nuclink.md)
   : Draw cross-panel nucleotide links
 - [`geom_synteny_link()`](https://dongyaoliu.github.io/ggexon/reference/geom_synteny_link.md)
