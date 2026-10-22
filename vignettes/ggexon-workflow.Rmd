@@ -7,344 +7,1140 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
+```{r setup, include = FALSE}
 knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
+  collapse = TRUE, comment = "#>", message = FALSE,
+  fig.width = 9, fig.height = 3.5, dpi = 160
 )
+```
+
+# From data to a genomic figure
+
+Genomic figures often combine exon positions on a chromosome, links between
+genomes, signal depth, and positions along a protein. ggexon connects these
+views through stored annotations and a ggplot2 plotting grammar.
+
+Each example below presents the input, constructs or prepares the ggexon
+object, and chooses geoms, scales, and a theme. The small gene models,
+gene-order matrix, protein counts, and DNA strings are synthetic teaching
+data. The pairwise and coverage examples use bundled files. Run the chunks
+in order in an R session with the current version of ggexon installed.
+
+```{r libraries, warning = FALSE}
 library(ggexon)
+library(ggplot2)
 ```
 
-# Overview
+## Major data objects
 
-`ggexon` is designed for synteny-aware genome plotting with support for
-multiple annotation layers, derived CDS and protein sequences, and patch-based
-curation workflows.
+| Object | What it stores | Typical input |
+| --- | --- | --- |
+| `SynFeatureAnnotation` | Genes, transcripts, exons, and CDS | GFF3 or GTF |
+| `SynIndividual` | One genome or sample and its annotation layers | Annotation, optional FASTA |
+| `SynSpecies` | Individuals and comparative relationships | Individuals, alignments, homology, trees |
+| `SynPairAlignment`, `SynMultiAlignment` | Relationships between genomes | PAF/PSL, or supported multiple-alignment data |
+| `SynBigWigAnnotation`, `SynVCFAnnotation` | Region-queryable signal or variants | BigWig or VCF |
+| `SynProteinDomainAnnotation`, `SynProteinMutationAnnotation` | Domains or mutation summaries | Domain and mutation tables |
+| `SynAnnotationPatch` | An explicit gene-model correction | Corrected feature ranges |
+| `HomologyAnnotation` | Reference/query gene mappings | Curated table or imported BLAST results |
+| `SynLayout`, `SynLocusSet` | Reusable panel windows or comparable loci | Named coordinate windows |
 
-This vignette sketches the core workflow:
+## Plotting functions supplied by ggexon
 
-1. Create a `SynIndividual`
-2. Load a feature annotation
-3. Attach additional annotation layers
-4. Set human-readable labels
-5. Patch corrected gene models
-6. Translate proteins from selected genes
-7. Combine multiple individuals in a `SynSpecies` object
-8. Query and filter pairwise alignments
-9. Plot directly from a `SynSpecies` container
+`ggexon()` starts the figure. Syn-aware layers resolve stored annotations
+when the plot is built; table-based layers use prepared data. Ordinary
+ggplot2 scales and themes remain available. A theme changes appearance; it
+does not select a genomic window or transform coordinates.
 
-# Create a `SynIndividual`
+### Geoms
 
-```{r eval = FALSE}
-x <- SynIndividual(
-  genome_file = system.file("extdata", "compact_synspecies", "XZ1516.fasta", package = "ggexon"),
-  annotation_file = system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
-    package = "ggexon"
-  )
+| Function | What it draws |
+| --- | --- |
+| `geom_exon()` | Exon rectangles, transcript backbones, and strand direction |
+| `geom_exon2()` | Exon/CDS/UTR models with explicit introns and optional schematic compression |
+| `geom_genetag()` | One directional gene span, with optional labels and overlap lanes |
+| `geom_genebox()` | Equal-size gene boxes with internal strand arrows |
+| `geom_genelabel()` | Gene labels and their leader lines, including homology-based names |
+| `geom_genelink()` | Straight, elbow, or spline lines between supplied coordinate pairs |
+| `geom_nuclink()` | Nucleotide-alignment ribbons between genomic panels |
+| `geom_synteny_link()` | Interval ribbons for supplied gene, exon, or block relationships |
+| `geom_coverage()` | Continuous coverage or signal tracks |
+| `geom_motif()` | Motif/domain blocks; attached protein domains can be projected onto genomic CDS intervals |
+| `geom_aa_variant()` | Amino-acid variant markers projected onto transcript models |
+| `geom_protein_lollipop()` | A protein backbone, domain blocks, and mutation stems and heads |
+| `geom_mutation_label()` | Mutation labels positioned to match mutation markers |
+| `geom_alignseq()` | Anchored DNA-difference markers or aligned sequence rows |
+| `geom_genomic_tree()` | Attaches a rectangular tree for alignment with genomic panels |
+
+### Scales and guides
+
+| Function | What it controls |
+| --- | --- |
+| `scale_x_ggexon_genomic()` | Shared exon-aware intron compression with original genomic coordinate labels |
+| `guide_x_ggexon_piecewise()` | Representative exon and intron scale bars for the compressed genomic x scale |
+| `strip_scale_x()` | Gene-order display widths or explicit shared comparison slots |
+| `strip_scale()` | Compatibility alias for `strip_scale_x()` |
+| `scale_x_facet_labels()` | Different x-axis labels for facets sharing a continuous x scale |
+| `scale_panel_annotation()` | Shared or independent annotation-panel y scales, with optional visible limits |
+| `scale_panel_coverage()` | Shared or independent coverage-panel y scales, with optional manual or automatic visible limits |
+
+### Facets and panel layout
+
+| Function | What it arranges |
+| --- | --- |
+| `facet_genomics()` | Annotation, coverage, and intervening link panels |
+| `facet_genomictree()` | Genomic panels ordered by tree tips, beside one spanning tree |
+| `center_panel_annotation()` | Centers annotation bodies in their panel views |
+| `set_panel_xlim()`, `clear_panel_xlim()` | Store or clear per-individual genomic windows |
+| `effective_panel_windows()` | Inspect the annotation windows resolved for a plot or stored layout |
+| `locus_grid_layout()`, `use_locus_grid()` | Prepare and apply layouts for comparable locus windows |
+| `annotate_cross_panel()` | Connect explicitly supplied anchors across panels |
+| `link_panels()` | Connect matching IDs represented by anchors in different panels |
+
+### Themes
+
+| Function | When to use it |
+| --- | --- |
+| `theme_ggexon_base()` | A background-free foundation retaining ordinary axes and grids |
+| `theme_ggexon_clean()` | The named shortcut for that clean background-free styling |
+| `theme_ggexon_track()` | Compact genomic tracks, with control over axes, grids, and legends |
+| `theme_ggexon_pairwise()` | Stacked annotation/link/annotation comparisons |
+| `theme_ggexon_genomictree()` | Genomic tracks aligned beside a tree |
+| `theme_ggexon_side_strips()` | Horizontal facet labels on the left or right, added after a complete theme |
+
+### Plot preparation and output
+
+| Function | What it prepares |
+| --- | --- |
+| `alignseq_data()` | Anchored columns and difference events from two already aligned DNA strings |
+| `protein_lollipop_data()` | Protein backbone, domain, and mutation layout tables |
+| `protein_mutation_data()` | Access the normalized table in a protein-mutation annotation |
+| `syn_gr_to_exon_df()` | Convert genomic feature ranges to an exon plotting table |
+| `project_domains_to_genome()`, `project_mutations_to_genome()` | Map protein positions through transcript CDS blocks to genomic intervals |
+| `ggexon_output_size()` | Record the intended figure dimensions for downstream layout |
+
+Functions such as `aes()`, `scale_fill_manual()`, `scale_x_continuous()`,
+`facet_wrap()`, `coord_fixed()`, `theme()`, and `ggsave()` come from ggplot2.
+The examples combine these with the ggexon functions above.
+
+# 1. Exons and alternative transcripts
+
+An exon table contains intervals and transcript membership. Drawing each row
+as an unrelated rectangle loses introns and strand direction. `geom_exon()`
+uses the feature hierarchy to draw transcript models.
+
+## Present the input
+
+Create two synthetic genes on `chr1`. Gene A has a full transcript and an
+exon-skipping transcript; gene B is on the opposite strand. Coordinates are
+one-based and inclusive, as in GTF. These are teaching models, not observed
+gene annotations.
+
+```{r workflow-feature-input}
+features <- data.frame(
+  type = c("gene", "transcript", rep("exon", 3), rep("CDS", 3),
+           "transcript", rep("exon", 2), rep("CDS", 2),
+           "gene", "transcript", "exon", "exon"),
+  start = c(101, 101, 101, 501, 901, 101, 501, 901,
+            101, 101, 901, 101, 901, 1201, 1201, 1201, 1501),
+  end = c(960, 960, 160, 590, 960, 160, 590, 960,
+          960, 160, 960, 160, 960, 1560, 1560, 1260, 1560),
+  strand = c(rep("+", 13), rep("-", 4)),
+  gene_id = c(rep("geneA", 13), rep("geneB", 4)),
+  transcript_id = c(NA, rep("A_full", 7), rep("A_skip", 5),
+                    NA, rep("B_only", 3))
 )
+knitr::kable(features)
 ```
 
-# Load the active feature annotation
+Write the records as a standard nine-column GTF. Substitute your own GTF or
+GFF3 path when working with real annotations.
 
-```{r eval = FALSE}
-x <- load_annotation(x)
-ann <- get_annotation(x)
-```
-
-At this point the active layer is a `SynFeatureAnnotation`.
-
-# Attach additional annotation layers
-
-You can attach variant, signal, and protein-domain layers to the same
-`SynIndividual`.
-
-VCF querying is supported. BCF parsing is not implemented; BCF input raises an
-unsupported-format error.
-
-```{r eval = FALSE}
-x <- add_annotation(
-  x,
-  SynVCFAnnotation(
-    name = "variants",
-    vcf_file = system.file(
-      "extdata",
-      "DL238.rename.ChrV.XZ1516.vcf.gz",
-      package = "ggexon"
-    )
-  )
+```{r workflow-write-gtf}
+attributes <- paste0('gene_id "', features$gene_id, '";')
+has_transcript <- !is.na(features$transcript_id)
+attributes[has_transcript] <- paste0(
+  attributes[has_transcript], ' transcript_id "',
+  features$transcript_id[has_transcript], '";'
 )
-
-x <- add_annotation(
-  x,
-  SynProteinDomainAnnotation(
-    name = "interpro",
-    domain_file = system.file(
-      "extdata",
-      "InterProScan.tsv",
-      package = "ggexon"
-    ),
-    keytype = "protein_id",
-    source_db = "InterPro"
-  )
+gtf <- data.frame(
+  seqname = "chr1", source = "synthetic", type = features$type,
+  start = features$start, end = features$end, score = ".",
+  strand = features$strand,
+  phase = ifelse(features$type == "CDS", "0", "."), attributes = attributes
 )
+gtf_file <- tempfile(fileext = ".gtf")
+write.table(gtf, gtf_file, sep = "\t", quote = FALSE,
+            row.names = FALSE, col.names = FALSE)
 ```
 
-# Set plot labels
+## Construct and inspect the object
 
-Stable IDs should remain unchanged. Use `set_gene_labels()` to add readable
-labels for plotting.
+`SynIndividual(annotation_file = ...)` attaches a default
+`SynFeatureAnnotation`. A FASTA is optional for annotation plotting; sequence
+extraction and translation require one. `load_annotation()` materializes the
+features so that we can inspect them before drawing.
 
-```{r eval = FALSE}
-x <- set_gene_labels(
-  x,
-  c(
-    FUN_000001 = "unc-1",
-    FUN_000002 = "unc-2"
-  )
+```{r workflow-feature-object}
+model <- SynIndividual(
+  annotation_file = gtf_file, annotation_format = "gtf", id = "teaching"
 )
+model <- load_annotation(model)
+class(model)
+class(get_annotation(model))
+exons <- query_features(model, feature_type = "exon", all = TRUE)
+knitr::kable(as.data.frame(exons)[,
+  c("seqnames", "start", "end", "strand", "gene_id", "transcript_id")])
 ```
 
-The active feature annotation will then carry a `plot_label` metadata column.
+## Choose the geom, scales, and theme
 
-# Apply a corrected patch from a small GFF
+Map transcript IDs to fill to distinguish isoforms. The ordinary continuous
+x scale preserves genomic spacing. The track theme hides the y axis used to
+position models; `show_legend = TRUE` retains the transcript legend.
 
-Small corrected GFF fragments can be imported and applied as structured
-patches.
-
-```{r eval = FALSE}
-x <- patch_annotation_from_gff(
-  x,
-  patch_file = system.file("extdata", "XZ1516.TA.gff", package = "ggexon"),
-  mode = "replace",
-  name = "ta-correction"
-)
-```
-
-This replaces matching target gene models in the active feature annotation and
-clears stale sequence caches.
-
-# Translate proteins for selected genes
-
-```{r eval = FALSE}
-x <- translate_protein(
-  x,
-  genes = c("FUN_000001", "FUN_000002")
-)
-
-protein_seq(get_annotation(x))
-```
-
-# Query attached non-feature layers
-
-Region-based layers are queried through their type-specific verbs.
-
-```{r eval = FALSE}
-variant_layer <- get_annotation(x, "variants")
-query_variants(variant_layer, chr = "V_RagTag", start = 21574336, end = 21574400)
-```
-
-# Group individuals in a `SynSpecies`
-
-Once you have multiple genomes or species, `SynSpecies` can hold both the
-`SynIndividual` objects and their cross-species alignments.
-
-Template requiring user-provided files: this recipe expects your second genome,
-annotation, and pairwise alignment files.
-
-```{r eval = FALSE}
-x2 <- SynIndividual(other_genome_file, other_annotation_file)
-
-sp <- SynSpecies(name = "Caenorhabditis")
-sp <- add_individual(sp, x)
-sp <- add_individual(sp, x2)
-
-sp <- add_pairwise_alignment(
-  sp,
-  SynPairAlignment(
-    name = "XZ1516_vs_other",
-    query_individual = "XZ1516",
-    target_individual = syn_id(x2),
-    file = "XZ1516_vs_other.paf"
-  )
-)
-```
-
-For multiple-species alignments:
-
-`SynMultiAlignment` can store already parsed MAF data supplied through `data`,
-but `load_alignment()` cannot parse a MAF file. ODGI-backed file loading is
-supported.
-
-Template requiring user-provided files: this storage-only recipe expects
-already parsed MAF data from your own file.
-
-```{r eval = FALSE}
-sp <- add_multiple_alignment(
-  sp,
-  SynMultiAlignment(
-    name = "worm-maf",
-    individuals = c("XZ1516", "N2", "CB4856"),
-    file = "worms.maf",
-    format = "maf",
-    data = pre_parsed_maf
-  )
-)
-```
-
-# Query pairwise alignments
-
-Pairwise alignments can now be read back as PAF-like tables from either a
-`SynSpecies` object or a `SynPairAlignment` object.
-
-Use `subset =` to trim on both query and target coordinates, and use
-`filter =` to discard short fragments by `alen`.
-
-```{r eval = FALSE}
-pairwise_alignment_data(
-  sp,
-  alignment = "XZ1516_vs_other",
-  subset = c(
-    XZ1516 = "RagTag_V:21550000-21680000",
-    other = "V:20450000-20510000"
-  ),
-  filter = 200
-)
-```
-
-The helper wrappers `subset_pairwise_alignment()` and
-`filter_pairwise_alignment()` expose the same operations separately when that
-reads more clearly in user code.
-
-# Plot directly from a `SynSpecies`
-
-You can now pass a `SynSpecies` object directly to `ggexon()` and let a
-syn-aware geom resolve the plotting data lazily at build time.
-
-For example, this draws the exon models for `XZ1516` across the
-`RagTag_V:21550000-21680000` region. Because this `SynSpecies` contains only
-one individual, you do not need to specify `species =`. Internally, the
-plotting code resolves that sole individual, maps the user-facing chromosome
-label `RagTag_V` to the annotation seqname used in the GFF (`V_RagTag` in the
-bundled example), and creates the default `aes()` mapping needed by
-`geom_exon()`.
-
-```{r workflow-one-individual, eval = TRUE, fig.alt = "Exon structures for XZ1516 genes across RagTag_V positions 21,550,000 to 21,680,000."}
-x <- SynIndividual(
-  genome_file = system.file("extdata", "compact_synspecies", "XZ1516.fasta", package = "ggexon"),
-  annotation_file = system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
-    package = "ggexon"
-  ),
-  id = "XZ1516"
-)
-
-sp <- SynSpecies(name = "Caenorhabditis")
-sp <- add_individual(sp, x)
-
-ggexon(sp) +
+```{r workflow-exons, fig.alt = "Synthetic exon models: A full has three exons, A skip omits the middle exon, and B only is on the minus strand."}
+transcript_colours <- c(A_full = "#0072B2", A_skip = "#D55E00", B_only = "#009E73")
+p_exons <- ggexon(model) +
   geom_exon(
-    chr = "RagTag_V",
-    subset = c(21550000, 21680000)
-  )
-```
-
-If a `SynSpecies` contains multiple individuals, then `species =` becomes
-required so the geom knows which one to plot.
-
-The same direct plotting workflow is also available for `geom_genetag()`, which
-collapses the region to one directional span per `gene_id`.
-
-```{r workflow-genetag, eval = TRUE, fig.alt = "Directional gene spans for XZ1516 across the same RagTag_V interval."}
-ggexon(sp) +
-  geom_genetag(
-    chr = "RagTag_V",
-    subset = c(21550000, 21680000),
-    show_label = FALSE
-  )
-```
-
-Use the two geoms for different levels of detail:
-
-- `geom_exon()` keeps exon-level structure and is useful when transcript
-  architecture matters.
-- `geom_genetag()` reduces each gene to a start-to-end span with an arrow
-  showing strand direction.
-
-Both geoms now use absolute genomic coordinates, so the x-axis stays in the
-original coordinate system of the chromosome rather than being re-based to a
-local zero point for each track.
-
-For pairwise comparison, draw the annotation tracks and then let
-`geom_nuclink()` resolve the stored alignment into the middle link panel. The
-reference species supplies the input coordinates.
-
-```{r workflow-pairwise-setup, eval = TRUE}
-n2 <- SynIndividual(
-  genome_file = system.file(
-    "extdata", "compact_synspecies",
-    "c_elegans.PRJNA13758.WS285.genomic.fa",
-    package = "ggexon"
-  ),
-  annotation_file = system.file(
-    "extdata", "compact_synspecies",
-    "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf",
-    package = "ggexon"
-  ),
-  annotation_format = "gtf",
-  id = "N2"
-)
-sp <- add_individual(sp, n2)
-sp <- add_pairwise_alignment(
-  sp,
-  SynPairAlignment(
-    "XZ1516_vs_N2",
-    query_individual = "XZ1516",
-    target_individual = "N2",
-    file = system.file(
-      "extdata", "compact_synspecies", "V_alginment.paf",
-      package = "ggexon"
-    )
-  )
-)
-```
-
-```{r workflow-pairwise-plot, eval = TRUE, fig.alt = "N2 and XZ1516 exon tracks linked by nucleotide alignments across the selected RagTag_V region."}
-ggexon(sp) +
-  geom_exon(
-    species = c("N2", "XZ1516")
+    aes(fill = transcript_id), chr = "chr1", subset = c(80, 1600),
+    transcript_arrow_length = 30
   ) +
+  scale_fill_manual(values = transcript_colours, name = "Transcript") +
+  scale_x_continuous(breaks = c(100, 500, 900, 1300, 1600),
+                     labels = scales::label_number(big.mark = ",")) +
+  theme_ggexon_track(base_size = 10, show_legend = TRUE)
+p_exons
+```
+
+The x distances are base pairs. The missing middle exon in `A_skip` comes
+from the input annotation; ggexon does not infer alternative splicing.
+
+# 2. Compress introns while retaining genomic labels
+
+Long introns can make exons too small to compare. A shared exon-aware scale
+compresses gaps while keeping transcripts aligned, helping you compare exon
+structure across isoforms.
+
+## Present the input
+
+Reuse the synthetic GTF and inspect gene A's exon rows.
+
+```{r workflow-compression-input}
+knitr::kable(features[features$gene_id == "geneA" & features$type == "exon", ])
+```
+
+## Prepare the object
+
+Create a copy restricted to the first locus, leaving `model` reusable.
+
+```{r workflow-compression-object}
+gene_a <- subset_individual(model, chr = "chr1", start = 80, end = 980)
+query_features(gene_a, feature_type = "exon", all = TRUE)
+```
+
+## Choose the geom, scales, and theme
+
+`geom_exon2()` draws explicit chevron introns. Disable its schematic
+compression so `scale_x_ggexon_genomic()` controls the transformation across
+the panel. A factor of 8 displays eligible gaps at one eighth of their
+genomic length while preserving exon widths.
+
+```{r workflow-compressed-exons, fig.alt = "Two gene A transcripts with chevron introns compressed eightfold and original genomic tick labels."}
+p_compressed <- ggexon(gene_a) +
+  geom_exon2(
+    aes(fill = transcript_id), chr = "chr1", compress_introns = FALSE,
+    arrow_width = 12
+  ) +
+  scale_x_ggexon_genomic(intron_factor = 8, n.breaks = 4) +
+  scale_fill_manual(values = transcript_colours, name = "Transcript") +
+  theme_ggexon_track(base_size = 10, show_legend = TRUE)
+p_compressed
+```
+
+Ticks report original genomic positions, but equal display distances across
+exons and introns no longer imply equal base-pair distances. A piecewise
+guide can show separate representative exon and intron scale bars.
+
+```{r workflow-piecewise-guide, fig.alt = "The compressed gene A models with representative exon and intron scale bars."}
+ggexon(gene_a) +
+  geom_exon2(
+    aes(fill = transcript_id), chr = "chr1", compress_introns = FALSE,
+    arrow_width = 12
+  ) +
+  scale_x_ggexon_genomic(
+    intron_factor = 8, guide = guide_x_ggexon_piecewise(by = "panel")
+  ) +
+  scale_fill_manual(values = transcript_colours) +
+  theme_ggexon_track(base_size = 10)
+```
+
+With explicit CDS and UTR records, `geom_exon2(annotation_type = "all")`
+can distinguish their box heights. Its default `compress_introns = TRUE`
+offers another schematic view; choose one compression method deliberately.
+
+# 3. Gene spans and readable labels
+
+For a locus overview, transcript detail can hide gene order. A directional
+tag gives one span per gene. Separate labels keep names readable without
+replacing the stable gene IDs used in computation.
+
+## Present the input
+
+```{r workflow-tag-input}
+knitr::kable(features[features$type == "gene",
+                      c("gene_id", "start", "end", "strand")])
+labels <- c(geneA = "Gene A (two isoforms)", geneB = "Gene B")
+```
+
+## Prepare the object
+
+`set_gene_labels()` returns an updated object carrying plot labels alongside
+the original IDs.
+
+```{r workflow-tag-object}
+labelled_model <- set_gene_labels(model, labels)
+```
+
+## Choose the geom, scales, and theme
+
+Suppress built-in tag labels and add `geom_genelabel()` for explicit
+placement. `collapse_tandem = TRUE` also combines adjacent genes sharing a
+label. Retain a base-pair axis because gene spans and spacing matter here.
+
+```{r workflow-genetags, fig.height = 2.8, fig.alt = "Directional gene spans with readable labels above the synthetic locus."}
+ggexon(labelled_model) +
+  geom_genetag(aes(fill = gene_id), chr = "chr1", show_label = FALSE) +
+  geom_genelabel(chr = "chr1", label_direction = "top", size = 3,
+                 collapse_tandem = TRUE, panel_width_inch = 7) +
+  scale_fill_manual(values = c(geneA = "#0072B2", geneB = "#009E73")) +
+  scale_x_continuous(labels = scales::label_number(big.mark = ","),
+                     expand = expansion(mult = 0.08)) +
+  theme_ggexon_track(base_size = 10)
+```
+
+For crowded loci, `gene_layout = "stack"` or `"nested"` separates overlapping
+bodies. For cross-species names, attach a `HomologyAnnotation` to a
+`SynSpecies` and use it through `geom_genelabel()`. Labels alone do not
+establish homology.
+
+# 4. Pairwise nucleotide alignments
+
+Two genomes can contain the same locus at different chromosome positions.
+`SynSpecies` stores their annotations and alignment together;
+`facet_genomics()` places links between their source tracks.
+
+## Present the input
+
+Use the bundled XZ1516 and N2 annotations and a small PAF alignment. This
+example needs neither a download nor user-supplied files.
+
+```{r workflow-pairwise-input}
+compact_dir <- system.file("extdata", "compact_synspecies", package = "ggexon")
+xz_gff <- file.path(compact_dir, "caenorhabditis_XZ1516.gff3")
+n2_gtf <- file.path(compact_dir, "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf")
+paf_file <- file.path(compact_dir, "V_alginment.paf")
+stopifnot(file.exists(xz_gff), file.exists(n2_gtf), file.exists(paf_file))
+cat(readLines(xz_gff, n = 5), sep = "\n")
+cat(readLines(n2_gtf, n = 3), sep = "\n")
+raw_paf <- read.delim(paf_file, header = FALSE, comment.char = "")
+names(raw_paf)[1:12] <- c(
+  "query", "qlen", "qstart", "qend", "strand", "target", "tlen",
+  "tstart", "tend", "matches", "alen", "mapq"
+)
+knitr::kable(head(raw_paf[, c("query", "qstart", "qend", "strand", "alen")], 4))
+knitr::kable(head(raw_paf[, c("target", "tstart", "tend", "matches", "mapq")], 4))
+```
+
+Raw PAF uses zero-based starts and half-open intervals. The ggexon importer
+normalizes returned start/end columns to one-based closed intervals. Let it
+perform this conversion once.
+
+## Construct and inspect the objects
+
+```{r workflow-pairwise-object}
+xz <- SynIndividual(annotation_file = xz_gff, id = "XZ1516")
+n2 <- SynIndividual(annotation_file = n2_gtf, annotation_format = "gtf", id = "N2")
+comparison <- SynSpecies(name = "Caenorhabditis pair")
+comparison <- add_individual(comparison, xz)
+comparison <- add_individual(comparison, n2)
+comparison <- add_pairwise_alignment(
+  comparison,
+  SynPairAlignment(
+    name = "XZ1516_vs_N2", query_individual = "XZ1516",
+    target_individual = "N2", file = paf_file, format = "paf"
+  )
+)
+individual_names(comparison)
+aligned_blocks <- pairwise_alignment_data(
+  comparison, alignment = "XZ1516_vs_N2",
+  subset = c(XZ1516 = "RagTag_V:21574445-21584356"), filter = 200
+)
+knitr::kable(head(aligned_blocks[, intersect(
+  c("qname", "qstart", "qend", "tname", "tstart", "tend", "strand", "alen"),
+  names(aligned_blocks)
+)], 6))
+```
+
+`filter = 200` removes short alignment fragments from this query result,
+leaving the stored alignment unchanged. `subset_pairwise_alignment()` and
+`filter_pairwise_alignment()` expose these operations separately.
+
+## Choose the geom, scales, facet, and theme
+
+`geom_nuclink()` derives a comparison window from XZ1516 coordinates and
+resolves the corresponding N2 region. Independent x ranges show each
+genome's own positions. The annotation y policy controls model layout. Hide the link panel's axes
+because the ribbons connect the two annotation rulers rather than defining
+a third genomic coordinate system.
+
+```{r workflow-pairwise-plot, fig.height = 4.4, fig.alt = "N2 and XZ1516 exon models connected by nucleotide alignment ribbons."}
+p_pairwise <- ggexon(comparison) +
+  geom_exon(species = c("N2", "XZ1516"), fill = "#0072B2") +
   geom_nuclink(
-    reference = "XZ1516",
-    chr = "RagTag_V",
-    subset = c(21574445, 21584356),
-    alignment = "XZ1516_vs_N2"
+    reference = "XZ1516", chr = "RagTag_V",
+    subset = c(21574445, 21584356), alignment = "XZ1516_vs_N2",
+    fill = "#56B4E9", alpha = 0.55
   ) +
-  facet_genomics(ggplot2::vars(track), scales = "free_y")
+  facet_genomics(vars(track), scales = "free_x", ncol = 1,
+                 strip.position = "left", vertical = "center",
+                 link_axis = "none", link_strip = "blank", link_panel_height = 0.6) +
+  scale_panel_annotation("fixed_y") +
+  scale_x_continuous(labels = scales::label_number(big.mark = ",")) +
+  theme_ggexon_pairwise(base_size = 10)
+p_pairwise
 ```
 
-For custom pairwise views, the PAF helper and the plotting grammar are meant
-to work together: derive or specify the windows you want, filter short PAF
-rows with `filter =`, and then draw the comparison.
+The GFF uses `V_RagTag`; the resolver also accepts the `RagTag_V` alias used
+in the plotting call. Inspect seqnames when preparing your own files.
 
-At the moment, this direct plotting path is implemented for `geom_exon()`,
-`geom_genetag()`, and `geom_nuclink()`. The same pattern can be extended to
-other geoms so they can consume `SynSpecies` or `SynIndividual` objects without
-requiring a manual `fortify()` step.
+Omitting `species` on a `SynSpecies` exon layer selects all stored
+individuals. Select it explicitly for a subset. For repeated figures,
+`set_panel_xlim()` stores named per-individual windows on the comparison's
+`SynLayout`; `clear_panel_xlim()` removes the overrides.
 
-# Notes
+`SynMultiAlignment` supports ODGI-backed comparisons. It can store already
+parsed MAF data through `data`, but `load_alignment()` does not parse MAF
+files. The [class and verb reference](ggexon-classes-and-verbs.html)
+describes these larger workflows.
 
-- `SynFeatureAnnotation` is the structural layer used for CDS extraction and
-  protein translation.
-- `SynVCFAnnotation` and `SynBigWigAnnotation` are designed for lazy,
-  region-based access.
-- `SynProteinDomainAnnotation` provides protein-space annotation tied to
-  transcript or protein identifiers.
-- `SynSpecies` is the comparison container that binds individuals and
-  alignments together.
+# 5. Gene-level synteny from an interval table
 
-# Next steps
+A curated ortholog link has a different interpretation from a nucleotide
+alignment. `geom_synteny_link()` draws supplied interval relationships with
+the same panel machinery; it does not infer those relationships.
 
-Suggested follow-up material for this vignette:
+## Present the input
 
-- comparing two feature annotation layers on the same genome
-- plotting patched genes before and after correction
-- combining synteny plots with variant and signal layers
+Two synthetic loci contain matched genes at different positions. The
+`family` assignments are supplied teaching data.
+
+```{r workflow-synteny-input}
+panel_order <- c("reference", "link_reference_query", "query")
+genes <- data.frame(
+  track = factor(rep(c("reference", "query"), each = 2), levels = panel_order),
+  xmin = c(100, 400, 1100, 1600), xmax = c(250, 600, 1300, 1750),
+  y = 1, strand = c("+", "-", "+", "-"), gene = rep(c("A", "B"), 2)
+)
+relationships <- data.frame(
+  family = c("A", "B"), tstart = c(100, 400), tend = c(250, 600),
+  qstart = c(1100, 1600), qend = c(1300, 1750), strand = "+"
+)
+knitr::kable(genes)
+knitr::kable(relationships)
+```
+
+## Prepare the plotting data
+
+Tables are valid inputs too. Add source track and chromosome names to route
+ribbons to their annotation panels. This prepared table workflow does not
+require a `SynPairAlignment`.
+
+```{r workflow-synteny-object}
+synteny <- transform(
+  relationships,
+  track = factor("link_reference_query", levels = panel_order),
+  tspecies = "reference", tchr = "chr1",
+  qspecies = "query", qchr = "chr2", group = seq_len(nrow(relationships))
+)
+```
+
+## Choose the geom, scales, facet, and theme
+
+Share a named palette between tags and ribbons so colour has one meaning.
+Independent base-pair axes retain the two loci's native coordinates.
+
+```{r workflow-synteny-plot, fig.height = 3.6, fig.alt = "Synthetic gene pairs connected by ribbons coloured by supplied family assignments."}
+ggexon() +
+  geom_genetag(data = genes, aes(fill = gene), show_label = FALSE) +
+  geom_synteny_link(
+    data = synteny,
+    aes(tspecies = tspecies, tchr = tchr, tstart = tstart, tend = tend,
+        qspecies = qspecies, qchr = qchr, qstart = qstart, qend = qend,
+        strand = strand, group = group, fill = family),
+    inherit.aes = FALSE, alpha = 0.45
+  ) +
+  facet_genomics(vars(track), scales = "free_x", ncol = 1,
+                 strip.position = "left", vertical = "center",
+                 link_axis = "none", link_strip = "blank", link_panel_height = 0.6) +
+  scale_fill_manual(values = c(A = "#0072B2", B = "#D55E00"), name = "Family") +
+  scale_x_continuous(labels = scales::label_number()) +
+  theme_ggexon_pairwise(base_size = 10, show_legend = TRUE)
+```
+
+# 6. Raw BigWig coverage beside gene annotation
+
+Comparing a continuous signal with a gene model requires a shared genomic
+window and a separate quantitative y scale. Signal layers keep the raw
+measurements attached to the individual rather than mixing them into feature
+annotation rows.
+
+## Present the input
+
+The bundled PEEL-1 fixture contains raw depth BigWigs and a WS285 GTF subset.
+Here two strains share one chromosome-I window. Start by inspecting the GTF
+as text: its nine columns contain genomic coordinates and feature attributes.
+BigWig is binary, so inspect its records with a region query instead of a text
+reader. The BigWig backend runs on macOS and Linux, and is unsupported on Windows.
+
+```{r workflow-coverage-input, eval = .Platform$OS.type != "windows"}
+coverage_dir <- system.file("extdata", "peel1_coverage", package = "ggexon")
+coverage_gtf <- file.path(coverage_dir, "WS285.ugt31-zeel1-peel1-nekl1.gtf")
+coverage_strains <- c("XZ1516", "ECA2091")
+cat(readLines(coverage_gtf, n = 5), sep = "\n")
+
+first_signal <- SynBigWigAnnotation(
+  name = "coverage",
+  bigwig_file = file.path(coverage_dir, "XZ1516.raw.bw"),
+  metadata = list(signal_unit = "raw_depth")
+)
+head(as.data.frame(query_signal(
+  first_signal, chr = "I", start = 2332338L, end = 2373985L
+)))
+```
+
+`query_signal()` returns intervals with a `score`, rather than requiring one
+row for every base. The imported table uses 1-based inclusive genomic
+coordinates. The metadata records the unit; it does not normalize the scores.
+
+## Construct and inspect the objects
+
+```{r workflow-coverage-object, eval = .Platform$OS.type != "windows"}
+coverage_species <- SynSpecies(name = "PEEL-1 coverage")
+for (strain in coverage_strains) {
+  one_strain <- SynIndividual(
+    annotation_file = coverage_gtf, annotation_format = "gtf", id = strain
+  )
+  one_strain <- add_annotation(one_strain, SynBigWigAnnotation(
+    name = "coverage",
+    bigwig_file = file.path(coverage_dir, paste0(strain, ".raw.bw")),
+    metadata = list(signal_unit = "raw_depth")
+  ))
+  coverage_species <- add_individual(coverage_species, one_strain)
+}
+individual_names(coverage_species)
+```
+
+Each individual owns a gene model and a named signal layer. `geom_coverage()`
+resolves that layer for both strains; the exon request supplies their common
+viewing window and draws one representative gene model below the signals.
+
+## Choose the geom, scales, facet, and theme
+
+```{r workflow-coverage-plot, eval = .Platform$OS.type != "windows", fig.height = 5, fig.alt = "Raw coverage from two C. elegans strains above a shared four-gene annotation, with one shared depth scale."}
+coverage_layers <- ggexon(coverage_species) +
+  geom_coverage(annotation = "coverage", fill = "#4C78A8") +
+  geom_exon(
+    species = "XZ1516", chr = "I", subset = c(2332338L, 2373985L),
+    annotation_type = "exon"
+  ) +
+  facet_genomics(vars(track), ncol = 1, strip.position = "left") +
+  center_panel_annotation() +
+  scale_x_continuous(labels = scales::label_comma(), oob = scales::oob_keep) +
+  labs(x = "Chromosome I position (bp)") +
+  theme_ggexon_track(base_size = 10) +
+  theme_ggexon_side_strips("left", base_size = 10) +
+  theme(axis.title.x = element_text())
+coverage_plot <- coverage_layers + scale_panel_coverage("fixed_y")
+coverage_plot
+```
+
+The explicit `fixed_y` policy makes equal vertical heights comparable across
+coverage panels. `center_panel_annotation()` adjusts the separate annotation
+panel's view. The track theme hides y labels used for annotation layout, while
+the side strip helper turns strain labels into readable horizontal text.
+This view compares signal shape and shared heights; inspect the queried
+`score` values for exact depths because y tick labels are hidden.
+The large ECA2091 peak sets the shared depth range, making the other signal
+look low. `oob_keep` retains boundary intervals for clipping at the panel edge.
+
+Replace the coverage policy with `scale_panel_coverage("free_y")` to inspect
+each strain on its own depth range; equal heights then need not mean equal
+depth. Adding `auto = TRUE` places each panel's span-weighted median at 85%
+of its height and clips higher peaks in the view. Neither option changes raw
+scores. Keep a linear genomic x axis: exon/intron compression through
+`scale_x_ggexon_genomic()` is unsupported for continuous coverage tracks.
+
+```{r workflow-coverage-free, eval = .Platform$OS.type != "windows", fig.height = 5, fig.alt = "The same raw coverage signals on separate y ranges, with each median depth at 85 percent of panel height and higher peaks clipped."}
+coverage_layers + scale_panel_coverage("free_y", auto = TRUE)
+```
+
+This second view reveals local signal structure in each strain. The peak
+clipping and independent y ranges mean its panel heights cannot be compared
+as absolute depths. See the [coverage example](bigwig-coverage-demo.html)
+for the full strain panel and fixture provenance.
+
+# 7. Protein mutation counts and domains
+
+A protein summary removes introns from the view and places mutation counts
+next to functional regions. This helps compare residues across a protein
+without treating their genomic distances as protein distances.
+
+## Present the input
+
+Protein positions and genomic positions describe different coordinate systems.
+For this example, create a synthetic mutation summary for a 160-residue
+protein, plus two synthetic domain intervals. These are teaching data, not
+biological claims. Counts describe samples carrying each mutation.
+
+```{r workflow-protein-input}
+raw_mutations <- data.frame(
+  gene = "demo-protein",
+  event_type = "substitution",
+  mutation_hash_or_notation = c("A#18#V", "K#42#R", "G#88#D", "S#140#F"),
+  sample_count = c(2L, 5L, 12L, 20L)
+)
+protein_domains <- data.frame(
+  start = c(10L, 85L), end = c(60L, 145L),
+  Domain = c("Binding", "Catalytic")
+)
+raw_mutations
+protein_domains
+```
+
+The reader bridges a raw count file and the normalized mutation table expected
+by the annotation object. It adds `gene_id`, `position`, `ref`, `alt`,
+`mutation`, and `source_row_id`. Passing `mutation_data` to the constructor
+stores this already normalized table; the constructor does not parse it again.
+
+## Construct and inspect the object
+
+```{r workflow-protein-object}
+mutation_file <- tempfile(fileext = ".tsv")
+write.table(raw_mutations, mutation_file, sep = "\t", quote = FALSE, row.names = FALSE)
+normalized_mutations <- read_protein_mutation_counts(mutation_file)
+protein_individual <- add_annotation(
+  SynIndividual(id = "synthetic-cohort"),
+  SynProteinMutationAnnotation(
+    name = "mutation_counts", mutation_file = mutation_file,
+    mutation_data = normalized_mutations
+  )
+)
+protein_mutations <- query_protein_mutations(
+  protein_individual, annotation = "mutation_counts", genes = "demo-protein"
+)
+protein_mutations[, c("gene_id", "position", "ref", "alt", "mutation", "sample_count")]
+```
+
+`geom_protein_lollipop()` takes ordinary mutation and domain tables, so query
+the attached annotation first. Inspect its preparation helper to see how
+positions become backbone, domain, stem, and head data. With the identity
+transform and the target range equal to the observed count range, the helper
+keeps head heights equal to sample counts for these data.
+
+## Choose the geom, scales, and theme
+
+```{r workflow-protein-preparation}
+count_range <- range(protein_mutations$sample_count)
+prepared_protein <- protein_lollipop_data(
+  mutations = protein_mutations, domains = protein_domains, protein_length = 160,
+  mutation_y_by = "sample_count", mutation_y_range = count_range,
+  track_ymin = -1.5, track_ymax = -1,
+  domain_default_ymin = -1.8, domain_default_ymax = -0.7
+)
+prepared_protein$mutations[, c("position", "lollipop_x", "lollipop_y", "lollipop_domain")]
+```
+
+```{r workflow-protein-plot, fig.height = 4, fig.alt = "Synthetic protein domains with four mutation lollipops whose heights show sample counts of two, five, twelve, and twenty."}
+protein_plot <- ggplot() +
+  geom_protein_lollipop(
+    mutations = protein_mutations, domains = protein_domains, protein_length = 160,
+    mutation_y_by = "sample_count", mutation_y_range = count_range,
+    track_ymin = -1.5, track_ymax = -1,
+    domain_default_ymin = -1.8, domain_default_ymax = -0.7,
+    point_colour = "#222222", point_size = 2.5
+  ) +
+  geom_mutation_label(
+    mutations = protein_mutations, mutation_y_by = "sample_count",
+    mutation_y_range = count_range, label_nudge_y = 0.8,
+    angle = 0, vjust = 0, size = 3
+  ) +
+  scale_fill_manual(values = c(Binding = "#0072B2", Catalytic = "#E69F00")) +
+  scale_x_continuous(breaks = seq(0, 160, 40), limits = c(0, 160)) +
+  scale_y_continuous(breaks = c(0, 5, 10, 15, 20), limits = c(-2, 23)) +
+  labs(x = "Amino-acid position", y = "Samples with mutation", fill = "Domain") +
+  theme_ggexon_track(base_size = 10, show_y_axis = TRUE, show_legend = TRUE) +
+  theme(axis.title = element_text())
+protein_plot
+```
+
+The label layer repeats the head-height settings so each label follows its
+mutation. Domain blocks sit below zero; the labeled y ticks refer to sample
+counts. Keeping `show_y_axis = TRUE` matters here because y carries a measured
+quantity. With the default lollipop height range, heights would be rescaled
+layout positions and should not be labeled as raw counts. No genomic x scale
+or facet is needed for this single protein-coordinate track.
+
+## Project protein features onto the genomic model
+
+A protein residue number is not a chromosome coordinate. Projection follows
+the transcript's CDS blocks, so one protein interval can occupy several exons.
+This example reconnects gene A's isoforms with a synthetic genome, then places
+a domain and a mutation on the exon models in genomic base pairs.
+
+### Present the raw data
+
+Reuse `gtf_file` from the first example. Its full transcript contains three
+CDS blocks; `A_skip` uses the first and last. Fill a 1,700-base `chr1` with
+unknown bases, then insert complete coding blocks. The first block starts
+with `ATG`, the last ends with `TAA`, and all CDS phases are zero.
+
+```{r workflow-projection-input}
+coding_blocks <- data.frame(
+  start = c(101L, 501L, 901L), end = c(160L, 590L, 960L),
+  dna = c(paste0("ATG", strrep("GCC", 19)), strrep("GCC", 30),
+          paste0(strrep("GCC", 19), "TAA"))
+)
+coding_blocks$width <- nchar(coding_blocks$dna)
+knitr::kable(coding_blocks[, c("start", "end", "width")])
+domain_input <- data.frame(
+  transcript_id = "A_full", domain = "Teaching domain",
+  start = 15L, end = 30L, analysis = "Pfam"
+)
+mutation_input <- data.frame(
+  gene_id = "geneA", position = 25L, ref = "A", alt = "V",
+  sample_count = 4L, mutation = "A25V", source_row_id = 1L
+)
+knitr::kable(domain_input)
+knitr::kable(mutation_input)
+```
+
+Domain bounds and mutation positions above are one-based **amino-acid**
+coordinates. The mutation table is already normalized; `source_row_id`
+records its input row. It describes one synthetic gene-level mutation,
+which will be projected separately onto each matching isoform.
+
+### Construct the sequence and annotation objects
+
+Create a FASTA and a new `SynIndividual` using the existing GTF. Translation
+joins each transcript's CDS in coding order. The output below contains 70
+characters for `A_full` and 40 for `A_skip`, including a terminal `*`.
+
+```{r workflow-projection-sequence}
+sequence_bases <- rep("N", 1700)
+for (i in seq_len(nrow(coding_blocks))) {
+  positions <- seq.int(coding_blocks$start[i], coding_blocks$end[i])
+  sequence_bases[positions] <- strsplit(coding_blocks$dna[i], "")[[1]]
+}
+teaching_fasta <- tempfile(fileext = ".fa")
+writeLines(c(">chr1", paste0(sequence_bases, collapse = "")), teaching_fasta)
+sequence_model <- SynIndividual(
+  genome_file = teaching_fasta, annotation_file = gtf_file,
+  annotation_format = "gtf", id = "teaching-sequence"
+)
+sequence_model <- translate_protein(sequence_model, genes = "geneA")
+translated <- as.character(protein_seq(sequence_model))
+knitr::kable(data.frame(
+  transcript = names(translated), residues_including_stop = nchar(translated),
+  sequence_start = substr(unname(translated), 1, 12),
+  terminal_character = substr(unname(translated), nchar(translated), nchar(translated))
+))
+```
+
+Attach domains using an explicit transcript key, and store the normalized
+mutation table in memory. The `analysis` column identifies the domain model;
+`model = "Pfam"` selects its records during projection.
+
+```{r workflow-projection-annotations}
+teaching_domain_file <- tempfile(fileext = ".tsv")
+write.table(domain_input, teaching_domain_file, sep = "\t", quote = FALSE,
+            row.names = FALSE)
+sequence_model <- add_annotation(sequence_model, SynProteinDomainAnnotation(
+  name = "teaching_domains", domain_file = teaching_domain_file,
+  keytype = "transcript_id"
+))
+sequence_model <- add_annotation(sequence_model, SynProteinMutationAnnotation(
+  name = "teaching_mutations", mutation_file = "<in-memory>",
+  keytype = "gene_id", mutation_data = mutation_input, lazy = FALSE
+))
+domain_projection <- project_domains_to_genome(
+  sequence_model, annotation = "teaching_domains", model = "Pfam",
+  transcripts = "A_full"
+)
+mutation_projection <- project_mutations_to_genome(
+  sequence_model, annotation = "teaching_mutations", genes = "geneA"
+)
+knitr::kable(domain_projection[, c("transcripts", "xmin", "xmax", "motif")])
+knitr::kable(mutation_projection[, c("transcripts", "xmin", "xmax", "mutation")])
+```
+
+The domain splits into genomic intervals 143-160 and 501-530. Residue 25
+maps to 513-515 in `A_full` and 913-915 in `A_skip`: identical protein
+positions need not refer to identical genomic bases across isoforms.
+
+### Choose the geoms, scale, and theme
+
+Draw neutral exon models, overlay the projected domain on the `A_full` row,
+and add mutation lollipops aligned to their matching transcripts. Here
+`y_offset = 2` places the single domain row over `A_full` in this two-isoform
+layout; inspect row placement when changing transcripts or domain models.
+
+```{r workflow-projection-plot, fig.height = 3.5, fig.alt = "Gene A exon models in genomic coordinates, with a split domain on the full isoform and residue 25 mutation markers at different genomic codons in the two isoforms."}
+projection_plot <- ggexon(sequence_model) +
+  geom_exon(chr = "chr1", subset = c(80, 980), fill = "grey85",
+            colour = "grey50", transcript_arrow_length = 25) +
+  geom_motif(aes(fill = motif), annotation = "teaching_domains", model = "Pfam",
+             chr = "chr1", subset = c(80, 980), y_offset = 2, exon_height = 0.5) +
+  geom_aa_variant(aes(fill = mutation, label = mutation),
+    annotation = "teaching_mutations", genes = "geneA",
+    chr = "chr1", subset = c(80, 980), spread = FALSE,
+    colour = "grey20", label_angle = 0, label_size = 3) +
+  scale_fill_manual(values = c("Teaching domain" = "#0072B2", A25V = "#D55E00"),
+                    name = "Protein feature") +
+  scale_x_continuous(breaks = c(100, 500, 900),
+                     labels = scales::label_number(big.mark = ",")) +
+  theme_ggexon_track(base_size = 10, show_legend = TRUE)
+projection_plot
+```
+
+This x axis measures genomic base pairs. The preceding protein lollipop
+example measures amino-acid positions. Projection uses annotation structure;
+the plotted mutation is supplied teaching data, not a variant inferred from
+the synthetic FASTA.
+
+# 8. Aligned DNA and sequence differences
+
+An alignment ribbon summarizes an interval but hides the bases that differ.
+For a short verified pairwise alignment, `alignseq_data()` attaches columns
+to genomic positions and `geom_alignseq()` draws the sequence detail.
+
+## Present the input
+
+Supply two already aligned strings. A dash is a gap; each start coordinate
+identifies the first non-gap base in the supplied orientation.
+
+```{r workflow-dna-input}
+dna <- c(reference = "AC-GTAC", query = "ATCG-AC")
+anchors <- data.frame(
+  sequence = names(dna), start = c(100, 900), strand = "+",
+  track = names(dna), chr = c("chr1", "chr2")
+)
+knitr::kable(data.frame(sequence = names(dna), aligned_DNA = unname(dna)))
+knitr::kable(anchors)
+```
+
+## Prepare and inspect the data
+
+The helper returns a data frame rather than an S4 container. It classifies
+differences relative to the named reference; it does not compute an alignment
+or infer evolutionary direction.
+
+```{r workflow-dna-object}
+dna_columns <- alignseq_data(
+  aligned = dna, anchors = anchors, reference = "reference",
+  details = c(101, 103), flank = 1
+)
+knitr::kable(dna_columns[, c("track", "column", "base", "position", "event_type")])
+```
+
+## Choose the geom, scales, and theme
+
+The row view suits this seven-column alignment. Each panel keeps its own
+genomic axis. Base callouts have equal column spacing; gaps consume no
+genomic bases. The geom supplies fixed event colours and nucleotide
+backgrounds, leaving the plot's fill scale available for other layers.
+
+```{r workflow-dna-plot, fig.height = 3.6, fig.alt = "Two aligned DNA rows anchored to their genomic coordinates, showing a substitution and two gap events."}
+ggexon() +
+  geom_alignseq(data = dna_columns, mode = "rows", size = 3.5) +
+  facet_wrap(vars(track), ncol = 1, scales = "free_x") +
+  scale_x_continuous(breaks = scales::breaks_pretty(n = 4)) +
+  theme_ggexon_track(base_size = 10, show_x_grid = FALSE)
+```
+
+For larger regions, `mode = "markers"` draws differences and uses `details`
+only for selected callouts. Match `track` names to existing annotation
+panels when adding DNA detail to a comparison. The [AS3MT example](as3mt-splice-variants-demo.html)
+uses this approach at a real locus.
+
+# 9. Equal gene slots for a presence and order comparison
+
+Base-pair spacing can obscure corresponding gene families across loci. A
+shared slot template makes occupied and empty positions visible, changing
+the meaning of the x axis to comparison slots.
+
+## Present the input
+
+These synthetic clusters have genes assigned to three slots. Cluster B has
+no row for slot 2; this input omission alone does not establish gene loss.
+
+```{r workflow-slot-input}
+slot_input <- data.frame(
+  cluster = c("A", "A", "A", "B", "B"),
+  position = c(100, 300, 1000, 500, 900),
+  slot = c("s1", "s2", "s3", "s1", "s3"),
+  strand = c("+", "-", "+", "-", "+")
+)
+knitr::kable(slot_input)
+```
+
+## Prepare the plotting data
+
+Retain genomic positions in `x`. The strip scale maps these to the explicit
+template rather than requiring us to overwrite source coordinates.
+
+```{r workflow-slot-object}
+slot_data <- transform(slot_input, x = position, y = 1, track = cluster,
+                       gene_key = slot, genomic_x = position)
+slot_order <- c("s1", "s2", "s3")
+```
+
+## Choose the geom, scales, facet, and theme
+
+`geom_genebox()` uses equal-size squares with strand arrows.
+`strip_scale_x()` reserves every slot, including unoccupied ones.
+`scale_x_facet_labels()` names each facet's slots, and `coord_fixed()` keeps
+boxes square. The clean theme retains ordinary axis labels.
+
+```{r workflow-slots, fig.height = 2.8, fig.alt = "Two three-slot gene clusters. Cluster B has an empty middle slot; occupied slots contain strand arrows."}
+ggexon(slot_data) +
+  geom_genebox(data = slot_data, aes(fill = slot), box_size = 0.65) +
+  facet_grid(. ~ cluster) +
+  strip_scale_x(slot_order = slot_order, guide = "none") +
+  scale_x_facet_labels(
+    cluster, labels = list(A = c("A1", "A2", "A3"), B = c("B1", "B2", "B3"))
+  ) +
+  scale_fill_manual(values = c(s1 = "#0072B2", s2 = "#D55E00", s3 = "#009E73")) +
+  coord_fixed(ratio = 1) +
+  theme_ggexon_clean(base_size = 10) +
+  theme(axis.title = element_blank(), axis.text.y = element_blank(),
+        panel.grid = element_blank(), legend.position = "none")
+```
+
+The x axis now names supplied slots, not base pairs. With Syn-backed data,
+`geom_genebox(anchor = "start")`, `"middle"`, or `"end"` chooses the coding
+anchor before scaling. See the [Hox example](hox-cluster-expansion-demo.html)
+for real annotations, slot curation, and anchor comparisons.
+
+# 10. Align genomic tracks to a tree
+
+A phylogenetic ordering can make a multi-genome comparison easier to read.
+ggexon aligns one spanning rectangular tree to genomic rows without manual
+positioning of separate plots.
+
+## Present the input
+
+Reuse the synthetic gene intervals from example 5 and supply a synthetic
+Newick tree. Its branch lengths are illustrative. This optional example
+requires `ape` and `ggtree`.
+
+```{r workflow-tree-input}
+tree_text <- "(reference:0.1,query:0.2);"
+tree_text
+knitr::kable(genes)
+```
+
+## Prepare the objects
+
+Tree-tip names must match track IDs, or be mapped with the `individual`
+argument to `geom_genomic_tree()`.
+
+```{r workflow-tree-object}
+tree_available <- requireNamespace("ape", quietly = TRUE) &&
+  requireNamespace("ggtree", quietly = TRUE)
+if (tree_available) {
+  teaching_tree <- ape::read.tree(text = tree_text)
+  tree_tracks <- transform(genes, track = as.character(track))
+}
+```
+
+## Choose the geom, scales, facet, and theme
+
+`geom_genomic_tree()` attaches the tree; `facet_genomictree()` orders and
+aligns the panels. Genomic x ranges and tree branch lengths have separate
+scales and meanings. This compact view hides the branch-length ruler;
+branch lengths remain specified in the Newick input.
+
+```{r workflow-tree-plot, warning = FALSE, fig.height = 3.5, fig.alt = "A synthetic two-tip tree aligned with reference and query gene tracks."}
+if (tree_available) {
+  ggexon(tree_tracks) +
+    geom_genetag(aes(fill = gene), show_label = FALSE) +
+    geom_genomic_tree(tree = teaching_tree, tree_width = grid::unit(1.2, "in")) +
+    facet_genomictree(scales = "free_x", show_tree_x_axis = FALSE) +
+    scale_fill_manual(values = c(A = "#0072B2", B = "#D55E00")) +
+    scale_x_continuous(labels = scales::label_number()) +
+    theme_ggexon_genomictree(base_size = 10)
+} else {
+  cat("Install ape and ggtree to render this optional example.")
+}
+```
+
+For repeated multi-locus comparisons, store comparable windows in a
+`SynLocusSet`, attach it with `add_locus_set()`, and use `use_locus_grid()`.
+This records the chosen loci alongside the individuals.
+
+# 11. Correct an annotation and compare the result
+
+A gene-model correction is easier to review when it remains attached to the
+annotation and you can still plot the original. A patch records the target,
+replacement features, and a name for the change.
+
+## Present the correction
+
+Shorten gene A's middle exon from 590 to 560 in this synthetic exercise.
+Supply the complete corrected gene model, including its unchanged children.
+
+```{r workflow-patch-input}
+corrected_ranges <- query_features(model, genes = "geneA", feature_type = NULL, all = TRUE)
+change <- as.character(S4Vectors::mcols(corrected_ranges)$type) %in% c("exon", "CDS") &
+  BiocGenerics::start(corrected_ranges) == 501
+BiocGenerics::end(corrected_ranges)[change] <- 560L
+knitr::kable(as.data.frame(corrected_ranges)[,
+  c("start", "end", "type", "gene_id", "transcript_id")])
+```
+
+## Construct and apply the patch
+
+```{r workflow-patch-object}
+correction <- SynAnnotationPatch(
+  name = "shorter-middle-exon", target_ids = "geneA", mode = "replace",
+  patch_data = corrected_ranges
+)
+corrected_model <- patch_annotation(model, correction)
+names(list_patches(corrected_model))
+```
+
+`patch_annotation_from_gff()` imports corrections from a small GFF. Replacing
+models clears stale sequence caches; recompute derived sequences afterwards.
+
+## Choose the geom, scales, facet, and theme
+
+Retain the same base-pair scale before and after to compare the boundary.
+Use uncompressed `geom_exon2()` models so the direction arrows sit at the
+terminal exons in this compact comparison.
+
+```{r workflow-patch-plot, fig.height = 4, fig.alt = "Before and after synthetic annotation panels showing a shorter middle exon following a patch."}
+before <- load_annotation(SynIndividual(
+  annotation_file = gtf_file, annotation_format = "gtf", id = "before"
+))
+after <- load_annotation(SynIndividual(
+  annotation_file = gtf_file, annotation_format = "gtf", id = "after"
+))
+after <- patch_annotation(after, correction)
+curation <- add_individual(SynSpecies("Annotation curation"), before)
+curation <- add_individual(curation, after)
+ggexon(curation) +
+  geom_exon2(aes(fill = transcript_id), chr = "chr1", subset = c(80, 980),
+             compress_introns = FALSE, arrow_width = 12) +
+  facet_genomics(vars(track), ncol = 1, scales = "fixed", strip.position = "left") +
+  scale_fill_manual(values = transcript_colours) +
+  scale_panel_annotation("fixed_y") +
+  scale_x_continuous(breaks = c(100, 500, 900)) +
+  theme_ggexon_track(base_size = 10) +
+  theme_ggexon_side_strips("left", base_size = 10)
+```
+
+# 12. Query a VCF layer and mark variant positions
+
+A VCF records allele changes at genomic positions. The feature annotation and
+variant layer remain separate: attaching a VCF does not change the gene model.
+This short example reuses `model` from the first example.
+
+## Present the input
+
+Create three synthetic single-nucleotide variants on the same `chr1` as the
+teaching GTF. VCF `POS` uses one-based coordinates; these example alleles are
+teaching labels and have not been checked against a reference FASTA.
+
+```{r workflow-vcf-input}
+vcf_lines <- c(
+  "##fileformat=VCFv4.2",
+  "#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO",
+  "chr1\t125\tv1\tA\tG\t60\tPASS\t.",
+  "chr1\t535\tv2\tC\tT\t80\tPASS\t.",
+  "chr1\t925\tv3\tG\tA\t50\tPASS\t."
+)
+cat(vcf_lines, sep = "\n")
+vcf_file <- tempfile(fileext = ".vcf")
+writeLines(vcf_lines, vcf_file)
+```
+
+## Construct and inspect the object
+
+Attach a named `SynVCFAnnotation`, retrieve it, and query the displayed
+interval. Plain-text VCF is sufficient for this small example. Large BGZF VCFs
+can use a tabix index for regional access. BCF parsing is unavailable.
+
+```{r workflow-vcf-object}
+variant_model <- add_annotation(
+  model, SynVCFAnnotation(name = "variants", vcf_file = vcf_file)
+)
+variant_rows <- as.data.frame(query_variants(
+  get_annotation(variant_model, "variants"),
+  chr = "chr1", start = 80, end = 980
+))
+knitr::kable(variant_rows[, c("CHROM", "POS", "ID", "REF", "ALT")])
+variant_rows$allele <- paste0(variant_rows$REF, ">", variant_rows$ALT)
+```
+
+## Choose the geoms, scales, and theme
+
+Use the stored feature annotation for exon models and an ordinary
+`geom_vline()` for the queried variant positions. Both use the same genomic
+x coordinates. The lines mark sites across transcript rows; they do not
+represent frequencies, coverage, or allele-specific transcript structures.
+
+```{r workflow-vcf-plot, fig.height = 3.2, fig.alt = "Three synthetic variant sites marked as vertical lines across two gene A transcript models."}
+vcf_plot <- ggexon(variant_model) +
+  geom_exon(chr = "chr1", subset = c(80, 980), fill = "grey65",
+            transcript_arrow_length = 25) +
+  geom_vline(
+    data = variant_rows, aes(xintercept = POS, colour = allele),
+    linewidth = 0.6, linetype = "dashed", inherit.aes = FALSE
+  ) +
+  scale_colour_manual(values = c("A>G" = "#0072B2", "C>T" = "#D55E00", "G>A" = "#009E73"),
+                      name = "REF > ALT") +
+  scale_x_continuous(breaks = c(100, 500, 900), labels = scales::label_comma()) +
+  theme_ggexon_track(base_size = 10, show_legend = TRUE)
+vcf_plot
+```
+
+# Choose a view for your question
+
+| Question | Object or preparation | Geometry | Scale and theme |
+| --- | --- | --- | --- |
+| Which exons and isoforms are annotated? | `SynIndividual` + features | `geom_exon()` | Genomic bp; track theme |
+| How do exon structures compare across long introns? | Feature layer | `geom_exon2()` | `scale_x_ggexon_genomic()`; piecewise guide |
+| What is the order and direction of genes? | Feature layer + plot labels | `geom_genetag()`, `geom_genelabel()` | Genomic bp or strip scale; track theme |
+| Which intervals align between genomes? | `SynSpecies` + `SynPairAlignment` | `geom_nuclink()` | Independent genomic x; pairwise theme |
+| Which curated genes or blocks correspond? | Matched interval table | `geom_synteny_link()` | Shared family palette; pairwise theme |
+| How does signal vary across a locus? | `SynBigWigAnnotation` | `geom_coverage()` | Genomic x; explicit coverage y policy |
+| Where are protein domains and mutations? | Mutation and domain tables/layers | `geom_protein_lollipop()`, `geom_motif()`, `geom_aa_variant()` | Protein residues or projected genomic bp |
+| Where are genomic variants recorded? | `SynVCFAnnotation` + `query_variants()` | Exons + ordinary `geom_vline()` | Genomic bp; track theme |
+| Which bases differ in an existing alignment? | `alignseq_data()` | `geom_alignseq()` | Anchored genomic coordinates; track theme |
+| Which comparison slots are occupied? | Gene-slot table | `geom_genebox()` | `strip_scale_x()`, facet labels; clean theme |
+| How do loci relate to a supplied tree? | Matching tracks and tree | `geom_genomic_tree()` | `facet_genomictree()`; genomic-tree theme |
+
+`theme_ggexon_base()` is the common background-free foundation;
+`theme_ggexon_clean()` keeps ordinary axes and grids. Choose the track theme
+when y only positions annotations; retain a numeric y axis for quantitative
+summaries. Side-strip styling supplements a theme and must match the facet's
+`strip.position`. Add ordinary `theme()` overrides after the complete theme.
+
+Export a saved plot object with explicit dimensions and inspect the result.
+For example, `ggsave("exon-models.pdf", plot = p_exons, width = 9, height = 3.5)`
+exports the first model view.
+
+The [Classes, Geoms, Facets, and Guides](ggexon-classes-and-verbs.html)
+article provides the full object hierarchy and less common workflows.
+The linked biological examples expand these recipes with documented sources.
