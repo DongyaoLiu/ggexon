@@ -1,0 +1,22 @@
+[
+  {
+    "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRR27178656&result=read_run&fields=run_accession%2Cstudy_accession%2Csample_accession%2Cexperiment_accession%2Cscientific_name%2Ctax_id%2Clibrary_strategy%2Clibrary_source%2Csample_title&format=tsv",
+    "run": "SRR27178656",
+    "result": "run_accession\tstudy_accession\tsample_accession\texperiment_accession\tscientific_name\ttax_id\tlibrary_strategy\tlibrary_source\tsample_title\nSRR27178656\tPRJNA1016395\tSAMN30216103\tSRX22859076\tSymphalangus syndactylus\t9590\tRNA-Seq\tTRANSCRIPTOMIC\tSymphalangus syndactylus (Jambi) Cell Line\n"
+  },
+  {
+    "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRR22452368&result=read_run&fields=run_accession%2Cstudy_accession%2Csample_accession%2Cexperiment_accession%2Cscientific_name%2Ctax_id%2Clibrary_strategy%2Clibrary_source%2Csample_title&format=tsv",
+    "run": "SRR22452368",
+    "result": "run_accession\tstudy_accession\tsample_accession\texperiment_accession\tscientific_name\ttax_id\tlibrary_strategy\tlibrary_source\tsample_title\nSRR22452368\tPRJNA902025\tSAMN13178754\tSRX18421142\tPongo abelii\t9601\tRNA-Seq\tTRANSCRIPTOMIC\tTestis sample from Pongo pygmaeus abelii\n"
+  },
+  {
+    "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRR22452369&result=read_run&fields=run_accession%2Cstudy_accession%2Csample_accession%2Cexperiment_accession%2Cscientific_name%2Ctax_id%2Clibrary_strategy%2Clibrary_source%2Csample_title&format=tsv",
+    "run": "SRR22452369",
+    "result": "run_accession\tstudy_accession\tsample_accession\texperiment_accession\tscientific_name\ttax_id\tlibrary_strategy\tlibrary_source\tsample_title\nSRR22452369\tPRJNA902025\tSAMN13178639\tSRX18421141\tPongo pygmaeus pygmaeus\t9602\tRNA-Seq\tTRANSCRIPTOMIC\tBornean orangutan testis\n"
+  },
+  {
+    "url": "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRR22452370&result=read_run&fields=run_accession%2Cstudy_accession%2Csample_accession%2Cexperiment_accession%2Cscientific_name%2Ctax_id%2Clibrary_strategy%2Clibrary_source%2Csample_title&format=tsv",
+    "run": "SRR22452370",
+    "result": "run_accession\tstudy_accession\tsample_accession\texperiment_accession\tscientific_name\ttax_id\tlibrary_strategy\tlibrary_source\tsample_title\nSRR22452370\tPRJNA902025\tSAMN31928435\tSRX18421140\tGorilla gorilla gorilla\t9595\tRNA-Seq\tTRANSCRIPTOMIC\tModel organism or animal sample from Gorilla gorilla gorilla\n"
+  }
+]

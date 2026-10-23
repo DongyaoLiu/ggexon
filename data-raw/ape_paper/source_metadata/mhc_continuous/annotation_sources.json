@@ -1,0 +1,1119 @@
+{
+  "retrieved": "2026-10-19",
+  "verification": "BigBed chromosome dictionaries and small range queries spanning existing curated MHC genes, not full-genome downloads. All coordinates in probe fields are BED0.",
+  "sources": [
+    {
+      "sample": "mPanTro3",
+      "species_id": "PTR",
+      "assembly": "mPanTro3_v2.0",
+      "track_name": "catRefGene",
+      "label": "CAT+RefSeq Consensus Protein Coding Gene Annotation v3.0 10/2024",
+      "url": "https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/gene/mPanTro3_v2.0_CatRefConsensus_v3.bb",
+      "alias_url": "https://research.nhgri.nih.gov/CustomTracks/T2T_hubs/T2Tgenomes/mPanTro3_v2.0/mPanTro3_v2.0.alias",
+      "n_chromosomes_with_models": 25,
+      "schema": "table bigGenePred\n\"bigGenePred gene models\"\n    (\n    string chrom;       \t\"Reference sequence chromosome or scaffold\"\n    uint   chromStart;  \t\"Start position in chromosome\" \n    uint   chromEnd;    \t\"End position in chromosome\"\n    string name;                \"Name or ID of item, ideally both human-readable and unique\"\n    uint score;                 \"Score (0-1000)\"\n    char[1] strand;     \t\"+ or - for strand\"\n    uint thickStart;    \t\"Start of where display should be thick (start codon)\"\n    uint thickEnd;      \t\"End of where display should be thick (stop codon)\"\n    uint reserved;       \t\"RGB value (use R,G,B string in input file)\"\n    int blockCount;     \t\"Number of blocks\"\n    int[blockCount] blockSizes; \"Comma separated list of block sizes\"\n    int[blockCount] chromStarts;\"Start positions relative to chromStart\"\n    string name2;                \"Name or ID of item, ideally both human-readable and unique\"\n    )  \n",
+      "haplotypes": [
+        {
+          "track": "PTRh1",
+          "browser_chrom": "chr5_hap1_hsa6",
+          "alias_rows": [
+            [
+              "chr5_hap1_hsa6",
+              "mPanTro3#1#chr5_hap1_hsa6",
+              "CM054439.2",
+              "5",
+              "CM054439.2",
+              "NC_072403.2",
+              "chr5",
+              "hsa6"
+            ]
+          ],
+          "annotation_chrom_candidates": [
+            "CM054439.2"
+          ],
+          "has_chromosome_models": true,
+          "annotation_chrom": "CM054439.2",
+          "chromosome_size": 183320697,
+          "probe_start0": 35659409,
+          "probe_end0": 35679409,
+          "probe_model_count": 13,
+          "sample_model": [
+            35661172,
+            35661229,
+            "GCA_028858775.2T00000362880\t0\t+\t35661229\t35661229\t76,85,212\t1\t57\t0\tHLA-F"
+          ]
+        },
+        {
+          "track": "PTRh2",
+          "browser_chrom": "chr5_hap2_hsa6",
+          "alias_rows": [
+            [
+              "chr5_hap2_hsa6",
+              "mPanTro3#2#chr5_hap2_hsa6",
+              "CM054416.2"
+            ]
+          ],
+          "annotation_chrom_candidates": [],
+          "has_chromosome_models": false
+        }
+      ]
+    },
+    {
+      "sample": "mPanTro3",
+      "species_id": "PTR",
+      "assembly": "mPanTro3_v2.0",
+      "track_name": "refGene",
+      "label": "NCBI RefSeq RS_2024_03",
+      "url": "https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/gene/mPanTro3_refGene.bb",
+      "alias_url": "https://research.nhgri.nih.gov/CustomTracks/T2T_hubs/T2Tgenomes/mPanTro3_v2.0/mPanTro3_v2.0.alias",
+      "n_chromosomes_with_models": 26,
+      "schema": "table bigGenePred\n\"bigGenePred gene models\"\n   (\n   string chrom;       \"Reference sequence chromosome or scaffold\"\n   uint   chromStart;  \"Start position in chromosome\"\n   uint   chromEnd;    \"End position in chromosome\"\n   string name;        \"Name or ID of item, ideally both human readable and unique\"\n   uint score;         \"Score (0-1000)\"\n   char[1] strand;     \"+ or - for strand\"\n   uint thickStart;    \"Start of where display should be thick (start codon)\"\n   uint thickEnd;      \"End of where display should be thick (stop codon)\"\n   uint reserved;       \"RGB value (use R,G,B string in input file)\"\n   int blockCount;     \"Number of blocks\"\n   int[blockCount] blockSizes; \"Comma separated list of block sizes\"\n   int[blockCount] chromStarts; \"Start positions relative to chromStart\"\n   string name2;       \"Alternative/human readable name\"\n   string cdsStartStat; \"Status of CDS start annotation (none, unknown, incomplete, or complete)\"\n   string cdsEndStat;   \"Status of CDS end annotation (none, unknown, incomplete, or complete)\"\n   int[blockCount] exonFrames; \"Exon frame {0,1,2}, or -1 if no frame for exon\"\n   string type;        \"Transcript type\"\n   string geneName;    \"Primary identifier for gene\"\n   string geneName2;   \"Alternative/human readable gene name\"\n   string geneType;    \"Gene type\"\n   )\n\n",
+      "haplotypes": [
+        {
+          "track": "PTRh1",
+          "browser_chrom": "chr5_hap1_hsa6",
+          "alias_rows": [
+            [
+              "chr5_hap1_hsa6",
+              "mPanTro3#1#chr5_hap1_hsa6",
+              "CM054439.2",
+              "5",
+              "CM054439.2",
+              "NC_072403.2",
+              "chr5",
+              "hsa6"
+            ]
+          ],
+          "annotation_chrom_candidates": [
+            "chr5_hap1_hsa6"
+          ],
+          "has_chromosome_models": true,
+          "annotation_chrom": "chr5_hap1_hsa6",
+          "chromosome_size": 183320697,
+          "probe_start0": 35659409,
+          "probe_end0": 35679409,
+          "probe_model_count": 2,
+          "sample_model": [
+            35654301,
+            35662600,
+            "NM_001129198.1\t0\t+\t35654301\t35662549\t1644912\t7\t11,14,5,274,117,33,56,\t0,4161,4176,6873,7287,7851,8243,\tPATR-F\tcmpl\tcmpl\t0,2,1,0,1,1,1,\t\tPATR-F\tMHC-F\tprotein_coding"
+          ]
+        },
+        {
+          "track": "PTRh2",
+          "browser_chrom": "chr5_hap2_hsa6",
+          "alias_rows": [
+            [
+              "chr5_hap2_hsa6",
+              "mPanTro3#2#chr5_hap2_hsa6",
+              "CM054416.2"
+            ]
+          ],
+          "annotation_chrom_candidates": [],
+          "has_chromosome_models": false
+        }
+      ]
+    },
+    {
+      "sample": "mPanTro3",
+      "species_id": "PTR",
+      "assembly": "mPanTro3_v2.0",
+      "track_name": "catGene",
+      "label": "CAT / LiftOff Gene Annotation v1.0 03/2024",
+      "url": "https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/gene/mPanTro3_catAnnotation_v1.0.bb",
+      "alias_url": "https://research.nhgri.nih.gov/CustomTracks/T2T_hubs/T2Tgenomes/mPanTro3_v2.0/mPanTro3_v2.0.alias",
+      "n_chromosomes_with_models": 25,
+      "schema": "table bigGenePred\n\"bigGenePred gene models\"\n    (\n    string chrom;       \t\"Reference sequence chromosome or scaffold\"\n    uint   chromStart;  \t\"Start position in chromosome\" \n    uint   chromEnd;    \t\"End position in chromosome\"\n    string name;        \t\"Name or ID of item, ideally both human-readable and unique\"\n    uint score;         \t\"Score (0-1000)\"\n    char[1] strand;     \t\"+ or - for strand\"\n    uint thickStart;    \t\"Start of where display should be thick (start codon)\"\n    uint thickEnd;      \t\"End of where display should be thick (stop codon)\"\n    uint reserved;       \t\"RGB value (use R,G,B string in input file)\"\n    int blockCount;     \t\"Number of blocks\"\n    int[blockCount] blockSizes; \"Comma separated list of block sizes\"\n    int[blockCount] chromStarts;\"Start positions relative to chromStart\"\n    string name2;       \"Gene name\"\n    string cdsStartStat; \"Status of CDS start annotation (none, unknown, incomplete, or complete)\"\n    string cdsEndStat;   \"Status of CDS end annotation (none, unknown, incomplete, or complete)\"\n    int[blockCount] exonFrames; \"Exon frame {0,1,2}, or -1 if no frame for exon\"\n    string transcriptId;  \"Transcript ID\"\n    string type;        \"Transcript type\"\n    string transcriptName2; \"Transcript Name 2\"\n    string geneType;    \"Gene type\"\n    string geneId;    \"Gene ID\"\n    string sourceTranscript; \"Source\"\n    string transcriptMode; \"Mode\"\n    )  \n",
+      "haplotypes": [
+        {
+          "track": "PTRh1",
+          "browser_chrom": "chr5_hap1_hsa6",
+          "alias_rows": [
+            [
+              "chr5_hap1_hsa6",
+              "mPanTro3#1#chr5_hap1_hsa6",
+              "CM054439.2",
+              "5",
+              "CM054439.2",
+              "NC_072403.2",
+              "chr5",
+              "hsa6"
+            ]
+          ],
+          "annotation_chrom_candidates": [
+            "CM054439.2"
+          ],
+          "has_chromosome_models": true,
+          "annotation_chrom": "CM054439.2",
+          "chromosome_size": 183320697,
+          "probe_start0": 35659409,
+          "probe_end0": 35679409,
+          "probe_model_count": 57,
+          "sample_model": [
+            35642974,
+            35664872,
+            "panTro_T0089695_1\t0\t+\t35645803\t35662549\t135,76,212\t7\t98,47,140,276,117,33,2328\t0,2823,17986,18198,18614,19178,19570\tpanTro_G0049795\tcmpl\tcmpl\t-1,0,2,1,1,1,1\tpanTro_T0089695_1\tunknown_likely_coding\tpanTro_G0049795_1\tunknown_likely_coding\tpanTro_G0049795\tnan\taugPB"
+          ]
+        },
+        {
+          "track": "PTRh2",
+          "browser_chrom": "chr5_hap2_hsa6",
+          "alias_rows": [
+            [
+              "chr5_hap2_hsa6",
+              "mPanTro3#2#chr5_hap2_hsa6",
+              "CM054416.2"
+            ]
+          ],
+          "annotation_chrom_candidates": [],
+          "has_chromosome_models": false
+        }
+      ]
+    },
+    {
+      "sample": "mPanPan1",
+      "species_id": "PPA",
+      "assembly": "mPanPan1_v2.0",
+      "track_name": "catRefGene",
+      "label": "CAT+RefSeq Consensus Protein Coding Gene Annotation v3.0 10/2024",
+      "url": "https://genomeark.s3.amazonaws.com/species/Pan_paniscus/mPanPan1/assembly_curated/gene/mPanPan1_v2.0_CatRefConsensus_v3.bb",
+      "alias_url": "https://research.nhgri.nih.gov/CustomTracks/T2T_hubs/T2Tgenomes/mPanPan1_v2.0/mPanPan1_v2.0.alias",
+      "n_chromosomes_with_models": 25,
+      "schema": "table bigGenePred\n\"bigGenePred gene models\"\n    (\n    string chrom;       \t\"Reference sequence chromosome or scaffold\"\n    uint   chromStart;  \t\"Start position in chromosome\" \n    uint   chromEnd;    \t\"End position in chromosome\"\n    string name;                \"Name or ID of item, ideally both human-readable and unique\"\n    uint score;                 \"Score (0-1000)\"\n    char[1] strand;     \t\"+ or - for strand\"\n    uint thickStart;    \t\"Start of where display should be thick (start codon)\"\n    uint thickEnd;      \t\"End of where display should be thick (stop codon)\"\n    uint reserved;       \t\"RGB value (use R,G,B string in input file)\"\n    int blockCount;     \t\"Number of blocks\"\n    int[blockCount] blockSizes; \"Comma separated list of block sizes\"\n    int[blockCount] chromStarts;\"Start positions relative to chromStart\"\n    string name2;                \"Name or ID of item, ideally both human-readable and unique\"\n    )  \n",
+      "haplotypes": [
+        {
+          "track": "PPAh1",
+          "browser_chrom": "chr5_mat_hsa6",
+          "alias_rows": [
+            [
+              "chr5_mat_hsa6",
+              "mPanPan1#M#chr5_mat_hsa6",
+              "CM054489.2"
+            ]
+          ],
+          "annotation_chrom_candidates": [],
+          "has_chromosome_models": false
+        },
+        {
+          "track": "PPAh2",
+          "browser_chrom": "chr5_pat_hsa6",
+          "alias_rows": [
+            [
+              "chr5_pat_hsa6",
+              "mPanPan1#P#chr5_pat_hsa6",
+              "CM054465.2",
+              "5",
+              "CM055477.2",
+              "NC_073254.2",
+              "chr5",
+              "hsa6"
+            ]
+          ],
+          "annotation_chrom_candidates": [
+            "CM055477.2"
+          ],
+          "has_chromosome_models": true,
+          "annotation_chrom": "CM055477.2",
+          "chromosome_size": 191151712,
+          "probe_start0": 44339361,
+          "probe_end0": 44359361,
+          "probe_model_count": 15,
+          "sample_model": [
+            44338760,
+            44342426,
+            "GCA_029289425.2T00000558078\t0\t+\t44339362\t44342307\t76,85,212\t8\t145,222,270,276,276,117,33,124\t0,444,796,1312,2170,2586,3150,3542\tHLA-F"
+          ]
+        }
+      ]
+    },
+    {
+      "sample": "mPanPan1",
+      "species_id": "PPA",
+      "assembly": "mPanPan1_v2.0",
+      "track_name": "refGene",
+      "label": "NCBI RefSeq RS_2024_03",
+      "url": "https://genomeark.s3.amazonaws.com/species/Pan_paniscus/mPanPan1/assembly_curated/gene/mPanPan1_refGene.bb",
+      "alias_url": "https://research.nhgri.nih.gov/CustomTracks/T2T_hubs/T2Tgenomes/mPanPan1_v2.0/mPanPan1_v2.0.alias",
+      "n_chromosomes_with_models": 26,
+      "schema": "table bigGenePred\n\"bigGenePred gene models\"\n   (\n   string chrom;       \"Reference sequence chromosome or scaffold\"\n   uint   chromStart;  \"Start position in chromosome\"\n   uint   chromEnd;    \"End position in chromosome\"\n   string name;        \"Name or ID of item, ideally both human readable and unique\"\n   uint score;         \"Score (0-1000)\"\n   char[1] strand;     \"+ or - for strand\"\n   uint thickStart;    \"Start of where display should be thick (start codon)\"\n   uint thickEnd;      \"End of where display should be thick (stop codon)\"\n   uint reserved;       \"RGB value (use R,G,B string in input file)\"\n   int blockCount;     \"Number of blocks\"\n   int[blockCount] blockSizes; \"Comma separated list of block sizes\"\n   int[blockCount] chromStarts; \"Start positions relative to chromStart\"\n   string name2;       \"Alternative/human readable name\"\n   string cdsStartStat; \"Status of CDS start annotation (none, unknown, incomplete, or complete)\"\n   string cdsEndStat;   \"Status of CDS end annotation (none, unknown, incomplete, or complete)\"\n   int[blockCount] exonFrames; \"Exon frame {0,1,2}, or -1 if no frame for exon\"\n   string type;        \"Transcript type\"\n   string geneName;    \"Primary identifier for gene\"\n   string geneName2;   \"Alternative/human readable gene name\"\n   string geneType;    \"Gene type\"\n   )\n\n",
+      "haplotypes": [
+        {
+          "track": "PPAh1",
+          "browser_chrom": "chr5_mat_hsa6",
+          "alias_rows": [
+            [
+              "chr5_mat_hsa6",
+              "mPanPan1#M#chr5_mat_hsa6",
+              "CM054489.2"
+            ]
+          ],
+          "annotation_chrom_candidates": [],
+          "has_chromosome_models": false
+        },
+        {
+          "track": "PPAh2",
+          "browser_chrom": "chr5_pat_hsa6",
+          "alias_rows": [
+            [
+              "chr5_pat_hsa6",
+              "mPanPan1#P#chr5_pat_hsa6",
+              "CM054465.2",
+              "5",
+              "CM055477.2",
+              "NC_073254.2",
+              "chr5",
+              "hsa6"
+            ]
+          ],
+          "annotation_chrom_candidates": [
+            "chr5_pat_hsa6"
+          ],
+          "has_chromosome_models": true,
+          "annotation_chrom": "chr5_pat_hsa6",
+          "chromosome_size": 191151712,
+          "probe_start0": 44339361,
+          "probe_end0": 44359361,
+          "probe_model_count": 19,
+          "sample_model": [
+            44339269,
+            44343194,
+            "XM_063605232.1\t0\t+\t44339362\t44343079\t1644912\t6\t157,270,276,276,117,408,\t0,287,803,1661,2077,3517,\tLOC100978457\tcmpl\tcmpl\t0,1,1,1,1,1,\t\tLOC100978457\tLOC100978457\tprotein_coding"
+          ]
+        }
+      ]
+    },
+    {
+      "sample": "mPanPan1",
+      "species_id": "PPA",
+      "assembly": "mPanPan1_v2.0",
+      "track_name": "catGene",
+      "label": "CAT / LiftOff Gene Annotation v1.0 03/2024",
+      "url": "https://genomeark.s3.amazonaws.com/species/Pan_paniscus/mPanPan1/assembly_curated/gene/mPanPan1_catAnnotation_v1.0.bb",
+      "alias_url": "https://research.nhgri.nih.gov/CustomTracks/T2T_hubs/T2Tgenomes/mPanPan1_v2.0/mPanPan1_v2.0.alias",
+      "n_chromosomes_with_models": 25,
+      "schema": "table bigGenePred\n\"bigGenePred gene models\"\n    (\n    string chrom;       \t\"Reference sequence chromosome or scaffold\"\n    uint   chromStart;  \t\"Start position in chromosome\" \n    uint   chromEnd;    \t\"End position in chromosome\"\n    string name;        \t\"Name or ID of item, ideally both human-readable and unique\"\n    uint score;         \t\"Score (0-1000)\"\n    char[1] strand;     \t\"+ or - for strand\"\n    uint thickStart;    \t\"Start of where display should be thick (start codon)\"\n    uint thickEnd;      \t\"End of where display should be thick (stop codon)\"\n    uint reserved;       \t\"RGB value (use R,G,B string in input file)\"\n    int blockCount;     \t\"Number of blocks\"\n    int[blockCount] blockSizes; \"Comma separated list of block sizes\"\n    int[blockCount] chromStarts;\"Start positions relative to chromStart\"\n    string name2;       \"Gene name\"\n    string cdsStartStat; \"Status of CDS start annotation (none, unknown, incomplete, or complete)\"\n    string cdsEndStat;   \"Status of CDS end annotation (none, unknown, incomplete, or complete)\"\n    int[blockCount] exonFrames; \"Exon frame {0,1,2}, or -1 if no frame for exon\"\n    string transcriptId;  \"Transcript ID\"\n    string type;        \"Transcript type\"\n    string transcriptName2; \"Transcript Name 2\"\n    string geneType;    \"Gene type\"\n    string geneId;    \"Gene ID\"\n    string sourceTranscript; \"Source\"\n    string transcriptMode; \"Mode\"\n    )  \n",
+      "haplotypes": [
+        {
+          "track": "PPAh1",
+          "browser_chrom": "chr5_mat_hsa6",
+          "alias_rows": [
+            [
+              "chr5_mat_hsa6",
+              "mPanPan1#M#chr5_mat_hsa6",
+              "CM054489.2"
+            ]
+          ],
+          "annotation_chrom_candidates": [],
+          "has_chromosome_models": false
+        },
+        {
+          "track": "PPAh2",
+          "browser_chrom": "chr5_pat_hsa6",
+          "alias_rows": [
+            [
+              "chr5_pat_hsa6",
+              "mPanPan1#P#chr5_pat_hsa6",
+              "CM054465.2",
+              "5",
+              "CM055477.2",
+              "NC_073254.2",
+              "chr5",
+              "hsa6"
+            ]
+          ],
+          "annotation_chrom_candidates": [
+            "CM055477.2"
+          ],
+          "has_chromosome_models": true,
+          "annotation_chrom": "CM055477.2",
+          "chromosome_size": 191151712,
+          "probe_start0": 44339361,
+          "probe_end0": 44359361,
+          "probe_model_count": 79,
+          "sample_model": [
+            44338760,
+            44342426,
+            "CHM13_T0185685_1\t0\t+\t44339362\t44342307\t255,51,255\t8\t145,222,270,276,276,117,33,124\t0,444,796,1312,2170,2586,3150,3542\tHLA-F\tcmpl\tcmpl\t-1,0,1,1,1,1,1,1\tCHM13_T0185685_1\tprotein_coding\tCHM13_G0047302_1\tprotein_coding\tHLA-F\tENST00000376861.5\tLiftoff"
+          ]
+        }
+      ]
+    },
+    {
+      "sample": "mGorGor1",
+      "species_id": "GGO",
+      "assembly": "mGorGor1_v2.0",
+      "track_name": "catRefGene",
+      "label": "CAT+RefSeq Consensus Protein Coding Gene Annotation v3.0 10/2024",
+      "url": "https://genomeark.s3.amazonaws.com/species/Gorilla_gorilla/mGorGor1/assembly_curated/gene/mGorGor1_v2.0_CatRefConsensus_v3.bb",
+      "alias_url": "https://research.nhgri.nih.gov/CustomTracks/T2T_hubs/T2Tgenomes/mGorGor1_v2.0/mGorGor1_v2.0.alias",
+      "n_chromosomes_with_models": 25,
+      "schema": "table bigGenePred\n\"bigGenePred gene models\"\n    (\n    string chrom;       \t\"Reference sequence chromosome or scaffold\"\n    uint   chromStart;  \t\"Start position in chromosome\" \n    uint   chromEnd;    \t\"End position in chromosome\"\n    string name;                \"Name or ID of item, ideally both human-readable and unique\"\n    uint score;                 \"Score (0-1000)\"\n    char[1] strand;     \t\"+ or - for strand\"\n    uint thickStart;    \t\"Start of where display should be thick (start codon)\"\n    uint thickEnd;      \t\"End of where display should be thick (stop codon)\"\n    uint reserved;       \t\"RGB value (use R,G,B string in input file)\"\n    int blockCount;     \t\"Number of blocks\"\n    int[blockCount] blockSizes; \"Comma separated list of block sizes\"\n    int[blockCount] chromStarts;\"Start positions relative to chromStart\"\n    string name2;                \"Name or ID of item, ideally both human-readable and unique\"\n    )  \n",
+      "haplotypes": [
+        {
+          "track": "GGOh1",
+          "browser_chrom": "chr5_mat_hsa6",
+          "alias_rows": [
+            [
+              "chr5_mat_hsa6",
+              "mGorGor1#M#chr5_mat_hsa6",
+              "CM054587.2",
+              "5",
+              "CM055451.2",
+              "NC_073229.2",
+              "chr5",
+              "hsa6"
+            ]
+          ],
+          "annotation_chrom_candidates": [
+            "CM055451.2"
+          ],
+          "has_chromosome_models": true,
+          "annotation_chrom": "CM055451.2",
+          "chromosome_size": 199452338,
+          "probe_start0": 47377842,
+          "probe_end0": 47397842,
+          "probe_model_count": 15,
+          "sample_model": [
+            47377242,
+            47380907,
+            "GCA_029281585.2T00001613310\t0\t+\t47377843\t47380788\t76,85,212\t8\t138,222,270,276,276,117,33,124\t0,443,795,1310,2168,2584,3149,3541\tHLA-F"
+          ]
+        },
+        {
+          "track": "GGOh2",
+          "browser_chrom": "chr5_pat_hsa6",
+          "alias_rows": [
+            [
+              "chr5_pat_hsa6",
+              "mGorGor1#P#chr5_pat_hsa6",
+              "CM054563.2"
+            ]
+          ],
+          "annotation_chrom_candidates": [],
+          "has_chromosome_models": false
+        }
+      ]
+    },
+    {
+      "sample": "mGorGor1",
+      "species_id": "GGO",
+      "assembly": "mGorGor1_v2.0",
+      "track_name": "refGene",
+      "label": "NCBI RefSeq RS_2024_03",
+      "url": "https://genomeark.s3.amazonaws.com/species/Gorilla_gorilla/mGorGor1/assembly_curated/gene/mGorGor1_refGene.bb",
+      "alias_url": "https://research.nhgri.nih.gov/CustomTracks/T2T_hubs/T2Tgenomes/mGorGor1_v2.0/mGorGor1_v2.0.alias",
+      "n_chromosomes_with_models": 26,
+      "schema": "table bigGenePred\n\"bigGenePred gene models\"\n   (\n   string chrom;       \"Reference sequence chromosome or scaffold\"\n   uint   chromStart;  \"Start position in chromosome\"\n   uint   chromEnd;    \"End position in chromosome\"\n   string name;        \"Name or ID of item, ideally both human readable and unique\"\n   uint score;         \"Score (0-1000)\"\n   char[1] strand;     \"+ or - for strand\"\n   uint thickStart;    \"Start of where display should be thick (start codon)\"\n   uint thickEnd;      \"End of where display should be thick (stop codon)\"\n   uint reserved;       \"RGB value (use R,G,B string in input file)\"\n   int blockCount;     \"Number of blocks\"\n   int[blockCount] blockSizes; \"Comma separated list of block sizes\"\n   int[blockCount] chromStarts; \"Start positions relative to chromStart\"\n   string name2;       \"Alternative/human readable name\"\n   string cdsStartStat; \"Status of CDS start annotation (none, unknown, incomplete, or complete)\"\n   string cdsEndStat;   \"Status of CDS end annotation (none, unknown, incomplete, or complete)\"\n   int[blockCount] exonFrames; \"Exon frame {0,1,2}, or -1 if no frame for exon\"\n   string type;        \"Transcript type\"\n   string geneName;    \"Primary identifier for gene\"\n   string geneName2;   \"Alternative/human readable gene name\"\n   string geneType;    \"Gene type\"\n   )\n\n",
+      "haplotypes": [
+        {
+          "track": "GGOh1",
+          "browser_chrom": "chr5_mat_hsa6",
+          "alias_rows": [
+            [
+              "chr5_mat_hsa6",
+              "mGorGor1#M#chr5_mat_hsa6",
+              "CM054587.2",
+              "5",
+              "CM055451.2",
+              "NC_073229.2",
+              "chr5",
+              "hsa6"
+            ]
+          ],
+          "annotation_chrom_candidates": [
+            "chr5_mat_hsa6"
+          ],
+          "has_chromosome_models": true,
+          "annotation_chrom": "chr5_mat_hsa6",
+          "chromosome_size": 199452338,
+          "probe_start0": 47377842,
+          "probe_end0": 47397842,
+          "probe_model_count": 8,
+          "sample_model": [
+            47377236,
+            47380907,
+            "XM_063707091.1\t0\t+\t47378168\t47380788\t1644912\t8\t144,81,245,276,276,117,33,124,\t0,590,826,1316,2174,2590,3155,3547,\tMHC-G\tcmpl\tcmpl\t-1,-1,0,1,1,1,1,1,\t\tMHC-G\tGogo-F,GOGO-G3\tprotein_coding"
+          ]
+        },
+        {
+          "track": "GGOh2",
+          "browser_chrom": "chr5_pat_hsa6",
+          "alias_rows": [
+            [
+              "chr5_pat_hsa6",
+              "mGorGor1#P#chr5_pat_hsa6",
+              "CM054563.2"
+            ]
+          ],
+          "annotation_chrom_candidates": [],
+          "has_chromosome_models": false
+        }
+      ]
+    },
+    {
+      "sample": "mGorGor1",
+      "species_id": "GGO",
+      "assembly": "mGorGor1_v2.0",
+      "track_name": "catGene",
+      "label": "CAT / LiftOff Gene Annotation v1.0 03/2024",
+      "url": "https://genomeark.s3.amazonaws.com/species/Gorilla_gorilla/mGorGor1/assembly_curated/gene/mGorGor1_catAnnotation_v1.0.bb",
+      "alias_url": "https://research.nhgri.nih.gov/CustomTracks/T2T_hubs/T2Tgenomes/mGorGor1_v2.0/mGorGor1_v2.0.alias",
+      "n_chromosomes_with_models": 25,
+      "schema": "table bigGenePred\n\"bigGenePred gene models\"\n    (\n    string chrom;       \t\"Reference sequence chromosome or scaffold\"\n    uint   chromStart;  \t\"Start position in chromosome\" \n    uint   chromEnd;    \t\"End position in chromosome\"\n    string name;        \t\"Name or ID of item, ideally both human-readable and unique\"\n    uint score;         \t\"Score (0-1000)\"\n    char[1] strand;     \t\"+ or - for strand\"\n    uint thickStart;    \t\"Start of where display should be thick (start codon)\"\n    uint thickEnd;      \t\"End of where display should be thick (stop codon)\"\n    uint reserved;       \t\"RGB value (use R,G,B string in input file)\"\n    int blockCount;     \t\"Number of blocks\"\n    int[blockCount] blockSizes; \"Comma separated list of block sizes\"\n    int[blockCount] chromStarts;\"Start positions relative to chromStart\"\n    string name2;       \"Gene name\"\n    string cdsStartStat; \"Status of CDS start annotation (none, unknown, incomplete, or complete)\"\n    string cdsEndStat;   \"Status of CDS end annotation (none, unknown, incomplete, or complete)\"\n    int[blockCount] exonFrames; \"Exon frame {0,1,2}, or -1 if no frame for exon\"\n    string transcriptId;  \"Transcript ID\"\n    string type;        \"Transcript type\"\n    string transcriptName2; \"Transcript Name 2\"\n    string geneType;    \"Gene type\"\n    string geneId;    \"Gene ID\"\n    string sourceTranscript; \"Source\"\n    string transcriptMode; \"Mode\"\n    )  \n",
+      "haplotypes": [
+        {
+          "track": "GGOh1",
+          "browser_chrom": "chr5_mat_hsa6",
+          "alias_rows": [
+            [
+              "chr5_mat_hsa6",
+              "mGorGor1#M#chr5_mat_hsa6",
+              "CM054587.2",
+              "5",
+              "CM055451.2",
+              "NC_073229.2",
+              "chr5",
+              "hsa6"
+            ]
+          ],
+          "annotation_chrom_candidates": [
+            "CM055451.2"
+          ],
+          "has_chromosome_models": true,
+          "annotation_chrom": "CM055451.2",
+          "chromosome_size": 199452338,
+          "probe_start0": 47377842,
+          "probe_end0": 47397842,
+          "probe_model_count": 56,
+          "sample_model": [
+            47377242,
+            47380907,
+            "CHM13_T0185685_1\t0\t+\t47377843\t47380788\t255,51,255\t8\t138,222,270,276,276,117,33,124\t0,443,795,1310,2168,2584,3149,3541\tHLA-F\tcmpl\tcmpl\t-1,0,1,1,1,1,1,1\tCHM13_T0185685_1\tprotein_coding\tCHM13_G0047302_1\tprotein_coding\tHLA-F\tENST00000376861.5\tLiftoff"
+          ]
+        },
+        {
+          "track": "GGOh2",
+          "browser_chrom": "chr5_pat_hsa6",
+          "alias_rows": [
+            [
+              "chr5_pat_hsa6",
+              "mGorGor1#P#chr5_pat_hsa6",
+              "CM054563.2"
+            ]
+          ],
+          "annotation_chrom_candidates": [],
+          "has_chromosome_models": false
+        }
+      ]
+    },
+    {
+      "sample": "mPonAbe1",
+      "species_id": "PAB",
+      "assembly": "mPonAbe1_v2.0",
+      "track_name": "catRefGene",
+      "label": "CAT+RefSeq Consensus Protein Coding Gene Annotation v3.0 10/2024",
+      "url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/gene/mPonAbe1_v2.0_CatRefConsensus_v3.bb",
+      "alias_url": "https://research.nhgri.nih.gov/CustomTracks/T2T_hubs/T2Tgenomes/mPonAbe1_v2.0/mPonAbe1_v2.0.alias",
+      "n_chromosomes_with_models": 26,
+      "schema": "table bigGenePred\n\"bigGenePred gene models\"\n    (\n    string chrom;       \t\"Reference sequence chromosome or scaffold\"\n    uint   chromStart;  \t\"Start position in chromosome\" \n    uint   chromEnd;    \t\"End position in chromosome\"\n    string name;                \"Name or ID of item, ideally both human-readable and unique\"\n    uint score;                 \"Score (0-1000)\"\n    char[1] strand;     \t\"+ or - for strand\"\n    uint thickStart;    \t\"Start of where display should be thick (start codon)\"\n    uint thickEnd;      \t\"End of where display should be thick (stop codon)\"\n    uint reserved;       \t\"RGB value (use R,G,B string in input file)\"\n    int blockCount;     \t\"Number of blocks\"\n    int[blockCount] blockSizes; \"Comma separated list of block sizes\"\n    int[blockCount] chromStarts;\"Start positions relative to chromStart\"\n    string name2;                \"Name or ID of item, ideally both human-readable and unique\"\n    )  \n",
+      "haplotypes": [
+        {
+          "track": "PABh1",
+          "browser_chrom": "chr5_hap1_hsa6",
+          "alias_rows": [
+            [
+              "chr5_hap1_hsa6",
+              "mPonAbe1#1#chr5_hap1_hsa6",
+              "CM054684.2",
+              "5",
+              "CM054684.2",
+              "NC_071990.2",
+              "chr5",
+              "hsa6"
+            ]
+          ],
+          "annotation_chrom_candidates": [
+            "CM054684.2"
+          ],
+          "has_chromosome_models": true,
+          "annotation_chrom": "CM054684.2",
+          "chromosome_size": 172605363,
+          "probe_start0": 29662796,
+          "probe_end0": 29682796,
+          "probe_model_count": 15,
+          "sample_model": [
+            29662132,
+            29675883,
+            "GCA_028885655.2T00000373569\t0\t+\t29662797\t29665742\t76,85,212\t8\t210,222,270,276,276,117,33,10146\t0,507,860,1375,2244,2661,3213,3605\tHLA-F"
+          ]
+        },
+        {
+          "track": "PABh2",
+          "browser_chrom": "chr5_hap2_hsa6",
+          "alias_rows": [
+            [
+              "chr5_hap2_hsa6",
+              "mPonAbe1#2#chr5_hap2_hsa6",
+              "CM054661.2"
+            ]
+          ],
+          "annotation_chrom_candidates": [],
+          "has_chromosome_models": false
+        }
+      ]
+    },
+    {
+      "sample": "mPonAbe1",
+      "species_id": "PAB",
+      "assembly": "mPonAbe1_v2.0",
+      "track_name": "refGene",
+      "label": "NCBI RefSeq RS_2024_03",
+      "url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/gene/mPonAbe1_refGene.bb",
+      "alias_url": "https://research.nhgri.nih.gov/CustomTracks/T2T_hubs/T2Tgenomes/mPonAbe1_v2.0/mPonAbe1_v2.0.alias",
+      "n_chromosomes_with_models": 30,
+      "schema": "table bigGenePred\n\"bigGenePred gene models\"\n   (\n   string chrom;       \"Reference sequence chromosome or scaffold\"\n   uint   chromStart;  \"Start position in chromosome\"\n   uint   chromEnd;    \"End position in chromosome\"\n   string name;        \"Name or ID of item, ideally both human readable and unique\"\n   uint score;         \"Score (0-1000)\"\n   char[1] strand;     \"+ or - for strand\"\n   uint thickStart;    \"Start of where display should be thick (start codon)\"\n   uint thickEnd;      \"End of where display should be thick (stop codon)\"\n   uint reserved;       \"RGB value (use R,G,B string in input file)\"\n   int blockCount;     \"Number of blocks\"\n   int[blockCount] blockSizes; \"Comma separated list of block sizes\"\n   int[blockCount] chromStarts; \"Start positions relative to chromStart\"\n   string name2;       \"Alternative/human readable name\"\n   string cdsStartStat; \"Status of CDS start annotation (none, unknown, incomplete, or complete)\"\n   string cdsEndStat;   \"Status of CDS end annotation (none, unknown, incomplete, or complete)\"\n   int[blockCount] exonFrames; \"Exon frame {0,1,2}, or -1 if no frame for exon\"\n   string type;        \"Transcript type\"\n   string geneName;    \"Primary identifier for gene\"\n   string geneName2;   \"Alternative/human readable gene name\"\n   string geneType;    \"Gene type\"\n   )\n\n",
+      "haplotypes": [
+        {
+          "track": "PABh1",
+          "browser_chrom": "chr5_hap1_hsa6",
+          "alias_rows": [
+            [
+              "chr5_hap1_hsa6",
+              "mPonAbe1#1#chr5_hap1_hsa6",
+              "CM054684.2",
+              "5",
+              "CM054684.2",
+              "NC_071990.2",
+              "chr5",
+              "hsa6"
+            ]
+          ],
+          "annotation_chrom_candidates": [
+            "chr5_hap1_hsa6"
+          ],
+          "has_chromosome_models": true,
+          "annotation_chrom": "chr5_hap1_hsa6",
+          "chromosome_size": 172605363,
+          "probe_start0": 29662796,
+          "probe_end0": 29682796,
+          "probe_model_count": 6,
+          "sample_model": [
+            29662169,
+            29665939,
+            "XM_054558623.2\t0\t+\t29662797\t29665742\t1644912\t8\t173,222,270,276,276,117,33,202,\t0,470,823,1338,2207,2624,3176,3568,\tLOC100432875\tcmpl\tcmpl\t-1,0,1,1,1,1,1,1,\t\tLOC100432875\tLOC100432875\tprotein_coding"
+          ]
+        },
+        {
+          "track": "PABh2",
+          "browser_chrom": "chr5_hap2_hsa6",
+          "alias_rows": [
+            [
+              "chr5_hap2_hsa6",
+              "mPonAbe1#2#chr5_hap2_hsa6",
+              "CM054661.2"
+            ]
+          ],
+          "annotation_chrom_candidates": [],
+          "has_chromosome_models": false
+        }
+      ]
+    },
+    {
+      "sample": "mPonAbe1",
+      "species_id": "PAB",
+      "assembly": "mPonAbe1_v2.0",
+      "track_name": "catGene",
+      "label": "CAT / LiftOff Gene Annotation v1.0 03/2024",
+      "url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/gene/mPonAbe1_catAnnotation_v1.0.bb",
+      "alias_url": "https://research.nhgri.nih.gov/CustomTracks/T2T_hubs/T2Tgenomes/mPonAbe1_v2.0/mPonAbe1_v2.0.alias",
+      "n_chromosomes_with_models": 29,
+      "schema": "table bigGenePred\n\"bigGenePred gene models\"\n    (\n    string chrom;       \t\"Reference sequence chromosome or scaffold\"\n    uint   chromStart;  \t\"Start position in chromosome\" \n    uint   chromEnd;    \t\"End position in chromosome\"\n    string name;        \t\"Name or ID of item, ideally both human-readable and unique\"\n    uint score;         \t\"Score (0-1000)\"\n    char[1] strand;     \t\"+ or - for strand\"\n    uint thickStart;    \t\"Start of where display should be thick (start codon)\"\n    uint thickEnd;      \t\"End of where display should be thick (stop codon)\"\n    uint reserved;       \t\"RGB value (use R,G,B string in input file)\"\n    int blockCount;     \t\"Number of blocks\"\n    int[blockCount] blockSizes; \"Comma separated list of block sizes\"\n    int[blockCount] chromStarts;\"Start positions relative to chromStart\"\n    string name2;       \"Gene name\"\n    string cdsStartStat; \"Status of CDS start annotation (none, unknown, incomplete, or complete)\"\n    string cdsEndStat;   \"Status of CDS end annotation (none, unknown, incomplete, or complete)\"\n    int[blockCount] exonFrames; \"Exon frame {0,1,2}, or -1 if no frame for exon\"\n    string transcriptId;  \"Transcript ID\"\n    string type;        \"Transcript type\"\n    string transcriptName2; \"Transcript Name 2\"\n    string geneType;    \"Gene type\"\n    string geneId;    \"Gene ID\"\n    string sourceTranscript; \"Source\"\n    string transcriptMode; \"Mode\"\n    )  \n",
+      "haplotypes": [
+        {
+          "track": "PABh1",
+          "browser_chrom": "chr5_hap1_hsa6",
+          "alias_rows": [
+            [
+              "chr5_hap1_hsa6",
+              "mPonAbe1#1#chr5_hap1_hsa6",
+              "CM054684.2",
+              "5",
+              "CM054684.2",
+              "NC_071990.2",
+              "chr5",
+              "hsa6"
+            ]
+          ],
+          "annotation_chrom_candidates": [
+            "CM054684.2"
+          ],
+          "has_chromosome_models": true,
+          "annotation_chrom": "CM054684.2",
+          "chromosome_size": 172605363,
+          "probe_start0": 29662796,
+          "probe_end0": 29682796,
+          "probe_model_count": 30,
+          "sample_model": [
+            29659893,
+            29712924,
+            "ponAbe_T0056365_1\t0\t-\t29660647\t29708559\t135,76,212\t9\t848,117,29,156,31,14,347,69,412\t0,39750,44520,44832,45125,48652,50529,52276,52619\tponAbe_G0032026\tcmpl\tcmpl\t2,2,0,0,2,0,-1,-1,-1\tponAbe_T0056365_1\tunknown_likely_coding\tponAbe_G0032026_1\tunknown_likely_coding\tponAbe_G0032026\tnan\taugPB"
+          ]
+        },
+        {
+          "track": "PABh2",
+          "browser_chrom": "chr5_hap2_hsa6",
+          "alias_rows": [
+            [
+              "chr5_hap2_hsa6",
+              "mPonAbe1#2#chr5_hap2_hsa6",
+              "CM054661.2"
+            ]
+          ],
+          "annotation_chrom_candidates": [],
+          "has_chromosome_models": false
+        }
+      ]
+    },
+    {
+      "sample": "mPonPyg2",
+      "species_id": "PPY",
+      "assembly": "mPonPyg2_v2.0",
+      "track_name": "catRefGene",
+      "label": "CAT+RefSeq Consensus Protein Coding Gene Annotation v3.0 10/2024",
+      "url": "https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/gene/mPonPyg2_v2.0_CatRefConsensus_v3.bb",
+      "alias_url": "https://research.nhgri.nih.gov/CustomTracks/T2T_hubs/T2Tgenomes/mPonPyg2_v2.0/mPonPyg2_v2.0.alias",
+      "n_chromosomes_with_models": 25,
+      "schema": "table bigGenePred\n\"bigGenePred gene models\"\n    (\n    string chrom;       \t\"Reference sequence chromosome or scaffold\"\n    uint   chromStart;  \t\"Start position in chromosome\" \n    uint   chromEnd;    \t\"End position in chromosome\"\n    string name;                \"Name or ID of item, ideally both human-readable and unique\"\n    uint score;                 \"Score (0-1000)\"\n    char[1] strand;     \t\"+ or - for strand\"\n    uint thickStart;    \t\"Start of where display should be thick (start codon)\"\n    uint thickEnd;      \t\"End of where display should be thick (stop codon)\"\n    uint reserved;       \t\"RGB value (use R,G,B string in input file)\"\n    int blockCount;     \t\"Number of blocks\"\n    int[blockCount] blockSizes; \"Comma separated list of block sizes\"\n    int[blockCount] chromStarts;\"Start positions relative to chromStart\"\n    string name2;                \"Name or ID of item, ideally both human-readable and unique\"\n    )  \n",
+      "haplotypes": [
+        {
+          "track": "PPYh1",
+          "browser_chrom": "chr5_hap1_hsa6",
+          "alias_rows": [
+            [
+              "chr5_hap1_hsa6",
+              "mPonPyg2#1#chr5_hap1_hsa6",
+              "CM054635.2",
+              "5",
+              "CM054635.2",
+              "NC_072378.2",
+              "chr5",
+              "hsa6"
+            ]
+          ],
+          "annotation_chrom_candidates": [
+            "CM054635.2"
+          ],
+          "has_chromosome_models": true,
+          "annotation_chrom": "CM054635.2",
+          "chromosome_size": 171334878,
+          "probe_start0": 29660035,
+          "probe_end0": 29680035,
+          "probe_model_count": 15,
+          "sample_model": [
+            29659368,
+            29673108,
+            "GCA_028885625.2T00001931158\t0\t+\t29660036\t29662980\t76,85,212\t8\t213,222,270,276,276,117,33,10133\t0,510,862,1377,2246,2663,3215,3607\tHLA-F"
+          ]
+        },
+        {
+          "track": "PPYh2",
+          "browser_chrom": "chr5_hap2_hsa6",
+          "alias_rows": [
+            [
+              "chr5_hap2_hsa6",
+              "mPonPyg2#2#chr5_hap2_hsa6",
+              "CM054612.2"
+            ]
+          ],
+          "annotation_chrom_candidates": [],
+          "has_chromosome_models": false
+        }
+      ]
+    },
+    {
+      "sample": "mPonPyg2",
+      "species_id": "PPY",
+      "assembly": "mPonPyg2_v2.0",
+      "track_name": "refGene",
+      "label": "NCBI RefSeq RS_2024_03",
+      "url": "https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/gene/mPonPyg2_refGene.bb",
+      "alias_url": "https://research.nhgri.nih.gov/CustomTracks/T2T_hubs/T2Tgenomes/mPonPyg2_v2.0/mPonPyg2_v2.0.alias",
+      "n_chromosomes_with_models": 26,
+      "schema": "table bigGenePred\n\"bigGenePred gene models\"\n   (\n   string chrom;       \"Reference sequence chromosome or scaffold\"\n   uint   chromStart;  \"Start position in chromosome\"\n   uint   chromEnd;    \"End position in chromosome\"\n   string name;        \"Name or ID of item, ideally both human readable and unique\"\n   uint score;         \"Score (0-1000)\"\n   char[1] strand;     \"+ or - for strand\"\n   uint thickStart;    \"Start of where display should be thick (start codon)\"\n   uint thickEnd;      \"End of where display should be thick (stop codon)\"\n   uint reserved;       \"RGB value (use R,G,B string in input file)\"\n   int blockCount;     \"Number of blocks\"\n   int[blockCount] blockSizes; \"Comma separated list of block sizes\"\n   int[blockCount] chromStarts; \"Start positions relative to chromStart\"\n   string name2;       \"Alternative/human readable name\"\n   string cdsStartStat; \"Status of CDS start annotation (none, unknown, incomplete, or complete)\"\n   string cdsEndStat;   \"Status of CDS end annotation (none, unknown, incomplete, or complete)\"\n   int[blockCount] exonFrames; \"Exon frame {0,1,2}, or -1 if no frame for exon\"\n   string type;        \"Transcript type\"\n   string geneName;    \"Primary identifier for gene\"\n   string geneName2;   \"Alternative/human readable gene name\"\n   string geneType;    \"Gene type\"\n   )\n\n",
+      "haplotypes": [
+        {
+          "track": "PPYh1",
+          "browser_chrom": "chr5_hap1_hsa6",
+          "alias_rows": [
+            [
+              "chr5_hap1_hsa6",
+              "mPonPyg2#1#chr5_hap1_hsa6",
+              "CM054635.2",
+              "5",
+              "CM054635.2",
+              "NC_072378.2",
+              "chr5",
+              "hsa6"
+            ]
+          ],
+          "annotation_chrom_candidates": [
+            "chr5_hap1_hsa6"
+          ],
+          "has_chromosome_models": true,
+          "annotation_chrom": "chr5_hap1_hsa6",
+          "chromosome_size": 171334878,
+          "probe_start0": 29660035,
+          "probe_end0": 29680035,
+          "probe_model_count": 4,
+          "sample_model": [
+            29659389,
+            29663179,
+            "XM_054490199.2\t0\t+\t29660036\t29662980\t1644912\t8\t192,222,270,276,276,117,33,204,\t0,489,841,1356,2225,2642,3194,3586,\tLOC129037895\tcmpl\tcmpl\t-1,0,1,1,1,1,1,1,\t\tLOC129037895\tLOC129037895\tprotein_coding"
+          ]
+        },
+        {
+          "track": "PPYh2",
+          "browser_chrom": "chr5_hap2_hsa6",
+          "alias_rows": [
+            [
+              "chr5_hap2_hsa6",
+              "mPonPyg2#2#chr5_hap2_hsa6",
+              "CM054612.2"
+            ]
+          ],
+          "annotation_chrom_candidates": [],
+          "has_chromosome_models": false
+        }
+      ]
+    },
+    {
+      "sample": "mPonPyg2",
+      "species_id": "PPY",
+      "assembly": "mPonPyg2_v2.0",
+      "track_name": "catGene",
+      "label": "CAT / LiftOff Gene Annotation v1.0 03/2024",
+      "url": "https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/gene/mPonPyg2_catAnnotation_v1.0.bb",
+      "alias_url": "https://research.nhgri.nih.gov/CustomTracks/T2T_hubs/T2Tgenomes/mPonPyg2_v2.0/mPonPyg2_v2.0.alias",
+      "n_chromosomes_with_models": 25,
+      "schema": "table bigGenePred\n\"bigGenePred gene models\"\n    (\n    string chrom;       \t\"Reference sequence chromosome or scaffold\"\n    uint   chromStart;  \t\"Start position in chromosome\" \n    uint   chromEnd;    \t\"End position in chromosome\"\n    string name;        \t\"Name or ID of item, ideally both human-readable and unique\"\n    uint score;         \t\"Score (0-1000)\"\n    char[1] strand;     \t\"+ or - for strand\"\n    uint thickStart;    \t\"Start of where display should be thick (start codon)\"\n    uint thickEnd;      \t\"End of where display should be thick (stop codon)\"\n    uint reserved;       \t\"RGB value (use R,G,B string in input file)\"\n    int blockCount;     \t\"Number of blocks\"\n    int[blockCount] blockSizes; \"Comma separated list of block sizes\"\n    int[blockCount] chromStarts;\"Start positions relative to chromStart\"\n    string name2;       \"Gene name\"\n    string cdsStartStat; \"Status of CDS start annotation (none, unknown, incomplete, or complete)\"\n    string cdsEndStat;   \"Status of CDS end annotation (none, unknown, incomplete, or complete)\"\n    int[blockCount] exonFrames; \"Exon frame {0,1,2}, or -1 if no frame for exon\"\n    string transcriptId;  \"Transcript ID\"\n    string type;        \"Transcript type\"\n    string transcriptName2; \"Transcript Name 2\"\n    string geneType;    \"Gene type\"\n    string geneId;    \"Gene ID\"\n    string sourceTranscript; \"Source\"\n    string transcriptMode; \"Mode\"\n    )  \n",
+      "haplotypes": [
+        {
+          "track": "PPYh1",
+          "browser_chrom": "chr5_hap1_hsa6",
+          "alias_rows": [
+            [
+              "chr5_hap1_hsa6",
+              "mPonPyg2#1#chr5_hap1_hsa6",
+              "CM054635.2",
+              "5",
+              "CM054635.2",
+              "NC_072378.2",
+              "chr5",
+              "hsa6"
+            ]
+          ],
+          "annotation_chrom_candidates": [
+            "CM054635.2"
+          ],
+          "has_chromosome_models": true,
+          "annotation_chrom": "CM054635.2",
+          "chromosome_size": 171334878,
+          "probe_start0": 29660035,
+          "probe_end0": 29680035,
+          "probe_model_count": 31,
+          "sample_model": [
+            29657130,
+            29707865,
+            "ponPyg_T0043498_1\t0\t-\t29657767\t29707672\t135,76,212\t3\t848,117,225\t0,39768,50510\tponPyg_G0024559\tcmpl\tcmpl\t2,2,0\tponPyg_T0043498_1\tunknown_likely_coding\tponPyg_G0024559_1\tunknown_likely_coding\tponPyg_G0024559\tnan\taugPB"
+          ]
+        },
+        {
+          "track": "PPYh2",
+          "browser_chrom": "chr5_hap2_hsa6",
+          "alias_rows": [
+            [
+              "chr5_hap2_hsa6",
+              "mPonPyg2#2#chr5_hap2_hsa6",
+              "CM054612.2"
+            ]
+          ],
+          "annotation_chrom_candidates": [],
+          "has_chromosome_models": false
+        }
+      ]
+    },
+    {
+      "sample": "mSymSyn1",
+      "species_id": "SSY",
+      "assembly": "mSymSyn1_v2.0",
+      "track_name": "catRefGene",
+      "label": "CAT+RefSeq Consensus Protein Coding Gene Annotation v3.0 10/2024",
+      "url": "https://genomeark.s3.amazonaws.com/species/Symphalangus_syndactylus/mSymSyn1/assembly_curated/gene/mSymSyn1_v2.0_CatRefConsensus_v3.bb",
+      "alias_url": "https://research.nhgri.nih.gov/CustomTracks/T2T_hubs/T2Tgenomes/mSymSyn1_v2.0/mSymSyn1_v2.0.alias",
+      "n_chromosomes_with_models": 26,
+      "schema": "table bigGenePred\n\"bigGenePred gene models\"\n    (\n    string chrom;       \t\"Reference sequence chromosome or scaffold\"\n    uint   chromStart;  \t\"Start position in chromosome\" \n    uint   chromEnd;    \t\"End position in chromosome\"\n    string name;                \"Name or ID of item, ideally both human-readable and unique\"\n    uint score;                 \"Score (0-1000)\"\n    char[1] strand;     \t\"+ or - for strand\"\n    uint thickStart;    \t\"Start of where display should be thick (start codon)\"\n    uint thickEnd;      \t\"End of where display should be thick (stop codon)\"\n    uint reserved;       \t\"RGB value (use R,G,B string in input file)\"\n    int blockCount;     \t\"Number of blocks\"\n    int[blockCount] blockSizes; \"Comma separated list of block sizes\"\n    int[blockCount] chromStarts;\"Start positions relative to chromStart\"\n    string name2;                \"Name or ID of item, ideally both human-readable and unique\"\n    )  \n",
+      "haplotypes": [
+        {
+          "track": "SSYh1",
+          "browser_chrom": "chr23_hap1",
+          "alias_rows": [
+            [
+              "chr23_hap1",
+              "mSymSyn1#1#chr23_hap1",
+              "CM054531.2",
+              "23",
+              "CM054531.2",
+              "NC_072445.2",
+              "chr23"
+            ]
+          ],
+          "annotation_chrom_candidates": [
+            "CM054531.2"
+          ],
+          "has_chromosome_models": true,
+          "annotation_chrom": "CM054531.2",
+          "chromosome_size": 78312223,
+          "probe_start0": 38642739,
+          "probe_end0": 38662739,
+          "probe_model_count": 15,
+          "sample_model": [
+            38638651,
+            38648097,
+            "GCA_028878055.2T00000370599\t0\t-\t38642740\t38648097\t76,85,212\t5\t3802,24,111,282,264\t0,4085,4429,5076,9182\tHLA-DPB1"
+          ]
+        },
+        {
+          "track": "SSYh2",
+          "browser_chrom": "chr23_hap2",
+          "alias_rows": [
+            [
+              "chr23_hap2",
+              "mSymSyn1#2#chr23_hap2",
+              "CM054556.2"
+            ]
+          ],
+          "annotation_chrom_candidates": [],
+          "has_chromosome_models": false
+        }
+      ]
+    },
+    {
+      "sample": "mSymSyn1",
+      "species_id": "SSY",
+      "assembly": "mSymSyn1_v2.0",
+      "track_name": "refGene",
+      "label": "NCBI RefSeq RS_2024_03",
+      "url": "https://genomeark.s3.amazonaws.com/species/Symphalangus_syndactylus/mSymSyn1/assembly_curated/gene/mSymSyn1_refGene.bb",
+      "alias_url": "https://research.nhgri.nih.gov/CustomTracks/T2T_hubs/T2Tgenomes/mSymSyn1_v2.0/mSymSyn1_v2.0.alias",
+      "n_chromosomes_with_models": 27,
+      "schema": "table bigGenePred\n\"bigGenePred gene models\"\n   (\n   string chrom;       \"Reference sequence chromosome or scaffold\"\n   uint   chromStart;  \"Start position in chromosome\"\n   uint   chromEnd;    \"End position in chromosome\"\n   string name;        \"Name or ID of item, ideally both human readable and unique\"\n   uint score;         \"Score (0-1000)\"\n   char[1] strand;     \"+ or - for strand\"\n   uint thickStart;    \"Start of where display should be thick (start codon)\"\n   uint thickEnd;      \"End of where display should be thick (stop codon)\"\n   uint reserved;       \"RGB value (use R,G,B string in input file)\"\n   int blockCount;     \"Number of blocks\"\n   int[blockCount] blockSizes; \"Comma separated list of block sizes\"\n   int[blockCount] chromStarts; \"Start positions relative to chromStart\"\n   string name2;       \"Alternative/human readable name\"\n   string cdsStartStat; \"Status of CDS start annotation (none, unknown, incomplete, or complete)\"\n   string cdsEndStat;   \"Status of CDS end annotation (none, unknown, incomplete, or complete)\"\n   int[blockCount] exonFrames; \"Exon frame {0,1,2}, or -1 if no frame for exon\"\n   string type;        \"Transcript type\"\n   string geneName;    \"Primary identifier for gene\"\n   string geneName2;   \"Alternative/human readable gene name\"\n   string geneType;    \"Gene type\"\n   )\n\n",
+      "haplotypes": [
+        {
+          "track": "SSYh1",
+          "browser_chrom": "chr23_hap1",
+          "alias_rows": [
+            [
+              "chr23_hap1",
+              "mSymSyn1#1#chr23_hap1",
+              "CM054531.2",
+              "23",
+              "CM054531.2",
+              "NC_072445.2",
+              "chr23"
+            ]
+          ],
+          "annotation_chrom_candidates": [
+            "chr23_hap1"
+          ],
+          "has_chromosome_models": true,
+          "annotation_chrom": "chr23_hap1",
+          "chromosome_size": 78312223,
+          "probe_start0": 38642739,
+          "probe_end0": 38662739,
+          "probe_model_count": 7,
+          "sample_model": [
+            38642223,
+            38652458,
+            "XM_055263109.2\t0\t-\t38642740\t38652355\t1644912\t6\t230,24,111,282,264,203,\t0,513,857,1504,5610,10032,\tLOC129473012\tcmpl\tcmpl\t-1,1,1,1,1,0,\t\tLOC129473012\tLOC129473012\tprotein_coding"
+          ]
+        },
+        {
+          "track": "SSYh2",
+          "browser_chrom": "chr23_hap2",
+          "alias_rows": [
+            [
+              "chr23_hap2",
+              "mSymSyn1#2#chr23_hap2",
+              "CM054556.2"
+            ]
+          ],
+          "annotation_chrom_candidates": [],
+          "has_chromosome_models": false
+        }
+      ]
+    },
+    {
+      "sample": "mSymSyn1",
+      "species_id": "SSY",
+      "assembly": "mSymSyn1_v2.0",
+      "track_name": "catGene",
+      "label": "CAT / LiftOff Gene Annotation v1.0 03/2024",
+      "url": "https://genomeark.s3.amazonaws.com/species/Symphalangus_syndactylus/mSymSyn1/assembly_curated/gene/mSymSyn1_catAnnotation_v1.0.bb",
+      "alias_url": "https://research.nhgri.nih.gov/CustomTracks/T2T_hubs/T2Tgenomes/mSymSyn1_v2.0/mSymSyn1_v2.0.alias",
+      "n_chromosomes_with_models": 26,
+      "schema": "table bigGenePred\n\"bigGenePred gene models\"\n    (\n    string chrom;       \t\"Reference sequence chromosome or scaffold\"\n    uint   chromStart;  \t\"Start position in chromosome\" \n    uint   chromEnd;    \t\"End position in chromosome\"\n    string name;        \t\"Name or ID of item, ideally both human-readable and unique\"\n    uint score;         \t\"Score (0-1000)\"\n    char[1] strand;     \t\"+ or - for strand\"\n    uint thickStart;    \t\"Start of where display should be thick (start codon)\"\n    uint thickEnd;      \t\"End of where display should be thick (stop codon)\"\n    uint reserved;       \t\"RGB value (use R,G,B string in input file)\"\n    int blockCount;     \t\"Number of blocks\"\n    int[blockCount] blockSizes; \"Comma separated list of block sizes\"\n    int[blockCount] chromStarts;\"Start positions relative to chromStart\"\n    string name2;       \"Gene name\"\n    string cdsStartStat; \"Status of CDS start annotation (none, unknown, incomplete, or complete)\"\n    string cdsEndStat;   \"Status of CDS end annotation (none, unknown, incomplete, or complete)\"\n    int[blockCount] exonFrames; \"Exon frame {0,1,2}, or -1 if no frame for exon\"\n    string transcriptId;  \"Transcript ID\"\n    string type;        \"Transcript type\"\n    string transcriptName2; \"Transcript Name 2\"\n    string geneType;    \"Gene type\"\n    string geneId;    \"Gene ID\"\n    string sourceTranscript; \"Source\"\n    string transcriptMode; \"Mode\"\n    )  \n",
+      "haplotypes": [
+        {
+          "track": "SSYh1",
+          "browser_chrom": "chr23_hap1",
+          "alias_rows": [
+            [
+              "chr23_hap1",
+              "mSymSyn1#1#chr23_hap1",
+              "CM054531.2",
+              "23",
+              "CM054531.2",
+              "NC_072445.2",
+              "chr23"
+            ]
+          ],
+          "annotation_chrom_candidates": [
+            "CM054531.2"
+          ],
+          "has_chromosome_models": true,
+          "annotation_chrom": "CM054531.2",
+          "chromosome_size": 78312223,
+          "probe_start0": 38642739,
+          "probe_end0": 38662739,
+          "probe_model_count": 49,
+          "sample_model": [
+            38638651,
+            38648097,
+            "CHM13_T0186976_1\t0\t-\t38642740\t38648097\t255,51,255\t5\t3802,24,111,282,264\t0,4085,4429,5076,9182\tHLA-DPB1\tcmpl\tincmpl\t-1,1,1,1,1\tCHM13_T0186976_1\tprotein_coding\tCHM13_G0047590_1\tprotein_coding\tHLA-DPB1\tENST00000418931.7\tLiftoff"
+          ]
+        },
+        {
+          "track": "SSYh2",
+          "browser_chrom": "chr23_hap2",
+          "alias_rows": [
+            [
+              "chr23_hap2",
+              "mSymSyn1#2#chr23_hap2",
+              "CM054556.2"
+            ]
+          ],
+          "annotation_chrom_candidates": [],
+          "has_chromosome_models": false
+        }
+      ]
+    },
+    {
+      "sample": "CHM13",
+      "species_id": "HSA",
+      "assembly": "T2T-CHM13v2.0",
+      "track_name": "refGene",
+      "url": "https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/CHM13/browser/bbi/chm13v2.0_RefSeq_Liftoff_v5.2.bb",
+      "schema": "table bigGenePred\n\"bigGenePred gene models\"\n   (\n   string chrom;       \"Reference sequence chromosome or scaffold\"\n   uint   chromStart;  \"Start position in chromosome\"\n   uint   chromEnd;    \"End position in chromosome\"\n   string name;        \"Name or ID of item, ideally both human readable and unique\"\n   uint score;         \"Score (0-1000)\"\n   char[1] strand;     \"+ or - for strand\"\n   uint thickStart;    \"Start of where display should be thick (start codon)\"\n   uint thickEnd;      \"End of where display should be thick (stop codon)\"\n   uint reserved;       \"RGB value (use R,G,B string in input file)\"\n   int blockCount;     \"Number of blocks\"\n   int[blockCount] blockSizes; \"Comma separated list of block sizes\"\n   int[blockCount] chromStarts; \"Start positions relative to chromStart\"\n   string name2;       \"Alternative/human readable name\"\n   string cdsStartStat; \"Status of CDS start annotation (none, unknown, incomplete, or complete)\"\n   string cdsEndStat;   \"Status of CDS end annotation (none, unknown, incomplete, or complete)\"\n   int[blockCount] exonFrames; \"Exon frame {0,1,2}, or -1 if no frame for exon\"\n   string type;        \"Transcript type\"\n   string geneName;    \"Primary identifier for gene\"\n   string geneName2;   \"Alternative/human readable gene name\"\n   string geneType;    \"Gene type\"\n   )\n\n",
+      "haplotypes": [
+        {
+          "track": "HSAh1",
+          "browser_chrom": "chr6",
+          "annotation_chrom": "chr6",
+          "has_chromosome_models": true,
+          "probe_start0": 29476948,
+          "probe_end0": 33231258,
+          "probe_model_count": 912,
+          "sample_model": [
+            29476948,
+            29502717,
+            "GABBR1\t0\t-\t29478253\t29502495\t1644912\t18\t1479,144,129,128,94,108,117,133,151,78,64,243,192,66,102,171,135,528,\t0,2256,2622,3331,4153,4660,4865,6364,6992,8687,10314,11006,18851,19502,19854,21055,21640,25241,\tGABBR1\tcmpl\tcmpl\t0,0,0,1,0,0,0,2,1,1,0,0,0,0,0,0,0,0,\t\tGABBR1\tGPRC3A\tprotein_coding"
+          ]
+        }
+      ]
+    }
+  ],
+  "ortholog_colors": {
+    "url": "https://raw.githubusercontent.com/marbl/T2T-Browser/603f414e9278545a1c8dcf416f3226e7a3d07e86/src/MHC/colors.txt",
+    "file": "colors.txt",
+    "sha256": "e74f9d0e42d67042342ac66d9ffd86f89f2834cfa09d9577d0a6158d67de9e53",
+    "rgb_by_locus": {
+      "F": "127,125,187",
+      "G": "137,204,237",
+      "H": "68,170,153",
+      "A": "133,200,135",
+      "J": "85,144,204",
+      "E": "221,203,119",
+      "C": "204,102,119",
+      "B": "211,117,169",
+      "OKO": "79,193,180",
+      "DRA": "140,212,226",
+      "DRB3": "176,176,106",
+      "DRB1": "180,157,203",
+      "DRB5": "204,122,141",
+      "DQA1": "119,173,222",
+      "DQB1": "63,129,184",
+      "DQA2": "39,158,72",
+      "DQB2": "232,255,82",
+      "DOB": "246,235,20",
+      "DMB": "251,180,113",
+      "DMA": "184,155,201",
+      "DOA": "220,159,199",
+      "DPA1": "222,203,228",
+      "DPB1": "102,95,170",
+      "p": "180,180,180"
+    }
+  },
+  "cautions": [
+    "RefSeq may annotate only one haplotype; CAT and consensus use GenBank accessions, requiring explicit browser chromAlias mapping.",
+    "Consensus track longLabel specifies protein coding, so it is not a complete all-biotype annotation. CAT also annotates only the primary haplotype in these standard browser sources. Supplement curated MHC pseudogenes explicitly; an unannotated haplotype does not imply gene absence.",
+    "Presence of an annotated chromosome does not establish complete gene annotation. Probe counts count transcript models, not unique genes.",
+    "CAT/RefSeq exon-model labels and functionality can disagree with curated MHC manual annotations; preserve the manual MHC names/status as authoritative at the locus."
+  ],
+  "panel_c_boundary_gene_query": {
+    "source_url": "https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/CHM13/browser/bbi/chm13v2.0_RefSeq_Liftoff_v5.2.bb",
+    "query_start0": 28000000,
+    "query_end0": 34000000,
+    "chrom": "chr6",
+    "ZNF311": {
+      "start0": 28869593,
+      "end0": 28880314,
+      "n_models": 28,
+      "alias": "zf31"
+    },
+    "GRM4": {
+      "start0": 33839942,
+      "end0": 33979214,
+      "n_models": 6,
+      "alias": "MGLUR4"
+    },
+    "gene_span_bp": 5109621,
+    "note": "Gene-span union is5.109621Mb, not exact5.31Mb; gene labels alone do not resolve plotted flanks."
+  },
+  "additional_source_search": {
+    "genomeark_gene_directories": "Listed all6species/sample assembly_curated/gene/ prefixes using S3 ListObjectsV2. Each contains standard CATv0.9/v1.0, RefSeq, consensusv3, manualMHC and human/mouseTOGA BigBeds; no secondary-haplotype gene annotation file was listed.",
+    "TOGA_probe": {
+      "species_id": "PAB",
+      "url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/gene/HLTOGAannotVsHg38v1.bb",
+      "n_chromosomes": 29,
+      "primary_chrom": "chr5_hap1_hsa6",
+      "secondary_chrom_present": false
+    }
+  },
+  "available_model_tracks": [
+    "PTRh1",
+    "PPAh2",
+    "GGOh1",
+    "PABh1",
+    "PPYh1",
+    "SSYh1",
+    "HSAh1"
+  ],
+  "missing_model_tracks": [
+    "PTRh2",
+    "PPAh1",
+    "GGOh2",
+    "PABh2",
+    "PPYh2",
+    "SSYh2"
+  ]
+}

@@ -52,6 +52,7 @@ being compared, pairwise or multiple alignments between them, optional
 trees, and reusable layout state.
 
 ``` r
+
 sp <- SynSpecies(name = "Caenorhabditis")
 ```
 
@@ -60,6 +61,7 @@ remember the genome FASTA, feature annotation file, loaded annotation
 layers, sequence caches, labels, patches, and feature indexes.
 
 ``` r
+
 xz <- SynIndividual(
   genome_file = "XZ1516.fasta",
   annotation_file = "XZ1516.gff3",
@@ -77,19 +79,20 @@ annotation file exist in the FASTA headers.
 
 The main concrete annotation classes are:
 
-| Class                          | Stores                                                                                                   |
-|--------------------------------|----------------------------------------------------------------------------------------------------------|
-| `SynFeatureAnnotation`         | Structural genome annotation such as genes, transcripts, exons, CDS, labels, and patch history           |
-| `SynVCFAnnotation`             | VCF querying is supported. BCF parsing is not implemented; BCF input raises an unsupported-format error. |
-| `SynBigWigAnnotation`          | Signal tracks queried by genomic region                                                                  |
-| `SynProteinDomainAnnotation`   | Protein-space domains from InterProScan-like tables                                                      |
-| `SynProteinMutationAnnotation` | Protein mutation summaries and lollipop-track inputs                                                     |
-| `SynAnnotationPatch`           | Small gene-model corrections that add, drop, or replace features                                         |
+| Class | Stores |
+|----|----|
+| `SynFeatureAnnotation` | Structural genome annotation such as genes, transcripts, exons, CDS, labels, and patch history |
+| `SynVCFAnnotation` | VCF querying is supported. BCF parsing is not implemented; BCF input raises an unsupported-format error. |
+| `SynBigWigAnnotation` | Signal tracks queried by genomic region |
+| `SynProteinDomainAnnotation` | Protein-space domains from InterProScan-like tables |
+| `SynProteinMutationAnnotation` | Protein mutation summaries and lollipop-track inputs |
+| `SynAnnotationPatch` | Small gene-model corrections that add, drop, or replace features |
 
 Additional layers are attached to a `SynIndividual` with
 [`add_annotation()`](https://dongyaoliu.github.io/ggexon/reference/add_annotation.md).
 
 ``` r
+
 xz <- add_annotation(
   xz,
   SynVCFAnnotation(
@@ -150,6 +153,7 @@ Template requiring user-provided files: the following recipe expects
 your BLAST outfmt 6 results and WormBase gene ID map.
 
 ``` r
+
 sp <- SynSpecies(name = "worms")
 
 # Import a BLAST outfmt 6 result (one species → reference)
@@ -192,6 +196,7 @@ Template requiring user-provided files: the loop below expects one BLAST
 outfmt 6 file per query species and a WormBase gene ID map.
 
 ``` r
+
 # Build homologies for all query species
 query_species_names <- c("C_bovis", "C_afra")
 for (sp_name in query_species_names) {
@@ -220,6 +225,7 @@ Template requiring user-provided files: this object-building recipe
 expects your pairwise alignment and already parsed MAF data.
 
 ``` r
+
 sp <- add_individual(sp, xz)
 
 sp <- add_pairwise_alignment(
@@ -248,11 +254,12 @@ sp <- add_multiple_alignment(
 
 [`ggexon()`](https://dongyaoliu.github.io/ggexon/reference/ggexon.md)
 starts a plot like
-[`ggplot()`](https://ggplot2.tidyverse.org/reference/ggplot.html), but
-it understands `SynIndividual` and `SynSpecies` objects. Geoms can
-resolve stored annotation or alignment data at build time.
+[`ggplot()`](https://rdrr.io/pkg/ggplot2/man/ggplot.html), but it
+understands `SynIndividual` and `SynSpecies` objects. Geoms can resolve
+stored annotation or alignment data at build time.
 
 ``` r
+
 ggexon(sp) +
   geom_exon(
     species = "XZ1516",
@@ -269,6 +276,7 @@ when transcript structure matters. It draws exon rectangles, the
 transcript backbone, and strand direction from feature annotation data.
 
 ``` r
+
 ggexon(sp) +
   geom_exon(
     species = "XZ1516",
@@ -286,6 +294,7 @@ useful when the visual emphasis is on coding and untranslated segments
 rather than raw genomic spacing.
 
 ``` r
+
 ggexon(sp) +
   geom_exon2(
     species = "XZ1516",
@@ -302,6 +311,7 @@ when each gene should be represented as one directional span. This is a
 compact overview layer for synteny figures.
 
 ``` r
+
 ggexon(sp) +
   geom_genetag(
     species = "XZ1516",
@@ -323,6 +333,7 @@ via stored `HomologyAnnotation` objects) can replace each query-species
 gene label with its reference-species ortholog name.
 
 ``` r
+
 ggexon(sp) +
   geom_genetag(species = "XZ1516", chr = "RagTag_V") +
   geom_genelabel(
@@ -347,6 +358,7 @@ positions by track-index modulo:
   to `"top"`.
 
 ``` r
+
 geom_genelabel(label_direction = "top:center:bottom")
 ```
 
@@ -380,6 +392,7 @@ default it assumes a ~300 mm wide genomic panel. For wide output
 is accurate:
 
 ``` r
+
 # Genomic tracks are ~38 inches wide (40 in total minus tree and labels)
 geom_genelabel(
   chr = "V", size = 2.4,
@@ -404,6 +417,7 @@ figures where tree-like relationships need to share the same panel
 system as genomic intervals.
 
 ``` r
+
 ggexon(tree_data) +
   geom_genomic_tree()
 ```
@@ -416,6 +430,7 @@ for motif, domain-like, or other interval blocks. It is a general
 interval layer when the data are already in a plot-ready table.
 
 ``` r
+
 ggplot(motif_data) +
   geom_motif(aes(xmin = start, xmax = end, y = track, fill = motif))
 ```
@@ -427,6 +442,7 @@ Use
 when mutation labels need to be placed on sequence or protein tracks.
 
 ``` r
+
 ggplot(mutation_data) +
   geom_mutation_label(aes(x = position, y = track, label = mutation))
 ```
@@ -439,6 +455,7 @@ for nucleotide-level links between aligned genomes. With a `SynSpecies`
 object, the geom can resolve stored pairwise alignments.
 
 ``` r
+
 ggexon(sp) +
   geom_exon(
     species = c("XZ1516", "N2"),
@@ -466,6 +483,7 @@ target interval columns (`tspecies`, `tchr`, `tstart`, `tend`), query
 interval columns (`qspecies`, `qchr`, `qstart`, `qend`), and `strand`.
 
 ``` r
+
 ggexon(sp) +
   geom_genetag(species = c("human", "macaque"), chr = "HOXA") +
   geom_synteny_link(
@@ -494,6 +512,7 @@ for protein-domain backbones with mutation lollipops. It is usually
 paired with protein-domain or protein-mutation helper data.
 
 ``` r
+
 mutations <- data.frame(
   position = c(5, 8, 20),
   mutation = c("M5T", "K8R", "A20V")
@@ -536,6 +555,7 @@ projection core with
 [`geom_motif()`](https://dongyaoliu.github.io/ggexon/reference/geom_motif.md).
 
 ``` r
+
 # Attach a protein-coordinate variant summary keyed to genes. The mutation
 # column accepts `C#316#H` hash notation or plain `C316H` strings.
 xz <- add_protein_mutation_annotation(
@@ -567,6 +587,7 @@ directly. A codon that straddles an intron returns one row per exonic
 fragment.
 
 ``` r
+
 project_mutations_to_genome(xz, chr = "RagTag_V", start = 21574445, end = 21584356)
 ```
 
@@ -582,6 +603,7 @@ arranges genomic annotation panels, link panels, signal tracks, and
 other data panels in one ggplot-like layout.
 
 ``` r
+
 ggexon(sp) +
   geom_exon(species = c("XZ1516", "N2"), chr = "RagTag_V") +
   geom_nuclink(
@@ -619,6 +641,7 @@ control those identities by role:
 - a valid wrapper for a role absent from the plot is a no-op.
 
 ``` r
+
 ggexon(sp) +
   geom_coverage(annotation = "coverage") +
   geom_exon(
@@ -653,6 +676,7 @@ and
 [`plot_ggtree_genomic_alignment()`](https://dongyaoliu.github.io/ggexon/reference/plot_ggtree_genomic_alignment.md).
 
 ``` r
+
 plot_ggtree_genomic_alignment(
   sp,
   alignment = "worm-maf",
@@ -666,16 +690,17 @@ plot_ggtree_genomic_alignment(
 lays out three columns left to right: tree, species labels, and genomic
 track panels. Each column has a dedicated width argument:
 
-| Column | Argument                                                                                                     | Default                        |
-|--------|--------------------------------------------------------------------------------------------------------------|--------------------------------|
-| Tree   | `tree_width` in [`geom_genomic_tree()`](https://dongyaoliu.github.io/ggexon/reference/geom_genomic_tree.md)  | `unit(1.5, "in")`              |
-| Labels | `label_width` in [`facet_genomictree()`](https://dongyaoliu.github.io/ggexon/reference/facet_genomictree.md) | `unit(0.7, "in")`              |
+| Column | Argument | Default |
+|----|----|----|
+| Tree | `tree_width` in [`geom_genomic_tree()`](https://dongyaoliu.github.io/ggexon/reference/geom_genomic_tree.md) | `unit(1.5, "in")` |
+| Labels | `label_width` in [`facet_genomictree()`](https://dongyaoliu.github.io/ggexon/reference/facet_genomictree.md) | `unit(0.7, "in")` |
 | Tracks | `track_width` in [`facet_genomictree()`](https://dongyaoliu.github.io/ggexon/reference/facet_genomictree.md) | `NULL` (fills remaining space) |
 
 Species labels can be placed on the left (`label_position = "left"`,
 default), right (`"right"`), or hidden (`"none"`).
 
 ``` r
+
 # Explicit column widths
 facet_genomictree(
   label_position = "left",
@@ -705,6 +730,7 @@ shows separate exon and intron scale bars instead of ordinary genomic
 ticks.
 
 ``` r
+
 ggexon(sp) +
   geom_exon(species = "XZ1516", chr = "RagTag_V") +
   scale_x_ggexon_genomic(
@@ -730,6 +756,7 @@ Template requiring user-provided files: the multiple-alignment recipe
 below expects already parsed MAF data from your own file.
 
 ``` r
+
 sp <- SynSpecies(name = "Caenorhabditis") |>
   add_individual(xz, n2) |>
   add_tree(tree)
@@ -763,6 +790,7 @@ Use `load_*()` when the object knows where a file is, but the data have
 not yet been materialized.
 
 ``` r
+
 xz <- load_annotation(xz)
 sp <- load_alignment(sp, alignment = "XZ1516_vs_N2")
 ```
@@ -771,6 +799,7 @@ Use `query_*()` and `*_data()` helpers when you want rows or ranges
 back:
 
 ``` r
+
 features <- query_features(
   xz,
   chr = "V_RagTag",
@@ -799,6 +828,7 @@ metadata; they do not alter the annotation object or expand intervals to
 per-base rows.
 
 ``` r
+
 region <- GenomicRanges::GRanges(
   "I",
   IRanges::IRanges(2332338L, 2373985L)
@@ -830,6 +860,7 @@ Use `subset_*()` and `filter_*()` when you want updated objects or
 filtered alignment state.
 
 ``` r
+
 sp_window <- subset_species(
   sp,
   coords = c("XZ1516#V_RagTag:21574445-21584356")
@@ -849,6 +880,7 @@ Use curation verbs when a feature annotation needs readable labels or
 corrected gene models:
 
 ``` r
+
 xz <- set_gene_labels(
   xz,
   c(FUN_000001 = "sept-1", FUN_000002 = "zina-1")

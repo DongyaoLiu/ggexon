@@ -20,6 +20,7 @@ Windows readers can view the rendered figure in the [online
 tutorial](https://dongyaoliu.github.io/ggexon/articles/bigwig-coverage-demo.html).
 
 ``` r
+
 library(ggexon)
 
 fixture_dir <- system.file("extdata", "peel1_coverage", package = "ggexon")

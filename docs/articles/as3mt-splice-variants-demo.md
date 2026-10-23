@@ -104,12 +104,11 @@ as3mt_plot$plot + as3mt_protein_layers(protein_change, protein_loss)
 The helpers use
 [`project_domains_to_genome()`](https://dongyaoliu.github.io/ggexon/reference/project_domains_to_genome.md)
 for the absent protein interval, then
-[`geom_rect()`](https://ggplot2.tidyverse.org/reference/geom_tile.html),
-[`geom_segment()`](https://ggplot2.tidyverse.org/reference/geom_segment.html)
-and
-[`geom_text()`](https://ggplot2.tidyverse.org/reference/geom_text.html)
-for its display. All layers stay on the human reference panel and follow
-the genomic scale. Substitution lollipops are reserved for actual
+[`geom_rect()`](https://rdrr.io/pkg/ggplot2/man/geom_tile.html),
+[`geom_segment()`](https://rdrr.io/pkg/ggplot2/man/geom_segment.html)
+and [`geom_text()`](https://rdrr.io/pkg/ggplot2/man/geom_text.html) for
+its display. All layers stay on the human reference panel and follow the
+genomic scale. Substitution lollipops are reserved for actual
 reference/alternative residues.
 
 ## 3. DNA detail at the exon-1 repeat

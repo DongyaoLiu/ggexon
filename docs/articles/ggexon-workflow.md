@@ -21,6 +21,7 @@ This vignette sketches the core workflow:
 ## Create a `SynIndividual`
 
 ``` r
+
 x <- SynIndividual(
   genome_file = system.file("extdata", "compact_synspecies", "XZ1516.fasta", package = "ggexon"),
   annotation_file = system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
@@ -32,6 +33,7 @@ x <- SynIndividual(
 ## Load the active feature annotation
 
 ``` r
+
 x <- load_annotation(x)
 ann <- get_annotation(x)
 ```
@@ -47,6 +49,7 @@ VCF querying is supported. BCF parsing is not implemented; BCF input
 raises an unsupported-format error.
 
 ``` r
+
 x <- add_annotation(
   x,
   SynVCFAnnotation(
@@ -81,6 +84,7 @@ Stable IDs should remain unchanged. Use
 to add readable labels for plotting.
 
 ``` r
+
 x <- set_gene_labels(
   x,
   c(
@@ -99,6 +103,7 @@ Small corrected GFF fragments can be imported and applied as structured
 patches.
 
 ``` r
+
 x <- patch_annotation_from_gff(
   x,
   patch_file = system.file("extdata", "XZ1516.TA.gff", package = "ggexon"),
@@ -113,6 +118,7 @@ annotation and clears stale sequence caches.
 ## Translate proteins for selected genes
 
 ``` r
+
 x <- translate_protein(
   x,
   genes = c("FUN_000001", "FUN_000002")
@@ -126,6 +132,7 @@ protein_seq(get_annotation(x))
 Region-based layers are queried through their type-specific verbs.
 
 ``` r
+
 variant_layer <- get_annotation(x, "variants")
 query_variants(variant_layer, chr = "V_RagTag", start = 21574336, end = 21574400)
 ```
@@ -139,6 +146,7 @@ Template requiring user-provided files: this recipe expects your second
 genome, annotation, and pairwise alignment files.
 
 ``` r
+
 x2 <- SynIndividual(other_genome_file, other_annotation_file)
 
 sp <- SynSpecies(name = "Caenorhabditis")
@@ -167,6 +175,7 @@ Template requiring user-provided files: this storage-only recipe expects
 already parsed MAF data from your own file.
 
 ``` r
+
 sp <- add_multiple_alignment(
   sp,
   SynMultiAlignment(
@@ -188,6 +197,7 @@ Use `subset =` to trim on both query and target coordinates, and use
 `filter =` to discard short fragments by `alen`.
 
 ``` r
+
 pairwise_alignment_data(
   sp,
   alignment = "XZ1516_vs_other",
@@ -218,11 +228,11 @@ only one individual, you do not need to specify `species =`. Internally,
 the plotting code resolves that sole individual, maps the user-facing
 chromosome label `RagTag_V` to the annotation seqname used in the GFF
 (`V_RagTag` in the bundled example), and creates the default
-[`aes()`](https://ggplot2.tidyverse.org/reference/aes.html) mapping
-needed by
+[`aes()`](https://rdrr.io/pkg/ggplot2/man/aes.html) mapping needed by
 [`geom_exon()`](https://dongyaoliu.github.io/ggexon/reference/geom_exon.md).
 
 ``` r
+
 x <- SynIndividual(
   genome_file = system.file("extdata", "compact_synspecies", "XZ1516.fasta", package = "ggexon"),
   annotation_file = system.file("extdata", "compact_synspecies", "caenorhabditis_XZ1516.gff3",
@@ -253,6 +263,7 @@ The same direct plotting workflow is also available for
 which collapses the region to one directional span per `gene_id`.
 
 ``` r
+
 ggexon(sp) +
   geom_genetag(
     chr = "RagTag_V",
@@ -283,6 +294,7 @@ resolve the stored alignment into the middle link panel. The reference
 species supplies the input coordinates.
 
 ``` r
+
 n2 <- SynIndividual(
   genome_file = system.file(
     "extdata", "compact_synspecies",
@@ -313,6 +325,7 @@ sp <- add_pairwise_alignment(
 ```
 
 ``` r
+
 ggexon(sp) +
   geom_exon(
     species = c("N2", "XZ1516")
@@ -341,8 +354,7 @@ and
 [`geom_nuclink()`](https://dongyaoliu.github.io/ggexon/reference/geom_nuclink.md).
 The same pattern can be extended to other geoms so they can consume
 `SynSpecies` or `SynIndividual` objects without requiring a manual
-[`fortify()`](https://ggplot2.tidyverse.org/reference/fortify.html)
-step.
+[`fortify()`](https://rdrr.io/pkg/ggplot2/man/fortify.html) step.
 
 ## Notes
 

@@ -1,0 +1,4 @@
+##gff-version 3
+PABh1	source	gene	590140	591184	.	-	.	ID=alternate;Name=OR5V1
+PABh1	source	mRNA	590140	591184	.	-	.	ID=alternate.t1;Parent=alternate
+PABh1	source	exon	590140	591184	.	-	.	ID=ex0;Parent=alternate.t1

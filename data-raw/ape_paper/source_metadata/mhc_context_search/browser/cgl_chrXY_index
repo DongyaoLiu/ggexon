@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>T2T Priamtes XY Hub Overview</title>
+    <style>
+      body {
+          background-color: white;
+          padding-left: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1><strong>Overview</strong></h1>
+
+    <p>T2T-Primates is a project of the Telomere-to-Telomere consortium and is led by the Makova, Phillippy, and Eichler labs. The project seeks to finish complete, diploid assemblies for key non-human primate species. The project
+       focused on gorilla, bonobo, chimpanzee, orangutan, and gibbon. 
+       Phase one of the project has produced complete sex chromosomes. This site contains the link to the UCSC Genome Browser Hub for the T2T Primate XY project and information on how to use it.</p>
+
+    <p>Clicking on the link to the genome of interest below will connect you to the browser for that genome in the hub. Each of these genomes have several tracks. You can now browse to any location on the genome and look at gene 
+       annotations from CAT, Liftoff, NCBI, and Augustus. There are also tracks related to segmental duplications, sequence classes on the X and Y chrosomomes, mapping and sequencing, and more.</p>
+
+    <h2> UCSC Genome Browser Links</h2>
+        <ul>
+           <li>Bonobo (Pan paniscus): <a href="https://genome.ucsc.edu/cgi-bin/hgTracks?genome=GCF_029289425.1&hubUrl=https://cgl.gi.ucsc.edu/data/T2T-primates-chrXY/hub/hub.txt">GCF_029289425.1</a></li>
+           <li>Chimpanzee (Pan troglodytes): <a href="https://genome.ucsc.edu/cgi-bin/hgTracks?genome=GCF_028858775.1&hubUrl=https://cgl.gi.ucsc.edu/data/T2T-primates-chrXY/hub/hub.txt">GCF_028858775.1</a></li>
+           <li>Human (Homo sapiens): <a href="https://genome.ucsc.edu/cgi-bin/hgTracks?db=hs1&hubUrl=https://cgl.gi.ucsc.edu/data/T2T-primates-chrXY/hub/hub.txt">CHM13</a></li>
+           <li>Gorilla (Gorilla gorilla): <a href="https://genome.ucsc.edu/cgi-bin/hgTracks?genome=GCF_029281585.1&hubUrl=https://cgl.gi.ucsc.edu/data/T2T-primates-chrXY/hub/hub.txt">GCF_029281585.1</a></li>
+           <li>Bornean Orangutan (Pongo pygmaeus): <a href="https://genome.ucsc.edu/cgi-bin/hgTracks?genome=GCF_028885625.1&hubUrl=https://cgl.gi.ucsc.edu/data/T2T-primates-chrXY/hub/hub.txt">GCF_028885625.1</a></li>
+           <li>Sumatran Orangutan (Pongo abelii): <a href="https://genome.ucsc.edu/cgi-bin/hgTracks?genome=GCF_028885655.1&hubUrl=https://cgl.gi.ucsc.edu/data/T2T-primates-chrXY/hub/hub.txt">GCF_028885655.1</a></li>
+           <li>Siamang (Symphalangus syndactylus): <a href="https://genome.ucsc.edu/cgi-bin/hgTracks?genome=GCF_028878055.1&hubUrl=https://cgl.gi.ucsc.edu/data/T2T-primates-chrXY/hub/hub.txt">GCF_028878055.1</a></li>
+        </ul>
+    </ul>
+
+    <h2>T2T Primates Consortium</h2>
+
+    <p><a href="https://github.com/marbl/Primates">T2T Primates Consortium</a></p>
+
+
+    <h2>Contact</h2>
+    <address>
+      <a href="mailto:pnhebbar@ucsc.edu">T2T Primates XY Hub Support</a>
+    </address>
+  </body>
+</html>

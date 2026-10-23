@@ -1,0 +1,7 @@
+{
+  "source_url": "https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/CHM13/browser/bbi/chm13v2.0_RefSeq_Liftoff_v5.2.bb",
+  "chrom": "chr6",
+  "browser_chrom": "chr6",
+  "start0": 28669878,
+  "end0": 33979214
+}

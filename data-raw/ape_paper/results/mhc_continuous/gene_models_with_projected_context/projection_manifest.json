@@ -1,0 +1,412 @@
+{
+  "method": "Same-species context-only Liftoff; no extra-copy search; no functional status inferred",
+  "minimum_coverage": 0.95,
+  "minimum_identity": 0.95,
+  "coordinate_system": "native BED0; source and target regional FASTAs are display-oriented, reflected back once for siamang",
+  "source_representatives": "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/figures/before-alt-context/representative-models.tsv",
+  "source_representatives_sha256": "0c069653516ae0d89f33fb8ca5977a1197e5f9727dbe43bb54889a7bbf2e5dd5",
+  "runs": [
+    {
+      "target": "SSYh2",
+      "source": "SSYh1",
+      "source_context_genes": 151,
+      "accepted": 150,
+      "not_transferred": 1,
+      "command": [
+        "/private/tmp/ggexon-mhc-liftoff-venv/bin/liftoff",
+        "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/SSYh2.fa",
+        "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/SSYh1.fa",
+        "-g",
+        "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/SSYh2/source.gff3",
+        "-o",
+        "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/SSYh2/projected.gff3",
+        "-u",
+        "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/SSYh2/unmapped.txt",
+        "-dir",
+        "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/SSYh2/intermediates",
+        "-p",
+        "2",
+        "-a",
+        "0.95",
+        "-s",
+        "0.95",
+        "-exclude_partial"
+      ],
+      "tools": {
+        "version": "1.6.3",
+        "direct_url": {
+          "url": "https://github.com/agshumate/Liftoff.git",
+          "vcs_info": {
+            "commit_id": "94d6073ee2400c438d181a67d3af1e362197d839",
+            "vcs": "git"
+          }
+        },
+        "minimap2_version": "2.31-r1302",
+        "minimap2_sha256": "233e289649c6886531810b3917ac1180c72beb432c3e64ba1d918f3ed3365907"
+      },
+      "source_window": {
+        "track": "SSYh1",
+        "species_id": "SSY",
+        "haplotype": "h1",
+        "label": "Siamang h1",
+        "chr": "chr23_hap1",
+        "start0": "37530567",
+        "end0": "42365376",
+        "length": "4834809",
+        "orientation": "-",
+        "twoBit_url": "https://genomeark.s3.amazonaws.com/species/Symphalangus_syndactylus/mSymSyn1/assembly_curated/mSymSyn1_v2.0.2bit"
+      },
+      "target_window": {
+        "track": "SSYh2",
+        "species_id": "SSY",
+        "haplotype": "h2",
+        "label": "Siamang h2",
+        "chr": "chr23_hap2",
+        "start0": "33263362",
+        "end0": "38051052",
+        "length": "4787690",
+        "orientation": "-",
+        "twoBit_url": "https://genomeark.s3.amazonaws.com/species/Symphalangus_syndactylus/mSymSyn1/assembly_curated/mSymSyn1_v2.0.2bit"
+      },
+      "source_gff_sha256": "26a09099e7a373af4c9083f900c6d305a18da81841d0ef27a08fe3e7e3a1a47f",
+      "target_fasta_sha256": "f4a2c8a2754492f390127f3e2fcbf1be9168881531979eb1b08ee33e6616614e",
+      "source_fasta_sha256": "d2bed4a2f3c98732ba7a83e35bc55af1ff7fc6154f2e7da66c97ca6670d65304"
+    },
+    {
+      "target": "PABh2",
+      "source": "PABh1",
+      "source_context_genes": 164,
+      "accepted": 158,
+      "not_transferred": 6,
+      "command": [
+        "/private/tmp/ggexon-mhc-liftoff-venv/bin/liftoff",
+        "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/PABh2.fa",
+        "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/PABh1.fa",
+        "-g",
+        "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/PABh2/source.gff3",
+        "-o",
+        "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/PABh2/projected.gff3",
+        "-u",
+        "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/PABh2/unmapped.txt",
+        "-dir",
+        "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/PABh2/intermediates",
+        "-p",
+        "2",
+        "-a",
+        "0.95",
+        "-s",
+        "0.95",
+        "-exclude_partial"
+      ],
+      "tools": {
+        "version": "1.6.3",
+        "direct_url": {
+          "url": "https://github.com/agshumate/Liftoff.git",
+          "vcs_info": {
+            "commit_id": "94d6073ee2400c438d181a67d3af1e362197d839",
+            "vcs": "git"
+          }
+        },
+        "minimap2_version": "2.31-r1302",
+        "minimap2_sha256": "233e289649c6886531810b3917ac1180c72beb432c3e64ba1d918f3ed3365907"
+      },
+      "source_window": {
+        "track": "PABh1",
+        "species_id": "PAB",
+        "haplotype": "h1",
+        "label": "Sumatran orangutan h1",
+        "chr": "chr5_hap1_hsa6",
+        "start0": "28698133",
+        "end0": "34402409",
+        "length": "5704276",
+        "orientation": "+",
+        "twoBit_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/mPonAbe1_v2.0.2bit"
+      },
+      "target_window": {
+        "track": "PABh2",
+        "species_id": "PAB",
+        "haplotype": "h2",
+        "label": "Sumatran orangutan h2",
+        "chr": "chr5_hap2_hsa6",
+        "start0": "28697494",
+        "end0": "34321984",
+        "length": "5624490",
+        "orientation": "+",
+        "twoBit_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/mPonAbe1_v2.0.2bit"
+      },
+      "source_gff_sha256": "ae9b6f6438e602bb898e1b0f57e93c68b5cfe1490c0430c2fdcaefabbea36026",
+      "target_fasta_sha256": "05d9dbf81c8e77a706e09b714c7693cba2e2ab2593e2a04e7e16322e73dc04b8",
+      "source_fasta_sha256": "12df0120fbc0f49b91e5e352fbe52e2bc40ea43d541c36ed6847e191474b907f"
+    },
+    {
+      "target": "PPYh2",
+      "source": "PPYh1",
+      "source_context_genes": 163,
+      "accepted": 161,
+      "not_transferred": 2,
+      "command": [
+        "/private/tmp/ggexon-mhc-liftoff-venv/bin/liftoff",
+        "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/PPYh2.fa",
+        "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/PPYh1.fa",
+        "-g",
+        "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/PPYh2/source.gff3",
+        "-o",
+        "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/PPYh2/projected.gff3",
+        "-u",
+        "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/PPYh2/unmapped.txt",
+        "-dir",
+        "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/PPYh2/intermediates",
+        "-p",
+        "2",
+        "-a",
+        "0.95",
+        "-s",
+        "0.95",
+        "-exclude_partial"
+      ],
+      "tools": {
+        "version": "1.6.3",
+        "direct_url": {
+          "url": "https://github.com/agshumate/Liftoff.git",
+          "vcs_info": {
+            "commit_id": "94d6073ee2400c438d181a67d3af1e362197d839",
+            "vcs": "git"
+          }
+        },
+        "minimap2_version": "2.31-r1302",
+        "minimap2_sha256": "233e289649c6886531810b3917ac1180c72beb432c3e64ba1d918f3ed3365907"
+      },
+      "source_window": {
+        "track": "PPYh1",
+        "species_id": "PPY",
+        "haplotype": "h1",
+        "label": "Bornean orangutan h1",
+        "chr": "chr5_hap1_hsa6",
+        "start0": "28708357",
+        "end0": "34513199",
+        "length": "5804842",
+        "orientation": "+",
+        "twoBit_url": "https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/mPonPyg2_v2.0.2bit"
+      },
+      "target_window": {
+        "track": "PPYh2",
+        "species_id": "PPY",
+        "haplotype": "h2",
+        "label": "Bornean orangutan h2",
+        "chr": "chr5_hap2_hsa6",
+        "start0": "28710772",
+        "end0": "34509381",
+        "length": "5798609",
+        "orientation": "+",
+        "twoBit_url": "https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/mPonPyg2_v2.0.2bit"
+      },
+      "source_gff_sha256": "b904da9fd90787f1a964c71ffbd6a54cfe7506e81be5ddb6855adcdd752628d6",
+      "target_fasta_sha256": "b9b697eca6e691d762fb2c95a9a90567e926646c4fad0d02fd667896b7dbbdcf",
+      "source_fasta_sha256": "0a7c1cd3b2d0987adfa68158d21447280395553948a4e807f02216d3b8564905"
+    },
+    {
+      "target": "GGOh2",
+      "source": "GGOh1",
+      "source_context_genes": 164,
+      "accepted": 161,
+      "not_transferred": 3,
+      "command": [
+        "/private/tmp/ggexon-mhc-liftoff-venv/bin/liftoff",
+        "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/GGOh2.fa",
+        "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/GGOh1.fa",
+        "-g",
+        "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/GGOh2/source.gff3",
+        "-o",
+        "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/GGOh2/projected.gff3",
+        "-u",
+        "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/GGOh2/unmapped.txt",
+        "-dir",
+        "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/GGOh2/intermediates",
+        "-p",
+        "2",
+        "-a",
+        "0.95",
+        "-s",
+        "0.95",
+        "-exclude_partial"
+      ],
+      "tools": {
+        "version": "1.6.3",
+        "direct_url": {
+          "url": "https://github.com/agshumate/Liftoff.git",
+          "vcs_info": {
+            "commit_id": "94d6073ee2400c438d181a67d3af1e362197d839",
+            "vcs": "git"
+          }
+        },
+        "minimap2_version": "2.31-r1302",
+        "minimap2_sha256": "233e289649c6886531810b3917ac1180c72beb432c3e64ba1d918f3ed3365907"
+      },
+      "source_window": {
+        "track": "GGOh1",
+        "species_id": "GGO",
+        "haplotype": "h1",
+        "label": "Gorilla h1",
+        "chr": "chr5_mat_hsa6",
+        "start0": "46448788",
+        "end0": "51895738",
+        "length": "5446950",
+        "orientation": "+",
+        "twoBit_url": "https://genomeark.s3.amazonaws.com/species/Gorilla_gorilla/mGorGor1/assembly_curated/mGorGor1_v2.0.2bit"
+      },
+      "target_window": {
+        "track": "GGOh2",
+        "species_id": "GGO",
+        "haplotype": "h2",
+        "label": "Gorilla h2",
+        "chr": "chr5_pat_hsa6",
+        "start0": "38874988",
+        "end0": "44233933",
+        "length": "5358945",
+        "orientation": "+",
+        "twoBit_url": "https://genomeark.s3.amazonaws.com/species/Gorilla_gorilla/mGorGor1/assembly_curated/mGorGor1_v2.0.2bit"
+      },
+      "source_gff_sha256": "e19e8b177f1215d0ab948a49de74b094df06f53ee0c5e74e98eb292992ed54ab",
+      "target_fasta_sha256": "455679c22a121557706cc551b2d6ea6e0acd8810221499042a62f977c52bff1c",
+      "source_fasta_sha256": "8d1d7c898ae074b893a342e88e939119892e21d9a49591904ad922981f558bd0"
+    },
+    {
+      "target": "PPAh1",
+      "source": "PPAh2",
+      "source_context_genes": 164,
+      "accepted": 162,
+      "not_transferred": 2,
+      "command": [
+        "/private/tmp/ggexon-mhc-liftoff-venv/bin/liftoff",
+        "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/PPAh1.fa",
+        "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/PPAh2.fa",
+        "-g",
+        "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/PPAh1/source.gff3",
+        "-o",
+        "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/PPAh1/projected.gff3",
+        "-u",
+        "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/PPAh1/unmapped.txt",
+        "-dir",
+        "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/PPAh1/intermediates",
+        "-p",
+        "2",
+        "-a",
+        "0.95",
+        "-s",
+        "0.95",
+        "-exclude_partial"
+      ],
+      "tools": {
+        "version": "1.6.3",
+        "direct_url": {
+          "url": "https://github.com/agshumate/Liftoff.git",
+          "vcs_info": {
+            "commit_id": "94d6073ee2400c438d181a67d3af1e362197d839",
+            "vcs": "git"
+          }
+        },
+        "minimap2_version": "2.31-r1302",
+        "minimap2_sha256": "233e289649c6886531810b3917ac1180c72beb432c3e64ba1d918f3ed3365907"
+      },
+      "source_window": {
+        "track": "PPAh2",
+        "species_id": "PPA",
+        "haplotype": "h2",
+        "label": "Bonobo h2",
+        "chr": "chr5_pat_hsa6",
+        "start0": "43421688",
+        "end0": "48633595",
+        "length": "5211907",
+        "orientation": "+",
+        "twoBit_url": "https://genomeark.s3.amazonaws.com/species/Pan_paniscus/mPanPan1/assembly_curated/mPanPan1_v2.0.2bit"
+      },
+      "target_window": {
+        "track": "PPAh1",
+        "species_id": "PPA",
+        "haplotype": "h1",
+        "label": "Bonobo h1",
+        "chr": "chr5_mat_hsa6",
+        "start0": "39408542",
+        "end0": "44487238",
+        "length": "5078696",
+        "orientation": "+",
+        "twoBit_url": "https://genomeark.s3.amazonaws.com/species/Pan_paniscus/mPanPan1/assembly_curated/mPanPan1_v2.0.2bit"
+      },
+      "source_gff_sha256": "2d724418fda12e809adcc4c3a6287e30147f6a89ec95868abfda232073cd5ae9",
+      "target_fasta_sha256": "409ccde1cc1c72db505f6a6ece29e3e6242106de5850ecd75f421d397412b1ed",
+      "source_fasta_sha256": "638470a2636163748aacfc2fec40719f196471492be25d35410cd7cbf1615197"
+    },
+    {
+      "target": "PTRh2",
+      "source": "PTRh1",
+      "source_context_genes": 164,
+      "accepted": 164,
+      "not_transferred": 0,
+      "command": [
+        "/private/tmp/ggexon-mhc-liftoff-venv/bin/liftoff",
+        "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/PTRh2.fa",
+        "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/PTRh1.fa",
+        "-g",
+        "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/PTRh2/source.gff3",
+        "-o",
+        "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/PTRh2/projected.gff3",
+        "-u",
+        "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/PTRh2/unmapped.txt",
+        "-dir",
+        "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/PTRh2/intermediates",
+        "-p",
+        "2",
+        "-a",
+        "0.95",
+        "-s",
+        "0.95",
+        "-exclude_partial"
+      ],
+      "tools": {
+        "version": "1.6.3",
+        "direct_url": {
+          "url": "https://github.com/agshumate/Liftoff.git",
+          "vcs_info": {
+            "commit_id": "94d6073ee2400c438d181a67d3af1e362197d839",
+            "vcs": "git"
+          }
+        },
+        "minimap2_version": "2.31-r1302",
+        "minimap2_sha256": "233e289649c6886531810b3917ac1180c72beb432c3e64ba1d918f3ed3365907"
+      },
+      "source_window": {
+        "track": "PTRh1",
+        "species_id": "PTR",
+        "haplotype": "h1",
+        "label": "Chimpanzee h1",
+        "chr": "chr5_hap1_hsa6",
+        "start0": "34745920",
+        "end0": "40035224",
+        "length": "5289304",
+        "orientation": "+",
+        "twoBit_url": "https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/mPanTro3_v2.0.2bit"
+      },
+      "target_window": {
+        "track": "PTRh2",
+        "species_id": "PTR",
+        "haplotype": "h2",
+        "label": "Chimpanzee h2",
+        "chr": "chr5_hap2_hsa6",
+        "start0": "33350131",
+        "end0": "38784666",
+        "length": "5434535",
+        "orientation": "+",
+        "twoBit_url": "https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/mPanTro3_v2.0.2bit"
+      },
+      "source_gff_sha256": "75a764610e268197c2cc069b429c5d72376df78fbe9b1551962ad28c7470622e",
+      "target_fasta_sha256": "190f4db34dfe994bb4d3fb877b762d9379f07551cf89aa91e430359ff9d60c16",
+      "source_fasta_sha256": "1032767c45c773b4decbaaf2cecadc34acd1de6a43e15bcf1f85f748b05721a9"
+    }
+  ],
+  "limitations": [
+    "Projected models are inferred, not released consensus annotations.",
+    "Only the bounded MHC interval is searched; unmapped models are not gene absence.",
+    "Novel or haplotype-specific context genes absent from the primary source cannot be discovered.",
+    "One source representative per annotated context locus; exons transferred without CDS or functionality inference."
+  ]
+}

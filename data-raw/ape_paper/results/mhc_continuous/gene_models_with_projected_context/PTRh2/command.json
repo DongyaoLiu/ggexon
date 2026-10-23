@@ -1,0 +1,61 @@
+{
+  "command": [
+    "/private/tmp/ggexon-mhc-liftoff-venv/bin/liftoff",
+    "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/PTRh2.fa",
+    "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/PTRh1.fa",
+    "-g",
+    "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/PTRh2/source.gff3",
+    "-o",
+    "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/PTRh2/projected.gff3",
+    "-u",
+    "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/PTRh2/unmapped.txt",
+    "-dir",
+    "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/PTRh2/intermediates",
+    "-p",
+    "2",
+    "-a",
+    "0.95",
+    "-s",
+    "0.95",
+    "-exclude_partial"
+  ],
+  "tools": {
+    "version": "1.6.3",
+    "direct_url": {
+      "url": "https://github.com/agshumate/Liftoff.git",
+      "vcs_info": {
+        "commit_id": "94d6073ee2400c438d181a67d3af1e362197d839",
+        "vcs": "git"
+      }
+    },
+    "minimap2_version": "2.31-r1302",
+    "minimap2_sha256": "233e289649c6886531810b3917ac1180c72beb432c3e64ba1d918f3ed3365907"
+  },
+  "source_window": {
+    "track": "PTRh1",
+    "species_id": "PTR",
+    "haplotype": "h1",
+    "label": "Chimpanzee h1",
+    "chr": "chr5_hap1_hsa6",
+    "start0": "34745920",
+    "end0": "40035224",
+    "length": "5289304",
+    "orientation": "+",
+    "twoBit_url": "https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/mPanTro3_v2.0.2bit"
+  },
+  "target_window": {
+    "track": "PTRh2",
+    "species_id": "PTR",
+    "haplotype": "h2",
+    "label": "Chimpanzee h2",
+    "chr": "chr5_hap2_hsa6",
+    "start0": "33350131",
+    "end0": "38784666",
+    "length": "5434535",
+    "orientation": "+",
+    "twoBit_url": "https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/mPanTro3_v2.0.2bit"
+  },
+  "source_gff_sha256": "75a764610e268197c2cc069b429c5d72376df78fbe9b1551962ad28c7470622e",
+  "target_fasta_sha256": "190f4db34dfe994bb4d3fb877b762d9379f07551cf89aa91e430359ff9d60c16",
+  "source_fasta_sha256": "1032767c45c773b4decbaaf2cecadc34acd1de6a43e15bcf1f85f748b05721a9"
+}

@@ -1,0 +1,14 @@
+track	species_id	haplotype	label	chr	start0	end0	length	orientation	twoBit_url
+SSYh2	SSY	h2	Siamang h2	chr23_hap2	33263362	38051052	4787690	-	https://genomeark.s3.amazonaws.com/species/Symphalangus_syndactylus/mSymSyn1/assembly_curated/mSymSyn1_v2.0.2bit
+SSYh1	SSY	h1	Siamang h1	chr23_hap1	37530567	42365376	4834809	-	https://genomeark.s3.amazonaws.com/species/Symphalangus_syndactylus/mSymSyn1/assembly_curated/mSymSyn1_v2.0.2bit
+PABh2	PAB	h2	Sumatran orangutan h2	chr5_hap2_hsa6	28697494	34321984	5624490	+	https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/mPonAbe1_v2.0.2bit
+PABh1	PAB	h1	Sumatran orangutan h1	chr5_hap1_hsa6	28698133	34402409	5704276	+	https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/mPonAbe1_v2.0.2bit
+PPYh2	PPY	h2	Bornean orangutan h2	chr5_hap2_hsa6	28710772	34509381	5798609	+	https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/mPonPyg2_v2.0.2bit
+PPYh1	PPY	h1	Bornean orangutan h1	chr5_hap1_hsa6	28708357	34513199	5804842	+	https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/mPonPyg2_v2.0.2bit
+GGOh2	GGO	h2	Gorilla h2	chr5_pat_hsa6	38874988	44233933	5358945	+	https://genomeark.s3.amazonaws.com/species/Gorilla_gorilla/mGorGor1/assembly_curated/mGorGor1_v2.0.2bit
+GGOh1	GGO	h1	Gorilla h1	chr5_mat_hsa6	46448788	51895738	5446950	+	https://genomeark.s3.amazonaws.com/species/Gorilla_gorilla/mGorGor1/assembly_curated/mGorGor1_v2.0.2bit
+PPAh2	PPA	h2	Bonobo h2	chr5_pat_hsa6	43421688	48633595	5211907	+	https://genomeark.s3.amazonaws.com/species/Pan_paniscus/mPanPan1/assembly_curated/mPanPan1_v2.0.2bit
+PPAh1	PPA	h1	Bonobo h1	chr5_mat_hsa6	39408542	44487238	5078696	+	https://genomeark.s3.amazonaws.com/species/Pan_paniscus/mPanPan1/assembly_curated/mPanPan1_v2.0.2bit
+PTRh2	PTR	h2	Chimpanzee h2	chr5_hap2_hsa6	33350131	38784666	5434535	+	https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/mPanTro3_v2.0.2bit
+PTRh1	PTR	h1	Chimpanzee h1	chr5_hap1_hsa6	34745920	40035224	5289304	+	https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/mPanTro3_v2.0.2bit
+HSAh1	HSA	h1	Human CHM13	chr6	28669878	33979214	5309336	+	https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/browser/CHM13/chm13v2.0.2bit

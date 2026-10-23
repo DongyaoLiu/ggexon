@@ -1,0 +1,9 @@
+##gff-version 3
+# Liftoff v1.6.3
+# /tmp/ggexon-mhc-liftoff-venv/bin/liftoff /Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/PPYh2.fa /Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/PPYh1.fa -g /Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/context_recovery/alternative_isoforms/PPYh2_MUCL3_2/source.gff3 -o /Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/context_recovery/alternative_isoforms/PPYh2_MUCL3_2/projection.gff3 -u /Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/context_recovery/alternative_isoforms/PPYh2_MUCL3_2/unmapped.txt -dir /Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/context_recovery/alternative_isoforms/PPYh2_MUCL3_2/intermediates -p 1 -a .95 -s .95
+PPYh2	Liftoff	gene	2280796	2295550	.	+	.	ID=alternate;Name=MUCL3;coverage=0.999;sequence_ID=0.995;extra_copy_number=0;copy_num_ID=alternate_0
+PPYh2	Liftoff	mRNA	2280796	2295550	.	+	.	ID=alternate.t1;Parent=alternate;extra_copy_number=0
+PPYh2	Liftoff	exon	2280796	2280877	.	+	.	ID=ex0;Parent=alternate.t1;extra_copy_number=0
+PPYh2	Liftoff	exon	2288666	2289529	.	+	.	ID=ex1;Parent=alternate.t1;extra_copy_number=0
+PPYh2	Liftoff	exon	2293346	2293806	.	+	.	ID=ex2;Parent=alternate.t1;extra_copy_number=0
+PPYh2	Liftoff	exon	2294302	2295550	.	+	.	ID=ex3;Parent=alternate.t1;extra_copy_number=0

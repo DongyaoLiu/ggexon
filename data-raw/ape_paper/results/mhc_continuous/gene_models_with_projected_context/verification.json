@@ -1,0 +1,18 @@
+{
+  "status": "PASS",
+  "unchanged_released_models": 8894,
+  "unchanged_released_exons": 65643,
+  "projected_models": 956,
+  "projected_exons_native_coordinates_verified": 9196,
+  "unresolved_source_models": 14,
+  "tracks_with_context": 13,
+  "minimum_independent_global_spliced_identity": 0.9505733491498616,
+  "minimum_global_spliced_identity_by_track": {
+    "SSYh2": 0.9628547579298832,
+    "GGOh2": 0.987890625,
+    "PPYh2": 0.9785330948121646,
+    "PPAh1": 0.9505733491498616,
+    "PABh2": 0.979129397734049,
+    "PTRh2": 0.982811200443582
+  }
+}

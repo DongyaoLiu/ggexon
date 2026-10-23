@@ -1,0 +1,2 @@
+run_accession	study_accession	sample_accession	experiment_accession	scientific_name	tax_id	library_strategy	library_source	sample_title
+SRR27178656	PRJNA1016395	SAMN30216103	SRX22859076	Symphalangus syndactylus	9590	RNA-Seq	TRANSCRIPTOMIC	Symphalangus syndactylus (Jambi) Cell Line

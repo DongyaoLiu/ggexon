@@ -1,0 +1,97 @@
+species_id	source_track	url	haplotype	browser_chrom	start0	end0	n_chromosomes	annotation_chrom	has_chromosome
+PTR	catRefGene	https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/gene/mPanTro3_v2.0_CatRefConsensus_v3.bb	PTRh1	chr5_hap1_hsa6	34745920	40035224	25	CM054439.2	True
+PTR	catRefGene	https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/gene/mPanTro3_v2.0_CatRefConsensus_v3.bb	PTRh2	chr5_hap2_hsa6	33350131	38784666	25		False
+PTR	cat_v0.9	https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/gene/mPanTro3_catAnnotation_v0.9.bb	PTRh1	chr5_hap1_hsa6	34745920	40035224	25	CM054439.2	True
+PTR	cat_v0.9	https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/gene/mPanTro3_catAnnotation_v0.9.bb	PTRh2	chr5_hap2_hsa6	33350131	38784666	25		False
+PTR	TOGA_hg38	https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/gene/HLTOGAannotVsHg38v1.bb	PTRh1	chr5_hap1_hsa6	34745920	40035224	25	chr5_hap1_hsa6	True
+PTR	TOGA_hg38	https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/gene/HLTOGAannotVsHg38v1.bb	PTRh2	chr5_hap2_hsa6	33350131	38784666	25		False
+PTR	TOGA_mm10	https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/gene/HLTOGAannotVsMm10v1.bb	PTRh1	chr5_hap1_hsa6	34745920	40035224	25	chr5_hap1_hsa6	True
+PTR	TOGA_mm10	https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/gene/HLTOGAannotVsMm10v1.bb	PTRh2	chr5_hap2_hsa6	33350131	38784666	25		False
+PTR	CGL_CAT_v0.9	https://cgl.gi.ucsc.edu/data/cactus/t2t-apes/8-t2t-apes-2023v2/annotations-v0.9/GCA_028858775.2.catAnnotation.bb	PTRh1	chr5_hap1_hsa6	34745920	40035224	25	CM054439.2	True
+PTR	CGL_CAT_v0.9	https://cgl.gi.ucsc.edu/data/cactus/t2t-apes/8-t2t-apes-2023v2/annotations-v0.9/GCA_028858775.2.catAnnotation.bb	PTRh2	chr5_hap2_hsa6	33350131	38784666	25		False
+PTR	CGL_CAT_v1.0	https://cgl.gi.ucsc.edu/data/cactus/t2t-apes/8-t2t-apes-2023v2/annotations-v1.0/GCA_028858775.2.cat.bb	PTRh1	chr5_hap1_hsa6	34745920	40035224	25	CM054439.2	True
+PTR	CGL_CAT_v1.0	https://cgl.gi.ucsc.edu/data/cactus/t2t-apes/8-t2t-apes-2023v2/annotations-v1.0/GCA_028858775.2.cat.bb	PTRh2	chr5_hap2_hsa6	33350131	38784666	25		False
+PTR	refGene	https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/gene/mPanTro3_refGene.bb	PTRh1	chr5_hap1_hsa6	34745920	40035224	26	chr5_hap1_hsa6	True
+PTR	refGene	https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/gene/mPanTro3_refGene.bb	PTRh2	chr5_hap2_hsa6	33350131	38784666	26		False
+PTR	catGene	https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/gene/mPanTro3_catAnnotation_v1.0.bb	PTRh1	chr5_hap1_hsa6	34745920	40035224	25	CM054439.2	True
+PTR	catGene	https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/gene/mPanTro3_catAnnotation_v1.0.bb	PTRh2	chr5_hap2_hsa6	33350131	38784666	25		False
+PPA	catRefGene	https://genomeark.s3.amazonaws.com/species/Pan_paniscus/mPanPan1/assembly_curated/gene/mPanPan1_v2.0_CatRefConsensus_v3.bb	PPAh1	chr5_mat_hsa6	39408542	44487238	25		False
+PPA	catRefGene	https://genomeark.s3.amazonaws.com/species/Pan_paniscus/mPanPan1/assembly_curated/gene/mPanPan1_v2.0_CatRefConsensus_v3.bb	PPAh2	chr5_pat_hsa6	43421688	48633595	25	CM055477.2	True
+PPA	cat_v0.9	https://genomeark.s3.amazonaws.com/species/Pan_paniscus/mPanPan1/assembly_curated/gene/mPanPan1_catAnnotation_v0.9.bb	PPAh1	chr5_mat_hsa6	39408542	44487238	25		False
+PPA	cat_v0.9	https://genomeark.s3.amazonaws.com/species/Pan_paniscus/mPanPan1/assembly_curated/gene/mPanPan1_catAnnotation_v0.9.bb	PPAh2	chr5_pat_hsa6	43421688	48633595	25	CM055477.2	True
+PPA	TOGA_hg38	https://genomeark.s3.amazonaws.com/species/Pan_paniscus/mPanPan1/assembly_curated/gene/HLTOGAannotVsHg38v1.bb	PPAh1	chr5_mat_hsa6	39408542	44487238	25		False
+PPA	TOGA_hg38	https://genomeark.s3.amazonaws.com/species/Pan_paniscus/mPanPan1/assembly_curated/gene/HLTOGAannotVsHg38v1.bb	PPAh2	chr5_pat_hsa6	43421688	48633595	25	chr5_pat_hsa6	True
+PPA	TOGA_mm10	https://genomeark.s3.amazonaws.com/species/Pan_paniscus/mPanPan1/assembly_curated/gene/HLTOGAannotVsMm10v1.bb	PPAh1	chr5_mat_hsa6	39408542	44487238	25		False
+PPA	TOGA_mm10	https://genomeark.s3.amazonaws.com/species/Pan_paniscus/mPanPan1/assembly_curated/gene/HLTOGAannotVsMm10v1.bb	PPAh2	chr5_pat_hsa6	43421688	48633595	25	chr5_pat_hsa6	True
+PPA	CGL_CAT_v0.9	https://cgl.gi.ucsc.edu/data/cactus/t2t-apes/8-t2t-apes-2023v2/annotations-v0.9/GCA_029289425.2.catAnnotation.bb	PPAh1	chr5_mat_hsa6	39408542	44487238	25		False
+PPA	CGL_CAT_v0.9	https://cgl.gi.ucsc.edu/data/cactus/t2t-apes/8-t2t-apes-2023v2/annotations-v0.9/GCA_029289425.2.catAnnotation.bb	PPAh2	chr5_pat_hsa6	43421688	48633595	25	CM055477.2	True
+PPA	CGL_CAT_v1.0	https://cgl.gi.ucsc.edu/data/cactus/t2t-apes/8-t2t-apes-2023v2/annotations-v1.0/GCA_029289425.2.cat.bb	PPAh1	chr5_mat_hsa6	39408542	44487238	25		False
+PPA	CGL_CAT_v1.0	https://cgl.gi.ucsc.edu/data/cactus/t2t-apes/8-t2t-apes-2023v2/annotations-v1.0/GCA_029289425.2.cat.bb	PPAh2	chr5_pat_hsa6	43421688	48633595	25	CM055477.2	True
+PPA	refGene	https://genomeark.s3.amazonaws.com/species/Pan_paniscus/mPanPan1/assembly_curated/gene/mPanPan1_refGene.bb	PPAh1	chr5_mat_hsa6	39408542	44487238	26		False
+PPA	refGene	https://genomeark.s3.amazonaws.com/species/Pan_paniscus/mPanPan1/assembly_curated/gene/mPanPan1_refGene.bb	PPAh2	chr5_pat_hsa6	43421688	48633595	26	chr5_pat_hsa6	True
+PPA	catGene	https://genomeark.s3.amazonaws.com/species/Pan_paniscus/mPanPan1/assembly_curated/gene/mPanPan1_catAnnotation_v1.0.bb	PPAh1	chr5_mat_hsa6	39408542	44487238	25		False
+PPA	catGene	https://genomeark.s3.amazonaws.com/species/Pan_paniscus/mPanPan1/assembly_curated/gene/mPanPan1_catAnnotation_v1.0.bb	PPAh2	chr5_pat_hsa6	43421688	48633595	25	CM055477.2	True
+GGO	catRefGene	https://genomeark.s3.amazonaws.com/species/Gorilla_gorilla/mGorGor1/assembly_curated/gene/mGorGor1_v2.0_CatRefConsensus_v3.bb	GGOh1	chr5_mat_hsa6	46448788	51895738	25	CM055451.2	True
+GGO	catRefGene	https://genomeark.s3.amazonaws.com/species/Gorilla_gorilla/mGorGor1/assembly_curated/gene/mGorGor1_v2.0_CatRefConsensus_v3.bb	GGOh2	chr5_pat_hsa6	38874988	44233933	25		False
+GGO	cat_v0.9	https://genomeark.s3.amazonaws.com/species/Gorilla_gorilla/mGorGor1/assembly_curated/gene/mGorGor1_catAnnotation_v0.9.bb	GGOh1	chr5_mat_hsa6	46448788	51895738	25	CM055451.2	True
+GGO	cat_v0.9	https://genomeark.s3.amazonaws.com/species/Gorilla_gorilla/mGorGor1/assembly_curated/gene/mGorGor1_catAnnotation_v0.9.bb	GGOh2	chr5_pat_hsa6	38874988	44233933	25		False
+GGO	TOGA_hg38	https://genomeark.s3.amazonaws.com/species/Gorilla_gorilla/mGorGor1/assembly_curated/gene/HLTOGAannotVsHg38v1.bb	GGOh1	chr5_mat_hsa6	46448788	51895738	25	chr5_mat_hsa6	True
+GGO	TOGA_hg38	https://genomeark.s3.amazonaws.com/species/Gorilla_gorilla/mGorGor1/assembly_curated/gene/HLTOGAannotVsHg38v1.bb	GGOh2	chr5_pat_hsa6	38874988	44233933	25		False
+GGO	TOGA_mm10	https://genomeark.s3.amazonaws.com/species/Gorilla_gorilla/mGorGor1/assembly_curated/gene/HLTOGAannotVsMm10v1.bb	GGOh1	chr5_mat_hsa6	46448788	51895738	25	chr5_mat_hsa6	True
+GGO	TOGA_mm10	https://genomeark.s3.amazonaws.com/species/Gorilla_gorilla/mGorGor1/assembly_curated/gene/HLTOGAannotVsMm10v1.bb	GGOh2	chr5_pat_hsa6	38874988	44233933	25		False
+GGO	CGL_CAT_v0.9	https://cgl.gi.ucsc.edu/data/cactus/t2t-apes/8-t2t-apes-2023v2/annotations-v0.9/GCA_029281585.2.catAnnotation.bb	GGOh1	chr5_mat_hsa6	46448788	51895738	25	CM055451.2	True
+GGO	CGL_CAT_v0.9	https://cgl.gi.ucsc.edu/data/cactus/t2t-apes/8-t2t-apes-2023v2/annotations-v0.9/GCA_029281585.2.catAnnotation.bb	GGOh2	chr5_pat_hsa6	38874988	44233933	25		False
+GGO	CGL_CAT_v1.0	https://cgl.gi.ucsc.edu/data/cactus/t2t-apes/8-t2t-apes-2023v2/annotations-v1.0/GCA_029281585.2.cat.bb	GGOh1	chr5_mat_hsa6	46448788	51895738	25	CM055451.2	True
+GGO	CGL_CAT_v1.0	https://cgl.gi.ucsc.edu/data/cactus/t2t-apes/8-t2t-apes-2023v2/annotations-v1.0/GCA_029281585.2.cat.bb	GGOh2	chr5_pat_hsa6	38874988	44233933	25		False
+GGO	refGene	https://genomeark.s3.amazonaws.com/species/Gorilla_gorilla/mGorGor1/assembly_curated/gene/mGorGor1_refGene.bb	GGOh1	chr5_mat_hsa6	46448788	51895738	26	chr5_mat_hsa6	True
+GGO	refGene	https://genomeark.s3.amazonaws.com/species/Gorilla_gorilla/mGorGor1/assembly_curated/gene/mGorGor1_refGene.bb	GGOh2	chr5_pat_hsa6	38874988	44233933	26		False
+GGO	catGene	https://genomeark.s3.amazonaws.com/species/Gorilla_gorilla/mGorGor1/assembly_curated/gene/mGorGor1_catAnnotation_v1.0.bb	GGOh1	chr5_mat_hsa6	46448788	51895738	25	CM055451.2	True
+GGO	catGene	https://genomeark.s3.amazonaws.com/species/Gorilla_gorilla/mGorGor1/assembly_curated/gene/mGorGor1_catAnnotation_v1.0.bb	GGOh2	chr5_pat_hsa6	38874988	44233933	25		False
+PAB	catRefGene	https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/gene/mPonAbe1_v2.0_CatRefConsensus_v3.bb	PABh1	chr5_hap1_hsa6	28698133	34402409	26	CM054684.2	True
+PAB	catRefGene	https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/gene/mPonAbe1_v2.0_CatRefConsensus_v3.bb	PABh2	chr5_hap2_hsa6	28697494	34321984	26		False
+PAB	cat_v0.9	https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/gene/mPonAbe1_catAnnotation_v0.9.bb	PABh1	chr5_hap1_hsa6	28698133	34402409	29	CM054684.2	True
+PAB	cat_v0.9	https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/gene/mPonAbe1_catAnnotation_v0.9.bb	PABh2	chr5_hap2_hsa6	28697494	34321984	29		False
+PAB	TOGA_hg38	https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/gene/HLTOGAannotVsHg38v1.bb	PABh1	chr5_hap1_hsa6	28698133	34402409	29	chr5_hap1_hsa6	True
+PAB	TOGA_hg38	https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/gene/HLTOGAannotVsHg38v1.bb	PABh2	chr5_hap2_hsa6	28697494	34321984	29		False
+PAB	TOGA_mm10	https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/gene/HLTOGAannotVsMm10v1.bb	PABh1	chr5_hap1_hsa6	28698133	34402409	29	chr5_hap1_hsa6	True
+PAB	TOGA_mm10	https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/gene/HLTOGAannotVsMm10v1.bb	PABh2	chr5_hap2_hsa6	28697494	34321984	29		False
+PAB	CGL_CAT_v0.9	https://cgl.gi.ucsc.edu/data/cactus/t2t-apes/8-t2t-apes-2023v2/annotations-v0.9/GCA_028885655.2.catAnnotation.bb	PABh1	chr5_hap1_hsa6	28698133	34402409	29	CM054684.2	True
+PAB	CGL_CAT_v0.9	https://cgl.gi.ucsc.edu/data/cactus/t2t-apes/8-t2t-apes-2023v2/annotations-v0.9/GCA_028885655.2.catAnnotation.bb	PABh2	chr5_hap2_hsa6	28697494	34321984	29		False
+PAB	CGL_CAT_v1.0	https://cgl.gi.ucsc.edu/data/cactus/t2t-apes/8-t2t-apes-2023v2/annotations-v1.0/GCA_028885655.2.cat.bb	PABh1	chr5_hap1_hsa6	28698133	34402409	29	CM054684.2	True
+PAB	CGL_CAT_v1.0	https://cgl.gi.ucsc.edu/data/cactus/t2t-apes/8-t2t-apes-2023v2/annotations-v1.0/GCA_028885655.2.cat.bb	PABh2	chr5_hap2_hsa6	28697494	34321984	29		False
+PAB	refGene	https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/gene/mPonAbe1_refGene.bb	PABh1	chr5_hap1_hsa6	28698133	34402409	30	chr5_hap1_hsa6	True
+PAB	refGene	https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/gene/mPonAbe1_refGene.bb	PABh2	chr5_hap2_hsa6	28697494	34321984	30		False
+PAB	catGene	https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/gene/mPonAbe1_catAnnotation_v1.0.bb	PABh1	chr5_hap1_hsa6	28698133	34402409	29	CM054684.2	True
+PAB	catGene	https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/gene/mPonAbe1_catAnnotation_v1.0.bb	PABh2	chr5_hap2_hsa6	28697494	34321984	29		False
+PPY	catRefGene	https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/gene/mPonPyg2_v2.0_CatRefConsensus_v3.bb	PPYh1	chr5_hap1_hsa6	28708357	34513199	25	CM054635.2	True
+PPY	catRefGene	https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/gene/mPonPyg2_v2.0_CatRefConsensus_v3.bb	PPYh2	chr5_hap2_hsa6	28710772	34509381	25		False
+PPY	cat_v0.9	https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/gene/mPonPyg2_catAnnotation_v0.9.bb	PPYh1	chr5_hap1_hsa6	28708357	34513199	25	CM054635.2	True
+PPY	cat_v0.9	https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/gene/mPonPyg2_catAnnotation_v0.9.bb	PPYh2	chr5_hap2_hsa6	28710772	34509381	25		False
+PPY	TOGA_hg38	https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/gene/HLTOGAannotVsHg38v1.bb	PPYh1	chr5_hap1_hsa6	28708357	34513199	25	chr5_hap1_hsa6	True
+PPY	TOGA_hg38	https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/gene/HLTOGAannotVsHg38v1.bb	PPYh2	chr5_hap2_hsa6	28710772	34509381	25		False
+PPY	TOGA_mm10	https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/gene/HLTOGAannotVsMm10v1.bb	PPYh1	chr5_hap1_hsa6	28708357	34513199	25	chr5_hap1_hsa6	True
+PPY	TOGA_mm10	https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/gene/HLTOGAannotVsMm10v1.bb	PPYh2	chr5_hap2_hsa6	28710772	34509381	25		False
+PPY	CGL_CAT_v0.9	https://cgl.gi.ucsc.edu/data/cactus/t2t-apes/8-t2t-apes-2023v2/annotations-v0.9/GCA_028885625.2.catAnnotation.bb	PPYh1	chr5_hap1_hsa6	28708357	34513199	25	CM054635.2	True
+PPY	CGL_CAT_v0.9	https://cgl.gi.ucsc.edu/data/cactus/t2t-apes/8-t2t-apes-2023v2/annotations-v0.9/GCA_028885625.2.catAnnotation.bb	PPYh2	chr5_hap2_hsa6	28710772	34509381	25		False
+PPY	CGL_CAT_v1.0	https://cgl.gi.ucsc.edu/data/cactus/t2t-apes/8-t2t-apes-2023v2/annotations-v1.0/GCA_028885625.2.cat.bb	PPYh1	chr5_hap1_hsa6	28708357	34513199	25	CM054635.2	True
+PPY	CGL_CAT_v1.0	https://cgl.gi.ucsc.edu/data/cactus/t2t-apes/8-t2t-apes-2023v2/annotations-v1.0/GCA_028885625.2.cat.bb	PPYh2	chr5_hap2_hsa6	28710772	34509381	25		False
+PPY	refGene	https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/gene/mPonPyg2_refGene.bb	PPYh1	chr5_hap1_hsa6	28708357	34513199	26	chr5_hap1_hsa6	True
+PPY	refGene	https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/gene/mPonPyg2_refGene.bb	PPYh2	chr5_hap2_hsa6	28710772	34509381	26		False
+PPY	catGene	https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/gene/mPonPyg2_catAnnotation_v1.0.bb	PPYh1	chr5_hap1_hsa6	28708357	34513199	25	CM054635.2	True
+PPY	catGene	https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/gene/mPonPyg2_catAnnotation_v1.0.bb	PPYh2	chr5_hap2_hsa6	28710772	34509381	25		False
+SSY	catRefGene	https://genomeark.s3.amazonaws.com/species/Symphalangus_syndactylus/mSymSyn1/assembly_curated/gene/mSymSyn1_v2.0_CatRefConsensus_v3.bb	SSYh1	chr23_hap1	37530567	42365376	26	CM054531.2	True
+SSY	catRefGene	https://genomeark.s3.amazonaws.com/species/Symphalangus_syndactylus/mSymSyn1/assembly_curated/gene/mSymSyn1_v2.0_CatRefConsensus_v3.bb	SSYh2	chr23_hap2	33263362	38051052	26		False
+SSY	cat_v0.9	https://genomeark.s3.amazonaws.com/species/Symphalangus_syndactylus/mSymSyn1/assembly_curated/gene/mSymSyn1_catAnnotation_v0.9.bb	SSYh1	chr23_hap1	37530567	42365376	26	CM054531.2	True
+SSY	cat_v0.9	https://genomeark.s3.amazonaws.com/species/Symphalangus_syndactylus/mSymSyn1/assembly_curated/gene/mSymSyn1_catAnnotation_v0.9.bb	SSYh2	chr23_hap2	33263362	38051052	26		False
+SSY	TOGA_hg38	https://genomeark.s3.amazonaws.com/species/Symphalangus_syndactylus/mSymSyn1/assembly_curated/gene/HLTOGAannotVsHg38v1.bb	SSYh1	chr23_hap1	37530567	42365376	26	chr23_hap1	True
+SSY	TOGA_hg38	https://genomeark.s3.amazonaws.com/species/Symphalangus_syndactylus/mSymSyn1/assembly_curated/gene/HLTOGAannotVsHg38v1.bb	SSYh2	chr23_hap2	33263362	38051052	26		False
+SSY	TOGA_mm10	https://genomeark.s3.amazonaws.com/species/Symphalangus_syndactylus/mSymSyn1/assembly_curated/gene/HLTOGAannotVsMm10v1.bb	SSYh1	chr23_hap1	37530567	42365376	26	chr23_hap1	True
+SSY	TOGA_mm10	https://genomeark.s3.amazonaws.com/species/Symphalangus_syndactylus/mSymSyn1/assembly_curated/gene/HLTOGAannotVsMm10v1.bb	SSYh2	chr23_hap2	33263362	38051052	26		False
+SSY	CGL_CAT_v0.9	https://cgl.gi.ucsc.edu/data/cactus/t2t-apes/8-t2t-apes-2023v2/annotations-v0.9/GCA_028878055.2.catAnnotation.bb	SSYh1	chr23_hap1	37530567	42365376	26	CM054531.2	True
+SSY	CGL_CAT_v0.9	https://cgl.gi.ucsc.edu/data/cactus/t2t-apes/8-t2t-apes-2023v2/annotations-v0.9/GCA_028878055.2.catAnnotation.bb	SSYh2	chr23_hap2	33263362	38051052	26		False
+SSY	CGL_CAT_v1.0	https://cgl.gi.ucsc.edu/data/cactus/t2t-apes/8-t2t-apes-2023v2/annotations-v1.0/GCA_028878055.2.cat.bb	SSYh1	chr23_hap1	37530567	42365376	26	CM054531.2	True
+SSY	CGL_CAT_v1.0	https://cgl.gi.ucsc.edu/data/cactus/t2t-apes/8-t2t-apes-2023v2/annotations-v1.0/GCA_028878055.2.cat.bb	SSYh2	chr23_hap2	33263362	38051052	26		False
+SSY	refGene	https://genomeark.s3.amazonaws.com/species/Symphalangus_syndactylus/mSymSyn1/assembly_curated/gene/mSymSyn1_refGene.bb	SSYh1	chr23_hap1	37530567	42365376	27	chr23_hap1	True
+SSY	refGene	https://genomeark.s3.amazonaws.com/species/Symphalangus_syndactylus/mSymSyn1/assembly_curated/gene/mSymSyn1_refGene.bb	SSYh2	chr23_hap2	33263362	38051052	27		False
+SSY	catGene	https://genomeark.s3.amazonaws.com/species/Symphalangus_syndactylus/mSymSyn1/assembly_curated/gene/mSymSyn1_catAnnotation_v1.0.bb	SSYh1	chr23_hap1	37530567	42365376	26	CM054531.2	True
+SSY	catGene	https://genomeark.s3.amazonaws.com/species/Symphalangus_syndactylus/mSymSyn1/assembly_curated/gene/mSymSyn1_catAnnotation_v1.0.bb	SSYh2	chr23_hap2	33263362	38051052	26		False

@@ -1,0 +1,4 @@
+locus	annotation	rows	owner_match	below_gene
+IGL	orf	149	TRUE	TRUE
+IGL	species_specific	23	TRUE	TRUE
+IGL	sv	188	TRUE	TRUE

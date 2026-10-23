@@ -1,0 +1,37 @@
+[
+  [
+    "cgl_annotations-v0.9",
+    "https://cgl.gi.ucsc.edu/data/cactus/t2t-apes/8-t2t-apes-2023v2/annotations-v0.9/",
+    10668
+  ],
+  [
+    "cgl_annotations-v1.0",
+    "https://cgl.gi.ucsc.edu/data/cactus/t2t-apes/8-t2t-apes-2023v2/annotations-v1.0/",
+    9264
+  ],
+  [
+    "cgl_annotations",
+    "https://cgl.gi.ucsc.edu/data/cactus/t2t-apes/8-t2t-apes-2023v2/annotations/",
+    9254
+  ],
+  [
+    "cgl_root",
+    "https://cgl.gi.ucsc.edu/data/cactus/t2t-apes/",
+    2289
+  ],
+  [
+    "cgl_16readme",
+    "https://cgl.gi.ucsc.edu/data/cactus/t2t-apes/16-t2t-apes-2023v2/16-t2t-apes-2023v2.README.md",
+    5374
+  ],
+  [
+    "cgl_16seqfile",
+    "https://cgl.gi.ucsc.edu/data/cactus/t2t-apes/16-t2t-apes-2023v2/16-t2t-apes-2023v2.seqfile",
+    3268
+  ],
+  [
+    "cgl_8seqfile",
+    "https://cgl.gi.ucsc.edu/data/cactus/t2t-apes/8-t2t-apes-2023v2/8-t2t-apes-2023v2.seqfile",
+    1237
+  ]
+]

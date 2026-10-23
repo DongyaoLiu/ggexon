@@ -2,7 +2,7 @@
 
 `ggexon()` starts a ggplot-like object for genomic annotations, synteny,
 and associated track data. It follows the same basic shape as
-[`ggplot2::ggplot()`](https://ggplot2.tidyverse.org/reference/ggplot.html),
+[`ggplot2::ggplot()`](https://rdrr.io/pkg/ggplot2/man/ggplot.html),
 while preserving `SynIndividual` and `SynSpecies` containers so ggexon
 layers can resolve their plotting data lazily during plot build.
 
@@ -25,7 +25,7 @@ ggexon(data = NULL, mapping = aes(), ..., environment = parent.frame())
 - mapping:
 
   Default aesthetic mappings created by
-  [`ggplot2::aes()`](https://ggplot2.tidyverse.org/reference/aes.html).
+  [`ggplot2::aes()`](https://rdrr.io/pkg/ggplot2/man/aes.html).
 
 - ...:
 

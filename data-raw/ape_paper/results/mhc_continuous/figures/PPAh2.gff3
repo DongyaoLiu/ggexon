@@ -1,0 +1,21 @@
+##gff-version 3
+MHC	curated	gene	917674	921392	.	+	.	ID=mhc1
+MHC	curated	gene	1010589	1012682	.	+	.	ID=mhc2
+MHC	curated	gene	1057735	1060692	.	+	.	ID=mhc3
+MHC	curated	gene	1112206	1115521	.	+	.	ID=mhc4
+MHC	curated	gene	1627288	1629721	.	+	.	ID=mhc5
+MHC	curated	gene	2414570	2417876	.	+	.	ID=mhc6
+MHC	curated	gene	2501322	2504010	.	+	.	ID=mhc7
+MHC	curated	gene	3499509	3503460	.	+	.	ID=mhc8
+MHC	curated	gene	3580692	3593160	.	+	.	ID=mhc9
+MHC	curated	gene	3647099	3660075	.	+	.	ID=mhc10
+MHC	curated	gene	3704781	3710179	.	+	.	ID=mhc11
+MHC	curated	gene	3721461	3727850	.	+	.	ID=mhc12
+MHC	curated	gene	3798053	3803034	.	+	.	ID=mhc13
+MHC	curated	gene	3813073	3820074	.	+	.	ID=mhc14
+MHC	curated	gene	3865840	3869642	.	+	.	ID=mhc15
+MHC	curated	gene	3988369	3994205	.	+	.	ID=mhc16
+MHC	curated	gene	4002264	4006508	.	+	.	ID=mhc17
+MHC	curated	gene	4057931	4063283	.	+	.	ID=mhc18
+MHC	curated	gene	4125435	4130356	.	+	.	ID=mhc19
+MHC	curated	gene	4132823	4142989	.	+	.	ID=mhc20

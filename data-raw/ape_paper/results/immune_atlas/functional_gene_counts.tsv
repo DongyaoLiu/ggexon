@@ -1,0 +1,73 @@
+track	group	count	label	band	text_colour
+PPA1	IGHV	49	49	(44,61]	white
+PPA2	IGHV	56	56	(44,61]	white
+HSA1	IGHV	NA	NA	NA	black
+GGO1	IGHV	43	43	(32,44]	white
+GGO2	IGHV	46	46	(44,61]	white
+PAB1	IGHV	50	50	(44,61]	white
+PAB2	IGHV	41	41	(32,44]	white
+PPY1	IGHV	51	51	(44,61]	white
+PPY2	IGHV	61	61	(44,61]	white
+PPA1	IGKV	28	28	(23,32]	black
+PPA2	IGKV	28	28	(23,32]	black
+HSA1	IGKV	NA	NA	NA	black
+GGO1	IGKV	27	27	(23,32]	black
+GGO2	IGKV	26	26	(23,32]	black
+PAB1	IGKV	32	32	(23,32]	black
+PAB2	IGKV	31	31	(23,32]	black
+PPY1	IGKV	32	32	(23,32]	black
+PPY2	IGKV	32	32	(23,32]	black
+PPA1	IGLV	25	25	(23,32]	black
+PPA2	IGLV	33	33	(32,44]	white
+HSA1	IGLV	NA	NA	NA	black
+GGO1	IGLV	25	25	(23,32]	black
+GGO2	IGLV	26	26	(23,32]	black
+PAB1	IGLV	25	25	(23,32]	black
+PAB2	IGLV	23	23	(7,23]	black
+PPY1	IGLV	33	33	(32,44]	white
+PPY2	IGLV	30	30	(23,32]	black
+PPA1	TRAV + TRDV	38	38	(32,44]	white
+PPA2	TRAV + TRDV	37	37	(32,44]	white
+HSA1	TRAV + TRDV	NA	NA	NA	black
+GGO1	TRAV + TRDV	41	41	(32,44]	white
+GGO2	TRAV + TRDV	40	40	(32,44]	white
+PAB1	TRAV + TRDV	38	38	(32,44]	white
+PAB2	TRAV + TRDV	37	37	(32,44]	white
+PPY1	TRAV + TRDV	38	38	(32,44]	white
+PPY2	TRAV + TRDV	36	36	(32,44]	white
+PPA1	TRBV	46	46	(44,61]	white
+PPA2	TRBV	45	45	(44,61]	white
+HSA1	TRBV	NA	NA	NA	black
+GGO1	TRBV	44	44	(32,44]	white
+GGO2	TRBV	45	45	(44,61]	white
+PAB1	TRBV	51	51	(44,61]	white
+PAB2	TRBV	57	57	(44,61]	white
+PPY1	TRBV	51	51	(44,61]	white
+PPY2	TRBV	47	47	(44,61]	white
+PPA1	TRGV	6	6	[5,7]	black
+PPA2	TRGV	5	5	[5,7]	black
+HSA1	TRGV	NA	NA	NA	black
+GGO1	TRGV	6	6	[5,7]	black
+GGO2	TRGV	6	6	[5,7]	black
+PAB1	TRGV	7	7	[5,7]	black
+PAB2	TRGV	8	8	(7,23]	black
+PPY1	TRGV	7	7	[5,7]	black
+PPY2	TRGV	7	7	[5,7]	black
+PPA1	MHC I	7	7	[5,7]	black
+PPA2	MHC I	7	7	[5,7]	black
+HSA1	MHC I	6	6	[5,7]	black
+GGO1	MHC I	7	7	[5,7]	black
+GGO2	MHC I	7	7	[5,7]	black
+PAB1	MHC I	8	8	(7,23]	black
+PAB2	MHC I	7	7	[5,7]	black
+PPY1	MHC I	6	6	[5,7]	black
+PPY2	MHC I	8	8	(7,23]	black
+PPA1	MHC II	12	12	(7,23]	black
+PPA2	MHC II	13	13	(7,23]	black
+HSA1	MHC II	13	13	(7,23]	black
+GGO1	MHC II	14	14	(7,23]	black
+GGO2	MHC II	11	11	(7,23]	black
+PAB1	MHC II	12	12	(7,23]	black
+PAB2	MHC II	11	11	(7,23]	black
+PPY1	MHC II	12	12	(7,23]	black
+PPY2	MHC II	14	14	(7,23]	black

@@ -1,0 +1,9 @@
+##gff-version 3
+# Liftoff v1.6.3
+# /tmp/ggexon-mhc-liftoff-venv/bin/liftoff /Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/PABh2.fa /Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/PABh1.fa -g /Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/context_recovery/alternative_isoforms/PABh2_OR5V1_2/source.gff3 -o /Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/context_recovery/alternative_isoforms/PABh2_OR5V1_2/projection.gff3 -u /Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/context_recovery/alternative_isoforms/PABh2_OR5V1_2/unmapped.txt -dir /Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/context_recovery/alternative_isoforms/PABh2_OR5V1_2/intermediates -p 1 -a .95 -s .95
+PABh2	Liftoff	gene	553828	595093	.	-	.	ID=alternate;Name=OR5V1;coverage=1.0;sequence_ID=0.992;extra_copy_number=0;copy_num_ID=alternate_0
+PABh2	Liftoff	mRNA	553828	595093	.	-	.	ID=alternate.t1;Parent=alternate;extra_copy_number=0
+PABh2	Liftoff	exon	553828	554872	.	-	.	ID=ex0;Parent=alternate.t1;extra_copy_number=0
+PABh2	Liftoff	exon	585736	585811	.	-	.	ID=ex1;Parent=alternate.t1;extra_copy_number=0
+PABh2	Liftoff	exon	586155	586192	.	-	.	ID=ex2;Parent=alternate.t1;extra_copy_number=0
+PABh2	Liftoff	exon	594990	595093	.	-	.	ID=ex3;Parent=alternate.t1;extra_copy_number=0

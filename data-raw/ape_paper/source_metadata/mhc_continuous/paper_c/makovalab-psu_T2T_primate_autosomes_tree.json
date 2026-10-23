@@ -1,0 +1,116 @@
+{
+  "sha": "780d95f32c859138f171f065a2b732063c727fa3",
+  "url": "https://api.github.com/repos/makovalab-psu/T2T_primate_autosomes/git/trees/780d95f32c859138f171f065a2b732063c727fa3",
+  "tree": [
+    {
+      "path": ".gitignore",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e43b0f988953ae3a84b00331d0ccf5f7d51cb3cf",
+      "size": 10,
+      "url": "https://api.github.com/repos/makovalab-psu/T2T_primate_autosomes/git/blobs/e43b0f988953ae3a84b00331d0ccf5f7d51cb3cf"
+    },
+    {
+      "path": "Detection_of_NUMTs",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "350b13ea20cf3cd1aa38bfbacd8b91441cf88f77",
+      "url": "https://api.github.com/repos/makovalab-psu/T2T_primate_autosomes/git/trees/350b13ea20cf3cd1aa38bfbacd8b91441cf88f77"
+    },
+    {
+      "path": "Detection_of_NUMTs/1_BlastMTvsNUCL.sh",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ee0dd6e925a49e1446e3a6c3449bf45561ffef41",
+      "size": 1729,
+      "url": "https://api.github.com/repos/makovalab-psu/T2T_primate_autosomes/git/blobs/ee0dd6e925a49e1446e3a6c3449bf45561ffef41"
+    },
+    {
+      "path": "Detection_of_NUMTs/2_ProcessBlastResults.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a13c26efe731d5f1b590350565a5113aac8051bb",
+      "size": 36746,
+      "url": "https://api.github.com/repos/makovalab-psu/T2T_primate_autosomes/git/blobs/a13c26efe731d5f1b590350565a5113aac8051bb"
+    },
+    {
+      "path": "Detection_of_NUMTs/README",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9ae86a3207c525ddab83f2bdbe5701afeb51d653",
+      "size": 423,
+      "url": "https://api.github.com/repos/makovalab-psu/T2T_primate_autosomes/git/blobs/9ae86a3207c525ddab83f2bdbe5701afeb51d653"
+    },
+    {
+      "path": "Detection_of_NUMTs/align.hsa.map.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b7ab67e8c963688be0d0c43083f0af309385c474",
+      "size": 524,
+      "url": "https://api.github.com/repos/makovalab-psu/T2T_primate_autosomes/git/blobs/b7ab67e8c963688be0d0c43083f0af309385c474"
+    },
+    {
+      "path": "README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8559a8dac40f7f92be870c73256da51a6b8daf96",
+      "size": 196,
+      "url": "https://api.github.com/repos/makovalab-psu/T2T_primate_autosomes/git/blobs/8559a8dac40f7f92be870c73256da51a6b8daf96"
+    },
+    {
+      "path": "divergence",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "7783288d0da1ab386b68a3d25955e17e69b74858",
+      "url": "https://api.github.com/repos/makovalab-psu/T2T_primate_autosomes/git/trees/7783288d0da1ab386b68a3d25955e17e69b74858"
+    },
+    {
+      "path": "divergence/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "96f725139851b013e0f065e8329211f386b716b6",
+      "size": 504,
+      "url": "https://api.github.com/repos/makovalab-psu/T2T_primate_autosomes/git/blobs/96f725139851b013e0f065e8329211f386b716b6"
+    },
+    {
+      "path": "divergence/nonCoveredRegion.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a00bfa7563870cbb676c53e7e621a1edd3ec9491",
+      "size": 1741,
+      "url": "https://api.github.com/repos/makovalab-psu/T2T_primate_autosomes/git/blobs/a00bfa7563870cbb676c53e7e621a1edd3ec9491"
+    },
+    {
+      "path": "nonB_DNA",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "2fdcefda213428bba5a6a75aa8b5b3e2c022232c",
+      "url": "https://api.github.com/repos/makovalab-psu/T2T_primate_autosomes/git/trees/2fdcefda213428bba5a6a75aa8b5b3e2c022232c"
+    },
+    {
+      "path": "nonB_DNA/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "45541ae8d6cf459d3507220ce1bbb595cb94e358",
+      "size": 1976,
+      "url": "https://api.github.com/repos/makovalab-psu/T2T_primate_autosomes/git/blobs/45541ae8d6cf459d3507220ce1bbb595cb94e358"
+    },
+    {
+      "path": "nonB_DNA/new_sequence_enrichment_commands.sh",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "45f809d5ac2748e0dbadaa55486ced4e65e3021b",
+      "size": 4269,
+      "url": "https://api.github.com/repos/makovalab-psu/T2T_primate_autosomes/git/blobs/45f809d5ac2748e0dbadaa55486ced4e65e3021b"
+    },
+    {
+      "path": "nonB_DNA/species_list.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4d0f5e46b4c2ac46d29b3ff00482fc39cdee6ad9",
+      "size": 86,
+      "url": "https://api.github.com/repos/makovalab-psu/T2T_primate_autosomes/git/blobs/4d0f5e46b4c2ac46d29b3ff00482fc39cdee6ad9"
+    }
+  ],
+  "truncated": false
+}

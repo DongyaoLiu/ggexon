@@ -120,6 +120,9 @@ links, trees, and protein mutation summaries.
   : Draw link lines between pairs of coordinates
 - [`geom_protein_lollipop()`](https://dongyaoliu.github.io/ggexon/reference/geom_protein_lollipop.md)
   : Draw lollipop annotations on a protein-coordinate track
+- [`geom_gene_lollipop()`](https://dongyaoliu.github.io/ggexon/reference/geom_gene_lollipop.md)
+  [`GeomGeneLollipop`](https://dongyaoliu.github.io/ggexon/reference/geom_gene_lollipop.md)
+  : Draw labelled gene arrows on stems at true genomic positions
 
 ## Facets, tree alignment, and guides
 

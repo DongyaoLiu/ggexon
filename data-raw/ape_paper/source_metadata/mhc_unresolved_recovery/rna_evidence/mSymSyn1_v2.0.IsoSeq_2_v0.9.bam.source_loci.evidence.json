@@ -1,0 +1,187 @@
+[
+  {
+    "track": "SSYh2",
+    "gene_symbol": "MUC21",
+    "source_track": "SSYh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Symphalangus_syndactylus/mSymSyn1/assembly_curated/expression/mSymSyn1_v2.0.IsoSeq_2_v0.9.bam",
+    "source_chrom": "CM054531.2",
+    "source_start0": 40638368,
+    "source_end0": 40645640,
+    "read_name": "SRR27178656.377840",
+    "flag": 16,
+    "primary": true,
+    "mapq": 30,
+    "read_start0": 40464722,
+    "read_end0": 40647511,
+    "strand": "-",
+    "cigar": "55S1292M468N526M1674I180483N20M244S",
+    "query_length": 3811,
+    "aligned_overlap_bp": 0,
+    "blocks_bed0": [
+      [
+        40464722,
+        40466014
+      ],
+      [
+        40466482,
+        40467008
+      ],
+      [
+        40647491,
+        40647511
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        40466014,
+        40466482
+      ],
+      [
+        40467008,
+        40647491
+      ]
+    ]
+  },
+  {
+    "track": "SSYh2",
+    "gene_symbol": "MUC21",
+    "source_track": "SSYh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Symphalangus_syndactylus/mSymSyn1/assembly_curated/expression/mSymSyn1_v2.0.IsoSeq_2_v0.9.bam",
+    "source_chrom": "CM054531.2",
+    "source_start0": 40638368,
+    "source_end0": 40645640,
+    "read_name": "SRR27178656.367516",
+    "flag": 0,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 40638368,
+    "read_end0": 40645640,
+    "strand": "+",
+    "cigar": "51S1908M318N213M45I283M135I77M90I14M45I457M1395N86M2217N304M23S",
+    "query_length": 3731,
+    "aligned_overlap_bp": 3342,
+    "blocks_bed0": [
+      [
+        40638368,
+        40640276
+      ],
+      [
+        40640594,
+        40640807
+      ],
+      [
+        40640807,
+        40641090
+      ],
+      [
+        40641090,
+        40641167
+      ],
+      [
+        40641167,
+        40641181
+      ],
+      [
+        40641181,
+        40641638
+      ],
+      [
+        40643033,
+        40643119
+      ],
+      [
+        40645336,
+        40645640
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        40640276,
+        40640594
+      ],
+      [
+        40641638,
+        40643033
+      ],
+      [
+        40643119,
+        40645336
+      ]
+    ]
+  },
+  {
+    "track": "SSYh2",
+    "gene_symbol": "MUC21",
+    "source_track": "SSYh1",
+    "bam_url": "https://genomeark.s3.amazonaws.com/species/Symphalangus_syndactylus/mSymSyn1/assembly_curated/expression/mSymSyn1_v2.0.IsoSeq_2_v0.9.bam",
+    "source_chrom": "CM054531.2",
+    "source_start0": 40638368,
+    "source_end0": 40645640,
+    "read_name": "SRR27178656.1784352",
+    "flag": 16,
+    "primary": true,
+    "mapq": 60,
+    "read_start0": 40639725,
+    "read_end0": 40645639,
+    "strand": "-",
+    "cigar": "57S551M318N213M45I283M135I77M45I99M26I5M19I31M45I274M1396N1I147M2217N303M23S",
+    "query_length": 2379,
+    "aligned_overlap_bp": 1983,
+    "blocks_bed0": [
+      [
+        40639725,
+        40640276
+      ],
+      [
+        40640594,
+        40640807
+      ],
+      [
+        40640807,
+        40641090
+      ],
+      [
+        40641090,
+        40641167
+      ],
+      [
+        40641167,
+        40641266
+      ],
+      [
+        40641266,
+        40641271
+      ],
+      [
+        40641271,
+        40641302
+      ],
+      [
+        40641302,
+        40641576
+      ],
+      [
+        40642972,
+        40643119
+      ],
+      [
+        40645336,
+        40645639
+      ]
+    ],
+    "junctions_bed0": [
+      [
+        40640276,
+        40640594
+      ],
+      [
+        40641576,
+        40642972
+      ],
+      [
+        40643119,
+        40645336
+      ]
+    ]
+  }
+]

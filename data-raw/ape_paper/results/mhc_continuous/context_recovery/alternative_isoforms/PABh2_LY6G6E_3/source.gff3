@@ -1,0 +1,6 @@
+##gff-version 3
+PABh1	source	gene	3228617	3230086	.	-	.	ID=alternate;Name=LY6G6E
+PABh1	source	mRNA	3228617	3230086	.	-	.	ID=alternate.t1;Parent=alternate
+PABh1	source	exon	3228617	3228837	.	-	.	ID=ex0;Parent=alternate.t1
+PABh1	source	exon	3228940	3229065	.	-	.	ID=ex1;Parent=alternate.t1
+PABh1	source	exon	3230035	3230086	.	-	.	ID=ex2;Parent=alternate.t1

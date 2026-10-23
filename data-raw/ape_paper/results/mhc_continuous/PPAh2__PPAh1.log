@@ -1,0 +1,10 @@
+[M::mm_idx_gen::0.092*1.03] collected minimizers
+[M::mm_idx_gen::0.131*1.30] sorted minimizers
+[M::main::0.131*1.30] loaded/built the index for 1 target sequence(s)
+[M::mm_mapopt_update::0.141*1.28] mid_occ = 61
+[M::mm_idx_stat] kmer size: 19; skip: 10; is_hpc: 0; #seq: 1
+[M::mm_idx_stat::0.149*1.26] distinct minimizers: 838623 (95.86% are singletons); average occurrences: 1.132; average spacing: 5.490; total length: 5211907
+[M::worker_pipeline::3.031*1.01] mapped 1 sequences
+[M::main] Version: 2.31-r1302
+[M::main] CMD: minimap2 -x asm20 -c --eqx --secondary=no -t 2 /Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/PPAh2.fa /Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/PPAh1.fa
+[M::main] Real time: 3.033 sec; CPU: 3.059 sec; Peak RSS: 0.351 GB

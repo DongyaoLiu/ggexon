@@ -1,0 +1,32 @@
+[
+  {
+    "assembly": "mGorGor1_v2.0",
+    "identical": true,
+    "sha256": "6837b6b9765cee468a3a31bb4b1ce5d505f192b7447b1883f86c44f0807388bf"
+  },
+  {
+    "assembly": "mPanPan1_v2.0",
+    "identical": true,
+    "sha256": "288ea1ab774b668b4846cde5786e82907c57caf2d278fdf8a1e5ebae9fd40fe4"
+  },
+  {
+    "assembly": "mPanTro3_v2.0",
+    "identical": true,
+    "sha256": "7be8e39a56d651dd7280769b0ee33db563972c6ad5df072e090070c27969865f"
+  },
+  {
+    "assembly": "mPonAbe1_v2.0",
+    "identical": true,
+    "sha256": "eb134e8cb5f2cca8546e5606fcc0c44011bac43afefb86694e629133b76ef01f"
+  },
+  {
+    "assembly": "mPonPyg2_v2.0",
+    "identical": true,
+    "sha256": "819c457ab74084b2ee0e28092bb7a233feb4a69313f5c929f386f1e51c98a9bf"
+  },
+  {
+    "assembly": "mSymSyn1_v2.0",
+    "identical": true,
+    "sha256": "bae3e6b764f544ac2790cbeb87fc9d3757cd6e2ac854035c5286e3a734fde6f5"
+  }
+]

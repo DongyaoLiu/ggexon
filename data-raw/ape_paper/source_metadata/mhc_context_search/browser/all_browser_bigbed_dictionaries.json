@@ -1,0 +1,3269 @@
+[
+  {
+    "species_id": "PTR",
+    "track": "catRefGene",
+    "url": "https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/gene/mPanTro3_v2.0_CatRefConsensus_v3.bb",
+    "method": "HTTP Range first 65536 bytes; parse complete BigBed B+ chromosome dictionary; no model/chromosome filtering applied",
+    "http_status": 206,
+    "bytes_read": 65536,
+    "chroms": {
+      "CM054434.2": 231299448,
+      "CM054437.2": 191670129,
+      "CM054438.2": 178964043,
+      "CM054439.2": 183320697,
+      "CM054440.2": 174648847,
+      "CM054441.2": 155691389,
+      "CM054442.2": 146288486,
+      "CM054443.2": 136991367,
+      "CM054444.2": 140160335,
+      "CM054445.2": 118863153,
+      "CM054446.2": 122853238,
+      "CM054447.2": 144476839,
+      "CM054448.2": 120149342,
+      "CM054449.2": 104701121,
+      "CM054450.2": 93846347,
+      "CM054451.2": 90695042,
+      "CM054452.2": 94528409,
+      "CM054453.2": 99595324,
+      "CM054454.2": 68087067,
+      "CM054455.2": 78115444,
+      "CM054456.2": 51350302,
+      "CM054457.2": 153896354,
+      "CM054458.2": 36447294,
+      "CM068905.1": 201579334,
+      "CM068906.1": 59520411
+    },
+    "hap_coverage": [
+      {
+        "track": "PTRh1",
+        "browser_chrom": "chr5_hap1_hsa6",
+        "start0": 34745920,
+        "end0": 40035224,
+        "aliases_checked": [
+          "5",
+          "CM054439.2",
+          "NC_072403.2",
+          "chr5",
+          "chr5_hap1_hsa6",
+          "hsa6",
+          "mPanTro3#1#chr5_hap1_hsa6"
+        ],
+        "chrom_dictionary_matches": {
+          "CM054439.2": 183320697
+        }
+      },
+      {
+        "track": "PTRh2",
+        "browser_chrom": "chr5_hap2_hsa6",
+        "start0": 33350131,
+        "end0": 38784666,
+        "aliases_checked": [
+          "CM054416.2",
+          "chr5_hap2_hsa6",
+          "mPanTro3#2#chr5_hap2_hsa6"
+        ],
+        "chrom_dictionary_matches": {}
+      }
+    ]
+  },
+  {
+    "species_id": "PTR",
+    "track": "cat_v0.9",
+    "url": "https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/gene/mPanTro3_catAnnotation_v0.9.bb",
+    "method": "HTTP Range first 65536 bytes; parse complete BigBed B+ chromosome dictionary; no model/chromosome filtering applied",
+    "http_status": 206,
+    "bytes_read": 65536,
+    "chroms": {
+      "CM054434.2": 231299448,
+      "CM054437.2": 191670129,
+      "CM054438.2": 178964043,
+      "CM054439.2": 183320697,
+      "CM054440.2": 174648847,
+      "CM054441.2": 155691389,
+      "CM054442.2": 146288486,
+      "CM054443.2": 136991367,
+      "CM054444.2": 140160335,
+      "CM054445.2": 118863153,
+      "CM054446.2": 122853238,
+      "CM054447.2": 144476839,
+      "CM054448.2": 120149342,
+      "CM054449.2": 104701121,
+      "CM054450.2": 93846347,
+      "CM054451.2": 90695042,
+      "CM054452.2": 94528409,
+      "CM054453.2": 99595324,
+      "CM054454.2": 68087067,
+      "CM054455.2": 78115444,
+      "CM054456.2": 51350302,
+      "CM054457.2": 153896354,
+      "CM054458.2": 36447294,
+      "CM068905.1": 201579334,
+      "CM068906.1": 59520411
+    },
+    "hap_coverage": [
+      {
+        "track": "PTRh1",
+        "browser_chrom": "chr5_hap1_hsa6",
+        "start0": 34745920,
+        "end0": 40035224,
+        "aliases_checked": [
+          "5",
+          "CM054439.2",
+          "NC_072403.2",
+          "chr5",
+          "chr5_hap1_hsa6",
+          "hsa6",
+          "mPanTro3#1#chr5_hap1_hsa6"
+        ],
+        "chrom_dictionary_matches": {
+          "CM054439.2": 183320697
+        }
+      },
+      {
+        "track": "PTRh2",
+        "browser_chrom": "chr5_hap2_hsa6",
+        "start0": 33350131,
+        "end0": 38784666,
+        "aliases_checked": [
+          "CM054416.2",
+          "chr5_hap2_hsa6",
+          "mPanTro3#2#chr5_hap2_hsa6"
+        ],
+        "chrom_dictionary_matches": {}
+      }
+    ]
+  },
+  {
+    "species_id": "PTR",
+    "track": "TOGA_hg38",
+    "url": "https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/gene/HLTOGAannotVsHg38v1.bb",
+    "method": "HTTP Range first 65536 bytes; parse complete BigBed B+ chromosome dictionary; no model/chromosome filtering applied",
+    "http_status": 206,
+    "bytes_read": 65536,
+    "chroms": {
+      "chr10_hap1_hsa12": 140160335,
+      "chr11_hap1_hsa9": 118863153,
+      "chr12_hap1_hsa2a": 122853238,
+      "chr13_hap1_hsa2b": 144476839,
+      "chr14_hap1_hsa13": 120149342,
+      "chr15_hap1_hsa14": 104701121,
+      "chr16_hap1_hsa15": 93846347,
+      "chr17_hap1_hsa18": 90695042,
+      "chr18_hap1_hsa16": 94528409,
+      "chr19_hap1_hsa17": 99595324,
+      "chr1_hap1_hsa1": 231299448,
+      "chr20_hap1_hsa19": 68087067,
+      "chr21_hap1_hsa20": 78115444,
+      "chr22_hap1_hsa21": 51350302,
+      "chr23_hap1_hsa22": 59520411,
+      "chr2_hap1_hsa3": 201579334,
+      "chr3_hap1_hsa4": 191670129,
+      "chr4_hap1_hsa5": 178964043,
+      "chr5_hap1_hsa6": 183320697,
+      "chr6_hap1_hsa7": 174648847,
+      "chr7_hap1_hsa8": 155691389,
+      "chr8_hap1_hsa10": 146288486,
+      "chr9_hap1_hsa11": 136991367,
+      "chrX_hap1_hsaX": 153896354,
+      "chrY_hap2_hsaY": 36447294
+    },
+    "hap_coverage": [
+      {
+        "track": "PTRh1",
+        "browser_chrom": "chr5_hap1_hsa6",
+        "start0": 34745920,
+        "end0": 40035224,
+        "aliases_checked": [
+          "5",
+          "CM054439.2",
+          "NC_072403.2",
+          "chr5",
+          "chr5_hap1_hsa6",
+          "hsa6",
+          "mPanTro3#1#chr5_hap1_hsa6"
+        ],
+        "chrom_dictionary_matches": {
+          "chr5_hap1_hsa6": 183320697
+        }
+      },
+      {
+        "track": "PTRh2",
+        "browser_chrom": "chr5_hap2_hsa6",
+        "start0": 33350131,
+        "end0": 38784666,
+        "aliases_checked": [
+          "CM054416.2",
+          "chr5_hap2_hsa6",
+          "mPanTro3#2#chr5_hap2_hsa6"
+        ],
+        "chrom_dictionary_matches": {}
+      }
+    ]
+  },
+  {
+    "species_id": "PTR",
+    "track": "TOGA_mm10",
+    "url": "https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/gene/HLTOGAannotVsMm10v1.bb",
+    "method": "HTTP Range first 65536 bytes; parse complete BigBed B+ chromosome dictionary; no model/chromosome filtering applied",
+    "http_status": 206,
+    "bytes_read": 65536,
+    "chroms": {
+      "chr10_hap1_hsa12": 140160335,
+      "chr11_hap1_hsa9": 118863153,
+      "chr12_hap1_hsa2a": 122853238,
+      "chr13_hap1_hsa2b": 144476839,
+      "chr14_hap1_hsa13": 120149342,
+      "chr15_hap1_hsa14": 104701121,
+      "chr16_hap1_hsa15": 93846347,
+      "chr17_hap1_hsa18": 90695042,
+      "chr18_hap1_hsa16": 94528409,
+      "chr19_hap1_hsa17": 99595324,
+      "chr1_hap1_hsa1": 231299448,
+      "chr20_hap1_hsa19": 68087067,
+      "chr21_hap1_hsa20": 78115444,
+      "chr22_hap1_hsa21": 51350302,
+      "chr23_hap1_hsa22": 59520411,
+      "chr2_hap1_hsa3": 201579334,
+      "chr3_hap1_hsa4": 191670129,
+      "chr4_hap1_hsa5": 178964043,
+      "chr5_hap1_hsa6": 183320697,
+      "chr6_hap1_hsa7": 174648847,
+      "chr7_hap1_hsa8": 155691389,
+      "chr8_hap1_hsa10": 146288486,
+      "chr9_hap1_hsa11": 136991367,
+      "chrX_hap1_hsaX": 153896354,
+      "chrY_hap2_hsaY": 36447294
+    },
+    "hap_coverage": [
+      {
+        "track": "PTRh1",
+        "browser_chrom": "chr5_hap1_hsa6",
+        "start0": 34745920,
+        "end0": 40035224,
+        "aliases_checked": [
+          "5",
+          "CM054439.2",
+          "NC_072403.2",
+          "chr5",
+          "chr5_hap1_hsa6",
+          "hsa6",
+          "mPanTro3#1#chr5_hap1_hsa6"
+        ],
+        "chrom_dictionary_matches": {
+          "chr5_hap1_hsa6": 183320697
+        }
+      },
+      {
+        "track": "PTRh2",
+        "browser_chrom": "chr5_hap2_hsa6",
+        "start0": 33350131,
+        "end0": 38784666,
+        "aliases_checked": [
+          "CM054416.2",
+          "chr5_hap2_hsa6",
+          "mPanTro3#2#chr5_hap2_hsa6"
+        ],
+        "chrom_dictionary_matches": {}
+      }
+    ]
+  },
+  {
+    "species_id": "PTR",
+    "track": "CGL_CAT_v0.9",
+    "url": "https://cgl.gi.ucsc.edu/data/cactus/t2t-apes/8-t2t-apes-2023v2/annotations-v0.9/GCA_028858775.2.catAnnotation.bb",
+    "method": "HTTP Range first 65536 bytes; parse complete BigBed B+ chromosome dictionary; no model/chromosome filtering applied",
+    "http_status": 206,
+    "bytes_read": 65536,
+    "chroms": {
+      "CM054434.2": 231299448,
+      "CM054437.2": 191670129,
+      "CM054438.2": 178964043,
+      "CM054439.2": 183320697,
+      "CM054440.2": 174648847,
+      "CM054441.2": 155691389,
+      "CM054442.2": 146288486,
+      "CM054443.2": 136991367,
+      "CM054444.2": 140160335,
+      "CM054445.2": 118863153,
+      "CM054446.2": 122853238,
+      "CM054447.2": 144476839,
+      "CM054448.2": 120149342,
+      "CM054449.2": 104701121,
+      "CM054450.2": 93846347,
+      "CM054451.2": 90695042,
+      "CM054452.2": 94528409,
+      "CM054453.2": 99595324,
+      "CM054454.2": 68087067,
+      "CM054455.2": 78115444,
+      "CM054456.2": 51350302,
+      "CM054457.2": 153896354,
+      "CM054458.2": 36447294,
+      "CM068905.1": 201579334,
+      "CM068906.1": 59520411
+    },
+    "hap_coverage": [
+      {
+        "track": "PTRh1",
+        "browser_chrom": "chr5_hap1_hsa6",
+        "start0": 34745920,
+        "end0": 40035224,
+        "aliases_checked": [
+          "5",
+          "CM054439.2",
+          "NC_072403.2",
+          "chr5",
+          "chr5_hap1_hsa6",
+          "hsa6",
+          "mPanTro3#1#chr5_hap1_hsa6"
+        ],
+        "chrom_dictionary_matches": {
+          "CM054439.2": 183320697
+        }
+      },
+      {
+        "track": "PTRh2",
+        "browser_chrom": "chr5_hap2_hsa6",
+        "start0": 33350131,
+        "end0": 38784666,
+        "aliases_checked": [
+          "CM054416.2",
+          "chr5_hap2_hsa6",
+          "mPanTro3#2#chr5_hap2_hsa6"
+        ],
+        "chrom_dictionary_matches": {}
+      }
+    ]
+  },
+  {
+    "species_id": "PTR",
+    "track": "CGL_CAT_v1.0",
+    "url": "https://cgl.gi.ucsc.edu/data/cactus/t2t-apes/8-t2t-apes-2023v2/annotations-v1.0/GCA_028858775.2.cat.bb",
+    "method": "HTTP Range first 65536 bytes; parse complete BigBed B+ chromosome dictionary; no model/chromosome filtering applied",
+    "http_status": 206,
+    "bytes_read": 65536,
+    "chroms": {
+      "CM054434.2": 231299448,
+      "CM054437.2": 191670129,
+      "CM054438.2": 178964043,
+      "CM054439.2": 183320697,
+      "CM054440.2": 174648847,
+      "CM054441.2": 155691389,
+      "CM054442.2": 146288486,
+      "CM054443.2": 136991367,
+      "CM054444.2": 140160335,
+      "CM054445.2": 118863153,
+      "CM054446.2": 122853238,
+      "CM054447.2": 144476839,
+      "CM054448.2": 120149342,
+      "CM054449.2": 104701121,
+      "CM054450.2": 93846347,
+      "CM054451.2": 90695042,
+      "CM054452.2": 94528409,
+      "CM054453.2": 99595324,
+      "CM054454.2": 68087067,
+      "CM054455.2": 78115444,
+      "CM054456.2": 51350302,
+      "CM054457.2": 153896354,
+      "CM054458.2": 36447294,
+      "CM068905.1": 201579334,
+      "CM068906.1": 59520411
+    },
+    "hap_coverage": [
+      {
+        "track": "PTRh1",
+        "browser_chrom": "chr5_hap1_hsa6",
+        "start0": 34745920,
+        "end0": 40035224,
+        "aliases_checked": [
+          "5",
+          "CM054439.2",
+          "NC_072403.2",
+          "chr5",
+          "chr5_hap1_hsa6",
+          "hsa6",
+          "mPanTro3#1#chr5_hap1_hsa6"
+        ],
+        "chrom_dictionary_matches": {
+          "CM054439.2": 183320697
+        }
+      },
+      {
+        "track": "PTRh2",
+        "browser_chrom": "chr5_hap2_hsa6",
+        "start0": 33350131,
+        "end0": 38784666,
+        "aliases_checked": [
+          "CM054416.2",
+          "chr5_hap2_hsa6",
+          "mPanTro3#2#chr5_hap2_hsa6"
+        ],
+        "chrom_dictionary_matches": {}
+      }
+    ]
+  },
+  {
+    "species_id": "PTR",
+    "track": "refGene",
+    "url": "https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/gene/mPanTro3_refGene.bb",
+    "method": "HTTP Range first 65536 bytes; parse complete BigBed B+ chromosome dictionary; no model/chromosome filtering applied",
+    "http_status": 206,
+    "bytes_read": 65536,
+    "chroms": {
+      "MT": 16560,
+      "chr10_hap1_hsa12": 140160335,
+      "chr11_hap1_hsa9": 118863153,
+      "chr12_hap1_hsa2a": 122853238,
+      "chr13_hap1_hsa2b": 144476839,
+      "chr14_hap1_hsa13": 120149342,
+      "chr15_hap1_hsa14": 104701121,
+      "chr16_hap1_hsa15": 93846347,
+      "chr17_hap1_hsa18": 90695042,
+      "chr18_hap1_hsa16": 94528409,
+      "chr19_hap1_hsa17": 99595324,
+      "chr1_hap1_hsa1": 231299448,
+      "chr20_hap1_hsa19": 68087067,
+      "chr21_hap1_hsa20": 78115444,
+      "chr22_hap1_hsa21": 51350302,
+      "chr23_hap1_hsa22": 59520411,
+      "chr2_hap1_hsa3": 201579334,
+      "chr3_hap1_hsa4": 191670129,
+      "chr4_hap1_hsa5": 178964043,
+      "chr5_hap1_hsa6": 183320697,
+      "chr6_hap1_hsa7": 174648847,
+      "chr7_hap1_hsa8": 155691389,
+      "chr8_hap1_hsa10": 146288486,
+      "chr9_hap1_hsa11": 136991367,
+      "chrX_hap1_hsaX": 153896354,
+      "chrY_hap2_hsaY": 36447294
+    },
+    "hap_coverage": [
+      {
+        "track": "PTRh1",
+        "browser_chrom": "chr5_hap1_hsa6",
+        "start0": 34745920,
+        "end0": 40035224,
+        "aliases_checked": [
+          "5",
+          "CM054439.2",
+          "NC_072403.2",
+          "chr5",
+          "chr5_hap1_hsa6",
+          "hsa6",
+          "mPanTro3#1#chr5_hap1_hsa6"
+        ],
+        "chrom_dictionary_matches": {
+          "chr5_hap1_hsa6": 183320697
+        }
+      },
+      {
+        "track": "PTRh2",
+        "browser_chrom": "chr5_hap2_hsa6",
+        "start0": 33350131,
+        "end0": 38784666,
+        "aliases_checked": [
+          "CM054416.2",
+          "chr5_hap2_hsa6",
+          "mPanTro3#2#chr5_hap2_hsa6"
+        ],
+        "chrom_dictionary_matches": {}
+      }
+    ]
+  },
+  {
+    "species_id": "PTR",
+    "track": "catGene",
+    "url": "https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/gene/mPanTro3_catAnnotation_v1.0.bb",
+    "method": "HTTP Range first 65536 bytes; parse complete BigBed B+ chromosome dictionary; no model/chromosome filtering applied",
+    "http_status": 206,
+    "bytes_read": 65536,
+    "chroms": {
+      "CM054434.2": 231299448,
+      "CM054437.2": 191670129,
+      "CM054438.2": 178964043,
+      "CM054439.2": 183320697,
+      "CM054440.2": 174648847,
+      "CM054441.2": 155691389,
+      "CM054442.2": 146288486,
+      "CM054443.2": 136991367,
+      "CM054444.2": 140160335,
+      "CM054445.2": 118863153,
+      "CM054446.2": 122853238,
+      "CM054447.2": 144476839,
+      "CM054448.2": 120149342,
+      "CM054449.2": 104701121,
+      "CM054450.2": 93846347,
+      "CM054451.2": 90695042,
+      "CM054452.2": 94528409,
+      "CM054453.2": 99595324,
+      "CM054454.2": 68087067,
+      "CM054455.2": 78115444,
+      "CM054456.2": 51350302,
+      "CM054457.2": 153896354,
+      "CM054458.2": 36447294,
+      "CM068905.1": 201579334,
+      "CM068906.1": 59520411
+    },
+    "hap_coverage": [
+      {
+        "track": "PTRh1",
+        "browser_chrom": "chr5_hap1_hsa6",
+        "start0": 34745920,
+        "end0": 40035224,
+        "aliases_checked": [
+          "5",
+          "CM054439.2",
+          "NC_072403.2",
+          "chr5",
+          "chr5_hap1_hsa6",
+          "hsa6",
+          "mPanTro3#1#chr5_hap1_hsa6"
+        ],
+        "chrom_dictionary_matches": {
+          "CM054439.2": 183320697
+        }
+      },
+      {
+        "track": "PTRh2",
+        "browser_chrom": "chr5_hap2_hsa6",
+        "start0": 33350131,
+        "end0": 38784666,
+        "aliases_checked": [
+          "CM054416.2",
+          "chr5_hap2_hsa6",
+          "mPanTro3#2#chr5_hap2_hsa6"
+        ],
+        "chrom_dictionary_matches": {}
+      }
+    ]
+  },
+  {
+    "species_id": "PPA",
+    "track": "catRefGene",
+    "url": "https://genomeark.s3.amazonaws.com/species/Pan_paniscus/mPanPan1/assembly_curated/gene/mPanPan1_v2.0_CatRefConsensus_v3.bb",
+    "method": "HTTP Range first 65536 bytes; parse complete BigBed B+ chromosome dictionary; no model/chromosome filtering applied",
+    "http_status": 206,
+    "bytes_read": 65536,
+    "chroms": {
+      "CM055472.2": 227705052,
+      "CM055475.2": 188614375,
+      "CM055476.2": 176551333,
+      "CM055477.2": 191151712,
+      "CM055478.2": 196309857,
+      "CM055479.2": 162793952,
+      "CM055480.2": 147028407,
+      "CM055481.2": 135750398,
+      "CM055482.2": 141815175,
+      "CM055483.2": 124758961,
+      "CM055484.2": 126551469,
+      "CM055485.2": 144872268,
+      "CM055486.2": 116126430,
+      "CM055487.2": 108452746,
+      "CM055488.2": 91859929,
+      "CM055489.2": 98270466,
+      "CM055490.2": 100427192,
+      "CM055491.2": 100792412,
+      "CM055492.2": 70721293,
+      "CM055493.2": 76791327,
+      "CM055494.2": 48483276,
+      "CM055495.2": 160241051,
+      "CM055496.2": 46954669,
+      "CM068944.1": 196431891,
+      "CM068945.1": 65052380
+    },
+    "hap_coverage": [
+      {
+        "track": "PPAh1",
+        "browser_chrom": "chr5_mat_hsa6",
+        "start0": 39408542,
+        "end0": 44487238,
+        "aliases_checked": [
+          "CM054489.2",
+          "chr5_mat_hsa6",
+          "mPanPan1#M#chr5_mat_hsa6"
+        ],
+        "chrom_dictionary_matches": {}
+      },
+      {
+        "track": "PPAh2",
+        "browser_chrom": "chr5_pat_hsa6",
+        "start0": 43421688,
+        "end0": 48633595,
+        "aliases_checked": [
+          "5",
+          "CM054465.2",
+          "CM055477.2",
+          "NC_073254.2",
+          "chr5",
+          "chr5_pat_hsa6",
+          "hsa6",
+          "mPanPan1#P#chr5_pat_hsa6"
+        ],
+        "chrom_dictionary_matches": {
+          "CM055477.2": 191151712
+        }
+      }
+    ]
+  },
+  {
+    "species_id": "PPA",
+    "track": "cat_v0.9",
+    "url": "https://genomeark.s3.amazonaws.com/species/Pan_paniscus/mPanPan1/assembly_curated/gene/mPanPan1_catAnnotation_v0.9.bb",
+    "method": "HTTP Range first 65536 bytes; parse complete BigBed B+ chromosome dictionary; no model/chromosome filtering applied",
+    "http_status": 206,
+    "bytes_read": 65536,
+    "chroms": {
+      "CM055472.2": 227705052,
+      "CM055475.2": 188614375,
+      "CM055476.2": 176551333,
+      "CM055477.2": 191151712,
+      "CM055478.2": 196309857,
+      "CM055479.2": 162793952,
+      "CM055480.2": 147028407,
+      "CM055481.2": 135750398,
+      "CM055482.2": 141815175,
+      "CM055483.2": 124758961,
+      "CM055484.2": 126551469,
+      "CM055485.2": 144872268,
+      "CM055486.2": 116126430,
+      "CM055487.2": 108452746,
+      "CM055488.2": 91859929,
+      "CM055489.2": 98270466,
+      "CM055490.2": 100427192,
+      "CM055491.2": 100792412,
+      "CM055492.2": 70721293,
+      "CM055493.2": 76791327,
+      "CM055494.2": 48483276,
+      "CM055495.2": 160241051,
+      "CM055496.2": 46954669,
+      "CM068944.1": 196431891,
+      "CM068945.1": 65052380
+    },
+    "hap_coverage": [
+      {
+        "track": "PPAh1",
+        "browser_chrom": "chr5_mat_hsa6",
+        "start0": 39408542,
+        "end0": 44487238,
+        "aliases_checked": [
+          "CM054489.2",
+          "chr5_mat_hsa6",
+          "mPanPan1#M#chr5_mat_hsa6"
+        ],
+        "chrom_dictionary_matches": {}
+      },
+      {
+        "track": "PPAh2",
+        "browser_chrom": "chr5_pat_hsa6",
+        "start0": 43421688,
+        "end0": 48633595,
+        "aliases_checked": [
+          "5",
+          "CM054465.2",
+          "CM055477.2",
+          "NC_073254.2",
+          "chr5",
+          "chr5_pat_hsa6",
+          "hsa6",
+          "mPanPan1#P#chr5_pat_hsa6"
+        ],
+        "chrom_dictionary_matches": {
+          "CM055477.2": 191151712
+        }
+      }
+    ]
+  },
+  {
+    "species_id": "PPA",
+    "track": "TOGA_hg38",
+    "url": "https://genomeark.s3.amazonaws.com/species/Pan_paniscus/mPanPan1/assembly_curated/gene/HLTOGAannotVsHg38v1.bb",
+    "method": "HTTP Range first 65536 bytes; parse complete BigBed B+ chromosome dictionary; no model/chromosome filtering applied",
+    "http_status": 206,
+    "bytes_read": 65536,
+    "chroms": {
+      "chr10_mat_hsa12": 141815175,
+      "chr11_mat_hsa9": 124758961,
+      "chr12_mat_hsa2a": 126551469,
+      "chr13_mat_hsa2b": 144872268,
+      "chr14_pat_hsa13": 116126430,
+      "chr15_mat_hsa14": 108452746,
+      "chr16_pat_hsa15": 91859929,
+      "chr17_mat_hsa18": 98270466,
+      "chr18_pat_hsa16": 100427192,
+      "chr19_pat_hsa17": 100792412,
+      "chr1_pat_hsa1": 227705052,
+      "chr20_pat_hsa19": 70721293,
+      "chr21_mat_hsa20": 76791327,
+      "chr22_pat_hsa21": 48483276,
+      "chr23_pat_hsa22": 65052380,
+      "chr2_mat_hsa3": 196431891,
+      "chr3_pat_hsa4": 188614375,
+      "chr4_mat_hsa5": 176551333,
+      "chr5_pat_hsa6": 191151712,
+      "chr6_mat_hsa7": 196309857,
+      "chr7_pat_hsa8": 162793952,
+      "chr8_mat_hsa10": 147028407,
+      "chr9_pat_hsa11": 135750398,
+      "chrX_mat_hsaX": 160241051,
+      "chrY_pat_hsaY": 46954669
+    },
+    "hap_coverage": [
+      {
+        "track": "PPAh1",
+        "browser_chrom": "chr5_mat_hsa6",
+        "start0": 39408542,
+        "end0": 44487238,
+        "aliases_checked": [
+          "CM054489.2",
+          "chr5_mat_hsa6",
+          "mPanPan1#M#chr5_mat_hsa6"
+        ],
+        "chrom_dictionary_matches": {}
+      },
+      {
+        "track": "PPAh2",
+        "browser_chrom": "chr5_pat_hsa6",
+        "start0": 43421688,
+        "end0": 48633595,
+        "aliases_checked": [
+          "5",
+          "CM054465.2",
+          "CM055477.2",
+          "NC_073254.2",
+          "chr5",
+          "chr5_pat_hsa6",
+          "hsa6",
+          "mPanPan1#P#chr5_pat_hsa6"
+        ],
+        "chrom_dictionary_matches": {
+          "chr5_pat_hsa6": 191151712
+        }
+      }
+    ]
+  },
+  {
+    "species_id": "PPA",
+    "track": "TOGA_mm10",
+    "url": "https://genomeark.s3.amazonaws.com/species/Pan_paniscus/mPanPan1/assembly_curated/gene/HLTOGAannotVsMm10v1.bb",
+    "method": "HTTP Range first 65536 bytes; parse complete BigBed B+ chromosome dictionary; no model/chromosome filtering applied",
+    "http_status": 206,
+    "bytes_read": 65536,
+    "chroms": {
+      "chr10_mat_hsa12": 141815175,
+      "chr11_mat_hsa9": 124758961,
+      "chr12_mat_hsa2a": 126551469,
+      "chr13_mat_hsa2b": 144872268,
+      "chr14_pat_hsa13": 116126430,
+      "chr15_mat_hsa14": 108452746,
+      "chr16_pat_hsa15": 91859929,
+      "chr17_mat_hsa18": 98270466,
+      "chr18_pat_hsa16": 100427192,
+      "chr19_pat_hsa17": 100792412,
+      "chr1_pat_hsa1": 227705052,
+      "chr20_pat_hsa19": 70721293,
+      "chr21_mat_hsa20": 76791327,
+      "chr22_pat_hsa21": 48483276,
+      "chr23_pat_hsa22": 65052380,
+      "chr2_mat_hsa3": 196431891,
+      "chr3_pat_hsa4": 188614375,
+      "chr4_mat_hsa5": 176551333,
+      "chr5_pat_hsa6": 191151712,
+      "chr6_mat_hsa7": 196309857,
+      "chr7_pat_hsa8": 162793952,
+      "chr8_mat_hsa10": 147028407,
+      "chr9_pat_hsa11": 135750398,
+      "chrX_mat_hsaX": 160241051,
+      "chrY_pat_hsaY": 46954669
+    },
+    "hap_coverage": [
+      {
+        "track": "PPAh1",
+        "browser_chrom": "chr5_mat_hsa6",
+        "start0": 39408542,
+        "end0": 44487238,
+        "aliases_checked": [
+          "CM054489.2",
+          "chr5_mat_hsa6",
+          "mPanPan1#M#chr5_mat_hsa6"
+        ],
+        "chrom_dictionary_matches": {}
+      },
+      {
+        "track": "PPAh2",
+        "browser_chrom": "chr5_pat_hsa6",
+        "start0": 43421688,
+        "end0": 48633595,
+        "aliases_checked": [
+          "5",
+          "CM054465.2",
+          "CM055477.2",
+          "NC_073254.2",
+          "chr5",
+          "chr5_pat_hsa6",
+          "hsa6",
+          "mPanPan1#P#chr5_pat_hsa6"
+        ],
+        "chrom_dictionary_matches": {
+          "chr5_pat_hsa6": 191151712
+        }
+      }
+    ]
+  },
+  {
+    "species_id": "PPA",
+    "track": "CGL_CAT_v0.9",
+    "url": "https://cgl.gi.ucsc.edu/data/cactus/t2t-apes/8-t2t-apes-2023v2/annotations-v0.9/GCA_029289425.2.catAnnotation.bb",
+    "method": "HTTP Range first 65536 bytes; parse complete BigBed B+ chromosome dictionary; no model/chromosome filtering applied",
+    "http_status": 206,
+    "bytes_read": 65536,
+    "chroms": {
+      "CM055472.2": 227705052,
+      "CM055475.2": 188614375,
+      "CM055476.2": 176551333,
+      "CM055477.2": 191151712,
+      "CM055478.2": 196309857,
+      "CM055479.2": 162793952,
+      "CM055480.2": 147028407,
+      "CM055481.2": 135750398,
+      "CM055482.2": 141815175,
+      "CM055483.2": 124758961,
+      "CM055484.2": 126551469,
+      "CM055485.2": 144872268,
+      "CM055486.2": 116126430,
+      "CM055487.2": 108452746,
+      "CM055488.2": 91859929,
+      "CM055489.2": 98270466,
+      "CM055490.2": 100427192,
+      "CM055491.2": 100792412,
+      "CM055492.2": 70721293,
+      "CM055493.2": 76791327,
+      "CM055494.2": 48483276,
+      "CM055495.2": 160241051,
+      "CM055496.2": 46954669,
+      "CM068944.1": 196431891,
+      "CM068945.1": 65052380
+    },
+    "hap_coverage": [
+      {
+        "track": "PPAh1",
+        "browser_chrom": "chr5_mat_hsa6",
+        "start0": 39408542,
+        "end0": 44487238,
+        "aliases_checked": [
+          "CM054489.2",
+          "chr5_mat_hsa6",
+          "mPanPan1#M#chr5_mat_hsa6"
+        ],
+        "chrom_dictionary_matches": {}
+      },
+      {
+        "track": "PPAh2",
+        "browser_chrom": "chr5_pat_hsa6",
+        "start0": 43421688,
+        "end0": 48633595,
+        "aliases_checked": [
+          "5",
+          "CM054465.2",
+          "CM055477.2",
+          "NC_073254.2",
+          "chr5",
+          "chr5_pat_hsa6",
+          "hsa6",
+          "mPanPan1#P#chr5_pat_hsa6"
+        ],
+        "chrom_dictionary_matches": {
+          "CM055477.2": 191151712
+        }
+      }
+    ]
+  },
+  {
+    "species_id": "PPA",
+    "track": "CGL_CAT_v1.0",
+    "url": "https://cgl.gi.ucsc.edu/data/cactus/t2t-apes/8-t2t-apes-2023v2/annotations-v1.0/GCA_029289425.2.cat.bb",
+    "method": "HTTP Range first 65536 bytes; parse complete BigBed B+ chromosome dictionary; no model/chromosome filtering applied",
+    "http_status": 206,
+    "bytes_read": 65536,
+    "chroms": {
+      "CM055472.2": 227705052,
+      "CM055475.2": 188614375,
+      "CM055476.2": 176551333,
+      "CM055477.2": 191151712,
+      "CM055478.2": 196309857,
+      "CM055479.2": 162793952,
+      "CM055480.2": 147028407,
+      "CM055481.2": 135750398,
+      "CM055482.2": 141815175,
+      "CM055483.2": 124758961,
+      "CM055484.2": 126551469,
+      "CM055485.2": 144872268,
+      "CM055486.2": 116126430,
+      "CM055487.2": 108452746,
+      "CM055488.2": 91859929,
+      "CM055489.2": 98270466,
+      "CM055490.2": 100427192,
+      "CM055491.2": 100792412,
+      "CM055492.2": 70721293,
+      "CM055493.2": 76791327,
+      "CM055494.2": 48483276,
+      "CM055495.2": 160241051,
+      "CM055496.2": 46954669,
+      "CM068944.1": 196431891,
+      "CM068945.1": 65052380
+    },
+    "hap_coverage": [
+      {
+        "track": "PPAh1",
+        "browser_chrom": "chr5_mat_hsa6",
+        "start0": 39408542,
+        "end0": 44487238,
+        "aliases_checked": [
+          "CM054489.2",
+          "chr5_mat_hsa6",
+          "mPanPan1#M#chr5_mat_hsa6"
+        ],
+        "chrom_dictionary_matches": {}
+      },
+      {
+        "track": "PPAh2",
+        "browser_chrom": "chr5_pat_hsa6",
+        "start0": 43421688,
+        "end0": 48633595,
+        "aliases_checked": [
+          "5",
+          "CM054465.2",
+          "CM055477.2",
+          "NC_073254.2",
+          "chr5",
+          "chr5_pat_hsa6",
+          "hsa6",
+          "mPanPan1#P#chr5_pat_hsa6"
+        ],
+        "chrom_dictionary_matches": {
+          "CM055477.2": 191151712
+        }
+      }
+    ]
+  },
+  {
+    "species_id": "PPA",
+    "track": "refGene",
+    "url": "https://genomeark.s3.amazonaws.com/species/Pan_paniscus/mPanPan1/assembly_curated/gene/mPanPan1_refGene.bb",
+    "method": "HTTP Range first 65536 bytes; parse complete BigBed B+ chromosome dictionary; no model/chromosome filtering applied",
+    "http_status": 206,
+    "bytes_read": 65536,
+    "chroms": {
+      "MT": 16569,
+      "chr10_mat_hsa12": 141815175,
+      "chr11_mat_hsa9": 124758961,
+      "chr12_mat_hsa2a": 126551469,
+      "chr13_mat_hsa2b": 144872268,
+      "chr14_pat_hsa13": 116126430,
+      "chr15_mat_hsa14": 108452746,
+      "chr16_pat_hsa15": 91859929,
+      "chr17_mat_hsa18": 98270466,
+      "chr18_pat_hsa16": 100427192,
+      "chr19_pat_hsa17": 100792412,
+      "chr1_pat_hsa1": 227705052,
+      "chr20_pat_hsa19": 70721293,
+      "chr21_mat_hsa20": 76791327,
+      "chr22_pat_hsa21": 48483276,
+      "chr23_pat_hsa22": 65052380,
+      "chr2_mat_hsa3": 196431891,
+      "chr3_pat_hsa4": 188614375,
+      "chr4_mat_hsa5": 176551333,
+      "chr5_pat_hsa6": 191151712,
+      "chr6_mat_hsa7": 196309857,
+      "chr7_pat_hsa8": 162793952,
+      "chr8_mat_hsa10": 147028407,
+      "chr9_pat_hsa11": 135750398,
+      "chrX_mat_hsaX": 160241051,
+      "chrY_pat_hsaY": 46954669
+    },
+    "hap_coverage": [
+      {
+        "track": "PPAh1",
+        "browser_chrom": "chr5_mat_hsa6",
+        "start0": 39408542,
+        "end0": 44487238,
+        "aliases_checked": [
+          "CM054489.2",
+          "chr5_mat_hsa6",
+          "mPanPan1#M#chr5_mat_hsa6"
+        ],
+        "chrom_dictionary_matches": {}
+      },
+      {
+        "track": "PPAh2",
+        "browser_chrom": "chr5_pat_hsa6",
+        "start0": 43421688,
+        "end0": 48633595,
+        "aliases_checked": [
+          "5",
+          "CM054465.2",
+          "CM055477.2",
+          "NC_073254.2",
+          "chr5",
+          "chr5_pat_hsa6",
+          "hsa6",
+          "mPanPan1#P#chr5_pat_hsa6"
+        ],
+        "chrom_dictionary_matches": {
+          "chr5_pat_hsa6": 191151712
+        }
+      }
+    ]
+  },
+  {
+    "species_id": "PPA",
+    "track": "catGene",
+    "url": "https://genomeark.s3.amazonaws.com/species/Pan_paniscus/mPanPan1/assembly_curated/gene/mPanPan1_catAnnotation_v1.0.bb",
+    "method": "HTTP Range first 65536 bytes; parse complete BigBed B+ chromosome dictionary; no model/chromosome filtering applied",
+    "http_status": 206,
+    "bytes_read": 65536,
+    "chroms": {
+      "CM055472.2": 227705052,
+      "CM055475.2": 188614375,
+      "CM055476.2": 176551333,
+      "CM055477.2": 191151712,
+      "CM055478.2": 196309857,
+      "CM055479.2": 162793952,
+      "CM055480.2": 147028407,
+      "CM055481.2": 135750398,
+      "CM055482.2": 141815175,
+      "CM055483.2": 124758961,
+      "CM055484.2": 126551469,
+      "CM055485.2": 144872268,
+      "CM055486.2": 116126430,
+      "CM055487.2": 108452746,
+      "CM055488.2": 91859929,
+      "CM055489.2": 98270466,
+      "CM055490.2": 100427192,
+      "CM055491.2": 100792412,
+      "CM055492.2": 70721293,
+      "CM055493.2": 76791327,
+      "CM055494.2": 48483276,
+      "CM055495.2": 160241051,
+      "CM055496.2": 46954669,
+      "CM068944.1": 196431891,
+      "CM068945.1": 65052380
+    },
+    "hap_coverage": [
+      {
+        "track": "PPAh1",
+        "browser_chrom": "chr5_mat_hsa6",
+        "start0": 39408542,
+        "end0": 44487238,
+        "aliases_checked": [
+          "CM054489.2",
+          "chr5_mat_hsa6",
+          "mPanPan1#M#chr5_mat_hsa6"
+        ],
+        "chrom_dictionary_matches": {}
+      },
+      {
+        "track": "PPAh2",
+        "browser_chrom": "chr5_pat_hsa6",
+        "start0": 43421688,
+        "end0": 48633595,
+        "aliases_checked": [
+          "5",
+          "CM054465.2",
+          "CM055477.2",
+          "NC_073254.2",
+          "chr5",
+          "chr5_pat_hsa6",
+          "hsa6",
+          "mPanPan1#P#chr5_pat_hsa6"
+        ],
+        "chrom_dictionary_matches": {
+          "CM055477.2": 191151712
+        }
+      }
+    ]
+  },
+  {
+    "species_id": "GGO",
+    "track": "catRefGene",
+    "url": "https://genomeark.s3.amazonaws.com/species/Gorilla_gorilla/mGorGor1/assembly_curated/gene/mGorGor1_v2.0_CatRefConsensus_v3.bb",
+    "method": "HTTP Range first 65536 bytes; parse complete BigBed B+ chromosome dictionary; no model/chromosome filtering applied",
+    "http_status": 206,
+    "bytes_read": 65536,
+    "chroms": {
+      "CM055446.2": 243847345,
+      "CM055449.2": 215373162,
+      "CM055450.2": 195332687,
+      "CM055451.2": 199452338,
+      "CM055452.2": 170803427,
+      "CM055453.2": 158533252,
+      "CM055454.2": 150804130,
+      "CM055455.2": 147876701,
+      "CM055456.2": 154228409,
+      "CM055457.2": 150248535,
+      "CM055458.2": 145906006,
+      "CM055459.2": 134695396,
+      "CM055460.2": 132018348,
+      "CM055461.2": 131692671,
+      "CM055462.2": 107915467,
+      "CM055463.2": 116054869,
+      "CM055464.2": 131347499,
+      "CM055465.2": 120452965,
+      "CM055466.2": 80312928,
+      "CM055467.2": 84443219,
+      "CM055468.2": 59507314,
+      "CM055469.2": 177558554,
+      "CM055470.2": 67405748,
+      "CM068950.1": 215253457,
+      "CM068951.1": 54769797
+    },
+    "hap_coverage": [
+      {
+        "track": "GGOh1",
+        "browser_chrom": "chr5_mat_hsa6",
+        "start0": 46448788,
+        "end0": 51895738,
+        "aliases_checked": [
+          "5",
+          "CM054587.2",
+          "CM055451.2",
+          "NC_073229.2",
+          "chr5",
+          "chr5_mat_hsa6",
+          "hsa6",
+          "mGorGor1#M#chr5_mat_hsa6"
+        ],
+        "chrom_dictionary_matches": {
+          "CM055451.2": 199452338
+        }
+      },
+      {
+        "track": "GGOh2",
+        "browser_chrom": "chr5_pat_hsa6",
+        "start0": 38874988,
+        "end0": 44233933,
+        "aliases_checked": [
+          "CM054563.2",
+          "chr5_pat_hsa6",
+          "mGorGor1#P#chr5_pat_hsa6"
+        ],
+        "chrom_dictionary_matches": {}
+      }
+    ]
+  },
+  {
+    "species_id": "GGO",
+    "track": "cat_v0.9",
+    "url": "https://genomeark.s3.amazonaws.com/species/Gorilla_gorilla/mGorGor1/assembly_curated/gene/mGorGor1_catAnnotation_v0.9.bb",
+    "method": "HTTP Range first 65536 bytes; parse complete BigBed B+ chromosome dictionary; no model/chromosome filtering applied",
+    "http_status": 206,
+    "bytes_read": 65536,
+    "chroms": {
+      "CM055446.2": 243847345,
+      "CM055449.2": 215373162,
+      "CM055450.2": 195332687,
+      "CM055451.2": 199452338,
+      "CM055452.2": 170803427,
+      "CM055453.2": 158533252,
+      "CM055454.2": 150804130,
+      "CM055455.2": 147876701,
+      "CM055456.2": 154228409,
+      "CM055457.2": 150248535,
+      "CM055458.2": 145906006,
+      "CM055459.2": 134695396,
+      "CM055460.2": 132018348,
+      "CM055461.2": 131692671,
+      "CM055462.2": 107915467,
+      "CM055463.2": 116054869,
+      "CM055464.2": 131347499,
+      "CM055465.2": 120452965,
+      "CM055466.2": 80312928,
+      "CM055467.2": 84443219,
+      "CM055468.2": 59507314,
+      "CM055469.2": 177558554,
+      "CM055470.2": 67405748,
+      "CM068950.1": 215253457,
+      "CM068951.1": 54769797
+    },
+    "hap_coverage": [
+      {
+        "track": "GGOh1",
+        "browser_chrom": "chr5_mat_hsa6",
+        "start0": 46448788,
+        "end0": 51895738,
+        "aliases_checked": [
+          "5",
+          "CM054587.2",
+          "CM055451.2",
+          "NC_073229.2",
+          "chr5",
+          "chr5_mat_hsa6",
+          "hsa6",
+          "mGorGor1#M#chr5_mat_hsa6"
+        ],
+        "chrom_dictionary_matches": {
+          "CM055451.2": 199452338
+        }
+      },
+      {
+        "track": "GGOh2",
+        "browser_chrom": "chr5_pat_hsa6",
+        "start0": 38874988,
+        "end0": 44233933,
+        "aliases_checked": [
+          "CM054563.2",
+          "chr5_pat_hsa6",
+          "mGorGor1#P#chr5_pat_hsa6"
+        ],
+        "chrom_dictionary_matches": {}
+      }
+    ]
+  },
+  {
+    "species_id": "GGO",
+    "track": "TOGA_hg38",
+    "url": "https://genomeark.s3.amazonaws.com/species/Gorilla_gorilla/mGorGor1/assembly_curated/gene/HLTOGAannotVsHg38v1.bb",
+    "method": "HTTP Range first 65536 bytes; parse complete BigBed B+ chromosome dictionary; no model/chromosome filtering applied",
+    "http_status": 206,
+    "bytes_read": 65536,
+    "chroms": {
+      "chr10_mat_hsa12": 154228409,
+      "chr11_mat_hsa2b": 150248535,
+      "chr12_pat_hsa2a": 145906006,
+      "chr13_pat_hsa9": 134695396,
+      "chr14_pat_hsa13": 132018348,
+      "chr15_pat_hsa14": 131692671,
+      "chr16_pat_hsa15": 107915467,
+      "chr17_mat_hsa18": 116054869,
+      "chr18_pat_hsa16": 131347499,
+      "chr19_pat_hsa5x17": 120452965,
+      "chr1_pat_hsa1": 243847345,
+      "chr20_mat_hsa19": 80312928,
+      "chr21_pat_hsa20": 84443219,
+      "chr22_mat_hsa21": 59507314,
+      "chr23_mat_hsa22": 54769797,
+      "chr2_pat_hsa3": 215253457,
+      "chr3_pat_hsa4": 215373162,
+      "chr4_pat_hsa17x5": 195332687,
+      "chr5_mat_hsa6": 199452338,
+      "chr6_mat_hsa7": 170803427,
+      "chr7_pat_hsa8": 158533252,
+      "chr8_pat_hsa10": 150804130,
+      "chr9_pat_hsa11": 147876701,
+      "chrX_mat_hsaX": 177558554,
+      "chrY_pat_hsaY": 67405748
+    },
+    "hap_coverage": [
+      {
+        "track": "GGOh1",
+        "browser_chrom": "chr5_mat_hsa6",
+        "start0": 46448788,
+        "end0": 51895738,
+        "aliases_checked": [
+          "5",
+          "CM054587.2",
+          "CM055451.2",
+          "NC_073229.2",
+          "chr5",
+          "chr5_mat_hsa6",
+          "hsa6",
+          "mGorGor1#M#chr5_mat_hsa6"
+        ],
+        "chrom_dictionary_matches": {
+          "chr5_mat_hsa6": 199452338
+        }
+      },
+      {
+        "track": "GGOh2",
+        "browser_chrom": "chr5_pat_hsa6",
+        "start0": 38874988,
+        "end0": 44233933,
+        "aliases_checked": [
+          "CM054563.2",
+          "chr5_pat_hsa6",
+          "mGorGor1#P#chr5_pat_hsa6"
+        ],
+        "chrom_dictionary_matches": {}
+      }
+    ]
+  },
+  {
+    "species_id": "GGO",
+    "track": "TOGA_mm10",
+    "url": "https://genomeark.s3.amazonaws.com/species/Gorilla_gorilla/mGorGor1/assembly_curated/gene/HLTOGAannotVsMm10v1.bb",
+    "method": "HTTP Range first 65536 bytes; parse complete BigBed B+ chromosome dictionary; no model/chromosome filtering applied",
+    "http_status": 206,
+    "bytes_read": 65536,
+    "chroms": {
+      "chr10_mat_hsa12": 154228409,
+      "chr11_mat_hsa2b": 150248535,
+      "chr12_pat_hsa2a": 145906006,
+      "chr13_pat_hsa9": 134695396,
+      "chr14_pat_hsa13": 132018348,
+      "chr15_pat_hsa14": 131692671,
+      "chr16_pat_hsa15": 107915467,
+      "chr17_mat_hsa18": 116054869,
+      "chr18_pat_hsa16": 131347499,
+      "chr19_pat_hsa5x17": 120452965,
+      "chr1_pat_hsa1": 243847345,
+      "chr20_mat_hsa19": 80312928,
+      "chr21_pat_hsa20": 84443219,
+      "chr22_mat_hsa21": 59507314,
+      "chr23_mat_hsa22": 54769797,
+      "chr2_pat_hsa3": 215253457,
+      "chr3_pat_hsa4": 215373162,
+      "chr4_pat_hsa17x5": 195332687,
+      "chr5_mat_hsa6": 199452338,
+      "chr6_mat_hsa7": 170803427,
+      "chr7_pat_hsa8": 158533252,
+      "chr8_pat_hsa10": 150804130,
+      "chr9_pat_hsa11": 147876701,
+      "chrX_mat_hsaX": 177558554,
+      "chrY_pat_hsaY": 67405748
+    },
+    "hap_coverage": [
+      {
+        "track": "GGOh1",
+        "browser_chrom": "chr5_mat_hsa6",
+        "start0": 46448788,
+        "end0": 51895738,
+        "aliases_checked": [
+          "5",
+          "CM054587.2",
+          "CM055451.2",
+          "NC_073229.2",
+          "chr5",
+          "chr5_mat_hsa6",
+          "hsa6",
+          "mGorGor1#M#chr5_mat_hsa6"
+        ],
+        "chrom_dictionary_matches": {
+          "chr5_mat_hsa6": 199452338
+        }
+      },
+      {
+        "track": "GGOh2",
+        "browser_chrom": "chr5_pat_hsa6",
+        "start0": 38874988,
+        "end0": 44233933,
+        "aliases_checked": [
+          "CM054563.2",
+          "chr5_pat_hsa6",
+          "mGorGor1#P#chr5_pat_hsa6"
+        ],
+        "chrom_dictionary_matches": {}
+      }
+    ]
+  },
+  {
+    "species_id": "GGO",
+    "track": "CGL_CAT_v0.9",
+    "url": "https://cgl.gi.ucsc.edu/data/cactus/t2t-apes/8-t2t-apes-2023v2/annotations-v0.9/GCA_029281585.2.catAnnotation.bb",
+    "method": "HTTP Range first 65536 bytes; parse complete BigBed B+ chromosome dictionary; no model/chromosome filtering applied",
+    "http_status": 206,
+    "bytes_read": 65536,
+    "chroms": {
+      "CM055446.2": 243847345,
+      "CM055449.2": 215373162,
+      "CM055450.2": 195332687,
+      "CM055451.2": 199452338,
+      "CM055452.2": 170803427,
+      "CM055453.2": 158533252,
+      "CM055454.2": 150804130,
+      "CM055455.2": 147876701,
+      "CM055456.2": 154228409,
+      "CM055457.2": 150248535,
+      "CM055458.2": 145906006,
+      "CM055459.2": 134695396,
+      "CM055460.2": 132018348,
+      "CM055461.2": 131692671,
+      "CM055462.2": 107915467,
+      "CM055463.2": 116054869,
+      "CM055464.2": 131347499,
+      "CM055465.2": 120452965,
+      "CM055466.2": 80312928,
+      "CM055467.2": 84443219,
+      "CM055468.2": 59507314,
+      "CM055469.2": 177558554,
+      "CM055470.2": 67405748,
+      "CM068950.1": 215253457,
+      "CM068951.1": 54769797
+    },
+    "hap_coverage": [
+      {
+        "track": "GGOh1",
+        "browser_chrom": "chr5_mat_hsa6",
+        "start0": 46448788,
+        "end0": 51895738,
+        "aliases_checked": [
+          "5",
+          "CM054587.2",
+          "CM055451.2",
+          "NC_073229.2",
+          "chr5",
+          "chr5_mat_hsa6",
+          "hsa6",
+          "mGorGor1#M#chr5_mat_hsa6"
+        ],
+        "chrom_dictionary_matches": {
+          "CM055451.2": 199452338
+        }
+      },
+      {
+        "track": "GGOh2",
+        "browser_chrom": "chr5_pat_hsa6",
+        "start0": 38874988,
+        "end0": 44233933,
+        "aliases_checked": [
+          "CM054563.2",
+          "chr5_pat_hsa6",
+          "mGorGor1#P#chr5_pat_hsa6"
+        ],
+        "chrom_dictionary_matches": {}
+      }
+    ]
+  },
+  {
+    "species_id": "GGO",
+    "track": "CGL_CAT_v1.0",
+    "url": "https://cgl.gi.ucsc.edu/data/cactus/t2t-apes/8-t2t-apes-2023v2/annotations-v1.0/GCA_029281585.2.cat.bb",
+    "method": "HTTP Range first 65536 bytes; parse complete BigBed B+ chromosome dictionary; no model/chromosome filtering applied",
+    "http_status": 206,
+    "bytes_read": 65536,
+    "chroms": {
+      "CM055446.2": 243847345,
+      "CM055449.2": 215373162,
+      "CM055450.2": 195332687,
+      "CM055451.2": 199452338,
+      "CM055452.2": 170803427,
+      "CM055453.2": 158533252,
+      "CM055454.2": 150804130,
+      "CM055455.2": 147876701,
+      "CM055456.2": 154228409,
+      "CM055457.2": 150248535,
+      "CM055458.2": 145906006,
+      "CM055459.2": 134695396,
+      "CM055460.2": 132018348,
+      "CM055461.2": 131692671,
+      "CM055462.2": 107915467,
+      "CM055463.2": 116054869,
+      "CM055464.2": 131347499,
+      "CM055465.2": 120452965,
+      "CM055466.2": 80312928,
+      "CM055467.2": 84443219,
+      "CM055468.2": 59507314,
+      "CM055469.2": 177558554,
+      "CM055470.2": 67405748,
+      "CM068950.1": 215253457,
+      "CM068951.1": 54769797
+    },
+    "hap_coverage": [
+      {
+        "track": "GGOh1",
+        "browser_chrom": "chr5_mat_hsa6",
+        "start0": 46448788,
+        "end0": 51895738,
+        "aliases_checked": [
+          "5",
+          "CM054587.2",
+          "CM055451.2",
+          "NC_073229.2",
+          "chr5",
+          "chr5_mat_hsa6",
+          "hsa6",
+          "mGorGor1#M#chr5_mat_hsa6"
+        ],
+        "chrom_dictionary_matches": {
+          "CM055451.2": 199452338
+        }
+      },
+      {
+        "track": "GGOh2",
+        "browser_chrom": "chr5_pat_hsa6",
+        "start0": 38874988,
+        "end0": 44233933,
+        "aliases_checked": [
+          "CM054563.2",
+          "chr5_pat_hsa6",
+          "mGorGor1#P#chr5_pat_hsa6"
+        ],
+        "chrom_dictionary_matches": {}
+      }
+    ]
+  },
+  {
+    "species_id": "GGO",
+    "track": "refGene",
+    "url": "https://genomeark.s3.amazonaws.com/species/Gorilla_gorilla/mGorGor1/assembly_curated/gene/mGorGor1_refGene.bb",
+    "method": "HTTP Range first 65536 bytes; parse complete BigBed B+ chromosome dictionary; no model/chromosome filtering applied",
+    "http_status": 206,
+    "bytes_read": 65536,
+    "chroms": {
+      "MT": 16407,
+      "chr10_mat_hsa12": 154228409,
+      "chr11_mat_hsa2b": 150248535,
+      "chr12_pat_hsa2a": 145906006,
+      "chr13_pat_hsa9": 134695396,
+      "chr14_pat_hsa13": 132018348,
+      "chr15_pat_hsa14": 131692671,
+      "chr16_pat_hsa15": 107915467,
+      "chr17_mat_hsa18": 116054869,
+      "chr18_pat_hsa16": 131347499,
+      "chr19_pat_hsa5x17": 120452965,
+      "chr1_pat_hsa1": 243847345,
+      "chr20_mat_hsa19": 80312928,
+      "chr21_pat_hsa20": 84443219,
+      "chr22_mat_hsa21": 59507314,
+      "chr23_mat_hsa22": 54769797,
+      "chr2_pat_hsa3": 215253457,
+      "chr3_pat_hsa4": 215373162,
+      "chr4_pat_hsa17x5": 195332687,
+      "chr5_mat_hsa6": 199452338,
+      "chr6_mat_hsa7": 170803427,
+      "chr7_pat_hsa8": 158533252,
+      "chr8_pat_hsa10": 150804130,
+      "chr9_pat_hsa11": 147876701,
+      "chrX_mat_hsaX": 177558554,
+      "chrY_pat_hsaY": 67405748
+    },
+    "hap_coverage": [
+      {
+        "track": "GGOh1",
+        "browser_chrom": "chr5_mat_hsa6",
+        "start0": 46448788,
+        "end0": 51895738,
+        "aliases_checked": [
+          "5",
+          "CM054587.2",
+          "CM055451.2",
+          "NC_073229.2",
+          "chr5",
+          "chr5_mat_hsa6",
+          "hsa6",
+          "mGorGor1#M#chr5_mat_hsa6"
+        ],
+        "chrom_dictionary_matches": {
+          "chr5_mat_hsa6": 199452338
+        }
+      },
+      {
+        "track": "GGOh2",
+        "browser_chrom": "chr5_pat_hsa6",
+        "start0": 38874988,
+        "end0": 44233933,
+        "aliases_checked": [
+          "CM054563.2",
+          "chr5_pat_hsa6",
+          "mGorGor1#P#chr5_pat_hsa6"
+        ],
+        "chrom_dictionary_matches": {}
+      }
+    ]
+  },
+  {
+    "species_id": "GGO",
+    "track": "catGene",
+    "url": "https://genomeark.s3.amazonaws.com/species/Gorilla_gorilla/mGorGor1/assembly_curated/gene/mGorGor1_catAnnotation_v1.0.bb",
+    "method": "HTTP Range first 65536 bytes; parse complete BigBed B+ chromosome dictionary; no model/chromosome filtering applied",
+    "http_status": 206,
+    "bytes_read": 65536,
+    "chroms": {
+      "CM055446.2": 243847345,
+      "CM055449.2": 215373162,
+      "CM055450.2": 195332687,
+      "CM055451.2": 199452338,
+      "CM055452.2": 170803427,
+      "CM055453.2": 158533252,
+      "CM055454.2": 150804130,
+      "CM055455.2": 147876701,
+      "CM055456.2": 154228409,
+      "CM055457.2": 150248535,
+      "CM055458.2": 145906006,
+      "CM055459.2": 134695396,
+      "CM055460.2": 132018348,
+      "CM055461.2": 131692671,
+      "CM055462.2": 107915467,
+      "CM055463.2": 116054869,
+      "CM055464.2": 131347499,
+      "CM055465.2": 120452965,
+      "CM055466.2": 80312928,
+      "CM055467.2": 84443219,
+      "CM055468.2": 59507314,
+      "CM055469.2": 177558554,
+      "CM055470.2": 67405748,
+      "CM068950.1": 215253457,
+      "CM068951.1": 54769797
+    },
+    "hap_coverage": [
+      {
+        "track": "GGOh1",
+        "browser_chrom": "chr5_mat_hsa6",
+        "start0": 46448788,
+        "end0": 51895738,
+        "aliases_checked": [
+          "5",
+          "CM054587.2",
+          "CM055451.2",
+          "NC_073229.2",
+          "chr5",
+          "chr5_mat_hsa6",
+          "hsa6",
+          "mGorGor1#M#chr5_mat_hsa6"
+        ],
+        "chrom_dictionary_matches": {
+          "CM055451.2": 199452338
+        }
+      },
+      {
+        "track": "GGOh2",
+        "browser_chrom": "chr5_pat_hsa6",
+        "start0": 38874988,
+        "end0": 44233933,
+        "aliases_checked": [
+          "CM054563.2",
+          "chr5_pat_hsa6",
+          "mGorGor1#P#chr5_pat_hsa6"
+        ],
+        "chrom_dictionary_matches": {}
+      }
+    ]
+  },
+  {
+    "species_id": "PAB",
+    "track": "catRefGene",
+    "url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/gene/mPonAbe1_v2.0_CatRefConsensus_v3.bb",
+    "method": "HTTP Range first 65536 bytes; parse complete BigBed B+ chromosome dictionary; no model/chromosome filtering applied",
+    "http_status": 206,
+    "bytes_read": 65536,
+    "chroms": {
+      "CM054679.2": 233795519,
+      "CM054682.2": 212916775,
+      "CM054683.2": 190378904,
+      "CM054684.2": 172605363,
+      "CM054685.2": 156966991,
+      "CM054686.2": 161631396,
+      "CM054687.2": 140854135,
+      "CM054688.2": 138471021,
+      "CM054689.2": 132281717,
+      "CM054690.2": 146197178,
+      "CM054691.2": 133183124,
+      "CM054692.2": 129618170,
+      "CM054693.2": 120579848,
+      "CM054694.2": 111741659,
+      "CM054695.2": 105333845,
+      "CM054696.2": 95460129,
+      "CM054697.2": 89553113,
+      "CM054698.2": 98669288,
+      "CM054699.2": 65400147,
+      "CM054700.2": 68750668,
+      "CM054701.2": 57143103,
+      "CM054702.2": 162586321,
+      "CM054703.2": 67827326,
+      "CM068843.1": 209544987,
+      "CM068844.1": 57593421,
+      "JAQQLQ020000020.1": 133200
+    },
+    "hap_coverage": [
+      {
+        "track": "PABh1",
+        "browser_chrom": "chr5_hap1_hsa6",
+        "start0": 28698133,
+        "end0": 34402409,
+        "aliases_checked": [
+          "5",
+          "CM054684.2",
+          "NC_071990.2",
+          "chr5",
+          "chr5_hap1_hsa6",
+          "hsa6",
+          "mPonAbe1#1#chr5_hap1_hsa6"
+        ],
+        "chrom_dictionary_matches": {
+          "CM054684.2": 172605363
+        }
+      },
+      {
+        "track": "PABh2",
+        "browser_chrom": "chr5_hap2_hsa6",
+        "start0": 28697494,
+        "end0": 34321984,
+        "aliases_checked": [
+          "CM054661.2",
+          "chr5_hap2_hsa6",
+          "mPonAbe1#2#chr5_hap2_hsa6"
+        ],
+        "chrom_dictionary_matches": {}
+      }
+    ]
+  },
+  {
+    "species_id": "PAB",
+    "track": "cat_v0.9",
+    "url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/gene/mPonAbe1_catAnnotation_v0.9.bb",
+    "method": "HTTP Range first 65536 bytes; parse complete BigBed B+ chromosome dictionary; no model/chromosome filtering applied",
+    "http_status": 206,
+    "bytes_read": 65536,
+    "chroms": {
+      "CM054679.2": 233795519,
+      "CM054682.2": 212916775,
+      "CM054683.2": 190378904,
+      "CM054684.2": 172605363,
+      "CM054685.2": 156966991,
+      "CM054686.2": 161631396,
+      "CM054687.2": 140854135,
+      "CM054688.2": 138471021,
+      "CM054689.2": 132281717,
+      "CM054690.2": 146197178,
+      "CM054691.2": 133183124,
+      "CM054692.2": 129618170,
+      "CM054693.2": 120579848,
+      "CM054694.2": 111741659,
+      "CM054695.2": 105333845,
+      "CM054696.2": 95460129,
+      "CM054697.2": 89553113,
+      "CM054698.2": 98669288,
+      "CM054699.2": 65400147,
+      "CM054700.2": 68750668,
+      "CM054701.2": 57143103,
+      "CM054702.2": 162586321,
+      "CM054703.2": 67827326,
+      "CM068843.1": 209544987,
+      "CM068844.1": 57593421,
+      "JAQQLQ020000019.1": 221508,
+      "JAQQLQ020000020.1": 133200,
+      "JAQQLQ020000021.1": 115212,
+      "JAQQLQ020000022.1": 299462
+    },
+    "hap_coverage": [
+      {
+        "track": "PABh1",
+        "browser_chrom": "chr5_hap1_hsa6",
+        "start0": 28698133,
+        "end0": 34402409,
+        "aliases_checked": [
+          "5",
+          "CM054684.2",
+          "NC_071990.2",
+          "chr5",
+          "chr5_hap1_hsa6",
+          "hsa6",
+          "mPonAbe1#1#chr5_hap1_hsa6"
+        ],
+        "chrom_dictionary_matches": {
+          "CM054684.2": 172605363
+        }
+      },
+      {
+        "track": "PABh2",
+        "browser_chrom": "chr5_hap2_hsa6",
+        "start0": 28697494,
+        "end0": 34321984,
+        "aliases_checked": [
+          "CM054661.2",
+          "chr5_hap2_hsa6",
+          "mPonAbe1#2#chr5_hap2_hsa6"
+        ],
+        "chrom_dictionary_matches": {}
+      }
+    ]
+  },
+  {
+    "species_id": "PAB",
+    "track": "TOGA_hg38",
+    "url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/gene/HLTOGAannotVsHg38v1.bb",
+    "method": "HTTP Range first 65536 bytes; parse complete BigBed B+ chromosome dictionary; no model/chromosome filtering applied",
+    "http_status": 206,
+    "bytes_read": 65536,
+    "chroms": {
+      "chr10_hap1_hsa12": 132281717,
+      "chr11_hap1_hsa2b": 146197178,
+      "chr12_hap1_hsa2a": 133183124,
+      "chr13_hap1_hsa9": 129618170,
+      "chr14_hap1_hsa13": 120579848,
+      "chr15_hap1_hsa14": 111741659,
+      "chr16_hap1_hsa15": 105333845,
+      "chr17_hap1_hsa18": 95460129,
+      "chr18_hap1_hsa16": 89553113,
+      "chr18_hap1_hsa16_random_utig4-1074": 221508,
+      "chr18_hap1_hsa16_random_utig4-1076": 133200,
+      "chr18_hap1_hsa16_random_utig4-3743": 115212,
+      "chr18_hap1_hsa16_random_utig4-3745": 299462,
+      "chr19_hap1_hsa17": 98669288,
+      "chr1_hap1_hsa1": 233795519,
+      "chr20_hap1_hsa19": 65400147,
+      "chr21_hap1_hsa20": 68750668,
+      "chr22_hap1_hsa21": 57143103,
+      "chr23_hap1_hsa22": 57593421,
+      "chr2_hap1_hsa3": 209544987,
+      "chr3_hap1_hsa4": 212916775,
+      "chr4_hap1_hsa5": 190378904,
+      "chr5_hap1_hsa6": 172605363,
+      "chr6_hap1_hsa7": 156966991,
+      "chr7_hap1_hsa8": 161631396,
+      "chr8_hap1_hsa10": 140854135,
+      "chr9_hap1_hsa11": 138471021,
+      "chrX_hap1_hsaX": 162586321,
+      "chrY_hap2_hsaY": 67827326
+    },
+    "hap_coverage": [
+      {
+        "track": "PABh1",
+        "browser_chrom": "chr5_hap1_hsa6",
+        "start0": 28698133,
+        "end0": 34402409,
+        "aliases_checked": [
+          "5",
+          "CM054684.2",
+          "NC_071990.2",
+          "chr5",
+          "chr5_hap1_hsa6",
+          "hsa6",
+          "mPonAbe1#1#chr5_hap1_hsa6"
+        ],
+        "chrom_dictionary_matches": {
+          "chr5_hap1_hsa6": 172605363
+        }
+      },
+      {
+        "track": "PABh2",
+        "browser_chrom": "chr5_hap2_hsa6",
+        "start0": 28697494,
+        "end0": 34321984,
+        "aliases_checked": [
+          "CM054661.2",
+          "chr5_hap2_hsa6",
+          "mPonAbe1#2#chr5_hap2_hsa6"
+        ],
+        "chrom_dictionary_matches": {}
+      }
+    ]
+  },
+  {
+    "species_id": "PAB",
+    "track": "TOGA_mm10",
+    "url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/gene/HLTOGAannotVsMm10v1.bb",
+    "method": "HTTP Range first 65536 bytes; parse complete BigBed B+ chromosome dictionary; no model/chromosome filtering applied",
+    "http_status": 206,
+    "bytes_read": 65536,
+    "chroms": {
+      "chr10_hap1_hsa12": 132281717,
+      "chr11_hap1_hsa2b": 146197178,
+      "chr12_hap1_hsa2a": 133183124,
+      "chr13_hap1_hsa9": 129618170,
+      "chr14_hap1_hsa13": 120579848,
+      "chr15_hap1_hsa14": 111741659,
+      "chr16_hap1_hsa15": 105333845,
+      "chr17_hap1_hsa18": 95460129,
+      "chr18_hap1_hsa16": 89553113,
+      "chr18_hap1_hsa16_random_utig4-1074": 221508,
+      "chr18_hap1_hsa16_random_utig4-1076": 133200,
+      "chr18_hap1_hsa16_random_utig4-3743": 115212,
+      "chr18_hap1_hsa16_random_utig4-3745": 299462,
+      "chr19_hap1_hsa17": 98669288,
+      "chr1_hap1_hsa1": 233795519,
+      "chr20_hap1_hsa19": 65400147,
+      "chr21_hap1_hsa20": 68750668,
+      "chr22_hap1_hsa21": 57143103,
+      "chr23_hap1_hsa22": 57593421,
+      "chr2_hap1_hsa3": 209544987,
+      "chr3_hap1_hsa4": 212916775,
+      "chr4_hap1_hsa5": 190378904,
+      "chr5_hap1_hsa6": 172605363,
+      "chr6_hap1_hsa7": 156966991,
+      "chr7_hap1_hsa8": 161631396,
+      "chr8_hap1_hsa10": 140854135,
+      "chr9_hap1_hsa11": 138471021,
+      "chrX_hap1_hsaX": 162586321,
+      "chrY_hap2_hsaY": 67827326
+    },
+    "hap_coverage": [
+      {
+        "track": "PABh1",
+        "browser_chrom": "chr5_hap1_hsa6",
+        "start0": 28698133,
+        "end0": 34402409,
+        "aliases_checked": [
+          "5",
+          "CM054684.2",
+          "NC_071990.2",
+          "chr5",
+          "chr5_hap1_hsa6",
+          "hsa6",
+          "mPonAbe1#1#chr5_hap1_hsa6"
+        ],
+        "chrom_dictionary_matches": {
+          "chr5_hap1_hsa6": 172605363
+        }
+      },
+      {
+        "track": "PABh2",
+        "browser_chrom": "chr5_hap2_hsa6",
+        "start0": 28697494,
+        "end0": 34321984,
+        "aliases_checked": [
+          "CM054661.2",
+          "chr5_hap2_hsa6",
+          "mPonAbe1#2#chr5_hap2_hsa6"
+        ],
+        "chrom_dictionary_matches": {}
+      }
+    ]
+  },
+  {
+    "species_id": "PAB",
+    "track": "CGL_CAT_v0.9",
+    "url": "https://cgl.gi.ucsc.edu/data/cactus/t2t-apes/8-t2t-apes-2023v2/annotations-v0.9/GCA_028885655.2.catAnnotation.bb",
+    "method": "HTTP Range first 65536 bytes; parse complete BigBed B+ chromosome dictionary; no model/chromosome filtering applied",
+    "http_status": 206,
+    "bytes_read": 65536,
+    "chroms": {
+      "CM054679.2": 233795519,
+      "CM054682.2": 212916775,
+      "CM054683.2": 190378904,
+      "CM054684.2": 172605363,
+      "CM054685.2": 156966991,
+      "CM054686.2": 161631396,
+      "CM054687.2": 140854135,
+      "CM054688.2": 138471021,
+      "CM054689.2": 132281717,
+      "CM054690.2": 146197178,
+      "CM054691.2": 133183124,
+      "CM054692.2": 129618170,
+      "CM054693.2": 120579848,
+      "CM054694.2": 111741659,
+      "CM054695.2": 105333845,
+      "CM054696.2": 95460129,
+      "CM054697.2": 89553113,
+      "CM054698.2": 98669288,
+      "CM054699.2": 65400147,
+      "CM054700.2": 68750668,
+      "CM054701.2": 57143103,
+      "CM054702.2": 162586321,
+      "CM054703.2": 67827326,
+      "CM068843.1": 209544987,
+      "CM068844.1": 57593421,
+      "JAQQLQ020000019.1": 221508,
+      "JAQQLQ020000020.1": 133200,
+      "JAQQLQ020000021.1": 115212,
+      "JAQQLQ020000022.1": 299462
+    },
+    "hap_coverage": [
+      {
+        "track": "PABh1",
+        "browser_chrom": "chr5_hap1_hsa6",
+        "start0": 28698133,
+        "end0": 34402409,
+        "aliases_checked": [
+          "5",
+          "CM054684.2",
+          "NC_071990.2",
+          "chr5",
+          "chr5_hap1_hsa6",
+          "hsa6",
+          "mPonAbe1#1#chr5_hap1_hsa6"
+        ],
+        "chrom_dictionary_matches": {
+          "CM054684.2": 172605363
+        }
+      },
+      {
+        "track": "PABh2",
+        "browser_chrom": "chr5_hap2_hsa6",
+        "start0": 28697494,
+        "end0": 34321984,
+        "aliases_checked": [
+          "CM054661.2",
+          "chr5_hap2_hsa6",
+          "mPonAbe1#2#chr5_hap2_hsa6"
+        ],
+        "chrom_dictionary_matches": {}
+      }
+    ]
+  },
+  {
+    "species_id": "PAB",
+    "track": "CGL_CAT_v1.0",
+    "url": "https://cgl.gi.ucsc.edu/data/cactus/t2t-apes/8-t2t-apes-2023v2/annotations-v1.0/GCA_028885655.2.cat.bb",
+    "method": "HTTP Range first 65536 bytes; parse complete BigBed B+ chromosome dictionary; no model/chromosome filtering applied",
+    "http_status": 206,
+    "bytes_read": 65536,
+    "chroms": {
+      "CM054679.2": 233795519,
+      "CM054682.2": 212916775,
+      "CM054683.2": 190378904,
+      "CM054684.2": 172605363,
+      "CM054685.2": 156966991,
+      "CM054686.2": 161631396,
+      "CM054687.2": 140854135,
+      "CM054688.2": 138471021,
+      "CM054689.2": 132281717,
+      "CM054690.2": 146197178,
+      "CM054691.2": 133183124,
+      "CM054692.2": 129618170,
+      "CM054693.2": 120579848,
+      "CM054694.2": 111741659,
+      "CM054695.2": 105333845,
+      "CM054696.2": 95460129,
+      "CM054697.2": 89553113,
+      "CM054698.2": 98669288,
+      "CM054699.2": 65400147,
+      "CM054700.2": 68750668,
+      "CM054701.2": 57143103,
+      "CM054702.2": 162586321,
+      "CM054703.2": 67827326,
+      "CM068843.1": 209544987,
+      "CM068844.1": 57593421,
+      "JAQQLQ020000019.1": 221508,
+      "JAQQLQ020000020.1": 133200,
+      "JAQQLQ020000021.1": 115212,
+      "JAQQLQ020000022.1": 299462
+    },
+    "hap_coverage": [
+      {
+        "track": "PABh1",
+        "browser_chrom": "chr5_hap1_hsa6",
+        "start0": 28698133,
+        "end0": 34402409,
+        "aliases_checked": [
+          "5",
+          "CM054684.2",
+          "NC_071990.2",
+          "chr5",
+          "chr5_hap1_hsa6",
+          "hsa6",
+          "mPonAbe1#1#chr5_hap1_hsa6"
+        ],
+        "chrom_dictionary_matches": {
+          "CM054684.2": 172605363
+        }
+      },
+      {
+        "track": "PABh2",
+        "browser_chrom": "chr5_hap2_hsa6",
+        "start0": 28697494,
+        "end0": 34321984,
+        "aliases_checked": [
+          "CM054661.2",
+          "chr5_hap2_hsa6",
+          "mPonAbe1#2#chr5_hap2_hsa6"
+        ],
+        "chrom_dictionary_matches": {}
+      }
+    ]
+  },
+  {
+    "species_id": "PAB",
+    "track": "refGene",
+    "url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/gene/mPonAbe1_refGene.bb",
+    "method": "HTTP Range first 65536 bytes; parse complete BigBed B+ chromosome dictionary; no model/chromosome filtering applied",
+    "http_status": 206,
+    "bytes_read": 65536,
+    "chroms": {
+      "MT": 16496,
+      "chr10_hap1_hsa12": 132281717,
+      "chr11_hap1_hsa2b": 146197178,
+      "chr12_hap1_hsa2a": 133183124,
+      "chr13_hap1_hsa9": 129618170,
+      "chr14_hap1_hsa13": 120579848,
+      "chr15_hap1_hsa14": 111741659,
+      "chr16_hap1_hsa15": 105333845,
+      "chr17_hap1_hsa18": 95460129,
+      "chr18_hap1_hsa16": 89553113,
+      "chr18_hap1_hsa16_random_utig4-1074": 221508,
+      "chr18_hap1_hsa16_random_utig4-1076": 133200,
+      "chr18_hap1_hsa16_random_utig4-3743": 115212,
+      "chr18_hap1_hsa16_random_utig4-3745": 299462,
+      "chr19_hap1_hsa17": 98669288,
+      "chr1_hap1_hsa1": 233795519,
+      "chr20_hap1_hsa19": 65400147,
+      "chr21_hap1_hsa20": 68750668,
+      "chr22_hap1_hsa21": 57143103,
+      "chr23_hap1_hsa22": 57593421,
+      "chr2_hap1_hsa3": 209544987,
+      "chr3_hap1_hsa4": 212916775,
+      "chr4_hap1_hsa5": 190378904,
+      "chr5_hap1_hsa6": 172605363,
+      "chr6_hap1_hsa7": 156966991,
+      "chr7_hap1_hsa8": 161631396,
+      "chr8_hap1_hsa10": 140854135,
+      "chr9_hap1_hsa11": 138471021,
+      "chrX_hap1_hsaX": 162586321,
+      "chrY_hap2_hsaY": 67827326
+    },
+    "hap_coverage": [
+      {
+        "track": "PABh1",
+        "browser_chrom": "chr5_hap1_hsa6",
+        "start0": 28698133,
+        "end0": 34402409,
+        "aliases_checked": [
+          "5",
+          "CM054684.2",
+          "NC_071990.2",
+          "chr5",
+          "chr5_hap1_hsa6",
+          "hsa6",
+          "mPonAbe1#1#chr5_hap1_hsa6"
+        ],
+        "chrom_dictionary_matches": {
+          "chr5_hap1_hsa6": 172605363
+        }
+      },
+      {
+        "track": "PABh2",
+        "browser_chrom": "chr5_hap2_hsa6",
+        "start0": 28697494,
+        "end0": 34321984,
+        "aliases_checked": [
+          "CM054661.2",
+          "chr5_hap2_hsa6",
+          "mPonAbe1#2#chr5_hap2_hsa6"
+        ],
+        "chrom_dictionary_matches": {}
+      }
+    ]
+  },
+  {
+    "species_id": "PAB",
+    "track": "catGene",
+    "url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/gene/mPonAbe1_catAnnotation_v1.0.bb",
+    "method": "HTTP Range first 65536 bytes; parse complete BigBed B+ chromosome dictionary; no model/chromosome filtering applied",
+    "http_status": 206,
+    "bytes_read": 65536,
+    "chroms": {
+      "CM054679.2": 233795519,
+      "CM054682.2": 212916775,
+      "CM054683.2": 190378904,
+      "CM054684.2": 172605363,
+      "CM054685.2": 156966991,
+      "CM054686.2": 161631396,
+      "CM054687.2": 140854135,
+      "CM054688.2": 138471021,
+      "CM054689.2": 132281717,
+      "CM054690.2": 146197178,
+      "CM054691.2": 133183124,
+      "CM054692.2": 129618170,
+      "CM054693.2": 120579848,
+      "CM054694.2": 111741659,
+      "CM054695.2": 105333845,
+      "CM054696.2": 95460129,
+      "CM054697.2": 89553113,
+      "CM054698.2": 98669288,
+      "CM054699.2": 65400147,
+      "CM054700.2": 68750668,
+      "CM054701.2": 57143103,
+      "CM054702.2": 162586321,
+      "CM054703.2": 67827326,
+      "CM068843.1": 209544987,
+      "CM068844.1": 57593421,
+      "JAQQLQ020000019.1": 221508,
+      "JAQQLQ020000020.1": 133200,
+      "JAQQLQ020000021.1": 115212,
+      "JAQQLQ020000022.1": 299462
+    },
+    "hap_coverage": [
+      {
+        "track": "PABh1",
+        "browser_chrom": "chr5_hap1_hsa6",
+        "start0": 28698133,
+        "end0": 34402409,
+        "aliases_checked": [
+          "5",
+          "CM054684.2",
+          "NC_071990.2",
+          "chr5",
+          "chr5_hap1_hsa6",
+          "hsa6",
+          "mPonAbe1#1#chr5_hap1_hsa6"
+        ],
+        "chrom_dictionary_matches": {
+          "CM054684.2": 172605363
+        }
+      },
+      {
+        "track": "PABh2",
+        "browser_chrom": "chr5_hap2_hsa6",
+        "start0": 28697494,
+        "end0": 34321984,
+        "aliases_checked": [
+          "CM054661.2",
+          "chr5_hap2_hsa6",
+          "mPonAbe1#2#chr5_hap2_hsa6"
+        ],
+        "chrom_dictionary_matches": {}
+      }
+    ]
+  },
+  {
+    "species_id": "PPY",
+    "track": "catRefGene",
+    "url": "https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/gene/mPonPyg2_v2.0_CatRefConsensus_v3.bb",
+    "method": "HTTP Range first 65536 bytes; parse complete BigBed B+ chromosome dictionary; no model/chromosome filtering applied",
+    "http_status": 206,
+    "bytes_read": 65536,
+    "chroms": {
+      "CM054630.2": 230807400,
+      "CM054633.2": 203829688,
+      "CM054634.2": 186348328,
+      "CM054635.2": 171334878,
+      "CM054636.2": 158534780,
+      "CM054637.2": 158152001,
+      "CM054638.2": 139209255,
+      "CM054639.2": 137033130,
+      "CM054640.2": 132184685,
+      "CM054641.2": 143261986,
+      "CM054642.2": 134313182,
+      "CM054643.2": 128999004,
+      "CM054644.2": 124308952,
+      "CM054645.2": 106409199,
+      "CM054646.2": 107891546,
+      "CM054647.2": 95557242,
+      "CM054648.2": 87425153,
+      "CM054649.2": 101496854,
+      "CM054650.2": 65241172,
+      "CM054651.2": 67026804,
+      "CM054652.2": 59678711,
+      "CM054653.2": 160969493,
+      "CM054654.2": 49419398,
+      "CM068907.1": 209442601,
+      "CM068908.1": 62059721
+    },
+    "hap_coverage": [
+      {
+        "track": "PPYh1",
+        "browser_chrom": "chr5_hap1_hsa6",
+        "start0": 28708357,
+        "end0": 34513199,
+        "aliases_checked": [
+          "5",
+          "CM054635.2",
+          "NC_072378.2",
+          "chr5",
+          "chr5_hap1_hsa6",
+          "hsa6",
+          "mPonPyg2#1#chr5_hap1_hsa6"
+        ],
+        "chrom_dictionary_matches": {
+          "CM054635.2": 171334878
+        }
+      },
+      {
+        "track": "PPYh2",
+        "browser_chrom": "chr5_hap2_hsa6",
+        "start0": 28710772,
+        "end0": 34509381,
+        "aliases_checked": [
+          "CM054612.2",
+          "chr5_hap2_hsa6",
+          "mPonPyg2#2#chr5_hap2_hsa6"
+        ],
+        "chrom_dictionary_matches": {}
+      }
+    ]
+  },
+  {
+    "species_id": "PPY",
+    "track": "cat_v0.9",
+    "url": "https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/gene/mPonPyg2_catAnnotation_v0.9.bb",
+    "method": "HTTP Range first 65536 bytes; parse complete BigBed B+ chromosome dictionary; no model/chromosome filtering applied",
+    "http_status": 206,
+    "bytes_read": 65536,
+    "chroms": {
+      "CM054630.2": 230807400,
+      "CM054633.2": 203829688,
+      "CM054634.2": 186348328,
+      "CM054635.2": 171334878,
+      "CM054636.2": 158534780,
+      "CM054637.2": 158152001,
+      "CM054638.2": 139209255,
+      "CM054639.2": 137033130,
+      "CM054640.2": 132184685,
+      "CM054641.2": 143261986,
+      "CM054642.2": 134313182,
+      "CM054643.2": 128999004,
+      "CM054644.2": 124308952,
+      "CM054645.2": 106409199,
+      "CM054646.2": 107891546,
+      "CM054647.2": 95557242,
+      "CM054648.2": 87425153,
+      "CM054649.2": 101496854,
+      "CM054650.2": 65241172,
+      "CM054651.2": 67026804,
+      "CM054652.2": 59678711,
+      "CM054653.2": 160969493,
+      "CM054654.2": 49419398,
+      "CM068907.1": 209442601,
+      "CM068908.1": 62059721
+    },
+    "hap_coverage": [
+      {
+        "track": "PPYh1",
+        "browser_chrom": "chr5_hap1_hsa6",
+        "start0": 28708357,
+        "end0": 34513199,
+        "aliases_checked": [
+          "5",
+          "CM054635.2",
+          "NC_072378.2",
+          "chr5",
+          "chr5_hap1_hsa6",
+          "hsa6",
+          "mPonPyg2#1#chr5_hap1_hsa6"
+        ],
+        "chrom_dictionary_matches": {
+          "CM054635.2": 171334878
+        }
+      },
+      {
+        "track": "PPYh2",
+        "browser_chrom": "chr5_hap2_hsa6",
+        "start0": 28710772,
+        "end0": 34509381,
+        "aliases_checked": [
+          "CM054612.2",
+          "chr5_hap2_hsa6",
+          "mPonPyg2#2#chr5_hap2_hsa6"
+        ],
+        "chrom_dictionary_matches": {}
+      }
+    ]
+  },
+  {
+    "species_id": "PPY",
+    "track": "TOGA_hg38",
+    "url": "https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/gene/HLTOGAannotVsHg38v1.bb",
+    "method": "HTTP Range first 65536 bytes; parse complete BigBed B+ chromosome dictionary; no model/chromosome filtering applied",
+    "http_status": 206,
+    "bytes_read": 65536,
+    "chroms": {
+      "chr10_hap1_hsa12": 132184685,
+      "chr11_hap1_hsa2b": 143261986,
+      "chr12_hap1_hsa2a": 134313182,
+      "chr13_hap1_hsa9": 128999004,
+      "chr14_hap1_hsa13": 124308952,
+      "chr15_hap1_hsa14": 106409199,
+      "chr16_hap1_hsa15": 107891546,
+      "chr17_hap1_hsa18": 95557242,
+      "chr18_hap1_hsa16": 87425153,
+      "chr19_hap1_hsa17": 101496854,
+      "chr1_hap1_hsa1": 230807400,
+      "chr20_hap1_hsa19": 65241172,
+      "chr21_hap1_hsa20": 67026804,
+      "chr22_hap1_hsa21": 59678711,
+      "chr23_hap1_hsa22": 62059721,
+      "chr2_hap1_hsa3": 209442601,
+      "chr3_hap1_hsa4": 203829688,
+      "chr4_hap1_hsa5": 186348328,
+      "chr5_hap1_hsa6": 171334878,
+      "chr6_hap1_hsa7": 158534780,
+      "chr7_hap1_hsa8": 158152001,
+      "chr8_hap1_hsa10": 139209255,
+      "chr9_hap1_hsa11": 137033130,
+      "chrX_hap1_hsaX": 160969493,
+      "chrY_hap2_hsaY": 49419398
+    },
+    "hap_coverage": [
+      {
+        "track": "PPYh1",
+        "browser_chrom": "chr5_hap1_hsa6",
+        "start0": 28708357,
+        "end0": 34513199,
+        "aliases_checked": [
+          "5",
+          "CM054635.2",
+          "NC_072378.2",
+          "chr5",
+          "chr5_hap1_hsa6",
+          "hsa6",
+          "mPonPyg2#1#chr5_hap1_hsa6"
+        ],
+        "chrom_dictionary_matches": {
+          "chr5_hap1_hsa6": 171334878
+        }
+      },
+      {
+        "track": "PPYh2",
+        "browser_chrom": "chr5_hap2_hsa6",
+        "start0": 28710772,
+        "end0": 34509381,
+        "aliases_checked": [
+          "CM054612.2",
+          "chr5_hap2_hsa6",
+          "mPonPyg2#2#chr5_hap2_hsa6"
+        ],
+        "chrom_dictionary_matches": {}
+      }
+    ]
+  },
+  {
+    "species_id": "PPY",
+    "track": "TOGA_mm10",
+    "url": "https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/gene/HLTOGAannotVsMm10v1.bb",
+    "method": "HTTP Range first 65536 bytes; parse complete BigBed B+ chromosome dictionary; no model/chromosome filtering applied",
+    "http_status": 206,
+    "bytes_read": 65536,
+    "chroms": {
+      "chr10_hap1_hsa12": 132184685,
+      "chr11_hap1_hsa2b": 143261986,
+      "chr12_hap1_hsa2a": 134313182,
+      "chr13_hap1_hsa9": 128999004,
+      "chr14_hap1_hsa13": 124308952,
+      "chr15_hap1_hsa14": 106409199,
+      "chr16_hap1_hsa15": 107891546,
+      "chr17_hap1_hsa18": 95557242,
+      "chr18_hap1_hsa16": 87425153,
+      "chr19_hap1_hsa17": 101496854,
+      "chr1_hap1_hsa1": 230807400,
+      "chr20_hap1_hsa19": 65241172,
+      "chr21_hap1_hsa20": 67026804,
+      "chr22_hap1_hsa21": 59678711,
+      "chr23_hap1_hsa22": 62059721,
+      "chr2_hap1_hsa3": 209442601,
+      "chr3_hap1_hsa4": 203829688,
+      "chr4_hap1_hsa5": 186348328,
+      "chr5_hap1_hsa6": 171334878,
+      "chr6_hap1_hsa7": 158534780,
+      "chr7_hap1_hsa8": 158152001,
+      "chr8_hap1_hsa10": 139209255,
+      "chr9_hap1_hsa11": 137033130,
+      "chrX_hap1_hsaX": 160969493,
+      "chrY_hap2_hsaY": 49419398
+    },
+    "hap_coverage": [
+      {
+        "track": "PPYh1",
+        "browser_chrom": "chr5_hap1_hsa6",
+        "start0": 28708357,
+        "end0": 34513199,
+        "aliases_checked": [
+          "5",
+          "CM054635.2",
+          "NC_072378.2",
+          "chr5",
+          "chr5_hap1_hsa6",
+          "hsa6",
+          "mPonPyg2#1#chr5_hap1_hsa6"
+        ],
+        "chrom_dictionary_matches": {
+          "chr5_hap1_hsa6": 171334878
+        }
+      },
+      {
+        "track": "PPYh2",
+        "browser_chrom": "chr5_hap2_hsa6",
+        "start0": 28710772,
+        "end0": 34509381,
+        "aliases_checked": [
+          "CM054612.2",
+          "chr5_hap2_hsa6",
+          "mPonPyg2#2#chr5_hap2_hsa6"
+        ],
+        "chrom_dictionary_matches": {}
+      }
+    ]
+  },
+  {
+    "species_id": "PPY",
+    "track": "CGL_CAT_v0.9",
+    "url": "https://cgl.gi.ucsc.edu/data/cactus/t2t-apes/8-t2t-apes-2023v2/annotations-v0.9/GCA_028885625.2.catAnnotation.bb",
+    "method": "HTTP Range first 65536 bytes; parse complete BigBed B+ chromosome dictionary; no model/chromosome filtering applied",
+    "http_status": 206,
+    "bytes_read": 65536,
+    "chroms": {
+      "CM054630.2": 230807400,
+      "CM054633.2": 203829688,
+      "CM054634.2": 186348328,
+      "CM054635.2": 171334878,
+      "CM054636.2": 158534780,
+      "CM054637.2": 158152001,
+      "CM054638.2": 139209255,
+      "CM054639.2": 137033130,
+      "CM054640.2": 132184685,
+      "CM054641.2": 143261986,
+      "CM054642.2": 134313182,
+      "CM054643.2": 128999004,
+      "CM054644.2": 124308952,
+      "CM054645.2": 106409199,
+      "CM054646.2": 107891546,
+      "CM054647.2": 95557242,
+      "CM054648.2": 87425153,
+      "CM054649.2": 101496854,
+      "CM054650.2": 65241172,
+      "CM054651.2": 67026804,
+      "CM054652.2": 59678711,
+      "CM054653.2": 160969493,
+      "CM054654.2": 49419398,
+      "CM068907.1": 209442601,
+      "CM068908.1": 62059721
+    },
+    "hap_coverage": [
+      {
+        "track": "PPYh1",
+        "browser_chrom": "chr5_hap1_hsa6",
+        "start0": 28708357,
+        "end0": 34513199,
+        "aliases_checked": [
+          "5",
+          "CM054635.2",
+          "NC_072378.2",
+          "chr5",
+          "chr5_hap1_hsa6",
+          "hsa6",
+          "mPonPyg2#1#chr5_hap1_hsa6"
+        ],
+        "chrom_dictionary_matches": {
+          "CM054635.2": 171334878
+        }
+      },
+      {
+        "track": "PPYh2",
+        "browser_chrom": "chr5_hap2_hsa6",
+        "start0": 28710772,
+        "end0": 34509381,
+        "aliases_checked": [
+          "CM054612.2",
+          "chr5_hap2_hsa6",
+          "mPonPyg2#2#chr5_hap2_hsa6"
+        ],
+        "chrom_dictionary_matches": {}
+      }
+    ]
+  },
+  {
+    "species_id": "PPY",
+    "track": "CGL_CAT_v1.0",
+    "url": "https://cgl.gi.ucsc.edu/data/cactus/t2t-apes/8-t2t-apes-2023v2/annotations-v1.0/GCA_028885625.2.cat.bb",
+    "method": "HTTP Range first 65536 bytes; parse complete BigBed B+ chromosome dictionary; no model/chromosome filtering applied",
+    "http_status": 206,
+    "bytes_read": 65536,
+    "chroms": {
+      "CM054630.2": 230807400,
+      "CM054633.2": 203829688,
+      "CM054634.2": 186348328,
+      "CM054635.2": 171334878,
+      "CM054636.2": 158534780,
+      "CM054637.2": 158152001,
+      "CM054638.2": 139209255,
+      "CM054639.2": 137033130,
+      "CM054640.2": 132184685,
+      "CM054641.2": 143261986,
+      "CM054642.2": 134313182,
+      "CM054643.2": 128999004,
+      "CM054644.2": 124308952,
+      "CM054645.2": 106409199,
+      "CM054646.2": 107891546,
+      "CM054647.2": 95557242,
+      "CM054648.2": 87425153,
+      "CM054649.2": 101496854,
+      "CM054650.2": 65241172,
+      "CM054651.2": 67026804,
+      "CM054652.2": 59678711,
+      "CM054653.2": 160969493,
+      "CM054654.2": 49419398,
+      "CM068907.1": 209442601,
+      "CM068908.1": 62059721
+    },
+    "hap_coverage": [
+      {
+        "track": "PPYh1",
+        "browser_chrom": "chr5_hap1_hsa6",
+        "start0": 28708357,
+        "end0": 34513199,
+        "aliases_checked": [
+          "5",
+          "CM054635.2",
+          "NC_072378.2",
+          "chr5",
+          "chr5_hap1_hsa6",
+          "hsa6",
+          "mPonPyg2#1#chr5_hap1_hsa6"
+        ],
+        "chrom_dictionary_matches": {
+          "CM054635.2": 171334878
+        }
+      },
+      {
+        "track": "PPYh2",
+        "browser_chrom": "chr5_hap2_hsa6",
+        "start0": 28710772,
+        "end0": 34509381,
+        "aliases_checked": [
+          "CM054612.2",
+          "chr5_hap2_hsa6",
+          "mPonPyg2#2#chr5_hap2_hsa6"
+        ],
+        "chrom_dictionary_matches": {}
+      }
+    ]
+  },
+  {
+    "species_id": "PPY",
+    "track": "refGene",
+    "url": "https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/gene/mPonPyg2_refGene.bb",
+    "method": "HTTP Range first 65536 bytes; parse complete BigBed B+ chromosome dictionary; no model/chromosome filtering applied",
+    "http_status": 206,
+    "bytes_read": 65536,
+    "chroms": {
+      "MT": 16461,
+      "chr10_hap1_hsa12": 132184685,
+      "chr11_hap1_hsa2b": 143261986,
+      "chr12_hap1_hsa2a": 134313182,
+      "chr13_hap1_hsa9": 128999004,
+      "chr14_hap1_hsa13": 124308952,
+      "chr15_hap1_hsa14": 106409199,
+      "chr16_hap1_hsa15": 107891546,
+      "chr17_hap1_hsa18": 95557242,
+      "chr18_hap1_hsa16": 87425153,
+      "chr19_hap1_hsa17": 101496854,
+      "chr1_hap1_hsa1": 230807400,
+      "chr20_hap1_hsa19": 65241172,
+      "chr21_hap1_hsa20": 67026804,
+      "chr22_hap1_hsa21": 59678711,
+      "chr23_hap1_hsa22": 62059721,
+      "chr2_hap1_hsa3": 209442601,
+      "chr3_hap1_hsa4": 203829688,
+      "chr4_hap1_hsa5": 186348328,
+      "chr5_hap1_hsa6": 171334878,
+      "chr6_hap1_hsa7": 158534780,
+      "chr7_hap1_hsa8": 158152001,
+      "chr8_hap1_hsa10": 139209255,
+      "chr9_hap1_hsa11": 137033130,
+      "chrX_hap1_hsaX": 160969493,
+      "chrY_hap2_hsaY": 49419398
+    },
+    "hap_coverage": [
+      {
+        "track": "PPYh1",
+        "browser_chrom": "chr5_hap1_hsa6",
+        "start0": 28708357,
+        "end0": 34513199,
+        "aliases_checked": [
+          "5",
+          "CM054635.2",
+          "NC_072378.2",
+          "chr5",
+          "chr5_hap1_hsa6",
+          "hsa6",
+          "mPonPyg2#1#chr5_hap1_hsa6"
+        ],
+        "chrom_dictionary_matches": {
+          "chr5_hap1_hsa6": 171334878
+        }
+      },
+      {
+        "track": "PPYh2",
+        "browser_chrom": "chr5_hap2_hsa6",
+        "start0": 28710772,
+        "end0": 34509381,
+        "aliases_checked": [
+          "CM054612.2",
+          "chr5_hap2_hsa6",
+          "mPonPyg2#2#chr5_hap2_hsa6"
+        ],
+        "chrom_dictionary_matches": {}
+      }
+    ]
+  },
+  {
+    "species_id": "PPY",
+    "track": "catGene",
+    "url": "https://genomeark.s3.amazonaws.com/species/Pongo_pygmaeus/mPonPyg2/assembly_curated/gene/mPonPyg2_catAnnotation_v1.0.bb",
+    "method": "HTTP Range first 65536 bytes; parse complete BigBed B+ chromosome dictionary; no model/chromosome filtering applied",
+    "http_status": 206,
+    "bytes_read": 65536,
+    "chroms": {
+      "CM054630.2": 230807400,
+      "CM054633.2": 203829688,
+      "CM054634.2": 186348328,
+      "CM054635.2": 171334878,
+      "CM054636.2": 158534780,
+      "CM054637.2": 158152001,
+      "CM054638.2": 139209255,
+      "CM054639.2": 137033130,
+      "CM054640.2": 132184685,
+      "CM054641.2": 143261986,
+      "CM054642.2": 134313182,
+      "CM054643.2": 128999004,
+      "CM054644.2": 124308952,
+      "CM054645.2": 106409199,
+      "CM054646.2": 107891546,
+      "CM054647.2": 95557242,
+      "CM054648.2": 87425153,
+      "CM054649.2": 101496854,
+      "CM054650.2": 65241172,
+      "CM054651.2": 67026804,
+      "CM054652.2": 59678711,
+      "CM054653.2": 160969493,
+      "CM054654.2": 49419398,
+      "CM068907.1": 209442601,
+      "CM068908.1": 62059721
+    },
+    "hap_coverage": [
+      {
+        "track": "PPYh1",
+        "browser_chrom": "chr5_hap1_hsa6",
+        "start0": 28708357,
+        "end0": 34513199,
+        "aliases_checked": [
+          "5",
+          "CM054635.2",
+          "NC_072378.2",
+          "chr5",
+          "chr5_hap1_hsa6",
+          "hsa6",
+          "mPonPyg2#1#chr5_hap1_hsa6"
+        ],
+        "chrom_dictionary_matches": {
+          "CM054635.2": 171334878
+        }
+      },
+      {
+        "track": "PPYh2",
+        "browser_chrom": "chr5_hap2_hsa6",
+        "start0": 28710772,
+        "end0": 34509381,
+        "aliases_checked": [
+          "CM054612.2",
+          "chr5_hap2_hsa6",
+          "mPonPyg2#2#chr5_hap2_hsa6"
+        ],
+        "chrom_dictionary_matches": {}
+      }
+    ]
+  },
+  {
+    "species_id": "SSY",
+    "track": "catRefGene",
+    "url": "https://genomeark.s3.amazonaws.com/species/Symphalangus_syndactylus/mSymSyn1/assembly_curated/gene/mSymSyn1_v2.0_CatRefConsensus_v3.bb",
+    "method": "HTTP Range first 65536 bytes; parse complete BigBed B+ chromosome dictionary; no model/chromosome filtering applied",
+    "http_status": 206,
+    "bytes_read": 65536,
+    "chroms": {
+      "CM054509.2": 167654734,
+      "CM054510.2": 154079787,
+      "CM054511.2": 160054556,
+      "CM054512.2": 167252203,
+      "CM054513.2": 161705797,
+      "CM054514.2": 154842609,
+      "CM054515.2": 154492986,
+      "CM054516.2": 153293009,
+      "CM054517.2": 147755551,
+      "CM054518.2": 141396425,
+      "CM054519.2": 142585216,
+      "CM054520.2": 98029838,
+      "CM054521.2": 136159655,
+      "CM054522.2": 124962429,
+      "CM054523.2": 120311650,
+      "CM054524.2": 111298303,
+      "CM054525.2": 106261908,
+      "CM054526.2": 111959805,
+      "CM054527.2": 146713733,
+      "CM054528.2": 72981805,
+      "CM054529.2": 95096135,
+      "CM054530.2": 80751072,
+      "CM054531.2": 78312223,
+      "CM054532.2": 79424044,
+      "CM054533.2": 165573899,
+      "CM054534.2": 29938336
+    },
+    "hap_coverage": [
+      {
+        "track": "SSYh1",
+        "browser_chrom": "chr23_hap1",
+        "start0": 37530567,
+        "end0": 42365376,
+        "aliases_checked": [
+          "23",
+          "CM054531.2",
+          "NC_072445.2",
+          "chr23",
+          "chr23_hap1",
+          "mSymSyn1#1#chr23_hap1"
+        ],
+        "chrom_dictionary_matches": {
+          "CM054531.2": 78312223
+        }
+      },
+      {
+        "track": "SSYh2",
+        "browser_chrom": "chr23_hap2",
+        "start0": 33263362,
+        "end0": 38051052,
+        "aliases_checked": [
+          "CM054556.2",
+          "chr23_hap2",
+          "mSymSyn1#2#chr23_hap2"
+        ],
+        "chrom_dictionary_matches": {}
+      }
+    ]
+  },
+  {
+    "species_id": "SSY",
+    "track": "cat_v0.9",
+    "url": "https://genomeark.s3.amazonaws.com/species/Symphalangus_syndactylus/mSymSyn1/assembly_curated/gene/mSymSyn1_catAnnotation_v0.9.bb",
+    "method": "HTTP Range first 65536 bytes; parse complete BigBed B+ chromosome dictionary; no model/chromosome filtering applied",
+    "http_status": 206,
+    "bytes_read": 65536,
+    "chroms": {
+      "CM054509.2": 167654734,
+      "CM054510.2": 154079787,
+      "CM054511.2": 160054556,
+      "CM054512.2": 167252203,
+      "CM054513.2": 161705797,
+      "CM054514.2": 154842609,
+      "CM054515.2": 154492986,
+      "CM054516.2": 153293009,
+      "CM054517.2": 147755551,
+      "CM054518.2": 141396425,
+      "CM054519.2": 142585216,
+      "CM054520.2": 98029838,
+      "CM054521.2": 136159655,
+      "CM054522.2": 124962429,
+      "CM054523.2": 120311650,
+      "CM054524.2": 111298303,
+      "CM054525.2": 106261908,
+      "CM054526.2": 111959805,
+      "CM054527.2": 146713733,
+      "CM054528.2": 72981805,
+      "CM054529.2": 95096135,
+      "CM054530.2": 80751072,
+      "CM054531.2": 78312223,
+      "CM054532.2": 79424044,
+      "CM054533.2": 165573899,
+      "CM054534.2": 29938336
+    },
+    "hap_coverage": [
+      {
+        "track": "SSYh1",
+        "browser_chrom": "chr23_hap1",
+        "start0": 37530567,
+        "end0": 42365376,
+        "aliases_checked": [
+          "23",
+          "CM054531.2",
+          "NC_072445.2",
+          "chr23",
+          "chr23_hap1",
+          "mSymSyn1#1#chr23_hap1"
+        ],
+        "chrom_dictionary_matches": {
+          "CM054531.2": 78312223
+        }
+      },
+      {
+        "track": "SSYh2",
+        "browser_chrom": "chr23_hap2",
+        "start0": 33263362,
+        "end0": 38051052,
+        "aliases_checked": [
+          "CM054556.2",
+          "chr23_hap2",
+          "mSymSyn1#2#chr23_hap2"
+        ],
+        "chrom_dictionary_matches": {}
+      }
+    ]
+  },
+  {
+    "species_id": "SSY",
+    "track": "TOGA_hg38",
+    "url": "https://genomeark.s3.amazonaws.com/species/Symphalangus_syndactylus/mSymSyn1/assembly_curated/gene/HLTOGAannotVsHg38v1.bb",
+    "method": "HTTP Range first 65536 bytes; parse complete BigBed B+ chromosome dictionary; no model/chromosome filtering applied",
+    "http_status": 206,
+    "bytes_read": 65536,
+    "chroms": {
+      "chr10_hap1": 141396425,
+      "chr11_hap1": 142585216,
+      "chr12_hap1": 98029838,
+      "chr13_hap1": 136159655,
+      "chr14_hap1": 124962429,
+      "chr15_hap1": 120311650,
+      "chr16_hap1": 111298303,
+      "chr17_hap1": 106261908,
+      "chr18_hap1": 111959805,
+      "chr19_hap1": 146713733,
+      "chr1_hap1": 167654734,
+      "chr20_hap1": 72981805,
+      "chr21_hap1": 95096135,
+      "chr22_hap1": 80751072,
+      "chr23_hap1": 78312223,
+      "chr24_hap1": 79424044,
+      "chr2_hap1": 154079787,
+      "chr3_hap1": 160054556,
+      "chr4_hap1": 167252203,
+      "chr5_hap1": 161705797,
+      "chr6_hap1": 154842609,
+      "chr7_hap1": 154492986,
+      "chr8_hap1": 153293009,
+      "chr9_hap1": 147755551,
+      "chrX_hap1": 165573899,
+      "chrY_hap2": 29938336
+    },
+    "hap_coverage": [
+      {
+        "track": "SSYh1",
+        "browser_chrom": "chr23_hap1",
+        "start0": 37530567,
+        "end0": 42365376,
+        "aliases_checked": [
+          "23",
+          "CM054531.2",
+          "NC_072445.2",
+          "chr23",
+          "chr23_hap1",
+          "mSymSyn1#1#chr23_hap1"
+        ],
+        "chrom_dictionary_matches": {
+          "chr23_hap1": 78312223
+        }
+      },
+      {
+        "track": "SSYh2",
+        "browser_chrom": "chr23_hap2",
+        "start0": 33263362,
+        "end0": 38051052,
+        "aliases_checked": [
+          "CM054556.2",
+          "chr23_hap2",
+          "mSymSyn1#2#chr23_hap2"
+        ],
+        "chrom_dictionary_matches": {}
+      }
+    ]
+  },
+  {
+    "species_id": "SSY",
+    "track": "TOGA_mm10",
+    "url": "https://genomeark.s3.amazonaws.com/species/Symphalangus_syndactylus/mSymSyn1/assembly_curated/gene/HLTOGAannotVsMm10v1.bb",
+    "method": "HTTP Range first 65536 bytes; parse complete BigBed B+ chromosome dictionary; no model/chromosome filtering applied",
+    "http_status": 206,
+    "bytes_read": 65536,
+    "chroms": {
+      "chr10_hap1": 141396425,
+      "chr11_hap1": 142585216,
+      "chr12_hap1": 98029838,
+      "chr13_hap1": 136159655,
+      "chr14_hap1": 124962429,
+      "chr15_hap1": 120311650,
+      "chr16_hap1": 111298303,
+      "chr17_hap1": 106261908,
+      "chr18_hap1": 111959805,
+      "chr19_hap1": 146713733,
+      "chr1_hap1": 167654734,
+      "chr20_hap1": 72981805,
+      "chr21_hap1": 95096135,
+      "chr22_hap1": 80751072,
+      "chr23_hap1": 78312223,
+      "chr24_hap1": 79424044,
+      "chr2_hap1": 154079787,
+      "chr3_hap1": 160054556,
+      "chr4_hap1": 167252203,
+      "chr5_hap1": 161705797,
+      "chr6_hap1": 154842609,
+      "chr7_hap1": 154492986,
+      "chr8_hap1": 153293009,
+      "chr9_hap1": 147755551,
+      "chrX_hap1": 165573899,
+      "chrY_hap2": 29938336
+    },
+    "hap_coverage": [
+      {
+        "track": "SSYh1",
+        "browser_chrom": "chr23_hap1",
+        "start0": 37530567,
+        "end0": 42365376,
+        "aliases_checked": [
+          "23",
+          "CM054531.2",
+          "NC_072445.2",
+          "chr23",
+          "chr23_hap1",
+          "mSymSyn1#1#chr23_hap1"
+        ],
+        "chrom_dictionary_matches": {
+          "chr23_hap1": 78312223
+        }
+      },
+      {
+        "track": "SSYh2",
+        "browser_chrom": "chr23_hap2",
+        "start0": 33263362,
+        "end0": 38051052,
+        "aliases_checked": [
+          "CM054556.2",
+          "chr23_hap2",
+          "mSymSyn1#2#chr23_hap2"
+        ],
+        "chrom_dictionary_matches": {}
+      }
+    ]
+  },
+  {
+    "species_id": "SSY",
+    "track": "CGL_CAT_v0.9",
+    "url": "https://cgl.gi.ucsc.edu/data/cactus/t2t-apes/8-t2t-apes-2023v2/annotations-v0.9/GCA_028878055.2.catAnnotation.bb",
+    "method": "HTTP Range first 65536 bytes; parse complete BigBed B+ chromosome dictionary; no model/chromosome filtering applied",
+    "http_status": 206,
+    "bytes_read": 65536,
+    "chroms": {
+      "CM054509.2": 167654734,
+      "CM054510.2": 154079787,
+      "CM054511.2": 160054556,
+      "CM054512.2": 167252203,
+      "CM054513.2": 161705797,
+      "CM054514.2": 154842609,
+      "CM054515.2": 154492986,
+      "CM054516.2": 153293009,
+      "CM054517.2": 147755551,
+      "CM054518.2": 141396425,
+      "CM054519.2": 142585216,
+      "CM054520.2": 98029838,
+      "CM054521.2": 136159655,
+      "CM054522.2": 124962429,
+      "CM054523.2": 120311650,
+      "CM054524.2": 111298303,
+      "CM054525.2": 106261908,
+      "CM054526.2": 111959805,
+      "CM054527.2": 146713733,
+      "CM054528.2": 72981805,
+      "CM054529.2": 95096135,
+      "CM054530.2": 80751072,
+      "CM054531.2": 78312223,
+      "CM054532.2": 79424044,
+      "CM054533.2": 165573899,
+      "CM054534.2": 29938336
+    },
+    "hap_coverage": [
+      {
+        "track": "SSYh1",
+        "browser_chrom": "chr23_hap1",
+        "start0": 37530567,
+        "end0": 42365376,
+        "aliases_checked": [
+          "23",
+          "CM054531.2",
+          "NC_072445.2",
+          "chr23",
+          "chr23_hap1",
+          "mSymSyn1#1#chr23_hap1"
+        ],
+        "chrom_dictionary_matches": {
+          "CM054531.2": 78312223
+        }
+      },
+      {
+        "track": "SSYh2",
+        "browser_chrom": "chr23_hap2",
+        "start0": 33263362,
+        "end0": 38051052,
+        "aliases_checked": [
+          "CM054556.2",
+          "chr23_hap2",
+          "mSymSyn1#2#chr23_hap2"
+        ],
+        "chrom_dictionary_matches": {}
+      }
+    ]
+  },
+  {
+    "species_id": "SSY",
+    "track": "CGL_CAT_v1.0",
+    "url": "https://cgl.gi.ucsc.edu/data/cactus/t2t-apes/8-t2t-apes-2023v2/annotations-v1.0/GCA_028878055.2.cat.bb",
+    "method": "HTTP Range first 65536 bytes; parse complete BigBed B+ chromosome dictionary; no model/chromosome filtering applied",
+    "http_status": 206,
+    "bytes_read": 65536,
+    "chroms": {
+      "CM054509.2": 167654734,
+      "CM054510.2": 154079787,
+      "CM054511.2": 160054556,
+      "CM054512.2": 167252203,
+      "CM054513.2": 161705797,
+      "CM054514.2": 154842609,
+      "CM054515.2": 154492986,
+      "CM054516.2": 153293009,
+      "CM054517.2": 147755551,
+      "CM054518.2": 141396425,
+      "CM054519.2": 142585216,
+      "CM054520.2": 98029838,
+      "CM054521.2": 136159655,
+      "CM054522.2": 124962429,
+      "CM054523.2": 120311650,
+      "CM054524.2": 111298303,
+      "CM054525.2": 106261908,
+      "CM054526.2": 111959805,
+      "CM054527.2": 146713733,
+      "CM054528.2": 72981805,
+      "CM054529.2": 95096135,
+      "CM054530.2": 80751072,
+      "CM054531.2": 78312223,
+      "CM054532.2": 79424044,
+      "CM054533.2": 165573899,
+      "CM054534.2": 29938336
+    },
+    "hap_coverage": [
+      {
+        "track": "SSYh1",
+        "browser_chrom": "chr23_hap1",
+        "start0": 37530567,
+        "end0": 42365376,
+        "aliases_checked": [
+          "23",
+          "CM054531.2",
+          "NC_072445.2",
+          "chr23",
+          "chr23_hap1",
+          "mSymSyn1#1#chr23_hap1"
+        ],
+        "chrom_dictionary_matches": {
+          "CM054531.2": 78312223
+        }
+      },
+      {
+        "track": "SSYh2",
+        "browser_chrom": "chr23_hap2",
+        "start0": 33263362,
+        "end0": 38051052,
+        "aliases_checked": [
+          "CM054556.2",
+          "chr23_hap2",
+          "mSymSyn1#2#chr23_hap2"
+        ],
+        "chrom_dictionary_matches": {}
+      }
+    ]
+  },
+  {
+    "species_id": "SSY",
+    "track": "refGene",
+    "url": "https://genomeark.s3.amazonaws.com/species/Symphalangus_syndactylus/mSymSyn1/assembly_curated/gene/mSymSyn1_refGene.bb",
+    "method": "HTTP Range first 65536 bytes; parse complete BigBed B+ chromosome dictionary; no model/chromosome filtering applied",
+    "http_status": 206,
+    "bytes_read": 65536,
+    "chroms": {
+      "MT": 16515,
+      "chr10_hap1": 141396425,
+      "chr11_hap1": 142585216,
+      "chr12_hap1": 98029838,
+      "chr13_hap1": 136159655,
+      "chr14_hap1": 124962429,
+      "chr15_hap1": 120311650,
+      "chr16_hap1": 111298303,
+      "chr17_hap1": 106261908,
+      "chr18_hap1": 111959805,
+      "chr19_hap1": 146713733,
+      "chr1_hap1": 167654734,
+      "chr20_hap1": 72981805,
+      "chr21_hap1": 95096135,
+      "chr22_hap1": 80751072,
+      "chr23_hap1": 78312223,
+      "chr24_hap1": 79424044,
+      "chr2_hap1": 154079787,
+      "chr3_hap1": 160054556,
+      "chr4_hap1": 167252203,
+      "chr5_hap1": 161705797,
+      "chr6_hap1": 154842609,
+      "chr7_hap1": 154492986,
+      "chr8_hap1": 153293009,
+      "chr9_hap1": 147755551,
+      "chrX_hap1": 165573899,
+      "chrY_hap2": 29938336
+    },
+    "hap_coverage": [
+      {
+        "track": "SSYh1",
+        "browser_chrom": "chr23_hap1",
+        "start0": 37530567,
+        "end0": 42365376,
+        "aliases_checked": [
+          "23",
+          "CM054531.2",
+          "NC_072445.2",
+          "chr23",
+          "chr23_hap1",
+          "mSymSyn1#1#chr23_hap1"
+        ],
+        "chrom_dictionary_matches": {
+          "chr23_hap1": 78312223
+        }
+      },
+      {
+        "track": "SSYh2",
+        "browser_chrom": "chr23_hap2",
+        "start0": 33263362,
+        "end0": 38051052,
+        "aliases_checked": [
+          "CM054556.2",
+          "chr23_hap2",
+          "mSymSyn1#2#chr23_hap2"
+        ],
+        "chrom_dictionary_matches": {}
+      }
+    ]
+  },
+  {
+    "species_id": "SSY",
+    "track": "catGene",
+    "url": "https://genomeark.s3.amazonaws.com/species/Symphalangus_syndactylus/mSymSyn1/assembly_curated/gene/mSymSyn1_catAnnotation_v1.0.bb",
+    "method": "HTTP Range first 65536 bytes; parse complete BigBed B+ chromosome dictionary; no model/chromosome filtering applied",
+    "http_status": 206,
+    "bytes_read": 65536,
+    "chroms": {
+      "CM054509.2": 167654734,
+      "CM054510.2": 154079787,
+      "CM054511.2": 160054556,
+      "CM054512.2": 167252203,
+      "CM054513.2": 161705797,
+      "CM054514.2": 154842609,
+      "CM054515.2": 154492986,
+      "CM054516.2": 153293009,
+      "CM054517.2": 147755551,
+      "CM054518.2": 141396425,
+      "CM054519.2": 142585216,
+      "CM054520.2": 98029838,
+      "CM054521.2": 136159655,
+      "CM054522.2": 124962429,
+      "CM054523.2": 120311650,
+      "CM054524.2": 111298303,
+      "CM054525.2": 106261908,
+      "CM054526.2": 111959805,
+      "CM054527.2": 146713733,
+      "CM054528.2": 72981805,
+      "CM054529.2": 95096135,
+      "CM054530.2": 80751072,
+      "CM054531.2": 78312223,
+      "CM054532.2": 79424044,
+      "CM054533.2": 165573899,
+      "CM054534.2": 29938336
+    },
+    "hap_coverage": [
+      {
+        "track": "SSYh1",
+        "browser_chrom": "chr23_hap1",
+        "start0": 37530567,
+        "end0": 42365376,
+        "aliases_checked": [
+          "23",
+          "CM054531.2",
+          "NC_072445.2",
+          "chr23",
+          "chr23_hap1",
+          "mSymSyn1#1#chr23_hap1"
+        ],
+        "chrom_dictionary_matches": {
+          "CM054531.2": 78312223
+        }
+      },
+      {
+        "track": "SSYh2",
+        "browser_chrom": "chr23_hap2",
+        "start0": 33263362,
+        "end0": 38051052,
+        "aliases_checked": [
+          "CM054556.2",
+          "chr23_hap2",
+          "mSymSyn1#2#chr23_hap2"
+        ],
+        "chrom_dictionary_matches": {}
+      }
+    ]
+  }
+]

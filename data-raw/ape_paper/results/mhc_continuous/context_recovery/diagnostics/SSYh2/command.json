@@ -1,0 +1,19 @@
+[
+  "/private/tmp/ggexon-mhc-liftoff-venv/bin/liftoff",
+  "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/SSYh2.fa",
+  "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/SSYh1.fa",
+  "-g",
+  "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/SSYh2/source.gff3",
+  "-o",
+  "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/context_recovery/diagnostics/SSYh2/all_mappings.gff3",
+  "-u",
+  "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/context_recovery/diagnostics/SSYh2/unmapped.txt",
+  "-dir",
+  "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/context_recovery/diagnostics/SSYh2/intermediates",
+  "-p",
+  "2",
+  "-a",
+  "0.95",
+  "-s",
+  "0.95"
+]

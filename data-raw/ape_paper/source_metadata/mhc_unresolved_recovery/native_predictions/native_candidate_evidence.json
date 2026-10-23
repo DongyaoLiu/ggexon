@@ -1,0 +1,2122 @@
+[
+  {
+    "track": "SSYh2",
+    "gene_symbol": "MUC21",
+    "source_track": "SSYh1",
+    "source_model_id": "SSYh1:904:GCA_028878055.2T00000381416",
+    "source_native_chrom": "CM054531.2",
+    "source_native_start0": 40638368,
+    "source_native_end0": 40645640,
+    "source_strand": "-",
+    "source_exons_native_bed0": [
+      [
+        40638368,
+        40640276
+      ],
+      [
+        40640594,
+        40643119
+      ],
+      [
+        40645336,
+        40645640
+      ]
+    ],
+    "source_exonic_bp": 4737,
+    "target_native_chrom": "CM054556.2",
+    "target_browser_chrom": "chr23_hap2",
+    "paf_file": "SSYh2__SSYh1.paf",
+    "syntenic_search_start0": 36337375,
+    "syntenic_search_end0": 36343560,
+    "closest_aligned_flanks_native_bed0": [
+      36343795,
+      36337157
+    ],
+    "paf_projected_exons_native_bed0": [
+      [
+        36337375,
+        36339283
+      ],
+      [
+        36339601,
+        36341046
+      ],
+      [
+        36343256,
+        36343560
+      ]
+    ],
+    "paf_source_exonic_coverage": 0.7720075997466751,
+    "paf_source_identical_fraction": 0.7610301878826261,
+    "source_url": "https://hgdownload.soe.ucsc.edu/hubs/GCA/028/878/085/GCA_028878085.3/bbi/GCA_028878085.3_NHGRI_mSymSyn1-v2.0_alt.augustus.bb",
+    "candidates": [
+      {
+        "chrom": "CM054556.2",
+        "chromStart": "36365927",
+        "chromEnd": "36404334",
+        "name": "g12925.t1",
+        "score": "0",
+        "strand": "-",
+        "thickStart": "36366070",
+        "thickEnd": "36404267",
+        "itemRgb": "0",
+        "blockCount": "28",
+        "blockSizes": "290,3125,81,50,143,129,176,112,207,153,152,79,69,105,126,76,77,82,104,89,112,110,107,122,101,82,130,168,",
+        "blockStarts": "0,755,13759,18479,22078,26545,26834,27167,27990,29069,29343,29598,29800,30020,30333,31271,31436,31826,32140,33663,34787,35369,35609,36716,37130,37348,37548,38239,",
+        "exons": [
+          [
+            36365927,
+            36366217
+          ],
+          [
+            36366682,
+            36369807
+          ],
+          [
+            36379686,
+            36379767
+          ],
+          [
+            36384406,
+            36384456
+          ],
+          [
+            36388005,
+            36388148
+          ],
+          [
+            36392472,
+            36392601
+          ],
+          [
+            36392761,
+            36392937
+          ],
+          [
+            36393094,
+            36393206
+          ],
+          [
+            36393917,
+            36394124
+          ],
+          [
+            36394996,
+            36395149
+          ],
+          [
+            36395270,
+            36395422
+          ],
+          [
+            36395525,
+            36395604
+          ],
+          [
+            36395727,
+            36395796
+          ],
+          [
+            36395947,
+            36396052
+          ],
+          [
+            36396260,
+            36396386
+          ],
+          [
+            36397198,
+            36397274
+          ],
+          [
+            36397363,
+            36397440
+          ],
+          [
+            36397753,
+            36397835
+          ],
+          [
+            36398067,
+            36398171
+          ],
+          [
+            36399590,
+            36399679
+          ],
+          [
+            36400714,
+            36400826
+          ],
+          [
+            36401296,
+            36401406
+          ],
+          [
+            36401536,
+            36401643
+          ],
+          [
+            36402643,
+            36402765
+          ],
+          [
+            36403057,
+            36403158
+          ],
+          [
+            36403275,
+            36403357
+          ],
+          [
+            36403475,
+            36403605
+          ],
+          [
+            36404166,
+            36404334
+          ]
+        ],
+        "gene_id": "g12925",
+        "cds_start_stat": "cmpl",
+        "cds_end_stat": "cmpl",
+        "projected_exonic_overlap_bp": 0,
+        "projected_fraction": 0.0,
+        "candidate_fraction": 0.0,
+        "distance_to_projected_span_bp": 22367,
+        "same_strand": true,
+        "overlapping_source_gene_exons": [
+          {
+            "gene_symbol": "MUCL3",
+            "source_model_id": "SSYh1:909:GCA_028878055.2T00000381494",
+            "exonic_overlap_bp": 3415
+          },
+          {
+            "gene_symbol": "VARS2",
+            "source_model_id": "SSYh1:916:GCA_028878055.2T00000381623",
+            "exonic_overlap_bp": 2591
+          },
+          {
+            "gene_symbol": "SFTA2",
+            "source_model_id": "SSYh1:906:GCA_028878055.2T00000381439",
+            "exonic_overlap_bp": 285
+          }
+        ]
+      },
+      {
+        "chrom": "CM054556.2",
+        "chromStart": "36250554",
+        "chromEnd": "36352579",
+        "name": "g12924.t1",
+        "score": "0",
+        "strand": "+",
+        "thickStart": "36261011",
+        "thickEnd": "36349655",
+        "itemRgb": "0",
+        "blockCount": "7",
+        "blockSizes": "144,95,57,428,1377,252,149,",
+        "blockStarts": "0,10408,10846,49648,89039,98855,101876,",
+        "exons": [
+          [
+            36250554,
+            36250698
+          ],
+          [
+            36260962,
+            36261057
+          ],
+          [
+            36261400,
+            36261457
+          ],
+          [
+            36300202,
+            36300630
+          ],
+          [
+            36339593,
+            36340970
+          ],
+          [
+            36349409,
+            36349661
+          ],
+          [
+            36352430,
+            36352579
+          ]
+        ],
+        "gene_id": "g12924",
+        "cds_start_stat": "cmpl",
+        "cds_end_stat": "cmpl",
+        "projected_exonic_overlap_bp": 1369,
+        "projected_fraction": 0.3743505605687722,
+        "candidate_fraction": 0.5471622701838529,
+        "distance_to_projected_span_bp": 0,
+        "same_strand": false,
+        "overlapping_source_gene_exons": [
+          {
+            "gene_symbol": "MUC21",
+            "source_model_id": "SSYh1:904:GCA_028878055.2T00000381416",
+            "exonic_overlap_bp": 1369
+          },
+          {
+            "gene_symbol": "MUC22",
+            "source_model_id": "SSYh1:903:GCA_028878055.2T00000381402",
+            "exonic_overlap_bp": 386
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "LY6G6E",
+    "source_track": "PABh1",
+    "source_model_id": "PABh1:630:GCA_028885655.2T00000381192",
+    "source_native_chrom": "CM054684.2",
+    "source_native_start0": 31926151,
+    "source_native_end0": 31928472,
+    "source_strand": "-",
+    "source_exons_native_bed0": [
+      [
+        31926151,
+        31926526
+      ],
+      [
+        31927072,
+        31927198
+      ],
+      [
+        31928167,
+        31928472
+      ]
+    ],
+    "source_exonic_bp": 806,
+    "target_native_chrom": "CM054661.2",
+    "target_browser_chrom": "chr5_hap2_hsa6",
+    "paf_file": "PABh2__PABh1.paf",
+    "syntenic_search_start0": 31873130,
+    "syntenic_search_end0": 31875409,
+    "closest_aligned_flanks_native_bed0": [
+      31871882,
+      31877292
+    ],
+    "paf_projected_exons_native_bed0": [
+      [
+        31873130,
+        31873463
+      ],
+      [
+        31874009,
+        31874135
+      ],
+      [
+        31875104,
+        31875409
+      ]
+    ],
+    "paf_source_exonic_coverage": 0.9478908188585607,
+    "paf_source_identical_fraction": 0.9478908188585607,
+    "source_url": "https://hgdownload.soe.ucsc.edu/hubs/GCA/028/885/685/GCA_028885685.2/bbi/GCA_028885685.2_NHGRI_mPonAbe1-v2.0_alt.augustus.bb",
+    "candidates": []
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR12D3",
+    "source_track": "PABh1",
+    "source_model_id": "PABh1:24:GCA_028885655.2T00000372633",
+    "source_native_chrom": "CM054684.2",
+    "source_native_start0": 29307722,
+    "source_native_end0": 29309591,
+    "source_strand": "-",
+    "source_exons_native_bed0": [
+      [
+        29307722,
+        29309591
+      ]
+    ],
+    "source_exonic_bp": 1869,
+    "target_native_chrom": "CM054661.2",
+    "target_browser_chrom": "chr5_hap2_hsa6",
+    "paf_file": "PABh2__PABh1.paf",
+    "syntenic_search_start0": 29257893,
+    "syntenic_search_end0": 29257895,
+    "closest_aligned_flanks_native_bed0": [
+      29257893,
+      29257894
+    ],
+    "paf_projected_exons_native_bed0": [],
+    "paf_source_exonic_coverage": 0,
+    "paf_source_identical_fraction": 0.0,
+    "source_url": "https://hgdownload.soe.ucsc.edu/hubs/GCA/028/885/685/GCA_028885685.2/bbi/GCA_028885685.2_NHGRI_mPonAbe1-v2.0_alt.augustus.bb",
+    "candidates": []
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR5V1",
+    "source_track": "PABh1",
+    "source_model_id": "PABh1:21:GCA_028885655.2T00000372605",
+    "source_native_chrom": "CM054684.2",
+    "source_native_start0": 29286783,
+    "source_native_end0": 29301596,
+    "source_strand": "-",
+    "source_exons_native_bed0": [
+      [
+        29286783,
+        29289317
+      ],
+      [
+        29301362,
+        29301596
+      ]
+    ],
+    "source_exonic_bp": 2768,
+    "target_native_chrom": "CM054661.2",
+    "target_browser_chrom": "chr5_hap2_hsa6",
+    "paf_file": "PABh2__PABh1.paf",
+    "syntenic_search_start0": 29249832,
+    "syntenic_search_end0": 29252366,
+    "closest_aligned_flanks_native_bed0": [
+      29249381,
+      29257894
+    ],
+    "paf_projected_exons_native_bed0": [
+      [
+        29249832,
+        29252366
+      ]
+    ],
+    "paf_source_exonic_coverage": 0.9154624277456648,
+    "paf_source_identical_fraction": 0.9122109826589595,
+    "source_url": "https://hgdownload.soe.ucsc.edu/hubs/GCA/028/885/685/GCA_028885685.2/bbi/GCA_028885685.2_NHGRI_mPonAbe1-v2.0_alt.augustus.bb",
+    "candidates": []
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "MUC21",
+    "source_track": "PABh1",
+    "source_model_id": "PABh1:368:GCA_028885655.2T00000377677",
+    "source_native_chrom": "CM054684.2",
+    "source_native_start0": 31038096,
+    "source_native_end0": 31043821,
+    "source_strand": "+",
+    "source_exons_native_bed0": [
+      [
+        31038096,
+        31038398
+      ],
+      [
+        31040566,
+        31041606
+      ],
+      [
+        31041924,
+        31043821
+      ]
+    ],
+    "source_exonic_bp": 3239,
+    "target_native_chrom": "CM054661.2",
+    "target_browser_chrom": "chr5_hap2_hsa6",
+    "paf_file": "PABh2__PABh1.paf",
+    "syntenic_search_start0": 30960004,
+    "syntenic_search_end0": 30966052,
+    "closest_aligned_flanks_native_bed0": [
+      30959973,
+      30967118
+    ],
+    "paf_projected_exons_native_bed0": [
+      [
+        30960004,
+        30960306
+      ],
+      [
+        30962470,
+        30962613
+      ],
+      [
+        30962658,
+        30963018
+      ],
+      [
+        30963288,
+        30963825
+      ],
+      [
+        30964143,
+        30964916
+      ],
+      [
+        30964928,
+        30966052
+      ]
+    ],
+    "paf_source_exonic_coverage": 1.0,
+    "paf_source_identical_fraction": 0.9910466193269528,
+    "source_url": "https://hgdownload.soe.ucsc.edu/hubs/GCA/028/885/685/GCA_028885685.2/bbi/GCA_028885685.2_NHGRI_mPonAbe1-v2.0_alt.augustus.bb",
+    "candidates": []
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PABh1",
+    "source_model_id": "PABh1:364:GCA_028885655.2T00000377625",
+    "source_native_chrom": "CM054684.2",
+    "source_native_start0": 30987577,
+    "source_native_end0": 31008651,
+    "source_strand": "+",
+    "source_exons_native_bed0": [
+      [
+        30987577,
+        30987727
+      ],
+      [
+        30990242,
+        30990344
+      ],
+      [
+        30991102,
+        30991216
+      ],
+      [
+        30994099,
+        30994114
+      ],
+      [
+        31001741,
+        31006933
+      ],
+      [
+        31007401,
+        31008651
+      ]
+    ],
+    "source_exonic_bp": 6823,
+    "target_native_chrom": "CM054661.2",
+    "target_browser_chrom": "chr5_hap2_hsa6",
+    "paf_file": "PABh2__PABh1.paf",
+    "syntenic_search_start0": 30910252,
+    "syntenic_search_end0": 30931606,
+    "closest_aligned_flanks_native_bed0": [
+      30909476,
+      30931677
+    ],
+    "paf_projected_exons_native_bed0": [
+      [
+        30910252,
+        30910402
+      ],
+      [
+        30912919,
+        30913021
+      ],
+      [
+        30913779,
+        30913893
+      ],
+      [
+        30916776,
+        30916791
+      ],
+      [
+        30924721,
+        30926968
+      ],
+      [
+        30927082,
+        30928309
+      ],
+      [
+        30928372,
+        30929862
+      ],
+      [
+        30930357,
+        30931606
+      ]
+    ],
+    "paf_source_exonic_coverage": 0.9664370511505203,
+    "paf_source_identical_fraction": 0.9605745273340173,
+    "source_url": "https://hgdownload.soe.ucsc.edu/hubs/GCA/028/885/685/GCA_028885685.2/bbi/GCA_028885685.2_NHGRI_mPonAbe1-v2.0_alt.augustus.bb",
+    "candidates": []
+  },
+  {
+    "track": "PABh2",
+    "gene_symbol": "OR12D2",
+    "source_track": "PABh1",
+    "source_model_id": "PABh1:25:GCA_028885655.2T00000372641",
+    "source_native_chrom": "CM054684.2",
+    "source_native_start0": 29335452,
+    "source_native_end0": 29337672,
+    "source_strand": "+",
+    "source_exons_native_bed0": [
+      [
+        29335452,
+        29335634
+      ],
+      [
+        29336365,
+        29337672
+      ]
+    ],
+    "source_exonic_bp": 1489,
+    "target_native_chrom": "CM054661.2",
+    "target_browser_chrom": "chr5_hap2_hsa6",
+    "paf_file": "PABh2__PABh1.paf",
+    "syntenic_search_start0": 29257893,
+    "syntenic_search_end0": 29257895,
+    "closest_aligned_flanks_native_bed0": [
+      29257893,
+      29257894
+    ],
+    "paf_projected_exons_native_bed0": [],
+    "paf_source_exonic_coverage": 0,
+    "paf_source_identical_fraction": 0.0,
+    "source_url": "https://hgdownload.soe.ucsc.edu/hubs/GCA/028/885/685/GCA_028885685.2/bbi/GCA_028885685.2_NHGRI_mPonAbe1-v2.0_alt.augustus.bb",
+    "candidates": []
+  },
+  {
+    "track": "PPYh2",
+    "gene_symbol": "MUC21",
+    "source_track": "PPYh1",
+    "source_model_id": "PPYh1:368:GCA_028885625.2T00001935266",
+    "source_native_chrom": "CM054635.2",
+    "source_native_start0": 30995465,
+    "source_native_end0": 31001285,
+    "source_strand": "+",
+    "source_exons_native_bed0": [
+      [
+        30995465,
+        30995767
+      ],
+      [
+        30997929,
+        30999059
+      ],
+      [
+        30999376,
+        31001285
+      ]
+    ],
+    "source_exonic_bp": 3341,
+    "target_native_chrom": "CM054612.2",
+    "target_browser_chrom": "chr5_hap2_hsa6",
+    "paf_file": "PPYh2__PPYh1.paf",
+    "syntenic_search_start0": 31035739,
+    "syntenic_search_end0": 31041701,
+    "closest_aligned_flanks_native_bed0": [
+      31035708,
+      31041717
+    ],
+    "paf_projected_exons_native_bed0": [
+      [
+        31035739,
+        31036041
+      ],
+      [
+        31038209,
+        31038394
+      ],
+      [
+        31038397,
+        31039090
+      ],
+      [
+        31039225,
+        31039474
+      ],
+      [
+        31039792,
+        31040565
+      ],
+      [
+        31040569,
+        31041701
+      ]
+    ],
+    "paf_source_exonic_coverage": 0.9979048189164921,
+    "paf_source_identical_fraction": 0.9856330439988028,
+    "source_url": "https://hgdownload.soe.ucsc.edu/hubs/GCA/028/885/525/GCA_028885525.2/bbi/GCA_028885525.2_NHGRI_mPonPyg2-v2.0_alt.augustus.bb",
+    "candidates": []
+  },
+  {
+    "track": "PPYh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "PPYh1",
+    "source_model_id": "PPYh1:364:GCA_028885625.2T00001935214",
+    "source_native_chrom": "CM054635.2",
+    "source_native_start0": 30944981,
+    "source_native_end0": 30966050,
+    "source_strand": "+",
+    "source_exons_native_bed0": [
+      [
+        30944981,
+        30945131
+      ],
+      [
+        30947646,
+        30947747
+      ],
+      [
+        30948505,
+        30948619
+      ],
+      [
+        30951502,
+        30951517
+      ],
+      [
+        30959140,
+        30964332
+      ],
+      [
+        30964800,
+        30966050
+      ]
+    ],
+    "source_exonic_bp": 6822,
+    "target_native_chrom": "CM054612.2",
+    "target_browser_chrom": "chr5_hap2_hsa6",
+    "paf_file": "PPYh2__PPYh1.paf",
+    "syntenic_search_start0": 30985110,
+    "syntenic_search_end0": 31006322,
+    "closest_aligned_flanks_native_bed0": [
+      30984992,
+      31006393
+    ],
+    "paf_projected_exons_native_bed0": [
+      [
+        30985110,
+        30985260
+      ],
+      [
+        30987777,
+        30987779
+      ],
+      [
+        30987780,
+        30987879
+      ],
+      [
+        30988637,
+        30988751
+      ],
+      [
+        30991634,
+        30991649
+      ],
+      [
+        30999437,
+        31001684
+      ],
+      [
+        31001798,
+        31003025
+      ],
+      [
+        31003088,
+        31004578
+      ],
+      [
+        31005073,
+        31006322
+      ]
+    ],
+    "paf_source_exonic_coverage": 0.966432131339783,
+    "paf_source_identical_fraction": 0.960715332746995,
+    "source_url": "https://hgdownload.soe.ucsc.edu/hubs/GCA/028/885/525/GCA_028885525.2/bbi/GCA_028885525.2_NHGRI_mPonPyg2-v2.0_alt.augustus.bb",
+    "candidates": []
+  },
+  {
+    "track": "GGOh2",
+    "gene_symbol": "MUC21",
+    "source_track": "GGOh1",
+    "source_model_id": "GGOh1:368:GCA_029281585.2T00001617418",
+    "source_native_chrom": "CM055451.2",
+    "source_native_start0": 48676804,
+    "source_native_end0": 48682820,
+    "source_strand": "+",
+    "source_exons_native_bed0": [
+      [
+        48676804,
+        48677106
+      ],
+      [
+        48679330,
+        48680595
+      ],
+      [
+        48680913,
+        48682820
+      ]
+    ],
+    "source_exonic_bp": 3474,
+    "target_native_chrom": "CM054563.2",
+    "target_browser_chrom": "chr5_pat_hsa6",
+    "paf_file": "GGOh2__GGOh1.paf",
+    "syntenic_search_start0": 41093511,
+    "syntenic_search_end0": 41100141,
+    "closest_aligned_flanks_native_bed0": [
+      41093384,
+      41100215
+    ],
+    "paf_projected_exons_native_bed0": [
+      [
+        41093511,
+        41093813
+      ],
+      [
+        41096022,
+        41096210
+      ],
+      [
+        41096255,
+        41096432
+      ],
+      [
+        41096657,
+        41096969
+      ],
+      [
+        41097239,
+        41097416
+      ],
+      [
+        41097461,
+        41097618
+      ],
+      [
+        41097663,
+        41097917
+      ],
+      [
+        41098235,
+        41100141
+      ]
+    ],
+    "paf_source_exonic_coverage": 0.9997121473805411,
+    "paf_source_identical_fraction": 0.9835924006908463,
+    "source_url": "https://hgdownload.soe.ucsc.edu/hubs/GCA/028/885/475/GCA_028885475.2/bbi/GCA_028885475.2_NHGRI_mGorGor1-v2.0_pat.augustus.bb",
+    "candidates": [
+      {
+        "chrom": "CM054563.2",
+        "chromStart": "40988503",
+        "chromEnd": "41088760",
+        "name": "g4606.t1",
+        "score": "0",
+        "strand": "+",
+        "thickStart": "40991432",
+        "thickEnd": "41088120",
+        "itemRgb": "0",
+        "blockCount": "58",
+        "blockSizes": "122,195,127,103,229,148,100,187,247,96,152,166,111,245,128,219,235,150,140,105,132,97,89,112,133,131,48,79,134,108,82,101,122,107,110,112,89,104,82,77,76,103,71,126,105,69,79,152,153,112,176,129,115,4232,143,1192,46,1035,",
+        "blockStarts": "0,2863,10667,10887,11181,12949,13356,13980,14274,15046,15250,16477,17371,18588,18981,19346,20038,20853,30648,31049,31546,32280,32468,32773,33629,33943,34726,34925,35427,36546,36772,36971,37361,38481,38718,39298,40436,41965,42300,42697,42862,43221,43557,43748,44082,44338,44530,44712,44985,46908,47177,47513,59316,69595,74298,85524,87505,99222,",
+        "exons": [
+          [
+            40988503,
+            40988625
+          ],
+          [
+            40991366,
+            40991561
+          ],
+          [
+            40999170,
+            40999297
+          ],
+          [
+            40999390,
+            40999493
+          ],
+          [
+            40999684,
+            40999913
+          ],
+          [
+            41001452,
+            41001600
+          ],
+          [
+            41001859,
+            41001959
+          ],
+          [
+            41002483,
+            41002670
+          ],
+          [
+            41002777,
+            41003024
+          ],
+          [
+            41003549,
+            41003645
+          ],
+          [
+            41003753,
+            41003905
+          ],
+          [
+            41004980,
+            41005146
+          ],
+          [
+            41005874,
+            41005985
+          ],
+          [
+            41007091,
+            41007336
+          ],
+          [
+            41007484,
+            41007612
+          ],
+          [
+            41007849,
+            41008068
+          ],
+          [
+            41008541,
+            41008776
+          ],
+          [
+            41009356,
+            41009506
+          ],
+          [
+            41019151,
+            41019291
+          ],
+          [
+            41019552,
+            41019657
+          ],
+          [
+            41020049,
+            41020181
+          ],
+          [
+            41020783,
+            41020880
+          ],
+          [
+            41020971,
+            41021060
+          ],
+          [
+            41021276,
+            41021388
+          ],
+          [
+            41022132,
+            41022265
+          ],
+          [
+            41022446,
+            41022577
+          ],
+          [
+            41023229,
+            41023277
+          ],
+          [
+            41023428,
+            41023507
+          ],
+          [
+            41023930,
+            41024064
+          ],
+          [
+            41025049,
+            41025157
+          ],
+          [
+            41025275,
+            41025357
+          ],
+          [
+            41025474,
+            41025575
+          ],
+          [
+            41025864,
+            41025986
+          ],
+          [
+            41026984,
+            41027091
+          ],
+          [
+            41027221,
+            41027331
+          ],
+          [
+            41027801,
+            41027913
+          ],
+          [
+            41028939,
+            41029028
+          ],
+          [
+            41030468,
+            41030572
+          ],
+          [
+            41030803,
+            41030885
+          ],
+          [
+            41031200,
+            41031277
+          ],
+          [
+            41031365,
+            41031441
+          ],
+          [
+            41031724,
+            41031827
+          ],
+          [
+            41032060,
+            41032131
+          ],
+          [
+            41032251,
+            41032377
+          ],
+          [
+            41032585,
+            41032690
+          ],
+          [
+            41032841,
+            41032910
+          ],
+          [
+            41033033,
+            41033112
+          ],
+          [
+            41033215,
+            41033367
+          ],
+          [
+            41033488,
+            41033641
+          ],
+          [
+            41035411,
+            41035523
+          ],
+          [
+            41035680,
+            41035856
+          ],
+          [
+            41036016,
+            41036145
+          ],
+          [
+            41047819,
+            41047934
+          ],
+          [
+            41058098,
+            41062330
+          ],
+          [
+            41062801,
+            41062944
+          ],
+          [
+            41074027,
+            41075219
+          ],
+          [
+            41076008,
+            41076054
+          ],
+          [
+            41087725,
+            41088760
+          ]
+        ],
+        "gene_id": "g4606",
+        "cds_start_stat": "cmpl",
+        "cds_end_stat": "cmpl",
+        "projected_exonic_overlap_bp": 0,
+        "projected_fraction": 0.0,
+        "candidate_fraction": 0.0,
+        "distance_to_projected_span_bp": 4751,
+        "same_strand": true,
+        "overlapping_source_gene_exons": [
+          {
+            "gene_symbol": "MUCL3",
+            "source_model_id": "GGOh1:364:GCA_029281585.2T00001617366",
+            "exonic_overlap_bp": 4490
+          },
+          {
+            "gene_symbol": "DDR1",
+            "source_model_id": "GGOh1:287:GCA_029281585.2T00001615873",
+            "exonic_overlap_bp": 2838
+          },
+          {
+            "gene_symbol": "VARS2",
+            "source_model_id": "GGOh1:349:GCA_029281585.2T00001616978",
+            "exonic_overlap_bp": 2396
+          },
+          {
+            "gene_symbol": "GTF2H4",
+            "source_model_id": "GGOh1:342:GCA_029281585.2T00001616824",
+            "exonic_overlap_bp": 1200
+          },
+          {
+            "gene_symbol": "SFTA2",
+            "source_model_id": "GGOh1:363:GCA_029281585.2T00001617348",
+            "exonic_overlap_bp": 194
+          }
+        ]
+      },
+      {
+        "chrom": "CM054563.2",
+        "chromStart": "41095972",
+        "chromEnd": "41100433",
+        "name": "g4607.t1",
+        "score": "0",
+        "strand": "-",
+        "thickStart": "41096005",
+        "thickEnd": "41097859",
+        "itemRgb": "0",
+        "blockCount": "2",
+        "blockSizes": "1972,83,",
+        "blockStarts": "0,4378,",
+        "exons": [
+          [
+            41095972,
+            41097944
+          ],
+          [
+            41100350,
+            41100433
+          ]
+        ],
+        "gene_id": "g4607",
+        "cds_start_stat": "cmpl",
+        "cds_end_stat": "cmpl",
+        "projected_exonic_overlap_bp": 1265,
+        "projected_fraction": 0.36423841059602646,
+        "candidate_fraction": 0.6155717761557178,
+        "distance_to_projected_span_bp": 0,
+        "same_strand": false,
+        "overlapping_source_gene_exons": [
+          {
+            "gene_symbol": "MUC21",
+            "source_model_id": "GGOh1:368:GCA_029281585.2T00001617418",
+            "exonic_overlap_bp": 1265
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "track": "GGOh2",
+    "gene_symbol": "MUC22",
+    "source_track": "GGOh1",
+    "source_model_id": "GGOh1:369:GCA_029281585.2T00001617430",
+    "source_native_chrom": "CM055451.2",
+    "source_native_start0": 48704878,
+    "source_native_end0": 48729247,
+    "source_strand": "+",
+    "source_exons_native_bed0": [
+      [
+        48704878,
+        48705181
+      ],
+      [
+        48719665,
+        48723844
+      ],
+      [
+        48725950,
+        48726336
+      ],
+      [
+        48728516,
+        48729247
+      ]
+    ],
+    "source_exonic_bp": 5599,
+    "target_native_chrom": "CM054563.2",
+    "target_browser_chrom": "chr5_pat_hsa6",
+    "paf_file": "GGOh2__GGOh1.paf",
+    "syntenic_search_start0": 41121114,
+    "syntenic_search_end0": 41147617,
+    "closest_aligned_flanks_native_bed0": [
+      41120200,
+      41147649
+    ],
+    "paf_projected_exons_native_bed0": [
+      [
+        41121114,
+        41121417
+      ],
+      [
+        41135903,
+        41136224
+      ],
+      [
+        41136227,
+        41137754
+      ],
+      [
+        41139074,
+        41140328
+      ],
+      [
+        41141141,
+        41142218
+      ],
+      [
+        41144324,
+        41144710
+      ],
+      [
+        41146886,
+        41147617
+      ]
+    ],
+    "paf_source_exonic_coverage": 1.0,
+    "paf_source_identical_fraction": 0.9985711734238257,
+    "source_url": "https://hgdownload.soe.ucsc.edu/hubs/GCA/028/885/475/GCA_028885475.2/bbi/GCA_028885475.2_NHGRI_mGorGor1-v2.0_pat.augustus.bb",
+    "candidates": [
+      {
+        "chrom": "CM054563.2",
+        "chromStart": "41135816",
+        "chromEnd": "41256743",
+        "name": "g4608.t1",
+        "score": "0",
+        "strand": "-",
+        "thickStart": "41140794",
+        "thickEnd": "41255498",
+        "itemRgb": "0",
+        "blockCount": "8",
+        "blockSizes": "5880,104,78,1564,173,143,94,233,",
+        "blockStarts": "0,12349,40792,94765,99137,104164,119607,120694,",
+        "exons": [
+          [
+            41135816,
+            41141696
+          ],
+          [
+            41148165,
+            41148269
+          ],
+          [
+            41176608,
+            41176686
+          ],
+          [
+            41230581,
+            41232145
+          ],
+          [
+            41234953,
+            41235126
+          ],
+          [
+            41239980,
+            41240123
+          ],
+          [
+            41255423,
+            41255517
+          ],
+          [
+            41256510,
+            41256743
+          ]
+        ],
+        "gene_id": "g4608",
+        "cds_start_stat": "cmpl",
+        "cds_end_stat": "cmpl",
+        "projected_exonic_overlap_bp": 3657,
+        "projected_fraction": 0.6531523486336845,
+        "candidate_fraction": 0.44225420244285885,
+        "distance_to_projected_span_bp": 0,
+        "same_strand": false,
+        "overlapping_source_gene_exons": [
+          {
+            "gene_symbol": "MUC22",
+            "source_model_id": "GGOh1:369:GCA_029281585.2T00001617430",
+            "exonic_overlap_bp": 3657
+          },
+          {
+            "gene_symbol": "CDSN",
+            "source_model_id": "GGOh1:378:GCA_029281585.2T00001617515",
+            "exonic_overlap_bp": 1676
+          },
+          {
+            "gene_symbol": "PSORS1C1",
+            "source_model_id": "GGOh1:371:GCA_029281585.2T00001617454",
+            "exonic_overlap_bp": 1564
+          }
+        ]
+      },
+      {
+        "chrom": "CM054563.2",
+        "chromStart": "41095972",
+        "chromEnd": "41100433",
+        "name": "g4607.t1",
+        "score": "0",
+        "strand": "-",
+        "thickStart": "41096005",
+        "thickEnd": "41097859",
+        "itemRgb": "0",
+        "blockCount": "2",
+        "blockSizes": "1972,83,",
+        "blockStarts": "0,4378,",
+        "exons": [
+          [
+            41095972,
+            41097944
+          ],
+          [
+            41100350,
+            41100433
+          ]
+        ],
+        "gene_id": "g4607",
+        "cds_start_stat": "cmpl",
+        "cds_end_stat": "cmpl",
+        "projected_exonic_overlap_bp": 0,
+        "projected_fraction": 0.0,
+        "candidate_fraction": 0.0,
+        "distance_to_projected_span_bp": 20681,
+        "same_strand": false,
+        "overlapping_source_gene_exons": [
+          {
+            "gene_symbol": "MUC21",
+            "source_model_id": "GGOh1:368:GCA_029281585.2T00001617418",
+            "exonic_overlap_bp": 1265
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "track": "GGOh2",
+    "gene_symbol": "MUCL3",
+    "source_track": "GGOh1",
+    "source_model_id": "GGOh1:364:GCA_029281585.2T00001617366",
+    "source_native_chrom": "CM055451.2",
+    "source_native_start0": 48626874,
+    "source_native_end0": 48647284,
+    "source_strand": "+",
+    "source_exons_native_bed0": [
+      [
+        48626874,
+        48627026
+      ],
+      [
+        48629553,
+        48629654
+      ],
+      [
+        48630421,
+        48630536
+      ],
+      [
+        48633418,
+        48633433
+      ],
+      [
+        48640841,
+        48645565
+      ],
+      [
+        48646036,
+        48647284
+      ]
+    ],
+    "source_exonic_bp": 6355,
+    "target_native_chrom": "CM054563.2",
+    "target_browser_chrom": "chr5_pat_hsa6",
+    "paf_file": "GGOh2__GGOh1.paf",
+    "syntenic_search_start0": 41044271,
+    "syntenic_search_end0": 41064051,
+    "closest_aligned_flanks_native_bed0": [
+      41044000,
+      41064110
+    ],
+    "paf_projected_exons_native_bed0": [
+      [
+        41044271,
+        41044423
+      ],
+      [
+        41046951,
+        41047052
+      ],
+      [
+        41047819,
+        41047934
+      ],
+      [
+        41050815,
+        41050830
+      ],
+      [
+        41058098,
+        41062330
+      ],
+      [
+        41062801,
+        41063468
+      ],
+      [
+        41063470,
+        41064051
+      ]
+    ],
+    "paf_source_exonic_coverage": 0.9225806451612903,
+    "paf_source_identical_fraction": 0.9156569630212431,
+    "source_url": "https://hgdownload.soe.ucsc.edu/hubs/GCA/028/885/475/GCA_028885475.2/bbi/GCA_028885475.2_NHGRI_mGorGor1-v2.0_pat.augustus.bb",
+    "candidates": [
+      {
+        "chrom": "CM054563.2",
+        "chromStart": "40988503",
+        "chromEnd": "41088760",
+        "name": "g4606.t1",
+        "score": "0",
+        "strand": "+",
+        "thickStart": "40991432",
+        "thickEnd": "41088120",
+        "itemRgb": "0",
+        "blockCount": "58",
+        "blockSizes": "122,195,127,103,229,148,100,187,247,96,152,166,111,245,128,219,235,150,140,105,132,97,89,112,133,131,48,79,134,108,82,101,122,107,110,112,89,104,82,77,76,103,71,126,105,69,79,152,153,112,176,129,115,4232,143,1192,46,1035,",
+        "blockStarts": "0,2863,10667,10887,11181,12949,13356,13980,14274,15046,15250,16477,17371,18588,18981,19346,20038,20853,30648,31049,31546,32280,32468,32773,33629,33943,34726,34925,35427,36546,36772,36971,37361,38481,38718,39298,40436,41965,42300,42697,42862,43221,43557,43748,44082,44338,44530,44712,44985,46908,47177,47513,59316,69595,74298,85524,87505,99222,",
+        "exons": [
+          [
+            40988503,
+            40988625
+          ],
+          [
+            40991366,
+            40991561
+          ],
+          [
+            40999170,
+            40999297
+          ],
+          [
+            40999390,
+            40999493
+          ],
+          [
+            40999684,
+            40999913
+          ],
+          [
+            41001452,
+            41001600
+          ],
+          [
+            41001859,
+            41001959
+          ],
+          [
+            41002483,
+            41002670
+          ],
+          [
+            41002777,
+            41003024
+          ],
+          [
+            41003549,
+            41003645
+          ],
+          [
+            41003753,
+            41003905
+          ],
+          [
+            41004980,
+            41005146
+          ],
+          [
+            41005874,
+            41005985
+          ],
+          [
+            41007091,
+            41007336
+          ],
+          [
+            41007484,
+            41007612
+          ],
+          [
+            41007849,
+            41008068
+          ],
+          [
+            41008541,
+            41008776
+          ],
+          [
+            41009356,
+            41009506
+          ],
+          [
+            41019151,
+            41019291
+          ],
+          [
+            41019552,
+            41019657
+          ],
+          [
+            41020049,
+            41020181
+          ],
+          [
+            41020783,
+            41020880
+          ],
+          [
+            41020971,
+            41021060
+          ],
+          [
+            41021276,
+            41021388
+          ],
+          [
+            41022132,
+            41022265
+          ],
+          [
+            41022446,
+            41022577
+          ],
+          [
+            41023229,
+            41023277
+          ],
+          [
+            41023428,
+            41023507
+          ],
+          [
+            41023930,
+            41024064
+          ],
+          [
+            41025049,
+            41025157
+          ],
+          [
+            41025275,
+            41025357
+          ],
+          [
+            41025474,
+            41025575
+          ],
+          [
+            41025864,
+            41025986
+          ],
+          [
+            41026984,
+            41027091
+          ],
+          [
+            41027221,
+            41027331
+          ],
+          [
+            41027801,
+            41027913
+          ],
+          [
+            41028939,
+            41029028
+          ],
+          [
+            41030468,
+            41030572
+          ],
+          [
+            41030803,
+            41030885
+          ],
+          [
+            41031200,
+            41031277
+          ],
+          [
+            41031365,
+            41031441
+          ],
+          [
+            41031724,
+            41031827
+          ],
+          [
+            41032060,
+            41032131
+          ],
+          [
+            41032251,
+            41032377
+          ],
+          [
+            41032585,
+            41032690
+          ],
+          [
+            41032841,
+            41032910
+          ],
+          [
+            41033033,
+            41033112
+          ],
+          [
+            41033215,
+            41033367
+          ],
+          [
+            41033488,
+            41033641
+          ],
+          [
+            41035411,
+            41035523
+          ],
+          [
+            41035680,
+            41035856
+          ],
+          [
+            41036016,
+            41036145
+          ],
+          [
+            41047819,
+            41047934
+          ],
+          [
+            41058098,
+            41062330
+          ],
+          [
+            41062801,
+            41062944
+          ],
+          [
+            41074027,
+            41075219
+          ],
+          [
+            41076008,
+            41076054
+          ],
+          [
+            41087725,
+            41088760
+          ]
+        ],
+        "gene_id": "g4606",
+        "cds_start_stat": "cmpl",
+        "cds_end_stat": "cmpl",
+        "projected_exonic_overlap_bp": 4490,
+        "projected_fraction": 0.7658195463073512,
+        "candidate_fraction": 0.33587672052663076,
+        "distance_to_projected_span_bp": 0,
+        "same_strand": true,
+        "overlapping_source_gene_exons": [
+          {
+            "gene_symbol": "MUCL3",
+            "source_model_id": "GGOh1:364:GCA_029281585.2T00001617366",
+            "exonic_overlap_bp": 4490
+          },
+          {
+            "gene_symbol": "DDR1",
+            "source_model_id": "GGOh1:287:GCA_029281585.2T00001615873",
+            "exonic_overlap_bp": 2838
+          },
+          {
+            "gene_symbol": "VARS2",
+            "source_model_id": "GGOh1:349:GCA_029281585.2T00001616978",
+            "exonic_overlap_bp": 2396
+          },
+          {
+            "gene_symbol": "GTF2H4",
+            "source_model_id": "GGOh1:342:GCA_029281585.2T00001616824",
+            "exonic_overlap_bp": 1200
+          },
+          {
+            "gene_symbol": "SFTA2",
+            "source_model_id": "GGOh1:363:GCA_029281585.2T00001617348",
+            "exonic_overlap_bp": 194
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "track": "PPAh1",
+    "gene_symbol": "C6orf15",
+    "source_track": "PPAh2",
+    "source_model_id": "PPAh2:368:GCA_029289425.2T00000562212",
+    "source_native_chrom": "CM055477.2",
+    "source_native_start0": 45673056,
+    "source_native_end0": 45674475,
+    "source_strand": "-",
+    "source_exons_native_bed0": [
+      [
+        45673056,
+        45674191
+      ],
+      [
+        45674388,
+        45674475
+      ]
+    ],
+    "source_exonic_bp": 1222,
+    "target_native_chrom": "CM054489.2",
+    "target_browser_chrom": "chr5_mat_hsa6",
+    "paf_file": "PPAh2__PPAh1.paf",
+    "syntenic_search_start0": 41622663,
+    "syntenic_search_end0": 41624067,
+    "closest_aligned_flanks_native_bed0": [
+      41622648,
+      41624490
+    ],
+    "paf_projected_exons_native_bed0": [
+      [
+        41622663,
+        41622884
+      ],
+      [
+        41622902,
+        41623783
+      ],
+      [
+        41623980,
+        41624067
+      ]
+    ],
+    "paf_source_exonic_coverage": 0.9729950900163666,
+    "paf_source_identical_fraction": 0.9599018003273322,
+    "source_url": "https://hgdownload.soe.ucsc.edu/hubs/GCA/028/858/845/GCA_028858845.2/bbi/GCA_028858845.2_NHGRI_mPanPan1-v2.0_mat.augustus.bb",
+    "candidates": [
+      {
+        "chrom": "CM054489.2",
+        "chromStart": "41534172",
+        "chromEnd": "41787165",
+        "name": "g4389.t3",
+        "score": "0",
+        "strand": "-",
+        "thickStart": "41537520",
+        "thickEnd": "41786770",
+        "itemRgb": "0",
+        "blockCount": "36",
+        "blockSizes": "3572,142,1430,173,143,113,101,163,172,152,102,189,137,46,113,107,111,150,111,136,164,304,106,67,159,131,172,31,186,128,98,48,120,276,350,129,",
+        "blockStarts": "0,42908,93402,97638,102651,115797,116261,116830,120256,120555,121971,122169,122450,122734,122982,125684,125897,127346,127735,128005,128239,131800,134045,134337,142327,142770,147191,151507,179665,204860,221958,250618,251244,251488,252342,252864,",
+        "exons": [
+          [
+            41534172,
+            41537744
+          ],
+          [
+            41577080,
+            41577222
+          ],
+          [
+            41627574,
+            41629004
+          ],
+          [
+            41631810,
+            41631983
+          ],
+          [
+            41636823,
+            41636966
+          ],
+          [
+            41649969,
+            41650082
+          ],
+          [
+            41650433,
+            41650534
+          ],
+          [
+            41651002,
+            41651165
+          ],
+          [
+            41654428,
+            41654600
+          ],
+          [
+            41654727,
+            41654879
+          ],
+          [
+            41656143,
+            41656245
+          ],
+          [
+            41656341,
+            41656530
+          ],
+          [
+            41656622,
+            41656759
+          ],
+          [
+            41656906,
+            41656952
+          ],
+          [
+            41657154,
+            41657267
+          ],
+          [
+            41659856,
+            41659963
+          ],
+          [
+            41660069,
+            41660180
+          ],
+          [
+            41661518,
+            41661668
+          ],
+          [
+            41661907,
+            41662018
+          ],
+          [
+            41662177,
+            41662313
+          ],
+          [
+            41662411,
+            41662575
+          ],
+          [
+            41665972,
+            41666276
+          ],
+          [
+            41668217,
+            41668323
+          ],
+          [
+            41668509,
+            41668576
+          ],
+          [
+            41676499,
+            41676658
+          ],
+          [
+            41676942,
+            41677073
+          ],
+          [
+            41681363,
+            41681535
+          ],
+          [
+            41685679,
+            41685710
+          ],
+          [
+            41713837,
+            41714023
+          ],
+          [
+            41739032,
+            41739160
+          ],
+          [
+            41756130,
+            41756228
+          ],
+          [
+            41784790,
+            41784838
+          ],
+          [
+            41785416,
+            41785536
+          ],
+          [
+            41785660,
+            41785936
+          ],
+          [
+            41786514,
+            41786864
+          ],
+          [
+            41787036,
+            41787165
+          ]
+        ],
+        "gene_id": "g4389",
+        "cds_start_stat": "cmpl",
+        "cds_end_stat": "cmpl",
+        "projected_exonic_overlap_bp": 0,
+        "projected_fraction": 0.0,
+        "candidate_fraction": 0.0,
+        "distance_to_projected_span_bp": 0,
+        "same_strand": true,
+        "overlapping_source_gene_exons": [
+          {
+            "gene_symbol": "MUC22",
+            "source_model_id": "PPAh2:367:GCA_029289425.2T00000562198",
+            "exonic_overlap_bp": 3572
+          },
+          {
+            "gene_symbol": "CCHCR1",
+            "source_model_id": "PPAh2:380:GCA_029289425.2T00000562302",
+            "exonic_overlap_bp": 2167
+          },
+          {
+            "gene_symbol": "CDSN",
+            "source_model_id": "PPAh2:376:GCA_029289425.2T00000562283",
+            "exonic_overlap_bp": 1542
+          },
+          {
+            "gene_symbol": "PSORS1C1",
+            "source_model_id": "PPAh2:369:GCA_029289425.2T00000562222",
+            "exonic_overlap_bp": 1430
+          },
+          {
+            "gene_symbol": "HLA-C",
+            "source_model_id": "PPAh2:426:GCA_029289425.2T00000562955",
+            "exonic_overlap_bp": 922
+          },
+          {
+            "gene_symbol": "POU5F1",
+            "source_model_id": "PPAh2:421:GCA_029289425.2T00000562924",
+            "exonic_overlap_bp": 290
+          },
+          {
+            "gene_symbol": "PSORS1C2",
+            "source_model_id": "PPAh2:377:GCA_029289425.2T00000562292",
+            "exonic_overlap_bp": 95
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "track": "PPAh1",
+    "gene_symbol": "OR2J2",
+    "source_track": "PPAh2",
+    "source_model_id": "PPAh2:17:GCA_029289425.2T00000557109",
+    "source_native_chrom": "CM055477.2",
+    "source_native_start0": 43809857,
+    "source_native_end0": 43814761,
+    "source_strand": "+",
+    "source_exons_native_bed0": [
+      [
+        43809857,
+        43810056
+      ],
+      [
+        43812573,
+        43814761
+      ]
+    ],
+    "source_exonic_bp": 2387,
+    "target_native_chrom": "CM054489.2",
+    "target_browser_chrom": "chr5_mat_hsa6",
+    "paf_file": "PPAh2__PPAh1.paf",
+    "syntenic_search_start0": 39769314,
+    "syntenic_search_end0": 39769316,
+    "closest_aligned_flanks_native_bed0": [
+      39769314,
+      39769315
+    ],
+    "paf_projected_exons_native_bed0": [],
+    "paf_source_exonic_coverage": 0,
+    "paf_source_identical_fraction": 0.0,
+    "source_url": "https://hgdownload.soe.ucsc.edu/hubs/GCA/028/858/845/GCA_028858845.2/bbi/GCA_028858845.2_NHGRI_mPanPan1-v2.0_mat.augustus.bb",
+    "candidates": [
+      {
+        "chrom": "CM054489.2",
+        "chromStart": "39721162",
+        "chromEnd": "40160493",
+        "name": "g4360.t1",
+        "score": "0",
+        "strand": "+",
+        "thickStart": "39731765",
+        "thickEnd": "40157591",
+        "itemRgb": "0",
+        "blockCount": "23",
+        "blockSizes": "87,466,106,764,181,133,55,88,903,868,940,20,877,56,57,77,81,44,938,637,178,823,101,",
+        "blockStarts": "0,10593,72388,84002,153161,169079,210385,219145,259491,279093,294286,295905,315962,372505,376381,386926,387760,397198,401185,421740,425411,435800,439230,",
+        "exons": [
+          [
+            39721162,
+            39721249
+          ],
+          [
+            39731755,
+            39732221
+          ],
+          [
+            39793550,
+            39793656
+          ],
+          [
+            39805164,
+            39805928
+          ],
+          [
+            39874323,
+            39874504
+          ],
+          [
+            39890241,
+            39890374
+          ],
+          [
+            39931547,
+            39931602
+          ],
+          [
+            39940307,
+            39940395
+          ],
+          [
+            39980653,
+            39981556
+          ],
+          [
+            40000255,
+            40001123
+          ],
+          [
+            40015448,
+            40016388
+          ],
+          [
+            40017067,
+            40017087
+          ],
+          [
+            40037124,
+            40038001
+          ],
+          [
+            40093667,
+            40093723
+          ],
+          [
+            40097543,
+            40097600
+          ],
+          [
+            40108088,
+            40108165
+          ],
+          [
+            40108922,
+            40109003
+          ],
+          [
+            40118360,
+            40118404
+          ],
+          [
+            40122347,
+            40123285
+          ],
+          [
+            40142902,
+            40143539
+          ],
+          [
+            40146573,
+            40146751
+          ],
+          [
+            40156962,
+            40157785
+          ],
+          [
+            40160392,
+            40160493
+          ]
+        ],
+        "gene_id": "g4360",
+        "cds_start_stat": "cmpl",
+        "cds_end_stat": "cmpl",
+        "projected_exonic_overlap_bp": 0,
+        "projected_fraction": 0.0,
+        "candidate_fraction": 0.0,
+        "distance_to_projected_span_bp": 0,
+        "same_strand": true,
+        "overlapping_source_gene_exons": [
+          {
+            "gene_symbol": "OR10C1",
+            "source_model_id": "PPAh2:29:GCA_029289425.2T00000557205",
+            "exonic_overlap_bp": 940
+          },
+          {
+            "gene_symbol": "OR2I1P",
+            "source_model_id": "PPAh2:40:GCA_029289425.2T00000557292",
+            "exonic_overlap_bp": 938
+          },
+          {
+            "gene_symbol": "OR12D2",
+            "source_model_id": "PPAh2:25:GCA_029289425.2T00000557176",
+            "exonic_overlap_bp": 903
+          },
+          {
+            "gene_symbol": "OR2H1",
+            "source_model_id": "PPAh2:31:GCA_029289425.2T00000557219",
+            "exonic_overlap_bp": 877
+          },
+          {
+            "gene_symbol": "OR2H2",
+            "source_model_id": "PPAh2:44:GCA_029289425.2T00000557749",
+            "exonic_overlap_bp": 823
+          },
+          {
+            "gene_symbol": "OR2J3",
+            "source_model_id": "PPAh2:15:GCA_029289425.2T00000557086",
+            "exonic_overlap_bp": 466
+          },
+          {
+            "gene_symbol": "OR14J1",
+            "source_model_id": "PPAh2:19:GCA_029289425.2T00000557125",
+            "exonic_overlap_bp": 133
+          },
+          {
+            "gene_symbol": "OR2J1",
+            "source_model_id": "PPAh2:12:GCA_029289425.2T00000557057",
+            "exonic_overlap_bp": 87
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,80 @@
+# Assembly name:  NHGRI_mPonAbe1-v2.0_alt
+# Organism name:  Pongo abelii (Sumatran orangutan)
+# Isolate:  AG06213
+# Sex:  male
+# Taxid:          9601
+# BioSample:      SAMN10521808
+# BioProject:     PRJNA916741
+# Submitter:      National Human Genome Research Institute, National Institutes of Health
+# Date:           2024-01-05
+# Assembly type:  alternate-pseudohaplotype
+# Release type:   major
+# Assembly level: Chromosome
+# Genome representation: partial
+# WGS project:    JAQQLR02
+# Assembly method: Verkko v. 1.4
+# Expected final version: no
+# Genome coverage: 89.0x
+# Sequencing technology: PacBio Sequel; Oxford Nanopore PromethION
+# Excluded from RefSeq: partial
+# GenBank assembly accession: GCA_028885685.2
+# Linked assembly: GCA_028885655.2 (principal pseudohaplotype of diploid)
+#
+## Assembly-Units:
+## GenBank Unit Accession	RefSeq Unit Accession	Assembly-Unit name
+## GCA_028885695.2		Primary Assembly
+#
+# Ordered by chromosome/plasmid; the chromosomes/plasmids are followed by
+# unlocalized scaffolds.
+# Unplaced scaffolds are listed at the end.
+# RefSeq is equal or derived from GenBank object.
+#
+# Sequence-Name	Sequence-Role	Assigned-Molecule	Assigned-Molecule-Location/Type	GenBank-Accn	Relationship	RefSeq-Accn	Assembly-Unit	Sequence-Length	UCSC-style-name
+chr1_hap2_hsa1	assembled-molecule	1	Chromosome	CM054656.2	<>	na	Primary Assembly	235168524	na
+chr2_hap2_hsa3	assembled-molecule	2	Chromosome	CM068845.1	<>	na	Primary Assembly	209606446	na
+chr3_hap2_hsa4	assembled-molecule	3	Chromosome	CM054659.2	<>	na	Primary Assembly	212218738	na
+chr4_hap2_hsa5	assembled-molecule	4	Chromosome	CM054660.2	<>	na	Primary Assembly	189721022	na
+chr5_hap2_hsa6	assembled-molecule	5	Chromosome	CM054661.2	<>	na	Primary Assembly	172332327	na
+chr6_hap2_hsa7	assembled-molecule	6	Chromosome	CM054662.2	<>	na	Primary Assembly	161077158	na
+chr7_hap2_hsa8	assembled-molecule	7	Chromosome	CM054663.2	<>	na	Primary Assembly	165375051	na
+chr8_hap2_hsa10	assembled-molecule	8	Chromosome	CM054664.2	<>	na	Primary Assembly	140600164	na
+chr9_hap2_hsa11	assembled-molecule	9	Chromosome	CM054665.2	<>	na	Primary Assembly	137947919	na
+chr10_hap2_hsa12	assembled-molecule	10	Chromosome	CM054666.2	<>	na	Primary Assembly	132232842	na
+chr11_hap2_hsa2b	assembled-molecule	11	Chromosome	CM054667.2	<>	na	Primary Assembly	145714809	na
+chr12_hap2_hsa2a	assembled-molecule	12	Chromosome	CM054668.2	<>	na	Primary Assembly	131851162	na
+chr13_hap2_hsa9	assembled-molecule	13	Chromosome	CM054669.2	<>	na	Primary Assembly	124957153	na
+chr14_hap2_hsa13	assembled-molecule	14	Chromosome	CM054670.2	<>	na	Primary Assembly	103426334	na
+chr15_hap2_hsa14	assembled-molecule	15	Chromosome	CM054671.2	<>	na	Primary Assembly	103738455	na
+chr16_hap2_hsa15	assembled-molecule	16	Chromosome	CM054672.2	<>	na	Primary Assembly	105127583	na
+chr17_hap2_hsa18	assembled-molecule	17	Chromosome	CM054673.2	<>	na	Primary Assembly	90163724	na
+chr18_hap2_hsa16	assembled-molecule	18	Chromosome	CM054674.2	<>	na	Primary Assembly	87469633	na
+chr19_hap2_hsa17	assembled-molecule	19	Chromosome	CM054675.2	<>	na	Primary Assembly	101028621	na
+chr20_hap2_hsa19	assembled-molecule	20	Chromosome	CM054676.2	<>	na	Primary Assembly	71828149	na
+chr21_hap2_hsa20	assembled-molecule	21	Chromosome	CM054677.2	<>	na	Primary Assembly	68780452	na
+chr22_hap2_hsa21	assembled-molecule	22	Chromosome	CM054678.2	<>	na	Primary Assembly	54334173	na
+chr23_hap2_hsa22	assembled-molecule	23	Chromosome	CM068846.1	<>	na	Primary Assembly	54011003	na
+chr9_hap2_hsa11_random_utig4-877	unlocalized-scaffold	9	Chromosome	JAQQLR020000010.1	<>	na	Primary Assembly	271393	na
+chr9_hap2_hsa11_random_utig4-878	unlocalized-scaffold	9	Chromosome	JAQQLR020000011.1	<>	na	Primary Assembly	135633	na
+chr9_hap2_hsa11_random_utig4-879	unlocalized-scaffold	9	Chromosome	JAQQLR020000012.1	<>	na	Primary Assembly	49798	na
+chr9_hap2_hsa11_random_utig4-974	unlocalized-scaffold	9	Chromosome	JAQQLR020000013.1	<>	na	Primary Assembly	125474	na
+chr9_hap2_hsa11_random_utig4-975	unlocalized-scaffold	9	Chromosome	JAQQLR020000014.1	<>	na	Primary Assembly	125475	na
+chr9_hap2_hsa11_random_utig4-976	unlocalized-scaffold	9	Chromosome	JAQQLR020000015.1	<>	na	Primary Assembly	80286	na
+chr9_hap2_hsa11_random_utig4-977	unlocalized-scaffold	9	Chromosome	JAQQLR020000016.1	<>	na	Primary Assembly	87158	na
+chr9_hap2_hsa11_random_utig4-990	unlocalized-scaffold	9	Chromosome	JAQQLR020000017.1	<>	na	Primary Assembly	118043	na
+chr9_hap2_hsa11_random_utig4-1108	unlocalized-scaffold	9	Chromosome	JAQQLR020000018.1	<>	na	Primary Assembly	46158	na
+chr9_hap2_hsa11_random_utig4-1467	unlocalized-scaffold	9	Chromosome	JAQQLR020000019.1	<>	na	Primary Assembly	150996	na
+chr9_hap2_hsa11_random_utig4-1468	unlocalized-scaffold	9	Chromosome	JAQQLR020000020.1	<>	na	Primary Assembly	79677	na
+chr9_hap2_hsa11_random_utig4-1469	unlocalized-scaffold	9	Chromosome	JAQQLR020000021.1	<>	na	Primary Assembly	85611	na
+chr9_hap2_hsa11_random_utig4-2086	unlocalized-scaffold	9	Chromosome	JAQQLR020000022.1	<>	na	Primary Assembly	28048	na
+chr9_hap2_hsa11_random_utig4-2088	unlocalized-scaffold	9	Chromosome	JAQQLR020000023.1	<>	na	Primary Assembly	167641	na
+chr9_hap2_hsa11_random_utig4-2699	unlocalized-scaffold	9	Chromosome	JAQQLR020000024.1	<>	na	Primary Assembly	89137	na
+chr9_hap2_hsa11_random_utig4-3119	unlocalized-scaffold	9	Chromosome	JAQQLR020000025.1	<>	na	Primary Assembly	19461	na
+chr9_hap2_hsa11_random_utig4-3120	unlocalized-scaffold	9	Chromosome	JAQQLR020000026.1	<>	na	Primary Assembly	27601	na
+chr9_hap2_hsa11_random_utig4-3148	unlocalized-scaffold	9	Chromosome	JAQQLR020000027.1	<>	na	Primary Assembly	49482	na
+chr9_hap2_hsa11_random_utig4-3149	unlocalized-scaffold	9	Chromosome	JAQQLR020000028.1	<>	na	Primary Assembly	4428	na
+chr9_hap2_hsa11_random_utig4-3150	unlocalized-scaffold	9	Chromosome	JAQQLR020000029.1	<>	na	Primary Assembly	36607	na
+chr9_hap2_hsa11_random_utig4-3725	unlocalized-scaffold	9	Chromosome	JAQQLR020000030.1	<>	na	Primary Assembly	19353	na
+chr9_hap2_hsa11_random_utig4-3726	unlocalized-scaffold	9	Chromosome	JAQQLR020000031.1	<>	na	Primary Assembly	39186	na
+chr9_hap2_hsa11_random_utig4-4279	unlocalized-scaffold	9	Chromosome	JAQQLR020000032.1	<>	na	Primary Assembly	235262	na
+chr9_hap2_hsa11_random_utig4-4280	unlocalized-scaffold	9	Chromosome	JAQQLR020000033.1	<>	na	Primary Assembly	202223	na
+chr9_hap2_hsa11_random_utig4-5532	unlocalized-scaffold	9	Chromosome	JAQQLR020000034.1	<>	na	Primary Assembly	11135	na

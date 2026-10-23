@@ -1,0 +1,61 @@
+{
+  "command": [
+    "/private/tmp/ggexon-mhc-liftoff-venv/bin/liftoff",
+    "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/PABh2.fa",
+    "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/PABh1.fa",
+    "-g",
+    "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/PABh2/source.gff3",
+    "-o",
+    "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/PABh2/projected.gff3",
+    "-u",
+    "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/PABh2/unmapped.txt",
+    "-dir",
+    "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/PABh2/intermediates",
+    "-p",
+    "2",
+    "-a",
+    "0.95",
+    "-s",
+    "0.95",
+    "-exclude_partial"
+  ],
+  "tools": {
+    "version": "1.6.3",
+    "direct_url": {
+      "url": "https://github.com/agshumate/Liftoff.git",
+      "vcs_info": {
+        "commit_id": "94d6073ee2400c438d181a67d3af1e362197d839",
+        "vcs": "git"
+      }
+    },
+    "minimap2_version": "2.31-r1302",
+    "minimap2_sha256": "233e289649c6886531810b3917ac1180c72beb432c3e64ba1d918f3ed3365907"
+  },
+  "source_window": {
+    "track": "PABh1",
+    "species_id": "PAB",
+    "haplotype": "h1",
+    "label": "Sumatran orangutan h1",
+    "chr": "chr5_hap1_hsa6",
+    "start0": "28698133",
+    "end0": "34402409",
+    "length": "5704276",
+    "orientation": "+",
+    "twoBit_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/mPonAbe1_v2.0.2bit"
+  },
+  "target_window": {
+    "track": "PABh2",
+    "species_id": "PAB",
+    "haplotype": "h2",
+    "label": "Sumatran orangutan h2",
+    "chr": "chr5_hap2_hsa6",
+    "start0": "28697494",
+    "end0": "34321984",
+    "length": "5624490",
+    "orientation": "+",
+    "twoBit_url": "https://genomeark.s3.amazonaws.com/species/Pongo_abelii/mPonAbe1/assembly_curated/mPonAbe1_v2.0.2bit"
+  },
+  "source_gff_sha256": "ae9b6f6438e602bb898e1b0f57e93c68b5cfe1490c0430c2fdcaefabbea36026",
+  "target_fasta_sha256": "05d9dbf81c8e77a706e09b714c7693cba2e2ab2593e2a04e7e16322e73dc04b8",
+  "source_fasta_sha256": "12df0120fbc0f49b91e5e352fbe52e2bc40ea43d541c36ed6847e191474b907f"
+}

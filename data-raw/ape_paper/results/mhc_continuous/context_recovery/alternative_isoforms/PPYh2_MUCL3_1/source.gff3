@@ -1,0 +1,6 @@
+##gff-version 3
+PPYh1	source	gene	2243052	2257693	.	+	.	ID=alternate;Name=MUCL3
+PPYh1	source	mRNA	2243052	2257693	.	+	.	ID=alternate.t1;Parent=alternate
+PPYh1	source	exon	2243052	2243160	.	+	.	ID=ex0;Parent=alternate.t1
+PPYh1	source	exon	2250784	2255975	.	+	.	ID=ex1;Parent=alternate.t1
+PPYh1	source	exon	2256444	2257693	.	+	.	ID=ex2;Parent=alternate.t1

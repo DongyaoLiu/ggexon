@@ -5,12 +5,12 @@ named facet value. `facet` may be a bare column name or a one-element
 column-name string, and `labels` is a named list whose entries provide
 the labels for each facet. Labels are not inferred from geom data, so
 their order must correspond to `breaks`. Add this helper after
-[`ggplot2::facet_grid()`](https://ggplot2.tidyverse.org/reference/facet_grid.html)
+[`ggplot2::facet_grid()`](https://rdrr.io/pkg/ggplot2/man/facet_grid.html)
 or
-[`ggplot2::facet_wrap()`](https://ggplot2.tidyverse.org/reference/facet_wrap.html)
+[`ggplot2::facet_wrap()`](https://rdrr.io/pkg/ggplot2/man/facet_wrap.html)
 with fixed x scales. All panels share the same trained x range; only
 their axis labels differ. This preserves compatibility with
-[`ggplot2::coord_fixed()`](https://ggplot2.tidyverse.org/reference/coord_fixed.html).
+[`ggplot2::coord_fixed()`](https://rdrr.io/pkg/ggplot2/man/coord_fixed.html).
 For a grid, `facet` must identify columns, because each column shares an
 x axis. Unlisted facets retain numeric labels. Wrapped facets show an x
 axis in every panel so each label mapping is visible.
@@ -54,12 +54,12 @@ scale_x_facet_labels(
 - expand:
 
   Expansion specification passed to
-  [`ggplot2::scale_x_continuous()`](https://ggplot2.tidyverse.org/reference/scale_continuous.html).
+  [`ggplot2::scale_x_continuous()`](https://rdrr.io/pkg/ggplot2/man/scale_continuous.html).
 
 - ...:
 
   Additional arguments passed to
-  [`ggplot2::scale_x_continuous()`](https://ggplot2.tidyverse.org/reference/scale_continuous.html).
+  [`ggplot2::scale_x_continuous()`](https://rdrr.io/pkg/ggplot2/man/scale_continuous.html).
 
 ## Value
 

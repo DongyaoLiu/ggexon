@@ -1,0 +1,20 @@
+track	kind	panel_type	ymin	ymax
+chimp_h1	Coding gene	annotation	-1.1	-0.8
+chimp_h1	Coding gene	annotation	-1.1	-0.8
+chimp_h1	Coding gene	annotation	-1.1	-0.8
+chimp_h2	Coding gene	annotation	-1.1	-0.8
+chimp_h2	Coding gene	annotation	-1.1	-0.8
+chimp_h1	Pseudogene	annotation	-1.9	-1.6
+chimp_h1	Pseudogene	annotation	-1.9	-1.6
+chimp_h2	Pseudogene	annotation	-1.9	-1.6
+chimp_h1	Segmental duplication	annotation	-2.7	-2.4
+chimp_h1	Segmental duplication	annotation	-2.7	-2.4
+chimp_h1	Segmental duplication	annotation	-2.7	-2.4
+chimp_h1	Segmental duplication	annotation	-2.7	-2.4
+chimp_h2	Segmental duplication	annotation	-2.7	-2.4
+chimp_h2	Segmental duplication	annotation	-2.7	-2.4
+chimp_h2	Segmental duplication	annotation	-2.7	-2.4
+chimp_h2	Segmental duplication	annotation	-2.7	-2.4
+human	Segmental duplication	annotation	-1.1	-0.8
+human	Segmental duplication	annotation	-1.1	-0.8
+human	Segmental duplication	annotation	-1.1	-0.8

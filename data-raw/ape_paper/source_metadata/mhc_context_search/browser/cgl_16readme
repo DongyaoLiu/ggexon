@@ -1,0 +1,98 @@
+# 16-way diploid progressive cactus alignment
+
+This alignment contains two genomes for each non-human species: either maternal/paternal or primary/alt.  There are four human genomes, hg38, hs1 and hg002-mat/pat.  
+
+**IMPORTANT NOTE**: The coverage for sex-chromosomes in this alignment is slightly lower (~5%) than for the primary-only 8-way alignment. This is an area under active development in cactus.
+
+## Tree
+
+First, remove sex chromosomes
+```
+printf "CM054605.2\nCM054581.2\nCP139511.1\nCP139534.1\nchrX\nchrY\nCM054507.2\nCM054483.2\nCM054457.2\nCM054458.2\nCM054702.2\nCM054703.2\nCM054653.2\nCM054654.2\nCM054533.2\nCM054534.2\n > sexChrs.txt 
+
+for i in hs1 hg38 GCA_018852605.2 GCA_018852615.2 GCA_028858805.2 GCA_028858775.2 GCA_028885685.2 GCA_028885655.2 GCA_028885525.2 GCA_028885625.2 GCA_028878085.2 GCA_028878055.2 GCA_028885495.2 GCA_028885475.2 GCA_028858845.2 GCA_028858825.2 ; do faSomeRecords ${i}.fna.gz sexChrs.txt ${i}_autosomes.fa -exclude; done
+```
+
+the make the autosomes tree (mashtree v1.4.6):
+
+```
+mashtree --numcpus 12 *._autosomes.fa > 16-t2t-apes-2023v2.dnd
+```
+
+## Cactus Alignment
+
+Cactus version v2.7.1 was used for all commands.  To reproduce,
+
+Make a SLURM config (bigger lastz chunks)
+
+```
+cp /private/groups/cgl/cactus/cactus-bin-v2.7.1/src/cactus/cactus_progressive_config.xml ./config-slurm.xml
+sed -i config-slurm.xml -e 's/blast chunkSize="30000000"/blast chunkSize="90000000"/g'
+sed -i config-slurm.xml -e 's/dechunkBatchSize="1000"/dechunkBatchSize="200"/g'
+```
+
+Give the ancestors unique names in case we want to attach to other alignment
+```
+sed -i config-slurm.xml -e 's/default_internal_node_prefix="Anc"/default_internal_node_prefix="T2TApesAnc"/g'
+```
+
+Cactus command. Note we add two new options for diploid support:
+
+`--maxOutgroups 3` : we give an extra outgroup (the default is 2) so that different species are sampled.
+`--chromInfo` : provide information of which comindations of {chrX,chrY} are present in each genome, so outgroups can be selected accordingly.  This will not make much of a difference on this tree with 3 outgroups, but will become more useful for the VGP alignment. 
+
+```
+TOIL_SLURM_ARGS="--partition=long --time=8000" cactus ./js-16apes ./16-t2t-apes-2023v2.seqfile ./16-t2t-apes-2023v2.hal --batchSystem slurm --caching false --consCores 64 --configFile ./config-slurm.xml --maxOutgroups 3 --chromInfo 16-t2t-apes-2023v2.chroms --logFile 16-t2t-apes-2023v2.hal.log --batchLogsDir batch-logs-16apes --coordinationDir /data/tmp
+```
+
+## MAF for each primary assembly
+
+for i in hs1 hg38 GCA_028858775.2 GCA_028885655.2 GCA_028885625.2 GCA_028878055.2; do TOIL_SLURM_ARGS="--partition=long --time=8000" cactus-hal2maf ./js ./16-t2t-apes-2023v2.hal ./16-t2t-apes-2023v2.${i}.maf.gz --filterGapCausingDupes --refGenome $i --chunkSize 500000 --batchCores 64 --noAncestors --batchCount 16  --batchSystem slurm --caching false --logFile ./16-t2t-apes-2023v2.${i}.gz.log --batchLogsDir batch-logs-16apes --coordinationDir /data/tmp ;done
+
+Then make a bigmaf (Note: using cactus commit a8bd77e65d7f7c26fd7a6d69a110d1fe23b275c9 for this one -- reproduce with v2.7.2)
+
+for i in hs1 hg38 GCA_028858775.2 GCA_028885655.2 GCA_028885625.2 GCA_028878055.2; do TOIL_SLURM_ARGS="--partition=long --time=8000" cactus-maf2bigmaf ./js-bb ./16-t2t-apes-2023v2.${i}.maf.gz ./16-t2t-apes-2023v2.${i}.bigmaf.bb --refGenome $i --halFile ./16-t2t-apes-2023v2.hal --logFile ./16-t2t-apes-2023v2.${i}.bigmaf.bb.log --batchLogsDir batch-logs-8apes --coordinationDir /data/tmp --batchSystem slurm; done
+
+## Coverage
+
+Compute some pairwise coverage and identity statistics from each MAF
+(uses taffy commit 5d5c019dee562ea8c62c8ab3ce74491734fe5a23)
+
+```
+for i in hs1 hg38 GCA_028858775.2 GCA_028885655.2 GCA_028885625.2 GCA_028878055.2; do taffy view -i ./16-t2t-apes-2023v2.${i}.maf.gz | taffy coverage -g "$(halStats --genomes ./16-t2t-apes-2023v2.hal)" > ./16-t2t-apes-2023v2.${i}.maf.coverage.tsv ; done
+```
+
+## Chains export
+
+All-to-all chains were created with `cactus-hal2chains` (commit 723b7899abe450d6e0872d87fcd6852dc155cb76)
+
+```
+TOIL_SLURM_ARGS="--partition=long --time=8000" cactus-hal2chains ./js_chains16 ./16-t2t-apes-2023v2.hal ./16-t2t-apes-2023v2-chains  --bigChain  --caching false --logFile ./16-t2t-apes-2023v2-chains.log --batchLogsDir batch-logs --batchSystem slurm --coordinationDir /data/tmp
+```
+
+## Naming
+
+Both the HAL and MAF files use NCBI accessions for genome names.  These are completely unreadable.  To change the HAL genome names to be human-readable, use the following command (runs in 1 second):
+
+```
+halRenameGenomes 16-t2t-apes-2023v2.hal rename-hal.tsv
+```
+
+Renaming the MAF file(s) takes a little longer, but can be done with:
+
+```
+zcat 16-t2t-apes-2023v2.hs1.maf.gz | sed -e 's/GCA_028885685.2/mPonAbe1_alt/g' \
+-e 's/GCA_028885655.2/mPonAbe1_pri/g' \
+-e 's/GCA_028885625.2/mPonPyg2_pri/g' \
+-e 's/GCA_028885525.2/mPonPyg2_alt/g' \
+-e 's/GCA_028885495.2/mGorGor1_mat/g' \
+-e 's/GCA_028885475.2/mGorGor1_pat/g' \
+-e 's/GCA_028858845.2/mPanPan1_mat/g' \
+-e 's/GCA_028858825.2/mPanPan1_pat/g' \
+-e 's/GCA_028858805.2/mPanTro3_alt/g' \
+-e 's/GCA_028858775.2/mPanTro3_pri/g' \
+-e 's/GCA_018852605.2/hg002_pat/g' \
+-e 's/GCA_018852615.2/hg002_mat/g' \
+-e 's/GCA_028878085.2/mSymSyn1_alt/g' \
+-e 's/GCA_028878055.2/mSymSyn1_pri/g' | bgzip --threads 2 > 16-t2t-apes-2023v2.hs1.renamed.maf.gz
+```

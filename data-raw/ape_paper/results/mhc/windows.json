@@ -1,0 +1,35 @@
+[
+  {
+    "id": "human",
+    "label": "Human \u00b7 CHM13",
+    "assembly": "T2T-CHM13v2.0",
+    "chrom": "chr6",
+    "start0": 32270000,
+    "end0": 32465000,
+    "twoBit": "https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/browser/CHM13/chm13v2.0.2bit",
+    "gene": "https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/CHM13/browser/bbi/chm13v2.0_RefSeq_Liftoff_v5.2.bb",
+    "sd": "https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/browser/CHM13/bbi/segDups_2024.bb"
+  },
+  {
+    "id": "chimp_h1",
+    "label": "Chimpanzee \u00b7 haplotype 1",
+    "assembly": "mPanTro3_v2.0",
+    "chrom": "chr5_hap1_hsa6",
+    "start0": 38225000,
+    "end0": 38520000,
+    "twoBit": "https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/mPanTro3_v2.0.2bit",
+    "gene": "https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/gene/mPanTro3_refGene.bb",
+    "sd": "https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/repeats/mPanTro3_v2.0.SD_v1.0.bb"
+  },
+  {
+    "id": "chimp_h2",
+    "label": "Chimpanzee \u00b7 haplotype 2",
+    "assembly": "mPanTro3_v2.0",
+    "chrom": "chr5_hap2_hsa6",
+    "start0": 36975000,
+    "end0": 37270000,
+    "twoBit": "https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/mPanTro3_v2.0.2bit",
+    "gene": "https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/gene/mPanTro3_refGene.bb",
+    "sd": "https://genomeark.s3.amazonaws.com/species/Pan_troglodytes/mPanTro3/assembly_curated/repeats/mPanTro3_v2.0.SD_v1.0.bb"
+  }
+]

@@ -1,0 +1,56 @@
+# Assembly name:  NHGRI_mGorGor1-v2.0_pat
+# Organism name:  Gorilla gorilla gorilla (western lowland gorilla)
+# Isolate:  KB3781
+# Sex:  male
+# Taxid:          9595
+# BioSample:      SAMN04003007
+# BioProject:     PRJNA916733
+# Submitter:      National Human Genome Research Institute, National Institutes of Health
+# Date:           2024-01-08
+# Assembly type:  haploid (paternal haplotype of diploid)
+# Release type:   major
+# Assembly level: Chromosome
+# Genome representation: partial
+# WGS project:    JAQQLK02
+# Assembly method: Verkko v. 1.4
+# Expected final version: no
+# Genome coverage: 109.0x
+# Sequencing technology: PacBio Sequel; Oxford Nanopore PromethION
+# Excluded from RefSeq: partial
+# GenBank assembly accession: GCA_028885475.2
+# Linked assembly: GCA_028885495.2 (maternal haplotype of diploid)
+#
+## Assembly-Units:
+## GenBank Unit Accession	RefSeq Unit Accession	Assembly-Unit name
+## GCA_028885485.2		Primary Assembly
+#
+# Ordered by chromosome/plasmid; the chromosomes/plasmids are followed by
+# unlocalized scaffolds.
+# Unplaced scaffolds are listed at the end.
+# RefSeq is equal or derived from GenBank object.
+#
+# Sequence-Name	Sequence-Role	Assigned-Molecule	Assigned-Molecule-Location/Type	GenBank-Accn	Relationship	RefSeq-Accn	Assembly-Unit	Sequence-Length	UCSC-style-name
+chr1_pat_hsa1	assembled-molecule	1	Chromosome	CM054558.2	<>	na	Primary Assembly	243847345	na
+chr2_pat_hsa3	assembled-molecule	2	Chromosome	CM068948.1	<>	na	Primary Assembly	215253457	na
+chr3_pat_hsa4	assembled-molecule	3	Chromosome	CM054561.2	<>	na	Primary Assembly	215373162	na
+chr4_pat_hsa17x5	assembled-molecule	4	Chromosome	CM054562.2	<>	na	Primary Assembly	195332687	na
+chr5_pat_hsa6	assembled-molecule	5	Chromosome	CM054563.2	<>	na	Primary Assembly	188221671	na
+chr6_pat_hsa7	assembled-molecule	6	Chromosome	CM054564.2	<>	na	Primary Assembly	176479397	na
+chr7_pat_hsa8	assembled-molecule	7	Chromosome	CM054565.2	<>	na	Primary Assembly	158533252	na
+chr8_pat_hsa10	assembled-molecule	8	Chromosome	CM054566.2	<>	na	Primary Assembly	150804130	na
+chr9_pat_hsa11	assembled-molecule	9	Chromosome	CM054567.2	<>	na	Primary Assembly	147876701	na
+chr10_pat_hsa12	assembled-molecule	10	Chromosome	CM054568.2	<>	na	Primary Assembly	159470633	na
+chr11_pat_hsa2b	assembled-molecule	11	Chromosome	CM054569.2	<>	na	Primary Assembly	144025524	na
+chr12_pat_hsa2a	assembled-molecule	12	Chromosome	CM054570.2	<>	na	Primary Assembly	145906006	na
+chr13_pat_hsa9	assembled-molecule	13	Chromosome	CM054571.2	<>	na	Primary Assembly	134695396	na
+chr14_pat_hsa13	assembled-molecule	14	Chromosome	CM054572.2	<>	na	Primary Assembly	132018348	na
+chr15_pat_hsa14	assembled-molecule	15	Chromosome	CM054573.2	<>	na	Primary Assembly	131692671	na
+chr16_pat_hsa15	assembled-molecule	16	Chromosome	CM054574.2	<>	na	Primary Assembly	107915467	na
+chr17_pat_hsa18	assembled-molecule	17	Chromosome	CM054575.2	<>	na	Primary Assembly	107360859	na
+chr18_pat_hsa16	assembled-molecule	18	Chromosome	CM054576.2	<>	na	Primary Assembly	131347499	na
+chr19_pat_hsa5x17	assembled-molecule	19	Chromosome	CM054577.2	<>	na	Primary Assembly	120452965	na
+chr20_pat_hsa19	assembled-molecule	20	Chromosome	CM054578.2	<>	na	Primary Assembly	76019317	na
+chr21_pat_hsa20	assembled-molecule	21	Chromosome	CM054579.2	<>	na	Primary Assembly	84443219	na
+chr22_pat_hsa21	assembled-molecule	22	Chromosome	CM054580.2	<>	na	Primary Assembly	58627414	na
+chr23_pat_hsa22	assembled-molecule	23	Chromosome	CM068949.1	<>	na	Primary Assembly	58753399	na
+chrY_pat_hsaY	assembled-molecule	Y	Chromosome	CM054581.2	<>	na	Primary Assembly	67405748	na

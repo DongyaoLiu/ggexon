@@ -1,0 +1,10 @@
+{
+  "source_gene_rows": 3349,
+  "loci": 54,
+  "alignment_rows": 370,
+  "sv_block_rows": 961,
+  "verified_sequences": 3339,
+  "unverified_sequences": 10,
+  "corrected_locus_positions": 326,
+  "supplementary_rows": 3346
+}

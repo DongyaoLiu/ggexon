@@ -1,0 +1,3 @@
+locus	annotation	rows	owner_match	below_gene
+TRA	orf	92	TRUE	TRUE
+TRA	sv	30	TRUE	TRUE

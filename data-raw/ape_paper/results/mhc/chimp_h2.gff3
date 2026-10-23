@@ -1,0 +1,4 @@
+##gff-version 3
+chr5_hap2_hsa6	manual_MHC	gene	36995127	36999083	.	+	.	ID=manual_0;gene_id=manual_0;gene_name=Patr-DRA;Name=Patr-DRA
+chr5_hap2_hsa6	manual_MHC	gene	37076413	37088822	.	-	.	ID=manual_1;gene_id=manual_1;gene_name=Patr-DRB5;Name=Patr-DRB5
+chr5_hap2_hsa6	manual_MHC	gene	37142284	37155006	.	-	.	ID=manual_2;gene_id=manual_2;gene_name=Patr-DRB;Name=Patr-DRB

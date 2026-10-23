@@ -1,0 +1,62 @@
+{
+  "makovalab-psu_T2T_primate_autosomes_tree.json": {
+    "bytes": 4477,
+    "sha256": "f6e6a74fde29d5a32d32eb2609255a0731ba0ff4608516a0dfbf78772d5719e8"
+  },
+  "conservation_README.md": {
+    "bytes": 19400,
+    "sha256": "4ac5da922da45d8f0864d0449c9ef6c469f6b4de437f4bcb5463ef487bbea68d"
+  },
+  "ed3.jpg": {
+    "bytes": 685532,
+    "sha256": "66224802820c9a9f354e7f640e7877c2dd3b80d350649fb63490fce94932ce55"
+  },
+  "supplementary_information.txt": {
+    "bytes": 286040,
+    "sha256": "7e700e81d01d95aaebd970e4cbedebb3e8ce14d7b3ac2d9b753968cf148780e5"
+  },
+  "Supplementary_Table_XI_59_exact.tsv": {
+    "bytes": 355,
+    "sha256": "c53d16d2de5e934603d8af1ccc6869fcc390462096f6f792d932b09ab91c9e29"
+  },
+  "research_report.md": {
+    "bytes": 6832,
+    "sha256": "662e00b17564f5d21775f9d40865339e7175f97ee376c42c13f7b907960330d8"
+  },
+  "ed3_figure_page.html": {
+    "bytes": 215948,
+    "sha256": "206032567deb7f83d890a29b128c43b6f3fb880dde0edfe276a175dcd9802eb3"
+  },
+  "supplementary_information.pdf": {
+    "bytes": 21063540,
+    "sha256": "a54a8f93330849134a4cbc694c5049f2aa593984852474e6e835a545a42f7b5d"
+  },
+  "T2T-apes_ape_pangenome_tree.json": {
+    "bytes": 59250,
+    "sha256": "82a664f13ce5b1fcd7d2a3531567dfb73ae73018c30269304264731bc2558412"
+  },
+  "marbl_T2T-Browser_tree.json": {
+    "bytes": 220795,
+    "sha256": "bb2c39a9cc5c56d05d5dceb1f87c3e27afa0d90487dfb7e7b8c6af886d3a8d51"
+  },
+  "alignment_README.md": {
+    "bytes": 6897,
+    "sha256": "948fa32c4933a74106d0abbbc6349c71af2309a9be0da458783fc06fbd8ec834"
+  },
+  "table59_provenance.json": {
+    "bytes": 497,
+    "sha256": "fd56378ba414749b52c83314441c3bca4a7c99fdb06a47c730af80f15c6afe56"
+  },
+  "mhcGene.upstream.html": {
+    "bytes": 8112,
+    "sha256": "7080c7f81765b4e7479bb6a21de39f121b4dfb00d4f78e1376277f2673ad545e"
+  },
+  "Primates_README.md": {
+    "bytes": 13426,
+    "sha256": "30f15c03f102b7a13519877c885fe3b9050175ba3cf5b5569d1786fd0cee7932"
+  },
+  "marbl_Primates_tree.json": {
+    "bytes": 13274,
+    "sha256": "330895d8fe31837abd2b3fd13ee429921c13c78b0f5e9befcffe13ddfbadd328"
+  }
+}

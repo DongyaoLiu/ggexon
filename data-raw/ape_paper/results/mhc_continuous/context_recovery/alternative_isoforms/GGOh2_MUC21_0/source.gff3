@@ -1,0 +1,6 @@
+##gff-version 3
+GGOh1	source	gene	2228017	2232763	.	+	.	ID=alternate;Name=MUC21
+GGOh1	source	mRNA	2228017	2232763	.	+	.	ID=alternate.t1;Parent=alternate
+GGOh1	source	exon	2228017	2228460	.	+	.	ID=ex0;Parent=alternate.t1
+GGOh1	source	exon	2230543	2231807	.	+	.	ID=ex1;Parent=alternate.t1
+GGOh1	source	exon	2232126	2232763	.	+	.	ID=ex2;Parent=alternate.t1

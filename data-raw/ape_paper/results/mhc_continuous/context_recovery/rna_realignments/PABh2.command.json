@@ -1,0 +1,11 @@
+[
+  "minimap2",
+  "-ax",
+  "splice:hq",
+  "-uf",
+  "--eqx",
+  "-t",
+  "2",
+  "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/PABh2.fa",
+  "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/context_recovery/rna_realignments/PABh2.fastq"
+]

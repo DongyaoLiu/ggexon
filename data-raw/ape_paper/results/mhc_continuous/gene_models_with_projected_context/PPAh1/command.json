@@ -1,0 +1,61 @@
+{
+  "command": [
+    "/private/tmp/ggexon-mhc-liftoff-venv/bin/liftoff",
+    "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/PPAh1.fa",
+    "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/PPAh2.fa",
+    "-g",
+    "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/PPAh1/source.gff3",
+    "-o",
+    "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/PPAh1/projected.gff3",
+    "-u",
+    "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/PPAh1/unmapped.txt",
+    "-dir",
+    "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/gene_models_with_projected_context/PPAh1/intermediates",
+    "-p",
+    "2",
+    "-a",
+    "0.95",
+    "-s",
+    "0.95",
+    "-exclude_partial"
+  ],
+  "tools": {
+    "version": "1.6.3",
+    "direct_url": {
+      "url": "https://github.com/agshumate/Liftoff.git",
+      "vcs_info": {
+        "commit_id": "94d6073ee2400c438d181a67d3af1e362197d839",
+        "vcs": "git"
+      }
+    },
+    "minimap2_version": "2.31-r1302",
+    "minimap2_sha256": "233e289649c6886531810b3917ac1180c72beb432c3e64ba1d918f3ed3365907"
+  },
+  "source_window": {
+    "track": "PPAh2",
+    "species_id": "PPA",
+    "haplotype": "h2",
+    "label": "Bonobo h2",
+    "chr": "chr5_pat_hsa6",
+    "start0": "43421688",
+    "end0": "48633595",
+    "length": "5211907",
+    "orientation": "+",
+    "twoBit_url": "https://genomeark.s3.amazonaws.com/species/Pan_paniscus/mPanPan1/assembly_curated/mPanPan1_v2.0.2bit"
+  },
+  "target_window": {
+    "track": "PPAh1",
+    "species_id": "PPA",
+    "haplotype": "h1",
+    "label": "Bonobo h1",
+    "chr": "chr5_mat_hsa6",
+    "start0": "39408542",
+    "end0": "44487238",
+    "length": "5078696",
+    "orientation": "+",
+    "twoBit_url": "https://genomeark.s3.amazonaws.com/species/Pan_paniscus/mPanPan1/assembly_curated/mPanPan1_v2.0.2bit"
+  },
+  "source_gff_sha256": "2d724418fda12e809adcc4c3a6287e30147f6a89ec95868abfda232073cd5ae9",
+  "target_fasta_sha256": "409ccde1cc1c72db505f6a6ece29e3e6242106de5850ecd75f421d397412b1ed",
+  "source_fasta_sha256": "638470a2636163748aacfc2fec40719f196471492be25d35410cd7cbf1615197"
+}

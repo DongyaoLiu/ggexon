@@ -1,0 +1,55 @@
+track_id	species	haplotype	locus	facet	length	display_orientation	track_order	source_track	contig	genomic_start0	genomic_end0	fasta_length	source_file
+PPA1	Bonobo	1	IGH	IGH	1051438	1	2	mPanPan1_mat	chr15_mat_hsa14	107056869	108108307	1051438	repo/configs/config_IGH.txt
+PPA2	Bonobo	2	IGH	IGH	1115029	1	3	mPanPan1_pat	chr15_pat_hsa14	109620415	110735444	1115029	repo/configs/config_IGH.txt
+HSA1	Human	1	IGH	IGH	1046742	1	1	human_T2T	NC_060938.1	100114750	101161492	1046742	repo/configs/config_IGH.txt
+GGO1	Gorilla	1	IGH	IGH	977228	1	4	mGorGor1_mat	chr15_mat_hsa14	138149531	139126759	977228	repo/configs/config_IGH.txt
+GGO2	Gorilla	2	IGH	IGH	981206	1	5	mGorGor1_pat	chr15_pat_hsa14	122898195	123879401	981206	repo/configs/config_IGH.txt
+PAB1	Sumatran orangutan	1	IGH	IGH	1341614	1	6	mPonAbe1_hap1	chr15_hap1_hsa14	110388028	111729642	1341614	repo/configs/config_IGH.txt
+PAB2	Sumatran orangutan	2	IGH	IGH	1235780	1	7	mPonAbe1_hap2	chr15_hap2_hsa14	102496804	103732584	1235780	repo/configs/config_IGH.txt
+PPY1	Bornean orangutan	1	IGH	IGH	1365505	1	8	mPonPyg2_hap1	chr15_hap1_hsa14	105032960	106398465	1365505	repo/configs/config_IGH.txt
+PPY2	Bornean orangutan	2	IGH	IGH	1431994	1	9	mPonPyg2_hap2	chr15_hap2_hsa14	105622380	107054374	1431994	repo/configs/config_IGH.txt
+PPA1	Bonobo	1	IGK	IGK	604126	-1	2	mPanPan1_mat	chr12_mat_hsa2a	37852980	38457106	604126	repo/configs/config_IGK.txt
+PPA2	Bonobo	2	IGK	IGK	610108	-1	3	mPanPan1_pat	chr12_pat_hsa2a	35178650	35788758	610108	repo/configs/config_IGK.txt
+HSA1	Human	1	IGK	IGK	2096464	1	1	human_T2T	NC_060926.1	88849574	90946038	2096464	repo/configs/config_IGK.txt
+GGO1	Gorilla	1	IGK	IGK	1390379	-1	4	mGorGor1_mat	chr12_mat_hsa2a	55181938	56572317	1390379	repo/configs/config_IGK.txt
+GGO2	Gorilla	2	IGK	IGK	910324	-1	5	mGorGor1_pat	chr12_pat_hsa2a	50978486	51888810	910324	repo/configs/config_IGK.txt
+PAB1	Sumatran orangutan	1	IGK	IGK	840377	-1	6	mPonAbe1_hap1	chr12_hap1_hsa2a	43453052	44293429	840377	repo/configs/config_IGK.txt
+PAB2	Sumatran orangutan	2	IGK	IGK	777799	-1	7	mPonAbe1_hap2	chr12_hap2_hsa2a	42052399	42830198	777799	repo/configs/config_IGK.txt
+PPY1	Bornean orangutan	1	IGK	IGK	791103	-1	8	mPonPyg2_hap1	chr12_hap1_hsa2a	44688570	45479673	791103	repo/configs/config_IGK.txt
+PPY2	Bornean orangutan	2	IGK	IGK	826226	-1	9	mPonPyg2_hap2	chr12_hap2_hsa2a	47971029	48797255	826226	repo/configs/config_IGK.txt
+PPA1	Bonobo	1	IGL	IGL	2057070	1	2	mPanPan1_mat	chr23_mat_hsa22	36728790	38785860	2057070	repo/configs/config_IGL.txt
+PPA2	Bonobo	2	IGL	IGL	1924033	1	3	mPanPan1_pat	chr23_pat_hsa22	31547979	33472012	1924033	repo/configs/config_IGL.txt
+HSA1	Human	1	IGL	IGL	939579	1	1	human_T2T	NC_060946.1	22424727	23364306	939579	repo/configs/config_IGL.txt
+GGO1	Gorilla	1	IGL	IGL	833556	1	4	mGorGor1_mat	chr23_mat_hsa22	19591683	20425239	833556	repo/configs/config_IGL.txt
+GGO2	Gorilla	2	IGL	IGL	879026	1	5	mGorGor1_pat	chr23_pat_hsa22	18871582	19750608	879026	repo/configs/config_IGL.txt
+PAB1	Sumatran orangutan	1	IGL	IGL	851476	-1	6	mPonAbe1_hap1	chr23_hap1_hsa22	25539198	26390674	851476	repo/configs/config_IGL.txt
+PAB2	Sumatran orangutan	2	IGL	IGL	726154	-1	7	mPonAbe1_hap2	chr23_hap2_hsa22	21990598	22716752	726154	repo/configs/config_IGL.txt
+PPY1	Bornean orangutan	1	IGL	IGL	1378298	-1	8	mPonPyg2_hap1	chr23_hap1_hsa22	29516724	30895022	1378298	repo/configs/config_IGL.txt
+PPY2	Bornean orangutan	2	IGL	IGL	1288982	-1	9	mPonPyg2_hap2	chr23_hap2_hsa22	20966899	22255881	1288982	repo/configs/config_IGL.txt
+PPA1	Bonobo	1	TRA	TRA/TRD	954524	1	2	mPanPan1_mat	chr15_mat_hsa14	23057024	24011548	954524	repo/configs/config_TRA.txt
+PPA2	Bonobo	2	TRA	TRA/TRD	955971	1	3	mPanPan1_pat	chr15_pat_hsa14	25572430	26528401	955971	repo/configs/config_TRA.txt
+HSA1	Human	1	TRA	TRA/TRD	962896	1	1	human_T2T	NC_060938.1	15799887	16762783	962896	repo/configs/config_TRA.txt
+GGO1	Gorilla	1	TRA	TRA/TRD	974453	-1	4	mGorGor1_mat	chr15_mat_hsa14	38075740	39050193	974453	repo/configs/config_TRA.txt
+GGO2	Gorilla	2	TRA	TRA/TRD	978051	-1	5	mGorGor1_pat	chr15_pat_hsa14	34064621	35042672	978051	repo/configs/config_TRA.txt
+PAB1	Sumatran orangutan	1	TRA	TRA/TRD	1061494	1	6	mPonAbe1_hap1	chr15_hap1_hsa14	25025979	26087473	1061494	repo/configs/config_TRA.txt
+PAB2	Sumatran orangutan	2	TRA	TRA/TRD	1064010	1	7	mPonAbe1_hap2	chr15_hap2_hsa14	17061223	18125233	1064010	repo/configs/config_TRA.txt
+PPY1	Bornean orangutan	1	TRA	TRA/TRD	1065125	1	8	mPonPyg2_hap1	chr15_hap1_hsa14	19652201	20717326	1065125	repo/configs/config_TRA.txt
+PPY2	Bornean orangutan	2	TRA	TRA/TRD	1058086	1	9	mPonPyg2_hap2	chr15_hap2_hsa14	20306378	21364464	1058086	repo/configs/config_TRA.txt
+PPA1	Bonobo	1	TRB	TRB	608477	1	2	mPanPan1_mat	chr6_mat_hsa7	179072465	179680942	608477	repo/configs/config_TRB.txt
+PPA2	Bonobo	2	TRB	TRB	608639	1	3	mPanPan1_pat	chr6_pat_hsa7	163130363	163739002	608639	repo/configs/config_TRB.txt
+HSA1	Human	1	TRB	TRB	578926	1	1	human_T2T	NC_060931.1	143594246	144173172	578926	repo/configs/config_TRB.txt
+GGO1	Gorilla	1	TRB	TRB	582616	1	4	mGorGor1_mat	chr6_mat_hsa7	151450129	152032745	582616	repo/configs/config_TRB.txt
+GGO2	Gorilla	2	TRB	TRB	582458	1	5	mGorGor1_pat	chr6_pat_hsa7	153510888	154093346	582458	repo/configs/config_TRB.txt
+PAB1	Sumatran orangutan	1	TRB	TRB	722773	1	6	mPonAbe1_hap1	chr6_hap1_hsa7	139717282	140440055	722773	repo/configs/config_TRB.txt
+PAB2	Sumatran orangutan	2	TRB	TRB	763491	1	7	mPonAbe1_hap2	chr6_hap2_hsa7	143823594	144587085	763491	repo/configs/config_TRB.txt
+PPY1	Bornean orangutan	1	TRB	TRB	740852	1	8	mPonPyg2_hap1	chr6_hap1_hsa7	141300307	142041159	740852	repo/configs/config_TRB.txt
+PPY2	Bornean orangutan	2	TRB	TRB	743940	1	9	mPonPyg2_hap2	chr6_hap2_hsa7	142019032	142762972	743940	repo/configs/config_TRB.txt
+PPA1	Bonobo	1	TRG	TRG	154740	1	2	mPanPan1_mat	chr6_mat_hsa7	43063961	43218701	154740	repo/configs/config_TRG.txt
+PPA2	Bonobo	2	TRG	TRG	150432	1	3	mPanPan1_pat	chr6_pat_hsa7	41961885	42112317	150432	repo/configs/config_TRG.txt
+HSA1	Human	1	TRG	TRG	170175	1	1	human_T2T	NC_060931.1	38374292	38453252	78960	repo/configs/config_TRG.txt
+GGO1	Gorilla	1	TRG	TRG	146689	1	4	mGorGor1_mat	chr6_mat_hsa7	45692281	45838970	146689	repo/configs/config_TRG.txt
+GGO2	Gorilla	2	TRG	TRG	146668	1	5	mGorGor1_pat	chr6_pat_hsa7	47172057	47318725	146668	repo/configs/config_TRG.txt
+PAB1	Sumatran orangutan	1	TRG	TRG	157593	-1	6	mPonAbe1_hap1	chr6_hap1_hsa7	46555905	46713498	157593	repo/configs/config_TRG.txt
+PAB2	Sumatran orangutan	2	TRG	TRG	161891	-1	7	mPonAbe1_hap2	chr6_hap2_hsa7	50616326	50778217	161891	repo/configs/config_TRG.txt
+PPY1	Bornean orangutan	1	TRG	TRG	157575	-1	8	mPonPyg2_hap1	chr6_hap1_hsa7	48092508	48250083	157575	repo/configs/config_TRG.txt
+PPY2	Bornean orangutan	2	TRG	TRG	157530	-1	9	mPonPyg2_hap2	chr6_hap2_hsa7	48826231	48983761	157530	repo/configs/config_TRG.txt

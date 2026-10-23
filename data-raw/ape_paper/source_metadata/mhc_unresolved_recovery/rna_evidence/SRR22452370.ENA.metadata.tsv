@@ -1,0 +1,2 @@
+run_accession	study_accession	sample_accession	experiment_accession	scientific_name	tax_id	library_strategy	library_source	sample_title
+SRR22452370	PRJNA902025	SAMN31928435	SRX18421140	Gorilla gorilla gorilla	9595	RNA-Seq	TRANSCRIPTOMIC	Model organism or animal sample from Gorilla gorilla gorilla

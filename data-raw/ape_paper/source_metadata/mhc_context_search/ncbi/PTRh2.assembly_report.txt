@@ -1,0 +1,55 @@
+# Assembly name:  NHGRI_mPanTro3-v2.0_alt
+# Organism name:  Pan troglodytes (chimpanzee)
+# Isolate:  AG18354
+# Sex:  male
+# Taxid:          9598
+# BioSample:      SAMN30216104
+# BioProject:     PRJNA916737
+# Submitter:      National Human Genome Research Institute, National Institutes of Health
+# Date:           2024-01-08
+# Assembly type:  alternate-pseudohaplotype
+# Release type:   major
+# Assembly level: Chromosome
+# Genome representation: partial
+# WGS project:    JAQQLO02
+# Assembly method: Verkko v. 1.4
+# Expected final version: no
+# Genome coverage: 60.0x
+# Sequencing technology: PacBio Sequel; Oxford Nanopore PromethION
+# Excluded from RefSeq: partial
+# GenBank assembly accession: GCA_028858805.2
+# Linked assembly: GCA_028858775.2 (principal pseudohaplotype of diploid)
+#
+## Assembly-Units:
+## GenBank Unit Accession	RefSeq Unit Accession	Assembly-Unit name
+## GCA_028858815.2		Primary Assembly
+#
+# Ordered by chromosome/plasmid; the chromosomes/plasmids are followed by
+# unlocalized scaffolds.
+# Unplaced scaffolds are listed at the end.
+# RefSeq is equal or derived from GenBank object.
+#
+# Sequence-Name	Sequence-Role	Assigned-Molecule	Assigned-Molecule-Location/Type	GenBank-Accn	Relationship	RefSeq-Accn	Assembly-Unit	Sequence-Length	UCSC-style-name
+chr1_hap2_hsa1	assembled-molecule	1	Chromosome	CM054411.2	<>	na	Primary Assembly	233523103	na
+chr2_hap2_hsa3	assembled-molecule	2	Chromosome	CM068903.1	<>	na	Primary Assembly	200342395	na
+chr3_hap2_hsa4	assembled-molecule	3	Chromosome	CM054414.2	<>	na	Primary Assembly	193341695	na
+chr4_hap2_hsa5	assembled-molecule	4	Chromosome	CM054415.2	<>	na	Primary Assembly	179313117	na
+chr5_hap2_hsa6	assembled-molecule	5	Chromosome	CM054416.2	<>	na	Primary Assembly	180078680	na
+chr6_hap2_hsa7	assembled-molecule	6	Chromosome	CM054417.2	<>	na	Primary Assembly	168845880	na
+chr7_hap2_hsa8	assembled-molecule	7	Chromosome	CM054418.2	<>	na	Primary Assembly	164843013	na
+chr8_hap2_hsa10	assembled-molecule	8	Chromosome	CM054419.2	<>	na	Primary Assembly	147433987	na
+chr9_hap2_hsa11	assembled-molecule	9	Chromosome	CM054420.2	<>	na	Primary Assembly	136439545	na
+chr10_hap2_hsa12	assembled-molecule	10	Chromosome	CM054421.2	<>	na	Primary Assembly	138751773	na
+chr11_hap2_hsa9	assembled-molecule	11	Chromosome	CM054422.2	<>	na	Primary Assembly	122000606	na
+chr12_hap2_hsa2a	assembled-molecule	12	Chromosome	CM054423.2	<>	na	Primary Assembly	126935857	na
+chr13_hap2_hsa2b	assembled-molecule	13	Chromosome	CM054424.2	<>	na	Primary Assembly	140842815	na
+chr14_hap2_hsa13	assembled-molecule	14	Chromosome	CM054425.2	<>	na	Primary Assembly	117995886	na
+chr15_hap2_hsa14	assembled-molecule	15	Chromosome	CM054426.2	<>	na	Primary Assembly	102708101	na
+chr16_hap2_hsa15	assembled-molecule	16	Chromosome	CM054427.2	<>	na	Primary Assembly	97712329	na
+chr17_hap2_hsa18	assembled-molecule	17	Chromosome	CM054428.2	<>	na	Primary Assembly	91956294	na
+chr18_hap2_hsa16	assembled-molecule	18	Chromosome	CM054429.2	<>	na	Primary Assembly	100838620	na
+chr19_hap2_hsa17	assembled-molecule	19	Chromosome	CM054430.2	<>	na	Primary Assembly	97071989	na
+chr20_hap2_hsa19	assembled-molecule	20	Chromosome	CM054431.2	<>	na	Primary Assembly	73832502	na
+chr21_hap2_hsa20	assembled-molecule	21	Chromosome	CM054432.2	<>	na	Primary Assembly	78790912	na
+chr22_hap2_hsa21	assembled-molecule	22	Chromosome	CM054433.2	<>	na	Primary Assembly	49554819	na
+chr23_hap2_hsa22	assembled-molecule	23	Chromosome	CM068904.1	<>	na	Primary Assembly	55318256	na

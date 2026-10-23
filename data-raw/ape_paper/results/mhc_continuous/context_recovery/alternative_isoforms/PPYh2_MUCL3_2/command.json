@@ -1,0 +1,19 @@
+[
+  "/tmp/ggexon-mhc-liftoff-venv/bin/liftoff",
+  "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/PPYh2.fa",
+  "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/PPYh1.fa",
+  "-g",
+  "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/context_recovery/alternative_isoforms/PPYh2_MUCL3_2/source.gff3",
+  "-o",
+  "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/context_recovery/alternative_isoforms/PPYh2_MUCL3_2/projection.gff3",
+  "-u",
+  "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/context_recovery/alternative_isoforms/PPYh2_MUCL3_2/unmapped.txt",
+  "-dir",
+  "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/context_recovery/alternative_isoforms/PPYh2_MUCL3_2/intermediates",
+  "-p",
+  "1",
+  "-a",
+  ".95",
+  "-s",
+  ".95"
+]

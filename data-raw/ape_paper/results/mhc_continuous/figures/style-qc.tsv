@@ -1,0 +1,2 @@
+theme	strip_side	panel_border	strip_background	gene_geom	mhc_geom	native_mhc_geom	native_mhc_colors	vr_shared_y	headroom	max_shift_mm	head_gap_mm	head_row_gap_mm	head_linewidth_mm	padding_mm	tip_mm	head_layout	head_rows	anchor_tick_mm	fan_height_mm	stem_linewidth_mm	lane_spacing_mm	lane_clearance_mm	context_bottom_y	context_top_y
+theme_ggexon_track + theme_ggexon_side_strips	left	FALSE	FALSE	geom_gene	geom_gene_lollipop	geom_gene	ortholog identity; status in enlarged heads	TRUE	8	25	0.8	0.8	0.25	0.6	1.8	columns	fixed by source gene key	0.9	2.5	0.22	0.65	0.5	-0.5	0

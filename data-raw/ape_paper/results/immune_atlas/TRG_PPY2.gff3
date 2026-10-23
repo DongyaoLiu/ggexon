@@ -1,0 +1,18 @@
+##gff-version 3
+TRG	source	gene	137196	137704	.	-	.	ID=g1
+TRG	source	gene	132868	133375	.	-	.	ID=g2
+TRG	source	gene	128510	129018	.	-	.	ID=g3
+TRG	source	gene	124182	124690	.	-	.	ID=g4
+TRG	source	gene	119852	120360	.	-	.	ID=g5
+TRG	source	gene	109881	110289	.	-	.	ID=g6
+TRG	source	gene	105129	105646	.	-	.	ID=g7
+TRG	source	gene	87159	87674	.	-	.	ID=g8
+TRG	source	gene	77539	77921	.	-	.	ID=g9
+TRG	source	gene	70041	70455	.	-	.	ID=g10
+TRG	source	gene	61915	62306	.	-	.	ID=g11
+TRG	source	gene	50232	50643	.	-	.	ID=g12
+TRG	source	gene	42856	42943	.	-	.	ID=g13
+TRG	source	gene	40175	40264	.	-	.	ID=g14
+TRG	source	gene	36077	36154	.	-	.	ID=g15
+TRG	source	gene	22916	23003	.	-	.	ID=g16
+TRG	source	gene	19951	20028	.	-	.	ID=g17

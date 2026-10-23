@@ -1,0 +1,206 @@
+{
+  "retrieved": "2026-10-18",
+  "paper": "https://www.nature.com/articles/s41586-025-08816-3",
+  "github_revision": "603f414e9278545a1c8dcf416f3226e7a3d07e86",
+  "coordinate_system": "genes.tsv, genes_ed3_scope.tsv and windows*.tsv: 1-based closed; genes.bed0.tsv and upstream .bed: 0-based half-open; upstream .txt: 1-based closed",
+  "conversion": "Ape .txt preserved start/end; verified every record matches upstream BED start=original_start-1,end=original_end. Human RefSeq BED0 starts incremented by1; ends unchanged.",
+  "functionality": "functional means manual Coding gene or RefSeq protein_coding; pseudogene means explicit manual Pseudogene or RefSeq geneType containing pseudogene. No functionality inferred from color. Functional is an annotation category, not experimental validation.",
+  "class_assignment": "DR/DQ/DP/DM/DO symbol suffixes: MHC_II; remaining curated ape loci and HLA symbols: MHC_I. Gogo-OKO is MHC_I.",
+  "human_aggregation": "Transcript models collapsed by gene symbol/chromosome/strand/status; output spans are union of transcript model starts and ends.",
+  "scope": "All6ape curated manual tables; human CHM13 RefSeq HLA coding/pseudogene regional records. Separate genes_ed3_scope.tsv restricts human to8classI loci (A/B/C/E/F/G/H/J) and13classII coding loci, matching requested ED3 overview scope; allape curated labels retained.",
+  "human_ed3_scope_symbols": [
+    "HLA-A",
+    "HLA-B",
+    "HLA-C",
+    "HLA-DMA",
+    "HLA-DMB",
+    "HLA-DOA",
+    "HLA-DOB",
+    "HLA-DPA1",
+    "HLA-DPB1",
+    "HLA-DQA1",
+    "HLA-DQA2",
+    "HLA-DQB1",
+    "HLA-DQB2",
+    "HLA-DRA",
+    "HLA-DRB1",
+    "HLA-DRB5",
+    "HLA-E",
+    "HLA-F",
+    "HLA-G",
+    "HLA-H",
+    "HLA-J"
+  ],
+  "human_excluded_noncoding_HLA_symbols": [
+    "HLA-DQB1-AS1",
+    "HLA-F-AS1"
+  ],
+  "species": {
+    "PTR": {
+      "sample": "mPanTro3",
+      "scientific_name": "Pan troglodytes",
+      "assembly": "mPanTro3_v2.0"
+    },
+    "PPA": {
+      "sample": "mPanPan1",
+      "scientific_name": "Pan paniscus",
+      "assembly": "mPanPan1_v2.0"
+    },
+    "GGO": {
+      "sample": "mGorGor1",
+      "scientific_name": "Gorilla gorilla",
+      "assembly": "mGorGor1_v2.0"
+    },
+    "PAB": {
+      "sample": "mPonAbe1",
+      "scientific_name": "Pongo abelii",
+      "assembly": "mPonAbe1_v2.0"
+    },
+    "PPY": {
+      "sample": "mPonPyg2",
+      "scientific_name": "Pongo pygmaeus",
+      "assembly": "mPonPyg2_v2.0"
+    },
+    "SSY": {
+      "sample": "mSymSyn1",
+      "scientific_name": "Symphalangus syndactylus",
+      "assembly": "mSymSyn1_v2.0"
+    },
+    "HSA": {
+      "sample": "CHM13",
+      "scientific_name": "Homo sapiens",
+      "assembly": "T2T-CHM13v2.0"
+    }
+  },
+  "cautions": [
+    "Counts represent source-curated genes, not genome-wide equal-ascertainment gene inventories. Ape manual tables omit some minor HLA-class pseudogene counterparts that RefSeq annotates in human.",
+    "The absence of a gene label in these sources does not establish biological absence in an ape haplotype.",
+    "Windows are the min/max observed selected gene spans for each class and track, not complete locus or synteny boundaries. No sequence alignment or genome-wide survey was performed.",
+    "Manual gene spans approximate putative start-to-end-codon intervals; human RefSeq transcript-union spans may include untranslated regions. Their widths are not directly equivalent gene-length measurements.",
+    "Some upstream manual browser records incorporate CAT-supported or renamed loci beyond populated manual cells in supplementary57/58; original browser tables are the source of truth for these outputs."
+  ],
+  "sources": [
+    {
+      "file": "source_metadata/mhc_full/README.upstream.md",
+      "url": "https://raw.githubusercontent.com/marbl/T2T-Browser/603f414e9278545a1c8dcf416f3226e7a3d07e86/src/MHC/README.md",
+      "bytes": 3228,
+      "sha256": "b6cc35397b8c23df7ab18848ea287c1030ac6d691895f48eefb03a89aea985da"
+    },
+    {
+      "file": "source_metadata/mhc_full/mPanTro3_MHC_manual_v0.1.txt",
+      "url": "https://raw.githubusercontent.com/marbl/T2T-Browser/603f414e9278545a1c8dcf416f3226e7a3d07e86/src/MHC/mPanTro3_MHC_manual_v0.1.txt",
+      "bytes": 2503,
+      "sha256": "07a9389206d3b18b6f458558d3cc648926a4c6e20755af0eb4e097d389fbf046"
+    },
+    {
+      "file": "source_metadata/mhc_full/mPanTro3_MHC_manual_v0.1.bed",
+      "url": "https://raw.githubusercontent.com/marbl/T2T-Browser/603f414e9278545a1c8dcf416f3226e7a3d07e86/src/MHC/mPanTro3_MHC_manual_v0.1.bed",
+      "bytes": 3165,
+      "sha256": "8b9d8fb44a844fe02cd522cc0c4d967744e4c228d77d8dcf2f106d0c41afc1a1"
+    },
+    {
+      "file": "source_metadata/mhc_full/mPanPan1_MHC_manual_v0.1.txt",
+      "url": "https://raw.githubusercontent.com/marbl/T2T-Browser/603f414e9278545a1c8dcf416f3226e7a3d07e86/src/MHC/mPanPan1_MHC_manual_v0.1.txt",
+      "bytes": 2288,
+      "sha256": "ba3e495a04dd23bcf17f73d2b5e232235360e237b9bb850e49cd2c49664f1c05"
+    },
+    {
+      "file": "source_metadata/mhc_full/mPanPan1_MHC_manual_v0.1.bed",
+      "url": "https://raw.githubusercontent.com/marbl/T2T-Browser/603f414e9278545a1c8dcf416f3226e7a3d07e86/src/MHC/mPanPan1_MHC_manual_v0.1.bed",
+      "bytes": 2898,
+      "sha256": "b4fb98a65495b082fda0f9dc70062179de9621d17b46e56856addcade8734958"
+    },
+    {
+      "file": "source_metadata/mhc_full/mGorGor1_MHC_manual_v0.1.txt",
+      "url": "https://raw.githubusercontent.com/marbl/T2T-Browser/603f414e9278545a1c8dcf416f3226e7a3d07e86/src/MHC/mGorGor1_MHC_manual_v0.1.txt",
+      "bytes": 2465,
+      "sha256": "89f55e44fc64a57645dc1560a94bad75cf8a3b5e10df160e699711058b2a8a7b"
+    },
+    {
+      "file": "source_metadata/mhc_full/mGorGor1_MHC_manual_v0.1.bed",
+      "url": "https://raw.githubusercontent.com/marbl/T2T-Browser/603f414e9278545a1c8dcf416f3226e7a3d07e86/src/MHC/mGorGor1_MHC_manual_v0.1.bed",
+      "bytes": 3127,
+      "sha256": "552bd7eebe3e9001ba723abaa97ba31ae4258177f3ff272f22c4fb1155bcfa0b"
+    },
+    {
+      "file": "source_metadata/mhc_full/mPonAbe1_MHC_manual_v0.1.txt",
+      "url": "https://raw.githubusercontent.com/marbl/T2T-Browser/603f414e9278545a1c8dcf416f3226e7a3d07e86/src/MHC/mPonAbe1_MHC_manual_v0.1.txt",
+      "bytes": 2614,
+      "sha256": "c8e22b6fe1309ebb6343b7328fe199f220c35412248aad2172c7b705ce2ff705"
+    },
+    {
+      "file": "source_metadata/mhc_full/mPonAbe1_MHC_manual_v0.1.bed",
+      "url": "https://raw.githubusercontent.com/marbl/T2T-Browser/603f414e9278545a1c8dcf416f3226e7a3d07e86/src/MHC/mPonAbe1_MHC_manual_v0.1.bed",
+      "bytes": 3313,
+      "sha256": "c35e7fb6a1d0d6a6cb828c70aa447445059a3fb3b414563cf99d197fbf5ac120"
+    },
+    {
+      "file": "source_metadata/mhc_full/mPonPyg2_MHC_manual_v0.1.txt",
+      "url": "https://raw.githubusercontent.com/marbl/T2T-Browser/603f414e9278545a1c8dcf416f3226e7a3d07e86/src/MHC/mPonPyg2_MHC_manual_v0.1.txt",
+      "bytes": 2677,
+      "sha256": "f1e5d53ff1fd1486f48221f86e3f8abc560a54c7959be36f86778a819b8711d5"
+    },
+    {
+      "file": "source_metadata/mhc_full/mPonPyg2_MHC_manual_v0.1.bed",
+      "url": "https://raw.githubusercontent.com/marbl/T2T-Browser/603f414e9278545a1c8dcf416f3226e7a3d07e86/src/MHC/mPonPyg2_MHC_manual_v0.1.bed",
+      "bytes": 3390,
+      "sha256": "d600287eb86a0d7652f9c174cc47b1f8f7f0533ad9bda12244118419e2f5c5b6"
+    },
+    {
+      "file": "source_metadata/mhc_full/mSymSyn1_MHC_manual_v0.1.txt",
+      "url": "https://raw.githubusercontent.com/marbl/T2T-Browser/603f414e9278545a1c8dcf416f3226e7a3d07e86/src/MHC/mSymSyn1_MHC_manual_v0.1.txt",
+      "bytes": 2012,
+      "sha256": "6f2e7871ea1f855aaed2fe659f45a94ed570a3698d4293e4adf66e5f5d09d092"
+    },
+    {
+      "file": "source_metadata/mhc_full/mSymSyn1_MHC_manual_v0.1.bed",
+      "url": "https://raw.githubusercontent.com/marbl/T2T-Browser/603f414e9278545a1c8dcf416f3226e7a3d07e86/src/MHC/mSymSyn1_MHC_manual_v0.1.bed",
+      "bytes": 2574,
+      "sha256": "7f10e2ec7db2686bf3730990d04a5eee1650ff930104adfd04d561adf063a04d"
+    },
+    {
+      "file": "source_metadata/mhc_full/CHM13_MHC_gene_models.bigGenePred.bed",
+      "url": "https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/CHM13/browser/bbi/chm13v2.0_RefSeq_Liftoff_v5.2.bb",
+      "bytes": 218596,
+      "sha256": "647c032b36c516ccf1baf775549b04de50f47c6b70ca4dbb410a9920c9087c24",
+      "acquisition": "Archived existing regional bigGenePred extract; not a genome-wide download. BED0 geneType is field20."
+    }
+  ],
+  "outputs": {
+    "counts.tsv": {
+      "sha256": "f010a933845fc127b59f1b8f1bdaea60a76759116b6f99e422fc2d4fcc480574",
+      "bytes": 1102
+    },
+    "counts_ed3_scope.tsv": {
+      "sha256": "211fc0a9aab58b84006221704834e6ca749230ccfb89afa616c9a9fa435fb7fd",
+      "bytes": 1100
+    },
+    "genes.bed0.tsv": {
+      "sha256": "c7ce8aec95d56dd0f48d7558699285db078e00e38fc3c5d8598d2fac6e2ea4e3",
+      "bytes": 56854
+    },
+    "genes.tsv": {
+      "sha256": "3a86761dd73c4007db600d6e0deeaad9e70a36c6ea577aaff503932e41e2a975",
+      "bytes": 56854
+    },
+    "genes_ed3_scope.tsv": {
+      "sha256": "af81b87b3954874ce90f0334bf67ff333c0546cf256afc3f63a4b3143d25cb15",
+      "bytes": 54130
+    },
+    "windows.tsv": {
+      "sha256": "524fa5e90ad50cfb87d56c42a1abee543d12343cadce4ea35028a24c84c58a4b",
+      "bytes": 2164
+    },
+    "windows_ed3_scope.tsv": {
+      "sha256": "9772f4fdd487d486ba4790916088698af735e21258c636a961cb8aad5abf40ac",
+      "bytes": 2163
+    }
+  },
+  "verification": {
+    "n_genes_full": 285,
+    "n_genes_ed3_scope": 269,
+    "n_tracks": 13,
+    "all_ape_records_match_bed0": true,
+    "unique_gene_records": true
+  }
+}

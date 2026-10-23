@@ -1,0 +1,2 @@
+# Feature	Class	Full Assembly	Assembly-unit accession	Assembly-unit name	Unique Ids	Placements
+gene	protein_coding	GCA_028858805.2	GCA_028858815.2	Primary Assembly	0	0

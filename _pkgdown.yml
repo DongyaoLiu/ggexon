@@ -99,6 +99,7 @@ reference:
   - geom_synteny_link
   - geom_genelink
   - geom_protein_lollipop
+  - geom_gene_lollipop
 
 - title: Facets, tree alignment, and guides
   desc: Arrange genomic panels beside link panels, tree panels, or other plots, and control genomic x-axis guides.

@@ -1,0 +1,154 @@
+{
+  "reports": [
+    {
+      "accession": "GCA_028885525.2",
+      "current_accession": "GCA_028885525.2",
+      "source_database": "SOURCE_DATABASE_GENBANK",
+      "organism": {
+        "tax_id": 9600,
+        "organism_name": "Pongo pygmaeus",
+        "common_name": "Bornean orangutan",
+        "infraspecific_names": {
+          "isolate": "AG05252",
+          "sex": "male"
+        }
+      },
+      "assembly_info": {
+        "assembly_level": "Chromosome",
+        "assembly_status": "current",
+        "assembly_name": "NHGRI_mPonPyg2-v2.0_alt",
+        "assembly_type": "alternate-pseudohaplotype",
+        "bioproject_lineage": [
+          {
+            "bioprojects": [
+              {
+                "accession": "PRJNA916740",
+                "title": "Pongo pygmaeus Genome sequencing and assembly",
+                "parent_accessions": [
+                  "PRJNA930876"
+                ]
+              },
+              {
+                "accession": "PRJNA930876",
+                "title": "Pongo pygmaeus Umbrella project",
+                "parent_accessions": [
+                  "PRJNA489243"
+                ]
+              },
+              {
+                "accession": "PRJNA489243",
+                "title": "Vertebrate Genomes Project",
+                "parent_accessions": [
+                  "PRJNA533106"
+                ]
+              },
+              {
+                "accession": "PRJNA533106",
+                "title": "Earth BioGenome Project (EBP)"
+              }
+            ]
+          }
+        ],
+        "bioproject_accession": "PRJNA916740",
+        "release_date": "2024-01-08",
+        "submitter": "National Human Genome Research Institute, National Institutes of Health",
+        "linked_assemblies": [
+          {
+            "linked_assembly": "GCA_028885625.2",
+            "assembly_type": "principal_pseudohaplotype_of_diploid"
+          }
+        ],
+        "sequencing_tech": "PacBio Sequel; Oxford Nanopore PromethION",
+        "assembly_method": "Verkko v. 1.4",
+        "biosample": {
+          "accession": "SAMN10521809",
+          "last_updated": "2019-12-02T18:38:15.800",
+          "publication_date": "2019-12-02T18:38:15.800",
+          "submission_date": "2018-12-04T16:21:03.560",
+          "sample_ids": [
+            {
+              "label": "Sample name",
+              "value": "01"
+            },
+            {
+              "db": "SRA",
+              "value": "SRS4115495"
+            }
+          ],
+          "description": {
+            "title": "Model organism or animal sample from Pongo pygmaeus",
+            "organism": {
+              "tax_id": 9600,
+              "organism_name": "Pongo pygmaeus"
+            }
+          },
+          "owner": {
+            "name": "Penn State",
+            "contacts": [
+              {}
+            ]
+          },
+          "models": [
+            "Model organism or animal"
+          ],
+          "bioprojects": [
+            {
+              "accession": "PRJNA505331"
+            }
+          ],
+          "package": "Model.organism.animal.1.0",
+          "attributes": [
+            {
+              "name": "isolate",
+              "value": "AG05252"
+            },
+            {
+              "name": "age",
+              "value": "missing"
+            },
+            {
+              "name": "sex",
+              "value": "male"
+            },
+            {
+              "name": "tissue",
+              "value": "fibroblast"
+            }
+          ],
+          "status": {
+            "status": "live",
+            "when": "2019-12-02T18:38:15.800"
+          },
+          "age": "missing",
+          "isolate": "AG05252",
+          "sex": "male",
+          "tissue": "fibroblast"
+        },
+        "blast_url": "https://blast.ncbi.nlm.nih.gov/Blast.cgi?PAGE_TYPE=BlastSearch&PROG_DEF=blastn&BLAST_SPEC=GDH_GCA_028885525.2",
+        "diploid_role": "alternate_pseudohaplotype_of_diploid"
+      },
+      "assembly_stats": {
+        "total_number_of_chromosomes": 23,
+        "total_sequence_length": "3007136161",
+        "total_ungapped_length": "2998131161",
+        "number_of_contigs": 43,
+        "contig_n50": 137913290,
+        "contig_l50": 9,
+        "number_of_scaffolds": 33,
+        "scaffold_n50": 140580864,
+        "scaffold_l50": 9,
+        "number_of_component_sequences": 33,
+        "atgc_count": "2998131161",
+        "gc_count": "1227714302",
+        "gc_percent": 41,
+        "genome_coverage": "54"
+      },
+      "wgs_info": {
+        "wgs_project_accession": "JAQQLT02",
+        "master_wgs_url": "https://www.ncbi.nlm.nih.gov/nuccore/JAQQLT000000000.2",
+        "wgs_contigs_url": "https://www.ncbi.nlm.nih.gov/Traces/wgs/JAQQLT02"
+      }
+    }
+  ],
+  "total_count": 1
+}
