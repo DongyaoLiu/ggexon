@@ -1,0 +1,68 @@
+{
+  "kind": "Observed RNA-seq bigWig signal; source scores retained unchanged",
+  "assembly": "GRCh38",
+  "gene": "AS3MT",
+  "gene_strand": "+",
+  "seqnames": "chr10",
+  "locus": {
+    "start": 102869470,
+    "end": 102901899,
+    "coordinate_system": "1-based closed"
+  },
+  "output_coordinate_system": "1-based closed",
+  "source": {
+    "accession": "ENCFF607FEG",
+    "experiment_accession": "ENCSR394HJK",
+    "output_type": "plus strand signal of unique reads",
+    "assay": "total RNA-seq",
+    "biosample_summary": "Homo sapiens dorsolateral prefrontal cortex tissue male adult (83 years)",
+    "biological_replicates": [
+      1
+    ],
+    "genome_annotation": "V29",
+    "source_url": "https://encode-public.s3.amazonaws.com/2022/05/13/c0826239-672c-4d5f-a32b-bd30b5c59e26/ENCFF607FEG.bigWig",
+    "metadata_url": "https://www.encodeproject.org/files/ENCFF607FEG/?format=json",
+    "experiment_url": "https://www.encodeproject.org/experiments/ENCSR394HJK/",
+    "expected_full_file_md5": "9320986050d387767f17042dcb2ea07f",
+    "full_file_md5_verified": false,
+    "expected_full_file_size": 129625014,
+    "file_page": "https://www.encodeproject.org/files/ENCFF607FEG/"
+  },
+  "extraction": {
+    "tool": "rtracklayer 1.66.0",
+    "method": "HTTP byte ranges fetched from source bigWig. Copied header/chromosome table, matching R-tree nodes, and matching compressed data block into a sparse temporary cache; rtracklayer import queried only the AS3MT locus.",
+    "byte_ranges": {
+      "header": {
+        "start": 0,
+        "end": 2549
+      },
+      "r_tree_root": {
+        "start": 81482931,
+        "end": 81491170
+      },
+      "r_tree_leaf": {
+        "start": 81562891,
+        "end": 81571086
+      },
+      "compressed_signal_block": {
+        "start": 10310187,
+        "end": 10314666
+      }
+    },
+    "date": "2026-10-22",
+    "missing_intervals": "No zero-filled, interpolated, or synthetic intervals added. Source bigWig omits intervals without signal.",
+    "script": "data-raw/as3mt/prepare-rnaseq-coverage.py"
+  },
+  "summary": {
+    "n_intervals": 352,
+    "n_covered_bases": 11224,
+    "score_min": 0.0276,
+    "score_max": 0.5517,
+    "weighted_mean_over_gene": 0.0237,
+    "covered_start": 102869470,
+    "covered_end": 102901899
+  },
+  "verification": "All 352 imported intervals and scores independently matched against the fetched compressed bigWig bedGraph section decoded with Python struct and zlib.",
+  "snapshot_sha256": "49a02b0589afbb6ddac8e64a26eee84d501da09ebff6a2d3f19c581585027dda",
+  "score_handling": "Source signal values unchanged; units not established as raw read depth."
+}

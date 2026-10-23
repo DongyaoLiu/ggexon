@@ -28,7 +28,7 @@ genomic coordinates."></head><body>
   <ul class="dropdown-menu" aria-labelledby="dropdown-tutorials"><li><a class="dropdown-item" href="../articles/ggexon-workflow.html">Complete workflow</a></li>
     <li><a class="dropdown-item" href="../articles/hox-cluster-expansion-demo.html">HOX cluster expansion</a></li>
     <li><a class="dropdown-item" href="../articles/cd44-splice-variants-demo.html">CD44 splice variant alignment</a></li>
-    <li><a class="dropdown-item" href="../articles/as3mt-splice-variants-demo.html">AS3MT transcripts, protein start and DNA repeats</a></li>
+    <li><a class="dropdown-item" href="../articles/as3mt-splice-variants-demo.html">AS3MT transcripts, DNA and RNA-seq</a></li>
     <li><a class="dropdown-item" href="../articles/hla-a-lollipop-demo.html">HLA-A protein variant lollipops</a></li>
     <li><a class="dropdown-item" href="../articles/bigwig-coverage-demo.html">PEEL-1 raw BigWig coverage</a></li>
     <li><a class="dropdown-item" href="../articles/ggexon-classes-and-verbs.html">Classes, geoms, facets, and guides</a></li>
@@ -46,7 +46,7 @@ genomic coordinates."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Compress introns while keeping genomic x-axis labels</h1>
-      <small class="dont-index">Source: <a href="https://github.com/DongyaoLiu/ggexon/blob/main/R/scale-genomic.R" class="external-link"><code>R/scale-genomic.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/DongyaoLiu/ggexon/blob/HEAD/R/scale-genomic.R" class="external-link"><code>R/scale-genomic.R</code></a></small>
       <div class="d-none name"><code>scale_x_ggexon_genomic.Rd</code></div>
     </div>
 
@@ -128,13 +128,28 @@ genomic-coordinate ticks, <code>"none"</code> to hide transformed x-axis ticks, 
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>This scale is intended for exon-structure layers such as <code><a href="geom_exon.html">geom_exon()</a></code> and
-<code><a href="geom_exon2.html">geom_exon2()</a></code>. It builds one transform per panel from the union of exon-like
-intervals, so multiple transcripts in the same panel stay aligned.
+    <p>The build first trains one map per reference panel from the union of original
+genomic intervals supplied by <code><a href="geom_exon.html">geom_exon()</a></code> and <code><a href="geom_exon2.html">geom_exon2()</a></code> layers.
+Multiple displayed transcripts and exon layers contribute to that union;
+invisible annotation placeholders are excluded. Other layers do not train
+the map, even when they contain gene or transcript metadata.
+The trained maps are then applied to genomic x-position aesthetics across
+related layers and panels. Points, labels and whole-gene annotations consume
+the same map without changing exon/intron boundaries. Every build trains a
+fresh registry; subsequent position-scale training only sets display ranges.
 Nucleotide links drawn with <code><a href="geom_nuclink.html">geom_nuclink()</a></code> are automatically subdivided
 at source-panel scale boundaries and transformed with the same maps. Supply
 their original genomic coordinates; no manual link-coordinate conversion is
-needed. Explicit panel windows are also mapped to compressed display limits.</p>
+needed. Explicit panel windows are also mapped to compressed display limits.
+Coverage drawn with <code><a href="geom_coverage.html">geom_coverage()</a></code> follows its resolved annotation
+source panel's map, including when several coverage tracks share one gene
+model. Signal intervals are split at scale boundaries; scores and genomic
+weighting for automatic coverage y limits are unchanged. Coverage without
+an exon-style source stays on ordinary genomic coordinates.
+Numeric x-position aesthetics are mapped centrally. Geoms with specialized
+geometry still prepare that geometry separately: nucleotide ribbons subdivide
+at source boundaries, while DNA callout lettering is laid out schematically
+after its genomic anchors are mapped.</p>
 <p>Use <code><a href="guide_x_ggexon_piecewise.html">guide_x_ggexon_piecewise()</a></code> in <code>guide</code> when the axis should display
 representative exon and intron scale bars instead of ordinary genomic ticks.</p>
     </div>
@@ -148,7 +163,7 @@ representative exon and intron scale bars instead of ordinary genomic ticks.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

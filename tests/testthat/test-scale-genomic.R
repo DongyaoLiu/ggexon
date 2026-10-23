@@ -1,3 +1,19 @@
+test_that("whole-gene consumers do not change exon-trained compression", {
+  exon <- data.frame(xmin = c(1, 1000), xmax = c(100, 1100), ymin = 1,
+    track = "reference", transcripts = "tx", strand = "+", type = "exon", group = 1)
+  gene <- exon[1, ]
+  gene$xmax <- 1100
+  plot <- ggexon(exon, ggplot2::aes(xmin = xmin, xmax = xmax, ymin = ymin,
+    track = track, transcripts = transcripts, strand = strand, type = type, group = group)) +
+    geom_exon2(annotation_type = "all") +
+    geom_gene(data = gene, proportion_trim3 = 0) +
+    scale_x_ggexon_genomic(intron_factor = 10)
+  built <- ggexon_build(plot)
+  expect_equal(built@data[[1L]]$xmin, c(1, 190))
+  expect_equal(built@data[[1L]]$xmax, c(100, 290))
+  expect_equal(built@data[[2L]]$xmax, 290)
+})
+
 test_that("scale_x_ggexon_genomic compresses introns but labels genomic coordinates", {
   exon_df <- data.frame(
     xmin = c(1, 1000),

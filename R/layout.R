@@ -76,10 +76,25 @@ create_layout2 <- function(facet, coord, layout = NULL) {
 #'   panel ids are propagated to layer data.
 #' - `Layout2$map_position()` maps each layer's x/y aesthetics against the
 #'   `SCALE_X` / `SCALE_Y` assignments in the final panel table.
+#' - when genomic compression is requested, `train_genomic_x()` learns an
+#'   immutable map registry from declared exon layers after geom setup, then
+#'   `map_genomic_x()` maps all related layers through those source maps.
+#'   Later ordinary position-scale training changes display ranges only.
 #'
 #' @seealso [SynLayout]
 #' @export
 Layout2 <- ggproto("Layout2", Layout,
+  genomic_x_scale_registry = NULL,
+  train_genomic_x = function(self, data, layers, scale_spec) {
+    registry <- train_ggexon_genomic_x_scale(data, layers, scale_spec, self)
+    self$genomic_x_scale_registry <- registry
+    self$genomic_x_transforms <- ggexon_genomic_x_panel_transforms(registry)
+    self$genomic_x_axis_data <- registry$axis_data
+    invisible(registry)
+  },
+  map_genomic_x = function(self, data) {
+    map_ggexon_genomic_x_scale(data, self$genomic_x_scale_registry)
+  },
   # Override ggplot2's Layout$setup() to carry Syn plot objects, stored
   # SynLayout overrides, and link-panel metadata through the facet pipeline.
   setup = function(self, data, plot_data = data_frame0(), plot_env = emptyenv()) {

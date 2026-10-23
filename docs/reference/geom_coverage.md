@@ -70,16 +70,22 @@ independent scale. Explicit coverage data on a `SynIndividual` or
 without an annotation layer. Ordinary non-Syn plots retain the legacy
 composite-layer behavior.
 
-Continuous coverage panels use ordinary genomic x coordinates. They
-cannot currently be combined with
-[`scale_x_ggexon_genomic()`](https://dongyaoliu.github.io/ggexon/reference/scale_x_ggexon_genomic.md)
-exon/intron compression or
-[`strip_scale_x()`](https://dongyaoliu.github.io/ggexon/reference/strip_scale_x.md);
-those mixed builds fail before transforming the signal. Inclusive
-genomic interval endpoints are retained in `interval_start`,
-`interval_end`, `genomic_xmin`, and `genomic_xmax` in the built layer
-data; rectangle edges are shifted by half a base so adjacent intervals
-meet without overlap or gaps.
+With
+[`scale_x_ggexon_genomic()`](https://dongyaoliu.github.io/ggexon/reference/scale_x_ggexon_genomic.md),
+coverage follows its annotation panel's exon/intron map. Intervals
+crossing scale boundaries are split without changing their scores.
+Automatic coverage y limits still use original genomic widths, rather
+than compressed display widths. Coverage without an exon-style
+annotation source keeps its ordinary genomic coordinates.
+[`strip_scale_x()`](https://dongyaoliu.github.io/ggexon/reference/strip_scale_x.md)
+remains unsupported for first-class coverage panels. Inclusive genomic
+interval endpoints are retained in `interval_start`, `interval_end`,
+`genomic_xmin`, and `genomic_xmax` in the built layer data; rectangle
+edges are shifted by half a base so adjacent intervals meet without
+overlap or gaps. After genomic compression, `genomic_edge_start` and
+`genomic_edge_end` retain each fragment's untransformed rectangle edges;
+the inclusive endpoint columns still identify the original parent
+interval.
 
 ## See also
 

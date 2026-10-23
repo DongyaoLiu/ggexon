@@ -20,6 +20,7 @@ Windows readers can view the rendered figure in the [online
 tutorial](https://dongyaoliu.github.io/ggexon/articles/bigwig-coverage-demo.html).
 
 ``` r
+
 library(ggexon)
 
 fixture_dir <- system.file("extdata", "peel1_coverage", package = "ggexon")
@@ -57,7 +58,7 @@ for (strain in strains) {
   coverage_species <- add_individual(coverage_species, individual)
 }
 
-ggexon(coverage_species) +
+coverage_plot <- ggexon(coverage_species) +
   geom_coverage(annotation = "coverage", fill = "#4C78A8") +
   geom_exon(
     species = "XZ1516",
@@ -74,6 +75,7 @@ ggexon(coverage_species) +
   center_panel_annotation() +
   theme_ggexon_track() +
   theme_ggexon_side_strips("left")
+coverage_plot
 ```
 
 ![A ggexon plot with thirteen separate PEEL-1 raw-coverage panels in the
@@ -112,6 +114,28 @@ the thirteen coverage panels;
 centers that gene model within its panel without changing annotation
 data or any coverage scale. No synthetic negative annotation band is
 added to a coverage panel.
+
+## Compress introns
+
+Add the genomic scale to align every coverage track with the
+representative gene model while shortening introns:
+
+``` r
+
+coverage_plot + scale_x_ggexon_genomic(intron_factor = 10)
+```
+
+[`geom_coverage()`](https://dongyaoliu.github.io/ggexon/reference/geom_coverage.md)
+automatically splits intervals at exon/intron scale boundaries. The
+build first trains the map from exon layers, then applies it to related
+panels and layers. Coverage and other annotations do not redefine that
+map. Depths and genomic-width weights for automatic y limits remain
+unchanged; only horizontal distances change. Built data retain the
+parent interval in `interval_start`/`interval_end` and each piece’s
+original rectangle edges in `genomic_edge_start`/`genomic_edge_end`.
+Coverage needs an exon-style annotation source to define the map;
+[`strip_scale_x()`](https://dongyaoliu.github.io/ggexon/reference/strip_scale_x.md)
+remains unsupported.
 
 For reproducibility, `manifest.tsv` in the fixture directory records
 each source BAM, output file, interval, bin size, normalization setting,

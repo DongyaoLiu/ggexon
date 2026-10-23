@@ -58,14 +58,18 @@ Explicit coverage data on a \code{SynIndividual} or \code{SynSpecies} plot can a
 form standalone first-class coverage panels without an annotation layer.
 Ordinary non-Syn plots retain the legacy composite-layer behavior.
 
-Continuous coverage panels use ordinary genomic x coordinates. They cannot
-currently be combined with \code{\link[=scale_x_ggexon_genomic]{scale_x_ggexon_genomic()}} exon/intron
-compression or \code{\link[=strip_scale_x]{strip_scale_x()}}; those mixed builds fail before
-transforming the signal.
+With \code{\link[=scale_x_ggexon_genomic]{scale_x_ggexon_genomic()}}, coverage follows its annotation panel's
+exon/intron map. Intervals crossing scale boundaries are split without
+changing their scores. Automatic coverage y limits still use original
+genomic widths, rather than compressed display widths. Coverage without an
+exon-style annotation source keeps its ordinary genomic coordinates.
+\code{\link[=strip_scale_x]{strip_scale_x()}} remains unsupported for first-class coverage panels.
 Inclusive genomic interval endpoints are retained in \code{interval_start},
 \code{interval_end}, \code{genomic_xmin}, and \code{genomic_xmax} in the built layer data;
 rectangle edges are shifted by half a base so adjacent intervals meet
-without overlap or gaps.
+without overlap or gaps. After genomic compression, \code{genomic_edge_start}
+and \code{genomic_edge_end} retain each fragment's untransformed rectangle edges;
+the inclusive endpoint columns still identify the original parent interval.
 }
 \seealso{
 \code{\link[=SynBigWigAnnotation]{SynBigWigAnnotation()}}, \code{\link[=query_signal]{query_signal()}},

@@ -141,10 +141,16 @@ apply_link_panel_y_range <- function(layout, y_range = c(0, 1)) {
 
 .coverage_span_weights <- function(layer_data) {
   weight <- rep(NA_real_, nrow(layer_data))
+  if (all(c("genomic_edge_start", "genomic_edge_end") %in% names(layer_data))) {
+    start <- as.numeric(layer_data$genomic_edge_start)
+    end <- as.numeric(layer_data$genomic_edge_end)
+    use <- is.finite(start) & is.finite(end) & end > start
+    weight[use] <- end[use] - start[use]
+  }
   if (all(c("interval_start", "interval_end") %in% names(layer_data))) {
     start <- suppressWarnings(as.numeric(layer_data$interval_start))
     end <- suppressWarnings(as.numeric(layer_data$interval_end))
-    use <- is.finite(start) & is.finite(end) & end >= start
+    use <- !is.finite(weight) & is.finite(start) & is.finite(end) & end >= start
     weight[use] <- end[use] - start[use] + 1
   }
   if (all(c("xmin", "xmax") %in% names(layer_data))) {
@@ -192,8 +198,7 @@ apply_link_panel_y_range <- function(layout, y_range = c(0, 1)) {
     return(list())
   }
 
-  roles <- ggexon_layout_layer_panel_roles(layers)
-  coverage_layers <- which(roles == "coverage")
+  coverage_layers <- which(vapply(layers, ggexon_layer_coverage_signal, logical(1)))
   records <- lapply(coverage_layers, function(i) {
     if (i > length(data)) {
       return(NULL)
@@ -440,6 +445,11 @@ ggexon_layer_panel_role <- function(layer) {
     if (identical(layer$geom, GeomNucLink)) "link" else "other"
 }
 
+ggexon_layer_coverage_signal <- function(layer) {
+  identical(ggexon_layer_panel_role(layer), "coverage") &&
+    !identical(layer$geom$ggexon_coverage_signal, FALSE)
+}
+
 ggexon_layout_layer_panel_roles <- function(layers) {
   vapply(layers, function(layer) {
     role <- ggexon_layer_panel_role(layer)
@@ -500,7 +510,7 @@ apply_coverage_panel_bands <- function(data,
                                        fraction = 0.25,
                                        layout = NULL) {
   roles <- vapply(layers, ggexon_layer_panel_role, character(1))
-  coverage_layers <- which(roles == "coverage")
+  coverage_layers <- which(vapply(layers, ggexon_layer_coverage_signal, logical(1)))
   training_max <- 1
   annotation_depth <- training_max * fraction
 
@@ -1078,10 +1088,8 @@ build_ggexon <- S7::method(ggexon_build, class_ggexon) <- function(plot, ...) {
     # Reparameterise geoms from (e.g.) y and width to ymin and ymax
     data <- by_layer(function(l, d) l$compute_geom_1(d), layers, data, "setting up geom")
     if (!is.null(plot@genomic_x_scale)) {
-      genomic_x_scaled <- apply_ggexon_genomic_x_scale(data, plot@genomic_x_scale, layout)
-      data <- genomic_x_scaled$data
-      layout$genomic_x_transforms <- genomic_x_scaled$transforms
-      layout$genomic_x_axis_data <- genomic_x_scaled$axis_data
+      layout$train_genomic_x(data, layers, plot@genomic_x_scale)
+      data <- layout$map_genomic_x(data)
     }
     if (!is.null(plot@strip_scale)) {
       # Restore genomic x values (saved before map_position) so strip_scale

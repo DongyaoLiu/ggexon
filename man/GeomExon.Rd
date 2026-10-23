@@ -5,7 +5,7 @@
 \alias{GeomExon}
 \title{Geom implementation for exon features}
 \format{
-An object of class \code{GeomExon} (inherits from \code{Geom}, \code{ggproto}, \code{gg}) of length 12.
+An object of class \code{GeomExon} (inherits from \code{Geom}, \code{ggproto}, \code{gg}) of length 13.
 }
 \usage{
 GeomExon

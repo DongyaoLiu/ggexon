@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Grammar of genomic annotations, synteny, and associated data • ggexon</title>
 <script src="lightswitch.js"></script><script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/Source_Sans_3-0.4.10/font.css" rel="stylesheet">
+<link href="deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="deps/Source_Sans_3-0.4.10/font.css" rel="stylesheet">
 <link href="deps/Source_Code_Pro-0.4.10/font.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
@@ -41,7 +41,7 @@
 <li><a class="dropdown-item" href="articles/ggexon-workflow.html">Complete workflow</a></li>
     <li><a class="dropdown-item" href="articles/hox-cluster-expansion-demo.html">HOX cluster expansion</a></li>
     <li><a class="dropdown-item" href="articles/cd44-splice-variants-demo.html">CD44 splice variant alignment</a></li>
-    <li><a class="dropdown-item" href="articles/as3mt-splice-variants-demo.html">AS3MT transcripts, protein start and DNA repeats</a></li>
+    <li><a class="dropdown-item" href="articles/as3mt-splice-variants-demo.html">AS3MT transcripts, DNA and RNA-seq</a></li>
     <li><a class="dropdown-item" href="articles/hla-a-lollipop-demo.html">HLA-A protein variant lollipops</a></li>
     <li><a class="dropdown-item" href="articles/bigwig-coverage-demo.html">PEEL-1 raw BigWig coverage</a></li>
     <li><a class="dropdown-item" href="articles/ggexon-classes-and-verbs.html">Classes, geoms, facets, and guides</a></li>
@@ -99,7 +99,8 @@
 <img src="reference/figures/as3mt-splice-variants-demo.png" alt="Human and chimpanzee AS3MT transcripts with native exon widths, 30-fold intron compression, and ungapped genomic alignment links following the same piecewise scale"><div class="figcaption">Human and chimpanzee AS3MT transcripts with native exon widths, 30-fold intron compression, and ungapped genomic alignment links following the same piecewise scale</div>
 </div>
 <p>The AS3MT tutorial compares the human and chimpanzee full-length transcripts with a paper-defined human AS3MTd2d3 reconstruction. <code><a href="reference/geom_exon2.html">geom_exon2()</a></code> distinguishes CDS from UTR, and <code>scale_x_ggexon_genomic(intron_factor = 30)</code> compresses introns while retaining exon widths. <code><a href="reference/geom_nuclink.html">geom_nuclink()</a></code> automatically subdivides raw genomic alignment blocks at both panels’ scale boundaries and maps the pieces to the same exon/intron scales. The plot retains only the two highest identity categories of the ungapped LASTZ alignment.</p>
-<p>See the <a href="https://dongyaoliu.github.io/ggexon/articles/as3mt-splice-variants-demo.html">AS3MT transcript, protein and DNA tutorial</a> for the reproducible offline example, projected protein-loss interval and start marker, and aligned DNA repeat detail.</p>
+<p>The tutorial also aligns matched human GTEx coverage and counted splice junctions to the compressed gene model. <code><a href="reference/geom_junction.html">geom_junction()</a></code> distinguishes exon inclusion from E1→E4 skipping, while preserving source signal values.</p>
+<p>See the <a href="https://dongyaoliu.github.io/ggexon/articles/as3mt-splice-variants-demo.html">AS3MT transcript, DNA and RNA-seq tutorial</a> for the reproducible offline example and aligned DNA repeat detail.</p>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -229,7 +230,7 @@
 <tr>
 <td>Draw genomic layers</td>
 <td>
-<code><a href="reference/ggexon.html">ggexon()</a></code>, <code><a href="reference/geom_exon.html">geom_exon()</a></code>, <code><a href="reference/geom_coverage.html">geom_coverage()</a></code>, <code><a href="reference/geom_genetag.html">geom_genetag()</a></code>, <code><a href="reference/geom_genebox.html">geom_genebox()</a></code>, <code><a href="reference/geom_genelabel.html">geom_genelabel()</a></code>, <code><a href="reference/geom_nuclink.html">geom_nuclink()</a></code>, <code><a href="reference/geom_synteny_link.html">geom_synteny_link()</a></code>, <code><a href="reference/geom_protein_lollipop.html">geom_protein_lollipop()</a></code>
+<code><a href="reference/ggexon.html">ggexon()</a></code>, <code><a href="reference/geom_exon.html">geom_exon()</a></code>, <code><a href="reference/geom_coverage.html">geom_coverage()</a></code>, <code><a href="reference/geom_junction.html">geom_junction()</a></code>, <code><a href="reference/geom_genetag.html">geom_genetag()</a></code>, <code><a href="reference/geom_genebox.html">geom_genebox()</a></code>, <code><a href="reference/geom_genelabel.html">geom_genelabel()</a></code>, <code><a href="reference/geom_nuclink.html">geom_nuclink()</a></code>, <code><a href="reference/geom_synteny_link.html">geom_synteny_link()</a></code>, <code><a href="reference/geom_protein_lollipop.html">geom_protein_lollipop()</a></code>
 </td>
 </tr>
 <tr>

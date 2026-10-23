@@ -7,6 +7,7 @@
 
 GeomGene <- ggproto("GeomGene", Geom,
                     ggexon_panel_role = "annotation",
+                    ggexon_genomic_x_aesthetics = c("Xmin", "Xmax"),
                     required_aes = c("ymin", "xmin", "xmax", "transcripts","strand", "track"),
                     non_missing_aes = c("linewidth", "shape"),
                     extra_params = c("exon_height", "na.rm", "x_translation", "proportion_trim3",

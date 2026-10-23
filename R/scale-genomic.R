@@ -6,13 +6,28 @@
 #' are drawn at compressed display positions but labelled with the original
 #' genomic coordinates.
 #'
-#' This scale is intended for exon-structure layers such as [geom_exon()] and
-#' [geom_exon2()]. It builds one transform per panel from the union of exon-like
-#' intervals, so multiple transcripts in the same panel stay aligned.
+#' The build first trains one map per reference panel from the union of original
+#' genomic intervals supplied by [geom_exon()] and [geom_exon2()] layers.
+#' Multiple displayed transcripts and exon layers contribute to that union;
+#' invisible annotation placeholders are excluded. Other layers do not train
+#' the map, even when they contain gene or transcript metadata.
+#' The trained maps are then applied to genomic x-position aesthetics across
+#' related layers and panels. Points, labels and whole-gene annotations consume
+#' the same map without changing exon/intron boundaries. Every build trains a
+#' fresh registry; subsequent position-scale training only sets display ranges.
 #' Nucleotide links drawn with [geom_nuclink()] are automatically subdivided
 #' at source-panel scale boundaries and transformed with the same maps. Supply
 #' their original genomic coordinates; no manual link-coordinate conversion is
 #' needed. Explicit panel windows are also mapped to compressed display limits.
+#' Coverage drawn with [geom_coverage()] follows its resolved annotation
+#' source panel's map, including when several coverage tracks share one gene
+#' model. Signal intervals are split at scale boundaries; scores and genomic
+#' weighting for automatic coverage y limits are unchanged. Coverage without
+#' an exon-style source stays on ordinary genomic coordinates.
+#' Numeric x-position aesthetics are mapped centrally. Geoms with specialized
+#' geometry still prepare that geometry separately: nucleotide ribbons subdivide
+#' at source boundaries, while DNA callout lettering is laid out schematically
+#' after its genomic anchors are mapped.
 #'
 #' Use [guide_x_ggexon_piecewise()] in `guide` when the axis should display
 #' representative exon and intron scale bars instead of ordinary genomic ticks.
@@ -194,19 +209,36 @@ ggplot_add.ggexon_genomic_x_scale_spec <- function(object, plot, ...) {
   plot
 }
 
-apply_ggexon_genomic_x_scale <- function(data, scale_spec, layout = NULL) {
-  if (is.null(scale_spec)) {
-    return(list(data = data, transforms = NULL))
-  }
-  .abort_unsupported_coverage_x_transform(
-    layout,
-    "exon/intron-compressed genomic x scales"
+apply_ggexon_genomic_x_scale <- function(data, scale_spec, layout = NULL, layers) {
+  registry <- train_ggexon_genomic_x_scale(data, layers, scale_spec, layout)
+  list(
+    data = map_ggexon_genomic_x_scale(data, registry),
+    transforms = ggexon_genomic_x_panel_transforms(registry),
+    axis_data = registry$axis_data
   )
+}
 
-  source_rows <- lapply(data, ggexon_genomic_x_source_rows)
+# Training reads only declared exon providers. Consumer layers cannot change
+# the exon union, even when they carry strand/type/transcript metadata.
+train_ggexon_genomic_x_scale <- function(data, layers, scale_spec, layout = NULL) {
+  if (is.null(scale_spec)) {
+    return(NULL)
+  }
+  if (length(layers) != length(data)) {
+    stop("Genomic scale training needs one layer for each data table.", call. = FALSE)
+  }
+  contributors <- vapply(layers, function(layer) {
+    isTRUE(layer$geom$ggexon_genomic_x_train)
+  }, logical(1))
+  registry <- structure(list(maps = list(), panel_map = integer(), axis_data = NULL,
+    source_layers = which(contributors),
+    layer_x_aesthetics = lapply(layers, function(layer) {
+      layer$geom$ggexon_genomic_x_aesthetics %||% character()
+    })), class = "ggexon_trained_genomic_x_scale")
+  source_rows <- lapply(data[contributors], ggexon_genomic_x_source_rows)
   source_rows <- source_rows[lengths(source_rows) > 0L]
   if (length(source_rows) == 0L) {
-    return(list(data = data, transforms = NULL))
+    return(registry)
   }
 
   source_df <- do.call(rbind, source_rows)
@@ -243,7 +275,21 @@ apply_ggexon_genomic_x_scale <- function(data, scale_spec, layout = NULL) {
   }
   transforms <- Filter(Negate(is.null), transforms)
   if (length(transforms) == 0L) {
-    return(list(data = data, transforms = NULL, axis_data = NULL))
+    return(registry)
+  }
+
+  # Store source maps once. Related panels bind to those same maps; sharing a
+  # display-range SCALE_X alone does not identify a genomic coordinate system.
+  panel_ids <- as.integer(names(transforms))
+  panel_map <- stats::setNames(panel_ids, as.character(panel_ids))
+  layout_df <- layout$layout %||% NULL
+  if (is.data.frame(layout_df) && "x_source_panel" %in% names(layout_df)) {
+    for (i in seq_len(nrow(layout_df))) {
+      source <- ggexon_panel_id(layout_df$x_source_panel[[i]])
+      if (is.na(source) || !as.character(source) %in% names(transforms)) next
+      panel <- ggexon_panel_id(layout_df$PANEL[[i]])
+      if (!is.na(panel)) panel_map[as.character(panel)] <- source
+    }
   }
 
   axis_data <- ggexon_genomic_x_piecewise_axis_data(
@@ -251,8 +297,36 @@ apply_ggexon_genomic_x_scale <- function(data, scale_spec, layout = NULL) {
     transforms = transforms,
     scale_spec = scale_spec
   )
-  data <- lapply(data, transform_ggexon_genomic_x_layer, transforms = transforms)
-  list(data = data, transforms = transforms, axis_data = axis_data)
+  registry$maps <- transforms
+  registry$panel_map <- panel_map
+  registry$axis_data <- axis_data
+  registry
+}
+
+# Compatibility view used by existing window/axis code and geometry adapters.
+# The registry itself retains only canonical source maps plus their bindings.
+ggexon_genomic_x_panel_transforms <- function(registry) {
+  if (is.null(registry) || length(registry$maps) == 0L) return(NULL)
+  panels <- names(registry$panel_map)
+  transforms <- lapply(panels, function(panel) {
+    source <- as.character(registry$panel_map[[panel]])
+    transform <- registry$maps[[source]]
+    transform$PANEL <- as.integer(panel)
+    transform
+  })
+  stats::setNames(transforms, panels)
+}
+
+map_ggexon_genomic_x_scale <- function(data, registry) {
+  if (is.null(registry) || length(registry$maps) == 0L) return(data)
+  transforms <- ggexon_genomic_x_panel_transforms(registry)
+  lapply(seq_along(data), function(i) {
+    extra_x <- if (i <= length(registry$layer_x_aesthetics)) {
+      registry$layer_x_aesthetics[[i]]
+    } else character()
+    transform_ggexon_genomic_x_layer(data[[i]], transforms,
+      source = i %in% registry$source_layers, extra_x = extra_x)
+  })
 }
 
 ggexon_genomic_x_selected_panels <- function(scale_spec,
@@ -353,6 +427,18 @@ ggexon_genomic_x_source_rows <- function(layer_data) {
       any(c("tspecies", "qspecies") %in% names(layer_data))) {
     return(data.frame())
   }
+  if (".ggexon_panel_role" %in% names(layer_data)) {
+    layer_data <- layer_data[is.na(layer_data$.ggexon_panel_role) |
+      layer_data$.ggexon_panel_role != "coverage", , drop = FALSE]
+  }
+  if ("blank_panel" %in% names(layer_data)) {
+    layer_data <- layer_data[!layer_data$blank_panel %in% TRUE, , drop = FALSE]
+  }
+  if ("transcripts" %in% names(layer_data)) {
+    blank <- startsWith(as.character(layer_data$transcripts), "__blank__")
+    layer_data <- layer_data[!blank %in% TRUE, , drop = FALSE]
+  }
+  if (nrow(layer_data) == 0L) return(data.frame())
   if (!any(c("transcripts", "type", "strand") %in% names(layer_data))) {
     return(data.frame())
   }
@@ -574,9 +660,15 @@ reduce_ggexon_genomic_intervals <- function(start, end) {
   do.call(rbind, out)
 }
 
-transform_ggexon_genomic_x_layer <- function(layer_data, transforms) {
+transform_ggexon_genomic_x_layer <- function(layer_data, transforms,
+                                            source = TRUE, extra_x = character()) {
   if (!is.data.frame(layer_data) || !"PANEL" %in% names(layer_data)) {
     return(layer_data)
+  }
+  if (".ggexon_panel_role" %in% names(layer_data) &&
+      nrow(layer_data) > 0L &&
+      isTRUE(all(layer_data$.ggexon_panel_role == "coverage"))) {
+    return(transform_ggexon_genomic_x_coverage(layer_data, transforms))
   }
   # Link vertices live in a middle panel, but their x coordinates belong to
   # two different annotation panels. Use those source maps, not the middle map.
@@ -585,7 +677,7 @@ transform_ggexon_genomic_x_layer <- function(layer_data, transforms) {
     return(transform_ggexon_genomic_x_links(layer_data, transforms))
   }
 
-  x_columns <- intersect(c("x", "xmin", "xmax", "xend", "xintercept"), names(layer_data))
+  x_columns <- intersect(c(ggplot2::scale_x_continuous()$aesthetics, extra_x), names(layer_data))
   if (length(x_columns) == 0L) {
     return(layer_data)
   }
@@ -599,14 +691,62 @@ transform_ggexon_genomic_x_layer <- function(layer_data, transforms) {
     idx <- which(panel_ids == panel_id)
     for (col in x_columns) {
       genomic_col <- paste0("genomic_", col)
-      if (!genomic_col %in% names(layer_data)) {
-        layer_data[[genomic_col]] <- layer_data[[col]]
+      # Exon2 explicitly preserves its pre-layout genomic endpoints. Ordinary
+      # consumers may use genomic_* for biological metadata (e.g. gene-box
+      # transcript spans), so cache their actual position aesthetics privately.
+      raw_col <- if (source) genomic_col else paste0(".ggexon_raw_", col)
+      if (!raw_col %in% names(layer_data)) {
+        layer_data[[raw_col]] <- layer_data[[col]]
       }
-      layer_data[[col]][idx] <- ggexon_genomic_to_plot_x(layer_data[[genomic_col]][idx], transform)
+      if (!genomic_col %in% names(layer_data)) {
+        layer_data[[genomic_col]] <- layer_data[[raw_col]]
+      }
+      layer_data[[col]][idx] <- ggexon_genomic_to_plot_x(layer_data[[raw_col]][idx], transform)
     }
   }
 
   layer_data
+}
+
+# Coverage endpoints are inclusive base centres; the drawn rectangles have
+# half-base edges. Split those edges, preserving the parent interval and score.
+# Fragment widths remain genomic widths for automatic coverage y limits.
+transform_ggexon_genomic_x_coverage <- function(data, transforms) {
+  starts <- data$genomic_edge_start %||% (data$interval_start - 0.5)
+  ends <- data$genomic_edge_end %||% (data$interval_end + 0.5)
+  parent <- seq_len(nrow(data))
+  panels <- ggexon_panel_id(data$PANEL)
+
+  for (panel in unique(panels)) {
+    tr <- transforms[[as.character(panel)]]
+    if (is.null(tr) || nrow(tr) < 2L) next
+    boundaries <- tr$genomic_start[c(FALSE, diff(tr$slope) != 0)]
+    for (boundary in boundaries) {
+      crossed <- which(panels[parent] == panel &
+        starts < boundary & ends > boundary)
+      if (length(crossed) == 0L) next
+      parent <- c(parent, parent[crossed])
+      starts <- c(starts, rep(boundary, length(crossed)))
+      ends <- c(replace(ends, crossed, boundary), ends[crossed])
+    }
+  }
+
+  order <- order(parent, starts)
+  out <- data[parent[order], , drop = FALSE]
+  out$genomic_edge_start <- starts[order]
+  out$genomic_edge_end <- ends[order]
+  out$xmin <- out$genomic_edge_start
+  out$xmax <- out$genomic_edge_end
+  panels <- panels[parent[order]]
+  for (panel in unique(panels)) {
+    tr <- transforms[[as.character(panel)]]
+    if (is.null(tr)) next
+    hit <- which(panels == panel)
+    out$xmin[hit] <- ggexon_genomic_to_plot_x(out$genomic_edge_start[hit], tr)
+    out$xmax[hit] <- ggexon_genomic_to_plot_x(out$genomic_edge_end[hit], tr)
+  }
+  rownames(out) <- NULL
+  out
 }
 
 # Split interval ribbons at every change of slope in either source map. Cutting
@@ -693,23 +833,26 @@ transform_ggexon_genomic_x_links <- function(data, transforms) {
 }
 
 ggexon_genomic_to_plot_x <- function(x, transform) {
-  vapply(as.numeric(x), function(value) {
-    if (!is.finite(value) || is.null(transform) || nrow(transform) == 0L) {
-      return(value)
-    }
-    first <- transform[1L, , drop = FALSE]
-    last <- transform[nrow(transform), , drop = FALSE]
-    if (value < first$genomic_start[[1L]]) {
-      return(first$plot_start[[1L]] - (first$genomic_start[[1L]] - value))
-    }
-    if (value > last$genomic_end[[1L]]) {
-      return(last$plot_end[[1L]] + (value - last$genomic_end[[1L]]))
-    }
-    idx <- which(value >= transform$genomic_start & value <= transform$genomic_end)
-    idx <- idx[[length(idx)]]
-    row <- transform[idx, , drop = FALSE]
-    row$plot_start[[1L]] + (value - row$genomic_start[[1L]]) * row$slope[[1L]]
-  }, numeric(1))
+  x <- as.numeric(x)
+  if (is.null(transform) || nrow(transform) == 0L) return(x)
+  out <- x
+  valid <- which(is.finite(x))
+  values <- x[valid]
+  last <- nrow(transform)
+  before <- values < transform$genomic_start[[1L]]
+  after <- values > transform$genomic_end[[last]]
+  inside <- !before & !after
+  out[valid[before]] <- values[before] +
+    transform$plot_start[[1L]] - transform$genomic_start[[1L]]
+  out[valid[after]] <- values[after] +
+    transform$plot_end[[last]] - transform$genomic_end[[last]]
+  # Maps are ordered, contiguous, and increasing. At a shared boundary take
+  # the segment starting there, as in the scalar mapping. Vector lookup keeps
+  # interval-native BigWig tracks practical without expanding them per base.
+  segment <- findInterval(values[inside], transform$genomic_start)
+  out[valid[inside]] <- transform$plot_start[segment] +
+    (values[inside] - transform$genomic_start[segment]) * transform$slope[segment]
+  out
 }
 
 ggexon_plot_to_genomic_x <- function(x, transform) {

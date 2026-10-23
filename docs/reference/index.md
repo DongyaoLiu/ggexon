@@ -92,6 +92,8 @@ links, trees, and protein mutation summaries.
   : Draw WormWeb-style exon-intron schematics
 - [`geom_coverage()`](https://dongyaoliu.github.io/ggexon/reference/geom_coverage.md)
   : Plot interval-native BigWig coverage
+- [`geom_junction()`](https://dongyaoliu.github.io/ggexon/reference/geom_junction.md)
+  : Draw splice junction arcs on annotation or coverage panels
 - [`geom_genetag()`](https://dongyaoliu.github.io/ggexon/reference/geom_genetag.md)
   : Draw gene tags as exon bodies with strand-direction triangles
 - [`geom_genebox()`](https://dongyaoliu.github.io/ggexon/reference/geom_genebox.md)
