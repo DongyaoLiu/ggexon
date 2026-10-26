@@ -12,6 +12,8 @@
   RNA-seq](https://dongyaoliu.github.io/ggexon/articles/as3mt-splice-variants-demo.md):
 - [HLA-A Protein Variants: Dense Multiallelic
   Lollipops](https://dongyaoliu.github.io/ggexon/articles/hla-a-lollipop-demo.md):
+- [Continuous MHC comparison across ape
+  haplotypes](https://dongyaoliu.github.io/ggexon/articles/mhc-continuous-demo.md):
 - [PEEL-1 Raw BigWig
   Coverage](https://dongyaoliu.github.io/ggexon/articles/bigwig-coverage-demo.md):
 - [Yeast cox1 Intron Architecture

@@ -227,6 +227,10 @@ The package site contains the longer cookbook-style documentation:
   slots, and
   [`geom_genebox()`](https://dongyaoliu.github.io/ggexon/reference/geom_genebox.md)
   anchor modes.
+- [`vignette("mhc-continuous-demo", package = "ggexon")`](https://dongyaoliu.github.io/ggexon/articles/mhc-continuous-demo.md)
+  for the continuous MHC class I–class II comparison across human and
+  ape haplotypes, including the layout measurement and export pipeline
+  behind the figure.
 - [`vignette("bigwig-coverage-demo", package = "ggexon")`](https://dongyaoliu.github.io/ggexon/articles/bigwig-coverage-demo.md)
   for thirteen independent raw-depth BigWig panels with automatic
   span-weighted median-at-85%-height scales above one shared, centered
