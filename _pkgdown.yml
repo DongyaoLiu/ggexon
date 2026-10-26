@@ -33,6 +33,8 @@ navbar:
         href: articles/as3mt-splice-variants-demo.html
       - text: HLA-A protein variant lollipops
         href: articles/hla-a-lollipop-demo.html
+      - text: Continuous MHC comparison
+        href: articles/mhc-continuous-demo.html
       - text: PEEL-1 raw BigWig coverage
         href: articles/bigwig-coverage-demo.html
       - text: Classes, geoms, facets, and guides
@@ -47,6 +49,7 @@ articles:
   - cd44-splice-variants-demo
   - as3mt-splice-variants-demo
   - hla-a-lollipop-demo
+  - mhc-continuous-demo
   - bigwig-coverage-demo
   - cox1-yeast-demo
   - ggexon-classes-and-verbs

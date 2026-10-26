@@ -186,6 +186,9 @@ The package site contains the longer cookbook-style documentation:
 - `vignette("hox-cluster-expansion-demo", package = "ggexon")` for the
   Ensembl-pinned HOX cluster matrix, exact curated Hox-number slots, and
   `geom_genebox()` anchor modes.
+- `vignette("mhc-continuous-demo", package = "ggexon")` for the continuous
+  MHC class I–class II comparison across human and ape haplotypes, including
+  the layout measurement and export pipeline behind the figure.
 - `vignette("bigwig-coverage-demo", package = "ggexon")` for thirteen independent
   raw-depth BigWig panels with automatic span-weighted median-at-85%-height
   scales above one shared, centered gene annotation.
