@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# From data to a genomic figure
+## Overview
 
 Genomic figures often combine exon positions on a chromosome, links between
 genomes, signal depth, and positions along a protein. ggexon connects these
@@ -31,7 +31,7 @@ library(ggexon)
 library(ggplot2)
 ```
 
-## Major data objects
+### Major data objects
 
 | Object | What it stores | Typical input |
 | --- | --- | --- |
@@ -45,14 +45,14 @@ library(ggplot2)
 | `HomologyAnnotation` | Reference/query gene mappings | Curated table or imported BLAST results |
 | `SynLayout`, `SynLocusSet` | Reusable panel windows or comparable loci | Named coordinate windows |
 
-## Plotting functions supplied by ggexon
+### Plotting functions supplied by ggexon
 
 `ggexon()` starts the figure. Syn-aware layers resolve stored annotations
 when the plot is built; table-based layers use prepared data. Ordinary
 ggplot2 scales and themes remain available. A theme changes appearance; it
 does not select a genomic window or transform coordinates.
 
-### Geoms
+#### Geoms
 
 | Function | What it draws |
 | --- | --- |
@@ -72,7 +72,7 @@ does not select a genomic window or transform coordinates.
 | `geom_alignseq()` | Anchored DNA-difference markers or aligned sequence rows |
 | `geom_genomic_tree()` | Attaches a rectangular tree for alignment with genomic panels |
 
-### Scales and guides
+#### Scales and guides
 
 | Function | What it controls |
 | --- | --- |
@@ -84,7 +84,7 @@ does not select a genomic window or transform coordinates.
 | `scale_panel_annotation()` | Shared or independent annotation-panel y scales, with optional visible limits |
 | `scale_panel_coverage()` | Shared or independent coverage-panel y scales, with optional manual or automatic visible limits |
 
-### Facets and panel layout
+#### Facets and panel layout
 
 | Function | What it arranges |
 | --- | --- |
@@ -97,7 +97,7 @@ does not select a genomic window or transform coordinates.
 | `annotate_cross_panel()` | Connect explicitly supplied anchors across panels |
 | `link_panels()` | Connect matching IDs represented by anchors in different panels |
 
-### Themes
+#### Themes
 
 | Function | When to use it |
 | --- | --- |
@@ -108,7 +108,7 @@ does not select a genomic window or transform coordinates.
 | `theme_ggexon_genomictree()` | Genomic tracks aligned beside a tree |
 | `theme_ggexon_side_strips()` | Horizontal facet labels on the left or right, added after a complete theme |
 
-### Plot preparation and output
+#### Plot preparation and output
 
 | Function | What it prepares |
 | --- | --- |
@@ -123,7 +123,7 @@ Functions such as `aes()`, `scale_fill_manual()`, `scale_x_continuous()`,
 `facet_wrap()`, `coord_fixed()`, `theme()`, and `ggsave()` come from ggplot2.
 The examples combine these with the ggexon functions above.
 
-## Curating elements within data objects
+### Curating elements within data objects
 
 Curation verbs describe the change made to stored biological information.
 Updating selected fields differs from replacing a complete gene model;
@@ -145,13 +145,13 @@ aliases for the corresponding operations above. Patch mode `"drop"` remains
 an alias for `"remove"`. Use `query_*()` to inspect data and `subset_*()` or
 `filter_*()` to select the data to keep.
 
-# 1. Exons and alternative transcripts
+## 1. Exons and alternative transcripts
 
 An exon table contains intervals and transcript membership. Drawing each row
 as an unrelated rectangle loses introns and strand direction. `geom_exon()`
 uses the feature hierarchy to draw transcript models.
 
-## Present the input
+### Present the input
 
 Create two synthetic genes on `chr1`. Gene A has a full transcript and an
 exon-skipping transcript; gene B is on the opposite strand. Coordinates are
@@ -196,7 +196,7 @@ write.table(gtf, gtf_file, sep = "\t", quote = FALSE,
             row.names = FALSE, col.names = FALSE)
 ```
 
-## Construct and inspect the object
+### Construct and inspect the object
 
 `SynIndividual(annotation_file = ...)` attaches a default
 `SynFeatureAnnotation`. A FASTA is optional for annotation plotting; sequence
@@ -215,7 +215,7 @@ knitr::kable(as.data.frame(exons)[,
   c("seqnames", "start", "end", "strand", "gene_id", "transcript_id")])
 ```
 
-## Choose the geom, scales, and theme
+### Choose the geom, scales, and theme
 
 Map transcript IDs to fill to distinguish isoforms. The ordinary continuous
 x scale preserves genomic spacing. The track theme hides the y axis used to
@@ -238,13 +238,13 @@ p_exons
 The x distances are base pairs. The missing middle exon in `A_skip` comes
 from the input annotation; ggexon does not infer alternative splicing.
 
-# 2. Compress introns while retaining genomic labels
+## 2. Compress introns while retaining genomic labels
 
 Long introns can make exons too small to compare. A shared exon-aware scale
 compresses gaps while keeping transcripts aligned, helping you compare exon
 structure across isoforms.
 
-## Present the input
+### Present the input
 
 Reuse the synthetic GTF and inspect gene A's exon rows.
 
@@ -252,7 +252,7 @@ Reuse the synthetic GTF and inspect gene A's exon rows.
 knitr::kable(features[features$gene_id == "geneA" & features$type == "exon", ])
 ```
 
-## Prepare the object
+### Prepare the object
 
 Create a copy restricted to the first locus, leaving `model` reusable.
 
@@ -261,7 +261,7 @@ gene_a <- subset_individual(model, chr = "chr1", start = 80, end = 980)
 query_features(gene_a, feature_type = "exon", all = TRUE)
 ```
 
-## Choose the geom, scales, and theme
+### Choose the geom, scales, and theme
 
 `geom_exon2()` draws explicit chevron introns. Disable its schematic
 compression so `scale_x_ggexon_genomic()` controls the transformation across
@@ -301,13 +301,13 @@ With explicit CDS and UTR records, `geom_exon2(annotation_type = "all")`
 can distinguish their box heights. Its default `compress_introns = TRUE`
 offers another schematic view; choose one compression method deliberately.
 
-# 3. Gene spans and readable labels
+## 3. Gene spans and readable labels
 
 For a locus overview, transcript detail can hide gene order. A directional
 tag gives one span per gene. Separate labels keep names readable without
 replacing the stable gene IDs used in computation.
 
-## Present the input
+### Present the input
 
 ```{r workflow-tag-input}
 knitr::kable(features[features$type == "gene",
@@ -315,7 +315,7 @@ knitr::kable(features[features$type == "gene",
 labels <- c(geneA = "Gene A (two isoforms)", geneB = "Gene B")
 ```
 
-## Prepare the object
+### Prepare the object
 
 `set_gene_labels()` returns an updated object carrying plot labels alongside
 the original IDs.
@@ -324,7 +324,7 @@ the original IDs.
 labelled_model <- set_gene_labels(model, labels)
 ```
 
-## Choose the geom, scales, and theme
+### Choose the geom, scales, and theme
 
 Suppress built-in tag labels and add `geom_genelabel()` for explicit
 placement. `collapse_tandem = TRUE` also combines adjacent genes sharing a
@@ -346,13 +346,13 @@ bodies. For cross-species names, attach a `HomologyAnnotation` to a
 `SynSpecies` and use it through `geom_genelabel()`. Labels alone do not
 establish homology.
 
-# 4. Pairwise nucleotide alignments
+## 4. Pairwise nucleotide alignments
 
 Two genomes can contain the same locus at different chromosome positions.
 `SynSpecies` stores their annotations and alignment together;
 `facet_genomics()` places links between their source tracks.
 
-## Present the input
+### Present the input
 
 Use the bundled XZ1516 and N2 annotations and a small PAF alignment. This
 example needs neither a download nor user-supplied files.
@@ -378,7 +378,7 @@ Raw PAF uses zero-based starts and half-open intervals. The ggexon importer
 normalizes returned start/end columns to one-based closed intervals. Let it
 perform this conversion once.
 
-## Construct and inspect the objects
+### Construct and inspect the objects
 
 ```{r workflow-pairwise-object}
 xz <- SynIndividual(annotation_file = xz_gff, id = "XZ1516")
@@ -408,7 +408,7 @@ knitr::kable(head(aligned_blocks[, intersect(
 leaving the stored alignment unchanged. `subset_pairwise_alignment()` and
 `filter_pairwise_alignment()` expose these operations separately.
 
-## Choose the geom, scales, facet, and theme
+### Choose the geom, scales, facet, and theme
 
 `geom_nuclink()` derives a comparison window from XZ1516 coordinates and
 resolves the corresponding N2 region. Independent x ranges show each
@@ -446,13 +446,13 @@ parsed MAF data through `data`, but `load_alignment()` does not parse MAF
 files. The [class and verb reference](ggexon-classes-and-verbs.html)
 describes these larger workflows.
 
-# 5. Gene-level synteny from an interval table
+## 5. Gene-level synteny from an interval table
 
 A curated ortholog link has a different interpretation from a nucleotide
 alignment. `geom_synteny_link()` draws supplied interval relationships with
 the same panel machinery; it does not infer those relationships.
 
-## Present the input
+### Present the input
 
 Two synthetic loci contain matched genes at different positions. The
 `family` assignments are supplied teaching data.
@@ -472,7 +472,7 @@ knitr::kable(genes)
 knitr::kable(relationships)
 ```
 
-## Prepare the plotting data
+### Prepare the plotting data
 
 Tables are valid inputs too. Add source track and chromosome names to route
 ribbons to their annotation panels. This prepared table workflow does not
@@ -487,7 +487,7 @@ synteny <- transform(
 )
 ```
 
-## Choose the geom, scales, facet, and theme
+### Choose the geom, scales, facet, and theme
 
 Share a named palette between tags and ribbons so colour has one meaning.
 Independent base-pair axes retain the two loci's native coordinates.
@@ -510,14 +510,14 @@ ggexon() +
   theme_ggexon_pairwise(base_size = 10, show_legend = TRUE)
 ```
 
-# 6. Raw BigWig coverage beside gene annotation
+## 6. Raw BigWig coverage beside gene annotation
 
 Comparing a continuous signal with a gene model requires a shared genomic
 window and a separate quantitative y scale. Signal layers keep the raw
 measurements attached to the individual rather than mixing them into feature
 annotation rows.
 
-## Present the input
+### Present the input
 
 The bundled PEEL-1 fixture contains raw depth BigWigs and a WS285 GTF subset.
 Here two strains share one chromosome-I window. Start by inspecting the GTF
@@ -545,7 +545,7 @@ head(as.data.frame(query_signal(
 row for every base. The imported table uses 1-based inclusive genomic
 coordinates. The metadata records the unit; it does not normalize the scores.
 
-## Construct and inspect the objects
+### Construct and inspect the objects
 
 ```{r workflow-coverage-object, eval = .Platform$OS.type != "windows"}
 coverage_species <- SynSpecies(name = "PEEL-1 coverage")
@@ -567,7 +567,7 @@ Each individual owns a gene model and a named signal layer. `geom_coverage()`
 resolves that layer for both strains; the exon request supplies their common
 viewing window and draws one representative gene model below the signals.
 
-## Choose the geom, scales, facet, and theme
+### Choose the geom, scales, facet, and theme
 
 ```{r workflow-coverage-plot, eval = .Platform$OS.type != "windows", fig.height = 5, fig.alt = "Raw coverage from two C. elegans strains above a shared four-gene annotation, with one shared depth scale."}
 coverage_layers <- ggexon(coverage_species) +
@@ -612,13 +612,13 @@ clipping and independent y ranges mean its panel heights cannot be compared
 as absolute depths. See the [coverage example](bigwig-coverage-demo.html)
 for the full strain panel and fixture provenance.
 
-# 7. Protein mutation counts and domains
+## 7. Protein mutation counts and domains
 
 A protein summary removes introns from the view and places mutation counts
 next to functional regions. This helps compare residues across a protein
 without treating their genomic distances as protein distances.
 
-## Present the input
+### Present the input
 
 Protein positions and genomic positions describe different coordinate systems.
 For this example, create a synthetic mutation summary for a 160-residue
@@ -645,7 +645,7 @@ by the annotation object. It adds `gene_id`, `position`, `ref`, `alt`,
 `mutation`, and `source_row_id`. Passing `mutation_data` to the constructor
 stores this already normalized table; the constructor does not parse it again.
 
-## Construct and inspect the object
+### Construct and inspect the object
 
 ```{r workflow-protein-object}
 mutation_file <- tempfile(fileext = ".tsv")
@@ -670,7 +670,7 @@ positions become backbone, domain, stem, and head data. With the identity
 transform and the target range equal to the observed count range, the helper
 keeps head heights equal to sample counts for these data.
 
-## Choose the geom, scales, and theme
+### Choose the geom, scales, and theme
 
 ```{r workflow-protein-preparation}
 count_range <- range(protein_mutations$sample_count)
@@ -713,14 +713,14 @@ quantity. With the default lollipop height range, heights would be rescaled
 layout positions and should not be labeled as raw counts. No genomic x scale
 or facet is needed for this single protein-coordinate track.
 
-## Project protein features onto the genomic model
+### Project protein features onto the genomic model
 
 A protein residue number is not a chromosome coordinate. Projection follows
 the transcript's CDS blocks, so one protein interval can occupy several exons.
 This example reconnects gene A's isoforms with a synthetic genome, then places
 a domain and a mutation on the exon models in genomic base pairs.
 
-### Present the raw data
+#### Present the raw data
 
 Reuse `gtf_file` from the first example. Its full transcript contains three
 CDS blocks; `A_skip` uses the first and last. Fill a 1,700-base `chr1` with
@@ -752,7 +752,7 @@ coordinates. The mutation table is already normalized; `source_row_id`
 records its input row. It describes one synthetic gene-level mutation,
 which will be projected separately onto each matching isoform.
 
-### Construct the sequence and annotation objects
+#### Construct the sequence and annotation objects
 
 Create a FASTA and a new `SynIndividual` using the existing GTF. Translation
 joins each transcript's CDS in coding order. The output below contains 70
@@ -810,7 +810,7 @@ The domain splits into genomic intervals 143-160 and 501-530. Residue 25
 maps to 513-515 in `A_full` and 913-915 in `A_skip`: identical protein
 positions need not refer to identical genomic bases across isoforms.
 
-### Choose the geoms, scale, and theme
+#### Choose the geoms, scale, and theme
 
 Draw neutral exon models, overlay the projected domain on the `A_full` row,
 and add mutation lollipops aligned to their matching transcripts. Here
@@ -840,13 +840,13 @@ example measures amino-acid positions. Projection uses annotation structure;
 the plotted mutation is supplied teaching data, not a variant inferred from
 the synthetic FASTA.
 
-# 8. Aligned DNA and sequence differences
+## 8. Aligned DNA and sequence differences
 
 An alignment ribbon summarizes an interval but hides the bases that differ.
 For a short verified pairwise alignment, `alignseq_data()` attaches columns
 to genomic positions and `geom_alignseq()` draws the sequence detail.
 
-## Present the input
+### Present the input
 
 Supply two already aligned strings. A dash is a gap; each start coordinate
 identifies the first non-gap base in the supplied orientation.
@@ -861,7 +861,7 @@ knitr::kable(data.frame(sequence = names(dna), aligned_DNA = unname(dna)))
 knitr::kable(anchors)
 ```
 
-## Prepare and inspect the data
+### Prepare and inspect the data
 
 The helper returns a data frame rather than an S4 container. It classifies
 differences relative to the named reference; it does not compute an alignment
@@ -875,7 +875,7 @@ dna_columns <- alignseq_data(
 knitr::kable(dna_columns[, c("track", "column", "base", "position", "event_type")])
 ```
 
-## Choose the geom, scales, and theme
+### Choose the geom, scales, and theme
 
 The row view suits this seven-column alignment. Each panel keeps its own
 genomic axis. Base callouts have equal column spacing; gaps consume no
@@ -895,13 +895,13 @@ only for selected callouts. Match `track` names to existing annotation
 panels when adding DNA detail to a comparison. The [AS3MT example](as3mt-splice-variants-demo.html)
 uses this approach at a real locus.
 
-# 9. Equal gene slots for a presence and order comparison
+## 9. Equal gene slots for a presence and order comparison
 
 Base-pair spacing can obscure corresponding gene families across loci. A
 shared slot template makes occupied and empty positions visible, changing
 the meaning of the x axis to comparison slots.
 
-## Present the input
+### Present the input
 
 These synthetic clusters have genes assigned to three slots. Cluster B has
 no row for slot 2; this input omission alone does not establish gene loss.
@@ -916,7 +916,7 @@ slot_input <- data.frame(
 knitr::kable(slot_input)
 ```
 
-## Prepare the plotting data
+### Prepare the plotting data
 
 Retain genomic positions in `x`. The strip scale maps these to the explicit
 template rather than requiring us to overwrite source coordinates.
@@ -927,7 +927,7 @@ slot_data <- transform(slot_input, x = position, y = 1, track = cluster,
 slot_order <- c("s1", "s2", "s3")
 ```
 
-## Choose the geom, scales, facet, and theme
+### Choose the geom, scales, facet, and theme
 
 `geom_genebox()` uses equal-size squares with strand arrows.
 `strip_scale_x()` reserves every slot, including unoccupied ones.
@@ -954,13 +954,13 @@ The x axis now names supplied slots, not base pairs. With Syn-backed data,
 anchor before scaling. See the [Hox example](hox-cluster-expansion-demo.html)
 for real annotations, slot curation, and anchor comparisons.
 
-# 10. Align genomic tracks to a tree
+## 10. Align genomic tracks to a tree
 
 A phylogenetic ordering can make a multi-genome comparison easier to read.
 ggexon aligns one spanning rectangular tree to genomic rows without manual
 positioning of separate plots.
 
-## Present the input
+### Present the input
 
 Reuse the synthetic gene intervals from example 5 and supply a synthetic
 Newick tree. Its branch lengths are illustrative. This optional example
@@ -972,7 +972,7 @@ tree_text
 knitr::kable(genes)
 ```
 
-## Prepare the objects
+### Prepare the objects
 
 Tree-tip names must match track IDs, or be mapped with the `individual`
 argument to `geom_genomic_tree()`.
@@ -986,7 +986,7 @@ if (tree_available) {
 }
 ```
 
-## Choose the geom, scales, facet, and theme
+### Choose the geom, scales, facet, and theme
 
 `geom_genomic_tree()` attaches the tree; `facet_genomictree()` orders and
 aligns the panels. Genomic x ranges and tree branch lengths have separate
@@ -1011,13 +1011,13 @@ For repeated multi-locus comparisons, store comparable windows in a
 `SynLocusSet`, attach it with `add_locus_set()`, and use `use_locus_grid()`.
 This records the chosen loci alongside the individuals.
 
-# 11. Correct an annotation and compare the result
+## 11. Correct an annotation and compare the result
 
 A gene-model correction is easier to review when it remains attached to the
 annotation and you can still plot the original. A patch records the target,
 replacement features, and a name for the change.
 
-## Present the correction
+### Present the correction
 
 Shorten gene A's middle exon from 590 to 560 in this synthetic exercise.
 Supply the complete corrected gene model, including its unchanged children.
@@ -1031,7 +1031,7 @@ knitr::kable(as.data.frame(corrected_ranges)[,
   c("start", "end", "type", "gene_id", "transcript_id")])
 ```
 
-## Construct and apply the patch
+### Construct and apply the patch
 
 ```{r workflow-patch-object}
 correction <- SynAnnotationPatch(
@@ -1063,7 +1063,7 @@ names(list_patches(without_gene_b))
 unique(as.character(S4Vectors::mcols(annotation_data(without_gene_b))$gene_id))
 ```
 
-## Choose the geom, scales, facet, and theme
+### Choose the geom, scales, facet, and theme
 
 Retain the same base-pair scale before and after to compare the boundary.
 Use uncompressed `geom_exon2()` models so the direction arrows sit at the
@@ -1090,13 +1090,13 @@ ggexon(curation) +
   theme_ggexon_side_strips("left", base_size = 10)
 ```
 
-# 12. Query a VCF layer and mark variant positions
+## 12. Query a VCF layer and mark variant positions
 
 A VCF records allele changes at genomic positions. The feature annotation and
 variant layer remain separate: attaching a VCF does not change the gene model.
 This short example reuses `model` from the first example.
 
-## Present the input
+### Present the input
 
 Create three synthetic single-nucleotide variants on the same `chr1` as the
 teaching GTF. VCF `POS` uses one-based coordinates; these example alleles are
@@ -1115,7 +1115,7 @@ vcf_file <- tempfile(fileext = ".vcf")
 writeLines(vcf_lines, vcf_file)
 ```
 
-## Construct and inspect the object
+### Construct and inspect the object
 
 Attach a named `SynVCFAnnotation`, retrieve it, and query the displayed
 interval. Plain-text VCF is sufficient for this small example. Large BGZF VCFs
@@ -1133,7 +1133,7 @@ knitr::kable(variant_rows[, c("CHROM", "POS", "ID", "REF", "ALT")])
 variant_rows$allele <- paste0(variant_rows$REF, ">", variant_rows$ALT)
 ```
 
-## Choose the geoms, scales, and theme
+### Choose the geoms, scales, and theme
 
 Use the stored feature annotation for exon models and an ordinary
 `geom_vline()` for the queried variant positions. Both use the same genomic
@@ -1155,7 +1155,7 @@ vcf_plot <- ggexon(variant_model) +
 vcf_plot
 ```
 
-# Choose a view for your question
+## Choosing a view for your question
 
 | Question | Object or preparation | Geometry | Scale and theme |
 | --- | --- | --- | --- |

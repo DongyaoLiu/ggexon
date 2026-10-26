@@ -12,7 +12,7 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>", fig.width = 9,
   fig.height = 6, dpi = 220)
 ```
 
-# Load the example
+## Step 1. Load the example
 
 Compare human full-length AS3MT, a **paper-defined d2d3 reconstruction**,
 and chimpanzee full-length AS3MT. Coordinates use **GRCh38** and
@@ -26,7 +26,7 @@ source(file.path(demo_dir, "load-as3mt-example.R"), local = TRUE)
 as3mt <- load_as3mt_example(demo_dir)
 ```
 
-# 1. Transcripts and compressed introns
+## Step 2. Transcripts and compressed introns
 
 `geom_exon2()` shows CDS as thick boxes and UTR as thin boxes. Keep the
 full-reference exon numbering: d2d3 retains **E1 and E4–E11**; dashed boxes
@@ -36,7 +36,7 @@ follows that same piecewise scale in both annotation panels. The build trains
 the maps from exon layers first, then applies them to related genomic layers;
 adding coverage or labels does not change the exon/intron boundaries.
 
-```{r as3mt-pairwise, fig.alt="Human full-length and paper-defined d2d3 transcript rows above the chimpanzee reference. Gold E2/E3 are skipped in d2d3; ribbons follow 30-fold intron compression.", fig.cap="Transcript comparison; introns compressed 30-fold."}
+```{r as3mt-pairwise, fig.alt="Human full-length and paper-defined d2d3 transcript rows above the chimpanzee reference. Gold E2/E3 are skipped in d2d3; ribbons follow 30-fold intron compression."}
 as3mt_plot <- plot_as3mt_example(as3mt, intron_factor = 30)
 as3mt_plot$plot
 ```
@@ -60,11 +60,14 @@ Ribbons retain the two highest LASTZ identity categories, **97.1–98.3%** and
 **98.3–100%**. The 37 ungapped blocks split into 57 polygon pieces at scale
 boundaries. They show DNA similarity, not expression or proof of exon skipping.
 
-# 2. DNA detail at the exon-1 repeat
+## Step 3. DNA detail at the exon-1 repeat
 
-The selected human reference contains three **36-bp VNTR** units; the chimp
-reference has one imperfect homolog (34/36 matching bases). The terminal unit
-contains 24 exonic and 12 intronic bases. Both references retain the **GT** donor:
+The repeat is a **variable number tandem repeat (VNTR)** of 36-bp units at the
+exon 1 / intron 1 boundary. Each unit contains 24 exonic and 12 intronic bases,
+and the terminal unit retains the **GT** donor. The selected human reference has
+three copies; the chimp reference has one imperfect homolog (34/36 matching
+bases). The **−72 bp** difference is therefore two missing 36-bp units
+(2 × 36 = 72 bp), not a 72-bp indel. Both references retain the donor:
 
 ```text
 CCTGAGTCGCAGGCCGAGGAGACA | GTGAGTGCGCGC
@@ -99,7 +102,7 @@ origin. The human allele experiment differs by **36 bp**; the figure's **−72 b
 marker instead compares the selected chimp and human references. Two base
 differences in the chimp homolog are context, not demonstrated causal SNVs.
 
-# 3. RNA-seq and splice junctions
+## Step 4. RNA-seq and splice junctions
 
 The bundled GTEx frontal-cortex (BA9) sample
 **GTEX-15G19-0011-R10b-SM-7KUG4.1** has both exon-2/3 inclusion and E1→E4
@@ -108,7 +111,7 @@ coverage; [Snaptron](https://snaptron.cs.jhu.edu/data.html) supplies junction
 counts from the same sample. Both use **GRCh38**. `geom_coverage()` and
 `geom_junction()` follow the human exon/intron map automatically.
 
-```{r as3mt-rnaseq, fig.height=7, fig.alt="Matched GTEx coverage and counted blue inclusion/orange E1-to-E4 skipping arcs in the same panel, above the human AS3MT transcripts. All follow 30-fold intron compression; ungapped links connect the chimp reference.", fig.cap="Matched human coverage and splice-junction reads."}
+```{r as3mt-rnaseq, fig.height=7, fig.alt="Matched GTEx coverage and counted blue inclusion/orange E1-to-E4 skipping arcs in the same panel, above the human AS3MT transcripts. All follow 30-fold intron compression; ungapped links connect the chimp reference."}
 rna_example <- plot_as3mt_coverage(demo_dir, intron_factor = 30,
   junction_panel = "coverage")
 rna_example$plot
@@ -140,7 +143,22 @@ These short-read junctions support the splice events, not complete transcript
 abundances. This independent donor's VNTR genotype is not inferred from the
 reference DNA or the separate minigene experiment.
 
-# Sources and reproducibility
+## Step 5. Combined result
+
+The green RNA-seq signal and counted splice arcs occupy the same panel and
+share the human gene model's compressed scale. Blue arcs support exon inclusion; the orange arc supports
+E1→E4 skipping. Purple outlines locate the VNTR; each species keeps its own DNA
+callout. Separate bars
+below the legend show exon and compressed-intron scales. The lower human transcript remains a
+**paper-defined reconstruction**; the repeat-count strip summarizes the tested
+human alleles schematically.
+
+```{r as3mt-alignseq, fig.height=8, fig.alt="Matched human RNA-seq and counted inclusion/skipping arcs share the top panel above the AS3MT transcript comparison. The same figure includes ungapped links, purple VNTR units, species-specific DNA callouts, exon/intron scale bars and the human minigene comparison."}
+grid::grid.newpage()
+grid::grid.draw(sequence_example$grob)
+```
+
+## Sources and reproducibility
 
 - [Li et al. (2016), doi:10.1038/nm.4096](https://doi.org/10.1038/nm.4096):
   d2d3 reconstruction and repeat sequence.
@@ -154,17 +172,3 @@ The installed `extdata/as3mt` directory contains the plotting helper, input
 snapshots and provenance. Repository preparation/export scripts are in
 `data-raw/as3mt`; the genomic ribbons use LASTZ `--nogapped --chain` blocks.
 
-# Combined result
-
-The green RNA-seq signal and counted splice arcs occupy the same panel and
-share the human gene model's compressed scale. Blue arcs support exon inclusion; the orange arc supports
-E1→E4 skipping. Purple outlines locate the VNTR; each species keeps its own DNA
-callout. Separate bars
-below the legend show exon and compressed-intron scales. The lower human transcript remains a
-**paper-defined reconstruction**; the repeat-count strip summarizes the tested
-human alleles schematically.
-
-```{r as3mt-alignseq, fig.height=8, fig.alt="Matched human RNA-seq and counted inclusion/skipping arcs share the top panel above the AS3MT transcript comparison. The same figure includes ungapped links, purple VNTR units, species-specific DNA callouts, exon/intron scale bars and the human minigene comparison.", fig.cap="AS3MT coverage, splice junctions and exon-1 VNTR."}
-grid::grid.newpage()
-grid::grid.draw(sequence_example$grob)
-```

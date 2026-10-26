@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Why a cluster matrix?
+## Overview
 
 This example replaces the former HOXA ribbon tutorial with a view of HOX
 cluster expansion. Early vertebrate whole-genome duplications produced the four
@@ -98,7 +98,7 @@ panels$species_row <- factor(panels$matrix_row, levels = row_levels)
 panels$cluster_column <- factor(panels$matrix_column, levels = column_levels)
 ```
 
-# Exact shared Hox slots
+## Step 1. Place genes in exact shared Hox slots
 
 `geom_genebox()` uses a square whose side length is measured in x and y data
 units, like a ggplot2 bar width. The default is `box_size = 1`, and
@@ -293,7 +293,7 @@ annotation slot: the BraLan2 GTF has no corresponding gene model, consistent
 with the failure to identify *B. lanceolatum* Hox13 in the expression study of
 [Pascual-Anaya et al. 2012](https://pmc.ncbi.nlm.nih.gov/articles/PMC3534614/).
 
-# What does the anchor mean?
+## Step 2. Choose the gene anchor
 
 For Syn-backed data, `geom_genebox(anchor = ...)` first keeps protein-coding
 transcripts with usable CDS, then selects the transcript having the greatest
@@ -388,7 +388,7 @@ anchor_table <- data.frame(
 knitr::kable(anchor_table, align = c("l", "l", "c", "r", "r", "r", "r"))
 ```
 
-# Pinned data and audit trail
+## Pinned data and audit trail
 
 The vertebrate annotations are pinned to Ensembl release 116. Amphioxus uses
 BraLan2 from Ensembl Metazoa release 63. The builder stores the source URL,

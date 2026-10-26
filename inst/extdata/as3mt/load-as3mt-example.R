@@ -97,9 +97,7 @@ plot_as3mt_example <- function(example, intron_factor = 30, base_size = 8, base_
     ggexon::scale_x_ggexon_genomic(intron_factor = intron_factor,
       guide = ggexon::guide_x_ggexon_piecewise(by = "panel")) +
     ggplot2::labs(title = "AS3MT transcripts: human–chimpanzee pairwise comparison",
-      subtitle = NULL, x = NULL, y = NULL,
-      caption = paste("Gold: skipped E2/E3. Thick boxes: CDS; thin boxes: UTR.",
-        "Lower human row: paper-defined d2d3 reconstruction.", sep = "\n")) +
+      subtitle = NULL, x = NULL, y = NULL) +
     ggexon::theme_ggexon_track(base_size = base_size, base_family = base_family,
       show_x_axis = TRUE, show_x_grid = FALSE, show_legend = TRUE) +
     ggplot2::theme(text = ggplot2::element_text(size = base_size),
@@ -183,9 +181,7 @@ plot_as3mt_coverage <- function(demo_dir = system.file("extdata", "as3mt", packa
     rna, base_size, base_family) +
     ggexon::scale_panel_annotation("free_y",
       limits = list(human = c(.15, 3.45), chimp = c(.3, 1.8))) +
-    ggplot2::labs(title = "AS3MT: RNA-seq and transcripts",
-      caption = paste("GTEx frontal cortex (BA9). Arc labels: junction reads.",
-        "Lower human transcript: paper-defined d2d3 reconstruction.", sep = "\n"))
+    ggplot2::labs(title = "AS3MT: RNA-seq and transcripts")
   list(plot = plot, build = ggexon::ggexon_build(plot), signal = rna$signal,
     junctions = rna$junctions, junction_panel = junction_panel)
 }
@@ -245,9 +241,7 @@ plot_as3mt_alignseq <- function(demo_dir = system.file("extdata", "as3mt", packa
     ggplot2::geom_segment(data = donors,
       ggplot2::aes(x = x, xend = x, y = y, yend = yend), inherit.aes = FALSE,
       colour = "grey20", linewidth = .35) +
-    ggplot2::labs(title = NULL, subtitle = NULL,
-      caption = paste("Exon-1 VNTR (purple). \u221272 bp: chimp relative to human.",
-        "Lower human row: paper-defined d2d3 reconstruction. Cai et al. (2021).", sep = "\n")) +
+    ggplot2::labs(title = NULL, subtitle = NULL) +
     ggplot2::theme(axis.text.x = ggplot2::element_blank(),
       axis.ticks.x = ggplot2::element_blank(), axis.line.x = ggplot2::element_blank())
   signal <- junctions <- NULL
@@ -255,10 +249,7 @@ plot_as3mt_alignseq <- function(demo_dir = system.file("extdata", "as3mt", packa
     rna <- as3mt_rnaseq_data(demo_dir, junction_panel)
     signal <- rna$signal
     junctions <- rna$junctions
-    plot <- as3mt_add_rnaseq(plot, rna, base_size, base_family) +
-      ggplot2::labs(caption = paste(
-        "GTEx frontal cortex. Arc labels: junction reads. VNTR (purple); chimp \u221272 bp.",
-        "Lower human row: paper-defined d2d3 reconstruction. Cai et al. (2021).", sep = "\n"))
+    plot <- as3mt_add_rnaseq(plot, rna, base_size, base_family)
   }
   short <- ggexon::alignseq_data(a$aligned, a$anchors, reference = "human", regions = a$details)
   short$track <- factor(short$track, levels = c("human", "chimp"))
@@ -280,8 +271,7 @@ plot_as3mt_alignseq <- function(demo_dir = system.file("extdata", "as3mt", packa
       inherit.aes = FALSE, fill = "grey65", colour = NA) +
     ggexon::geom_alignseq(data = short, mode = "rows", size = base_size / (72.27 / 25.4), family = base_family) +
     ggexon::facet_genomics(ggplot2::vars(track), ncol = 1, scales = "free_x") +
-    ggplot2::labs(x = "Assembly-specific chr10 genomic coordinates", y = NULL,
-      caption = "Terminal VNTR unit: E1 (24 nt) | intron 1 (12 nt).") +
+    ggplot2::labs(x = "Assembly-specific chr10 genomic coordinates", y = NULL) +
     ggexon::theme_ggexon_track(base_size = base_size, base_family = base_family,
       show_x_axis = TRUE, show_x_grid = FALSE)
   coverage_height <- if (isTRUE(show_coverage) && junction_panel == "coverage") 2.2 else 1.2

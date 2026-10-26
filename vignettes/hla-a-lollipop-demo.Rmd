@@ -12,7 +12,7 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>", fig.width = 10,
                       fig.height = 5.625, dpi = 220)
 ```
 
-# A dense landscape of HLA-A variation
+## Overview
 
 This example summarizes **5,998 named HLA-A alleles**, an MHC class I heavy
 chain, from IPD-IMGT/HLA release **3.66.0**. Comparison with **A\*02:01:01:01**
@@ -38,7 +38,7 @@ proteins. The panel contains 3,188 distinct mature protein sequences, but is
 not deduplicated to those proteins. Counts reflect database representation,
 not individuals, independent observations, or population frequencies.
 
-# Load the offline inputs
+## Step 1. Load the offline inputs
 
 ```{r hla-a-load, message = FALSE}
 library(ggexon)
@@ -61,7 +61,7 @@ The allele manifest retains every exact name and sequence checksum. The original
 FASTA records are unchanged and bundled with gzip compression. The loader and
 plotting functions are example helpers, not new exported package functions.
 
-## Protein coordinates and structural regions
+### Protein coordinates and structural regions
 
 The original precursor sequences include a 24-residue signal peptide. The plot
 uses **mature-protein positions 1–341**, so mature residue 156 is precursor
@@ -83,7 +83,7 @@ Different DNA variants producing the same amino-acid change are grouped into
 one substitution. The protein view uses amino-acid coordinates; the gene-model
 section below projects them to the exact reference allele's coding structure.
 
-# Dense lollipop summary
+## Step 2. Draw the dense lollipop summary
 
 ```{r hla-a-overview, fig.alt = "A dense HLA-A lollipop landscape containing 1212 substitution heads at 334 residues from 5998 named alleles. Heads are coloured by amino-acid group, with a logarithmic count axis and labelled structural regions beneath.", fig.cap = "All eligible named HLA-A alleles from the pinned release. Every substitution remains a separate head; colours describe the alternative amino acid, not its prevalence."}
 plots <- plot_hla_a_example(hla)
@@ -134,7 +134,7 @@ unchanged.
 head(hla$mutations[, c("mutation", "allele_count", "n_alternatives", "amino_acid_group")])
 ```
 
-# Multiple alternatives at residue 156
+## Step 3. Compare multiple alternatives at residue 156
 
 The reference has **L** at mature residue 156. In this expanded panel there are
 **five** alternative amino acids, each counted separately:
@@ -158,7 +158,7 @@ Each summary row includes up to three example allele names. The complete
 manifest and source sequences retain all eligible alleles without producing
 unwieldy lists of thousands of names in each table cell.
 
-# Project onto the reference exon–intron model
+## Step 4. Project onto the reference exon–intron model
 
 The same 1,212 substitutions can be placed above the **eight coding exons and
 seven introns** of A\*02:01:01:01. The bundled IPD HLA00005 reference snapshot
@@ -216,7 +216,7 @@ intron exactly 130, avoiding an off-by-one error from inclusive endpoints.
 Codon anchors retain their original genomic base-centre coordinates. The guide
 reports **73 bp** for the representative exon and **130 bp /3** for the intron.
 
-# Reproduce and customize
+## Reproducing and customizing
 
 From the repository root:
 

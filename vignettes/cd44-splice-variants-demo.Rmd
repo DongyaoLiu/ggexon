@@ -19,7 +19,7 @@ knitr::read_chunk(system.file("extdata", "cd44_pairwise_ensembl116",
   "load-cd44-example.R", package = "ggexon"))
 ```
 
-# Overview
+## Overview
 
 This tutorial compares selected human `CD44` and mouse `Cd44` protein-coding
 splice variants in one pairwise genomic view. The example uses two annotation
@@ -41,7 +41,7 @@ GRCm39 `chr2`. The mouse `Cd44` gene is on the reverse strand, so the plot
 below reverses the mouse panel at draw time while keeping tick labels in
 original genomic coordinates.
 
-# Build one comparative data object
+## Step 1. Build one comparative data object
 
 The comparison is stored in one `SynSpecies` object named `cd44`. It contains
 human and mouse `SynIndividual` objects with loaded `SynFeatureAnnotation`
@@ -82,7 +82,7 @@ names(isoform_table) <- c("Species", "Transcript", "Ensembl transcript", "Exons"
 knitr::kable(isoform_table)
 ```
 
-# Pairwise splice-variant plot
+## Step 2. Draw the pairwise splice-variant plot
 
 The geoms resolve their data from `ggexon(cd44)`. The feature annotation retains
 `exon_role`, `transcript_name`, `selection_order`, and `isoform_y` as metadata.
@@ -175,7 +175,7 @@ cd44_plot <- ggexon(cd44) +
 cd44_plot
 ```
 
-# What the alignment layer contributes
+### What the alignment layer contributes
 
 `geom_nuclink()` uses a table of target/query genomic intervals. Here those
 intervals come from LASTZ alignments of genomic DNA windows spanning the human
@@ -307,7 +307,7 @@ names(protein_identity_table) <- c(
 knitr::kable(protein_identity_table, row.names = FALSE)
 ```
 
-# Reusing the pattern
+## Step 3. Reuse the pattern
 
 Save the comparative object to keep its loaded annotations, normalized links,
 sequence windows, and supporting tables together:
@@ -330,7 +330,7 @@ release, source URLs, strand-aware flank sizes, UCSC sequence windows, LASTZ
 command, selected isoforms, common-exon calls, and exon-homology candidate
 tables.
 
-# Object construction code
+## Appendix. Object construction code
 
 This is the loader sourced above. The annotation is loaded into each
 `SynIndividual` and enriched by matching transcript IDs and exon coordinates.

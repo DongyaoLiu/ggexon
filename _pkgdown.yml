@@ -33,7 +33,7 @@ navbar:
         href: articles/as3mt-splice-variants-demo.html
       - text: HLA-A protein variant lollipops
         href: articles/hla-a-lollipop-demo.html
-      - text: Continuous MHC comparison
+      - text: MHC haplotypes across apes
         href: articles/mhc-continuous-demo.html
       - text: PEEL-1 raw BigWig coverage
         href: articles/bigwig-coverage-demo.html
