@@ -88,14 +88,18 @@ GeomCoverage <- ggplot2::ggproto(
 #' form standalone first-class coverage panels without an annotation layer.
 #' Ordinary non-Syn plots retain the legacy composite-layer behavior.
 #'
-#' Continuous coverage panels use ordinary genomic x coordinates. They cannot
-#' currently be combined with [`scale_x_ggexon_genomic()`] exon/intron
-#' compression or [`strip_scale_x()`]; those mixed builds fail before
-#' transforming the signal.
+#' With [`scale_x_ggexon_genomic()`], coverage follows its annotation panel's
+#' exon/intron map. Intervals crossing scale boundaries are split without
+#' changing their scores. Automatic coverage y limits still use original
+#' genomic widths, rather than compressed display widths. Coverage without an
+#' exon-style annotation source keeps its ordinary genomic coordinates.
+#' [`strip_scale_x()`] remains unsupported for first-class coverage panels.
 #' Inclusive genomic interval endpoints are retained in `interval_start`,
 #' `interval_end`, `genomic_xmin`, and `genomic_xmax` in the built layer data;
 #' rectangle edges are shifted by half a base so adjacent intervals meet
-#' without overlap or gaps.
+#' without overlap or gaps. After genomic compression, `genomic_edge_start`
+#' and `genomic_edge_end` retain each fragment's untransformed rectangle edges;
+#' the inclusive endpoint columns still identify the original parent interval.
 #'
 #' @param mapping,data,stat,position,...,na.rm,show.legend,inherit.aes Standard
 #'   ggplot2 layer arguments.

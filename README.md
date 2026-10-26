@@ -84,9 +84,12 @@ genomic alignment blocks at both panels' scale boundaries and maps the pieces
 to the same exon/intron scales. The plot retains only the two highest identity
 categories of the ungapped LASTZ alignment.
 
-See the [AS3MT transcript, protein and DNA tutorial](https://dongyaoliu.github.io/ggexon/articles/as3mt-splice-variants-demo.html)
-for the reproducible offline example, projected protein-loss interval and start marker,
-and aligned DNA repeat detail.
+The tutorial also aligns matched human GTEx coverage and counted splice
+junctions to the compressed gene model. `geom_junction()` distinguishes
+exon inclusion from E1→E4 skipping, while preserving source signal values.
+
+See the [AS3MT transcript, DNA and RNA-seq tutorial](https://dongyaoliu.github.io/ggexon/articles/as3mt-splice-variants-demo.html)
+for the reproducible offline example and aligned DNA repeat detail.
 
 ## Installation
 
@@ -147,7 +150,7 @@ The public API is organized around a few function families:
 | Load and query data | `load_annotation()`, `load_alignment()`, `import_blast_homology()`, `query_features()`, `query_variants()`, `query_signal()`, `query_domains()` |
 | Derive sequence/protein data | `extract_cds_seq()`, `translate_protein()`, `project_domains_to_genome()` |
 | Subset and curate objects | `subset_species()`, `subset_individual()`, `subset_pairwise_alignment()`, `set_gene_labels()`, `patch_annotation_from_gff()` |
-| Draw genomic layers | `ggexon()`, `geom_exon()`, `geom_coverage()`, `geom_genetag()`, `geom_genebox()`, `geom_genelabel()`, `geom_nuclink()`, `geom_synteny_link()`, `geom_protein_lollipop()` |
+| Draw genomic layers | `ggexon()`, `geom_exon()`, `geom_coverage()`, `geom_junction()`, `geom_genetag()`, `geom_genebox()`, `geom_genelabel()`, `geom_nuclink()`, `geom_synteny_link()`, `geom_protein_lollipop()` |
 | Arrange panels and guides | `facet_genomics()`, `scale_panel_annotation()`, `scale_panel_coverage()`, `center_panel_annotation()`, `facet_genomictree()`, `scale_x_ggexon_genomic()`, `scale_x_facet_labels()`, `guide_x_ggexon_piecewise()` |
 | Style plots | `theme_ggexon_clean()`, `theme_ggexon_base()`, `theme_ggexon_track()`, `theme_ggexon_pairwise()` |
 

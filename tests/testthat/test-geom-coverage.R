@@ -2019,7 +2019,7 @@ test_that("link panels never source coordinates from coverage panels", {
   expect_false(any(c(link$t_panel, link$q_panel) %in% coverage_panels))
 })
 
-test_that("continuous coverage rejects compressed and strip genomic x transforms", {
+test_that("continuous coverage supports genomic compression but rejects strip scaling", {
   skip_on_os("windows") # rtracklayer BigWig I/O is unsupported on Windows.
   species <- coverage_fixture_species("XZ1516")
   base <- ggexon(species) +
@@ -2032,10 +2032,7 @@ test_that("continuous coverage rejects compressed and strip genomic x transforms
     ) +
     facet_genomics(ggplot2::vars(track), scales = "free_x")
 
-  expect_error(
-    ggexon_build(base + scale_x_ggexon_genomic()),
-    "coverage.*continuous.*not supported"
-  )
+  expect_no_error(ggexon_build(base + scale_x_ggexon_genomic()))
   expect_error(
     ggexon_build(base + strip_scale_x(guide = "none")),
     "coverage.*continuous.*not supported"

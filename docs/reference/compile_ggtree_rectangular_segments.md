@@ -3,7 +3,7 @@
 `compile_ggtree_rectangular_segments()` converts a rectangular ggtree
 plot or tree object into plain segment rows. The returned data can be
 drawn with
-[`ggplot2::geom_segment()`](https://rdrr.io/pkg/ggplot2/man/geom_segment.html)
+[`ggplot2::geom_segment()`](https://ggplot2.tidyverse.org/reference/geom_segment.html)
 inside
 [`ggexon()`](https://dongyaoliu.github.io/ggexon/reference/ggexon.md)
 and aligned to a gene-tag panel with

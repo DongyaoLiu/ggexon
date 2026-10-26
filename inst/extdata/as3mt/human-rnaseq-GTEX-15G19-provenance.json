@@ -1,0 +1,230 @@
+{
+  "sample": "GTEX-15G19-0011-R10b-SM-7KUG4.1",
+  "rail_id": "9717366",
+  "run_accession": null,
+  "assembly": "GRCh38",
+  "gene": "AS3MT",
+  "gene_strand": "+",
+  "seqnames": "chr10",
+  "start": 102869470,
+  "end": 102901899,
+  "coordinate_system": "1-based closed; donor/acceptor are flanking exonic bases, not intronic bases",
+  "biosample": "Human frontal cortex (BA9), male, age 60-69",
+  "sample_metadata_url": "https://snaptron.cs.jhu.edu/gtexv2/samples?all=1",
+  "sample_metadata": {
+    "rail_id": "9717366",
+    "external_id": "GTEX-15G19-0011-R10b-SM-7KUG4.1",
+    "run_acc": "NA",
+    "SMTSD": "Brain - Frontal Cortex (BA9)",
+    "SEX": "1",
+    "AGE": "60-69",
+    "SMRIN": "7.9",
+    "SMAFRZE": "RNASEQ",
+    "SMGEBTCHT": "TruSeq.v1",
+    "min_len": "76",
+    "max_len": "76"
+  },
+  "source": "recount3 GTEx release human base_sums, ALL (combined-strand signal)",
+  "source_url": "https://recount-opendata.s3.amazonaws.com/recount3/release/human/data_sources/gtex/base_sums/IN/BRAIN/G4/gtex.base_sums.BRAIN_GTEX-15G19-0011-R10b-SM-7KUG4.1.ALL.bw",
+  "source_full_file_size": 160835940,
+  "full_file_checksum_verified": false,
+  "score_units": "Raw per-base RNA-seq coverage counts; source values displayed without a library-size normalization or conversion to transcript abundance",
+  "score_units_source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8628444/",
+  "coverage_documentation_url": "https://research.libd.org/recount3/articles/recount3-quickstart.html",
+  "score_handling": "Source float32 values unchanged. Only locus boundaries are clipped. No normalization, interpolation, binning, or missing-base zero filling.",
+  "signal_tsv_sha256": "ebdb2814ac547d91847e514cfbc0b0776eb5cea4c8e9d8841af6b50b2adf67f7",
+  "junction_tsv_sha256": "9161fbbd4cb0b62b78675d288d6362bf605957a61643a60c57a3e6e9cebc3277",
+  "n_intervals": 1072,
+  "n_covered_bases": 32430,
+  "n_explicit_zero_intervals": 75,
+  "n_explicit_zero_bases": 22515,
+  "min_score": 0.0,
+  "max_score": 64.0,
+  "source_signal_blocks": [
+    {
+      "offset": 72212258,
+      "size": 10435
+    },
+    {
+      "offset": 72222693,
+      "size": 9873
+    }
+  ],
+  "retained_byte_ranges": [
+    {
+      "start": 0,
+      "end": 9493,
+      "sha256": "660828ee5a0b00714bb748341e696d40836fbd71ab899dfcec98c8c4f9cb31a7"
+    },
+    {
+      "start": 72212258,
+      "end": 72222692,
+      "sha256": "be3cfaf5f5132fd8f617fc5b3680229e68fd419ca830dcd54023639661a396dd"
+    },
+    {
+      "start": 72222693,
+      "end": 72232565,
+      "sha256": "cd0beb058240f318f7ea767fab02a14827b2fcc15511d8c89492c930a0b67c60"
+    },
+    {
+      "start": 137570495,
+      "end": 137570542,
+      "sha256": "2f35d1d911538cc181875b45a8cab00ba108af4a4814c495b46792e258b18f52"
+    },
+    {
+      "start": 137570543,
+      "end": 137570546,
+      "sha256": "413432a2e4977ca133f00f95e74dcb2af10220ee4bcf9c47ac33ed88a7d7bffa"
+    },
+    {
+      "start": 137570547,
+      "end": 137572082,
+      "sha256": "ed6e4627f684c0b689b704760adee5b016565beced3090a52a4aa24d35c7d8ff"
+    },
+    {
+      "start": 137574795,
+      "end": 137574798,
+      "sha256": "1112da16eb081d8d3dedf4cfb31fb10f96d713988136da3dc00e9f0c8def0e0e"
+    },
+    {
+      "start": 137574799,
+      "end": 137574870,
+      "sha256": "c8a92fed65aa8434a208b292eb7bc7a30801e3afa0ed34b72c4e582463558250"
+    },
+    {
+      "start": 137801047,
+      "end": 137801050,
+      "sha256": "b0749d8197a53f5096eed954d3f29ef2f38455d49a3ae01acd6e3a8fc65cc49d"
+    },
+    {
+      "start": 137801051,
+      "end": 137803098,
+      "sha256": "326b60581a34ead8bc92bec7ca054068331e2cf61e1fa1873a5d72c3d365bef7"
+    }
+  ],
+  "n_retained_source_bytes": 33518,
+  "n_unique_source_bytes": 33518,
+  "source_byte_requests": [
+    {
+      "start": 0,
+      "end": 63,
+      "sha256": "093d452cdfbb35f3a299145a74fc223f6e21368cb58c59088d0178419ff9ad1f",
+      "retrieved_from": "cache"
+    },
+    {
+      "start": 0,
+      "end": 9493,
+      "sha256": "660828ee5a0b00714bb748341e696d40836fbd71ab899dfcec98c8c4f9cb31a7",
+      "retrieved_from": "cache"
+    },
+    {
+      "start": 137570495,
+      "end": 137570542,
+      "sha256": "2f35d1d911538cc181875b45a8cab00ba108af4a4814c495b46792e258b18f52",
+      "retrieved_from": "cache"
+    },
+    {
+      "start": 137570543,
+      "end": 137570546,
+      "sha256": "413432a2e4977ca133f00f95e74dcb2af10220ee4bcf9c47ac33ed88a7d7bffa",
+      "retrieved_from": "cache"
+    },
+    {
+      "start": 137570547,
+      "end": 137572082,
+      "sha256": "ed6e4627f684c0b689b704760adee5b016565beced3090a52a4aa24d35c7d8ff",
+      "retrieved_from": "cache"
+    },
+    {
+      "start": 137574795,
+      "end": 137574798,
+      "sha256": "1112da16eb081d8d3dedf4cfb31fb10f96d713988136da3dc00e9f0c8def0e0e",
+      "retrieved_from": "cache"
+    },
+    {
+      "start": 137574799,
+      "end": 137574870,
+      "sha256": "c8a92fed65aa8434a208b292eb7bc7a30801e3afa0ed34b72c4e582463558250",
+      "retrieved_from": "cache"
+    },
+    {
+      "start": 137801047,
+      "end": 137801050,
+      "sha256": "b0749d8197a53f5096eed954d3f29ef2f38455d49a3ae01acd6e3a8fc65cc49d",
+      "retrieved_from": "cache"
+    },
+    {
+      "start": 137801051,
+      "end": 137803098,
+      "sha256": "326b60581a34ead8bc92bec7ca054068331e2cf61e1fa1873a5d72c3d365bef7",
+      "retrieved_from": "cache"
+    },
+    {
+      "start": 72212258,
+      "end": 72222692,
+      "sha256": "be3cfaf5f5132fd8f617fc5b3680229e68fd419ca830dcd54023639661a396dd",
+      "retrieved_from": "cache"
+    },
+    {
+      "start": 72222693,
+      "end": 72232565,
+      "sha256": "cd0beb058240f318f7ea767fab02a14827b2fcc15511d8c89492c930a0b67c60",
+      "retrieved_from": "cache"
+    }
+  ],
+  "n_source_byte_requests": 11,
+  "n_requested_source_bytes": 33582,
+  "n_http_source_requests": 0,
+  "n_http_source_bytes": 0,
+  "n_cached_source_bytes": 33582,
+  "source_byte_accounting": "Counters describe this preparation run only, excluding Snaptron queries. Requested bytes count each cache/HTTP retrieval, including the 64-byte header read again within the larger header/tree range. Unique bytes count overlapping source positions once. Retained bytes are the chunks used for the sparse BigWig; an expanded chunk replaces an earlier chunk with the same start. HTTP counters exclude cached and in-memory reads.",
+  "offline_replay": true,
+  "junction_source": "Snaptron gtexv2, exact intron coordinates and sample-filtered rail_id",
+  "junction_count_units": "Reported supporting-read counts for each splice junction in this sample",
+  "junction_queries": [
+    {
+      "url": "https://snaptron.cs.jhu.edu/gtexv2/snaptron?regions=chr10:102869594-102869804&exact=1&sids=9717366",
+      "response_sha256": "ae6b1060ddd5d4cb3187d918ddea53b378685ff96b53eb31dceba6f038372449",
+      "snaptron_id": "4104169",
+      "intron_start": 102869594,
+      "intron_end": 102869804,
+      "reads": 9,
+      "event": "inclusion"
+    },
+    {
+      "url": "https://snaptron.cs.jhu.edu/gtexv2/snaptron?regions=chr10:102869846-102870083&exact=1&sids=9717366",
+      "response_sha256": "8e2c762512301a4995359a007f6141f6520f52e46f338ce73a1634110a70f6e1",
+      "snaptron_id": "4104202",
+      "intron_start": 102869846,
+      "intron_end": 102870083,
+      "reads": 10,
+      "event": "inclusion"
+    },
+    {
+      "url": "https://snaptron.cs.jhu.edu/gtexv2/snaptron?regions=chr10:102870212-102872447&exact=1&sids=9717366",
+      "response_sha256": "3cb0d5d87d983716efc80d5b4138beb894529a6b72ee61dd5e4ff1dd875d740b",
+      "snaptron_id": "4104254",
+      "intron_start": 102870212,
+      "intron_end": 102872447,
+      "reads": 11,
+      "event": "inclusion"
+    },
+    {
+      "url": "https://snaptron.cs.jhu.edu/gtexv2/snaptron?regions=chr10:102869594-102872447&exact=1&sids=9717366",
+      "response_sha256": "2f2222c50ee759b201efd02968de205058497d3c82fa5d85dd7f718314b83ea8",
+      "snaptron_id": "4104180",
+      "intron_start": 102869594,
+      "intron_end": 102872447,
+      "reads": 12,
+      "event": "skipping"
+    }
+  ],
+  "verification": "Original BigWig chromosome and interval indexes plus compressed signal sections validated. All 1072 coordinates and source scores matched an independent rtracklayer import of original indexed source bytes.",
+  "prepared_utc": "2026-10-22T16:18:42.313880+00:00",
+  "caveats": [
+    "Coverage is combined across transcripts and strands; shared-exon coverage cannot be assigned separately to either AS3MT isoform.",
+    "Junction counts support inclusion or E2/E3 skipping events and do not measure complete transcript abundance or prove the full reconstructed transcript.",
+    "This independent adult GTEx sample is separate from the organoid and minigene experiments in the cited AS3MT papers.",
+    "Selected for the coexistence of inclusion and skipping junctions in one standard GTEx RNA-seq sample. This selection is for visualization and does not support an unbiased prevalence estimate or biological group comparison."
+  ]
+}

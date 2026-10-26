@@ -5,7 +5,7 @@
 \alias{SynAnnotationPatch-class}
 \title{SynAnnotationPatch class}
 \description{
-\code{SynAnnotationPatch} records a patch that replaces, adds, or drops a subset
+\code{SynAnnotationPatch} records a patch that replaces, adds, or removes a subset
 of features from a \code{SynFeatureAnnotation}. As a genome-coordinate annotation,
 it inherits the shared \code{SynGenomeAnnotation} metadata used across
 nucleotide-level annotation layers.
@@ -29,7 +29,8 @@ and \code{"add"} patches.}
 \item{\code{target_ids}}{Character vector of feature identifiers targeted by the
 patch.}
 
-\item{\code{mode}}{Patch mode. One of \code{"replace"}, \code{"add"}, or \code{"drop"}.}
+\item{\code{mode}}{Patch mode. One of \code{"replace"}, \code{"add"}, \code{"remove"}, or legacy
+\code{"drop"}.}
 
 \item{\code{metadata}}{Optional patch metadata.}
 }}
@@ -50,7 +51,7 @@ patch.}
 \section{Validity rules}{
 
 \itemize{
-\item \code{mode} must be one of \code{"replace"}, \code{"add"}, or \code{"drop"}.
+\item \code{mode} must be one of \code{"replace"}, \code{"add"}, \code{"remove"}, or legacy \code{"drop"}.
 \item \code{patch_data} is required when \code{mode} is \code{"replace"} or \code{"add"}.
 }
 }

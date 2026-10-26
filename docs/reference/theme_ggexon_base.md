@@ -2,7 +2,7 @@
 
 `theme_ggexon_base()` is the common foundation for ggexon's specialized
 themes. It uses
-[`ggplot2::theme_minimal()`](https://rdrr.io/pkg/ggplot2/man/ggtheme.html)
+[`ggplot2::theme_minimal()`](https://ggplot2.tidyverse.org/reference/ggtheme.html)
 typography and coordinate grids while removing decorative plot, panel,
 strip, border, and legend backgrounds. Strip text, axes, and grid lines
 remain available for derived themes to style.
@@ -18,12 +18,12 @@ theme_ggexon_base(base_size = 8, base_family = "")
 - base_size:
 
   Base font size passed to
-  [`ggplot2::theme_minimal()`](https://rdrr.io/pkg/ggplot2/man/ggtheme.html).
+  [`ggplot2::theme_minimal()`](https://ggplot2.tidyverse.org/reference/ggtheme.html).
 
 - base_family:
 
   Base font family passed to
-  [`ggplot2::theme_minimal()`](https://rdrr.io/pkg/ggplot2/man/ggtheme.html).
+  [`ggplot2::theme_minimal()`](https://ggplot2.tidyverse.org/reference/ggtheme.html).
 
 ## Value
 

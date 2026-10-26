@@ -1,14 +1,21 @@
 # Edit homology rows
 
-These S4 methods add, delete, or replace rows in a `HomologyAnnotation`
-table. Methods for `SynSpecies` edit one attached homology annotation
-selected by `name`, by `query_species`, or by omission when exactly one
-homology annotation is attached.
+Use `add_homology()`, `update_homology()`, and `remove_homology()` to
+edit rows in a `HomologyAnnotation` table. `update_homology()` changes
+only the supplied columns of matching rows; it does not replace the
+whole table. `replace_homology()` and `delete_homology()` remain
+compatible synonyms for updating and removing rows. The preferred names
+forward to their existing S4 methods, preserving dispatch and argument
+handling.
 
 ## Usage
 
 ``` r
 add_homology(x, ...)
+
+update_homology(x, ...)
+
+remove_homology(x, ...)
 
 delete_homology(x, ...)
 
@@ -99,14 +106,14 @@ delete_homology(
 - ...:
 
   Extra homology table columns for `add_homology()` and
-  `replace_homology()`.
+  `update_homology()`.
 
 - data:
 
   Optional data frame of rows. For `add_homology()` it must contain
-  `query_gene` and `reference_gene`. For `replace_homology()` it must
+  `query_gene` and `reference_gene`. For `update_homology()` it must
   contain `query_gene` plus at least one column to update. For
-  `delete_homology()`, only `query_gene` and optional `reference_gene`
+  `remove_homology()`, only `query_gene` and optional `reference_gene`
   are used.
 
 - query_gene:
@@ -115,7 +122,7 @@ delete_homology(
 
 - reference_gene:
 
-  Reference-side gene IDs. In `delete_homology()` this is an optional
+  Reference-side gene IDs. In `remove_homology()` this is an optional
   guard: rows are deleted only when the current reference gene matches.
 
 - overwrite:
@@ -126,12 +133,12 @@ delete_homology(
 
 - add_missing:
 
-  For `replace_homology()`, whether missing `query_gene` values should
-  be added. Missing rows require non-empty `reference_gene` values.
+  For `update_homology()`, whether missing `query_gene` values should be
+  added. Missing rows require non-empty `reference_gene` values.
 
 - missing:
 
-  For `delete_homology()`, behavior when a requested `query_gene` is
+  For `remove_homology()`, behavior when a requested `query_gene` is
   absent.
 
 - name:
@@ -145,3 +152,9 @@ delete_homology(
 ## Value
 
 The updated object.
+
+## Details
+
+Methods for `SynSpecies` edit one attached homology annotation selected
+by `name`, by `query_species`, or by omission when exactly one homology
+annotation is attached.

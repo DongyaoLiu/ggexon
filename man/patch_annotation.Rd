@@ -9,7 +9,7 @@ patch_annotation(
   patch,
   annotation = NULL,
   target_ids = NULL,
-  mode = c("replace", "add", "drop"),
+  mode = c("replace", "add", "remove", "drop"),
   name = NULL
 )
 }
@@ -24,7 +24,8 @@ patch_annotation(
 \item{target_ids}{Optional target gene IDs when \code{patch} is not already a
 \code{SynAnnotationPatch}.}
 
-\item{mode}{One of \code{"replace"}, \code{"add"}, or \code{"drop"}.}
+\item{mode}{One of \code{"replace"}, \code{"add"}, or \code{"remove"}. Legacy \code{"drop"}
+remains supported with the same removal behavior.}
 
 \item{name}{Optional patch label.}
 }

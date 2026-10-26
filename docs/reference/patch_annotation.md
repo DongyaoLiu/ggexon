@@ -10,7 +10,7 @@ patch_annotation(
   patch,
   annotation = NULL,
   target_ids = NULL,
-  mode = c("replace", "add", "drop"),
+  mode = c("replace", "add", "remove", "drop"),
   name = NULL
 )
 ```
@@ -36,7 +36,8 @@ patch_annotation(
 
 - mode:
 
-  One of `"replace"`, `"add"`, or `"drop"`.
+  One of `"replace"`, `"add"`, or `"remove"`. Legacy `"drop"` remains
+  supported with the same removal behavior.
 
 - name:
 

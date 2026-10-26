@@ -16,6 +16,6 @@ ggexon_gtable(data)
 
 ## Value
 
-A [gtable::gtable](https://rdrr.io/pkg/gtable/man/gtable.html) object
-ready to draw with
+A [gtable::gtable](https://gtable.r-lib.org/reference/gtable.html)
+object ready to draw with
 [`grid::grid.draw()`](https://rdrr.io/r/grid/grid.draw.html).

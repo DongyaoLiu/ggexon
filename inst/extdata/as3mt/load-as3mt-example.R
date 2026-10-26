@@ -49,68 +49,8 @@ load_as3mt_example <- function(demo_dir = system.file("extdata", "as3mt", packag
     organoid_summary = read_table("organoid-summary.tsv"))
 }
 
-# Project the assigned protein start through the full-length reference CDS.
-# This is an isoform consequence, not a substitution or a causal DNA variant.
-as3mt_protein_change <- function(example) {
-  assigned <- example$specification$reference_validation$paper_defined_d2d3_reconstruction
-  event <- data.frame(gene_id = "AS3MT", position = assigned$lost_N_terminal_residues + 1L,
-    mutation = "d2d3 assigned start", lost_aa = assigned$lost_N_terminal_residues)
-  human <- suppressMessages(ggexon::subset_individual(example$comparison,
-    individual = "human", chr = "chr10"))
-  human <- ggexon::add_annotation(human, ggexon::SynProteinMutationAnnotation(
-    name = "d2d3_start", mutation_file = "<paper-defined protein start>",
-    mutation_data = event, keytype = "gene_id", lazy = FALSE), set_active = FALSE)
-  projected <- ggexon::project_mutations_to_genome(human, annotation = "d2d3_start",
-    transcripts = "human_full")
-  stopifnot(nrow(projected) == 1L,
-    identical(as.numeric(c(projected$xmin, projected$xmax)),
-      as.numeric(assigned$translation_start_genomic_1based)))
-  projected$anchor <- (projected$xmin + projected$xmax) / 2
-  projected$track <- "human"
-  projected$protein_event <- "isoform_start"
-  projected$label <- sprintf("Start: M%d \u2192 M1", projected$position)
-  projected
-}
-
-# Use the existing interval projector for the absent N-terminal protein region.
-# This annotation is a protein interval, not a functional-domain claim.
-as3mt_protein_loss <- function(example) {
-  lost <- example$specification$reference_validation$paper_defined_d2d3_reconstruction$lost_N_terminal_residues
-  human <- suppressMessages(ggexon::subset_individual(example$comparison,
-    individual = "human", chr = "chr10"))
-  interval <- methods::new("SynProteinDomainAnnotation", name = "d2d3_absent",
-    source_file = "<paper-defined absent protein interval>", keytype = "gene_id",
-    loaded = TRUE, lazy = FALSE, domain_data = S4Vectors::DataFrame(
-      gene_id = "AS3MT", domain = "Absent in d2d3", start = 1L, end = lost))
-  human <- ggexon::add_annotation(human, interval, set_active = FALSE)
-  projected <- ggexon::project_domains_to_genome(human, annotation = "d2d3_absent",
-    transcripts = "human_full")
-  projected <- projected[order(projected$xmin), , drop = FALSE]
-  stopifnot(sum(projected$xmax - projected$xmin + 1) == 3 * lost)
-  projected$track <- "human"
-  projected$protein_event <- "lost_residues"
-  projected
-}
-
-as3mt_protein_layers <- function(change, loss, base_size = 8, base_family = "serif") {
-  text_size <- base_size / (72.27 / 25.4)
-  lost_label <- loss[1, , drop = FALSE]
-  lost_label$label <- sprintf("aa1\u2013%d lost", change$lost_aa)
-  list(
-    ggplot2::geom_rect(data = loss, ggplot2::aes(xmin = xmin - .5, xmax = xmax + .5,
-      ymin = 1.70, ymax = 1.77), fill = "#D55E00", colour = NA, inherit.aes = FALSE),
-    ggplot2::geom_segment(data = change, ggplot2::aes(x = anchor, xend = anchor),
-      y = 1.74, yend = 2.28, colour = "#D55E00", linewidth = .55, inherit.aes = FALSE),
-    ggplot2::geom_text(data = lost_label, ggplot2::aes(x = xmin, label = label),
-      y = 1.53, hjust = 0, family = base_family, size = text_size,
-      colour = "#D55E00", inherit.aes = FALSE),
-    ggplot2::geom_text(data = change, ggplot2::aes(x = anchor, label = label),
-      y = 1.53, hjust = -.07, family = base_family, size = text_size,
-      colour = "#D55E00", inherit.aes = FALSE))
-}
-
 plot_as3mt_example <- function(example, intron_factor = 30, base_size = 8, base_family = "serif",
-                               link_data = NULL, show_protein = TRUE) {
+                               link_data = NULL, junction_evidence = FALSE) {
   stopifnot(is.numeric(intron_factor), length(intron_factor) == 1L, intron_factor > 0)
   palette <- c(human_full = "#0072B2", human_short = "#D55E00", chimp = "#64748B",
     skipped_exons = "#E69F00")
@@ -122,8 +62,14 @@ plot_as3mt_example <- function(example, intron_factor = 30, base_size = 8, base_
   lab$y <- ifelse(lab$id == "human_full", 2.45, 1.35)
   lab$y[lab$exon == 2] <- lab$y[lab$exon == 2] + .25
   lab$label <- paste0("E", lab$exon)
+  if (isTRUE(junction_evidence)) {
+    # The first two introns are very narrow after compression. Put E2 below
+    # its exon so its name does not overlap the counted inclusion arcs.
+    lab$y[lab$id == "human_full" & lab$exon == 2] <- 1.6
+  }
   ghosts <- lab[lab$id == "human_full" & lab$exon %in% c(2, 3), ]
   junction <- data.frame(track = "human", x = 102870950, y = .35, label = "E1 → E4")
+  attr(junction, "ggexon_panel_role") <- "annotation"
   text_mm <- base_size / (72.27 / 25.4)
   plot <- ggexon::ggexon(example$comparison) +
     ggexon::geom_exon2(mapping = ggplot2::aes(xmin = xmin - .5, xmax = xmax + .5,
@@ -166,15 +112,90 @@ plot_as3mt_example <- function(example, intron_factor = 30, base_size = 8, base_
       legend.text = ggplot2::element_text(size = base_size),
       legend.title = ggplot2::element_text(size = base_size),
       legend.position = "bottom", panel.spacing.y = grid::unit(.35, "lines"))
-  change <- as3mt_protein_change(example)
-  loss <- as3mt_protein_loss(example)
-  if (isTRUE(show_protein)) plot <- plot + as3mt_protein_layers(change, loss, base_size, base_family)
-  list(plot = plot, build = ggexon::ggexon_build(plot), protein_change = change, protein_loss = loss)
+  list(plot = plot, build = ggexon::ggexon_build(plot))
+}
+
+# Coverage and junctions come from the same independent human GTEx donor.
+as3mt_rnaseq_data <- function(demo_dir, junction_panel = c("coverage", "annotation")) {
+  junction_panel <- match.arg(junction_panel)
+  signal <- utils::read.delim(file.path(demo_dir, "human-rnaseq-GTEX-15G19.tsv"))
+  signal$track <- "human"
+  junctions <- utils::read.delim(file.path(demo_dir, "human-junctions-GTEX-15G19.tsv"))
+  junctions$track <- "human"
+  # Genomic splice boundaries are the edges between the adjacent bases.
+  junctions$x <- junctions$donor + .5
+  junctions$xend <- junctions$acceptor - .5
+  if (junction_panel == "coverage") {
+    depth <- max(max(signal$score), 1)
+    coverage_at <- function(position) vapply(position, function(pos) {
+      hit <- which(signal$start <= pos & signal$end >= pos)
+      if (length(hit)) signal$score[hit[1L]] else NA_real_
+    }, numeric(1))
+    # Connect to the exonic side of each splice boundary, without smoothing
+    # or changing the source signal. The two ends need not have equal depth.
+    junctions$y <- coverage_at(junctions$donor)
+    junctions$yend <- coverage_at(junctions$acceptor)
+    # The first two introns are only 7-8 display-bp after compression. Stagger
+    # their counts vertically; keep the enclosing skipping arc above them.
+    rises <- c("E1-E2" = 8.5, "E2-E3" = 25, "E3-E4" = 24, "E1-E4" = 53)
+    keys <- paste(junctions$from_exon, junctions$to_exon, sep = "-")
+    junctions$height <- unname(rises[keys]) * depth / 64
+    # Move the short-arc counts away from the enclosing orange curve using
+    # ordinary text justification; genomic endpoints remain unchanged.
+    justification <- c("E1-E2" = 1.5, "E2-E3" = 0, "E3-E4" = 1, "E1-E4" = .5)
+    junctions$label_hjust <- unname(justification[keys])
+  } else {
+    junctions$y <- ifelse(junctions$event == "skipping", 1.12, 2.22)
+    junctions$yend <- junctions$y
+    junctions$height <- c(.3, .7, .4, .4)
+    junctions$label_hjust <- .5
+  }
+  junctions$label <- as.character(junctions$reads)
+  list(signal = signal, junctions = junctions, junction_panel = junction_panel)
+}
+
+as3mt_add_rnaseq <- function(plot, rna, base_size, base_family) {
+  plot +
+    ggexon::geom_coverage(data = rna$signal,
+      mapping = ggplot2::aes(xmin = start, xmax = end, coverage = score, track = track),
+      inherit.aes = FALSE, fill = "#009E73", alpha = 1) +
+    ggexon::geom_junction(data = rna$junctions,
+      mapping = ggplot2::aes(x = x, xend = xend, y = y, yend = yend, height = height,
+        linewidth = reads, label = label, hjust = label_hjust, colour = event),
+      inherit.aes = FALSE, label_size = base_size / (72.27 / 25.4),
+      label_family = base_family, panel = rna$junction_panel) +
+    ggplot2::scale_colour_manual(values = c(inclusion = "#0072B2", skipping = "#D55E00"),
+      guide = "none") +
+    ggplot2::scale_linewidth_continuous(range = c(.3, .8), guide = "none") +
+    ggexon::scale_panel_coverage("free_y")
+}
+
+# Real source values; no expression data are inferred for chimp.
+plot_as3mt_coverage <- function(demo_dir = system.file("extdata", "as3mt", package = "ggexon"),
+                                intron_factor = 30, base_size = 8, base_family = "serif",
+                                junction_panel = c("coverage", "annotation")) {
+  junction_panel <- match.arg(junction_panel)
+  example <- load_as3mt_example(demo_dir)
+  rna <- as3mt_rnaseq_data(demo_dir, junction_panel)
+  plot <- as3mt_add_rnaseq(
+    plot_as3mt_example(example, intron_factor, base_size, base_family,
+      junction_evidence = junction_panel == "annotation")$plot,
+    rna, base_size, base_family) +
+    ggexon::scale_panel_annotation("free_y",
+      limits = list(human = c(.15, 3.45), chimp = c(.3, 1.8))) +
+    ggplot2::labs(title = "AS3MT: RNA-seq and transcripts",
+      caption = paste("GTEx frontal cortex (BA9). Arc labels: junction reads.",
+        "Lower human transcript: paper-defined d2d3 reconstruction.", sep = "\n"))
+  list(plot = plot, build = ggexon::ggexon_build(plot), signal = rna$signal,
+    junctions = rna$junctions, junction_panel = junction_panel)
 }
 
 # Explicit DNA differences; the overview's ungapped ribbons are not variant calls.
 plot_as3mt_alignseq <- function(demo_dir = system.file("extdata", "as3mt", package = "ggexon"),
-                               intron_factor = 30, base_size = 8, base_family = "serif") {
+                               intron_factor = 30, base_size = 8, base_family = "serif",
+                               show_coverage = TRUE,
+                               junction_panel = c("coverage", "annotation")) {
+  junction_panel <- match.arg(junction_panel)
   example <- load_as3mt_example(demo_dir)
   a <- readRDS(file.path(demo_dir, "vntr-dna.rds"))
   d <- ggexon::alignseq_data(a$aligned, a$anchors, reference = "human",
@@ -191,6 +212,7 @@ plot_as3mt_alignseq <- function(demo_dir = system.file("extdata", "as3mt", packa
     data.frame(track = "chimp", start = a$chimp_unit_start, end = a$chimp_unit_end, y = .7))
   donors <- data.frame(track = c("human", "chimp"),
     x = unname(a$donor_after) + .5, y = c(1.48, .38), yend = c(2.12, 1.02))
+  attr(donors, "ggexon_panel_role") <- "annotation"
   # Equal physical bp scales across assembly panels allow one shared pair of bars.
   initial <- plot_as3mt_example(example, intron_factor, base_size, base_family)$build
   windows <- list(human = c(102869400, 102902000), chimp = c(104324090, 104356300))
@@ -211,7 +233,8 @@ plot_as3mt_alignseq <- function(demo_dir = system.file("extdata", "as3mt", packa
     xlim_chr = c(human = "chr10", chimp = "chr10"))
   plot <- plot_as3mt_example(example, intron_factor, base_size, base_family,
     # Use the same raw genomic links; fractional padding affects display only.
-    link_data = example$selected_links)$plot +
+    link_data = example$selected_links,
+    junction_evidence = isTRUE(show_coverage) && junction_panel == "annotation")$plot +
     ggexon::geom_alignseq(data = d, size = base_size / (72.27 / 25.4), family = base_family) +
     ggexon::scale_x_ggexon_genomic(intron_factor = intron_factor, guide = "none") +
     ggexon::scale_panel_annotation("free_y",
@@ -224,7 +247,19 @@ plot_as3mt_alignseq <- function(demo_dir = system.file("extdata", "as3mt", packa
       colour = "grey20", linewidth = .35) +
     ggplot2::labs(title = NULL, subtitle = NULL,
       caption = paste("Exon-1 VNTR (purple). \u221272 bp: chimp relative to human.",
+        "Lower human row: paper-defined d2d3 reconstruction. Cai et al. (2021).", sep = "\n")) +
+    ggplot2::theme(axis.text.x = ggplot2::element_blank(),
+      axis.ticks.x = ggplot2::element_blank(), axis.line.x = ggplot2::element_blank())
+  signal <- junctions <- NULL
+  if (isTRUE(show_coverage)) {
+    rna <- as3mt_rnaseq_data(demo_dir, junction_panel)
+    signal <- rna$signal
+    junctions <- rna$junctions
+    plot <- as3mt_add_rnaseq(plot, rna, base_size, base_family) +
+      ggplot2::labs(caption = paste(
+        "GTEx frontal cortex. Arc labels: junction reads. VNTR (purple); chimp \u221272 bp.",
         "Lower human row: paper-defined d2d3 reconstruction. Cai et al. (2021).", sep = "\n"))
+  }
   short <- ggexon::alignseq_data(a$aligned, a$anchors, reference = "human", regions = a$details)
   short$track <- factor(short$track, levels = c("human", "chimp"))
   short$y <- .75
@@ -249,18 +284,24 @@ plot_as3mt_alignseq <- function(demo_dir = system.file("extdata", "as3mt", packa
       caption = "Terminal VNTR unit: E1 (24 nt) | intron 1 (12 nt).") +
     ggexon::theme_ggexon_track(base_size = base_size, base_family = base_family,
       show_x_axis = TRUE, show_x_grid = FALSE)
-  display <- as3mt_sequence_legend(plot, intron_factor, base_size, base_family)
+  coverage_height <- if (isTRUE(show_coverage) && junction_panel == "coverage") 2.2 else 1.2
+  display <- as3mt_sequence_legend(plot, intron_factor, base_size, base_family,
+    coverage_height = coverage_height)
   list(plot = plot, rows = rows, data = d, alignment = a,
-    grob = display$grob, scale_bars = display$scale_bars, display_spans = display$display_spans, vntr = a)
+    grob = display$grob, scale_bars = display$scale_bars, display_spans = display$display_spans,
+    vntr = a, signal = signal, junctions = junctions,
+    junction_panel = junction_panel, coverage_height = coverage_height)
 }
 
 
 # Place exactly two bars in a separate legend row, calibrated to the annotation
 # panel width. Both assemblies have the same display span, including expansion.
-as3mt_sequence_legend <- function(plot, intron_factor, base_size, base_family) {
+as3mt_sequence_legend <- function(plot, intron_factor, base_size, base_family,
+                                  coverage_height = 1.2) {
   built <- ggexon::ggexon_build(plot)
   layout <- built$layout$layout
-  ids <- as.integer(layout$PANEL[match(c("human", "chimp"), layout$track)])
+  annotation <- layout[layout$panel_type == "annotation", , drop = FALSE]
+  ids <- as.integer(annotation$PANEL[match(c("human", "chimp"), annotation$track)])
   spans <- vapply(ids, function(i) diff(built$layout$panel_params[[i]]$x.range), numeric(1))
   stopifnot(abs(diff(spans)) < 1e-5)
   bars <- data.frame(region_type = c("exon", "intron"),
@@ -269,11 +310,16 @@ as3mt_sequence_legend <- function(plot, intron_factor, base_size, base_family) {
   table <- ggplot2::ggplot_gtable(built)
   panel_rows <- which(grepl("^panel-", table$layout$name))
   for (species in c("human", "chimp")) {
-    row <- layout$ROW[layout$track == species]
-    col <- layout$COL[layout$track == species]
+    row <- annotation$ROW[annotation$track == species]
+    col <- annotation$COL[annotation$track == species]
     index <- which(table$layout$name == paste0("panel-", col, "-", row))
     if (length(index) == 1) table$heights[table$layout$t[index]] <-
       grid::unit(if (species == "human") 3.5 else 2.3, "null")
+  }
+  coverage <- layout[layout$panel_type == "coverage", , drop = FALSE]
+  for (i in seq_len(nrow(coverage))) {
+    index <- which(table$layout$name == paste0("panel-", coverage$COL[i], "-", coverage$ROW[i]))
+    if (length(index) == 1L) table$heights[table$layout$t[index]] <- grid::unit(coverage_height, "null")
   }
   gp <- grid::gpar(fontfamily = base_family, fontsize = base_size, col = "grey20")
   scale_grobs <- lapply(1:2, function(i) {

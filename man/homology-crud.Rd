@@ -3,6 +3,8 @@
 \name{homology-crud}
 \alias{homology-crud}
 \alias{add_homology}
+\alias{update_homology}
+\alias{remove_homology}
 \alias{delete_homology}
 \alias{replace_homology}
 \alias{add_homology,HomologyAnnotation-method}
@@ -17,6 +19,10 @@
 \title{Edit homology rows}
 \usage{
 add_homology(x, ...)
+
+update_homology(x, ...)
+
+remove_homology(x, ...)
 
 delete_homology(x, ...)
 
@@ -92,16 +98,16 @@ replace_homology(x, ...)
 \item{x}{A \code{HomologyAnnotation} or \code{SynSpecies} object.}
 
 \item{...}{Extra homology table columns for \code{add_homology()} and
-\code{replace_homology()}.}
+\code{update_homology()}.}
 
 \item{data}{Optional data frame of rows. For \code{add_homology()} it must contain
-\code{query_gene} and \code{reference_gene}. For \code{replace_homology()} it must contain
-\code{query_gene} plus at least one column to update. For \code{delete_homology()},
+\code{query_gene} and \code{reference_gene}. For \code{update_homology()} it must contain
+\code{query_gene} plus at least one column to update. For \code{remove_homology()},
 only \code{query_gene} and optional \code{reference_gene} are used.}
 
 \item{query_gene}{Query-side gene IDs.}
 
-\item{reference_gene}{Reference-side gene IDs. In \code{delete_homology()} this is
+\item{reference_gene}{Reference-side gene IDs. In \code{remove_homology()} this is
 an optional guard: rows are deleted only when the current reference gene
 matches.}
 
@@ -109,11 +115,11 @@ matches.}
 \code{query_gene} values should update those rows. When \code{FALSE}, existing rows
 are kept and a warning is emitted.}
 
-\item{add_missing}{For \code{replace_homology()}, whether missing \code{query_gene}
+\item{add_missing}{For \code{update_homology()}, whether missing \code{query_gene}
 values should be added. Missing rows require non-empty \code{reference_gene}
 values.}
 
-\item{missing}{For \code{delete_homology()}, behavior when a requested
+\item{missing}{For \code{remove_homology()}, behavior when a requested
 \code{query_gene} is absent.}
 
 \item{name}{Optional homology annotation name when \code{x} is a \code{SynSpecies}.}
@@ -125,8 +131,15 @@ values.}
 The updated object.
 }
 \description{
-These S4 methods add, delete, or replace rows in a \code{HomologyAnnotation}
-table. Methods for \code{SynSpecies} edit one attached homology annotation selected
+Use \code{add_homology()}, \code{update_homology()}, and \code{remove_homology()} to edit
+rows in a \code{HomologyAnnotation} table. \code{update_homology()} changes only the
+supplied columns of matching rows; it does not replace the whole table.
+\code{replace_homology()} and \code{delete_homology()} remain compatible synonyms for
+updating and removing rows. The preferred names forward to their existing
+S4 methods, preserving dispatch and argument handling.
+}
+\details{
+Methods for \code{SynSpecies} edit one attached homology annotation selected
 by \code{name}, by \code{query_species}, or by omission when exactly one homology
 annotation is attached.
 }

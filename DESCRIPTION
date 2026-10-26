@@ -84,6 +84,7 @@ Collate:
     'geom-genebox.R'
     'geom-genetag.R'
     'geom-genomic-tree.R'
+    'geom-junction.R'
     'geom-motif.R'
     'geom-mutation-label.R'
     'geom-nuclink.R'

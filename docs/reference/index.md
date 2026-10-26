@@ -92,6 +92,8 @@ links, trees, and protein mutation summaries.
   : Draw WormWeb-style exon-intron schematics
 - [`geom_coverage()`](https://dongyaoliu.github.io/ggexon/reference/geom_coverage.md)
   : Plot interval-native BigWig coverage
+- [`geom_junction()`](https://dongyaoliu.github.io/ggexon/reference/geom_junction.md)
+  : Draw splice junction arcs on annotation or coverage panels
 - [`geom_genetag()`](https://dongyaoliu.github.io/ggexon/reference/geom_genetag.md)
   : Draw gene tags as exon bodies with strand-direction triangles
 - [`geom_genebox()`](https://dongyaoliu.github.io/ggexon/reference/geom_genebox.md)
@@ -370,6 +372,8 @@ manage object-level curation state.
   : Set human-readable gene labels on a feature annotation layer
 
 - [`add_homology()`](https://dongyaoliu.github.io/ggexon/reference/homology-crud.md)
+  [`update_homology()`](https://dongyaoliu.github.io/ggexon/reference/homology-crud.md)
+  [`remove_homology()`](https://dongyaoliu.github.io/ggexon/reference/homology-crud.md)
   [`delete_homology()`](https://dongyaoliu.github.io/ggexon/reference/homology-crud.md)
   [`replace_homology()`](https://dongyaoliu.github.io/ggexon/reference/homology-crud.md)
   : Edit homology rows
@@ -386,11 +390,13 @@ manage object-level curation state.
 - [`list_patches()`](https://dongyaoliu.github.io/ggexon/reference/list_patches.md)
   : List annotation patches
 
-- [`clear_patches()`](https://dongyaoliu.github.io/ggexon/reference/clear_patches.md)
-  : Clear annotation patches
+- [`reset_patches()`](https://dongyaoliu.github.io/ggexon/reference/reset_patches.md)
+  [`clear_patches()`](https://dongyaoliu.github.io/ggexon/reference/reset_patches.md)
+  : Reset recorded annotation patches
 
-- [`rename_domain_annotation_ids()`](https://dongyaoliu.github.io/ggexon/reference/rename_domain_annotation_ids.md)
-  : Rename protein-domain identifiers using an explicit mapping
+- [`map_domain_ids()`](https://dongyaoliu.github.io/ggexon/reference/map_domain_ids.md)
+  [`rename_domain_annotation_ids()`](https://dongyaoliu.github.io/ggexon/reference/map_domain_ids.md)
+  : Map protein-domain identifiers using an explicit mapping
 
 ## Alignment and tree workflows
 

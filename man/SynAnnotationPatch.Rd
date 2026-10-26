@@ -8,7 +8,7 @@ SynAnnotationPatch(
   name,
   patch_data = NULL,
   target_ids = character(),
-  mode = c("replace", "add", "drop"),
+  mode = c("replace", "add", "remove", "drop"),
   source_file = "<patch>",
   metadata = list()
 )
@@ -18,9 +18,10 @@ SynAnnotationPatch(
 
 \item{patch_data}{Optional patched gene model as \code{GRanges}.}
 
-\item{target_ids}{Target gene IDs to replace, add, or drop.}
+\item{target_ids}{Target gene IDs to replace, add, or remove.}
 
-\item{mode}{One of \code{"replace"}, \code{"add"}, or \code{"drop"}.}
+\item{mode}{One of \code{"replace"}, \code{"add"}, or \code{"remove"}. Legacy \code{"drop"}
+remains supported with the same removal behavior.}
 
 \item{source_file}{Optional source identifier for the patch. Defaults to
 \code{"<patch>"} for in-memory patch objects.}

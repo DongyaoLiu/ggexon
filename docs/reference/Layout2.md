@@ -13,7 +13,7 @@ Layout2
 ## Format
 
 An object of class `Layout2` (inherits from `Layout`, `ggproto`, `gg`)
-of length 3.
+of length 6.
 
 ## Details
 
@@ -53,6 +53,12 @@ The high-level flow is:
 
 - `Layout2$map_position()` maps each layer's x/y aesthetics against the
   `SCALE_X` / `SCALE_Y` assignments in the final panel table.
+
+- when genomic compression is requested, `train_genomic_x()` learns an
+  immutable map registry from declared exon layers after geom setup,
+  then `map_genomic_x()` maps all related layers through those source
+  maps. Later ordinary position-scale training changes display ranges
+  only.
 
 ## See also
 

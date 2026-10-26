@@ -24,7 +24,7 @@ structure and link metadata need to be introduced."></head><body>
   <ul class="dropdown-menu" aria-labelledby="dropdown-tutorials"><li><a class="dropdown-item" href="../articles/ggexon-workflow.html">Complete workflow</a></li>
     <li><a class="dropdown-item" href="../articles/hox-cluster-expansion-demo.html">HOX cluster expansion</a></li>
     <li><a class="dropdown-item" href="../articles/cd44-splice-variants-demo.html">CD44 splice variant alignment</a></li>
-    <li><a class="dropdown-item" href="../articles/as3mt-splice-variants-demo.html">AS3MT transcripts, protein start and DNA repeats</a></li>
+    <li><a class="dropdown-item" href="../articles/as3mt-splice-variants-demo.html">AS3MT transcripts, DNA and RNA-seq</a></li>
     <li><a class="dropdown-item" href="../articles/hla-a-lollipop-demo.html">HLA-A protein variant lollipops</a></li>
     <li><a class="dropdown-item" href="../articles/bigwig-coverage-demo.html">PEEL-1 raw BigWig coverage</a></li>
     <li><a class="dropdown-item" href="../articles/ggexon-classes-and-verbs.html">Classes, geoms, facets, and guides</a></li>
@@ -59,7 +59,7 @@ structure and link metadata need to be introduced.</p>
 
     <div class="section level2">
     <h2 id="format">Format<a class="anchor" aria-label="anchor" href="#format"></a></h2>
-    <p>An object of class <code>Layout2</code> (inherits from <code>Layout</code>, <code>ggproto</code>, <code>gg</code>) of length 3.</p>
+    <p>An object of class <code>Layout2</code> (inherits from <code>Layout</code>, <code>ggproto</code>, <code>gg</code>) of length 6.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -85,6 +85,10 @@ chain layout, or fall back to a standard faceting layout.</p></li>
 panel ids are propagated to layer data.</p></li>
 <li><p><code>Layout2$map_position()</code> maps each layer's x/y aesthetics against the
 <code>SCALE_X</code> / <code>SCALE_Y</code> assignments in the final panel table.</p></li>
+<li><p>when genomic compression is requested, <code>train_genomic_x()</code> learns an
+immutable map registry from declared exon layers after geom setup, then
+<code>map_genomic_x()</code> maps all related layers through those source maps.
+Later ordinary position-scale training changes display ranges only.</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

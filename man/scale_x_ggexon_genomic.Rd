@@ -57,13 +57,28 @@ are drawn at compressed display positions but labelled with the original
 genomic coordinates.
 }
 \details{
-This scale is intended for exon-structure layers such as \code{\link[=geom_exon]{geom_exon()}} and
-\code{\link[=geom_exon2]{geom_exon2()}}. It builds one transform per panel from the union of exon-like
-intervals, so multiple transcripts in the same panel stay aligned.
+The build first trains one map per reference panel from the union of original
+genomic intervals supplied by \code{\link[=geom_exon]{geom_exon()}} and \code{\link[=geom_exon2]{geom_exon2()}} layers.
+Multiple displayed transcripts and exon layers contribute to that union;
+invisible annotation placeholders are excluded. Other layers do not train
+the map, even when they contain gene or transcript metadata.
+The trained maps are then applied to genomic x-position aesthetics across
+related layers and panels. Points, labels and whole-gene annotations consume
+the same map without changing exon/intron boundaries. Every build trains a
+fresh registry; subsequent position-scale training only sets display ranges.
 Nucleotide links drawn with \code{\link[=geom_nuclink]{geom_nuclink()}} are automatically subdivided
 at source-panel scale boundaries and transformed with the same maps. Supply
 their original genomic coordinates; no manual link-coordinate conversion is
 needed. Explicit panel windows are also mapped to compressed display limits.
+Coverage drawn with \code{\link[=geom_coverage]{geom_coverage()}} follows its resolved annotation
+source panel's map, including when several coverage tracks share one gene
+model. Signal intervals are split at scale boundaries; scores and genomic
+weighting for automatic coverage y limits are unchanged. Coverage without
+an exon-style source stays on ordinary genomic coordinates.
+Numeric x-position aesthetics are mapped centrally. Geoms with specialized
+geometry still prepare that geometry separately: nucleotide ribbons subdivide
+at source boundaries, while DNA callout lettering is laid out schematically
+after its genomic anchors are mapped.
 
 Use \code{\link[=guide_x_ggexon_piecewise]{guide_x_ggexon_piecewise()}} in \code{guide} when the axis should display
 representative exon and intron scale bars instead of ordinary genomic ticks.

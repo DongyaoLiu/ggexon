@@ -225,7 +225,7 @@ setClass(
 
 #' SynAnnotationPatch class
 #'
-#' `SynAnnotationPatch` records a patch that replaces, adds, or drops a subset
+#' `SynAnnotationPatch` records a patch that replaces, adds, or removes a subset
 #' of features from a `SynFeatureAnnotation`. As a genome-coordinate annotation,
 #' it inherits the shared `SynGenomeAnnotation` metadata used across
 #' nucleotide-level annotation layers.
@@ -241,7 +241,8 @@ setClass(
 #'   and `"add"` patches.
 #' @slot target_ids Character vector of feature identifiers targeted by the
 #'   patch.
-#' @slot mode Patch mode. One of `"replace"`, `"add"`, or `"drop"`.
+#' @slot mode Patch mode. One of `"replace"`, `"add"`, `"remove"`, or legacy
+#'   `"drop"`.
 #' @slot metadata Optional patch metadata.
 #'
 #' @section Prototype defaults:
@@ -254,7 +255,7 @@ setClass(
 #' * `mode = "replace"`
 #'
 #' @section Validity rules:
-#' * `mode` must be one of `"replace"`, `"add"`, or `"drop"`.
+#' * `mode` must be one of `"replace"`, `"add"`, `"remove"`, or legacy `"drop"`.
 #' * `patch_data` is required when `mode` is `"replace"` or `"add"`.
 #'
 #' @exportClass SynAnnotationPatch
@@ -277,10 +278,10 @@ setClass(
   ),
   validity = function(object) {
     problems <- character()
-    if (length(object@mode) != 1L || !(object@mode %in% c("replace", "add", "drop"))) {
-      problems <- c(problems, "`mode` must be one of 'replace', 'add', or 'drop'.")
+    if (length(object@mode) != 1L || !(object@mode %in% c("replace", "add", "remove", "drop"))) {
+      problems <- c(problems, "`mode` must be one of 'replace', 'add', 'remove', or 'drop'.")
     }
-    if (object@mode != "drop" && is.null(object@patch_data)) {
+    if (!(object@mode %in% c("remove", "drop")) && is.null(object@patch_data)) {
       problems <- c(problems, "`patch_data` is required for 'replace' and 'add' patches.")
     }
     if (length(problems) == 0L) TRUE else problems
@@ -528,12 +529,20 @@ SynFeatureAnnotation <- function(name,
   )
 }
 
+.match_annotation_patch_mode <- function(mode) {
+  if (length(mode) == 1L && mode %in% c("r", "re")) {
+    mode <- "replace"
+  }
+  match.arg(mode, c("replace", "add", "remove", "drop"))
+}
+
 #' Constructor for SynAnnotationPatch
 #'
 #' @param name Patch label.
 #' @param patch_data Optional patched gene model as `GRanges`.
-#' @param target_ids Target gene IDs to replace, add, or drop.
-#' @param mode One of `"replace"`, `"add"`, or `"drop"`.
+#' @param target_ids Target gene IDs to replace, add, or remove.
+#' @param mode One of `"replace"`, `"add"`, or `"remove"`. Legacy `"drop"`
+#'   remains supported with the same removal behavior.
 #' @param source_file Optional source identifier for the patch. Defaults to
 #'   `"<patch>"` for in-memory patch objects.
 #' @param metadata Optional metadata list.
@@ -543,10 +552,10 @@ SynFeatureAnnotation <- function(name,
 SynAnnotationPatch <- function(name,
                                patch_data = NULL,
                                target_ids = character(),
-                               mode = c("replace", "add", "drop"),
+                               mode = c("replace", "add", "remove", "drop"),
                                source_file = "<patch>",
                                metadata = list()) {
-  mode <- match.arg(mode)
+  mode <- .match_annotation_patch_mode(mode)
   new(
     "SynAnnotationPatch",
     name = name,
@@ -827,7 +836,8 @@ set_gene_labels <- function(x, mapping, annotation = NULL) {
 #'   `SynIndividual`.
 #' @param target_ids Optional target gene IDs when `patch` is not already a
 #'   `SynAnnotationPatch`.
-#' @param mode One of `"replace"`, `"add"`, or `"drop"`.
+#' @param mode One of `"replace"`, `"add"`, or `"remove"`. Legacy `"drop"`
+#'   remains supported with the same removal behavior.
 #' @param name Optional patch label.
 #'
 #' @return The updated object.
@@ -836,9 +846,9 @@ patch_annotation <- function(x,
                              patch,
                              annotation = NULL,
                              target_ids = NULL,
-                             mode = c("replace", "add", "drop"),
+                             mode = c("replace", "add", "remove", "drop"),
                              name = NULL) {
-  mode <- match.arg(mode)
+  mode <- .match_annotation_patch_mode(mode)
 
   if (methods::is(x, "SynIndividual")) {
     ann_name <- if (is.null(annotation)) active_feature_annotation(x) else annotation
@@ -912,13 +922,26 @@ list_patches <- function(x, annotation = NULL) {
   patches(x)
 }
 
-#' Clear annotation patches
+#' Reset recorded annotation patches
+#'
+#' `reset_patches()` restores the base feature annotation, removes recorded
+#' patches, reapplies display labels, and clears derived feature indexes,
+#' sequence caches, and feature-layer plotting state. `clear_patches()` remains
+#' a compatible synonym with the same arguments and behavior.
 #'
 #' @param x A `SynFeatureAnnotation` or `SynIndividual` object.
 #' @param annotation Optional feature-annotation layer name when `x` is a
 #'   `SynIndividual`.
 #'
 #' @return The updated object.
+#' @name reset_patches
+#' @seealso [patch_annotation()], [list_patches()]
+#' @export
+reset_patches <- function(x, annotation = NULL) {
+  clear_patches(x, annotation = annotation)
+}
+
+#' @rdname reset_patches
 #' @export
 clear_patches <- function(x, annotation = NULL) {
   if (methods::is(x, "SynIndividual")) {
@@ -973,7 +996,8 @@ read_patch_gff <- function(path, format = c("auto", "gff", "gtf")) {
 #'   `SynIndividual`.
 #' @param target_ids Optional target gene IDs. When omitted, target IDs are
 #'   inferred from the patch file.
-#' @param mode One of `"replace"`, `"add"`, or `"drop"`.
+#' @param mode One of `"replace"`, `"add"`, or `"remove"`. Legacy `"drop"`
+#'   remains supported with the same removal behavior.
 #' @param name Optional patch label.
 #' @param format One of `"auto"`, `"gff"`, or `"gtf"`.
 #'
@@ -983,13 +1007,13 @@ patch_annotation_from_gff <- function(x,
                                       patch_file,
                                       annotation = NULL,
                                       target_ids = NULL,
-                                      mode = c("replace", "add", "drop"),
+                                      mode = c("replace", "add", "remove", "drop"),
                                       name = NULL,
                                       format = c("auto", "gff", "gtf")) {
-  mode <- match.arg(mode)
+  mode <- .match_annotation_patch_mode(mode)
   format <- match.arg(format)
 
-  patch_gr <- if (mode == "drop") NULL else read_patch_gff(patch_file, format = format)
+  patch_gr <- if (mode %in% c("remove", "drop")) NULL else read_patch_gff(patch_file, format = format)
   if (is.null(target_ids) && !is.null(patch_gr)) {
     target_ids <- unique(.extract_patch_target_ids(patch_gr))
   }
@@ -1160,7 +1184,7 @@ patch_annotation_from_gff <- function(x,
     patch_mode_value <- patch_mode(patch)
     patch_gr <- patch_data(patch)
 
-    if (patch_mode_value %in% c("replace", "drop")) {
+    if (patch_mode_value %in% c("replace", "remove", "drop")) {
       drop_idx <- rep(FALSE, length(out))
       if (length(targets) > 0L) {
         drop_idx <- drop_idx | .match_gene_targets(out, targets)
@@ -1349,7 +1373,12 @@ query_domains <- function(x, ids = NULL, domains = NULL) {
   out
 }
 
-#' Rename protein-domain identifiers using an explicit mapping
+#' Map protein-domain identifiers using an explicit mapping
+#'
+#' `map_domain_ids()` maps identifier values into a target column and makes
+#' that column the annotation's matching key. It preserves the source column
+#' when `from` and `to` differ. `rename_domain_annotation_ids()` remains a
+#' compatible synonym with the same arguments and behavior.
 #'
 #' @param x A `SynProteinDomainAnnotation` or `SynIndividual` object.
 #' @param mapping Either a named character vector (`old_id -> new_id`) or a
@@ -1364,6 +1393,22 @@ query_domains <- function(x, ids = NULL, domains = NULL) {
 #'   to a target identifier.
 #'
 #' @return The updated object.
+#' @name map_domain_ids
+#' @seealso [query_domains()]
+#' @export
+map_domain_ids <- function(x,
+                           mapping,
+                           annotation = NULL,
+                           from = NULL,
+                           to = "transcript_id",
+                           drop_unmapped = FALSE) {
+  rename_domain_annotation_ids(
+    x, mapping = mapping, annotation = annotation, from = from, to = to,
+    drop_unmapped = drop_unmapped
+  )
+}
+
+#' @rdname map_domain_ids
 #' @export
 rename_domain_annotation_ids <- function(x,
                                          mapping,

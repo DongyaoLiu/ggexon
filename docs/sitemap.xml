@@ -78,7 +78,6 @@
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/check_syn_files.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/class_ggexon_built.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/clear_panel_xlim.html</loc></url>
-<url><loc>https://dongyaoliu.github.io/ggexon/reference/clear_patches.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/compile_ggtree_genetag.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/compile_ggtree_genomic_alignment.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/compile_ggtree_rectangular_segments.html</loc></url>
@@ -114,6 +113,7 @@
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/geom_genelink.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/geom_genetag.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/geom_genomic_tree.html</loc></url>
+<url><loc>https://dongyaoliu.github.io/ggexon/reference/geom_junction.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/geom_motif.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/geom_mutation_label.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/geom_nuclink.html</loc></url>
@@ -149,6 +149,7 @@
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/locus_grid_layout.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/locus_sets.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/locus_table.html</loc></url>
+<url><loc>https://dongyaoliu.github.io/ggexon/reference/map_domain_ids.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/multiple_alignment_data.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/odgi_multi_alignment.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/odgi_node_table.html</loc></url>
@@ -178,7 +179,7 @@
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/reexports.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/reference_species.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/remove_missing.html</loc></url>
-<url><loc>https://dongyaoliu.github.io/ggexon/reference/rename_domain_annotation_ids.html</loc></url>
+<url><loc>https://dongyaoliu.github.io/ggexon/reference/reset_patches.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/resolve_syn_individual.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/scale_panel_annotation.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/scale_panel_coverage.html</loc></url>

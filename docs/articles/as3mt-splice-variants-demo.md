@@ -1,4 +1,4 @@
-# AS3MT: transcripts, protein start and DNA repeats
+# AS3MT: transcripts, DNA and RNA-seq
 
 ## Load the example
 
@@ -15,6 +15,12 @@ library(ggplot2)
 demo_dir <- system.file("extdata", "as3mt", package = "ggexon")
 source(file.path(demo_dir, "load-as3mt-example.R"), local = TRUE)
 as3mt <- load_as3mt_example(demo_dir)
+#> Warning in read.table(file = file, header = header, sep = sep, quote = quote, :
+#> invalid input found on input connection
+#> '/private/var/folders/1q/c2x4tgc13k71k6n_lb5m_7n00000gn/T/RtmpTdoKnQ/temp_libpath43ba7a9eede9/ggexon/extdata/as3mt/human-chimp-links.nogap.tsv'
+#> Warning in read.table(file = file, header = header, sep = sep, quote = quote, :
+#> incomplete final line found by readTableHeader on
+#> '/private/var/folders/1q/c2x4tgc13k71k6n_lb5m_7n00000gn/T/RtmpTdoKnQ/temp_libpath43ba7a9eede9/ggexon/extdata/as3mt/human-chimp-links.nogap.tsv'
 ```
 
 ## 1. Transcripts and compressed introns
@@ -26,11 +32,13 @@ skipped E2/E3. `scale_x_ggexon_genomic(intron_factor = 30)` compresses
 introns 30-fold while keeping exon widths.
 [`geom_nuclink()`](https://dongyaoliu.github.io/ggexon/reference/geom_nuclink.md)
 automatically follows that same piecewise scale in both annotation
-panels.
+panels. The build trains the maps from exon layers first, then applies
+them to related genomic layers; adding coverage or labels does not
+change the exon/intron boundaries.
 
 ``` r
 
-as3mt_plot <- plot_as3mt_example(as3mt, intron_factor = 30, show_protein = FALSE)
+as3mt_plot <- plot_as3mt_example(as3mt, intron_factor = 30)
 as3mt_plot$plot
 ```
 
@@ -62,56 +70,7 @@ and **98.3–100%**. The 37 ungapped blocks split into 57 polygon pieces
 at scale boundaries. They show DNA similarity, not expression or proof
 of exon skipping.
 
-## 2. Protein change on the human reference
-
-The assigned d2d3 protein contains **273 aa**, corresponding to
-canonical human residues **103–375** instead of 1–375. Its loss of **102
-N-terminal aa** is a consequence of the assigned downstream start; E2/E3
-skipping removes 169 RNA bases, not a 306-nt in-frame deletion.
-
-Project residue 103 through the **full-length human CDS** with
-[`project_mutations_to_genome()`](https://dongyaoliu.github.io/ggexon/reference/project_mutations_to_genome.md).
-Its codon is **GRCh38 chr10:102872584–102872586** in E4. The example
-helper returns that projection:
-
-``` r
-
-protein_change <- as3mt_protein_change(as3mt)
-knitr::kable(protein_change[, c("position", "xmin", "xmax", "lost_aa")],
-  col.names = c("Canonical residue", "Codon start", "Codon end", "Lost aa"))
-```
-
-| Canonical residue | Codon start | Codon end | Lost aa |
-|------------------:|------------:|----------:|--------:|
-|               103 |   102872584 | 102872586 |     102 |
-
-Show the protein consequence with two distinct annotations:
-
-- An orange interval marks canonical **aa1–102 absent from d2d3**. It is
-  projected through the full-length CDS and split across coding exons;
-  introns are not highlighted. This is a protein loss, not a 306-bp
-  genomic deletion.
-- A vertical start tick marks **M103**, which becomes **M1 in d2d3**.
-  Both residues are methionine; there is no amino-acid substitution at
-  this site.
-
-``` r
-
-protein_loss <- as3mt_protein_loss(as3mt)
-as3mt_plot$plot + as3mt_protein_layers(protein_change, protein_loss)
-```
-
-The helpers use
-[`project_domains_to_genome()`](https://dongyaoliu.github.io/ggexon/reference/project_domains_to_genome.md)
-for the absent protein interval, then
-[`geom_rect()`](https://rdrr.io/pkg/ggplot2/man/geom_tile.html),
-[`geom_segment()`](https://rdrr.io/pkg/ggplot2/man/geom_segment.html)
-and [`geom_text()`](https://rdrr.io/pkg/ggplot2/man/geom_text.html) for
-its display. All layers stay on the human reference panel and follow the
-genomic scale. Substitution lollipops are reserved for actual
-reference/alternative residues.
-
-## 3. DNA detail at the exon-1 repeat
+## 2. DNA detail at the exon-1 repeat
 
 The selected human reference contains three **36-bp VNTR** units; the
 chimp reference has one imperfect homolog (34/36 matching bases). The
@@ -144,6 +103,12 @@ short window, `mode = "rows"` shows all selected bases:
 ``` r
 
 sequence_example <- plot_as3mt_alignseq(demo_dir, intron_factor = 30)
+#> Warning in read.table(file = file, header = header, sep = sep, quote = quote, :
+#> invalid input found on input connection
+#> '/private/var/folders/1q/c2x4tgc13k71k6n_lb5m_7n00000gn/T/RtmpTdoKnQ/temp_libpath43ba7a9eede9/ggexon/extdata/as3mt/human-chimp-links.nogap.tsv'
+#> Warning in read.table(file = file, header = header, sep = sep, quote = quote, :
+#> incomplete final line found by readTableHeader on
+#> '/private/var/folders/1q/c2x4tgc13k71k6n_lb5m_7n00000gn/T/RtmpTdoKnQ/temp_libpath43ba7a9eede9/ggexon/extdata/as3mt/human-chimp-links.nogap.tsv'
 sequence_example$rows
 ```
 
@@ -159,14 +124,80 @@ differs by **36 bp**; the figure’s **−72 bp** marker instead compares
 the selected chimp and human references. Two base differences in the
 chimp homolog are context, not demonstrated causal SNVs.
 
+## 3. RNA-seq and splice junctions
+
+The bundled GTEx frontal-cortex (BA9) sample
+**GTEX-15G19-0011-R10b-SM-7KUG4.1** has both exon-2/3 inclusion and
+E1→E4 skipping reads. Its [recount3 BigWig](https://rna.recount.bio/)
+contains total coverage;
+[Snaptron](https://snaptron.cs.jhu.edu/data.html) supplies junction
+counts from the same sample. Both use **GRCh38**.
+[`geom_coverage()`](https://dongyaoliu.github.io/ggexon/reference/geom_coverage.md)
+and
+[`geom_junction()`](https://dongyaoliu.github.io/ggexon/reference/geom_junction.md)
+follow the human exon/intron map automatically.
+
+``` r
+
+rna_example <- plot_as3mt_coverage(demo_dir, intron_factor = 30,
+  junction_panel = "coverage")
+#> Warning in read.table(file = file, header = header, sep = sep, quote = quote, :
+#> invalid input found on input connection
+#> '/private/var/folders/1q/c2x4tgc13k71k6n_lb5m_7n00000gn/T/RtmpTdoKnQ/temp_libpath43ba7a9eede9/ggexon/extdata/as3mt/human-chimp-links.nogap.tsv'
+#> Warning in read.table(file = file, header = header, sep = sep, quote = quote, :
+#> incomplete final line found by readTableHeader on
+#> '/private/var/folders/1q/c2x4tgc13k71k6n_lb5m_7n00000gn/T/RtmpTdoKnQ/temp_libpath43ba7a9eede9/ggexon/extdata/as3mt/human-chimp-links.nogap.tsv'
+rna_example$plot
+```
+
+![Matched GTEx coverage and counted blue inclusion/orange E1-to-E4
+skipping arcs in the same panel, above the human AS3MT transcripts. All
+follow 30-fold intron compression; ungapped links connect the chimp
+reference.](as3mt-splice-variants-demo_files/figure-html/as3mt-rnaseq-1.png)
+
+Matched human coverage and splice-junction reads.
+
+Arc labels are **junction read counts**: E1→E2, 9; E2→E3, 10; E3→E4, 11;
+E1→E4, 12. Line width reflects these counts. The layer takes exon-edge
+genomic anchors; it draws the curve and centres its label after
+compression. Choose `panel = "coverage"` to put arcs on the BigWig
+panel, or `panel = "annotation"` (the geom default) to put them on the
+gene model:
+
+``` r
+
+geom_junction(data = rna_example$junctions,
+  aes(x = x, xend = xend, y = y, yend = yend, height = height,
+      linewidth = reads, label = reads, hjust = label_hjust, colour = event),
+  panel = "coverage", inherit.aes = FALSE)
+```
+
+`y` and optional `yend` meet the measured coverage at the donor and
+acceptor exon bases. `height` controls the curve’s rise; staggered
+heights and text `hjust` separate the counts around narrow compressed
+introns. `y`, `yend` and `height` use the selected panel’s y units. For
+the gene-model layout, use
+`plot_as3mt_alignseq(demo_dir, junction_panel = "annotation")`.
+
+Source coverage values remain unchanged, and missing intervals are not
+filled. `human-rnaseq-GTEX-15G19-provenance.json` records the exact
+URLs, sample and extraction; `data-raw/as3mt/prepare-gtex-rnaseq.py`
+reproduces the snapshots. These short-read junctions support the splice
+events, not complete transcript abundances. This independent donor’s
+VNTR genotype is not inferred from the reference DNA or the separate
+minigene experiment.
+
 ## Sources and reproducibility
 
 - [Li et al. (2016),
   doi:10.1038/nm.4096](https://doi.org/10.1038/nm.4096): d2d3
-  reconstruction, protein assignment and repeat sequence.
+  reconstruction and repeat sequence.
 - [Cai et al. (2021),
   doi:10.1093/schbul/sbaa098](https://doi.org/10.1093/schbul/sbaa098):
   human VNTR minigene comparison.
+- [recount3](https://rna.recount.bio/) and
+  [Snaptron](https://snaptron.cs.jhu.edu/data.html): matched GTEx
+  coverage and exon-junction reads.
 
 The installed `extdata/as3mt` directory contains the plotting helper,
 input snapshots and provenance. Repository preparation/export scripts
@@ -175,12 +206,13 @@ are in `data-raw/as3mt`; the genomic ribbons use LASTZ
 
 ## Combined result
 
-The human reference shows **aa1–102 absent** and a **start tick at M103
-(d2d3 M1)**. Purple outlines locate the VNTR; each species keeps its own
-DNA callout. Separate bars below the legend show exon and
-compressed-intron scales. The lower human transcript remains a
-**paper-defined reconstruction**; the repeat-count strip summarizes the
-tested human alleles schematically.
+The green RNA-seq signal and counted splice arcs occupy the same panel
+and share the human gene model’s compressed scale. Blue arcs support
+exon inclusion; the orange arc supports E1→E4 skipping. Purple outlines
+locate the VNTR; each species keeps its own DNA callout. Separate bars
+below the legend show exon and compressed-intron scales. The lower human
+transcript remains a **paper-defined reconstruction**; the repeat-count
+strip summarizes the tested human alleles schematically.
 
 ``` r
 
@@ -188,11 +220,10 @@ grid::grid.newpage()
 grid::grid.draw(sequence_example$grob)
 ```
 
-![Combined AS3MT transcript comparison with an orange interval split
-across human coding exons for canonical residues 1–102 absent from d2d3,
-and a separate E4 start tick labelled M103 to M1. Purple VNTR units,
-species-specific DNA callouts, and separate exon/intron scale bars
-complete the
-figure.](as3mt-splice-variants-demo_files/figure-html/as3mt-alignseq-1.png)
+![Matched human RNA-seq and counted inclusion/skipping arcs share the
+top panel above the AS3MT transcript comparison. The same figure
+includes ungapped links, purple VNTR units, species-specific DNA
+callouts, exon/intron scale bars and the human minigene
+comparison.](as3mt-splice-variants-demo_files/figure-html/as3mt-alignseq-1.png)
 
-AS3MT transcripts, assigned protein-start change and exon-1 VNTR.
+AS3MT coverage, splice junctions and exon-1 VNTR.

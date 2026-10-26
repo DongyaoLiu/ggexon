@@ -5,7 +5,7 @@
 \alias{Layout2}
 \title{ggexon layout runtime with Syn-aware panel setup}
 \format{
-An object of class \code{Layout2} (inherits from \code{Layout}, \code{ggproto}, \code{gg}) of length 3.
+An object of class \code{Layout2} (inherits from \code{Layout}, \code{ggproto}, \code{gg}) of length 6.
 }
 \usage{
 Layout2
@@ -42,6 +42,10 @@ chain layout, or fall back to a standard faceting layout.
 panel ids are propagated to layer data.
 \item \code{Layout2$map_position()} maps each layer's x/y aesthetics against the
 \code{SCALE_X} / \code{SCALE_Y} assignments in the final panel table.
+\item when genomic compression is requested, \code{train_genomic_x()} learns an
+immutable map registry from declared exon layers after geom setup, then
+\code{map_genomic_x()} maps all related layers through those source maps.
+Later ordinary position-scale training changes display ranges only.
 }
 }
 

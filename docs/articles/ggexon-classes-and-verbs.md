@@ -254,9 +254,9 @@ sp <- add_multiple_alignment(
 
 [`ggexon()`](https://dongyaoliu.github.io/ggexon/reference/ggexon.md)
 starts a plot like
-[`ggplot()`](https://rdrr.io/pkg/ggplot2/man/ggplot.html), but it
-understands `SynIndividual` and `SynSpecies` objects. Geoms can resolve
-stored annotation or alignment data at build time.
+[`ggplot()`](https://ggplot2.tidyverse.org/reference/ggplot.html), but
+it understands `SynIndividual` and `SynSpecies` objects. Geoms can
+resolve stored annotation or alignment data at build time.
 
 ``` r
 
@@ -894,11 +894,15 @@ xz <- patch_annotation_from_gff(
 )
 ```
 
-Patch modes include `replace`, `add`, and `drop`. Patch history can be
-inspected with
+Patch modes include `replace`, `add`, and `remove`; `drop` remains a
+supported alias for `remove`. Patch history can be inspected with
 [`list_patches()`](https://dongyaoliu.github.io/ggexon/reference/list_patches.md)
-and cleared with
-[`clear_patches()`](https://dongyaoliu.github.io/ggexon/reference/clear_patches.md).
+and reset with
+[`reset_patches()`](https://dongyaoliu.github.io/ggexon/reference/reset_patches.md),
+which restores the base annotation while retaining assigned display
+labels. The earlier name
+[`clear_patches()`](https://dongyaoliu.github.io/ggexon/reference/reset_patches.md)
+remains supported.
 
 ## Recommended workflow
 

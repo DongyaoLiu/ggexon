@@ -16,12 +16,12 @@ theme_ggexon_clean(base_size = 8, base_family = "")
 - base_size:
 
   Base font size passed to
-  [`ggplot2::theme_minimal()`](https://rdrr.io/pkg/ggplot2/man/ggtheme.html).
+  [`ggplot2::theme_minimal()`](https://ggplot2.tidyverse.org/reference/ggtheme.html).
 
 - base_family:
 
   Base font family passed to
-  [`ggplot2::theme_minimal()`](https://rdrr.io/pkg/ggplot2/man/ggtheme.html).
+  [`ggplot2::theme_minimal()`](https://ggplot2.tidyverse.org/reference/ggtheme.html).
 
 ## Value
 

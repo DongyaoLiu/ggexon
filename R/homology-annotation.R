@@ -1125,29 +1125,35 @@ setReplaceMethod("homology_table", "HomologyAnnotation", function(x, value) {
 
 #' Edit homology rows
 #'
-#' These S4 methods add, delete, or replace rows in a `HomologyAnnotation`
-#' table. Methods for `SynSpecies` edit one attached homology annotation selected
+#' Use `add_homology()`, `update_homology()`, and `remove_homology()` to edit
+#' rows in a `HomologyAnnotation` table. `update_homology()` changes only the
+#' supplied columns of matching rows; it does not replace the whole table.
+#' `replace_homology()` and `delete_homology()` remain compatible synonyms for
+#' updating and removing rows. The preferred names forward to their existing
+#' S4 methods, preserving dispatch and argument handling.
+#'
+#' Methods for `SynSpecies` edit one attached homology annotation selected
 #' by `name`, by `query_species`, or by omission when exactly one homology
 #' annotation is attached.
 #'
 #' @param x A `HomologyAnnotation` or `SynSpecies` object.
 #' @param data Optional data frame of rows. For `add_homology()` it must contain
-#'   `query_gene` and `reference_gene`. For `replace_homology()` it must contain
-#'   `query_gene` plus at least one column to update. For `delete_homology()`,
+#'   `query_gene` and `reference_gene`. For `update_homology()` it must contain
+#'   `query_gene` plus at least one column to update. For `remove_homology()`,
 #'   only `query_gene` and optional `reference_gene` are used.
 #' @param query_gene Query-side gene IDs.
-#' @param reference_gene Reference-side gene IDs. In `delete_homology()` this is
+#' @param reference_gene Reference-side gene IDs. In `remove_homology()` this is
 #'   an optional guard: rows are deleted only when the current reference gene
 #'   matches.
 #' @param ... Extra homology table columns for `add_homology()` and
-#'   `replace_homology()`.
+#'   `update_homology()`.
 #' @param overwrite For `add_homology()`, whether incoming rows for existing
 #'   `query_gene` values should update those rows. When `FALSE`, existing rows
 #'   are kept and a warning is emitted.
-#' @param add_missing For `replace_homology()`, whether missing `query_gene`
+#' @param add_missing For `update_homology()`, whether missing `query_gene`
 #'   values should be added. Missing rows require non-empty `reference_gene`
 #'   values.
-#' @param missing For `delete_homology()`, behavior when a requested
+#' @param missing For `remove_homology()`, behavior when a requested
 #'   `query_gene` is absent.
 #' @param name Optional homology annotation name when `x` is a `SynSpecies`.
 #' @param query_species Optional query species selector when `x` is a
@@ -1160,6 +1166,18 @@ NULL
 #' @rdname homology-crud
 #' @export
 setGeneric("add_homology", function(x, ...) standardGeneric("add_homology"))
+
+#' @rdname homology-crud
+#' @export
+update_homology <- function(x, ...) {
+  replace_homology(x, ...)
+}
+
+#' @rdname homology-crud
+#' @export
+remove_homology <- function(x, ...) {
+  delete_homology(x, ...)
+}
 
 #' @rdname homology-crud
 #' @export

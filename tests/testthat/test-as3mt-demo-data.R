@@ -26,6 +26,44 @@ test_that("AS3MT offline inputs preserve ungapped blocks and top-two selection",
   }
 })
 
+test_that("AS3MT RNA-seq signal follows human compression without changing source scores", {
+  demo_dir <- system.file("extdata", "as3mt", package = "ggexon")
+  env <- new.env(parent = globalenv())
+  sys.source(file.path(demo_dir, "load-as3mt-example.R"), envir = env)
+  expect_true(is.function(env$plot_as3mt_coverage))
+  if (!is.function(env$plot_as3mt_coverage)) return()
+  source <- utils::read.delim(file.path(demo_dir, "human-rnaseq-GTEX-15G19.tsv"))
+  expect_equal(nrow(source), 1072L)
+  source_width <- sum(source$end - source$start + 1)
+  expect_equal(source_width, 32430)
+  for (factor in c(10, 30)) {
+    result <- env$plot_as3mt_coverage(demo_dir, intron_factor = factor)
+    built <- result$build
+    layout <- as.data.frame(built@layout$layout)
+    coverage_panel <- as.integer(layout$PANEL[layout$panel_type == "coverage"])
+    human_panel <- as.integer(layout$PANEL[
+      layout$panel_type == "annotation" & layout$track == "human"])
+    expect_equal(layout$x_source_panel[layout$panel_type == "coverage"], human_panel)
+    layer <- which(vapply(result$plot$layers,
+      function(layer) inherits(layer$geom, "GeomCoverage"), logical(1)))
+    signal <- built@data[[layer]]
+    expect_equal(unique(as.integer(signal$PANEL)), coverage_panel)
+    expect_true(all(signal$coverage %in% source$score))
+    expect_equal(sum(.coverage_span_weights(signal)), source_width)
+    expect_equal(sum(signal$coverage * .coverage_span_weights(signal)),
+      sum(source$score * (source$end - source$start + 1)))
+    expect_equal(signal$ymax, signal$coverage)
+    expect_equal(signal$xmin, ggexon_genomic_to_plot_x(signal$genomic_edge_start,
+      built@layout$genomic_x_transforms[[as.character(human_panel)]]))
+    junction_panels <- unlist(lapply(built@data, function(layer) {
+      if (!"label" %in% names(layer)) return(integer())
+      as.integer(layer$PANEL[!is.na(layer$label) & layer$label == "E1 → E4"])
+    }))
+    expect_equal(junction_panels, human_panel)
+    expect_silent(ggplot2::ggplot_gtable(built))
+  }
+})
+
 test_that("AS3MT loads portably and uses native scaling at different compression factors", {
   demo_dir <- system.file("extdata", "as3mt", package = "ggexon")
   portable <- tempfile("as3mt-offline-")
@@ -120,48 +158,17 @@ test_that("AS3MT sequence example highlights the experimentally supported VNTR",
   expect_equal(result$vntr$constructs$repeat_count, c(2L, 3L))
 })
 
-test_that("AS3MT protein loss and start marker stay on human coding exons", {
+test_that("AS3MT combined view contains transcript and DNA annotations without protein consequences", {
   demo_dir <- system.file("extdata", "as3mt", package = "ggexon")
   env <- new.env(parent = globalenv())
   sys.source(file.path(demo_dir, "load-as3mt-example.R"), envir = env)
-  example <- env$load_as3mt_example(demo_dir)
-  change <- env$as3mt_protein_change(example)
-  expect_equal(change$position, 103L)
-  expect_equal(change$xmin, 102872584)
-  expect_equal(change$xmax, 102872586)
-  expect_equal(change$anchor, 102872585)
-  expect_equal(change$track, "human")
-  expect_equal(change$transcripts, "human_full")
-  expect_equal(change$lost_aa, 102L)
-  loss <- env$as3mt_protein_loss(example)
-  expect_equal(loss$xmin, c(102869593, 102869805, 102870084, 102872448))
-  expect_equal(loss$xmax, c(102869593, 102869845, 102870211, 102872583))
-  expect_equal(sum(loss$xmax - loss$xmin + 1), 306)
-  expect_true(all(loss$track == "human"))
-  expect_match(change$label, "M103.*M1")
-  for (factor in c(1, 30)) {
-    result <- env$plot_as3mt_example(example, intron_factor = factor)
-    b <- result$build
-    expect_false(any(vapply(result$plot$layers, function(l)
-      "lollipop_position" %in% names(l$data), logical(1))))
-    i <- which(vapply(result$plot$layers, function(l)
-      inherits(l$geom, "GeomSegment") && "protein_event" %in% names(l$data), logical(1)))
-    expect_length(i, 1L)
-    protein_layers <- Filter(function(l) "protein_event" %in% names(l$data), result$plot$layers)
-    expect_true(all(vapply(protein_layers, function(l)
-      identical(unique(l$data$track), "human"), logical(1))))
-    rect <- which(vapply(result$plot$layers, function(l)
-      inherits(l$geom, "GeomRect") && "protein_event" %in% names(l$data), logical(1)))
-    expect_length(rect, 1L)
-    expect_equal(sum(b$data[[rect]]$xmax - b$data[[rect]]$xmin), 306)
-    point <- b$data[[i]]
-    human_panel <- b$layout$layout$PANEL[b$layout$layout$track == "human"]
-    expect_equal(as.character(point$PANEL), as.character(human_panel))
-    transform <- b$layout$genomic_x_transforms[[as.character(human_panel)]]
-    piece <- transform[transform$genomic_start <= change$anchor &
-      transform$genomic_end >= change$anchor, ]
-    expected <- piece$plot_start + (change$anchor - piece$genomic_start) *
-      (piece$plot_end - piece$plot_start) / (piece$genomic_end - piece$genomic_start)
-    expect_equal(point$x, expected)
-  }
+  result <- env$plot_as3mt_alignseq(demo_dir)
+  expect_equal(sum(vapply(result$plot$layers,
+    function(layer) inherits(layer$geom, "GeomCoverage"), logical(1))), 1L)
+  labels <- function(g) c(if (inherits(g, "text")) as.character(g$label),
+    unlist(lapply(g$children, labels)), unlist(lapply(g$grobs, labels)))
+  text <- labels(result$grob)
+  expect_true("E4" %in% text)
+  expect_true("human (reference)" %in% text)
+  expect_false(any(grepl("aa1.*102|M103|Start: M", text)))
 })

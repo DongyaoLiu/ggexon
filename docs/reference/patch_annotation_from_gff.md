@@ -10,7 +10,7 @@ patch_annotation_from_gff(
   patch_file,
   annotation = NULL,
   target_ids = NULL,
-  mode = c("replace", "add", "drop"),
+  mode = c("replace", "add", "remove", "drop"),
   name = NULL,
   format = c("auto", "gff", "gtf")
 )
@@ -37,7 +37,8 @@ patch_annotation_from_gff(
 
 - mode:
 
-  One of `"replace"`, `"add"`, or `"drop"`.
+  One of `"replace"`, `"add"`, or `"remove"`. Legacy `"drop"` remains
+  supported with the same removal behavior.
 
 - name:
 

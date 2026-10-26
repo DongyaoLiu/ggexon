@@ -798,8 +798,11 @@ xz <- patch_annotation_from_gff(
 )
 ```
 
-Patch modes include `replace`, `add`, and `drop`. Patch history can be
-inspected with `list_patches()` and cleared with `clear_patches()`.
+Patch modes include `replace`, `add`, and `remove`; `drop` remains a supported
+alias for `remove`. Patch history can be inspected with `list_patches()` and
+reset with `reset_patches()`, which restores the base annotation while
+retaining assigned display labels. The earlier name `clear_patches()` remains
+supported.
 
 # Recommended workflow
 

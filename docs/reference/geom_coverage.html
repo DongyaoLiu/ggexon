@@ -28,7 +28,7 @@ xmax, coverage, and track aesthetics directly."></head><body>
   <ul class="dropdown-menu" aria-labelledby="dropdown-tutorials"><li><a class="dropdown-item" href="../articles/ggexon-workflow.html">Complete workflow</a></li>
     <li><a class="dropdown-item" href="../articles/hox-cluster-expansion-demo.html">HOX cluster expansion</a></li>
     <li><a class="dropdown-item" href="../articles/cd44-splice-variants-demo.html">CD44 splice variant alignment</a></li>
-    <li><a class="dropdown-item" href="../articles/as3mt-splice-variants-demo.html">AS3MT transcripts, protein start and DNA repeats</a></li>
+    <li><a class="dropdown-item" href="../articles/as3mt-splice-variants-demo.html">AS3MT transcripts, DNA and RNA-seq</a></li>
     <li><a class="dropdown-item" href="../articles/hla-a-lollipop-demo.html">HLA-A protein variant lollipops</a></li>
     <li><a class="dropdown-item" href="../articles/bigwig-coverage-demo.html">PEEL-1 raw BigWig coverage</a></li>
     <li><a class="dropdown-item" href="../articles/ggexon-classes-and-verbs.html">Classes, geoms, facets, and guides</a></li>
@@ -120,14 +120,18 @@ coverage panel an independent scale.
 Explicit coverage data on a <code>SynIndividual</code> or <code>SynSpecies</code> plot can also
 form standalone first-class coverage panels without an annotation layer.
 Ordinary non-Syn plots retain the legacy composite-layer behavior.</p>
-<p>Continuous coverage panels use ordinary genomic x coordinates. They cannot
-currently be combined with <code><a href="scale_x_ggexon_genomic.html">scale_x_ggexon_genomic()</a></code> exon/intron
-compression or <code><a href="strip_scale_x.html">strip_scale_x()</a></code>; those mixed builds fail before
-transforming the signal.
+<p>With <code><a href="scale_x_ggexon_genomic.html">scale_x_ggexon_genomic()</a></code>, coverage follows its annotation panel's
+exon/intron map. Intervals crossing scale boundaries are split without
+changing their scores. Automatic coverage y limits still use original
+genomic widths, rather than compressed display widths. Coverage without an
+exon-style annotation source keeps its ordinary genomic coordinates.
+<code><a href="strip_scale_x.html">strip_scale_x()</a></code> remains unsupported for first-class coverage panels.
 Inclusive genomic interval endpoints are retained in <code>interval_start</code>,
 <code>interval_end</code>, <code>genomic_xmin</code>, and <code>genomic_xmax</code> in the built layer data;
 rectangle edges are shifted by half a base so adjacent intervals meet
-without overlap or gaps.</p>
+without overlap or gaps. After genomic compression, <code>genomic_edge_start</code>
+and <code>genomic_edge_end</code> retain each fragment's untransformed rectangle edges;
+the inclusive endpoint columns still identify the original parent interval.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

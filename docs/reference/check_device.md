@@ -53,10 +53,10 @@ check_device(
 - call:
 
   The execution environment of a currently running function, e.g.
-  [`caller_env()`](https://rdrr.io/pkg/rlang/man/stack.html). The
+  [`caller_env()`](https://rlang.r-lib.org/reference/stack.html). The
   function will be mentioned in warnings and error messages as the
   source of the warning or error. See the `call` argument of
-  [`abort()`](https://rdrr.io/pkg/rlang/man/abort.html) for more
+  [`abort()`](https://rlang.r-lib.org/reference/abort.html) for more
   information.
 
 ## Value

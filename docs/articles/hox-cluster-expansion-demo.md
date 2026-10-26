@@ -257,11 +257,11 @@ calls.
 | Species     | Cluster   | Source-annotation gap slots   |
 |:------------|:----------|:------------------------------|
 | Spotted gar | HOXA      | Hox9, Hox7, Hox6, Hox4, Hox2  |
-| Amphioxus   | Ancestral | Hox13                         |
 | Spotted gar | HOXB      | Hox4, Hox2                    |
 | Chicken     | HOXC      | Hox6, Hox5, Hox4              |
 | Spotted gar | HOXC      | Hox10, Hox9, Hox8, Hox6, Hox1 |
 | Chicken     | HOXD      | Hox1                          |
+| Amphioxus   | Ancestral | Hox13                         |
 
 Literature-expected Hox members without a safe coding model in the
 pinned source annotation. Full evidence and candidate-model assessments
@@ -315,7 +315,8 @@ at all three raw anchors. The x coordinates are displayed in megabases
 and reversed only for presentation, so the panel still reads Hox13 to
 Hox1 like the matrix. The gene boxes use the same data-unit geometry as
 the matrix, with a 0.004 Mb side length. Labels are composed with a
-separate [`geom_text()`](https://rdrr.io/pkg/ggplot2/man/geom_text.html)
+separate
+[`geom_text()`](https://ggplot2.tidyverse.org/reference/geom_text.html)
 layer because
 [`geom_genebox()`](https://dongyaoliu.github.io/ggexon/reference/geom_genebox.md)
 deliberately does not contain text.

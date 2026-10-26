@@ -20,7 +20,7 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-tutorials"><li><a class="dropdown-item" href="../articles/ggexon-workflow.html">Complete workflow</a></li>
     <li><a class="dropdown-item" href="../articles/hox-cluster-expansion-demo.html">HOX cluster expansion</a></li>
     <li><a class="dropdown-item" href="../articles/cd44-splice-variants-demo.html">CD44 splice variant alignment</a></li>
-    <li><a class="dropdown-item" href="../articles/as3mt-splice-variants-demo.html">AS3MT transcripts, protein start and DNA repeats</a></li>
+    <li><a class="dropdown-item" href="../articles/as3mt-splice-variants-demo.html">AS3MT transcripts, DNA and RNA-seq</a></li>
     <li><a class="dropdown-item" href="../articles/hla-a-lollipop-demo.html">HLA-A protein variant lollipops</a></li>
     <li><a class="dropdown-item" href="../articles/bigwig-coverage-demo.html">PEEL-1 raw BigWig coverage</a></li>
     <li><a class="dropdown-item" href="../articles/ggexon-classes-and-verbs.html">Classes, geoms, facets, and guides</a></li>
@@ -333,6 +333,13 @@
 
         </dt>
         <dd>Plot interval-native BigWig coverage</dd>
+
+        <dt>
+
+          <code><a href="geom_junction.html">geom_junction()</a></code>
+
+        </dt>
+        <dd>Draw splice junction arcs on annotation or coverage panels</dd>
 
         <dt>
 
@@ -1051,7 +1058,7 @@
 
         <dt>
 
-          <code><a href="homology-crud.html">add_homology()</a></code> <code><a href="homology-crud.html">delete_homology()</a></code> <code><a href="homology-crud.html">replace_homology()</a></code>
+          <code><a href="homology-crud.html">add_homology()</a></code> <code><a href="homology-crud.html">update_homology()</a></code> <code><a href="homology-crud.html">remove_homology()</a></code> <code><a href="homology-crud.html">delete_homology()</a></code> <code><a href="homology-crud.html">replace_homology()</a></code>
 
         </dt>
         <dd>Edit homology rows</dd>
@@ -1086,17 +1093,17 @@
 
         <dt>
 
-          <code><a href="clear_patches.html">clear_patches()</a></code>
+          <code><a href="reset_patches.html">reset_patches()</a></code> <code><a href="reset_patches.html">clear_patches()</a></code>
 
         </dt>
-        <dd>Clear annotation patches</dd>
+        <dd>Reset recorded annotation patches</dd>
 
         <dt>
 
-          <code><a href="rename_domain_annotation_ids.html">rename_domain_annotation_ids()</a></code>
+          <code><a href="map_domain_ids.html">map_domain_ids()</a></code> <code><a href="map_domain_ids.html">rename_domain_annotation_ids()</a></code>
 
         </dt>
-        <dd>Rename protein-domain identifiers using an explicit mapping</dd>
+        <dd>Map protein-domain identifiers using an explicit mapping</dd>
       </dl></div><div class="section level2">
       <h2 id="alignment-and-tree-workflows">Alignment and tree workflows<a class="anchor" aria-label="anchor" href="#alignment-and-tree-workflows"></a></h2>
 
