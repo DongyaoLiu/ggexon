@@ -199,14 +199,14 @@ reference:
   - filter_odgi_nodes
   - set_gene_labels
   - add_homology
-  - replace_homology
-  - delete_homology
+  - update_homology
+  - remove_homology
   - patch_annotation
   - patch_annotation_from_gff
   - read_patch_gff
   - list_patches
-  - clear_patches
-  - rename_domain_annotation_ids
+  - reset_patches
+  - map_domain_ids
 
 - title: Alignment and tree workflows
   desc: Read pairwise and multiple alignments, work with ODGI data, and extract alignment tables.

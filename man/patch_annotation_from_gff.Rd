@@ -9,7 +9,7 @@ patch_annotation_from_gff(
   patch_file,
   annotation = NULL,
   target_ids = NULL,
-  mode = c("replace", "add", "drop"),
+  mode = c("replace", "add", "remove", "drop"),
   name = NULL,
   format = c("auto", "gff", "gtf")
 )
@@ -25,7 +25,8 @@ patch_annotation_from_gff(
 \item{target_ids}{Optional target gene IDs. When omitted, target IDs are
 inferred from the patch file.}
 
-\item{mode}{One of \code{"replace"}, \code{"add"}, or \code{"drop"}.}
+\item{mode}{One of \code{"replace"}, \code{"add"}, or \code{"remove"}. Legacy \code{"drop"}
+remains supported with the same removal behavior.}
 
 \item{name}{Optional patch label.}
 

@@ -123,6 +123,28 @@ Functions such as `aes()`, `scale_fill_manual()`, `scale_x_continuous()`,
 `facet_wrap()`, `coord_fixed()`, `theme()`, and `ggsave()` come from ggplot2.
 The examples combine these with the ggexon functions above.
 
+## Curating elements within data objects
+
+Curation verbs describe the change made to stored biological information.
+Updating selected fields differs from replacing a complete gene model;
+resetting patches restores the base annotation.
+
+| Operation | Function | Effect |
+| --- | --- | --- |
+| Add relationships | `add_homology()` | Insert query-to-reference gene relationships |
+| Update fields | `update_homology()` | Change supplied columns for matched query genes while preserving other fields |
+| Remove relationships | `remove_homology()` | Remove selected homology rows, with an optional reference-gene guard |
+| Set display labels | `set_gene_labels()` | Assign labels while retaining stable biological IDs |
+| Map identifiers | `map_domain_ids()` | Map domain annotation identifier values to the key used by transcript models |
+| Patch gene models | `patch_annotation()` | Record an addition, replacement, or removal using `mode = "add"`, `"replace"`, or `"remove"` |
+| Reset patches | `reset_patches()` | Restore the base feature annotation and retain assigned display labels |
+
+`replace_homology()`, `delete_homology()`,
+`rename_domain_annotation_ids()`, and `clear_patches()` remain supported
+aliases for the corresponding operations above. Patch mode `"drop"` remains
+an alias for `"remove"`. Use `query_*()` to inspect data and `subset_*()` or
+`filter_*()` to select the data to keep.
+
 # 1. Exons and alternative transcripts
 
 An exon table contains intervals and transcript membership. Drawing each row
@@ -1022,6 +1044,24 @@ names(list_patches(corrected_model))
 
 `patch_annotation_from_gff()` imports corrections from a small GFF. Replacing
 models clears stale sequence caches; recompute derived sequences afterwards.
+
+`reset_patches()` clears all recorded patches and restores the base feature
+annotation. A removal is also
+recorded as a patch, so it can be inspected and reset in the same way.
+These operations return updated objects; `model` remains available for the
+comparison below.
+
+```{r workflow-patch-reset-remove}
+restored_model <- reset_patches(corrected_model)
+length(list_patches(restored_model))
+
+without_gene_b <- patch_annotation(
+  model, patch = NULL, target_ids = "geneB", mode = "remove",
+  name = "remove-gene-b"
+)
+names(list_patches(without_gene_b))
+unique(as.character(S4Vectors::mcols(annotation_data(without_gene_b))$gene_id))
+```
 
 ## Choose the geom, scales, facet, and theme
 
