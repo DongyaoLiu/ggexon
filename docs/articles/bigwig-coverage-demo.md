@@ -20,7 +20,6 @@ Windows readers can view the rendered figure in the [online
 tutorial](https://dongyaoliu.github.io/ggexon/articles/bigwig-coverage-demo.html).
 
 ``` r
-
 library(ggexon)
 
 fixture_dir <- system.file("extdata", "peel1_coverage", package = "ggexon")
@@ -121,7 +120,6 @@ Add the genomic scale to align every coverage track with the
 representative gene model while shortening introns:
 
 ``` r
-
 coverage_plot + scale_x_ggexon_genomic(intron_factor = 10)
 ```
 

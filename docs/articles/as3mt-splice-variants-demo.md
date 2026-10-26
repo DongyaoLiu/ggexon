@@ -8,19 +8,11 @@ reconstruction**, and chimpanzee full-length AS3MT. Coordinates use
 downloads are needed.
 
 ``` r
-
 library(ggexon)
 library(ggplot2)
-#> Warning: package 'ggplot2' was built under R version 4.4.3
 demo_dir <- system.file("extdata", "as3mt", package = "ggexon")
 source(file.path(demo_dir, "load-as3mt-example.R"), local = TRUE)
 as3mt <- load_as3mt_example(demo_dir)
-#> Warning in read.table(file = file, header = header, sep = sep, quote = quote, :
-#> invalid input found on input connection
-#> '/private/var/folders/1q/c2x4tgc13k71k6n_lb5m_7n00000gn/T/RtmpTdoKnQ/temp_libpath43ba7a9eede9/ggexon/extdata/as3mt/human-chimp-links.nogap.tsv'
-#> Warning in read.table(file = file, header = header, sep = sep, quote = quote, :
-#> incomplete final line found by readTableHeader on
-#> '/private/var/folders/1q/c2x4tgc13k71k6n_lb5m_7n00000gn/T/RtmpTdoKnQ/temp_libpath43ba7a9eede9/ggexon/extdata/as3mt/human-chimp-links.nogap.tsv'
 ```
 
 ## 1. Transcripts and compressed introns
@@ -37,7 +29,6 @@ them to related genomic layers; adding coverage or labels does not
 change the exon/intron boundaries.
 
 ``` r
-
 as3mt_plot <- plot_as3mt_example(as3mt, intron_factor = 30)
 as3mt_plot$plot
 ```
@@ -52,7 +43,6 @@ Transcript comparison; introns compressed 30-fold.
 The helper uses this grammar:
 
 ``` r
-
 ggexon(as3mt$comparison) +
   geom_exon2(aes(xmin = xmin - 0.5, xmax = xmax + 0.5,
     ymin = isoform_y, transcripts = transcript_name, fill = exon_class),
@@ -88,7 +78,6 @@ verified against the bundled FASTAs; the donor-anchored alignment places
 72 chimp gap columns opposite two human repeat copies.
 
 ``` r
-
 v <- readRDS(file.path(demo_dir, "vntr-dna.rds"))
 sequence_data <- alignseq_data(v$aligned, v$anchors, reference = "human",
   regions = v$regions, details = v$details, flank = 0)
@@ -101,14 +90,7 @@ spaced schematically; smooth connectors retain genomic anchors. For a
 short window, `mode = "rows"` shows all selected bases:
 
 ``` r
-
 sequence_example <- plot_as3mt_alignseq(demo_dir, intron_factor = 30)
-#> Warning in read.table(file = file, header = header, sep = sep, quote = quote, :
-#> invalid input found on input connection
-#> '/private/var/folders/1q/c2x4tgc13k71k6n_lb5m_7n00000gn/T/RtmpTdoKnQ/temp_libpath43ba7a9eede9/ggexon/extdata/as3mt/human-chimp-links.nogap.tsv'
-#> Warning in read.table(file = file, header = header, sep = sep, quote = quote, :
-#> incomplete final line found by readTableHeader on
-#> '/private/var/folders/1q/c2x4tgc13k71k6n_lb5m_7n00000gn/T/RtmpTdoKnQ/temp_libpath43ba7a9eede9/ggexon/extdata/as3mt/human-chimp-links.nogap.tsv'
 sequence_example$rows
 ```
 
@@ -138,15 +120,8 @@ and
 follow the human exon/intron map automatically.
 
 ``` r
-
 rna_example <- plot_as3mt_coverage(demo_dir, intron_factor = 30,
   junction_panel = "coverage")
-#> Warning in read.table(file = file, header = header, sep = sep, quote = quote, :
-#> invalid input found on input connection
-#> '/private/var/folders/1q/c2x4tgc13k71k6n_lb5m_7n00000gn/T/RtmpTdoKnQ/temp_libpath43ba7a9eede9/ggexon/extdata/as3mt/human-chimp-links.nogap.tsv'
-#> Warning in read.table(file = file, header = header, sep = sep, quote = quote, :
-#> incomplete final line found by readTableHeader on
-#> '/private/var/folders/1q/c2x4tgc13k71k6n_lb5m_7n00000gn/T/RtmpTdoKnQ/temp_libpath43ba7a9eede9/ggexon/extdata/as3mt/human-chimp-links.nogap.tsv'
 rna_example$plot
 ```
 
@@ -165,7 +140,6 @@ panel, or `panel = "annotation"` (the geom default) to put them on the
 gene model:
 
 ``` r
-
 geom_junction(data = rna_example$junctions,
   aes(x = x, xend = xend, y = y, yend = yend, height = height,
       linewidth = reads, label = reads, hjust = label_hjust, colour = event),
@@ -215,7 +189,6 @@ transcript remains a **paper-defined reconstruction**; the repeat-count
 strip summarizes the tested human alleles schematically.
 
 ``` r
-
 grid::grid.newpage()
 grid::grid.draw(sequence_example$grob)
 ```

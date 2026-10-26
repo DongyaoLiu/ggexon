@@ -15,24 +15,23 @@ the chunks in order in an R session with the current version of ggexon
 installed.
 
 ``` r
-
 library(ggexon)
 library(ggplot2)
 ```
 
 ### Major data objects
 
-| Object | What it stores | Typical input |
-|----|----|----|
-| `SynFeatureAnnotation` | Genes, transcripts, exons, and CDS | GFF3 or GTF |
-| `SynIndividual` | One genome or sample and its annotation layers | Annotation, optional FASTA |
-| `SynSpecies` | Individuals and comparative relationships | Individuals, alignments, homology, trees |
-| `SynPairAlignment`, `SynMultiAlignment` | Relationships between genomes | PAF/PSL, or supported multiple-alignment data |
-| `SynBigWigAnnotation`, `SynVCFAnnotation` | Region-queryable signal or variants | BigWig or VCF |
-| `SynProteinDomainAnnotation`, `SynProteinMutationAnnotation` | Domains or mutation summaries | Domain and mutation tables |
-| `SynAnnotationPatch` | An explicit gene-model correction | Corrected feature ranges |
-| `HomologyAnnotation` | Reference/query gene mappings | Curated table or imported BLAST results |
-| `SynLayout`, `SynLocusSet` | Reusable panel windows or comparable loci | Named coordinate windows |
+| Object                                                       | What it stores                                 | Typical input                                 |
+|--------------------------------------------------------------|------------------------------------------------|-----------------------------------------------|
+| `SynFeatureAnnotation`                                       | Genes, transcripts, exons, and CDS             | GFF3 or GTF                                   |
+| `SynIndividual`                                              | One genome or sample and its annotation layers | Annotation, optional FASTA                    |
+| `SynSpecies`                                                 | Individuals and comparative relationships      | Individuals, alignments, homology, trees      |
+| `SynPairAlignment`, `SynMultiAlignment`                      | Relationships between genomes                  | PAF/PSL, or supported multiple-alignment data |
+| `SynBigWigAnnotation`, `SynVCFAnnotation`                    | Region-queryable signal or variants            | BigWig or VCF                                 |
+| `SynProteinDomainAnnotation`, `SynProteinMutationAnnotation` | Domains or mutation summaries                  | Domain and mutation tables                    |
+| `SynAnnotationPatch`                                         | An explicit gene-model correction              | Corrected feature ranges                      |
+| `HomologyAnnotation`                                         | Reference/query gene mappings                  | Curated table or imported BLAST results       |
+| `SynLayout`, `SynLocusSet`                                   | Reusable panel windows or comparable loci      | Named coordinate windows                      |
 
 ### Plotting functions supplied by ggexon
 
@@ -44,70 +43,70 @@ not select a genomic window or transform coordinates.
 
 #### Geoms
 
-| Function | What it draws |
-|----|----|
-| [`geom_exon()`](https://dongyaoliu.github.io/ggexon/reference/geom_exon.md) | Exon rectangles, transcript backbones, and strand direction |
-| [`geom_exon2()`](https://dongyaoliu.github.io/ggexon/reference/geom_exon2.md) | Exon/CDS/UTR models with explicit introns and optional schematic compression |
-| [`geom_genetag()`](https://dongyaoliu.github.io/ggexon/reference/geom_genetag.md) | One directional gene span, with optional labels and overlap lanes |
-| [`geom_genebox()`](https://dongyaoliu.github.io/ggexon/reference/geom_genebox.md) | Equal-size gene boxes with internal strand arrows |
-| [`geom_genelabel()`](https://dongyaoliu.github.io/ggexon/reference/geom_genelabel.md) | Gene labels and their leader lines, including homology-based names |
-| [`geom_genelink()`](https://dongyaoliu.github.io/ggexon/reference/geom_genelink.md) | Straight, elbow, or spline lines between supplied coordinate pairs |
-| [`geom_nuclink()`](https://dongyaoliu.github.io/ggexon/reference/geom_nuclink.md) | Nucleotide-alignment ribbons between genomic panels |
-| [`geom_synteny_link()`](https://dongyaoliu.github.io/ggexon/reference/geom_synteny_link.md) | Interval ribbons for supplied gene, exon, or block relationships |
-| [`geom_coverage()`](https://dongyaoliu.github.io/ggexon/reference/geom_coverage.md) | Continuous coverage or signal tracks |
-| [`geom_motif()`](https://dongyaoliu.github.io/ggexon/reference/geom_motif.md) | Motif/domain blocks; attached protein domains can be projected onto genomic CDS intervals |
-| [`geom_aa_variant()`](https://dongyaoliu.github.io/ggexon/reference/geom_aa_variant.md) | Amino-acid variant markers projected onto transcript models |
-| [`geom_protein_lollipop()`](https://dongyaoliu.github.io/ggexon/reference/geom_protein_lollipop.md) | A protein backbone, domain blocks, and mutation stems and heads |
-| [`geom_mutation_label()`](https://dongyaoliu.github.io/ggexon/reference/geom_mutation_label.md) | Mutation labels positioned to match mutation markers |
-| [`geom_alignseq()`](https://dongyaoliu.github.io/ggexon/reference/geom_alignseq.md) | Anchored DNA-difference markers or aligned sequence rows |
-| [`geom_genomic_tree()`](https://dongyaoliu.github.io/ggexon/reference/geom_genomic_tree.md) | Attaches a rectangular tree for alignment with genomic panels |
+| Function                                                                                            | What it draws                                                                             |
+|-----------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------|
+| [`geom_exon()`](https://dongyaoliu.github.io/ggexon/reference/geom_exon.md)                         | Exon rectangles, transcript backbones, and strand direction                               |
+| [`geom_exon2()`](https://dongyaoliu.github.io/ggexon/reference/geom_exon2.md)                       | Exon/CDS/UTR models with explicit introns and optional schematic compression              |
+| [`geom_genetag()`](https://dongyaoliu.github.io/ggexon/reference/geom_genetag.md)                   | One directional gene span, with optional labels and overlap lanes                         |
+| [`geom_genebox()`](https://dongyaoliu.github.io/ggexon/reference/geom_genebox.md)                   | Equal-size gene boxes with internal strand arrows                                         |
+| [`geom_genelabel()`](https://dongyaoliu.github.io/ggexon/reference/geom_genelabel.md)               | Gene labels and their leader lines, including homology-based names                        |
+| [`geom_genelink()`](https://dongyaoliu.github.io/ggexon/reference/geom_genelink.md)                 | Straight, elbow, or spline lines between supplied coordinate pairs                        |
+| [`geom_nuclink()`](https://dongyaoliu.github.io/ggexon/reference/geom_nuclink.md)                   | Nucleotide-alignment ribbons between genomic panels                                       |
+| [`geom_synteny_link()`](https://dongyaoliu.github.io/ggexon/reference/geom_synteny_link.md)         | Interval ribbons for supplied gene, exon, or block relationships                          |
+| [`geom_coverage()`](https://dongyaoliu.github.io/ggexon/reference/geom_coverage.md)                 | Continuous coverage or signal tracks                                                      |
+| [`geom_motif()`](https://dongyaoliu.github.io/ggexon/reference/geom_motif.md)                       | Motif/domain blocks; attached protein domains can be projected onto genomic CDS intervals |
+| [`geom_aa_variant()`](https://dongyaoliu.github.io/ggexon/reference/geom_aa_variant.md)             | Amino-acid variant markers projected onto transcript models                               |
+| [`geom_protein_lollipop()`](https://dongyaoliu.github.io/ggexon/reference/geom_protein_lollipop.md) | A protein backbone, domain blocks, and mutation stems and heads                           |
+| [`geom_mutation_label()`](https://dongyaoliu.github.io/ggexon/reference/geom_mutation_label.md)     | Mutation labels positioned to match mutation markers                                      |
+| [`geom_alignseq()`](https://dongyaoliu.github.io/ggexon/reference/geom_alignseq.md)                 | Anchored DNA-difference markers or aligned sequence rows                                  |
+| [`geom_genomic_tree()`](https://dongyaoliu.github.io/ggexon/reference/geom_genomic_tree.md)         | Attaches a rectangular tree for alignment with genomic panels                             |
 
 #### Scales and guides
 
-| Function | What it controls |
-|----|----|
-| [`scale_x_ggexon_genomic()`](https://dongyaoliu.github.io/ggexon/reference/scale_x_ggexon_genomic.md) | Shared exon-aware intron compression with original genomic coordinate labels |
-| [`guide_x_ggexon_piecewise()`](https://dongyaoliu.github.io/ggexon/reference/guide_x_ggexon_piecewise.md) | Representative exon and intron scale bars for the compressed genomic x scale |
-| [`strip_scale_x()`](https://dongyaoliu.github.io/ggexon/reference/strip_scale_x.md) | Gene-order display widths or explicit shared comparison slots |
-| [`strip_scale()`](https://dongyaoliu.github.io/ggexon/reference/strip_scale_x.md) | Compatibility alias for [`strip_scale_x()`](https://dongyaoliu.github.io/ggexon/reference/strip_scale_x.md) |
-| [`scale_x_facet_labels()`](https://dongyaoliu.github.io/ggexon/reference/scale_x_facet_labels.md) | Different x-axis labels for facets sharing a continuous x scale |
-| [`scale_panel_annotation()`](https://dongyaoliu.github.io/ggexon/reference/scale_panel_annotation.md) | Shared or independent annotation-panel y scales, with optional visible limits |
-| [`scale_panel_coverage()`](https://dongyaoliu.github.io/ggexon/reference/scale_panel_coverage.md) | Shared or independent coverage-panel y scales, with optional manual or automatic visible limits |
+| Function                                                                                                  | What it controls                                                                                            |
+|-----------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------|
+| [`scale_x_ggexon_genomic()`](https://dongyaoliu.github.io/ggexon/reference/scale_x_ggexon_genomic.md)     | Shared exon-aware intron compression with original genomic coordinate labels                                |
+| [`guide_x_ggexon_piecewise()`](https://dongyaoliu.github.io/ggexon/reference/guide_x_ggexon_piecewise.md) | Representative exon and intron scale bars for the compressed genomic x scale                                |
+| [`strip_scale_x()`](https://dongyaoliu.github.io/ggexon/reference/strip_scale_x.md)                       | Gene-order display widths or explicit shared comparison slots                                               |
+| [`strip_scale()`](https://dongyaoliu.github.io/ggexon/reference/strip_scale_x.md)                         | Compatibility alias for [`strip_scale_x()`](https://dongyaoliu.github.io/ggexon/reference/strip_scale_x.md) |
+| [`scale_x_facet_labels()`](https://dongyaoliu.github.io/ggexon/reference/scale_x_facet_labels.md)         | Different x-axis labels for facets sharing a continuous x scale                                             |
+| [`scale_panel_annotation()`](https://dongyaoliu.github.io/ggexon/reference/scale_panel_annotation.md)     | Shared or independent annotation-panel y scales, with optional visible limits                               |
+| [`scale_panel_coverage()`](https://dongyaoliu.github.io/ggexon/reference/scale_panel_coverage.md)         | Shared or independent coverage-panel y scales, with optional manual or automatic visible limits             |
 
 #### Facets and panel layout
 
-| Function | What it arranges |
-|----|----|
-| [`facet_genomics()`](https://dongyaoliu.github.io/ggexon/reference/facet_genomics.md) | Annotation, coverage, and intervening link panels |
-| [`facet_genomictree()`](https://dongyaoliu.github.io/ggexon/reference/facet_genomictree.md) | Genomic panels ordered by tree tips, beside one spanning tree |
-| [`center_panel_annotation()`](https://dongyaoliu.github.io/ggexon/reference/center_panel_annotation.md) | Centers annotation bodies in their panel views |
-| [`set_panel_xlim()`](https://dongyaoliu.github.io/ggexon/reference/set_panel_xlim.md), [`clear_panel_xlim()`](https://dongyaoliu.github.io/ggexon/reference/clear_panel_xlim.md) | Store or clear per-individual genomic windows |
-| [`effective_panel_windows()`](https://dongyaoliu.github.io/ggexon/reference/effective_panel_windows.md) | Inspect the annotation windows resolved for a plot or stored layout |
-| [`locus_grid_layout()`](https://dongyaoliu.github.io/ggexon/reference/locus_grid_layout.md), [`use_locus_grid()`](https://dongyaoliu.github.io/ggexon/reference/use_locus_grid.md) | Prepare and apply layouts for comparable locus windows |
-| [`annotate_cross_panel()`](https://dongyaoliu.github.io/ggexon/reference/annotate_cross_panel.md) | Connect explicitly supplied anchors across panels |
-| [`link_panels()`](https://dongyaoliu.github.io/ggexon/reference/link_panels.md) | Connect matching IDs represented by anchors in different panels |
+| Function                                                                                                                                                                           | What it arranges                                                    |
+|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------|
+| [`facet_genomics()`](https://dongyaoliu.github.io/ggexon/reference/facet_genomics.md)                                                                                              | Annotation, coverage, and intervening link panels                   |
+| [`facet_genomictree()`](https://dongyaoliu.github.io/ggexon/reference/facet_genomictree.md)                                                                                        | Genomic panels ordered by tree tips, beside one spanning tree       |
+| [`center_panel_annotation()`](https://dongyaoliu.github.io/ggexon/reference/center_panel_annotation.md)                                                                            | Centers annotation bodies in their panel views                      |
+| [`set_panel_xlim()`](https://dongyaoliu.github.io/ggexon/reference/set_panel_xlim.md), [`clear_panel_xlim()`](https://dongyaoliu.github.io/ggexon/reference/clear_panel_xlim.md)   | Store or clear per-individual genomic windows                       |
+| [`effective_panel_windows()`](https://dongyaoliu.github.io/ggexon/reference/effective_panel_windows.md)                                                                            | Inspect the annotation windows resolved for a plot or stored layout |
+| [`locus_grid_layout()`](https://dongyaoliu.github.io/ggexon/reference/locus_grid_layout.md), [`use_locus_grid()`](https://dongyaoliu.github.io/ggexon/reference/use_locus_grid.md) | Prepare and apply layouts for comparable locus windows              |
+| [`annotate_cross_panel()`](https://dongyaoliu.github.io/ggexon/reference/annotate_cross_panel.md)                                                                                  | Connect explicitly supplied anchors across panels                   |
+| [`link_panels()`](https://dongyaoliu.github.io/ggexon/reference/link_panels.md)                                                                                                    | Connect matching IDs represented by anchors in different panels     |
 
 #### Themes
 
-| Function | When to use it |
-|----|----|
-| [`theme_ggexon_base()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_base.md) | A background-free foundation retaining ordinary axes and grids |
-| [`theme_ggexon_clean()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_clean.md) | The named shortcut for that clean background-free styling |
-| [`theme_ggexon_track()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_track.md) | Compact genomic tracks, with control over axes, grids, and legends |
-| [`theme_ggexon_pairwise()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_pairwise.md) | Stacked annotation/link/annotation comparisons |
-| [`theme_ggexon_genomictree()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_track.md) | Genomic tracks aligned beside a tree |
+| Function                                                                                                  | When to use it                                                             |
+|-----------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------|
+| [`theme_ggexon_base()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_base.md)               | A background-free foundation retaining ordinary axes and grids             |
+| [`theme_ggexon_clean()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_clean.md)             | The named shortcut for that clean background-free styling                  |
+| [`theme_ggexon_track()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_track.md)             | Compact genomic tracks, with control over axes, grids, and legends         |
+| [`theme_ggexon_pairwise()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_pairwise.md)       | Stacked annotation/link/annotation comparisons                             |
+| [`theme_ggexon_genomictree()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_track.md)       | Genomic tracks aligned beside a tree                                       |
 | [`theme_ggexon_side_strips()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_side_strips.md) | Horizontal facet labels on the left or right, added after a complete theme |
 
 #### Plot preparation and output
 
-| Function | What it prepares |
-|----|----|
-| [`alignseq_data()`](https://dongyaoliu.github.io/ggexon/reference/alignseq_data.md) | Anchored columns and difference events from two already aligned DNA strings |
-| [`protein_lollipop_data()`](https://dongyaoliu.github.io/ggexon/reference/protein_lollipop_data.md) | Protein backbone, domain, and mutation layout tables |
-| [`protein_mutation_data()`](https://dongyaoliu.github.io/ggexon/reference/protein_mutation_data.md) | Access the normalized table in a protein-mutation annotation |
-| [`syn_gr_to_exon_df()`](https://dongyaoliu.github.io/ggexon/reference/syn_gr_to_exon_df.md) | Convert genomic feature ranges to an exon plotting table |
-| [`project_domains_to_genome()`](https://dongyaoliu.github.io/ggexon/reference/project_domains_to_genome.md), [`project_mutations_to_genome()`](https://dongyaoliu.github.io/ggexon/reference/project_mutations_to_genome.md) | Map protein positions through transcript CDS blocks to genomic intervals |
-| [`ggexon_output_size()`](https://dongyaoliu.github.io/ggexon/reference/ggexon_output_size.md) | Record the intended figure dimensions for downstream layout |
+| Function                                                                                                                                                                                                                     | What it prepares                                                            |
+|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------|
+| [`alignseq_data()`](https://dongyaoliu.github.io/ggexon/reference/alignseq_data.md)                                                                                                                                          | Anchored columns and difference events from two already aligned DNA strings |
+| [`protein_lollipop_data()`](https://dongyaoliu.github.io/ggexon/reference/protein_lollipop_data.md)                                                                                                                          | Protein backbone, domain, and mutation layout tables                        |
+| [`protein_mutation_data()`](https://dongyaoliu.github.io/ggexon/reference/protein_mutation_data.md)                                                                                                                          | Access the normalized table in a protein-mutation annotation                |
+| [`syn_gr_to_exon_df()`](https://dongyaoliu.github.io/ggexon/reference/syn_gr_to_exon_df.md)                                                                                                                                  | Convert genomic feature ranges to an exon plotting table                    |
+| [`project_domains_to_genome()`](https://dongyaoliu.github.io/ggexon/reference/project_domains_to_genome.md), [`project_mutations_to_genome()`](https://dongyaoliu.github.io/ggexon/reference/project_mutations_to_genome.md) | Map protein positions through transcript CDS blocks to genomic intervals    |
+| [`ggexon_output_size()`](https://dongyaoliu.github.io/ggexon/reference/ggexon_output_size.md)                                                                                                                                | Record the intended figure dimensions for downstream layout                 |
 
 Functions such as
 [`aes()`](https://ggplot2.tidyverse.org/reference/aes.html),
@@ -126,15 +125,15 @@ Curation verbs describe the change made to stored biological
 information. Updating selected fields differs from replacing a complete
 gene model; resetting patches restores the base annotation.
 
-| Operation | Function | Effect |
-|----|----|----|
-| Add relationships | [`add_homology()`](https://dongyaoliu.github.io/ggexon/reference/homology-crud.md) | Insert query-to-reference gene relationships |
-| Update fields | [`update_homology()`](https://dongyaoliu.github.io/ggexon/reference/homology-crud.md) | Change supplied columns for matched query genes while preserving other fields |
-| Remove relationships | [`remove_homology()`](https://dongyaoliu.github.io/ggexon/reference/homology-crud.md) | Remove selected homology rows, with an optional reference-gene guard |
-| Set display labels | [`set_gene_labels()`](https://dongyaoliu.github.io/ggexon/reference/set_gene_labels.md) | Assign labels while retaining stable biological IDs |
-| Map identifiers | [`map_domain_ids()`](https://dongyaoliu.github.io/ggexon/reference/map_domain_ids.md) | Map domain annotation identifier values to the key used by transcript models |
-| Patch gene models | [`patch_annotation()`](https://dongyaoliu.github.io/ggexon/reference/patch_annotation.md) | Record an addition, replacement, or removal using `mode = "add"`, `"replace"`, or `"remove"` |
-| Reset patches | [`reset_patches()`](https://dongyaoliu.github.io/ggexon/reference/reset_patches.md) | Restore the base feature annotation and retain assigned display labels |
+| Operation            | Function                                                                                  | Effect                                                                                       |
+|----------------------|-------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------|
+| Add relationships    | [`add_homology()`](https://dongyaoliu.github.io/ggexon/reference/homology-crud.md)        | Insert query-to-reference gene relationships                                                 |
+| Update fields        | [`update_homology()`](https://dongyaoliu.github.io/ggexon/reference/homology-crud.md)     | Change supplied columns for matched query genes while preserving other fields                |
+| Remove relationships | [`remove_homology()`](https://dongyaoliu.github.io/ggexon/reference/homology-crud.md)     | Remove selected homology rows, with an optional reference-gene guard                         |
+| Set display labels   | [`set_gene_labels()`](https://dongyaoliu.github.io/ggexon/reference/set_gene_labels.md)   | Assign labels while retaining stable biological IDs                                          |
+| Map identifiers      | [`map_domain_ids()`](https://dongyaoliu.github.io/ggexon/reference/map_domain_ids.md)     | Map domain annotation identifier values to the key used by transcript models                 |
+| Patch gene models    | [`patch_annotation()`](https://dongyaoliu.github.io/ggexon/reference/patch_annotation.md) | Record an addition, replacement, or removal using `mode = "add"`, `"replace"`, or `"remove"` |
+| Reset patches        | [`reset_patches()`](https://dongyaoliu.github.io/ggexon/reference/reset_patches.md)       | Restore the base feature annotation and retain assigned display labels                       |
 
 [`replace_homology()`](https://dongyaoliu.github.io/ggexon/reference/homology-crud.md),
 [`delete_homology()`](https://dongyaoliu.github.io/ggexon/reference/homology-crud.md),
@@ -161,7 +160,6 @@ Coordinates are one-based and inclusive, as in GTF. These are teaching
 models, not observed gene annotations.
 
 ``` r
-
 features <- data.frame(
   type = c("gene", "transcript", rep("exon", 3), rep("CDS", 3),
            "transcript", rep("exon", 2), rep("CDS", 2),
@@ -202,7 +200,6 @@ Write the records as a standard nine-column GTF. Substitute your own GTF
 or GFF3 path when working with real annotations.
 
 ``` r
-
 attributes <- paste0('gene_id "', features$gene_id, '";')
 has_transcript <- !is.na(features$transcript_id)
 attributes[has_transcript] <- paste0(
@@ -229,7 +226,6 @@ sequence extraction and translation require one.
 materializes the features so that we can inspect them before drawing.
 
 ``` r
-
 model <- SynIndividual(
   annotation_file = gtf_file, annotation_format = "gtf", id = "teaching"
 )
@@ -265,7 +261,6 @@ y axis used to position models; `show_legend = TRUE` retains the
 transcript legend.
 
 ``` r
-
 transcript_colours <- c(A_full = "#0072B2", A_skip = "#D55E00", B_only = "#009E73")
 p_exons <- ggexon(model) +
   geom_exon(
@@ -298,7 +293,6 @@ compare exon structure across isoforms.
 Reuse the synthetic GTF and inspect gene A’s exon rows.
 
 ``` r
-
 knitr::kable(features[features$gene_id == "geneA" & features$type == "exon", ])
 ```
 
@@ -315,7 +309,6 @@ knitr::kable(features[features$gene_id == "geneA" & features$type == "exon", ])
 Create a copy restricted to the first locus, leaving `model` reusable.
 
 ``` r
-
 gene_a <- subset_individual(model, chr = "chr1", start = 80, end = 980)
 query_features(gene_a, feature_type = "exon", all = TRUE)
 #> GRanges object with 5 ranges and 7 metadata columns:
@@ -347,7 +340,6 @@ eligible gaps at one eighth of their genomic length while preserving
 exon widths.
 
 ``` r
-
 p_compressed <- ggexon(gene_a) +
   geom_exon2(
     aes(fill = transcript_id), chr = "chr1", compress_introns = FALSE,
@@ -369,7 +361,6 @@ piecewise guide can show separate representative exon and intron scale
 bars.
 
 ``` r
-
 ggexon(gene_a) +
   geom_exon2(
     aes(fill = transcript_id), chr = "chr1", compress_introns = FALSE,
@@ -399,7 +390,6 @@ readable without replacing the stable gene IDs used in computation.
 ### Present the input
 
 ``` r
-
 knitr::kable(features[features$type == "gene",
                       c("gene_id", "start", "end", "strand")])
 ```
@@ -410,7 +400,6 @@ knitr::kable(features[features$type == "gene",
 | 14  | geneB   |  1201 | 1560 | \-     |
 
 ``` r
-
 labels <- c(geneA = "Gene A (two isoforms)", geneB = "Gene B")
 ```
 
@@ -421,7 +410,6 @@ returns an updated object carrying plot labels alongside the original
 IDs.
 
 ``` r
-
 labelled_model <- set_gene_labels(model, labels)
 ```
 
@@ -434,7 +422,6 @@ genes sharing a label. Retain a base-pair axis because gene spans and
 spacing matter here.
 
 ``` r
-
 ggexon(labelled_model) +
   geom_genetag(aes(fill = gene_id), chr = "chr1", show_label = FALSE) +
   geom_genelabel(chr = "chr1", label_direction = "top", size = 3,
@@ -467,7 +454,6 @@ Use the bundled XZ1516 and N2 annotations and a small PAF alignment.
 This example needs neither a download nor user-supplied files.
 
 ``` r
-
 compact_dir <- system.file("extdata", "compact_synspecies", package = "ggexon")
 xz_gff <- file.path(compact_dir, "caenorhabditis_XZ1516.gff3")
 n2_gtf <- file.path(compact_dir, "c_elegans.PRJNA13758.WS285.canonical_geneset.gtf")
@@ -499,7 +485,6 @@ knitr::kable(head(raw_paf[, c("query", "qstart", "qend", "strand", "alen")], 4))
 | V_RagTag | 21574445 | 21579192 | \-     | 5159 |
 
 ``` r
-
 knitr::kable(head(raw_paf[, c("target", "tstart", "tend", "matches", "mapq")], 4))
 ```
 
@@ -517,7 +502,6 @@ intervals. Let it perform this conversion once.
 ### Construct and inspect the objects
 
 ``` r
-
 xz <- SynIndividual(annotation_file = xz_gff, id = "XZ1516")
 n2 <- SynIndividual(annotation_file = n2_gtf, annotation_format = "gtf", id = "N2")
 comparison <- SynSpecies(name = "Caenorhabditis pair")
@@ -566,7 +550,6 @@ panel’s axes because the ribbons connect the two annotation rulers
 rather than defining a third genomic coordinate system.
 
 ``` r
-
 p_pairwise <- ggexon(comparison) +
   geom_exon(species = c("N2", "XZ1516"), fill = "#0072B2") +
   geom_nuclink(
@@ -618,7 +601,6 @@ Two synthetic loci contain matched genes at different positions. The
 `family` assignments are supplied teaching data.
 
 ``` r
-
 panel_order <- c("reference", "link_reference_query", "query")
 genes <- data.frame(
   track = factor(rep(c("reference", "query"), each = 2), levels = panel_order),
@@ -640,7 +622,6 @@ knitr::kable(genes)
 | query     | 1600 | 1750 |   1 | \-     | B    |
 
 ``` r
-
 knitr::kable(relationships)
 ```
 
@@ -656,7 +637,6 @@ route ribbons to their annotation panels. This prepared table workflow
 does not require a `SynPairAlignment`.
 
 ``` r
-
 synteny <- transform(
   relationships,
   track = factor("link_reference_query", levels = panel_order),
@@ -672,7 +652,6 @@ meaning. Independent base-pair axes retain the two loci’s native
 coordinates.
 
 ``` r
-
 ggexon() +
   geom_genetag(data = genes, aes(fill = gene), show_label = FALSE) +
   geom_synteny_link(
@@ -710,7 +689,6 @@ region query instead of a text reader. The BigWig backend runs on macOS
 and Linux, and is unsupported on Windows.
 
 ``` r
-
 coverage_dir <- system.file("extdata", "peel1_coverage", package = "ggexon")
 coverage_gtf <- file.path(coverage_dir, "WS285.ugt31-zeel1-peel1-nekl1.gtf")
 coverage_strains <- c("XZ1516", "ECA2091")
@@ -747,7 +725,6 @@ scores.
 ### Construct and inspect the objects
 
 ``` r
-
 coverage_species <- SynSpecies(name = "PEEL-1 coverage")
 for (strain in coverage_strains) {
   one_strain <- SynIndividual(
@@ -773,7 +750,6 @@ signals.
 ### Choose the geom, scales, facet, and theme
 
 ``` r
-
 coverage_layers <- ggexon(coverage_species) +
   geom_coverage(annotation = "coverage", fill = "#4C78A8") +
   geom_exon(
@@ -816,7 +792,6 @@ compression through
 is unsupported for continuous coverage tracks.
 
 ``` r
-
 coverage_layers + scale_panel_coverage("free_y", auto = TRUE)
 ```
 
@@ -845,7 +820,6 @@ teaching data, not biological claims. Counts describe samples carrying
 each mutation.
 
 ``` r
-
 raw_mutations <- data.frame(
   gene = "demo-protein",
   event_type = "substitution",
@@ -877,7 +851,6 @@ not parse it again.
 ### Construct and inspect the object
 
 ``` r
-
 mutation_file <- tempfile(fileext = ".tsv")
 write.table(raw_mutations, mutation_file, sep = "\t", quote = FALSE, row.names = FALSE)
 normalized_mutations <- read_protein_mutation_counts(mutation_file)
@@ -909,7 +882,6 @@ helper keeps head heights equal to sample counts for these data.
 ### Choose the geom, scales, and theme
 
 ``` r
-
 count_range <- range(protein_mutations$sample_count)
 prepared_protein <- protein_lollipop_data(
   mutations = protein_mutations, domains = protein_domains, protein_length = 160,
@@ -926,7 +898,6 @@ prepared_protein$mutations[, c("position", "lollipop_x", "lollipop_y", "lollipop
 ```
 
 ``` r
-
 protein_plot <- ggplot() +
   geom_protein_lollipop(
     mutations = protein_mutations, domains = protein_domains, protein_length = 160,
@@ -978,7 +949,6 @@ block starts with `ATG`, the last ends with `TAA`, and all CDS phases
 are zero.
 
 ``` r
-
 coding_blocks <- data.frame(
   start = c(101L, 501L, 901L), end = c(160L, 590L, 960L),
   dna = c(paste0("ATG", strrep("GCC", 19)), strrep("GCC", 30),
@@ -995,7 +965,6 @@ knitr::kable(coding_blocks[, c("start", "end", "width")])
 |   901 | 960 |    60 |
 
 ``` r
-
 domain_input <- data.frame(
   transcript_id = "A_full", domain = "Teaching domain",
   start = 15L, end = 30L, analysis = "Pfam"
@@ -1012,7 +981,6 @@ knitr::kable(domain_input)
 | A_full        | Teaching domain |    15 |  30 | Pfam     |
 
 ``` r
-
 knitr::kable(mutation_input)
 ```
 
@@ -1033,7 +1001,6 @@ below contains 70 characters for `A_full` and 40 for `A_skip`, including
 a terminal `*`.
 
 ``` r
-
 sequence_bases <- rep("N", 1700)
 for (i in seq_len(nrow(coding_blocks))) {
   positions <- seq.int(coding_blocks$start[i], coding_blocks$end[i])
@@ -1065,7 +1032,6 @@ the domain model; `model = "Pfam"` selects its records during
 projection.
 
 ``` r
-
 teaching_domain_file <- tempfile(fileext = ".tsv")
 write.table(domain_input, teaching_domain_file, sep = "\t", quote = FALSE,
             row.names = FALSE)
@@ -1093,7 +1059,6 @@ knitr::kable(domain_projection[, c("transcripts", "xmin", "xmax", "motif")])
 | A_full      |  501 |  530 | Teaching domain |
 
 ``` r
-
 knitr::kable(mutation_projection[, c("transcripts", "xmin", "xmax", "mutation")])
 ```
 
@@ -1115,7 +1080,6 @@ two-isoform layout; inspect row placement when changing transcripts or
 domain models.
 
 ``` r
-
 projection_plot <- ggexon(sequence_model) +
   geom_exon(chr = "chr1", subset = c(80, 980), fill = "grey85",
             colour = "grey50", transcript_arrow_length = 25) +
@@ -1159,7 +1123,6 @@ coordinate identifies the first non-gap base in the supplied
 orientation.
 
 ``` r
-
 dna <- c(reference = "AC-GTAC", query = "ATCG-AC")
 anchors <- data.frame(
   sequence = names(dna), start = c(100, 900), strand = "+",
@@ -1174,7 +1137,6 @@ knitr::kable(data.frame(sequence = names(dna), aligned_DNA = unname(dna)))
 | query     | ATCG-AC     |
 
 ``` r
-
 knitr::kable(anchors)
 ```
 
@@ -1190,7 +1152,6 @@ classifies differences relative to the named reference; it does not
 compute an alignment or infer evolutionary direction.
 
 ``` r
-
 dna_columns <- alignseq_data(
   aligned = dna, anchors = anchors, reference = "reference",
   details = c(101, 103), flank = 1
@@ -1223,7 +1184,6 @@ genomic bases. The geom supplies fixed event colours and nucleotide
 backgrounds, leaving the plot’s fill scale available for other layers.
 
 ``` r
-
 ggexon() +
   geom_alignseq(data = dna_columns, mode = "rows", size = 3.5) +
   facet_wrap(vars(track), ncol = 1, scales = "free_x") +
@@ -1254,7 +1214,6 @@ has no row for slot 2; this input omission alone does not establish gene
 loss.
 
 ``` r
-
 slot_input <- data.frame(
   cluster = c("A", "A", "A", "B", "B"),
   position = c(100, 300, 1000, 500, 900),
@@ -1279,7 +1238,6 @@ explicit template rather than requiring us to overwrite source
 coordinates.
 
 ``` r
-
 slot_data <- transform(slot_input, x = position, y = 1, track = cluster,
                        gene_key = slot, genomic_x = position)
 slot_order <- c("s1", "s2", "s3")
@@ -1297,7 +1255,6 @@ names each facet’s slots, and
 keeps boxes square. The clean theme retains ordinary axis labels.
 
 ``` r
-
 ggexon(slot_data) +
   geom_genebox(data = slot_data, aes(fill = slot), box_size = 0.65) +
   facet_grid(. ~ cluster) +
@@ -1335,7 +1292,6 @@ Newick tree. Its branch lengths are illustrative. This optional example
 requires `ape` and `ggtree`.
 
 ``` r
-
 tree_text <- "(reference:0.1,query:0.2);"
 tree_text
 #> [1] "(reference:0.1,query:0.2);"
@@ -1356,7 +1312,6 @@ argument to
 [`geom_genomic_tree()`](https://dongyaoliu.github.io/ggexon/reference/geom_genomic_tree.md).
 
 ``` r
-
 tree_available <- requireNamespace("ape", quietly = TRUE) &&
   requireNamespace("ggtree", quietly = TRUE)
 if (tree_available) {
@@ -1376,7 +1331,6 @@ branch-length ruler; branch lengths remain specified in the Newick
 input.
 
 ``` r
-
 if (tree_available) {
   ggexon(tree_tracks) +
     geom_genetag(aes(fill = gene), show_label = FALSE) +
@@ -1413,7 +1367,6 @@ Supply the complete corrected gene model, including its unchanged
 children.
 
 ``` r
-
 corrected_ranges <- query_features(model, genes = "geneA", feature_type = NULL, all = TRUE)
 change <- as.character(S4Vectors::mcols(corrected_ranges)$type) %in% c("exon", "CDS") &
   BiocGenerics::start(corrected_ranges) == 501
@@ -1441,7 +1394,6 @@ knitr::kable(as.data.frame(corrected_ranges)[,
 ### Construct and apply the patch
 
 ``` r
-
 correction <- SynAnnotationPatch(
   name = "shorter-middle-exon", target_ids = "geneA", mode = "replace",
   patch_data = corrected_ranges
@@ -1462,7 +1414,6 @@ the same way. These operations return updated objects; `model` remains
 available for the comparison below.
 
 ``` r
-
 restored_model <- reset_patches(corrected_model)
 length(list_patches(restored_model))
 #> [1] 0
@@ -1486,7 +1437,6 @@ models so the direction arrows sit at the terminal exons in this compact
 comparison.
 
 ``` r
-
 before <- load_annotation(SynIndividual(
   annotation_file = gtf_file, annotation_format = "gtf", id = "before"
 ))
@@ -1526,7 +1476,6 @@ alleles are teaching labels and have not been checked against a
 reference FASTA.
 
 ``` r
-
 vcf_lines <- c(
   "##fileformat=VCFv4.2",
   "#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO",
@@ -1552,7 +1501,6 @@ BGZF VCFs can use a tabix index for regional access. BCF parsing is
 unavailable.
 
 ``` r
-
 variant_model <- add_annotation(
   model, SynVCFAnnotation(name = "variants", vcf_file = vcf_file)
 )
@@ -1570,7 +1518,6 @@ knitr::kable(variant_rows[, c("CHROM", "POS", "ID", "REF", "ALT")])
 | chr1  | 925 | v3  | G   | A   |
 
 ``` r
-
 variant_rows$allele <- paste0(variant_rows$REF, ">", variant_rows$ALT)
 ```
 
@@ -1584,7 +1531,6 @@ represent frequencies, coverage, or allele-specific transcript
 structures.
 
 ``` r
-
 vcf_plot <- ggexon(variant_model) +
   geom_exon(chr = "chr1", subset = c(80, 980), fill = "grey65",
             transcript_arrow_length = 25) +
@@ -1605,19 +1551,19 @@ models.](ggexon-workflow_files/figure-html/workflow-vcf-plot-1.png)
 
 ## Choose a view for your question
 
-| Question | Object or preparation | Geometry | Scale and theme |
-|----|----|----|----|
-| Which exons and isoforms are annotated? | `SynIndividual` + features | [`geom_exon()`](https://dongyaoliu.github.io/ggexon/reference/geom_exon.md) | Genomic bp; track theme |
-| How do exon structures compare across long introns? | Feature layer | [`geom_exon2()`](https://dongyaoliu.github.io/ggexon/reference/geom_exon2.md) | [`scale_x_ggexon_genomic()`](https://dongyaoliu.github.io/ggexon/reference/scale_x_ggexon_genomic.md); piecewise guide |
-| What is the order and direction of genes? | Feature layer + plot labels | [`geom_genetag()`](https://dongyaoliu.github.io/ggexon/reference/geom_genetag.md), [`geom_genelabel()`](https://dongyaoliu.github.io/ggexon/reference/geom_genelabel.md) | Genomic bp or strip scale; track theme |
-| Which intervals align between genomes? | `SynSpecies` + `SynPairAlignment` | [`geom_nuclink()`](https://dongyaoliu.github.io/ggexon/reference/geom_nuclink.md) | Independent genomic x; pairwise theme |
-| Which curated genes or blocks correspond? | Matched interval table | [`geom_synteny_link()`](https://dongyaoliu.github.io/ggexon/reference/geom_synteny_link.md) | Shared family palette; pairwise theme |
-| How does signal vary across a locus? | `SynBigWigAnnotation` | [`geom_coverage()`](https://dongyaoliu.github.io/ggexon/reference/geom_coverage.md) | Genomic x; explicit coverage y policy |
-| Where are protein domains and mutations? | Mutation and domain tables/layers | [`geom_protein_lollipop()`](https://dongyaoliu.github.io/ggexon/reference/geom_protein_lollipop.md), [`geom_motif()`](https://dongyaoliu.github.io/ggexon/reference/geom_motif.md), [`geom_aa_variant()`](https://dongyaoliu.github.io/ggexon/reference/geom_aa_variant.md) | Protein residues or projected genomic bp |
-| Where are genomic variants recorded? | `SynVCFAnnotation` + [`query_variants()`](https://dongyaoliu.github.io/ggexon/reference/query_variants.md) | Exons + ordinary [`geom_vline()`](https://ggplot2.tidyverse.org/reference/geom_abline.html) | Genomic bp; track theme |
-| Which bases differ in an existing alignment? | [`alignseq_data()`](https://dongyaoliu.github.io/ggexon/reference/alignseq_data.md) | [`geom_alignseq()`](https://dongyaoliu.github.io/ggexon/reference/geom_alignseq.md) | Anchored genomic coordinates; track theme |
-| Which comparison slots are occupied? | Gene-slot table | [`geom_genebox()`](https://dongyaoliu.github.io/ggexon/reference/geom_genebox.md) | [`strip_scale_x()`](https://dongyaoliu.github.io/ggexon/reference/strip_scale_x.md), facet labels; clean theme |
-| How do loci relate to a supplied tree? | Matching tracks and tree | [`geom_genomic_tree()`](https://dongyaoliu.github.io/ggexon/reference/geom_genomic_tree.md) | [`facet_genomictree()`](https://dongyaoliu.github.io/ggexon/reference/facet_genomictree.md); genomic-tree theme |
+| Question                                            | Object or preparation                                                                                      | Geometry                                                                                                                                                                                                                                                                    | Scale and theme                                                                                                        |
+|-----------------------------------------------------|------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------|
+| Which exons and isoforms are annotated?             | `SynIndividual` + features                                                                                 | [`geom_exon()`](https://dongyaoliu.github.io/ggexon/reference/geom_exon.md)                                                                                                                                                                                                 | Genomic bp; track theme                                                                                                |
+| How do exon structures compare across long introns? | Feature layer                                                                                              | [`geom_exon2()`](https://dongyaoliu.github.io/ggexon/reference/geom_exon2.md)                                                                                                                                                                                               | [`scale_x_ggexon_genomic()`](https://dongyaoliu.github.io/ggexon/reference/scale_x_ggexon_genomic.md); piecewise guide |
+| What is the order and direction of genes?           | Feature layer + plot labels                                                                                | [`geom_genetag()`](https://dongyaoliu.github.io/ggexon/reference/geom_genetag.md), [`geom_genelabel()`](https://dongyaoliu.github.io/ggexon/reference/geom_genelabel.md)                                                                                                    | Genomic bp or strip scale; track theme                                                                                 |
+| Which intervals align between genomes?              | `SynSpecies` + `SynPairAlignment`                                                                          | [`geom_nuclink()`](https://dongyaoliu.github.io/ggexon/reference/geom_nuclink.md)                                                                                                                                                                                           | Independent genomic x; pairwise theme                                                                                  |
+| Which curated genes or blocks correspond?           | Matched interval table                                                                                     | [`geom_synteny_link()`](https://dongyaoliu.github.io/ggexon/reference/geom_synteny_link.md)                                                                                                                                                                                 | Shared family palette; pairwise theme                                                                                  |
+| How does signal vary across a locus?                | `SynBigWigAnnotation`                                                                                      | [`geom_coverage()`](https://dongyaoliu.github.io/ggexon/reference/geom_coverage.md)                                                                                                                                                                                         | Genomic x; explicit coverage y policy                                                                                  |
+| Where are protein domains and mutations?            | Mutation and domain tables/layers                                                                          | [`geom_protein_lollipop()`](https://dongyaoliu.github.io/ggexon/reference/geom_protein_lollipop.md), [`geom_motif()`](https://dongyaoliu.github.io/ggexon/reference/geom_motif.md), [`geom_aa_variant()`](https://dongyaoliu.github.io/ggexon/reference/geom_aa_variant.md) | Protein residues or projected genomic bp                                                                               |
+| Where are genomic variants recorded?                | `SynVCFAnnotation` + [`query_variants()`](https://dongyaoliu.github.io/ggexon/reference/query_variants.md) | Exons + ordinary [`geom_vline()`](https://ggplot2.tidyverse.org/reference/geom_abline.html)                                                                                                                                                                                 | Genomic bp; track theme                                                                                                |
+| Which bases differ in an existing alignment?        | [`alignseq_data()`](https://dongyaoliu.github.io/ggexon/reference/alignseq_data.md)                        | [`geom_alignseq()`](https://dongyaoliu.github.io/ggexon/reference/geom_alignseq.md)                                                                                                                                                                                         | Anchored genomic coordinates; track theme                                                                              |
+| Which comparison slots are occupied?                | Gene-slot table                                                                                            | [`geom_genebox()`](https://dongyaoliu.github.io/ggexon/reference/geom_genebox.md)                                                                                                                                                                                           | [`strip_scale_x()`](https://dongyaoliu.github.io/ggexon/reference/strip_scale_x.md), facet labels; clean theme         |
+| How do loci relate to a supplied tree?              | Matching tracks and tree                                                                                   | [`geom_genomic_tree()`](https://dongyaoliu.github.io/ggexon/reference/geom_genomic_tree.md)                                                                                                                                                                                 | [`facet_genomictree()`](https://dongyaoliu.github.io/ggexon/reference/facet_genomictree.md); genomic-tree theme        |
 
 [`theme_ggexon_base()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_base.md)
 is the common background-free foundation;

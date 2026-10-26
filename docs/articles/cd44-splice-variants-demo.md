@@ -43,7 +43,6 @@ accessors. Its complete construction code is shown at the end of this
 tutorial; it is not a new exported package function.
 
 ``` r
-
 library(ggexon)
 library(ggplot2)
 
@@ -67,7 +66,6 @@ together. For example, the selected isoform table is retrieved from the
 object rather than read again from a separate file:
 
 ``` r
-
 species <- cd44@metadata$species
 isoforms <- cd44@metadata$tables$cd44_selected_isoforms
 
@@ -79,16 +77,16 @@ names(isoform_table) <- c("Species", "Transcript", "Ensembl transcript", "Exons"
 knitr::kable(isoform_table)
 ```
 
-| Species | Transcript | Ensembl transcript | Exons | Reason |
-|:---|:---|:---|---:|:---|
-| Human | CD44-208 | ENST00000428726 | 18 | RefSeq-backed Ensembl canonical transcript (NM_000610) |
-| Human | CD44-201 | ENST00000263398 | 9 | RefSeq-backed shorter CD44 splice isoform (NM_001001391) |
-| Human | CD44-210 | ENST00000434472 | 10 | RefSeq-backed intermediate CD44 splice isoform (NM_001202555) |
-| Human | CD44-242 | ENST00000904013 | 18 | RefSeq-backed expanded CD44 splice isoform (NM_001440324/NM_001440326) |
-| Mouse | Cd44-201 | ENSMUST00000005218 | 19 | RefSeq-backed Ensembl canonical transcript (NM_009851) |
-| Mouse | Cd44-203 | ENSMUST00000099673 | 9 | RefSeq-backed shorter Cd44 splice isoform (NM_001039151) |
-| Mouse | Cd44-204 | ENSMUST00000111190 | 11 | RefSeq-backed intermediate Cd44 splice isoform (NM_001177787) |
-| Mouse | Cd44-208 | ENSMUST00000111198 | 16 | RefSeq-backed expanded Cd44 splice isoform (NM_001177785) |
+| Species | Transcript | Ensembl transcript | Exons | Reason                                                                 |
+|:--------|:-----------|:-------------------|------:|:-----------------------------------------------------------------------|
+| Human   | CD44-208   | ENST00000428726    |    18 | RefSeq-backed Ensembl canonical transcript (NM_000610)                 |
+| Human   | CD44-201   | ENST00000263398    |     9 | RefSeq-backed shorter CD44 splice isoform (NM_001001391)               |
+| Human   | CD44-210   | ENST00000434472    |    10 | RefSeq-backed intermediate CD44 splice isoform (NM_001202555)          |
+| Human   | CD44-242   | ENST00000904013    |    18 | RefSeq-backed expanded CD44 splice isoform (NM_001440324/NM_001440326) |
+| Mouse   | Cd44-201   | ENSMUST00000005218 |    19 | RefSeq-backed Ensembl canonical transcript (NM_009851)                 |
+| Mouse   | Cd44-203   | ENSMUST00000099673 |     9 | RefSeq-backed shorter Cd44 splice isoform (NM_001039151)               |
+| Mouse   | Cd44-204   | ENSMUST00000111190 |    11 | RefSeq-backed intermediate Cd44 splice isoform (NM_001177787)          |
+| Mouse   | Cd44-208   | ENSMUST00000111198 |    16 | RefSeq-backed expanded Cd44 splice isoform (NM_001177785)              |
 
 ## Pairwise splice-variant plot
 
@@ -100,7 +98,6 @@ distinguishes common and variable exons. Link fill maps to the stored
 LASTZ identity bin. The transcript backbone is neutral grey.
 
 ``` r
-
 track_labels <- c(
   human = sprintf("Human CD44 (%s)", species$chr[species$species == "human"]),
   link_human_mouse = "",
@@ -229,7 +226,6 @@ filtering or block interpretation, regenerate and normalize the links
 first.
 
 ``` r
-
 links <- pairwise_alignment_data(cd44, alignment = "human_mouse")
 homology_candidates <- cd44@metadata$tables$cd44_exon_homology_ranked
 
@@ -267,7 +263,6 @@ target-bp-weighted identity. The middle region is the longest
 consecutive run of variable selected exons.
 
 ``` r
-
 unique_exons <- cd44@metadata$tables$cd44_selected_unique_exons
 
 human_exons <- unique_exons[unique_exons$species == "human", ]
@@ -316,11 +311,11 @@ region_summary <- do.call(rbind, lapply(seq_len(nrow(regions)), function(i) {
 knitr::kable(region_summary)
 ```
 
-| Region | Retained blocks | Human bp covered | Weighted identity (%) |
-|:---|---:|---:|---:|
-| 5’ side | 15 | 52737 | 55.0 |
-| variable exon-rich middle | 3 | 14714 | 55.4 |
-| 3’ side | 5 | 16851 | 56.4 |
+| Region                    | Retained blocks | Human bp covered | Weighted identity (%) |
+|:--------------------------|----------------:|-----------------:|----------------------:|
+| 5’ side                   |              15 |            52737 |                  55.0 |
+| variable exon-rich middle |               3 |            14714 |                  55.4 |
+| 3’ side                   |               5 |            16851 |                  56.4 |
 
 The same exon-pair candidates can be summarized at the protein level.
 Peptide fragments are reconstructed from selected transcript CDS codons
@@ -329,7 +324,6 @@ below uses a global peptide alignment; the denominator is aligned
 amino-acid columns, including gap columns.
 
 ``` r
-
 protein_identity <- cd44@metadata$tables$cd44_exon_protein_identity
 
 protein_identity_table <- protein_identity[
@@ -355,13 +349,13 @@ knitr::kable(protein_identity_table, row.names = FALSE)
 ```
 
 | Human exon | Mouse exon | Human role | Mouse role | Genomic identity (%) | Human peptide aa | Mouse peptide aa | Identical aa | Aligned aa | Gap aa | Protein identity (%) |
-|---:|---:|:---|:---|---:|---:|---:|---:|---:|---:|---:|
-| 1 | 19 | variable | common | 56.099 | 23 | 27 | 20 | 27 | 4 | 74.1 |
-| 3 | 18 | common | common | 54.681 | 55 | 55 | 47 | 55 | 0 | 85.5 |
-| 6 | 15 | common | common | 53.681 | 77 | 74 | 42 | 78 | 5 | 53.8 |
-| 16 | 5 | variable | variable | 59.102 | 68 | 69 | 32 | 69 | 1 | 46.4 |
-| 19 | 2 | common | common | 53.880 | 26 | 26 | 25 | 26 | 0 | 96.2 |
-| 20 | 1 | common | common | 59.770 | 67 | 67 | 60 | 67 | 0 | 89.6 |
+|-----------:|-----------:|:-----------|:-----------|---------------------:|-----------------:|-----------------:|-------------:|-----------:|-------:|---------------------:|
+|          1 |         19 | variable   | common     |               56.099 |               23 |               27 |           20 |         27 |      4 |                 74.1 |
+|          3 |         18 | common     | common     |               54.681 |               55 |               55 |           47 |         55 |      0 |                 85.5 |
+|          6 |         15 | common     | common     |               53.681 |               77 |               74 |           42 |         78 |      5 |                 53.8 |
+|         16 |          5 | variable   | variable   |               59.102 |               68 |               69 |           32 |         69 |      1 |                 46.4 |
+|         19 |          2 | common     | common     |               53.880 |               26 |               26 |           25 |         26 |      0 |                 96.2 |
+|         20 |          1 | common     | common     |               59.770 |               67 |               67 |           60 |         67 |      0 |                 89.6 |
 
 ## Reusing the pattern
 
@@ -369,7 +363,6 @@ Save the comparative object to keep its loaded annotations, normalized
 links, sequence windows, and supporting tables together:
 
 ``` r
-
 saveRDS(cd44, "cd44-comparison.rds")
 cd44 <- readRDS("cd44-comparison.rds")
 ```
@@ -399,7 +392,6 @@ the ordinary Syn-backed data resolution path. All bundled TSV tables are
 retained for audit and reuse.
 
 ``` r
-
 # Example-level loader, not an exported ggexon function.
 load_cd44_example <- function(demo_dir) {
   # Keep all supporting tables in the comparative object's metadata.

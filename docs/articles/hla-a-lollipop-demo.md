@@ -34,10 +34,8 @@ population frequencies.
 ## Load the offline inputs
 
 ``` r
-
 library(ggexon)
 library(ggplot2)
-#> Warning: package 'ggplot2' was built under R version 4.4.3
 
 demo_dir <- system.file("extdata", "hla_a_lollipop", package = "ggexon")
 source(file.path(demo_dir, "load-hla-a-example.R"), local = TRUE)
@@ -72,7 +70,6 @@ shared structural boundaries annotate this equal-length HLA-A track. All
 substitutions are computed against the selected A\*02:01 reference.
 
 ``` r
-
 knitr::kable(hla$domains, col.names = c("Protein region", "Start", "End"))
 ```
 
@@ -95,7 +92,6 @@ to the exact reference allele’s coding structure.
 ## Dense lollipop summary
 
 ``` r
-
 plots <- plot_hla_a_example(hla)
 plots$overview
 ```
@@ -137,7 +133,6 @@ to prepare the track and count heights. The key preparation arguments
 are:
 
 ``` r
-
 prepared <- protein_lollipop_data(
   hla$mutations,
   domains = hla$domains, domain = "domain",
@@ -158,7 +153,6 @@ bounded fanning is specific to this example; the package’s default
 spreading API is unchanged.
 
 ``` r
-
 head(hla$mutations[, c("mutation", "allele_count", "n_alternatives", "amino_acid_group")])
 #>   mutation allele_count n_alternatives amino_acid_group
 #> 1      G1A            1              4        Aliphatic
@@ -175,7 +169,6 @@ The reference has **L** at mature residue 156. In this expanded panel
 there are **five** alternative amino acids, each counted separately:
 
 ``` r
-
 focus_states <- hla$states[hla$states$position == hla$focus_position, ]
 knitr::kable(focus_states[, c("ref", "alt", "is_reference", "allele_count")],
              col.names = c("Reference", "Observed", "Reference match", "Named alleles"))
@@ -191,7 +184,6 @@ knitr::kable(focus_states[, c("ref", "alt", "is_reference", "allele_count")],
 | 861 | L         | W        | FALSE           |          1043 |
 
 ``` r
-
 stopifnot(sum(focus_states$allele_count) == nrow(hla$alleles))
 ```
 
@@ -201,7 +193,6 @@ sum to 5,998. Reference matches remain in the state table and are not
 substitution heads.
 
 ``` r
-
 plots$focus
 ```
 
@@ -233,7 +224,6 @@ substitutions are projected onto this one reference structure, not onto
 separate allele-specific intron models.
 
 ``` r
-
 source(file.path(demo_dir, "project-hla-a-example.R"), local = TRUE)
 gene <- load_hla_a_gene_model(hla, demo_dir)
 knitr::kable(gene$structure, col.names = c("Feature", "Number", "Start", "End", "Length (bp)"))
@@ -271,7 +261,6 @@ and bases 504–505 in exon 2. Its anchor is **504.5**, on the exonic
 two-base fragment.
 
 ``` r
-
 genomic_plot <- plot_hla_a_gene_example(hla, gene, intron_factor = 3)
 genomic_plot$plot
 ```
@@ -289,7 +278,6 @@ original length.
 The scale configuration is:
 
 ``` r
-
 ggexon(exons, aes(xmin = xmin, xmax = xmax, ymin = ymin,
                    transcripts = transcripts, strand = strand,
                    type = type, track = track, group = group)) +

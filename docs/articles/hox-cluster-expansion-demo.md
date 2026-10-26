@@ -23,7 +23,6 @@ anchor; this placement does not assign it specifically to HOXA. Its
 HOXB–HOXD cells are structural blanks.
 
 ``` r
-
 library(ggexon)
 library(ggplot2)
 
@@ -125,7 +124,6 @@ common slot geometry and supports `coord_fixed(ratio = 1)`. The 15
 labels in each narrow column are rotated 90 degrees for readability.
 
 ``` r
-
 structural_panels <- panels[panels$cell_status == "structural_blank", ]
 lost_panels <- panels[panels$cell_status == "cluster_not_retained", ]
 
@@ -257,15 +255,15 @@ calls.
 | Species     | Cluster   | Source-annotation gap slots   |
 |:------------|:----------|:------------------------------|
 | Spotted gar | HOXA      | Hox9, Hox7, Hox6, Hox4, Hox2  |
+| Amphioxus   | Ancestral | Hox13                         |
 | Spotted gar | HOXB      | Hox4, Hox2                    |
 | Chicken     | HOXC      | Hox6, Hox5, Hox4              |
 | Spotted gar | HOXC      | Hox10, Hox9, Hox8, Hox6, Hox1 |
 | Chicken     | HOXD      | Hox1                          |
-| Amphioxus   | Ancestral | Hox13                         |
 
 Literature-expected Hox members without a safe coding model in the
 pinned source annotation. Full evidence and candidate-model assessments
-remain in hox_annotation_gaps.tsv. {.table}
+remain in hox_annotation_gaps.tsv.
 
 Two spotted-gar Hox14 positions have different, explicit states rather
 than annotation gaps: HoxA14 is a lineage absence, while HoxD14 is a
@@ -322,7 +320,6 @@ layer because
 deliberately does not contain text.
 
 ``` r
-
 human_hoxa <- genes[genes$species == "human" & genes$cluster == "A", ]
 anchor_columns <- c(
   "ATG anchor" = "genomic_x_start",
@@ -384,19 +381,19 @@ Human HOXA anchor modes on the GRCh38 coordinate scale in megabases. The
 descending x axis preserves the posterior-to-anterior reading direction;
 no strip scale is applied.
 
-| Gene | Selected transcript | Strand | Transcript span (bp) | ATG anchor | Midpoint | Stop anchor |
-|:---|:---|:--:|---:|---:|---:|---:|
-| HOXA13 | ENST00000649031.1 | \- | 5,728 | 27,200,076 | 27,199,138 | 27,198,199 |
-| HOXA11 | ENST00001135396.1 | \- | 4,097 | 27,185,143 | 27,183,970 | 27,182,797 |
-| HOXA10 | ENST00000396344.5 | \- | 9,670 | 27,179,654 | 27,175,777 | 27,171,900 |
-| HOXA9 | ENST00001143300.1 | \- | 3,128 | 27,165,456 | 27,164,530 | 27,163,604 |
-| HOXA7 | ENST00001136817.1 | \- | 2,977 | 27,156,544 | 27,155,727 | 27,154,910 |
-| HOXA6 | ENST00001140137.1 | \- | 3,672 | 27,147,748 | 27,146,704 | 27,145,659 |
-| HOXA5 | ENST00001138441.1 | \- | 2,668 | 27,143,606 | 27,142,721 | 27,141,836 |
-| HOXA4 | ENST00000610970.2 | \- | 2,894 | 27,130,732 | 27,129,979 | 27,129,226 |
-| HOXA3 | ENST00000851228.2 | \- | 46,427 | 27,110,639 | 27,109,278 | 27,107,916 |
-| HOXA2 | ENST00001141882.1 | \- | 2,706 | 27,102,499 | 27,101,613 | 27,100,727 |
-| HOXA1 | ENST00000643460.2 | \- | 3,008 | 27,095,911 | 27,095,176 | 27,094,441 |
+| Gene   | Selected transcript | Strand | Transcript span (bp) | ATG anchor |   Midpoint | Stop anchor |
+|:-------|:--------------------|:------:|---------------------:|-----------:|-----------:|------------:|
+| HOXA13 | ENST00000649031.1   |   \-   |                5,728 | 27,200,076 | 27,199,138 |  27,198,199 |
+| HOXA11 | ENST00001135396.1   |   \-   |                4,097 | 27,185,143 | 27,183,970 |  27,182,797 |
+| HOXA10 | ENST00000396344.5   |   \-   |                9,670 | 27,179,654 | 27,175,777 |  27,171,900 |
+| HOXA9  | ENST00001143300.1   |   \-   |                3,128 | 27,165,456 | 27,164,530 |  27,163,604 |
+| HOXA7  | ENST00001136817.1   |   \-   |                2,977 | 27,156,544 | 27,155,727 |  27,154,910 |
+| HOXA6  | ENST00001140137.1   |   \-   |                3,672 | 27,147,748 | 27,146,704 |  27,145,659 |
+| HOXA5  | ENST00001138441.1   |   \-   |                2,668 | 27,143,606 | 27,142,721 |  27,141,836 |
+| HOXA4  | ENST00000610970.2   |   \-   |                2,894 | 27,130,732 | 27,129,979 |  27,129,226 |
+| HOXA3  | ENST00000851228.2   |   \-   |               46,427 | 27,110,639 | 27,109,278 |  27,107,916 |
+| HOXA2  | ENST00001141882.1   |   \-   |                2,706 | 27,102,499 | 27,101,613 |  27,100,727 |
+| HOXA1  | ENST00000643460.2   |   \-   |                3,008 | 27,095,911 | 27,095,176 |  27,094,441 |
 
 ## Pinned data and audit trail
 
@@ -405,14 +402,14 @@ uses BraLan2 from Ensembl Metazoa release 63. The builder stores the
 source URL, assembly accession, retrieval date, and SHA-256 checksum
 rather than silently following a moving current release.
 
-| Species | Assembly | Source | Retrieved on | Source annotation |
-|:---|:---|:---|:---|:---|
-| Human | GRCh38 | Ensembl 116 | 2026-07-20 | [Homo_sapiens.GRCh38.116.chr.gtf.gz](https://ftp.ensembl.org/pub/release-116/gtf/homo_sapiens/Homo_sapiens.GRCh38.116.chr.gtf.gz) |
-| Mouse | GRCm39 | Ensembl 116 | 2026-07-20 | [Mus_musculus.GRCm39.116.chr.gtf.gz](https://ftp.ensembl.org/pub/release-116/gtf/mus_musculus/Mus_musculus.GRCm39.116.chr.gtf.gz) |
-| Chicken | bGalGal1.mat.broiler.GRCg7b | Ensembl 116 | 2026-07-20 | [Gallus_gallus.bGalGal1.mat.broiler.GRCg7b.116.chr.gtf.gz](https://ftp.ensembl.org/pub/release-116/gtf/gallus_gallus/Gallus_gallus.bGalGal1.mat.broiler.GRCg7b.116.chr.gtf.gz) |
-| Spotted gar | LepOcu1 | Ensembl 116 | 2026-07-20 | [Lepisosteus_oculatus.LepOcu1.116.chr.gtf.gz](https://ftp.ensembl.org/pub/release-116/gtf/lepisosteus_oculatus/Lepisosteus_oculatus.LepOcu1.116.chr.gtf.gz) |
-| Zebrafish | GRCz11 | Ensembl 116 | 2026-07-20 | [Danio_rerio.GRCz11.116.chr.gtf.gz](https://ftp.ensembl.org/pub/release-116/gtf/danio_rerio/Danio_rerio.GRCz11.116.chr.gtf.gz) |
-| Amphioxus | BraLan2 | Ensembl Metazoa 63 | 2026-07-20 | [Branchiostoma_lanceolatum.BraLan2.63.gtf.gz](https://ftp.ensemblgenomes.ebi.ac.uk/pub/metazoa/release-63/gtf/branchiostoma_lanceolatum/Branchiostoma_lanceolatum.BraLan2.63.gtf.gz) |
+| Species     | Assembly                    | Source             | Retrieved on | Source annotation                                                                                                                                                                    |
+|:------------|:----------------------------|:-------------------|:-------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Human       | GRCh38                      | Ensembl 116        | 2026-07-20   | [Homo_sapiens.GRCh38.116.chr.gtf.gz](https://ftp.ensembl.org/pub/release-116/gtf/homo_sapiens/Homo_sapiens.GRCh38.116.chr.gtf.gz)                                                    |
+| Mouse       | GRCm39                      | Ensembl 116        | 2026-07-20   | [Mus_musculus.GRCm39.116.chr.gtf.gz](https://ftp.ensembl.org/pub/release-116/gtf/mus_musculus/Mus_musculus.GRCm39.116.chr.gtf.gz)                                                    |
+| Chicken     | bGalGal1.mat.broiler.GRCg7b | Ensembl 116        | 2026-07-20   | [Gallus_gallus.bGalGal1.mat.broiler.GRCg7b.116.chr.gtf.gz](https://ftp.ensembl.org/pub/release-116/gtf/gallus_gallus/Gallus_gallus.bGalGal1.mat.broiler.GRCg7b.116.chr.gtf.gz)       |
+| Spotted gar | LepOcu1                     | Ensembl 116        | 2026-07-20   | [Lepisosteus_oculatus.LepOcu1.116.chr.gtf.gz](https://ftp.ensembl.org/pub/release-116/gtf/lepisosteus_oculatus/Lepisosteus_oculatus.LepOcu1.116.chr.gtf.gz)                          |
+| Zebrafish   | GRCz11                      | Ensembl 116        | 2026-07-20   | [Danio_rerio.GRCz11.116.chr.gtf.gz](https://ftp.ensembl.org/pub/release-116/gtf/danio_rerio/Danio_rerio.GRCz11.116.chr.gtf.gz)                                                       |
+| Amphioxus   | BraLan2                     | Ensembl Metazoa 63 | 2026-07-20   | [Branchiostoma_lanceolatum.BraLan2.63.gtf.gz](https://ftp.ensemblgenomes.ebi.ac.uk/pub/metazoa/release-63/gtf/branchiostoma_lanceolatum/Branchiostoma_lanceolatum.BraLan2.63.gtf.gz) |
 
 The bundled directory contains:
 

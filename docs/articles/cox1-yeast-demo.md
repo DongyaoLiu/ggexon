@@ -17,7 +17,6 @@ blocks and seven introns. The data are bundled under
 `inst/extdata/cox1_yeast_pairwise`.
 
 ``` r
-
 library(ggexon)
 library(ggplot2)
 
@@ -33,10 +32,10 @@ names(gene_table) <- c("Species", "Scientific name", "Source", "Gene", "Gene ID"
 knitr::kable(gene_table)
 ```
 
-| Species | Scientific name | Source | Gene | Gene ID | CDS blocks | Introns |
-|:---|:---|:---|:---|:---|---:|---:|
-| Fission yeast | Schizosaccharomyces pombe | PomBase | cox1 | SPMIT.01 | 3 | 2 |
-| Budding yeast | Saccharomyces cerevisiae S288C | SGD | COX1 | Q0045 | 8 | 7 |
+| Species       | Scientific name                | Source  | Gene | Gene ID  | CDS blocks | Introns |
+|:--------------|:-------------------------------|:--------|:-----|:---------|-----------:|--------:|
+| Fission yeast | Schizosaccharomyces pombe      | PomBase | cox1 | SPMIT.01 |          3 |       2 |
+| Budding yeast | Saccharomyces cerevisiae S288C | SGD     | COX1 | Q0045    |          8 |       7 |
 
 ## Pairwise mitochondrial plot
 
@@ -45,7 +44,6 @@ as gaps on the transcript backbone. LASTZ links are computed from
 genomic mitochondrial DNA windows with 500 bp flanks around each gene.
 
 ``` r
-
 exons <- read.delim(file.path(demo_dir, "cox1_plot_exons.tsv"), check.names = FALSE)
 links <- read.delim(file.path(demo_dir, "cox1_nuclinks_lastz.tsv"), check.names = FALSE)
 
@@ -175,7 +173,6 @@ The nucleotide links are deliberately separate from the annotation rows:
   [`geom_nuclink()`](https://dongyaoliu.github.io/ggexon/reference/geom_nuclink.md).
 
 ``` r
-
 homology_candidates <- read.delim(
   file.path(demo_dir, "cox1_exon_homology_ranked.tsv"),
   check.names = FALSE
@@ -218,7 +215,6 @@ The ranked exon-pair table is derived by intersecting retained LASTZ
 blocks with the CDS intervals on both tracks.
 
 ``` r
-
 pair_table <- homology_candidates[, c(
   "fission_exon_rank", "budding_exon_rank", "max_min_overlap_bp",
   "max_link_identity", "reciprocal_best"
