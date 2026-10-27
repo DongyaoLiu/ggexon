@@ -1,0 +1,8 @@
+PANEL	ROW	COL	track	panel_type	species	alignment_name	tspecies	qspecies	SCALE_X	SCALE_Y	t_panel	q_panel	xlim_chr	xlim_min	xlim_max	.ggexon_coverage_window_explicit	individual	COORD
+1	1	1	SSYh1	annotation	SSYh1	NA	NA	NA	1	1	NA	NA	MHC	0	5804842	NA	SSYh1	1
+2	2	1	link_SSYh1__GGOh2	link	NA	SSYh1__GGOh2	SSYh1	GGOh2	2	2	1	3	NA	NA	NA	NA	NA	2
+3	3	1	GGOh2	annotation	GGOh2	NA	NA	NA	3	3	NA	NA	MHC	0	5804842	NA	GGOh2	3
+4	4	1	link_GGOh2__GGOh1	link	NA	GGOh2__GGOh1	GGOh2	GGOh1	4	2	3	5	NA	NA	NA	NA	NA	4
+5	5	1	GGOh1	annotation	GGOh1	NA	NA	NA	5	4	NA	NA	MHC	0	5804842	NA	GGOh1	5
+6	6	1	link_GGOh1__HSAh1	link	NA	GGOh1__HSAh1	GGOh1	HSAh1	6	2	5	7	NA	NA	NA	NA	NA	6
+7	7	1	HSAh1	annotation	HSAh1	NA	NA	NA	7	5	NA	NA	MHC	0	5804842	NA	HSAh1	7

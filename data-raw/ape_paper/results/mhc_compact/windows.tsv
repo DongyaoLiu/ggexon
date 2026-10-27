@@ -1,0 +1,5 @@
+track	species_id	haplotype	label	chr	start0	end0	length	orientation	twoBit_url
+SSYh1	SSY	h1	Siamang h1	chr23_hap1	37530567	42365376	4834809	-	https://genomeark.s3.amazonaws.com/species/Symphalangus_syndactylus/mSymSyn1/assembly_curated/mSymSyn1_v2.0.2bit
+GGOh2	GGO	h2	Gorilla h2	chr5_pat_hsa6	38874988	44233933	5358945	+	https://genomeark.s3.amazonaws.com/species/Gorilla_gorilla/mGorGor1/assembly_curated/mGorGor1_v2.0.2bit
+GGOh1	GGO	h1	Gorilla h1	chr5_mat_hsa6	46448788	51895738	5446950	+	https://genomeark.s3.amazonaws.com/species/Gorilla_gorilla/mGorGor1/assembly_curated/mGorGor1_v2.0.2bit
+HSAh1	HSA	h1	Human CHM13	chr6	28669878	33979214	5309336	+	https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/browser/CHM13/chm13v2.0.2bit

@@ -22,14 +22,94 @@ alignment design of Fig. 3c in
 [Yoo et al. (2025)](https://www.nature.com/articles/s41586-025-08816-3). It is a
 source-backed reconstruction, not a pixel reproduction of the published figure.
 
-The finished figure puts MHC class I, the intervening region and class II on one
-continuous native-coordinate track per haplotype. It contains 13 annotation
-tracks (human CHM13 plus both haplotypes of six ape species), 12 adjacent
-nucleotide-link panels, 285 curated MHC genes and a common base-pair scale.
+The complete source dataset contains 13 haplotype tracks and 285 curated MHC
+genes. The worked example below first loads that **whole data object**, then
+subsets it to **human CHM13, gorilla h1/h2 and siamang h1** before plotting.
+The compact figure has four annotation tracks, 97 curated MHC heads and three
+nucleotide-link panels, while preserving the full native windows, common bp
+scale and shared head rows. Human has only the CHM13 reference in these inputs.
+Gorilla's two curated head profiles differ; siamang's two profiles match in gene
+identity, copy count, order, strand and status, so only h1 is shown.
 
-```{r fig-final, echo = FALSE, out.width = "100%", fig.alt = "Tall thirteen-track MHC haplotype comparison. Each row is one haplotype with small native gene arrows, enlarged labelled MHC heads, grey context genes, variable-region bars and class I/II spans; grey ribbons between rows show adjacent nucleotide alignments. Human CHM13 is at the bottom, followed upward by both haplotypes of chimpanzee, bonobo, gorilla, Bornean orangutan, Sumatran orangutan and siamang."}
-knitr::include_graphics("figures/mhc-continuous.png")
+```{r fig-final, echo = FALSE, out.width = "100%", fig.alt = "Compact four-track MHC comparison: siamang h1, gorilla h2, gorilla h1 and human CHM13. All tracks retain native gene spans, shared enlarged MHC head rows, grey context genes and lower variable-region annotations. Three direct nucleotide-alignment panels connect adjacent tracks."}
+knitr::include_graphics("figures/mhc-three-species.png")
 ```
+
+## Compact example: subset the full object first
+
+Run these blocks from a repository checkout root after installing the package
+and its dependencies. The helpers are repository example functions, loaded with
+`source()`; they are not exported package APIs. The source tables are not
+installed with the package, so the website embeds the verified render above.
+
+### Load all haplotypes and annotations together
+
+`read_mhc_data()` returns a list containing the complete `SynSpecies` object
+(`species`) plus its native windows, MHC genes, context models, exons, variable
+regions and alignment tables. It also records `max_bp` from **all 13 windows**.
+No species selection happens while reading:
+
+```{r mhc-data-object, eval = FALSE}
+library(ggexon)
+source("data-raw/ape_paper/mhc_tutorial_data.R")
+
+mhc_all <- read_mhc_data()
+stopifnot(length(individual_names(mhc_all$species)) == 13L,
+          nrow(mhc_all$mhc) == 285L)
+```
+
+The full alignment collection includes the original 12 adjacent comparisons
+plus two direct bridges needed for the compact order: siamang h1 → gorilla h2
+and gorilla h1 → human CHM13. These were computed directly from the cached DNA
+with the same minimap2 and block-filter settings. Subsetting does not invent
+alignments across removed tracks.
+
+### Select a reusable smaller data object
+
+```{r mhc-subset-object, eval = FALSE}
+keep <- c("SSYh1", "GGOh2", "GGOh1", "HSAh1")  # top to bottom
+mhc_small <- subset_mhc_data(mhc_all, tracks = keep)
+
+stopifnot(
+  identical(individual_names(mhc_small$species), keep),
+  length(pairwise_alignments(mhc_small$species)) == 3L,
+  nrow(mhc_small$mhc) == 97L,
+  identical(mhc_small$max_bp, mhc_all$max_bp),
+  length(individual_names(mhc_all$species)) == 13L  # original unchanged
+)
+```
+
+The subset copies the selected individuals with their attached annotations,
+filters every annotation table consistently, retains only the direct alignments
+for adjacent selected tracks and rebuilds the chain layout. A requested pair
+without a stored direct alignment raises an error rather than drawing a false
+bridge. The original `mhc_all` remains available for another selection.
+The full object's `max_bp` is retained, so selecting fewer tracks does not
+rescale each haplotype or move any genomic anchor.
+
+### Render the selected object
+
+```{r mhc-render-subset, eval = FALSE}
+compact_plot <- render_mhc_data(
+  mhc_small,
+  output_dir = "data-raw/ape_paper/results/mhc_compact/figures"
+)
+grid::grid.newpage()
+grid::grid.draw(compact_plot$gtable)
+```
+
+`render_mhc_data()` passes the **subsetted `SynSpecies`** and its associated
+tables to the shared renderer. It returns the plot, measured gtable and PDF/PNG
+paths. It keeps the exact small MHC arrows, grey context, ortholog colors,
+pseudogene markings, six shared head rows and lower annotation lanes. The export
+is 180 × 267.5 mm, about 67% shorter than the full comparison, with 252 ribbons
+and 860 grey context arrows. The helper definitions are in
+`data-raw/ape_paper/mhc_tutorial_data.R`; the short runnable entry point is
+`data-raw/ape_paper/render_mhc_compact.R`.
+
+The remaining steps explain the shared rendering pipeline and the complete
+source data. Their full-dataset counts (13 tracks, 285 heads, 624 original
+ribbons) describe the original seven-species view, not the compact subset.
 
 ```{r fig-classii, echo = FALSE, out.width = "100%", fig.alt = "Two gorilla haplotypes compared at MHC class II, showing enlarged directional gene heads on shared rows, small native-span arrows, grey context genes and grey nucleotide ribbons."}
 knitr::include_graphics("figures/mhc-classii-comparison.png")
@@ -447,15 +527,28 @@ catalog, and gene counts have different ascertainment across released and
 projected tracks. The region boundaries and adjacent alignments are documented
 reconstructions, not exact reproductions of the source figure.
 
-The finished figure is exported at 180 mm width; its height is measured from
-the head layout rather than fixed in advance. The vector PDF is kept in
-`data-raw/ape_paper/results/mhc_continuous/figures/`, and the PNG preview is
-shown above.
+Both versions are exported at 180 mm width, with height measured from the
+head layout. The original full vector PDF remains under
+`data-raw/ape_paper/results/mhc_continuous/figures/`; the compact version is
+under `data-raw/ape_paper/results/mhc_compact/figures/` and is shown above.
 
-## Reproducing the figure
+## Reproducing the compact and full figures
 
-The bounded inputs and the rendered figure are tracked under
-`data-raw/ape_paper/results/mhc_continuous/`. From the repository root:
+The compact example is reproducible from the whole data object with:
+
+```sh
+Rscript data-raw/ape_paper/render_mhc_compact.R
+```
+
+That entry point executes the same read → subset → render sequence shown above.
+It reads the checked-in compact direct-alignment table, so rendering does not
+require rerunning minimap2 or fetching DNA. Regenerating those alignments uses
+`python3 data-raw/ape_paper/prepare_mhc_compact.py` and requires the previously
+acquired regional FASTA caches and minimap2.
+
+The original full view remains available as the
+[13-track preview](figures/mhc-continuous.png). Its bounded inputs and figure
+are under `data-raw/ape_paper/results/mhc_continuous/`. From the repository root:
 
 ```sh
 Rscript data-raw/ape_paper/render_mhc_continuous.R
@@ -466,4 +559,4 @@ the QC tables. Rebuilding the inputs from raw sources additionally requires the
 bounded fetch, Liftoff projection, minimap2 and recovery steps documented in
 `data-raw/ape_paper/results/mhc_continuous/README.md`. `data-raw/` is source
 material and is not installed with the package, so this vignette embeds the
-final PNG preview instead of re-running the renderer.
+verified previews instead of re-running the source-data renderer during site builds.

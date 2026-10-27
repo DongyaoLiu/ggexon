@@ -1,0 +1,8 @@
+species_id	h1_heads	h2_heads	paired_haplotypes_available	identical_ordered_head_profiles	selected_tracks
+SSY	18	18	True	True	SSYh1
+PAB	22	22	True	False	
+PPY	22	23	True	False	
+GGO	22	20	True	False	GGOh2,GGOh1
+PPA	19	20	True	False	
+PTR	22	20	True	False	
+HSA	37	0	False	False	HSAh1

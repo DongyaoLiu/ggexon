@@ -16,14 +16,39 @@ P<-list(text_size_pt=8,family='Times',width_mm=180,height_mm=560,dpi=150,export_
  continuous_map='viridis',auto_quantile=TRUE)
 # Original ED3 ortholog colors are an explicit user requirement and override Wong.
 # Any continuous color introduced later must use equal-count finite-data quantiles.
-pkgload::load_all('.',quiet=TRUE)
-B<-'data-raw/ape_paper/results/mhc_continuous';O<-file.path(B,'figures');dir.create(O,recursive=TRUE,showWarnings=FALSE)
+if(!exists('mhc_dataset',inherits=FALSE))pkgload::load_all('.',quiet=TRUE)
+B<-'data-raw/ape_paper/results/mhc_continuous'
+# Optional subset/export inputs share the approved full-figure rendering path.
+O<-Sys.getenv('GGEXON_MHC_OUTPUT',file.path(B,'figures'));dir.create(O,recursive=TRUE,showWarnings=FALSE)
+selected_tracks<-strsplit(Sys.getenv('GGEXON_MHC_TRACKS',''),',',fixed=TRUE)[[1]]
+subset_requested<-length(selected_tracks)>0L && nzchar(selected_tracks[1])
+if(subset_requested) stopifnot(normalizePath(O,mustWork=FALSE)!=normalizePath(file.path(B,'figures'),mustWork=FALSE))
 rd<-function(p)read.delim(p,check.names=FALSE,stringsAsFactors=FALSE)
 wr<-function(d,f)write.table(d,file.path(O,f),sep='\t',quote=FALSE,row.names=FALSE)
+# Tutorial mode consumes a complete, already subsetted data object. File mode
+# remains available for reproducing the full figure and older entry points.
+object_mode<-exists('mhc_dataset',inherits=FALSE)
+if(object_mode) {
+ w<-mhc_dataset$windows;m<-mhc_dataset$models;e<-mhc_dataset$exons
+ cg<-mhc_dataset$mhc;links<-mhc_dataset$links;vr<-mhc_dataset$regions
+ maxbp<-mhc_dataset$max_bp
+} else {
 w<-rd(file.path(B,'windows.tsv'));model_dir<-file.path(B,'gene_models_with_recovered_context')
 stopifnot(file.exists(file.path(model_dir,'recovery_manifest.json')))
 m<-rd(file.path(model_dir,'models.tsv'));e<-rd(file.path(model_dir,'exons.tsv'))
-cg<-rd('data-raw/ape_paper/results/mhc_full/genes.tsv');links<-rd(file.path(B,'links.tsv'));vr<-rd(file.path(B,'discordant_regions.tsv'))
+cg<-rd('data-raw/ape_paper/results/mhc_full/genes.tsv');links<-rd(Sys.getenv('GGEXON_MHC_LINKS',file.path(B,'links.tsv')));vr<-rd(file.path(B,'discordant_regions.tsv'))
+# Preserve the original bp-to-mm scale even when the longest track is omitted.
+maxbp<-max(w$length)
+}
+full_track_count<-if(object_mode)length(mhc_dataset$all_tracks) else nrow(w)
+if(subset_requested) {
+ stopifnot(!anyDuplicated(selected_tracks),all(selected_tracks %in% w$track))
+ w<-w[match(selected_tracks,w$track),]
+ m<-m[m$track %in% selected_tracks,];e<-e[e$track %in% selected_tracks,]
+ cg<-cg[cg$track %in% selected_tracks,];vr<-vr[vr$track %in% selected_tracks,]
+}
+compact<-nrow(w)<full_track_count
+expected_mhc_genes<-nrow(cg)
 color_source<-read.delim(P$source_ortholog_colors,header=FALSE,stringsAsFactors=FALSE)
 cc<-setNames(vapply(strsplit(color_source[[2]],','),function(x)rgb(as.numeric(x[1]),as.numeric(x[2]),as.numeric(x[3]),maxColorValue=255),character(1)),color_source[[1]])
 palette<-c(cc[names(cc)!='p'],Pseudogene=unname(cc['p']),'Other gene'=P$context_grey)
@@ -60,7 +85,12 @@ transform_native<-function(d,a,b,trackcol='track') {
 }
 m<-transform_native(m,'chromStart','chromEnd');ew<-w[match(e$track,w$track),];e<-e[e$end0>ew$start0 & e$start0<ew$end0,];e<-transform_native(e,'start0','end0')
 e$kind<-m$kind[match(e$model_id,m$model_id)];cg$start0<-cg$start-1;cg$end0<-cg$end;cg<-transform_native(cg,'start0','end0')
-maxbp<-max(w$length);lims<-setNames(rep(list(c(0,maxbp)),nrow(w)),w$track);chr<-setNames(as.list(rep('MHC',nrow(w))),w$track)
+lims<-setNames(rep(list(c(0,maxbp)),nrow(w)),w$track);chr<-setNames(as.list(rep('MHC',nrow(w))),w$track)
+pair_names<-if(nrow(w)>1L)paste(head(w$track,-1L),tail(w$track,-1L),sep='__') else character()
+if(object_mode) {
+ sp<-mhc_dataset$species
+ stopifnot(identical(individual_names(sp),w$track),identical(names(pairwise_alignments(sp)),pair_names))
+} else {
 sp<-SynSpecies(name='continuous_MHC')
 for(id in w$track) {
  z<-cg[cg$track==id,];f<-file.path(O,paste0(id,'.gff3'))
@@ -76,6 +106,7 @@ for(i in seq_len(nrow(w)-1)) {
  # converted closed-interval start so plotting uses native BED0 endpoint lengths.
  z$tstart<-z$tstart-1;z$qstart<-z$qstart-1
  sp<-add_pairwise_alignment(sp,SynPairAlignment(nm,target_individual=t,query_individual=q,file=file.path(B,'links.tsv'),data=z))
+}
 }
 sp<-store_chain_layout(sp,free=list(x=TRUE,y=TRUE))
 for(id in w$track)sp<-set_panel_xlim(sp,individual=id,xlim=c(0,maxbp),xlim_chr='MHC')
@@ -109,7 +140,7 @@ stopifnot(all(native_mhc_arrows$functionality[missing_ortholog_color]=='pseudoge
 native_mhc_arrows$ortholog_fill[missing_ortholog_color]<-unname(cc['p'])
 native_mhc_arrows$color_basis<-ifelse(missing_ortholog_color,
  'source pseudogene grey; no separate ortholog color defined','source ortholog color')
-stopifnot(nrow(native_mhc_arrows)==285,!anyNA(native_mhc_arrows$ortholog_fill))
+stopifnot(nrow(native_mhc_arrows)==expected_mhc_genes,!anyNA(native_mhc_arrows$ortholog_fill))
 
 # Explicit layout metadata: preserve source identities and status independently.
 # Six physical rows are shared across all tracks; blank slots are not loss calls.
@@ -172,11 +203,11 @@ p<-p+scale_x_continuous(limits=c(0,maxbp),breaks=seq(0,5e6,1e6),labels=function(
  scale_fill_manual(values=palette,breaks=names(palette),drop=TRUE)+scale_colour_manual(values=palette,guide='none')+
  facet_genomics(vars(track),scales='free',ncol=1,strip.position='left',xlim=lims,xlim_chr=chr,link_panel_height=.35,link_axis='none',link_strip='blank',labeller=labeller(track=function(x)ifelse(x %in% names(striplabels),striplabels[x],x)))+
  scale_panel_annotation('free_y',limits=setNames(rep(list(c(miny,P$lollipop_headroom)),nrow(w)),w$track))+
- labs(x='Genomic coordinate (bp; native assembly, common bp scale)',y=NULL,fill='MHC ortholog / annotation',caption='Small arrows retain true spans and ortholog colors; enlarged heads retain shared rows.\nEmpty head slots do not establish gene absence.\nVR1–VR3: published CHM13 regions; ape bars show chain-supported projections.\n* pseudogene. Projected context: same-species Liftoff; exon coverage and identity >=95%.\nFive alternatives recovered at >=95%; nine transfers remain unresolved.\nRecoveries use shorter source isoforms; RNA support is partial and not haplotype-resolved.\nRegion boundaries and adjacent alignments are reconstructed; see the source notes.')+
+ labs(x='Genomic coordinate (bp; native assembly, common bp scale)',y=NULL,fill='MHC ortholog / annotation',caption=if(compact) 'Human CHM13; gorilla h1/h2 differ in MHC heads; siamang h1 represents matching h1/h2 head profiles.\nSmall arrows: true genomic spans; enlarged heads: shared rows; * pseudogene. Grey: context genes.\nVR1-3: published CHM13 intervals or chain-supported projections; ribbons: direct nucleotide alignments.\nContext includes labelled same-species projections; profiles describe these sampled assemblies.' else 'Small arrows retain true spans and ortholog colors; enlarged heads retain shared rows.\nEmpty head slots do not establish gene absence.\nVR1–VR3: published CHM13 regions; ape bars show chain-supported projections.\n* pseudogene. Projected context: same-species Liftoff; exon coverage and identity >=95%.\nFive alternatives recovered at >=95%; nine transfers remain unresolved.\nRecoveries use shorter source isoforms; RNA support is partial and not haplotype-resolved.\nRegion boundaries and adjacent alignments are reconstructed; see the source notes.')+
  theme_ggexon_track(base_family=P$family,base_size=P$text_size_pt,show_x_grid=FALSE,show_legend=TRUE)+theme_ggexon_side_strips('left',base_size=P$text_size_pt)+theme(text=element_text(size=P$text_size_pt,family=P$family),axis.text=element_text(size=P$text_size_pt),strip.text=element_text(size=P$text_size_pt),legend.text=element_text(size=P$text_size_pt),legend.title=element_text(size=P$text_size_pt),plot.caption=element_text(size=P$text_size_pt,hjust=0),legend.position='bottom',legend.location='plot',legend.justification='left',legend.box.just='left',plot.caption.position='plot',legend.key.size=unit(2.5,'mm'),panel.grid=element_blank(),panel.border=element_blank(),strip.background=element_blank(),plot.title=element_blank(),plot.subtitle=element_blank(),plot.margin=margin(2,2,2,2))+guides(fill=guide_legend(nrow=4,byrow=TRUE))
 stopifnot(inherits(p@theme$panel.border,'element_blank'),inherits(p@theme$strip.background,'element_blank'),p@facet$params$strip.position=='left')
 wr(data.frame(theme='theme_ggexon_track + theme_ggexon_side_strips',strip_side='left',panel_border=FALSE,strip_background=FALSE,gene_geom='geom_gene',mhc_geom='geom_gene_lollipop',native_mhc_geom='geom_gene',native_mhc_colors='ortholog identity; status in enlarged heads',vr_shared_y=TRUE,headroom=P$lollipop_headroom,max_shift_mm=P$lollipop_max_shift_mm,head_gap_mm=P$lollipop_gap_mm,head_row_gap_mm=P$lollipop_row_gap_mm,head_linewidth_mm=P$data_linewidth,padding_mm=P$lollipop_padding_mm,tip_mm=P$lollipop_tip_mm,head_layout=P$lollipop_head_layout,head_rows='fixed by source gene key',anchor_tick_mm=P$anchor_tick_mm,fan_height_mm=P$fan_height_mm,stem_linewidth_mm=P$stem_linewidth,lane_spacing_mm=P$lane_spacing_mm,lane_clearance_mm=P$lane_clearance_mm,context_bottom_y=-P$gene_height,context_top_y=0),'style-qc.tsv')
-built<-ggexon_build(p);lay<-as.data.frame(built@layout$layout);stopifnot(sum(lay$panel_type=='annotation')==13,sum(lay$panel_type=='link')==12,!any(lay$panel_type=='coverage'))
+built<-ggexon_build(p);lay<-as.data.frame(built@layout$layout);stopifnot(sum(lay$panel_type=='annotation')==nrow(w),sum(lay$panel_type=='link')==nrow(w)-1L,!any(lay$panel_type=='coverage'))
 # Export assertions establish equal geometry, not merely equal printed ticks.
 scales_qc<-do.call(rbind,lapply(which(lay$panel_type=='annotation'),function(i){z<-lay[i,];lim<-built@layout$panel_scales_x[[z$SCALE_X]]$get_limits();data.frame(track=z$track,min=lim[1],max=lim[2],bp_per_axis_unit=diff(c(0,maxbp))/diff(lim))}))
 stopifnot(length(unique(round(scales_qc$bp_per_axis_unit,8)))==1)
@@ -191,7 +222,7 @@ wr(data.frame(track=vr$track,region=vr$region,ymin=shown$ymin,ymax=shown$ymax),'
 gene_shown<-built@data[[gene_index]];gi<-match(gene_shown$transcripts,gene_arrows$transcripts)
 stopifnot(nrow(gene_shown)==nrow(gene_arrows),!anyNA(gi),all(gene_shown$Xmin==gene_arrows$xmin[gi]),all(gene_shown$Xmax==gene_arrows$xmax[gi]),all(gene_shown$strand==gene_arrows$strand[gi]),all(gene_shown$ymax==0),all(gene_shown$ymin==-P$gene_height))
 native_shown<-built@data[[native_mhc_index]];ni<-match(native_mhc_arrows$transcripts,native_shown$transcripts)
-stopifnot(nrow(native_shown)==285,!anyNA(ni),
+stopifnot(nrow(native_shown)==expected_mhc_genes,!anyNA(ni),
  all(native_shown$Xmin[ni]==native_mhc_arrows$xmin),all(native_shown$Xmax[ni]==native_mhc_arrows$xmax),
  all(native_shown$strand[ni]==native_mhc_arrows$strand),all(native_shown$ymin[ni]==-P$gene_height),
  all(native_shown$ymax[ni]==0),all(ggexon:::to_lower_ascii(native_shown$fill[ni])==ggexon:::to_lower_ascii(native_mhc_arrows$ortholog_fill)))
@@ -265,4 +296,4 @@ ggsave(file.path(O,'mhc_continuous.png'),tab,width=P$width_mm,height=P$height_mm
 stopifnot(length(layout_records)>0L)
 wr(do.call(rbind,layout_records),'mhc-lollipop-layout.tsv')
 if(file.exists(file.path(O,'mhc-labels.tsv')))unlink(file.path(O,'mhc-labels.tsv'))
-message('PASS: 13 native tracks; 12 link panels; ',nrow(links),' ribbons; ',nrow(m),' representative gene models; ',nrow(cg),' curated MHC genes; ',nrow(vr),' exact source/projection segments; enlarged MHC heads=',nrow(cg),'; native MHC arrows=',nrow(native_mhc_arrows))
+message('PASS: ',nrow(w),' native tracks; ',nrow(w)-1L,' link panels; ',nrow(links),' ribbons; ',nrow(m),' representative gene models; ',nrow(cg),' curated MHC genes; ',nrow(vr),' exact source/projection segments; enlarged MHC heads=',nrow(cg),'; native MHC arrows=',nrow(native_mhc_arrows))

@@ -1,0 +1,861 @@
+track	species	individual	xmin	xmax	ymin	transcripts	strand	kind	native_start0	native_end0	source	annotation_evidence	projection_source_model_id	projection_coverage	projection_identity	recovery_method
+SSYh1	SSYh1	SSYh1	1311602	1331810	-0.5	SSYh1:1073:GCA_028878055.2T00000384098	+	Other gene	41033566	41053774	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2840799	2856941	-0.5	GGOh1:610:GCA_029281585.2T00001620547	-	Other gene	49289587	49305729	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	2879010	2895158	-0.5	GGOh2:liftoff:ctx0001	-	Other gene	41753998	41770146	source representative context model	same-species Liftoff projection	GGOh1:610:GCA_029281585.2T00001620547	1	0.998	
+HSAh1	HSAh1	HSAh1	2870110	2886115	-0.5	HSAh1:706:ABHD16A	-	Other gene	31539988	31555993	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	3321453	3324731	-0.5	GGOh1:960:GCA_029281585.2T00001626429	-	Other gene	49770241	49773519	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	3358579	3361857	-0.5	GGOh2:liftoff:ctx0002	-	Other gene	42233567	42236845	source representative context model	same-species Liftoff projection	GGOh1:960:GCA_029281585.2T00001626429	1	1	
+HSAh1	HSAh1	HSAh1	3364281	3367566	-0.5	HSAh1:862:AGER	-	Other gene	32034159	32037444	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	3308685	3317571	-0.5	GGOh1:947:GCA_029281585.2T00001626254	-	Other gene	49757473	49766359	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	3345811	3354697	-0.5	GGOh2:liftoff:ctx0003	-	Other gene	42220799	42229685	source representative context model	same-species Liftoff projection	GGOh1:947:GCA_029281585.2T00001626254	1	1	
+HSAh1	HSAh1	HSAh1	3351524	3360433	-0.5	HSAh1:843:AGPAT1	-	Other gene	32021402	32030311	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2254732	2256476	-0.5	SSYh1:748:GCA_028878055.2T00000379582	+	Other gene	40108900	40110644	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2579435	2602120	-0.5	SSYh1:499:GCA_028878055.2T00000375440	+	Other gene	39763256	39785941	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	4200657	4216534	-0.5	GGOh1:1060:GCA_029281585.2T00001628164	-	Other gene	50649445	50665322	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	4100381	4116258	-0.5	GGOh2:liftoff:ctx0004	-	Other gene	42975369	42991246	source representative context model	same-species Liftoff projection	GGOh1:1060:GCA_029281585.2T00001628164	1	1	
+GGOh1	GGOh1	GGOh1	3291997	3293980	-0.5	GGOh1:919:GCA_029281585.2T00001625794	-	Other gene	49740785	49742768	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	3329094	3331077	-0.5	GGOh2:liftoff:ctx0005	-	Other gene	42204082	42206065	source representative context model	same-species Liftoff projection	GGOh1:919:GCA_029281585.2T00001625794	1	1	
+GGOh1	GGOh1	GGOh1	2840802	2867974	-0.5	GGOh1:611:GCA_029281585.2T00001620791	-	Other gene	49289590	49316762	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	2879013	2906185	-0.5	GGOh2:liftoff:ctx0006	-	Other gene	41754001	41781173	source representative context model	same-species Liftoff projection	GGOh1:611:GCA_029281585.2T00001620791	1	0.998	
+SSYh1	SSYh1	SSYh1	2308581	2316023	-0.5	SSYh1:679:GCA_028878055.2T00000378473	+	Other gene	40049353	40056795	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	4085949	4111037	-0.5	GGOh1:1029:GCA_029281585.2T00001627784	-	Other gene	50534737	50559825	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	3985665	4010757	-0.5	GGOh2:liftoff:ctx0007	-	Other gene	42860653	42885745	source representative context model	same-species Liftoff projection	GGOh1:1029:GCA_029281585.2T00001627784	1	0.996	
+SSYh1	SSYh1	SSYh1	2293219	2298909	-0.5	SSYh1:701:GCA_028878055.2T00000378742	+	Other gene	40066467	40072157	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	1368103	1389488	-0.5	SSYh1:1057:GCA_028878055.2T00000383870	+	Other gene	40975888	40997273	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	3255296	3268273	-0.5	GGOh1:904:GCA_029281585.2T00001625575	-	Other gene	49704084	49717061	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	3292404	3305379	-0.5	GGOh2:liftoff:ctx0008	-	Other gene	42167392	42180367	source representative context model	same-species Liftoff projection	GGOh1:904:GCA_029281585.2T00001625575	1	0.999	
+HSAh1	HSAh1	HSAh1	3298577	3311560	-0.5	HSAh1:826:ATF6B	-	Other gene	31968455	31981438	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2698260	2700635	-0.5	GGOh1:479:GCA_029281585.2T00001618807	-	Other gene	49147048	49149423	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	2736444	2738819	-0.5	GGOh2:liftoff:ctx0009	-	Other gene	41611432	41613807	source representative context model	same-species Liftoff projection	GGOh1:479:GCA_029281585.2T00001618807	1	1	
+HSAh1	HSAh1	HSAh1	2727657	2729818	-0.5	HSAh1:566:ATP6V1G2	-	Other gene	31397535	31399696	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2684023	2700373	-0.5	GGOh1:459:GCA_029281585.2T00001618466	-	Other gene	49132811	49149161	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	2722203	2738557	-0.5	GGOh2:liftoff:ctx0010	-	Other gene	41597191	41613545	source representative context model	same-species Liftoff projection	GGOh1:459:GCA_029281585.2T00001618466	1	0.999	
+HSAh1	HSAh1	HSAh1	2713436	2730058	-0.5	HSAh1:558:ATP6V1G2-DDX39B	-	Other gene	31383314	31399936	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	3911762	3913464	-0.5	SSYh1:161:GCA_028878055.2T00000369717	+	Other gene	38451912	38453614	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2792266	2805959	-0.5	GGOh1:552:GCA_029281585.2T00001619733	-	Other gene	49241054	49254747	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	2830484	2844176	-0.5	GGOh2:liftoff:ctx0011	-	Other gene	41705472	41719164	source representative context model	same-species Liftoff projection	GGOh1:552:GCA_029281585.2T00001619733	1	0.998	
+HSAh1	HSAh1	HSAh1	2822191	2835322	-0.5	HSAh1:617:BAG6	-	Other gene	31492069	31505200	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	4861091	4868849	-0.5	GGOh1:1265:GCA_029281585.2T00001631153	-	Other gene	51309879	51317637	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	4760822	4768579	-0.5	GGOh2:liftoff:ctx0012	-	Other gene	43635810	43643567	source representative context model	same-species Liftoff projection	GGOh1:1265:GCA_029281585.2T00001631153	1	1	
+HSAh1	HSAh1	HSAh1	4723863	4731588	-0.5	HSAh1:1089:BAK1	-	Other gene	33393741	33401466	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	3587562	3600443	-0.5	SSYh1:226:GCA_028878055.2T00000370894	+	Other gene	38764933	38777814	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	3543383	3556579	-0.5	GGOh1:995:GCA_029281585.2T00001627325	-	Other gene	49992171	50005367	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	3587042	3600237	-0.5	GGOh2:liftoff:ctx0013	-	Other gene	42462030	42475225	source representative context model	same-species Liftoff projection	GGOh1:995:GCA_029281585.2T00001627325	1	1	
+HSAh1	HSAh1	HSAh1	3576383	3590225	-0.5	HSAh1:883:BTNL2	-	Other gene	32246261	32260103	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2585809	2595732	-0.5	SSYh1:512:GCA_028878055.2T00000375573	+	Other gene	39769644	39779567	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	3117800	3125050	-0.5	HSAh1:787:C2-AS1	-	Other gene	31787678	31794928	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2630811	2645158	-0.5	SSYh1:432:GCA_028878055.2T00000374403	+	Other gene	39720218	39734565	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	1391856	1397885	-0.5	SSYh1:1038:GCA_028878055.2T00000383604	+	Other gene	40967491	40973520	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2358692	2360045	-0.5	GGOh1:370:GCA_029281585.2T00001617444	-	Other gene	48807480	48808833	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	2350796	2352149	-0.5	GGOh2:liftoff:ctx0014	-	Other gene	41225784	41227137	source representative context model	same-species Liftoff projection	GGOh1:370:GCA_029281585.2T00001617444	1	0.999	
+HSAh1	HSAh1	HSAh1	2309072	2310425	-0.5	HSAh1:472:C6orf15	-	Other gene	30978950	30980303	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2811605	2814088	-0.5	GGOh1:577:GCA_029281585.2T00001620167	-	Other gene	49260393	49262876	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	2849820	2852303	-0.5	GGOh2:liftoff:ctx0015	-	Other gene	41724808	41727291	source representative context model	same-species Liftoff projection	GGOh1:577:GCA_029281585.2T00001620167	1	0.999	
+HSAh1	HSAh1	HSAh1	2841452	2843933	-0.5	HSAh1:687:C6orf47	-	Other gene	31511330	31513811	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2389955	2405317	-0.5	GGOh1:382:GCA_029281585.2T00001617534	-	Other gene	48838743	48854105	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	2382086	2397442	-0.5	GGOh2:liftoff:ctx0016	-	Other gene	41257074	41272430	source representative context model	same-species Liftoff projection	GGOh1:382:GCA_029281585.2T00001617534	1	0.998	
+HSAh1	HSAh1	HSAh1	2340246	2355608	-0.5	HSAh1:479:CCHCR1	-	Other gene	31010124	31025486	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2362551	2367958	-0.5	GGOh1:378:GCA_029281585.2T00001617515	-	Other gene	48811339	48816746	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	2354655	2360077	-0.5	GGOh2:liftoff:ctx0017	-	Other gene	41229643	41235065	source representative context model	same-species Liftoff projection	GGOh1:378:GCA_029281585.2T00001617515	1	0.995	
+HSAh1	HSAh1	HSAh1	2312936	2318292	-0.5	HSAh1:474:CDSN	-	Other gene	30982814	30988170	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2596154	2602156	-0.5	SSYh1:497:GCA_028878055.2T00000375308	+	Other gene	39763220	39769222	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2884555	2891274	-0.5	GGOh1:658:GCA_029281585.2T00001621259	-	Other gene	49333343	49340062	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	2922766	2929488	-0.5	GGOh2:liftoff:ctx0018	-	Other gene	41797754	41804476	source representative context model	same-species Liftoff projection	GGOh1:658:GCA_029281585.2T00001621259	1	0.999	
+HSAh1	HSAh1	HSAh1	2913735	2920477	-0.5	HSAh1:731:CLIC1	-	Other gene	31583613	31590355	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	4435386	4465071	-0.5	GGOh1:1112:GCA_029281585.2T00001628960	-	Other gene	50884174	50913859	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	4335195	4364880	-0.5	GGOh2:liftoff:ctx0019	-	Other gene	43210183	43239868	source representative context model	same-species Liftoff projection	GGOh1:1112:GCA_029281585.2T00001628960	1	1	
+HSAh1	HSAh1	HSAh1	4314168	4344483	-0.5	HSAh1:957:COL11A2	-	Other gene	32984046	33014361	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	4255165	4258617	-0.5	HSAh1:943:COL11A2P1	-	Other gene	32925043	32928495	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2308560	2312838	-0.5	SSYh1:682:GCA_028878055.2T00000378513	+	Other gene	40052538	40056816	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	4705671	4707213	-0.5	GGOh1:1228:GCA_029281585.2T00001630604	-	Other gene	51154459	51156001	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	4605421	4606963	-0.5	GGOh2:liftoff:ctx0020	-	Other gene	43480409	43481951	source representative context model	same-species Liftoff projection	GGOh1:1228:GCA_029281585.2T00001630604	1	0.999	
+HSAh1	HSAh1	HSAh1	4567925	4569591	-0.5	HSAh1:1053:CUTA	-	Other gene	33237803	33239469	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2648077	2651363	-0.5	SSYh1:418:GCA_028878055.2T00000374202	+	Other gene	39714013	39717299	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	4591505	4595964	-0.5	GGOh1:1190:GCA_029281585.2T00001630065	-	Other gene	51040293	51044752	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	4491258	4495717	-0.5	GGOh2:liftoff:ctx0021	-	Other gene	43366246	43370705	source representative context model	same-species Liftoff projection	GGOh1:1190:GCA_029281585.2T00001630065	1	1	
+HSAh1	HSAh1	HSAh1	4470041	4474443	-0.5	HSAh1:1027:DAXX	-	Other gene	33139919	33144321	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2881007	2884592	-0.5	GGOh1:651:GCA_029281585.2T00001621152	-	Other gene	49329795	49333380	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	2919218	2922803	-0.5	GGOh2:liftoff:ctx0022	-	Other gene	41794206	41797791	source representative context model	same-species Liftoff projection	GGOh1:651:GCA_029281585.2T00001621152	1	1	
+HSAh1	HSAh1	HSAh1	2910194	2913418	-0.5	HSAh1:729:DDAH2	-	Other gene	31580072	31583296	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	1625553	1644935	-0.5	SSYh1:934:GCA_028878055.2T00000382147	+	Other gene	40720441	40739823	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2686222	2695802	-0.5	GGOh1:466:GCA_029281585.2T00001618664	-	Other gene	49135010	49144590	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	2724402	2733981	-0.5	GGOh2:liftoff:ctx0023	-	Other gene	41599390	41608969	source representative context model	same-species Liftoff projection	GGOh1:466:GCA_029281585.2T00001618664	1	0.998	
+HSAh1	HSAh1	HSAh1	2713443	2725217	-0.5	HSAh1:560:DDX39B	-	Other gene	31383321	31395095	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	534326	536159	-0.5	HSAh1:86:DDX6P1	-	Other gene	29204204	29206037	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	2549466	2552968	-0.5	HSAh1:535:DHFRP2	-	Other gene	31219344	31222846	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	1893565	1917576	-0.5	GGOh1:238:GCA_029281585.2T00001615295	-	Other gene	48342353	48366364	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	1885250	1909259	-0.5	GGOh2:liftoff:ctx0024	-	Other gene	40760238	40784247	source representative context model	same-species Liftoff projection	GGOh1:238:GCA_029281585.2T00001615295	1	1	
+HSAh1	HSAh1	HSAh1	1847422	1867333	-0.5	HSAh1:332:DHX16	-	Other gene	30517300	30537211	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	3123810	3126254	-0.5	GGOh1:813:GCA_029281585.2T00001624079	-	Other gene	49572598	49575042	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	3162046	3164490	-0.5	GGOh2:liftoff:ctx0025	-	Other gene	42037034	42039478	source representative context model	same-species Liftoff projection	GGOh1:813:GCA_029281585.2T00001624079	1	0.999	
+HSAh1	HSAh1	HSAh1	3153141	3155465	-0.5	HSAh1:804:DXO	-	Other gene	31823019	31825343	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2777742	2780710	-0.5	SSYh1:368:GCA_028878055.2T00000373225	+	Other gene	39584666	39587634	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	3036112	3053576	-0.5	GGOh1:739:GCA_029281585.2T00001622664	-	Other gene	49484900	49502364	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	3074352	3091810	-0.5	GGOh2:liftoff:ctx0026	-	Other gene	41949340	41966798	source representative context model	same-species Liftoff projection	GGOh1:739:GCA_029281585.2T00001622664	1	1	
+HSAh1	HSAh1	HSAh1	3063115	3081062	-0.5	HSAh1:771:EHMT2	-	Other gene	31732993	31750940	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	3268733	3270322	-0.5	GGOh1:912:GCA_029281585.2T00001625729	-	Other gene	49717521	49719110	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	3305839	3307428	-0.5	GGOh2:liftoff:ctx0027	-	Other gene	42180827	42182416	source representative context model	same-species Liftoff projection	GGOh1:912:GCA_029281585.2T00001625729	1	0.998	
+HSAh1	HSAh1	HSAh1	3312020	3313602	-0.5	HSAh1:828:FKBPL	-	Other gene	31981898	31983480	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	1972546	1987518	-0.5	GGOh1:271:GCA_029281585.2T00001615664	-	Other gene	48421334	48436306	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	1964203	1979173	-0.5	GGOh2:liftoff:ctx0028	-	Other gene	40839191	40854161	source representative context model	same-species Liftoff projection	GGOh1:271:GCA_029281585.2T00001615664	1	1	
+HSAh1	HSAh1	HSAh1	1922032	1937012	-0.5	HSAh1:383:FLOT1	-	Other gene	30591910	30606890	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	818409	849327	-0.5	GGOh1:52:GCA_029281585.2T00001612769	-	Other gene	47267197	47298115	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	816854	847764	-0.5	GGOh2:liftoff:ctx0029	-	Other gene	39691842	39722752	source representative context model	same-species Liftoff projection	GGOh1:52:GCA_029281585.2T00001612769	1	0.998	
+HSAh1	HSAh1	HSAh1	807070	836215	-0.5	HSAh1:128:GABBR1	-	Other gene	29476948	29506093	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	1780824	1796622	-0.5	GGOh1:183:GCA_029281585.2T00001614497	-	Other gene	48229612	48245410	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	1772497	1788308	-0.5	GGOh2:liftoff:ctx0030	-	Other gene	40647485	40663296	source representative context model	same-species Liftoff projection	GGOh1:183:GCA_029281585.2T00001614497	1	1	
+HSAh1	HSAh1	HSAh1	1735677	1750787	-0.5	HSAh1:298:GNL1	-	Other gene	30405555	30420665	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2814537	2819608	-0.5	GGOh1:579:GCA_029281585.2T00001620186	-	Other gene	49263325	49268396	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	2852752	2857813	-0.5	GGOh2:liftoff:ctx0031	-	Other gene	41727740	41732801	source representative context model	same-species Liftoff projection	GGOh1:579:GCA_029281585.2T00001620186	0.998	0.996	
+HSAh1	HSAh1	HSAh1	2844382	2849047	-0.5	HSAh1:691:GPANK1	-	Other gene	31514260	31518925	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	742595	743435	-0.5	HSAh1:119:GPR53P	-	Other gene	29412473	29413313	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	3331239	3333346	-0.5	GGOh1:976:GCA_029281585.2T00001626677	-	Other gene	49780027	49782134	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	3368365	3370472	-0.5	GGOh2:liftoff:ctx0032	-	Other gene	42243353	42245460	source representative context model	same-species Liftoff projection	GGOh1:976:GCA_029281585.2T00001626677	1	1	
+HSAh1	HSAh1	HSAh1	3374076	3378834	-0.5	HSAh1:868:GPSM3	-	Other gene	32043954	32048712	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	5308190	5437410	-0.5	GGOh1:1295:GCA_029281585.2T00001631857	-	Other gene	51756978	51886198	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	5220208	5349392	-0.5	GGOh2:liftoff:ctx0033	-	Other gene	44095196	44224380	source representative context model	same-species Liftoff projection	GGOh1:1295:GCA_029281585.2T00001631857	0.999	0.998	
+HSAh1	HSAh1	HSAh1	5170064	5299795	-0.5	HSAh1:1157:GRM4	-	Other gene	33839942	33969673	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	1652566	1658469	-0.5	SSYh1:928:GCA_028878055.2T00000381973	+	Other gene	40706907	40712810	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	1428388	1520461	-0.5	HSAh1:272:HCG17	-	Other gene	30098266	30190339	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	1481744	1521483	-0.5	HSAh1:276:HCG18	-	Other gene	30151622	30191361	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	2140768	2149651	-0.5	HSAh1:462:HCG21	-	Other gene	30810646	30819529	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	993174	995194	-0.5	HSAh1:174:HCG4	-	Other gene	29663052	29665072	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	1120609	1123194	-0.5	HSAh1:201:HCG4B	-	Other gene	29790487	29793072	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	923413	924403	-0.5	HSAh1:153:HCG4P11	-	Other gene	29593291	29594281	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	1198860	1199840	-0.5	HSAh1:215:HCG4P3	-	Other gene	29868738	29869718	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	1149239	1149667	-0.5	HSAh1:207:HCG4P4	-	Other gene	29819117	29819545	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	1134963	1135853	-0.5	HSAh1:205:HCG4P5	-	Other gene	29804841	29805731	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	1082154	1083051	-0.5	HSAh1:195:HCG4P7	-	Other gene	29752032	29752929	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	1028051	1029037	-0.5	HSAh1:180:HCG4P8	-	Other gene	29697929	29698915	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	1000336	1002049	-0.5	HSAh1:176:HCG4P9	-	Other gene	29670214	29671927	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	1035539	1037080	-0.5	HSAh1:188:HCGVIII-2	-	Other gene	29705417	29706958	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	1073579	1075464	-0.5	HSAh1:194:HCP5B	-	Other gene	29743457	29745342	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	928814	951257	-0.5	HSAh1:169:HLA-F-AS1	-	Other gene	29598692	29621135	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	3837336	3839495	-0.5	SSYh1:184:GCA_028878055.2T00000370000	+	Other gene	38525881	38528040	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2461313	2463739	-0.5	SSYh1:557:GCA_028878055.2T00000376573	+	Other gene	39901637	39904063	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2474159	2476672	-0.5	SSYh1:555:GCA_028878055.2T00000376556	+	Other gene	39888704	39891217	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2963666	2969343	-0.5	GGOh1:717:GCA_029281585.2T00001622288	-	Other gene	49412454	49418131	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	3001901	3007580	-0.5	GGOh2:liftoff:ctx0034	-	Other gene	41876889	41882568	source representative context model	same-species Liftoff projection	GGOh1:717:GCA_029281585.2T00001622288	1	0.999	
+HSAh1	HSAh1	HSAh1	2992797	2998462	-0.5	HSAh1:748:HSPA1L	-	Other gene	31662675	31668340	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	1988029	1989364	-0.5	GGOh1:283:GCA_029281585.2T00001615824	-	Other gene	48436817	48438152	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	1979684	1981019	-0.5	GGOh2:liftoff:ctx0035	-	Other gene	40854672	40856007	source representative context model	same-species Liftoff projection	GGOh1:283:GCA_029281585.2T00001615824	1	1	
+HSAh1	HSAh1	HSAh1	1937523	1938872	-0.5	HSAh1:385:IER3	-	Other gene	30607401	30608750	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	953011	953354	-0.5	HSAh1:172:IFITM4P	-	Other gene	29622889	29623232	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	5012295	5037459	-0.5	GGOh1:1275:GCA_029281585.2T00001631594	-	Other gene	51461083	51486247	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	4909838	4935001	-0.5	GGOh2:liftoff:ctx0036	-	Other gene	43784826	43809989	source representative context model	same-species Liftoff projection	GGOh1:1275:GCA_029281585.2T00001631594	1	0.999	
+HSAh1	HSAh1	HSAh1	4872966	4898207	-0.5	HSAh1:1113:IP6K3	-	Other gene	33542844	33568085	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	4291059	4367484	-0.5	SSYh1:39:GCA_028878055.2T00000367742	+	Other gene	37997892	38074317	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	4782558	4785060	-0.5	HSAh1:1099:ITPR3-AS1	-	Other gene	33452436	33454938	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	4069507	4087931	-0.5	SSYh1:104:GCA_028878055.2T00000369046	+	Other gene	38277445	38295869	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	173964	175360	-0.5	HSAh1:26:KRT18P1	-	Other gene	28843842	28845238	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	5062065	5073095	-0.5	GGOh1:1280:GCA_029281585.2T00001631674	-	Other gene	51510853	51521883	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	4959611	4970621	-0.5	GGOh2:liftoff:ctx0037	-	Other gene	43834599	43845609	source representative context model	same-species Liftoff projection	GGOh1:1280:GCA_029281585.2T00001631674	0.995	0.995	
+HSAh1	HSAh1	HSAh1	4922514	4940432	-0.5	HSAh1:1119:LEMD2	-	Other gene	33592392	33610310	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	2007636	2025408	-0.5	HSAh1:388:LINC00243	-	Other gene	30677514	30695286	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	4737415	4744650	-0.5	HSAh1:1092:LINC00336	-	Other gene	33407293	33414528	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	5040827	5048224	-0.5	HSAh1:1135:LINC01016	-	Other gene	33710705	33718102	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	64395	68447	-0.5	HSAh1:10:LINC01623	-	Other gene	28734273	28738325	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	2034274	2042906	-0.5	HSAh1:389:LINC02570	-	Other gene	30704152	30712784	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	2490147	2497867	-0.5	HSAh1:529:LINC02571	-	Other gene	31160025	31167745	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	2742771	2755875	-0.5	HSAh1:573:LOC100287329	-	Other gene	31412649	31425753	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	3336111	3337675	-0.5	HSAh1:833:LOC100507547	-	Other gene	32005989	32007553	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	226805	240818	-0.5	HSAh1:61:LOC105375002	-	Other gene	28896683	28910696	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	488942	539341	-0.5	HSAh1:81:LOC105375005	-	Other gene	29158820	29209219	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	435706	437693	-0.5	HSAh1:78:LOC105375006	-	Other gene	29105584	29107571	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	1050133	1059068	-0.5	HSAh1:191:LOC105375010	-	Other gene	29720011	29728946	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	1655180	1657959	-0.5	HSAh1:291:LOC105375012	-	Other gene	30325058	30327837	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	4282220	4294908	-0.5	HSAh1:946:LOC105375021	-	Other gene	32952098	32964786	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	4397558	4398592	-0.5	HSAh1:976:LOC105375022	-	Other gene	33067436	33068470	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	4971601	4973434	-0.5	HSAh1:1128:LOC105375025	-	Other gene	33641479	33643312	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	647280	663181	-0.5	HSAh1:95:LOC105379641	-	Other gene	29317158	29333059	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	4668217	4687294	-0.5	HSAh1:1084:LOC107986537	-	Other gene	33338095	33357172	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	5053885	5058159	-0.5	HSAh1:1143:LOC107986590	-	Other gene	33723763	33728037	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	2493072	2504817	-0.5	HSAh1:530:LOC112267902	-	Other gene	31162950	31174695	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	1327196	1327334	-0.5	HSAh1:241:LOC124900227	-	Other gene	29997074	29997212	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	42011	43794	-0.5	HSAh1:8:LOC124901296	-	Other gene	28711889	28713672	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	1124175	1139643	-0.5	HSAh1:203:LOC124901298	-	Other gene	29794053	29809521	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	3794120	3800497	-0.5	HSAh1:892:LOC124901301	-	Other gene	32463998	32470375	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	4114764	4120002	-0.5	HSAh1:927:LOC124901302	-	Other gene	32784642	32789880	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	4860883	4862552	-0.5	HSAh1:1106:LOC124901304	-	Other gene	33530761	33532430	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	693294	698921	-0.5	HSAh1:112:LOC124901486	-	Other gene	29363172	29368799	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	1189971	1190430	-0.5	HSAh1:213:LOC353007	-	Other gene	29859849	29860308	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	1106245	1107410	-0.5	HSAh1:200:LOC353008	-	Other gene	29776123	29777288	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	1067603	1068771	-0.5	HSAh1:193:LOC353009	-	Other gene	29737481	29738649	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	967254	968428	-0.5	HSAh1:173:LOC353010	-	Other gene	29637132	29638306	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2951455	2961025	-0.5	GGOh1:714:GCA_029281585.2T00001622264	-	Other gene	49400243	49409813	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	2989684	2999271	-0.5	GGOh2:liftoff:ctx0038	-	Other gene	41864672	41874259	source representative context model	same-species Liftoff projection	GGOh1:714:GCA_029281585.2T00001622264	1	0.997	
+HSAh1	HSAh1	HSAh1	2980565	2990137	-0.5	HSAh1:747:LSM2	-	Other gene	31650443	31660015	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2225410	2228139	-0.5	SSYh1:765:GCA_028878055.2T00000379769	+	Other gene	40137237	40139966	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2211310	2213561	-0.5	SSYh1:786:GCA_028878055.2T00000379958	+	Other gene	40151815	40154066	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2734396	2736178	-0.5	GGOh1:497:GCA_029281585.2T00001618979	-	Other gene	49183184	49184966	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	2772590	2774373	-0.5	GGOh2:liftoff:ctx0039	-	Other gene	41647578	41649361	source representative context model	same-species Liftoff projection	GGOh1:497:GCA_029281585.2T00001618979	1	0.999	
+HSAh1	HSAh1	HSAh1	2763731	2765598	-0.5	HSAh1:578:LTB	-	Other gene	31433609	31435476	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2312661	2316023	-0.5	SSYh1:677:GCA_028878055.2T00000378441	+	Other gene	40049353	40052715	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2830272	2833700	-0.5	GGOh1:604:GCA_029281585.2T00001620468	-	Other gene	49279060	49282488	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	2868478	2871911	-0.5	GGOh2:liftoff:ctx0040	-	Other gene	41743466	41746899	source representative context model	same-species Liftoff projection	GGOh1:604:GCA_029281585.2T00001620468	1	1	
+HSAh1	HSAh1	HSAh1	2859839	2864223	-0.5	HSAh1:703:LY6G5C	-	Other gene	31529717	31534101	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2872565	2875638	-0.5	GGOh1:634:GCA_029281585.2T00001621075	-	Other gene	49321353	49324426	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	2910762	2913835	-0.5	GGOh2:liftoff:ctx0041	-	Other gene	41785750	41788823	source representative context model	same-species Liftoff projection	GGOh1:634:GCA_029281585.2T00001621075	1	1	
+HSAh1	HSAh1	HSAh1	2901802	2904901	-0.5	HSAh1:718:LY6G6C	-	Other gene	31571680	31574779	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2361329	2363767	-0.5	SSYh1:644:GCA_028878055.2T00000377958	+	Other gene	40001609	40004047	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2865640	2867967	-0.5	GGOh1:626:GCA_029281585.2T00001620877	-	Other gene	49314428	49316755	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	2903851	2906178	-0.5	GGOh2:liftoff:ctx0042	-	Other gene	41778839	41781166	source representative context model	same-species Liftoff projection	GGOh1:626:GCA_029281585.2T00001620877	1	0.997	
+HSAh1	HSAh1	HSAh1	2895497	2897222	-0.5	HSAh1:716:LY6G6E	-	Other gene	31565375	31567100	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2352575	2356383	-0.5	SSYh1:652:GCA_028878055.2T00000378069	+	Other gene	40008993	40012801	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2352613	2363881	-0.5	SSYh1:643:GCA_028878055.2T00000377940	+	Other gene	40001495	40012763	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	4516220	4517846	-0.5	HSAh1:1032:LYPLA2P1	-	Other gene	33186098	33187724	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	700098	701359	-0.5	GGOh1:40:GCA_029281585.2T00001612507	-	Other gene	47148886	47150147	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	694976	696237	-0.5	GGOh2:liftoff:ctx0043	-	Other gene	39569964	39571225	source representative context model	same-species Liftoff projection	GGOh1:40:GCA_029281585.2T00001612507	1	1	
+HSAh1	HSAh1	HSAh1	691475	692735	-0.5	HSAh1:111:MAS1L	-	Other gene	29361353	29362613	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	679803	680850	-0.5	HSAh1:108:MAS1LP1	-	Other gene	29349681	29350728	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2168520	2169787	-0.5	SSYh1:822:GCA_028878055.2T00000380409	+	Other gene	40195589	40196856	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	1103792	1104655	-0.5	HSAh1:199:MCCD1P1	-	Other gene	29773670	29774533	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	1189156	1189329	-0.5	HSAh1:212:MCCD1P2	-	Other gene	29859034	29859207	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	1944380	1962110	-0.5	GGOh1:256:GCA_029281585.2T00001615486	-	Other gene	48393168	48410898	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	1936057	1953787	-0.5	GGOh2:liftoff:ctx0044	-	Other gene	40811045	40828775	source representative context model	same-species Liftoff projection	GGOh1:256:GCA_029281585.2T00001615486	1	0.999	
+HSAh1	HSAh1	HSAh1	1894132	1911606	-0.5	HSAh1:362:MDC1	-	Other gene	30564010	30581484	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	2580306	2584520	-0.5	HSAh1:541:MICA-AS1	-	Other gene	31250184	31254398	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2131544	2144985	-0.5	SSYh1:823:GCA_028878055.2T00000380419	+	Other gene	40220391	40233832	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	2663168	2678024	-0.5	HSAh1:551:MICB-DT	-	Other gene	31333046	31347902	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	1164389	1169746	-0.5	HSAh1:209:MICD	-	Other gene	29834267	29839624	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	943766	947995	-0.5	HSAh1:170:MICE	-	Other gene	29613644	29617873	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	1053887	1055762	-0.5	HSAh1:192:MICF	-	Other gene	29723765	29725640	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	1014320	1014623	-0.5	HSAh1:179:MICG	-	Other gene	29684198	29684501	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	3140165	3140267	-0.5	HSAh1:796:MIR1236	-	Other gene	31810043	31810145	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	5151377	5151457	-0.5	HSAh1:1151:MIR1275	-	Other gene	33821255	33821335	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	3902753	3902821	-0.5	HSAh1:901:MIR3135B	-	Other gene	32572631	32572699	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	2884185	2884248	-0.5	HSAh1:711:MIR4646	-	Other gene	31554063	31554126	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	3353342	3353429	-0.5	HSAh1:846:MIR6721	-	Other gene	32023220	32023307	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	4438710	4438773	-0.5	HSAh1:993:MIR6873	-	Other gene	33108588	33108651	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	2541227	2541331	-0.5	HSAh1:532:MIR6891	-	Other gene	31211105	31211209	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	5085544	5094648	-0.5	GGOh1:1292:GCA_029281585.2T00001631811	-	Other gene	51534332	51543436	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	4983071	4992175	-0.5	GGOh2:liftoff:ctx0045	-	Other gene	43858059	43867163	source representative context model	same-species Liftoff projection	GGOh1:1292:GCA_029281585.2T00001631811	1	1	
+HSAh1	HSAh1	HSAh1	4945974	4955305	-0.5	HSAh1:1125:MLN	-	Other gene	33615852	33625183	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	571194	586448	-0.5	SSYh1:1187:GCA_028878055.2T00000385574	+	Other gene	41778928	41794182	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2369332	2373106	-0.5	SSYh1:630:GCA_028878055.2T00000377778	+	Other gene	39992270	39996044	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	1358427	1367613	-0.5	SSYh1:1062:GCA_028878055.2T00000383960	+	Other gene	40997763	41006949	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2386697	2406342	-0.5	SSYh1:602:GCA_028878055.2T00000377326	+	Other gene	39959034	39978679	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2386707	2408837	-0.5	SSYh1:590:GCA_028878055.2T00000376987	+	Other gene	39956539	39978669	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2260454	2277761	-0.5	SSYh1:737:GCA_028878055.2T00000379467	+	Other gene	40087615	40104922	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	4521005	4545884	-0.5	GGOh1:1128:GCA_029281585.2T00001629321	-	Other gene	50969793	50994672	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	4420755	4445636	-0.5	GGOh2:liftoff:ctx0046	-	Other gene	43295743	43320624	source representative context model	same-species Liftoff projection	GGOh1:1128:GCA_029281585.2T00001629321	1	0.999	
+HSAh1	HSAh1	HSAh1	3858843	3859504	-0.5	HSAh1:898:MTCO3P1	-	Other gene	32528721	32529382	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	1719736	1727008	-0.5	SSYh1:904:GCA_028878055.2T00000381416	+	Other gene	40638368	40645640	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	1744792	1766490	-0.5	SSYh1:903:GCA_028878055.2T00000381402	+	Other gene	40598886	40620584	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	1678896	1698416	-0.5	SSYh1:909:GCA_028878055.2T00000381494	+	Other gene	40666960	40686480	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	2156190	2156768	-0.5	HSAh1:463:NAPGP2	-	Other gene	30826068	30826646	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2742634	2746695	-0.5	GGOh1:520:GCA_029281585.2T00001619204	-	Other gene	49191422	49195483	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	2780825	2784886	-0.5	GGOh2:liftoff:ctx0047	-	Other gene	41655813	41659874	source representative context model	same-species Liftoff projection	GGOh1:520:GCA_029281585.2T00001619204	1	0.998	
+HSAh1	HSAh1	HSAh1	2772064	2776176	-0.5	HSAh1:596:NCR3	-	Other gene	31441942	31446054	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	3106375	3112897	-0.5	GGOh1:783:GCA_029281585.2T00001623620	-	Other gene	49555163	49561685	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	3144629	3151152	-0.5	GGOh2:liftoff:ctx0048	-	Other gene	42019617	42026140	source representative context model	same-species Liftoff projection	GGOh1:783:GCA_029281585.2T00001623620	1	0.998	
+HSAh1	HSAh1	HSAh1	3135413	3142298	-0.5	HSAh1:790:NELFE	-	Other gene	31805291	31812176	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	3014027	3019171	-0.5	GGOh1:721:GCA_029281585.2T00001622323	-	Other gene	49462815	49467959	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	3052264	3057407	-0.5	GGOh2:liftoff:ctx0049	-	Other gene	41927252	41932395	source representative context model	same-species Liftoff projection	GGOh1:721:GCA_029281585.2T00001622323	0.999	0.998	
+HSAh1	HSAh1	HSAh1	3041020	3046183	-0.5	HSAh1:762:NEU1	-	Other gene	31710898	31716061	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2187094	2197800	-0.5	SSYh1:788:GCA_028878055.2T00000379985	+	Other gene	40167576	40178282	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	3335323	3364537	-0.5	GGOh1:982:GCA_029281585.2T00001626753	-	Other gene	49784111	49813325	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	3372449	3401663	-0.5	GGOh2:liftoff:ctx0050	-	Other gene	42247437	42276651	source representative context model	same-species Liftoff projection	GGOh1:982:GCA_029281585.2T00001626753	1	0.999	
+HSAh1	HSAh1	HSAh1	3378153	3407387	-0.5	HSAh1:869:NOTCH4	-	Other gene	32048031	32077265	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	1932639	1936007	-0.5	GGOh1:254:GCA_029281585.2T00001615457	-	Other gene	48381427	48384795	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	1924317	1927685	-0.5	GGOh2:liftoff:ctx0051	-	Other gene	40799305	40802673	source representative context model	same-species Liftoff projection	GGOh1:254:GCA_029281585.2T00001615457	1	1	
+HSAh1	HSAh1	HSAh1	1882376	1885158	-0.5	HSAh1:341:NRM	-	Other gene	30552254	30555036	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	637182	671279	-0.5	GGOh1:30:GCA_029281585.2T00001612421	-	Other gene	47085970	47120067	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	631309	666158	-0.5	GGOh2:liftoff:ctx0052	-	Other gene	39506297	39541146	source representative context model	same-species Liftoff projection	GGOh1:30:GCA_029281585.2T00001612421	1	0.999	
+HSAh1	HSAh1	HSAh1	630281	661851	-0.5	HSAh1:93:OR11A1	-	Other gene	29300159	29331729	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	583860	585728	-0.5	GGOh1:24:GCA_029281585.2T00001612372	-	Other gene	47032648	47034516	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	577986	579854	-0.5	GGOh2:liftoff:ctx0053	-	Other gene	39452974	39454842	source representative context model	same-species Liftoff projection	GGOh1:24:GCA_029281585.2T00001612372	1	0.999	
+HSAh1	HSAh1	HSAh1	578332	580201	-0.5	HSAh1:88:OR12D3	-	Other gene	29248210	29250079	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	372923	384167	-0.5	SSYh1:1224:GCA_028878055.2T00000386201	+	Other gene	41981209	41992453	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	231505	232433	-0.5	HSAh1:62:OR2AD1P	-	Other gene	28901383	28902311	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	295630	296736	-0.5	GGOh1:11:GCA_029281585.2T00001612251	-	Other gene	46744418	46745524	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	295701	296807	-0.5	GGOh2:liftoff:ctx0054	-	Other gene	39170689	39171795	source representative context model	same-species Liftoff projection	GGOh1:11:GCA_029281585.2T00001612251	1	0.999	
+HSAh1	HSAh1	HSAh1	291052	292158	-0.5	HSAh1:67:OR2B3	-	Other gene	28960930	28962036	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	434123	435114	-0.5	HSAh1:77:OR2G1P	-	Other gene	29104001	29104992	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	474199	482125	-0.5	SSYh1:1221:GCA_028878055.2T00000386186	+	Other gene	41883251	41891177	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	342614	343761	-0.5	HSAh1:70:OR2N1P	-	Other gene	29012492	29013639	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	276642	277377	-0.5	HSAh1:65:OR2P1P	-	Other gene	28946520	28947255	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	467539	468959	-0.5	HSAh1:79:OR2U1P	-	Other gene	29137417	29138837	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	473344	474301	-0.5	HSAh1:80:OR2U2P	-	Other gene	29143222	29144179	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	253951	254979	-0.5	GGOh1:10:GCA_029281585.2T00001612244	-	Other gene	46702739	46703767	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	253851	254879	-0.5	GGOh2:liftoff:ctx0055	-	Other gene	39128839	39129867	source representative context model	same-species Liftoff projection	GGOh1:10:GCA_029281585.2T00001612244	1	0.999	
+HSAh1	HSAh1	HSAh1	249035	249998	-0.5	HSAh1:64:OR2W1	-	Other gene	28918913	28919876	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	564436	579244	-0.5	GGOh1:21:GCA_029281585.2T00001612344	-	Other gene	47013224	47028032	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	558563	573370	-0.5	GGOh2:liftoff:ctx0056	-	Other gene	39433551	39448358	source representative context model	same-species Liftoff projection	GGOh1:21:GCA_029281585.2T00001612344	1	1	
+HSAh1	HSAh1	HSAh1	558646	573774	-0.5	HSAh1:87:OR5V1	-	Other gene	29228524	29243652	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	1380962	1383004	-0.5	HSAh1:271:PAIP1P1	-	Other gene	30050840	30052882	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	3325217	3330675	-0.5	GGOh1:970:GCA_029281585.2T00001626622	-	Other gene	49774005	49779463	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	3362343	3367801	-0.5	GGOh2:liftoff:ctx0057	-	Other gene	42237331	42242789	source representative context model	same-species Liftoff projection	GGOh1:970:GCA_029281585.2T00001626622	1	0.999	
+HSAh1	HSAh1	HSAh1	3368045	3373513	-0.5	HSAh1:866:PBX2	-	Other gene	32037923	32043391	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	3924592	3933633	-0.5	SSYh1:137:GCA_028878055.2T00000369535	+	Other gene	38431743	38440784	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	4089096	4094512	-0.5	SSYh1:94:GCA_028878055.2T00000368871	+	Other gene	38270864	38276280	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2411885	2414727	-0.5	GGOh1:423:GCA_029281585.2T00001618156	-	Other gene	48860673	48863515	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	2404010	2406852	-0.5	GGOh2:liftoff:ctx0058	-	Other gene	41278998	41281840	source representative context model	same-species Liftoff projection	GGOh1:423:GCA_029281585.2T00001618156	1	1	
+HSAh1	HSAh1	HSAh1	2362138	2364987	-0.5	HSAh1:507:POU5F1	-	Other gene	31032016	31034865	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	2702202	2703557	-0.5	HSAh1:555:PPIAP9	-	Other gene	31372080	31373435	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	1838554	1855385	-0.5	GGOh1:201:GCA_029281585.2T00001614787	-	Other gene	48287342	48304173	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	1830239	1847069	-0.5	GGOh2:liftoff:ctx0059	-	Other gene	40705227	40722057	source representative context model	same-species Liftoff projection	GGOh1:201:GCA_029281585.2T00001614787	1	0.999	
+HSAh1	HSAh1	HSAh1	1794714	1811546	-0.5	HSAh1:308:PPP1R10	-	Other gene	30464592	30481424	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	825774	827901	-0.5	SSYh1:1142:GCA_028878055.2T00000385013	+	Other gene	41537475	41539602	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	1920957	1931809	-0.5	GGOh1:246:GCA_029281585.2T00001615404	-	Other gene	48369745	48380597	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	1912640	1923487	-0.5	GGOh2:liftoff:ctx0060	-	Other gene	40787628	40798475	source representative context model	same-species Liftoff projection	GGOh1:246:GCA_029281585.2T00001615404	1	0.999	
+HSAh1	HSAh1	HSAh1	1870716	1882719	-0.5	HSAh1:338:PPP1R18	-	Other gene	30540594	30552597	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	4027929	4031519	-0.5	HSAh1:920:PPP1R2P1	-	Other gene	32697807	32701397	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2765574	2776205	-0.5	SSYh1:380:GCA_028878055.2T00000373347	+	Other gene	39589171	39599802	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2766219	2784414	-0.5	SSYh1:365:GCA_028878055.2T00000373068	+	Other gene	39580962	39599157	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	1298986	1302672	-0.5	SSYh1:1079:GCA_028878055.2T00000384257	+	Other gene	41062704	41066390	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	3288373	3291938	-0.5	GGOh1:914:GCA_029281585.2T00001625742	-	Other gene	49737161	49740726	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	3325471	3329036	-0.5	GGOh2:liftoff:ctx0061	-	Other gene	42200459	42204024	source representative context model	same-species Liftoff projection	GGOh1:914:GCA_029281585.2T00001625742	1	1	
+HSAh1	HSAh1	HSAh1	3331672	3335249	-0.5	HSAh1:829:PRRT1	-	Other gene	32001550	32005127	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	4112961	4116782	-0.5	GGOh1:1040:GCA_029281585.2T00001627968	-	Other gene	50561749	50565570	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	4012681	4016503	-0.5	GGOh2:liftoff:ctx0062	-	Other gene	42887669	42891491	source representative context model	same-species Liftoff projection	GGOh1:1040:GCA_029281585.2T00001627968	1	1	
+HSAh1	HSAh1	HSAh1	3992213	3996176	-0.5	HSAh1:912:PSMB8	-	Other gene	32662091	32666054	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	3469192	3474181	-0.5	SSYh1:258:GCA_028878055.2T00000371208	+	Other gene	38891195	38896184	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	1848923	1853006	-0.5	SSYh1:900:GCA_028878055.2T00000381366	+	Other gene	40512370	40516453	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2385046	2386578	-0.5	GGOh1:379:GCA_029281585.2T00001617524	-	Other gene	48833834	48835366	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	2377184	2378716	-0.5	GGOh2:liftoff:ctx0063	-	Other gene	41252172	41253704	source representative context model	same-species Liftoff projection	GGOh1:379:GCA_029281585.2T00001617524	1	0.997	
+HSAh1	HSAh1	HSAh1	2335349	2336882	-0.5	HSAh1:475:PSORS1C2	-	Other gene	31005227	31006760	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	2371553	2384143	-0.5	HSAh1:523:PSORS1C3	-	Other gene	31041431	31054021	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	4565471	4572752	-0.5	GGOh1:1169:GCA_029281585.2T00001629809	-	Other gene	51014259	51021540	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	4465223	4472504	-0.5	GGOh2:liftoff:ctx0064	-	Other gene	43340211	43347492	source representative context model	same-species Liftoff projection	GGOh1:1169:GCA_029281585.2T00001629809	1	1	
+HSAh1	HSAh1	HSAh1	4443137	4453096	-0.5	HSAh1:1009:RGL2	-	Other gene	33113015	33122974	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	3841168	3845356	-0.5	SSYh1:183:GCA_028878055.2T00000369980	+	Other gene	38520020	38524208	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	3261832	3261953	-0.5	HSAh1:825:RNA5SP206	-	Other gene	31931710	31931831	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	1343999	1349622	-0.5	GGOh1:132:GCA_029281585.2T00001613850	-	Other gene	47792787	47798410	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	1335723	1341330	-0.5	GGOh2:liftoff:ctx0065	-	Other gene	40210711	40216318	source representative context model	same-species Liftoff projection	GGOh1:132:GCA_029281585.2T00001613850	0.999	0.993	
+HSAh1	HSAh1	HSAh1	1264665	1270165	-0.5	HSAh1:231:RNF39	-	Other gene	29934543	29940043	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2790795	2793180	-0.5	SSYh1:355:GCA_028878055.2T00000372919	+	Other gene	39572196	39574581	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	3736635	3736782	-0.5	HSAh1:890:RNU1-152P	-	Other gene	32406513	32406660	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	3710631	3710782	-0.5	HSAh1:888:RNU1-61P	-	Other gene	32380509	32380660	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	2940119	2940222	-0.5	HSAh1:738:RNU6-850P	-	Other gene	31609997	31610100	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	4551495	4552128	-0.5	HSAh1:1038:RPL12P1	-	Other gene	33221373	33222006	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	928810	929368	-0.5	HSAh1:167:RPL23AP1	-	Other gene	29598688	29599246	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	4540839	4540962	-0.5	HSAh1:1033:RPL35AP4	-	Other gene	33210717	33210840	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	1005064	1005950	-0.5	HSAh1:178:RPL7AP7	-	Other gene	29674942	29675828	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	1891071	1891862	-0.5	HSAh1:350:RPL7P4	-	Other gene	30560949	30561740	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	1081290	1083008	-0.5	SSYh1:1099:GCA_028878055.2T00000384436	+	Other gene	41282368	41284086	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	693981	694472	-0.5	HSAh1:113:RPS17P1	-	Other gene	29363859	29364350	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	3909986	3911184	-0.5	SSYh1:164:GCA_028878055.2T00000369746	+	Other gene	38454192	38455390	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	4466190	4473250	-0.5	GGOh1:1116:GCA_029281585.2T00001629148	-	Other gene	50914978	50922038	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	4365999	4373051	-0.5	GGOh2:liftoff:ctx0066	-	Other gene	43240987	43248039	source representative context model	same-species Liftoff projection	GGOh1:1116:GCA_029281585.2T00001629148	1	0.999	
+HSAh1	HSAh1	HSAh1	4345062	4352140	-0.5	HSAh1:964:RXRB	-	Other gene	33014940	33022018	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2406979	2408838	-0.5	SSYh1:587:GCA_028878055.2T00000376914	+	Other gene	39956538	39958397	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	2947303	2948757	-0.5	HSAh1:740:SAPCD1-AS1	-	Other gene	31617181	31618635	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	279217	282052	-0.5	HSAh1:66:SAR1AP1	-	Other gene	28949095	28951930	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2174931	2199911	-0.5	GGOh1:363:GCA_029281585.2T00001617348	-	Other gene	48623719	48648699	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	2166114	2190478	-0.5	GGOh2:liftoff:ctx0067	-	Other gene	41041102	41065466	source representative context model	same-species Liftoff projection	GGOh1:363:GCA_029281585.2T00001617348	1	0.996	
+HSAh1	HSAh1	HSAh1	2126138	2126956	-0.5	HSAh1:456:SFTA2	-	Other gene	30796016	30796834	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2608898	2619600	-0.5	SSYh1:469:GCA_028878055.2T00000374902	+	Other gene	39745776	39756478	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	3833544	3837114	-0.5	SSYh1:188:GCA_028878055.2T00000370058	+	Other gene	38528262	38531832	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	3019559	3034022	-0.5	GGOh1:726:GCA_029281585.2T00001622414	-	Other gene	49468347	49482810	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	3057795	3072262	-0.5	GGOh2:liftoff:ctx0068	-	Other gene	41932783	41947250	source representative context model	same-species Liftoff projection	GGOh1:726:GCA_029281585.2T00001622414	0.998	0.997	
+HSAh1	HSAh1	HSAh1	3046553	3061028	-0.5	HSAh1:763:SLC44A4	-	Other gene	31716431	31730906	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	4594340	4602234	-0.5	GGOh1:1198:GCA_029281585.2T00001630164	-	Other gene	51043128	51051022	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	4494093	4501989	-0.5	GGOh2:liftoff:ctx0069	-	Other gene	43369081	43376977	source representative context model	same-species Liftoff projection	GGOh1:1198:GCA_029281585.2T00001630164	1	1	
+HSAh1	HSAh1	HSAh1	4475111	4480763	-0.5	HSAh1:1030:SMIM40	-	Other gene	33144989	33150641	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	2719590	2719666	-0.5	HSAh1:562:SNORD117	-	Other gene	31389468	31389544	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	2724314	2724392	-0.5	HSAh1:563:SNORD84	-	Other gene	31394192	31394270	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	840275	841290	-0.5	HSAh1:139:SUMO2P1	-	Other gene	29510153	29511168	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	4098133	4131783	-0.5	SSYh1:52:GCA_028878055.2T00000368276	+	Other gene	38233593	38267243	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	4588847	4605890	-0.5	HSAh1:1078:SYNGAP1-AS1	-	Other gene	33258725	33275768	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	4117433	4126057	-0.5	GGOh1:1046:GCA_029281585.2T00001628047	-	Other gene	50566221	50574845	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	4017154	4025775	-0.5	GGOh2:liftoff:ctx0070	-	Other gene	42892142	42900763	source representative context model	same-species Liftoff projection	GGOh1:1046:GCA_029281585.2T00001628047	1	1	
+HSAh1	HSAh1	HSAh1	3996705	4005201	-0.5	HSAh1:918:TAP1	-	Other gene	32666583	32675079	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	4097613	4110985	-0.5	GGOh1:1032:GCA_029281585.2T00001627847	-	Other gene	50546401	50559773	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	3997326	4010705	-0.5	GGOh2:liftoff:ctx0071	-	Other gene	42872314	42885693	source representative context model	same-species Liftoff projection	GGOh1:1032:GCA_029281585.2T00001627847	1	0.995	
+HSAh1	HSAh1	HSAh1	3976911	3990234	-0.5	HSAh1:910:TAP2	-	Other gene	32646789	32660112	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	4573503	4587014	-0.5	GGOh1:1177:GCA_029281585.2T00001629901	-	Other gene	51022291	51035802	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	4473255	4486767	-0.5	GGOh2:liftoff:ctx0072	-	Other gene	43348243	43361755	source representative context model	same-species Liftoff projection	GGOh1:1177:GCA_029281585.2T00001629901	1	0.999	
+HSAh1	HSAh1	HSAh1	4451177	4465562	-0.5	HSAh1:1020:TAPBP	-	Other gene	33121055	33135440	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	1895517	1901408	-0.5	SSYh1:856:GCA_028878055.2T00000380771	+	Other gene	40463968	40469859	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2214801	2217575	-0.5	SSYh1:782:GCA_028878055.2T00000379923	+	Other gene	40147801	40150575	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	3191747	3196351	-0.5	HSAh1:815:TNXA	-	Other gene	31861625	31866229	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	3181094	3249368	-0.5	GGOh1:895:GCA_029281585.2T00001625223	-	Other gene	49629882	49698156	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	3219319	3286479	-0.5	GGOh2:liftoff:ctx0073	-	Other gene	42094307	42161467	source representative context model	same-species Liftoff projection	GGOh1:895:GCA_029281585.2T00001625223	1	0.996	
+HSAh1	HSAh1	HSAh1	3224478	3292652	-0.5	HSAh1:824:TNXB	-	Other gene	31894356	31962530	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	844	916	-0.5	HSAh1:1:TRA-AGC1-1	-	Other gene	28670722	28670794	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	43214	43286	-0.5	HSAh1:9:TRA-AGC2-1	-	Other gene	28713092	28713164	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	68454	68526	-0.5	HSAh1:12:TRA-AGC2-2	-	Other gene	28738332	28738404	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	16878	16950	-0.5	HSAh1:5:TRA-AGC6-1	-	Other gene	28686756	28686828	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	22042	22114	-0.5	HSAh1:6:TRA-TGC5-1	-	Other gene	28691920	28691992	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	7589	7661	-0.5	HSAh1:3:TRA-TGC7-1	-	Other gene	28677467	28677539	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	186593	186666	-0.5	HSAh1:28:TRF-GAA1-2	-	Other gene	28856471	28856544	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	12639	12712	-0.5	HSAh1:4:TRF-GAA3-1	-	Other gene	28682517	28682590	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	28122	28196	-0.5	HSAh1:7:TRF-GAA4-1	-	Other gene	28698000	28698074	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	1425845	1435165	-0.5	GGOh1:144:GCA_029281585.2T00001613965	-	Other gene	47874633	47883953	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	1417425	1426720	-0.5	GGOh2:liftoff:ctx0074	-	Other gene	40292413	40301708	source representative context model	same-species Liftoff projection	GGOh1:144:GCA_029281585.2T00001613965	0.995	0.991	
+HSAh1	HSAh1	HSAh1	1346339	1358390	-0.5	HSAh1:253:TRIM10	-	Other gene	30016217	30028268	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	916339	925815	-0.5	SSYh1:1124:GCA_028878055.2T00000384806	+	Other gene	41439561	41449037	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	1459707	1488502	-0.5	GGOh1:153:GCA_029281585.2T00001614096	-	Other gene	47908495	47937290	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	1451272	1480166	-0.5	GGOh2:liftoff:ctx0075	-	Other gene	40326260	40355154	source representative context model	same-species Liftoff projection	GGOh1:153:GCA_029281585.2T00001614096	1	0.998	
+HSAh1	HSAh1	HSAh1	1378806	1407762	-0.5	HSAh1:261:TRIM26	-	Other gene	30048684	30077640	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	116615	137550	-0.5	GGOh1:2:GCA_029281585.2T00001612155	-	Other gene	46565403	46586338	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	116550	137478	-0.5	GGOh2:liftoff:ctx0076	-	Other gene	38991538	39012466	source representative context model	same-species Liftoff projection	GGOh1:2:GCA_029281585.2T00001612155	1	0.999	
+HSAh1	HSAh1	HSAh1	107915	128891	-0.5	HSAh1:17:TRIM27	-	Other gene	28777793	28798769	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	1376699	1386955	-0.5	GGOh1:134:GCA_029281585.2T00001613869	-	Other gene	47825487	47835743	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	1368355	1378618	-0.5	GGOh2:liftoff:ctx0077	-	Other gene	40243343	40253606	source representative context model	same-species Liftoff projection	GGOh1:134:GCA_029281585.2T00001613869	1	0.998	
+HSAh1	HSAh1	HSAh1	1297292	1307479	-0.5	HSAh1:236:TRIM31	-	Other gene	29967170	29977357	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	1063337	1079877	-0.5	SSYh1:1104:GCA_028878055.2T00000384508	+	Other gene	41285499	41302039	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	1064999	1083005	-0.5	SSYh1:1101:GCA_028878055.2T00000384459	+	Other gene	41282371	41300377	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	889064	901928	-0.5	SSYh1:1131:GCA_028878055.2T00000384913	+	Other gene	41463448	41476312	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	148523	148605	-0.5	HSAh1:21:TRL-AAG2-2	-	Other gene	28818401	28818483	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	101136	101242	-0.5	HSAh1:15:TRL-CAA1-1	-	Other gene	28771014	28771120	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	158157	158230	-0.5	HSAh1:25:TRM-CAT3-1	-	Other gene	28828035	28828108	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	146500	146572	-0.5	HSAh1:20:TRQ-CTG1-3	-	Other gene	28816378	28816450	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	3433094	3506079	-0.5	GGOh1:989:GCA_029281585.2T00001627049	-	Other gene	49881882	49954867	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	3470211	3549716	-0.5	GGOh2:liftoff:ctx0078	-	Other gene	42345199	42424704	source representative context model	same-species Liftoff projection	GGOh1:989:GCA_029281585.2T00001627049	1	0.999	
+HSAh1	HSAh1	HSAh1	3476120	3554862	-0.5	HSAh1:876:TSBP1	-	Other gene	32145998	32224740	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	1470123	1473892	-0.5	SSYh1:1004:GCA_028878055.2T00000383203	+	Other gene	40891484	40895253	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	768929	773134	-0.5	GGOh1:44:GCA_029281585.2T00001612531	-	Other gene	47217717	47221922	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	763785	767990	-0.5	GGOh2:liftoff:ctx0079	-	Other gene	39638773	39642978	source representative context model	same-species Liftoff projection	GGOh1:44:GCA_029281585.2T00001612531	1	1	
+HSAh1	HSAh1	HSAh1	760320	764538	-0.5	HSAh1:121:UBD	-	Other gene	29430198	29434416	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	669454	669725	-0.5	HSAh1:107:UBDP1	-	Other gene	29339332	29339603	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	1552927	1558443	-0.5	HSAh1:289:UBQLN1P1	-	Other gene	30222805	30228321	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	4984943	4989314	-0.5	GGOh1:1271:GCA_029281585.2T00001631554	-	Other gene	51433731	51438102	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	4882488	4886859	-0.5	GGOh2:liftoff:ctx0080	-	Other gene	43757476	43761847	source representative context model	same-species Liftoff projection	GGOh1:1271:GCA_029281585.2T00001631554	1	0.999	
+HSAh1	HSAh1	HSAh1	4848070	4863005	-0.5	HSAh1:1102:UQCC2	-	Other gene	33517948	33532883	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	2794258	2794532	-0.5	HSAh1:598:UQCRHP1	-	Other gene	31464136	31464410	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2931599	2950080	-0.5	GGOh1:697:GCA_029281585.2T00001622130	-	Other gene	49380387	49398868	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	2969831	2988309	-0.5	GGOh2:liftoff:ctx0081	-	Other gene	41844819	41863297	source representative context model	same-species Liftoff projection	GGOh1:697:GCA_029281585.2T00001622130	1	0.999	
+HSAh1	HSAh1	HSAh1	2960686	2978922	-0.5	HSAh1:743:VARS1	-	Other gene	31630564	31648800	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	1658567	1670858	-0.5	SSYh1:916:GCA_028878055.2T00000381623	+	Other gene	40694518	40706809	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	4401761	4423360	-0.5	HSAh1:983:VPS52	-	Other gene	33071639	33093238	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2919719	2931407	-0.5	GGOh1:689:GCA_029281585.2T00001621965	-	Other gene	49368507	49380195	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	2957935	2969639	-0.5	GGOh2:liftoff:ctx0082	-	Other gene	41832923	41844627	source representative context model	same-species Liftoff projection	GGOh1:689:GCA_029281585.2T00001621965	1	0.998	
+HSAh1	HSAh1	HSAh1	2948758	2960497	-0.5	HSAh1:741:VWA7	-	Other gene	31618636	31630375	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	2483728	2485343	-0.5	HSAh1:528:WASF5P	-	Other gene	31153606	31155221	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	4552974	4563063	-0.5	GGOh1:1152:GCA_029281585.2T00001629592	-	Other gene	51001762	51011851	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	4452726	4462815	-0.5	GGOh2:liftoff:ctx0083	-	Other gene	43327714	43337803	source representative context model	same-species Liftoff projection	GGOh1:1152:GCA_029281585.2T00001629592	1	1	
+HSAh1	HSAh1	HSAh1	4430591	4440723	-0.5	HSAh1:990:WDR46	-	Other gene	33100469	33110601	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	3055987	3058462	-0.5	GGOh1:749:GCA_029281585.2T00001623303	-	Other gene	49504775	49507250	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	3094222	3096697	-0.5	GGOh2:liftoff:ctx0084	-	Other gene	41969210	41971685	source representative context model	same-species Liftoff projection	GGOh1:749:GCA_029281585.2T00001623303	1	0.999	
+HSAh1	HSAh1	HSAh1	3082978	3085452	-0.5	HSAh1:781:ZBTB12	-	Other gene	31752856	31755330	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	4587353	4590679	-0.5	GGOh1:1187:GCA_029281585.2T00001630027	-	Other gene	51036141	51039467	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	4487106	4490432	-0.5	GGOh2:liftoff:ctx0085	-	Other gene	43362094	43365420	source representative context model	same-species Liftoff projection	GGOh1:1187:GCA_029281585.2T00001630027	1	1	
+HSAh1	HSAh1	HSAh1	4465901	4469228	-0.5	HSAh1:1022:ZBTB22	-	Other gene	33135779	33139106	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	4132669	4134279	-0.5	SSYh1:47:GCA_028878055.2T00000368169	+	Other gene	38231097	38232707	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	912997	913404	-0.5	HSAh1:152:ZDHHC20P1	-	Other gene	29582875	29583282	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	880915	889566	-0.5	GGOh1:86:GCA_029281585.2T00001613281	-	Other gene	47329703	47338354	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	879347	888181	-0.5	GGOh2:liftoff:ctx0086	-	Other gene	39754335	39763169	source representative context model	same-species Liftoff projection	GGOh1:86:GCA_029281585.2T00001613281	1	0.998	
+HSAh1	HSAh1	HSAh1	877302	886003	-0.5	HSAh1:151:ZFP57	-	Other gene	29547180	29555881	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	207946	218364	-0.5	GGOh1:9:GCA_029281585.2T00001612236	-	Other gene	46656734	46667152	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	207840	218257	-0.5	GGOh2:liftoff:ctx0087	-	Other gene	39082828	39093245	source representative context model	same-species Liftoff projection	GGOh1:9:GCA_029281585.2T00001612236	1	0.999	
+HSAh1	HSAh1	HSAh1	199715	210436	-0.5	HSAh1:46:ZNF311	-	Other gene	28869593	28880314	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	93902	94556	-0.5	HSAh1:14:ZNF90P2	-	Other gene	28763780	28764434	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	816143	822490	-0.5	SSYh1:1152:GCA_028878055.2T00000385134	+	Other gene	41542886	41549233	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	1249002	1253134	-0.5	HSAh1:219:ZNRD1ASP	-	Other gene	29918880	29923012	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	1810913	1830664	-0.5	GGOh1:197:GCA_029281585.2T00001614686	+	Other gene	48259701	48279452	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	1802599	1822349	-0.5	GGOh2:liftoff:ctx0088	+	Other gene	40677587	40697337	source representative context model	same-species Liftoff projection	GGOh1:197:GCA_029281585.2T00001614686	1	1	
+HSAh1	HSAh1	HSAh1	1765742	1785821	-0.5	HSAh1:304:ABCF1	+	Other gene	30435620	30455699	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2332020	2348168	-0.5	SSYh1:658:GCA_028878055.2T00000378236	-	Other gene	40017208	40033356	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2793361	2796627	-0.5	SSYh1:347:GCA_028878055.2T00000372818	-	Other gene	39568749	39572015	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2780641	2789471	-0.5	SSYh1:361:GCA_028878055.2T00000373004	-	Other gene	39575905	39584735	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2768486	2770232	-0.5	GGOh1:527:GCA_029281585.2T00001619287	+	Other gene	49217274	49219020	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	2806705	2808451	-0.5	GGOh2:liftoff:ctx0089	+	Other gene	41681693	41683439	source representative context model	same-species Liftoff projection	GGOh1:527:GCA_029281585.2T00001619287	1	0.998	
+HSAh1	HSAh1	HSAh1	2798405	2799682	-0.5	HSAh1:599:AIF1	+	Other gene	31468283	31469560	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	3083769	3106196	-0.5	GGOh1:757:GCA_029281585.2T00001623313	+	Other gene	49532557	49554984	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	3122019	3144450	-0.5	GGOh2:liftoff:ctx0090	+	Other gene	41997007	42019438	source representative context model	same-species Liftoff projection	GGOh1:757:GCA_029281585.2T00001623313	1	0.998	
+SSYh1	SSYh1	SSYh1	3555812	3572039	-0.5	SSYh1:242:GCA_028878055.2T00000371114	-	Other gene	38793337	38809564	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2763990	2765959	-0.5	SSYh1:391:GCA_028878055.2T00000373498	-	Other gene	39599417	39601386	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2332023	2360048	-0.5	SSYh1:647:GCA_028878055.2T00000377979	-	Other gene	40005328	40033353	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2819426	2826873	-0.5	GGOh1:592:GCA_029281585.2T00001620362	+	Other gene	49268214	49275661	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	2857631	2865077	-0.5	GGOh2:liftoff:ctx0091	+	Other gene	41732619	41740065	source representative context model	same-species Liftoff projection	GGOh1:592:GCA_029281585.2T00001620362	1	0.998	
+SSYh1	SSYh1	SSYh1	3428477	3453830	-0.5	SSYh1:274:GCA_028878055.2T00000371376	-	Other gene	38911546	38936899	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2805696	2811390	-0.5	GGOh1:574:GCA_029281585.2T00001620117	+	Other gene	49254484	49260178	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	2843913	2849605	-0.5	GGOh2:liftoff:ctx0092	+	Other gene	41718901	41724593	source representative context model	same-species Liftoff projection	GGOh1:574:GCA_029281585.2T00001620117	1	1	
+HSAh1	HSAh1	HSAh1	2839048	2841365	-0.5	HSAh1:686:APOM	+	Other gene	31508926	31511243	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	1865012	1884747	-0.5	GGOh1:216:GCA_029281585.2T00001615003	+	Other gene	48313800	48333535	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	1856697	1876432	-0.5	GGOh2:liftoff:ctx0093	+	Other gene	40731685	40751420	source representative context model	same-species Liftoff projection	GGOh1:216:GCA_029281585.2T00001615003	1	1	
+HSAh1	HSAh1	HSAh1	1821176	1838942	-0.5	HSAh1:320:ATAT1	+	Other gene	30491054	30508820	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2724852	2738363	-0.5	SSYh1:399:GCA_028878055.2T00000373596	-	Other gene	39627013	39640524	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2183972	2186340	-0.5	SSYh1:794:GCA_028878055.2T00000380049	-	Other gene	40179036	40181404	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2169773	2186079	-0.5	SSYh1:800:GCA_028878055.2T00000380097	-	Other gene	40179297	40195603	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	4550989	4552692	-0.5	GGOh1:1148:GCA_029281585.2T00001629570	+	Other gene	50999777	51001480	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	4450741	4452444	-0.5	GGOh2:liftoff:ctx0094	+	Other gene	43325729	43327432	source representative context model	same-species Liftoff projection	GGOh1:1148:GCA_029281585.2T00001629570	1	1	
+HSAh1	HSAh1	HSAh1	4428606	4430309	-0.5	HSAh1:987:B3GALT4	+	Other gene	33098484	33100187	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2279052	2293470	-0.5	SSYh1:704:GCA_028878055.2T00000378846	-	Other gene	40071906	40086324	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	4240776	4248623	-0.5	SSYh1:44:GCA_028878055.2T00000368125	-	Other gene	38116753	38124600	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	4232063	4245099	-0.5	GGOh1:1070:GCA_029281585.2T00001628255	+	Other gene	50680851	50693887	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	4131787	4144820	-0.5	GGOh2:liftoff:ctx0095	+	Other gene	43006775	43019808	source representative context model	same-species Liftoff projection	GGOh1:1070:GCA_029281585.2T00001628255	1	1	
+HSAh1	HSAh1	HSAh1	4120074	4132989	-0.5	HSAh1:928:BRD2	+	Other gene	32789952	32802867	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	3038948	3052108	-0.5	SSYh1:311:GCA_028878055.2T00000371898	-	Other gene	39313268	39326428	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	3090246	3099833	-0.5	GGOh1:765:GCA_029281585.2T00001623284	+	Other gene	49539034	49548621	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	3128508	3138087	-0.5	GGOh2:liftoff:ctx0096	+	Other gene	42003496	42013075	source representative context model	same-species Liftoff projection	GGOh1:765:GCA_029281585.2T00001623284	1	0.997	
+HSAh1	HSAh1	HSAh1	3111093	3128999	-0.5	HSAh1:786:C2	+	Other gene	31780971	31798877	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	3134669	3148920	-0.5	GGOh1:843:GCA_029281585.2T00001624360	+	Other gene	49583457	49597708	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	3172896	3187147	-0.5	GGOh2:liftoff:ctx0097	+	Other gene	42047884	42062135	source representative context model	same-species Liftoff projection	GGOh1:843:GCA_029281585.2T00001624360	1	0.998	
+HSAh1	HSAh1	HSAh1	3165384	3186009	-0.5	HSAh1:813:C4A	+	Other gene	31835262	31855887	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	3161128	3175379	-0.5	GGOh1:860:GCA_029281585.2T00001624611	+	Other gene	49609916	49624167	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	3199353	3213602	-0.5	GGOh2:liftoff:ctx0098	+	Other gene	42074341	42088590	source representative context model	same-species Liftoff projection	GGOh1:860:GCA_029281585.2T00001624611	0.999	0.998	
+HSAh1	HSAh1	HSAh1	3198122	3218747	-0.5	HSAh1:817:C4B	+	Other gene	31868000	31888625	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	1887133	1893648	-0.5	GGOh1:224:GCA_029281585.2T00001615114	+	Other gene	48335921	48342436	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	1878818	1885333	-0.5	GGOh2:liftoff:ctx0099	+	Other gene	40753806	40760321	source representative context model	same-species Liftoff projection	GGOh1:224:GCA_029281585.2T00001615114	1	1	
+HSAh1	HSAh1	HSAh1	1841434	1847503	-0.5	HSAh1:327:C6orf136	+	Other gene	30511312	30517381	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	1845021	1846459	-0.5	SSYh1:902:GCA_028878055.2T00000381392	-	Other gene	40518917	40520355	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2299118	2301587	-0.5	SSYh1:698:GCA_028878055.2T00000378700	-	Other gene	40063789	40066258	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	1878180	1894717	-0.5	SSYh1:884:GCA_028878055.2T00000381196	-	Other gene	40470659	40487196	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	1849261	1854633	-0.5	SSYh1:899:GCA_028878055.2T00000381383	-	Other gene	40510743	40516115	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	3100255	3106232	-0.5	GGOh1:769:GCA_029281585.2T00001623453	+	Other gene	49549043	49555020	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	3138509	3144486	-0.5	GGOh2:liftoff:ctx0100	+	Other gene	42013497	42019474	source representative context model	same-species Liftoff projection	GGOh1:769:GCA_029281585.2T00001623453	1	0.999	
+HSAh1	HSAh1	HSAh1	3129421	3135411	-0.5	HSAh1:788:CFB	+	Other gene	31799299	31805289	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2376971	2384006	-0.5	SSYh1:616:GCA_028878055.2T00000377580	-	Other gene	39981370	39988405	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	3794485	3825171	-0.5	SSYh1:197:GCA_028878055.2T00000370436	-	Other gene	38540205	38570891	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2819405	2823667	-0.5	GGOh1:588:GCA_029281585.2T00001620304	+	Other gene	49268193	49272455	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	2857610	2861872	-0.5	GGOh2:liftoff:ctx0101	+	Other gene	41732598	41736860	source representative context model	same-species Liftoff projection	GGOh1:588:GCA_029281585.2T00001620304	1	0.998	
+HSAh1	HSAh1	HSAh1	2849235	2853223	-0.5	HSAh1:700:CSNK2B	+	Other gene	31519113	31523101	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	4094637	4096182	-0.5	SSYh1:82:GCA_028878055.2T00000368702	-	Other gene	38269194	38270739	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	3188963	3192237	-0.5	HSAh1:814:CYP21A1P	+	Other gene	31858841	31862115	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	3178305	3181583	-0.5	GGOh1:881:GCA_029281585.2T00001624991	+	Other gene	49627093	49630371	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	3216530	3219808	-0.5	GGOh2:liftoff:ctx0102	+	Other gene	42091518	42094796	source representative context model	same-species Liftoff projection	GGOh1:881:GCA_029281585.2T00001624991	1	0.995	
+HSAh1	HSAh1	HSAh1	3221743	3224968	-0.5	HSAh1:819:CYP21A2	+	Other gene	31891621	31894846	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	3954856	3959343	-0.5	SSYh1:112:GCA_028878055.2T00000369173	-	Other gene	38406033	38410520	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2373429	2375912	-0.5	SSYh1:626:GCA_028878055.2T00000377725	-	Other gene	39989464	39991947	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2124730	2144036	-0.5	GGOh1:287:GCA_029281585.2T00001615873	+	Other gene	48573518	48592824	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	2116329	2135635	-0.5	GGOh2:liftoff:ctx0103	+	Other gene	40991317	41010623	source representative context model	same-species Liftoff projection	GGOh1:287:GCA_029281585.2T00001615873	1	0.999	
+HSAh1	HSAh1	HSAh1	2077712	2094950	-0.5	HSAh1:399:DDR1	+	Other gene	30747590	30764828	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2171956	2181517	-0.5	SSYh1:807:GCA_028878055.2T00000380227	-	Other gene	40183859	40193420	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	2725517	2726352	-0.5	HSAh1:564:DDX39B-AS1	+	Other gene	31395395	31396230	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	1102557	1103460	-0.5	HSAh1:198:DDX39BP1	+	Other gene	29772435	29773338	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	1187223	1188148	-0.5	HSAh1:211:DDX39BP2	+	Other gene	29857101	29858026	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	1397802	1418051	-0.5	SSYh1:1033:GCA_028878055.2T00000383501	-	Other gene	40947325	40967574	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2619657	2622106	-0.5	SSYh1:451:GCA_028878055.2T00000374692	-	Other gene	39743270	39745719	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	3305700	3308754	-0.5	GGOh1:942:GCA_029281585.2T00001626202	+	Other gene	49754488	49757542	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	3342795	3345880	-0.5	GGOh2:liftoff:ctx0104	+	Other gene	42217783	42220868	source representative context model	same-species Liftoff projection	GGOh1:942:GCA_029281585.2T00001626202	1	0.987	
+HSAh1	HSAh1	HSAh1	3347906	3351594	-0.5	HSAh1:840:EGFL8	+	Other gene	32017784	32021472	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2532242	2549960	-0.5	SSYh1:533:GCA_028878055.2T00000376132	-	Other gene	39815416	39833134	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	3061164	3067561	-0.5	HSAh1:766:EHMT2-AS1	+	Other gene	31731042	31737439	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	1226076	1228241	-0.5	HSAh1:218:ETF1P1	+	Other gene	29895954	29898119	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	2563689	2564002	-0.5	HSAh1:537:FGFR3P1	+	Other gene	31233567	31233880	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2738823	2740381	-0.5	SSYh1:397:GCA_028878055.2T00000373545	-	Other gene	39624995	39626553	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	1476437	1492027	-0.5	SSYh1:993:GCA_028878055.2T00000383047	-	Other gene	40873349	40888939	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	515654	546652	-0.5	SSYh1:1200:GCA_028878055.2T00000385737	-	Other gene	41818724	41849722	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	4735010	4740338	-0.5	HSAh1:1091:GGNBP1	+	Other gene	33404888	33410216	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	1280014	1296122	-0.5	SSYh1:1085:GCA_028878055.2T00000384299	-	Other gene	41069254	41085362	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2304234	2308763	-0.5	SSYh1:690:GCA_028878055.2T00000378609	-	Other gene	40056613	40061142	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2803136	2805242	-0.5	SSYh1:333:GCA_028878055.2T00000372593	-	Other gene	39560134	39562240	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	4696205	4825366	-0.5	SSYh1:4:GCA_028878055.2T00000367264	-	Other gene	37540010	37669171	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2151736	2157635	-0.5	GGOh1:342:GCA_029281585.2T00001616824	+	Other gene	48600524	48606423	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	2143339	2149238	-0.5	GGOh2:liftoff:ctx0105	+	Other gene	41018327	41024226	source representative context model	same-species Liftoff projection	GGOh1:342:GCA_029281585.2T00001616824	1	1	
+HSAh1	HSAh1	HSAh1	2102994	2108894	-0.5	HSAh1:452:GTF2H4	+	Other gene	30772872	30778772	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	101443	102232	-0.5	HSAh1:16:HCG14	+	Other gene	28771321	28772110	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	190763	193486	-0.5	HSAh1:31:HCG15	+	Other gene	28860641	28863364	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	1961280	1987016	-0.5	HSAh1:387:HCG20	+	Other gene	30631158	30656894	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	2251305	2257707	-0.5	HSAh1:469:HCG22	+	Other gene	30921183	30927585	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	3573554	3576736	-0.5	HSAh1:882:HCG23	+	Other gene	32243432	32246614	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	4294797	4300289	-0.5	HSAh1:948:HCG24	+	Other gene	32964675	32970167	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	4401019	4406374	-0.5	HSAh1:977:HCG25	+	Other gene	33070897	33076252	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	2654475	2655655	-0.5	HSAh1:550:HCG26	+	Other gene	31324353	31325533	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	2395577	2401783	-0.5	HSAh1:524:HCG27	+	Other gene	31065455	31071661	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	1169117	1172407	-0.5	HSAh1:210:HCG9	+	Other gene	29838995	29842285	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	950461	950856	-0.5	HSAh1:171:HCG9P5	+	Other gene	29620339	29620734	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	2646426	2649056	-0.5	HSAh1:549:HCP5	+	Other gene	31316304	31318934	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2035054	2038285	-0.5	SSYh1:838:GCA_028878055.2T00000380575	-	Other gene	40327091	40330322	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	3813026	3813877	-0.5	HSAh1:897:HLA-DQB1-AS1	+	Other gene	32482904	32483755	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	3508604	3509928	-0.5	HSAh1:880:HNRNPA1P2	+	Other gene	32178482	32179806	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	4477238	4479409	-0.5	GGOh1:1124:GCA_029281585.2T00001629263	+	Other gene	50926026	50928197	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	4377039	4379210	-0.5	GGOh2:liftoff:ctx0106	+	Other gene	43252027	43254198	source representative context model	same-species Liftoff projection	GGOh1:1124:GCA_029281585.2T00001629263	1	1	
+HSAh1	HSAh1	HSAh1	4356129	4358306	-0.5	HSAh1:970:HSD17B8	+	Other gene	33026007	33028184	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2969604	2972028	-0.5	GGOh1:718:GCA_029281585.2T00001622298	+	Other gene	49418392	49420816	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	3007840	3010264	-0.5	GGOh2:liftoff:ctx0107	+	Other gene	41882828	41885252	source representative context model	same-species Liftoff projection	GGOh1:718:GCA_029281585.2T00001622298	1	0.998	
+HSAh1	HSAh1	HSAh1	2998721	3001121	-0.5	HSAh1:749:HSPA1A	+	Other gene	31668599	31670999	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2981823	2984326	-0.5	GGOh1:720:GCA_029281585.2T00001622315	+	Other gene	49430611	49433114	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	3020036	3022549	-0.5	GGOh2:liftoff:ctx0108	+	Other gene	41895024	41897537	source representative context model	same-species Liftoff projection	GGOh1:720:GCA_029281585.2T00001622315	1	0.991	
+HSAh1	HSAh1	HSAh1	3010923	3013439	-0.5	HSAh1:750:HSPA1B	+	Other gene	31680801	31683317	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2455324	2461054	-0.5	SSYh1:558:GCA_028878055.2T00000376581	-	Other gene	39904322	39910052	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	1492481	1493816	-0.5	SSYh1:990:GCA_028878055.2T00000383023	-	Other gene	40871560	40872895	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	1937287	1937998	-0.5	HSAh1:384:IER3-AS1	+	Other gene	30607165	30607876	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	4392834	4417958	-0.5	SSYh1:33:GCA_028878055.2T00000367673	-	Other gene	37947418	37972542	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	4908843	4987229	-0.5	GGOh1:1267:GCA_029281585.2T00001631190	+	Other gene	51357631	51436017	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	4806446	4884774	-0.5	GGOh2:liftoff:ctx0109	+	Other gene	43681434	43759762	source representative context model	same-species Liftoff projection	GGOh1:1267:GCA_029281585.2T00001631190	1	0.997	
+HSAh1	HSAh1	HSAh1	4774655	4847869	-0.5	HSAh1:1097:ITPR3	+	Other gene	33444533	33517747	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	4680890	4698990	-0.5	GGOh1:1202:GCA_029281585.2T00001630190	+	Other gene	51129678	51147778	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	4580648	4598740	-0.5	GGOh2:liftoff:ctx0110	+	Other gene	43455636	43473728	source representative context model	same-species Liftoff projection	GGOh1:1202:GCA_029281585.2T00001630190	0.99	0.99	
+HSAh1	HSAh1	HSAh1	4542944	4561380	-0.5	HSAh1:1034:KIFC1	+	Other gene	33212822	33231258	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	4442945	4453927	-0.5	SSYh1:26:GCA_028878055.2T00000367610	-	Other gene	37911449	37922431	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	734189	738352	-0.5	HSAh1:117:LINC01015	+	Other gene	29404067	29408230	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	2627889	2633195	-0.5	HSAh1:547:LINC01149	+	Other gene	31297767	31303073	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	148685	149440	-0.5	HSAh1:22:LINC01556	+	Other gene	28818563	28819318	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	1710562	1713880	-0.5	HSAh1:297:LINC02569	+	Other gene	30380440	30383758	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	702253	715343	-0.5	HSAh1:115:LINC02829	+	Other gene	29372131	29385221	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	428866	471965	-0.5	HSAh1:75:LINC03003	+	Other gene	29098744	29141843	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	4045622	4055213	-0.5	HSAh1:922:LOC100294145	+	Other gene	32715500	32725091	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	3870225	3871038	-0.5	HSAh1:899:LOC102725019	+	Other gene	32540103	32540916	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	680477	690132	-0.5	HSAh1:109:LOC105375008	+	Other gene	29350355	29360010	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	2872804	2874472	-0.5	HSAh1:709:LOC105375018	+	Other gene	31542682	31544350	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	2866007	2870006	-0.5	HSAh1:704:LOC105375019	+	Other gene	31535885	31539884	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	4940679	4954328	-0.5	HSAh1:1123:LOC105375024	+	Other gene	33610557	33624206	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	5044445	5066114	-0.5	HSAh1:1138:LOC105375026	+	Other gene	33714323	33735992	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	5016666	5031494	-0.5	HSAh1:1132:LOC105375027	+	Other gene	33686544	33701372	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	400101	405386	-0.5	HSAh1:73:LOC124901297	+	Other gene	29069979	29075264	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	2131831	2133697	-0.5	HSAh1:458:LOC124901299	+	Other gene	30801709	30803575	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	2571248	2573850	-0.5	HSAh1:540:LOC124901300	+	Other gene	31241126	31243728	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	4474157	4475131	-0.5	HSAh1:1029:LOC124901303	+	Other gene	33144035	33145009	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	4781352	4783286	-0.5	HSAh1:1098:LOC124901305	+	Other gene	33451230	33453164	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	4995305	4998134	-0.5	HSAh1:1129:LOC124901306	+	Other gene	33665183	33668012	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	5071557	5076016	-0.5	HSAh1:1149:LOC124901307	+	Other gene	33741435	33745894	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	5086541	5088512	-0.5	HSAh1:1150:LOC124901308	+	Other gene	33756419	33758390	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	1752	1908	-0.5	HSAh1:2:LOC124901504	+	Other gene	28671630	28671786	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2442330	2451857	-0.5	SSYh1:559:GCA_028878055.2T00000376591	-	Other gene	39913519	39923046	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2739954	2742649	-0.5	GGOh1:499:GCA_029281585.2T00001618996	+	Other gene	49188742	49191437	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	2778151	2780840	-0.5	GGOh2:liftoff:ctx0111	+	Other gene	41653139	41655828	source representative context model	same-species Liftoff projection	GGOh1:499:GCA_029281585.2T00001618996	0.996	0.996	
+HSAh1	HSAh1	HSAh1	2769870	2772079	-0.5	HSAh1:588:LST1	+	Other gene	31439748	31441957	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2725834	2728098	-0.5	GGOh1:489:GCA_029281585.2T00001618903	+	Other gene	49174622	49176886	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	2764028	2766292	-0.5	GGOh2:liftoff:ctx0112	+	Other gene	41639016	41641280	source representative context model	same-species Liftoff projection	GGOh1:489:GCA_029281585.2T00001618903	1	0.998	
+HSAh1	HSAh1	HSAh1	2743810	2757498	-0.5	HSAh1:574:LTA	+	Other gene	31413688	31427376	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2219868	2221651	-0.5	SSYh1:781:GCA_028878055.2T00000379919	-	Other gene	40143725	40145508	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2823490	2826873	-0.5	GGOh1:597:GCA_029281585.2T00001620413	+	Other gene	49272278	49275661	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	2861695	2865077	-0.5	GGOh2:liftoff:ctx0113	+	Other gene	41736683	41740065	source representative context model	same-species Liftoff projection	GGOh1:597:GCA_029281585.2T00001620413	1	0.998	
+HSAh1	HSAh1	HSAh1	2853131	2856702	-0.5	HSAh1:702:LY6G5B	+	Other gene	31523009	31526580	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2319355	2322777	-0.5	SSYh1:674:GCA_028878055.2T00000378424	-	Other gene	40042599	40046021	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2364610	2367648	-0.5	SSYh1:642:GCA_028878055.2T00000377926	-	Other gene	39997728	40000766	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2869255	2871722	-0.5	GGOh1:630:GCA_029281585.2T00001620917	+	Other gene	49318043	49320510	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	2907465	2909919	-0.5	GGOh2:liftoff:ctx0114	+	Other gene	41782453	41784907	source representative context model	same-species Liftoff projection	GGOh1:630:GCA_029281585.2T00001620917	1	0.998	
+HSAh1	HSAh1	HSAh1	2898504	2901074	-0.5	HSAh1:717:LY6G6D	+	Other gene	31568382	31570952	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2357475	2360041	-0.5	SSYh1:648:GCA_028878055.2T00000378029	-	Other gene	40005335	40007901	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2860731	2864549	-0.5	GGOh1:624:GCA_029281585.2T00001620841	+	Other gene	49309519	49313337	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	2898949	2902760	-0.5	GGOh2:liftoff:ctx0115	+	Other gene	41773937	41777748	source representative context model	same-species Liftoff projection	GGOh1:624:GCA_029281585.2T00001620841	1	0.997	
+HSAh1	HSAh1	HSAh1	2890022	2893836	-0.5	HSAh1:713:LY6G6F	+	Other gene	31559900	31563714	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2860769	2871836	-0.5	GGOh1:625:GCA_029281585.2T00001620859	+	Other gene	49309557	49320624	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	2898987	2910033	-0.5	GGOh2:liftoff:ctx0116	+	Other gene	41773975	41785021	source representative context model	same-species Liftoff projection	GGOh1:625:GCA_029281585.2T00001620859	1	0.996	
+HSAh1	HSAh1	HSAh1	2890022	2901074	-0.5	HSAh1:714:LY6G6F-LY6G6D	+	Other gene	31559900	31570952	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	407119	408380	-0.5	SSYh1:1223:GCA_028878055.2T00000386193	-	Other gene	41956996	41958257	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2682766	2684037	-0.5	GGOh1:453:GCA_029281585.2T00001618456	+	Other gene	49131554	49132825	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	2720946	2722217	-0.5	GGOh2:liftoff:ctx0117	+	Other gene	41595934	41597205	source representative context model	same-species Liftoff projection	GGOh1:453:GCA_029281585.2T00001618456	1	1	
+HSAh1	HSAh1	HSAh1	2712179	2713450	-0.5	HSAh1:557:MCCD1	+	Other gene	31382057	31383328	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	1446936	1465424	-0.5	SSYh1:1009:GCA_028878055.2T00000383265	-	Other gene	40899952	40918440	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	1897392	1907509	-0.5	HSAh1:369:MDC1-AS1	+	Other gene	30567270	30577387	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2648259	2663877	-0.5	GGOh1:447:GCA_029281585.2T00001618390	+	Other gene	49097047	49112665	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	2686420	2702037	-0.5	GGOh2:liftoff:ctx0118	+	Other gene	41561408	41577025	source representative context model	same-species Liftoff projection	GGOh1:447:GCA_029281585.2T00001618390	0.998	0.994	
+HSAh1	HSAh1	HSAh1	2589602	2601323	-0.5	HSAh1:546:MICA	+	Other gene	31259480	31271201	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	2681373	2694346	-0.5	HSAh1:553:MICB	+	Other gene	31351251	31364224	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	1609044	1610970	-0.5	HSAh1:290:MICC	+	Other gene	30278922	30280848	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	4359309	4359419	-0.5	HSAh1:971:MIR219A1	+	Other gene	33029187	33029297	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	4849434	4849541	-0.5	HSAh1:1103:MIR3934	+	Other gene	33519312	33519419	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	2085660	2085750	-0.5	HSAh1:449:MIR4640	+	Other gene	30755538	30755628	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	4589815	4589922	-0.5	HSAh1:1079:MIR5004	+	Other gene	33259693	33259800	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	2816951	2817023	-0.5	HSAh1:607:MIR6832	+	Other gene	31486829	31486901	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	3363128	3363189	-0.5	HSAh1:849:MIR6833	+	Other gene	32033006	32033067	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	4441728	4441809	-0.5	HSAh1:1001:MIR6834	+	Other gene	33111606	33111687	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	5050450	5050516	-0.5	HSAh1:1141:MIR7159	+	Other gene	33720328	33720394	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	1778636	1778722	-0.5	HSAh1:306:MIR877	+	Other gene	30448514	30448600	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	4466368	4474647	-0.5	SSYh1:15:GCA_028878055.2T00000367439	-	Other gene	37890729	37899008	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	865668	880165	-0.5	GGOh1:69:GCA_029281585.2T00001613028	+	Other gene	47314456	47328953	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	864102	878601	-0.5	GGOh2:liftoff:ctx0119	+	Other gene	39739090	39753589	source representative context model	same-species Liftoff projection	GGOh1:69:GCA_029281585.2T00001613028	1	1	
+HSAh1	HSAh1	HSAh1	861909	877185	-0.5	HSAh1:140:MOG	+	Other gene	29531787	29547063	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2877335	2880684	-0.5	GGOh1:640:GCA_029281585.2T00001621007	+	Other gene	49326123	49329472	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	2915540	2918895	-0.5	GGOh2:liftoff:ctx0120	+	Other gene	41790528	41793883	source representative context model	same-species Liftoff projection	GGOh1:640:GCA_029281585.2T00001621007	1	0.998	
+HSAh1	HSAh1	HSAh1	2906527	2909869	-0.5	HSAh1:720:MPIG6B	+	Other gene	31576405	31579747	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	1855993	1864532	-0.5	GGOh1:210:GCA_029281585.2T00001614879	+	Other gene	48304781	48313320	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	1847677	1856217	-0.5	GGOh2:liftoff:ctx0121	+	Other gene	40722665	40731205	source representative context model	same-species Liftoff projection	GGOh1:210:GCA_029281585.2T00001614879	1	1	
+HSAh1	HSAh1	HSAh1	1812142	1820695	-0.5	HSAh1:315:MRPS18B	+	Other gene	30482020	30490573	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2893960	2916789	-0.5	GGOh1:667:GCA_029281585.2T00001621479	+	Other gene	49342748	49365577	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	2932181	2955005	-0.5	GGOh2:liftoff:ctx0122	+	Other gene	41807169	41829993	source representative context model	same-species Liftoff projection	GGOh1:667:GCA_029281585.2T00001621479	1	0.998	
+HSAh1	HSAh1	HSAh1	2923150	2945845	-0.5	HSAh1:737:MSH5	+	Other gene	31593028	31615723	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2893970	2918984	-0.5	GGOh1:668:GCA_029281585.2T00001621822	+	Other gene	49342758	49367772	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	2932191	2957200	-0.5	GGOh2:liftoff:ctx0123	+	Other gene	41807179	41832188	source representative context model	same-species Liftoff projection	GGOh1:668:GCA_029281585.2T00001621822	1	0.998	
+HSAh1	HSAh1	HSAh1	2923093	2948019	-0.5	HSAh1:733:MSH5-SAPCD1	+	Other gene	31592971	31617897	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2773901	2790965	-0.5	GGOh1:531:GCA_029281585.2T00001619352	+	Other gene	49222689	49239753	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	2812117	2829184	-0.5	GGOh2:liftoff:ctx0124	+	Other gene	41687105	41704172	source representative context model	same-species Liftoff projection	GGOh1:531:GCA_029281585.2T00001619352	1	0.998	
+SSYh1	SSYh1	SSYh1	3881285	3906681	-0.5	SSYh1:171:GCA_028878055.2T00000369812	-	Other gene	38458695	38484091	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2228016	2234032	-0.5	GGOh1:368:GCA_029281585.2T00001617418	+	Other gene	48676804	48682820	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	2178503	2184684	-0.5	HSAh1:465:MUC21	+	Other gene	30848381	30854562	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2256090	2280459	-0.5	GGOh1:369:GCA_029281585.2T00001617430	+	Other gene	48704878	48729247	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	2205260	2230530	-0.5	HSAh1:468:MUC22	+	Other gene	30875138	30900408	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2178086	2198496	-0.5	GGOh1:364:GCA_029281585.2T00001617366	+	Other gene	48626874	48647284	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	2175760	2189063	-0.5	GGOh2:recovered:MUCL3	+	Other gene	41050748	41064051	source representative context model	same-species Liftoff projection	GGOh1:366:GCA_029281585.2T00001617394	0.99	0.988	alternative same-species transcript; strict95
+HSAh1	HSAh1	HSAh1	2135764	2149010	-0.5	HSAh1:461:MUCL3	+	Other gene	30805642	30818888	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	4490446	4491195	-0.5	HSAh1:1031:MYL12BP3	+	Other gene	33160324	33161073	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2228124	2232036	-0.5	SSYh1:754:GCA_028878055.2T00000379650	-	Other gene	40133340	40137252	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2602299	2608677	-0.5	SSYh1:489:GCA_028878055.2T00000375200	-	Other gene	39756699	39763077	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2509613	2514994	-0.5	SSYh1:554:GCA_028878055.2T00000376551	-	Other gene	39850382	39855763	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2701395	2712617	-0.5	GGOh1:485:GCA_029281585.2T00001618859	+	Other gene	49150183	49161405	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	2739579	2750806	-0.5	GGOh2:liftoff:ctx0128	+	Other gene	41614567	41625794	source representative context model	same-species Liftoff projection	GGOh1:485:GCA_029281585.2T00001618859	1	1	
+HSAh1	HSAh1	HSAh1	2730816	2742030	-0.5	HSAh1:572:NFKBIL1	+	Other gene	31400694	31411908	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2807281	2836208	-0.5	SSYh1:325:GCA_028878055.2T00000372447	-	Other gene	39529168	39558095	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	1434495	1437922	-0.5	SSYh1:1017:GCA_028878055.2T00000383360	-	Other gene	40927454	40930881	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	653601	655273	-0.5	GGOh1:31:GCA_029281585.2T00001612437	+	Other gene	47102389	47104061	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	648480	650152	-0.5	GGOh2:liftoff:ctx0129	+	Other gene	39523468	39525140	source representative context model	same-species Liftoff projection	GGOh1:31:GCA_029281585.2T00001612437	1	1	
+HSAh1	HSAh1	HSAh1	644083	645755	-0.5	HSAh1:94:OR10C1	+	Other gene	29313961	29315633	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	621844	623176	-0.5	HSAh1:90:OR12D1	+	Other gene	29291722	29293054	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	607449	609684	-0.5	GGOh1:25:GCA_029281585.2T00001612380	+	Other gene	47056237	47058472	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	601576	603811	-0.5	GGOh2:liftoff:ctx0130	+	Other gene	39476564	39478799	source representative context model	same-species Liftoff projection	GGOh1:25:GCA_029281585.2T00001612380	1	1	
+HSAh1	HSAh1	HSAh1	600542	602777	-0.5	HSAh1:89:OR12D2	+	Other gene	29270420	29272655	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	512756	523988	-0.5	GGOh1:19:GCA_029281585.2T00001612327	+	Other gene	46961544	46972776	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	506879	518111	-0.5	GGOh2:liftoff:ctx0131	+	Other gene	39381867	39393099	source representative context model	same-species Liftoff projection	GGOh1:19:GCA_029281585.2T00001612327	1	1	
+HSAh1	HSAh1	HSAh1	506586	517915	-0.5	HSAh1:83:OR14J1	+	Other gene	29176464	29187793	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	495478	496633	-0.5	HSAh1:82:OR2B4P	+	Other gene	29165356	29166511	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	671388	678527	-0.5	GGOh1:33:GCA_029281585.2T00001612451	+	Other gene	47120176	47127315	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	666267	673406	-0.5	GGOh2:liftoff:ctx0132	+	Other gene	39541255	39548394	source representative context model	same-species Liftoff projection	GGOh1:33:GCA_029281585.2T00001612451	1	1	
+HSAh1	HSAh1	HSAh1	661934	669108	-0.5	HSAh1:105:OR2H1	+	Other gene	29331812	29338986	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	801378	806647	-0.5	GGOh1:46:GCA_029281585.2T00001612981	+	Other gene	47250166	47255435	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	799829	805098	-0.5	GGOh2:liftoff:ctx0133	+	Other gene	39674817	39680086	source representative context model	same-species Liftoff projection	GGOh1:46:GCA_029281585.2T00001612981	1	0.999	
+HSAh1	HSAh1	HSAh1	789922	795301	-0.5	HSAh1:126:OR2H2	+	Other gene	29459800	29465179	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	420129	421070	-0.5	HSAh1:74:OR2H4P	+	Other gene	29090007	29090948	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	778873	779452	-0.5	HSAh1:122:OR2H5P	+	Other gene	29448751	29449330	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	763801	771121	-0.5	GGOh1:42:GCA_029281585.2T00001612524	+	Other gene	47212589	47219909	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	758657	765977	-0.5	GGOh2:liftoff:ctx0134	+	Other gene	39633645	39640965	source representative context model	same-species Liftoff projection	GGOh1:42:GCA_029281585.2T00001612524	1	0.999	
+HSAh1	HSAh1	HSAh1	755190	762579	-0.5	HSAh1:120:OR2I1P	+	Other gene	29425068	29432457	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	309095	312141	-0.5	GGOh1:12:GCA_029281585.2T00001612259	+	Other gene	46757883	46760929	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	309170	312215	-0.5	GGOh2:liftoff:ctx0135	+	Other gene	39184158	39187203	source representative context model	same-species Liftoff projection	GGOh1:12:GCA_029281585.2T00001612259	0.999	0.999	
+HSAh1	HSAh1	HSAh1	304334	307553	-0.5	HSAh1:68:OR2J1	+	Other gene	28974212	28977431	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	375529	380432	-0.5	GGOh1:17:GCA_029281585.2T00001612311	+	Other gene	46824317	46829220	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	369824	374727	-0.5	GGOh2:liftoff:ctx0136	+	Other gene	39244812	39249715	source representative context model	same-species Liftoff projection	GGOh1:17:GCA_029281585.2T00001612311	1	0.996	
+HSAh1	HSAh1	HSAh1	375757	380658	-0.5	HSAh1:71:OR2J2	+	Other gene	29045635	29050536	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	317656	324181	-0.5	GGOh1:15:GCA_029281585.2T00001612288	+	Other gene	46766444	46772969	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	317744	324260	-0.5	GGOh2:liftoff:ctx0137	+	Other gene	39192732	39199248	source representative context model	same-species Liftoff projection	GGOh1:15:GCA_029281585.2T00001612288	0.999	0.998	
+HSAh1	HSAh1	HSAh1	312907	319614	-0.5	HSAh1:69:OR2J3	+	Other gene	28982785	28989492	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	386376	387309	-0.5	HSAh1:72:OR2J4P	+	Other gene	29056254	29057187	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	256232	257260	-0.5	SSYh1:1226:GCA_028878055.2T00000386218	-	Other gene	42108116	42109144	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	240846	281551	-0.5	HSAh1:63:OR2W1-AS1	+	Other gene	28910724	28951429	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2797114	2802574	-0.5	SSYh1:335:GCA_028878055.2T00000372620	-	Other gene	39562802	39568262	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	4563600	4572211	-0.5	GGOh1:1165:GCA_029281585.2T00001629746	+	Other gene	51012388	51020999	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	4463352	4471963	-0.5	GGOh2:liftoff:ctx0138	+	Other gene	43338340	43346951	source representative context model	same-species Liftoff projection	GGOh1:1165:GCA_029281585.2T00001629746	1	1	
+HSAh1	HSAh1	HSAh1	4441084	4442417	-0.5	HSAh1:997:PFDN6	+	Other gene	33110962	33112295	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	4700130	4705550	-0.5	GGOh1:1211:GCA_029281585.2T00001630362	+	Other gene	51148918	51154338	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	4599880	4605300	-0.5	GGOh2:liftoff:ctx0139	+	Other gene	43474868	43480288	source representative context model	same-species Liftoff projection	GGOh1:1211:GCA_029281585.2T00001630362	1	1	
+HSAh1	HSAh1	HSAh1	4562173	4567923	-0.5	HSAh1:1044:PHF1	+	Other gene	33232051	33237801	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	1255666	1259303	-0.5	HSAh1:222:POLR1H	+	Other gene	29925544	29929181	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	2338539	2338726	-0.5	HSAh1:476:POLR2LP1	+	Other gene	31008417	31008604	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	1901542	1904584	-0.5	SSYh1:851:GCA_028878055.2T00000380708	-	Other gene	40460792	40463834	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	1340745	1357819	-0.5	SSYh1:1067:GCA_028878055.2T00000383999	-	Other gene	41007557	41024631	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	1341940	1344067	-0.5	GGOh1:130:GCA_029281585.2T00001613825	+	Other gene	47790728	47792855	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	1333664	1335791	-0.5	GGOh2:liftoff:ctx0140	+	Other gene	40208652	40210779	source representative context model	same-species Liftoff projection	GGOh1:130:GCA_029281585.2T00001613825	1	0.996	
+HSAh1	HSAh1	HSAh1	1255666	1264729	-0.5	HSAh1:227:PPP1R11	+	Other gene	29925544	29934607	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	1421778	1433665	-0.5	SSYh1:1026:GCA_028878055.2T00000383430	-	Other gene	40931711	40943598	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	3293596	3304139	-0.5	GGOh1:923:GCA_029281585.2T00001625844	+	Other gene	49742384	49752927	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	3330693	3341234	-0.5	GGOh2:liftoff:ctx0141	+	Other gene	42205681	42216222	source representative context model	same-species Liftoff projection	GGOh1:923:GCA_029281585.2T00001625844	1	0.999	
+HSAh1	HSAh1	HSAh1	3337450	3346987	-0.5	HSAh1:838:PPT2	+	Other gene	32007328	32016865	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	3294241	3312473	-0.5	GGOh1:931:GCA_029281585.2T00001626037	+	Other gene	49743029	49761261	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	3331338	3349599	-0.5	GGOh2:liftoff:ctx0142	+	Other gene	42206326	42224587	source representative context model	same-species Liftoff projection	GGOh1:931:GCA_029281585.2T00001626037	1	0.992	
+HSAh1	HSAh1	HSAh1	3337308	3351598	-0.5	HSAh1:836:PPT2-EGFL8	+	Other gene	32007186	32021476	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	1799479	1803168	-0.5	GGOh1:193:GCA_029281585.2T00001614587	+	Other gene	48248267	48251956	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	1791165	1794854	-0.5	GGOh2:liftoff:ctx0143	+	Other gene	40666153	40669842	source representative context model	same-species Liftoff projection	GGOh1:193:GCA_029281585.2T00001614587	1	1	
+HSAh1	HSAh1	HSAh1	1751006	1758021	-0.5	HSAh1:301:PRR3	+	Other gene	30420884	30427899	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	2803881	2820936	-0.5	HSAh1:604:PRRC2A	+	Other gene	31473759	31490814	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2760384	2763928	-0.5	SSYh1:395:GCA_028878055.2T00000373537	-	Other gene	39601448	39604992	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	3455746	3459555	-0.5	SSYh1:269:GCA_028878055.2T00000371329	-	Other gene	38905821	38909630	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	3995582	3997997	-0.5	HSAh1:915:PSMB8-AS1	+	Other gene	32665460	32667875	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	4126405	4131141	-0.5	GGOh1:1051:GCA_029281585.2T00001628014	+	Other gene	50575193	50579929	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	4026123	4030859	-0.5	GGOh2:liftoff:ctx0144	+	Other gene	42901111	42905847	source representative context model	same-species Liftoff projection	GGOh1:1051:GCA_029281585.2T00001628014	1	0.999	
+HSAh1	HSAh1	HSAh1	4005688	4011348	-0.5	HSAh1:919:PSMB9	+	Other gene	32675566	32681226	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2362219	2366334	-0.5	GGOh1:371:GCA_029281585.2T00001617454	+	Other gene	48811007	48815122	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	2354323	2358452	-0.5	GGOh2:liftoff:ctx0145	+	Other gene	41229311	41233440	source representative context model	same-species Liftoff projection	GGOh1:371:GCA_029281585.2T00001617454	1	0.995	
+HSAh1	HSAh1	HSAh1	2312649	2337908	-0.5	HSAh1:473:PSORS1C1	+	Other gene	30982527	31007786	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	1872910	1874451	-0.5	SSYh1:896:GCA_028878055.2T00000381373	-	Other gene	40490925	40492466	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	1827751	1829539	-0.5	HSAh1:323:PTMAP1	+	Other gene	30497629	30499417	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	1680197	1681289	-0.5	HSAh1:294:RANP1	+	Other gene	30350075	30351167	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	3926887	3934175	-0.5	SSYh1:133:GCA_028878055.2T00000369394	-	Other gene	38431201	38438489	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	4481078	4485298	-0.5	GGOh1:1126:GCA_029281585.2T00001629295	+	Other gene	50929866	50934086	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	4380879	4385099	-0.5	GGOh2:liftoff:ctx0146	+	Other gene	43255867	43260087	source representative context model	same-species Liftoff projection	GGOh1:1126:GCA_029281585.2T00001629295	1	0.999	
+HSAh1	HSAh1	HSAh1	4359974	4364191	-0.5	HSAh1:974:RING1	+	Other gene	33029852	33034069	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	2059006	2059250	-0.5	HSAh1:390:RN7SKP186	+	Other gene	30728884	30729128	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	4692004	4692307	-0.5	HSAh1:1085:RN7SL26P	+	Other gene	33361882	33362185	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	1945490	1945742	-0.5	HSAh1:386:RN7SL353P	+	Other gene	30615368	30615620	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	182396	182695	-0.5	HSAh1:27:RN7SL471P	+	Other gene	28852274	28852573	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	827833	833456	-0.5	SSYh1:1140:GCA_028878055.2T00000384984	-	Other gene	41531920	41537543	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	3318894	3321279	-0.5	GGOh1:953:GCA_029281585.2T00001626343	+	Other gene	49767682	49770067	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	3356020	3358405	-0.5	GGOh2:liftoff:ctx0147	+	Other gene	42231008	42233393	source representative context model	same-species Liftoff projection	GGOh1:953:GCA_029281585.2T00001626343	1	0.999	
+HSAh1	HSAh1	HSAh1	3361717	3364106	-0.5	HSAh1:848:RNF5	+	Other gene	32031595	32033984	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	2280896	2280960	-0.5	HSAh1:471:RNU6-1133P	+	Other gene	30950774	30950838	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	2556116	2556223	-0.5	HSAh1:536:RNU6-283P	+	Other gene	31225994	31226101	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	3535931	3536038	-0.5	HSAh1:881:RNU6-603P	+	Other gene	32205809	32205916	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	120550	120650	-0.5	HSAh1:18:RNU6-930P	+	Other gene	28790428	28790528	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	4351075	4351167	-0.5	HSAh1:966:RNY4P10	+	Other gene	33020953	33021045	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	787309	787857	-0.5	HSAh1:125:RPL13AP	+	Other gene	29457187	29457735	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	66157	66840	-0.5	HSAh1:11:RPL13P	+	Other gene	28736035	28736718	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	2711289	2711939	-0.5	HSAh1:556:RPL15P4	+	Other gene	31381167	31381817	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	4230870	4231382	-0.5	HSAh1:941:RPL32P1	+	Other gene	32900748	32901260	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	2476518	2477799	-0.5	HSAh1:527:RPL3P2	+	Other gene	31146396	31147677	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	1621624	1623341	-0.5	GGOh1:173:GCA_029281585.2T00001614408	+	Other gene	48070412	48072129	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	1613326	1615042	-0.5	GGOh2:liftoff:ctx0148	+	Other gene	40488314	40490030	source representative context model	same-species Liftoff projection	GGOh1:173:GCA_029281585.2T00001614408	0.999	0.998	
+HSAh1	HSAh1	HSAh1	1539488	1541190	-0.5	HSAh1:286:RPP21	+	Other gene	30209366	30211068	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	4549201	4550389	-0.5	GGOh1:1146:GCA_029281585.2T00001629562	+	Other gene	50997989	50999177	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	4448953	4450141	-0.5	GGOh2:liftoff:ctx0149	+	Other gene	43323941	43325129	source representative context model	same-species Liftoff projection	GGOh1:1146:GCA_029281585.2T00001629562	1	1	
+HSAh1	HSAh1	HSAh1	4423558	4427995	-0.5	HSAh1:986:RPS18	+	Other gene	33093436	33097873	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	3826287	3833343	-0.5	SSYh1:190:GCA_028878055.2T00000370091	-	Other gene	38532033	38539089	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2917130	2918985	-0.5	GGOh1:686:GCA_029281585.2T00001621933	+	Other gene	49365918	49367773	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	2955346	2957201	-0.5	GGOh2:liftoff:ctx0150	+	Other gene	41830334	41832189	source representative context model	same-species Liftoff projection	GGOh1:686:GCA_029281585.2T00001621933	1	0.997	
+HSAh1	HSAh1	HSAh1	2945824	2948019	-0.5	HSAh1:739:SAPCD1	+	Other gene	31615702	31617897	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	1675686	1699834	-0.5	SSYh1:906:GCA_028878055.2T00000381439	-	Other gene	40665542	40689690	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	3113118	3123752	-0.5	GGOh1:796:GCA_029281585.2T00001623830	+	Other gene	49561906	49572540	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	3151373	3161988	-0.5	GGOh2:liftoff:ctx0151	+	Other gene	42026361	42036976	source representative context model	same-species Liftoff projection	GGOh1:796:GCA_029281585.2T00001623830	1	0.999	
+HSAh1	HSAh1	HSAh1	3142501	3153078	-0.5	HSAh1:801:SKIV2L	+	Other gene	31812379	31822956	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	4473451	4477020	-0.5	GGOh1:1122:GCA_029281585.2T00001629238	+	Other gene	50922239	50925808	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	4373252	4376821	-0.5	GGOh2:liftoff:ctx0152	+	Other gene	43248240	43251809	source representative context model	same-species Liftoff projection	GGOh1:1122:GCA_029281585.2T00001629238	1	1	
+HSAh1	HSAh1	HSAh1	4352341	4355912	-0.5	HSAh1:967:SLC39A7	+	Other gene	33022219	33025790	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2515372	2530168	-0.5	SSYh1:547:GCA_028878055.2T00000376452	-	Other gene	39835208	39850004	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	3957696	3966534	-0.5	SSYh1:108:GCA_028878055.2T00000369105	-	Other gene	38398842	38407680	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	3018097	3022942	-0.5	HSAh1:756:SNHG32	+	Other gene	31687975	31692820	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	2806248	2806380	-0.5	HSAh1:606:SNORA38	+	Other gene	31476126	31476258	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	787053	787130	-0.5	HSAh1:124:SNORD32B	+	Other gene	29456931	29457008	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	3018444	3018507	-0.5	HSAh1:760:SNORD48	+	Other gene	31688322	31688385	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	3020257	3020321	-0.5	HSAh1:761:SNORD52	+	Other gene	31690135	31690199	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	3126341	3133822	-0.5	GGOh1:832:GCA_029281585.2T00001624278	+	Other gene	49575129	49582610	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	3164577	3172049	-0.5	GGOh2:liftoff:ctx0153	+	Other gene	42039565	42047037	source representative context model	same-species Liftoff projection	GGOh1:832:GCA_029281585.2T00001624278	1	0.999	
+HSAh1	HSAh1	HSAh1	3154501	3164774	-0.5	HSAh1:809:STK19	+	Other gene	31824379	31834652	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	3196717	3197512	-0.5	HSAh1:816:STK19B	+	Other gene	31866595	31867390	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	1663228	1665273	-0.5	HSAh1:293:SUCLA2P1	+	Other gene	30333106	30335151	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	4709169	4742792	-0.5	GGOh1:1232:GCA_029281585.2T00001630661	+	Other gene	51157957	51191580	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	4608919	4642552	-0.5	GGOh2:liftoff:ctx0154	+	Other gene	43483907	43517540	source representative context model	same-species Liftoff projection	GGOh1:1232:GCA_029281585.2T00001630661	1	0.999	
+HSAh1	HSAh1	HSAh1	4572486	4605174	-0.5	HSAh1:1075:SYNGAP1	+	Other gene	33242364	33275052	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	3460208	3468862	-0.5	SSYh1:262:GCA_028878055.2T00000371245	-	Other gene	38896514	38905168	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	3440354	3453778	-0.5	SSYh1:275:GCA_028878055.2T00000371410	-	Other gene	38911598	38925022	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	3934906	3950380	-0.5	SSYh1:129:GCA_028878055.2T00000369358	-	Other gene	38414996	38430470	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2406117	2411750	-0.5	GGOh1:415:GCA_029281585.2T00001618057	+	Other gene	48854905	48860538	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	2398242	2403875	-0.5	GGOh2:liftoff:ctx0155	+	Other gene	41273230	41278863	source representative context model	same-species Liftoff projection	GGOh1:415:GCA_029281585.2T00001618057	1	0.999	
+HSAh1	HSAh1	HSAh1	2356394	2362017	-0.5	HSAh1:502:TCF19	+	Other gene	31026272	31031895	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	782261	782551	-0.5	HSAh1:123:TMEM183AP1	+	Other gene	29452139	29452429	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	1660580	1663222	-0.5	HSAh1:292:TMPOP1	+	Other gene	30330458	30333100	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2729338	2732111	-0.5	GGOh1:493:GCA_029281585.2T00001618938	+	Other gene	49178126	49180899	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	2767532	2770305	-0.5	GGOh2:liftoff:ctx0156	+	Other gene	41642520	41645293	source representative context model	same-species Liftoff projection	GGOh1:493:GCA_029281585.2T00001618938	1	0.999	
+HSAh1	HSAh1	HSAh1	2758738	2761510	-0.5	HSAh1:577:TNF	+	Other gene	31428616	31431388	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2650875	2718916	-0.5	SSYh1:408:GCA_028878055.2T00000373895	-	Other gene	39646460	39714501	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	187120	187192	-0.5	HSAh1:29:TRE-CTC1-6	+	Other gene	28856998	28857070	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	905136	914410	-0.5	SSYh1:1127:GCA_028878055.2T00000384842	-	Other gene	41450966	41460240	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	1437076	1446554	-0.5	GGOh1:146:GCA_029281585.2T00001614006	+	Other gene	47885864	47895342	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	1428633	1438112	-0.5	GGOh2:liftoff:ctx0157	+	Other gene	40303621	40313100	source representative context model	same-species Liftoff projection	GGOh1:146:GCA_029281585.2T00001614006	1	0.998	
+HSAh1	HSAh1	HSAh1	1357926	1367074	-0.5	HSAh1:256:TRIM15	+	Other gene	30027804	30036952	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	934861	964047	-0.5	SSYh1:1116:GCA_028878055.2T00000384703	-	Other gene	41401329	41430515	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	1432650	1436627	-0.5	HSAh1:273:TRIM26BP	+	Other gene	30102528	30106505	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	100123	126854	-0.5	SSYh1:1231:GCA_028878055.2T00000386296	-	Other gene	42238522	42265253	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	855707	865977	-0.5	SSYh1:1133:GCA_028878055.2T00000384934	-	Other gene	41499399	41509669	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	1299635	1309113	-0.5	HSAh1:239:TRIM31-AS1	+	Other gene	29969513	29978991	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	1603372	1620204	-0.5	GGOh1:166:GCA_029281585.2T00001614294	+	Other gene	48052160	48068992	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	1595093	1611906	-0.5	GGOh2:liftoff:ctx0158	+	Other gene	40470081	40486894	source representative context model	same-species Liftoff projection	GGOh1:166:GCA_029281585.2T00001614294	1	0.999	
+HSAh1	HSAh1	HSAh1	1520795	1538062	-0.5	HSAh1:281:TRIM39	+	Other gene	30190673	30207940	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	1605032	1623338	-0.5	GGOh1:169:GCA_029281585.2T00001614361	+	Other gene	48053820	48072126	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	1596755	1615039	-0.5	GGOh2:liftoff:ctx0159	+	Other gene	40471743	40490027	source representative context model	same-species Liftoff projection	GGOh1:169:GCA_029281585.2T00001614361	1	0.999	
+HSAh1	HSAh1	HSAh1	1523638	1541191	-0.5	HSAh1:284:TRIM39-RPP21	+	Other gene	30193516	30211069	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	1410035	1422634	-0.5	GGOh1:141:GCA_029281585.2T00001613917	+	Other gene	47858823	47871422	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	1401615	1414214	-0.5	GGOh2:liftoff:ctx0160	+	Other gene	40276603	40289202	source representative context model	same-species Liftoff projection	GGOh1:141:GCA_029281585.2T00001613917	1	0.998	
+HSAh1	HSAh1	HSAh1	1330536	1343125	-0.5	HSAh1:242:TRIM40	+	Other gene	30000414	30013003	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	155921	155994	-0.5	HSAh1:24:TRK-TTT3-3	+	Other gene	28825799	28825872	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	193921	194003	-0.5	HSAh1:32:TRL-AAG3-1	+	Other gene	28863799	28863881	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	145952	146057	-0.5	HSAh1:19:TRL-CAA1-2	+	Other gene	28815830	28815935	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	149476	149549	-0.5	HSAh1:23:TRM-CAT3-2	+	Other gene	28819354	28819427	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	86302	86375	-0.5	HSAh1:13:TRR-CCG1-2	+	Other gene	28756180	28756253	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2916107	2997700	-0.5	SSYh1:316:GCA_028878055.2T00000372027	-	Other gene	39367676	39449269	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	3438580	3590774	-0.5	HSAh1:874:TSBP1-AS1	+	Other gene	32108458	32260652	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	1966528	1970291	-0.5	GGOh1:268:GCA_029281585.2T00001615629	+	Other gene	48415316	48419079	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	1958185	1961948	-0.5	GGOh2:liftoff:ctx0161	+	Other gene	40833173	40836936	source representative context model	same-species Liftoff projection	GGOh1:268:GCA_029281585.2T00001615629	1	1	
+HSAh1	HSAh1	HSAh1	1915961	1919746	-0.5	HSAh1:374:TUBB	+	Other gene	30585839	30589624	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	480041	484140	-0.5	SSYh1:1219:GCA_028878055.2T00000386167	-	Other gene	41881236	41885335	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	4365201	4369557	-0.5	SSYh1:38:GCA_028878055.2T00000367739	-	Other gene	37995819	38000175	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	2471816	2475652	-0.5	HSAh1:526:USP8P1	+	Other gene	31141694	31145530	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2422150	2440942	-0.5	SSYh1:567:GCA_028878055.2T00000376667	-	Other gene	39924434	39943226	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	2157733	2170040	-0.5	GGOh1:349:GCA_029281585.2T00001616978	+	Other gene	48606521	48618828	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	2149336	2161608	-0.5	GGOh2:liftoff:ctx0162	+	Other gene	41024324	41036596	source representative context model	same-species Liftoff projection	GGOh1:349:GCA_029281585.2T00001616978	1	0.997	
+HSAh1	HSAh1	HSAh1	2109025	2121260	-0.5	HSAh1:453:VARS2	+	Other gene	30778903	30791138	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2409560	2421964	-0.5	SSYh1:582:GCA_028878055.2T00000376847	-	Other gene	39943412	39955816	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	3913747	3924057	-0.5	SSYh1:152:GCA_028878055.2T00000369623	-	Other gene	38441319	38451629	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	2552356	2554829	-0.5	SSYh1:528:GCA_028878055.2T00000375941	-	Other gene	39810547	39813020	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	3950718	3954039	-0.5	SSYh1:123:GCA_028878055.2T00000369267	-	Other gene	38411337	38414658	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	4743662	4745280	-0.5	GGOh1:1262:GCA_029281585.2T00001631119	+	Other gene	51192450	51194068	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	4643422	4645040	-0.5	GGOh2:liftoff:ctx0163	+	Other gene	43518410	43520028	source representative context model	same-species Liftoff projection	GGOh1:1262:GCA_029281585.2T00001631119	1	1	
+HSAh1	HSAh1	HSAh1	4604567	4609029	-0.5	HSAh1:1082:ZBTB9	+	Other gene	33274445	33278907	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	2566393	2566823	-0.5	HSAh1:538:ZDHHC20P2	+	Other gene	31236271	31236701	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	587179	596007	-0.5	SSYh1:1179:GCA_028878055.2T00000385428	-	Other gene	41769369	41778197	source representative context model	released annotation		NA	NA	
+SSYh1	SSYh1	SSYh1	197994	208435	-0.5	SSYh1:1227:GCA_028878055.2T00000386225	-	Other gene	42156941	42167382	source representative context model	released annotation		NA	NA	
+HSAh1	HSAh1	HSAh1	4367048	4367658	-0.5	HSAh1:975:ZNF70P1	+	Other gene	33036926	33037536	source representative context model	released annotation		NA	NA	
+GGOh1	GGOh1	GGOh1	1332635	1338642	-0.5	GGOh1:119:GCA_029281585.2T00001613697	+	Other gene	47781423	47787430	source representative context model	released annotation		NA	NA	
+GGOh2	GGOh2	GGOh2	1324505	1330367	-0.5	GGOh2:liftoff:ctx0164	+	Other gene	40199493	40205355	source representative context model	same-species Liftoff projection	GGOh1:119:GCA_029281585.2T00001613697	0.964	0.961	

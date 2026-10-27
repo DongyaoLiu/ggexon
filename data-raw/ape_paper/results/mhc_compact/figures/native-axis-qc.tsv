@@ -1,0 +1,22 @@
+track	chr	orientation	native_tick	display_bp	npc	coordinate_system
+SSYh1	chr23_hap1	-	3.8e+07	4365376	0.747081592891441	1-based native assembly
+SSYh1	chr23_hap1	-	3.9e+07	3365376	0.578189458210989	1-based native assembly
+SSYh1	chr23_hap1	-	4e+07	2365376	0.409297323530537	1-based native assembly
+SSYh1	chr23_hap1	-	4.1e+07	1365376	0.240405188850084	1-based native assembly
+SSYh1	chr23_hap1	-	4.2e+07	365376	0.0715130541696323	1-based native assembly
+GGOh2	chr5_pat_hsa6	+	3.9e+07	125011	0.0309172962171654	1-based native assembly
+GGOh2	chr5_pat_hsa6	+	4e+07	1125011	0.199809430897618	1-based native assembly
+GGOh2	chr5_pat_hsa6	+	4.1e+07	2125011	0.36870156557807	1-based native assembly
+GGOh2	chr5_pat_hsa6	+	4.2e+07	3125011	0.537593700258522	1-based native assembly
+GGOh2	chr5_pat_hsa6	+	4.3e+07	4125011	0.706485834938974	1-based native assembly
+GGOh2	chr5_pat_hsa6	+	4.4e+07	5125011	0.875377969619426	1-based native assembly
+GGOh1	chr5_mat_hsa6	+	4.7e+07	551211	0.102899124017974	1-based native assembly
+GGOh1	chr5_mat_hsa6	+	4.8e+07	1551211	0.271791258698426	1-based native assembly
+GGOh1	chr5_mat_hsa6	+	4.9e+07	2551211	0.440683393378878	1-based native assembly
+GGOh1	chr5_mat_hsa6	+	5e+07	3551211	0.609575528059331	1-based native assembly
+GGOh1	chr5_mat_hsa6	+	5.1e+07	4551211	0.778467662739783	1-based native assembly
+HSAh1	chr6	+	2.9e+07	330121	0.065558761961473	1-based native assembly
+HSAh1	chr6	+	3e+07	1330121	0.234450896641925	1-based native assembly
+HSAh1	chr6	+	3.1e+07	2330121	0.403343031322377	1-based native assembly
+HSAh1	chr6	+	3.2e+07	3330121	0.572235166002829	1-based native assembly
+HSAh1	chr6	+	3.3e+07	4330121	0.741127300683281	1-based native assembly

@@ -1,0 +1,84 @@
+{
+  "tracks_top_to_bottom": [
+    "SSYh1",
+    "GGOh2",
+    "GGOh1",
+    "HSAh1"
+  ],
+  "species": [
+    "Human",
+    "Gorilla",
+    "Siamang"
+  ],
+  "selection": "Human CHM13 baseline; gorilla has head identity/content/status differences; siamang has identical ordered heads and is represented by h1.",
+  "human_limitation": "Only CHM13 is available; no second human haplotype is inferred.",
+  "equivalence": "Ordered gene identity, copy multiplicity, source functional status and strand; native coordinate shifts alone do not require a second haplotype.",
+  "biological_scope": "Differences describe the sampled assemblies and curated source annotations, not fixed species-wide differences or confirmed gene absence.",
+  "common_display_span_bp": 5804842,
+  "alignments": [
+    {
+      "target": "SSYh1",
+      "query": "GGOh2",
+      "file": "SSYh1__GGOh2.paf",
+      "sha256": "9e2296f9fad587074316fe5dfe2a5113872d22dfb0562dc2b77e3359ce06e69f",
+      "source": "new direct minimap2 alignment",
+      "target_fasta_sha256": "d2bed4a2f3c98732ba7a83e35bc55af1ff7fc6154f2e7da66c97ca6670d65304",
+      "query_fasta_sha256": "455679c22a121557706cc551b2d6ea6e0acd8810221499042a62f977c52bff1c",
+      "command": [
+        "minimap2",
+        "-x",
+        "asm20",
+        "-c",
+        "--eqx",
+        "--secondary=no",
+        "-t",
+        "2",
+        "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/SSYh1.fa",
+        "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/GGOh2.fa"
+      ]
+    },
+    {
+      "target": "GGOh2",
+      "query": "GGOh1",
+      "file": "GGOh2__GGOh1.paf",
+      "sha256": "e914227213ec1bee392a760d20fdb0f3ccb5a656b4c5edd0b2af9363ca8d34ec",
+      "source": "existing direct alignment",
+      "target_fasta_sha256": "455679c22a121557706cc551b2d6ea6e0acd8810221499042a62f977c52bff1c",
+      "query_fasta_sha256": "8d1d7c898ae074b893a342e88e939119892e21d9a49591904ad922981f558bd0",
+      "command": [
+        "minimap2",
+        "-x",
+        "asm20",
+        "-c",
+        "--eqx",
+        "--secondary=no",
+        "-t",
+        "2",
+        "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/GGOh2.fa",
+        "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/GGOh1.fa"
+      ]
+    },
+    {
+      "target": "GGOh1",
+      "query": "HSAh1",
+      "file": "GGOh1__HSAh1.paf",
+      "sha256": "22a107864c7b6bde575aab4a39fafc1ca34ce0e2221313683128db4fba9d7bf9",
+      "source": "new direct minimap2 alignment",
+      "target_fasta_sha256": "8d1d7c898ae074b893a342e88e939119892e21d9a49591904ad922981f558bd0",
+      "query_fasta_sha256": "5b0edc59ff60c1d41c767a02d74c4b0edd0bbe52fc1ad02f06e0aca5bc400bc7",
+      "command": [
+        "minimap2",
+        "-x",
+        "asm20",
+        "-c",
+        "--eqx",
+        "--secondary=no",
+        "-t",
+        "2",
+        "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/GGOh1.fa",
+        "/Users/liudongyao/.codex/worktrees/ape-integrated-annotations/ggexon/data-raw/ape_paper/results/mhc_continuous/HSAh1.fa"
+      ]
+    }
+  ],
+  "ribbon_count": 252
+}

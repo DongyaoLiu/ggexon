@@ -1,0 +1,21 @@
+{
+  "status": "PASS",
+  "species": 3,
+  "annotation_tracks": 4,
+  "link_panels": 3,
+  "mhc_heads": 97,
+  "native_mhc_arrows": 97,
+  "ribbons": 252,
+  "raw_alignments_audited": 138,
+  "reverse_alignments": 2,
+  "aligned_bp_audited": 14998171,
+  "native_genomic_spans_unchanged": true,
+  "context_genes_preserved": true,
+  "shared_six_head_rows": true,
+  "common_bp_scale": true,
+  "leader_crossings": 0,
+  "leader_other_head_intersections": 0,
+  "head_overlaps": false,
+  "vector_pdf": true,
+  "approved_full_pdf_unchanged": true
+}
