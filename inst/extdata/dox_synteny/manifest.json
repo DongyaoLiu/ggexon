@@ -1,0 +1,812 @@
+{
+  "paper": "https://doi.org/10.1038/s41559-021-01592-z",
+  "dox_cds_source": "https://media.springernature.com/original/springer-static/esm/art%3A10.1038%2Fs41559-021-01592-z/MediaObjects/41559_2021_1592_MOESM2_ESM.xlsx",
+  "coordinate_system": "1-based inclusive; all seqnames aliased to X, original contigs in windows.tsv",
+  "RNA_seq": "Testis, biological replicate 1; GSE185361. Dmau/Dsech: deposited strand signals. Dsim: complete SRR23418969 library remapped directly to the plotted assembly.",
+  "signal_units": "Dmau/Dsech: author-deposited BigWig values. Dsim: unnormalized primary read depth, MAPQ>=20. Independent y scales; no between-species expression inference.",
+  "RNA_seq_remapping": {
+    "run": "SRR23418969",
+    "sample": "GSM7039340",
+    "read_pairs": 40381684,
+    "assembly": "GCA_004382185.1",
+    "provenance_file": "Dsim-remapping-qc.json"
+  },
+  "alignment": {
+    "tool": "lastz (version 1.04.52 released 20250402)",
+    "mode": "--nogapped --chain",
+    "minimum_length": 80,
+    "minimum_identity": 85,
+    "selection": "No gene- or insertion-dependent filtering"
+  },
+  "annotation": "Two common D. melanogaster RefSeq transcript models mapped to the exact species assemblies; three Dox coding exons mapped from the published CDS with 100% identity",
+  "sources": [
+    {
+      "species": "Dmau",
+      "kind": "genome_and_mapped_annotation",
+      "sequence_url": "https://api.genome.ucsc.edu/getData/sequence?hubUrl=https%3A%2F%2Fhgdownload.soe.ucsc.edu%2Fhubs%2FGCF%2F004%2F382%2F145%2FGCF_004382145.1%2Fhub.txt&genome=GCF_004382145.1&chrom=NC_046672.1&start=9389703&end=9438333",
+      "annotation_url": "https://api.genome.ucsc.edu/getData/track?hubUrl=https%3A%2F%2Fhgdownload.soe.ucsc.edu%2Fhubs%2FGCF%2F004%2F382%2F145%2FGCF_004382145.1%2Fhub.txt&genome=GCF_004382145.1&chrom=NC_046672.1&start=9389703&end=9438333&track=xenoRefGene",
+      "range_requests_verified": true
+    },
+    {
+      "species": "Dsim",
+      "kind": "genome_and_mapped_annotation",
+      "sequence_url": "https://api.genome.ucsc.edu/getData/sequence?hubUrl=https%3A%2F%2Fhgdownload.soe.ucsc.edu%2Fhubs%2FGCA%2F004%2F382%2F185%2FGCA_004382185.1%2Fhub.txt&genome=GCA_004382185.1&chrom=CM015611.1&start=9233163&end=9276944",
+      "annotation_url": "https://api.genome.ucsc.edu/getData/track?hubUrl=https%3A%2F%2Fhgdownload.soe.ucsc.edu%2Fhubs%2FGCA%2F004%2F382%2F185%2FGCA_004382185.1%2Fhub.txt&genome=GCA_004382185.1&chrom=CM015611.1&start=9233163&end=9276944&track=xenoRefGene",
+      "range_requests_verified": true
+    },
+    {
+      "species": "Dsech",
+      "kind": "genome_and_mapped_annotation",
+      "sequence_url": "https://api.genome.ucsc.edu/getData/sequence?hubUrl=https%3A%2F%2Fhgdownload.soe.ucsc.edu%2Fhubs%2FGCF%2F004%2F382%2F195%2FGCF_004382195.1%2Fhub.txt&genome=GCF_004382195.1&chrom=NC_045954.1&start=9396968&end=9444821",
+      "annotation_url": "https://api.genome.ucsc.edu/getData/track?hubUrl=https%3A%2F%2Fhgdownload.soe.ucsc.edu%2Fhubs%2FGCF%2F004%2F382%2F195%2FGCF_004382195.1%2Fhub.txt&genome=GCF_004382195.1&chrom=NC_045954.1&start=9396968&end=9444821&track=xenoRefGene",
+      "range_requests_verified": true
+    },
+    {
+      "species": "Dmau",
+      "kind": "RNA-seq",
+      "sample": "GSM5611558",
+      "strand": "+",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM5611nnn/GSM5611558/suppl/GSM5611558_Dmau_RNA_rep1.Forward.bw",
+      "source_seqname": "X",
+      "chromosome_length": 23222241,
+      "n_intervals": 11082,
+      "included": true,
+      "range_requests_verified": true,
+      "byte_ranges": [
+        {
+          "start": 0,
+          "size": 64,
+          "sha256": "38e3bba6137164c6ba74346443b6e39b12c9532cc08cbeaef1f5974f85689795"
+        },
+        {
+          "start": 344,
+          "size": 32,
+          "sha256": "6b03e92d2b674008d5f57130a6fc8fc49296698c1836bb46957e42e557bf3752"
+        },
+        {
+          "start": 376,
+          "size": 4,
+          "sha256": "313588ae36b23498c072b8718f9a3614d9e52b444cdcea74ecd49c93044741b3"
+        },
+        {
+          "start": 380,
+          "size": 56,
+          "sha256": "118cb7c3e448796ee36a638cca4016fdfe03aa709bcfd91115125a5005d0ca92"
+        },
+        {
+          "start": 7548,
+          "size": 4,
+          "sha256": "afa7518106309c22d325df6d2663249d158d2f36f1976269d6d4104d9198a108"
+        },
+        {
+          "start": 7552,
+          "size": 7168,
+          "sha256": "118222d0e9e1713b065b89fd7f76a799840bad2e72c01b4d2df66a76f5f43222"
+        },
+        {
+          "start": 14720,
+          "size": 4,
+          "sha256": "61d6c9ccccd00e383e51ce9c30fa366f3116f8a2c961db0662435dcfff7719da"
+        },
+        {
+          "start": 14724,
+          "size": 1988,
+          "sha256": "6f39e9d7f194a671b6d1f40a734624034caa460302a8da663f52b0f0212ad323"
+        },
+        {
+          "start": 90517514,
+          "size": 48,
+          "sha256": "154f168059613c4aa22084cdc4300d3ba0f664b6f1e0966a22be075ca85470e8"
+        },
+        {
+          "start": 90517562,
+          "size": 4,
+          "sha256": "8377fa5abee2114fd65cc6810c8a7dd4aa1951d8969ef129c83b47cd2dd60431"
+        },
+        {
+          "start": 90517566,
+          "size": 4056,
+          "sha256": "57a78dab236c69f2420d706926d5827a6edec10a0625ca6d470f5a66debc566c"
+        },
+        {
+          "start": 91679346,
+          "size": 4,
+          "sha256": "afa7518106309c22d325df6d2663249d158d2f36f1976269d6d4104d9198a108"
+        },
+        {
+          "start": 91679350,
+          "size": 8192,
+          "sha256": "c7e12f5805cbfc93ad9bf9c78d6b75a4a1eec0b6ac0f17379e1eca14cc0a6ab2"
+        },
+        {
+          "start": 76694699,
+          "size": 1895,
+          "sha256": "42e65ea6c57f5f89870efac90d0bf77f8948cc2c6bf9b8c2637b97c6daf7a6f2"
+        },
+        {
+          "start": 76696594,
+          "size": 1935,
+          "sha256": "c92a3a3a20189effb5017ad4d10a23654ce7bc36c0055669b4a6919d962824f8"
+        },
+        {
+          "start": 76698529,
+          "size": 1907,
+          "sha256": "a3c68e897636e0f34934ee310fc24e3bd2025f11bff6195fba65b6212b790e05"
+        },
+        {
+          "start": 76700436,
+          "size": 1854,
+          "sha256": "789e9974d89673d9dfbeb6420b7eb19cbbb7fa1485837e35ee7807b4ed8da916"
+        },
+        {
+          "start": 76702290,
+          "size": 1833,
+          "sha256": "a702f8cce7bf6fcdeedfd3e45abf58f9d6d88e770a180d26d7e73cd6b0d9a34b"
+        },
+        {
+          "start": 76704123,
+          "size": 1839,
+          "sha256": "20419b5f28c9b687976384f55d2a131661fe2cc7c0c7744ea799ec0611bd02ec"
+        },
+        {
+          "start": 76705962,
+          "size": 2438,
+          "sha256": "95787c71a2cf9466aa2fa09d41483d8e85e26db29f9e3fa154b959eb4a55b079"
+        },
+        {
+          "start": 76708400,
+          "size": 2859,
+          "sha256": "cc7d59e86b07d34ac7a0ac465e0ed96c6b589d4c940280c9b9c5b1771b6888cf"
+        },
+        {
+          "start": 76711259,
+          "size": 2713,
+          "sha256": "cf9cb6f1b87d57c44692adeb16b6c9515dfec4d0e59b7728f0a7850c39dfda1c"
+        },
+        {
+          "start": 76713972,
+          "size": 1811,
+          "sha256": "76f7abbf9af07a41e0327adec26bea6b364287f7b7a1098d3d647f180cd8e9ae"
+        },
+        {
+          "start": 76715783,
+          "size": 1667,
+          "sha256": "c9f1a5576af2fc55421317846a32c57f2b0f23c30ea1cea0603ed767fef41598"
+        },
+        {
+          "start": 76717450,
+          "size": 1714,
+          "sha256": "6e866f23abbb2edc410d6e5b4577a654286ed020492f295dcdcf4990c41e546a"
+        }
+      ],
+      "score_handling": "Source float32 scores unchanged; intervals clipped at window boundaries only"
+    },
+    {
+      "species": "Dmau",
+      "kind": "RNA-seq",
+      "sample": "GSM5611558",
+      "strand": "-",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM5611nnn/GSM5611558/suppl/GSM5611558_Dmau_RNA_rep1.Reverse.bw",
+      "source_seqname": "X",
+      "chromosome_length": 23222241,
+      "n_intervals": 22129,
+      "included": true,
+      "range_requests_verified": true,
+      "byte_ranges": [
+        {
+          "start": 0,
+          "size": 64,
+          "sha256": "213ecaf65e5015f155c024b3df390027fb4a183c7c1f384ca52aa9ce95edfe59"
+        },
+        {
+          "start": 344,
+          "size": 32,
+          "sha256": "a97e0bab572bbe397991af5b1d82101e772c8e320dca5f860a3a1642dbcc4be1"
+        },
+        {
+          "start": 376,
+          "size": 4,
+          "sha256": "313588ae36b23498c072b8718f9a3614d9e52b444cdcea74ecd49c93044741b3"
+        },
+        {
+          "start": 380,
+          "size": 56,
+          "sha256": "88fb7ad33ae9b4433d0394137a82e0cb44852765682300ee61a0804fe70c5c98"
+        },
+        {
+          "start": 7548,
+          "size": 4,
+          "sha256": "afa7518106309c22d325df6d2663249d158d2f36f1976269d6d4104d9198a108"
+        },
+        {
+          "start": 7552,
+          "size": 7168,
+          "sha256": "059484db55a7a82de5eaabd31d5571be0198de92427fa456ee57c7b91a5d94f6"
+        },
+        {
+          "start": 14720,
+          "size": 4,
+          "sha256": "b514b064f4e2b9104b09964a4aa61d8d421ef3da9d035e114e1b2287fd893f7b"
+        },
+        {
+          "start": 14724,
+          "size": 2044,
+          "sha256": "4f2111e47b90852ce3e450935240d41ba9b02f95d572ce63a990800a9599e3bc"
+        },
+        {
+          "start": 91234914,
+          "size": 48,
+          "sha256": "f5302667498ba014225e2591a3e1d4e820bd4782f92508ddbf48817f7ce6f3bc"
+        },
+        {
+          "start": 91234962,
+          "size": 4,
+          "sha256": "d56b53438295543f840589a0f161c8b2721853c511cd031e527234b2eeadd7b4"
+        },
+        {
+          "start": 91234966,
+          "size": 4104,
+          "sha256": "21b98a365eacb6c9ca7516e46f078bdcf77efcf16deed8575635e1a8e8017b75"
+        },
+        {
+          "start": 92437726,
+          "size": 4,
+          "sha256": "afa7518106309c22d325df6d2663249d158d2f36f1976269d6d4104d9198a108"
+        },
+        {
+          "start": 92437730,
+          "size": 8192,
+          "sha256": "a4c92f421f7c2991cc3621050de5ee37ea554939af87ed9b6dfc12238439d1d0"
+        },
+        {
+          "start": 78986902,
+          "size": 1738,
+          "sha256": "c520663262be8953554700c4810d0e956c976760d39fba12810e4a49b8392086"
+        },
+        {
+          "start": 78988640,
+          "size": 1647,
+          "sha256": "f67cb93cc2b71368698574542dffda3c8cfa079fd62500006f034c1c93b57594"
+        },
+        {
+          "start": 78990287,
+          "size": 1757,
+          "sha256": "f7ba8e01e2c26056b91f6becb5bd326b01e9bec5ba9c551281e038a1d1ae5093"
+        },
+        {
+          "start": 78992044,
+          "size": 1670,
+          "sha256": "e6db0599b67bf0e85047cd4b885228f7b93510848e54a01ce56a7ce45ee50195"
+        },
+        {
+          "start": 78993714,
+          "size": 1837,
+          "sha256": "ffdd6f5974c66fedb0493638797c4cb9bb4f043b0c0e0098639280ed7c1d8ffd"
+        },
+        {
+          "start": 78995551,
+          "size": 1879,
+          "sha256": "d78f27bc74a801323368bcf78d2ce23852ab0cd9dc5e33f84b1dc24218b539ca"
+        },
+        {
+          "start": 78997430,
+          "size": 2536,
+          "sha256": "847eac6fc9bf7611c7205feea393a165b2d21762f167ce84ba1aa7b654ecea13"
+        },
+        {
+          "start": 78999966,
+          "size": 3489,
+          "sha256": "77f4b0b23528c6846b68d689eef661b77bd70f13b945547196a4ef3691061b97"
+        },
+        {
+          "start": 79003455,
+          "size": 3050,
+          "sha256": "84d1647a01b83385a687203632c04b2b51a147b561b1e9e1b51a28b24f23206e"
+        },
+        {
+          "start": 79006505,
+          "size": 1711,
+          "sha256": "ccab39a050e7ee5de139d6d101926dbe6d096ffc83ff61f9f784172040518519"
+        },
+        {
+          "start": 79008216,
+          "size": 1699,
+          "sha256": "c7d4ca319d85f1e5c38055815d795911aaa683709056429f5fbc49b737630090"
+        },
+        {
+          "start": 79009915,
+          "size": 1839,
+          "sha256": "cd4de2934ddeee44a19ccf3a86083577c1156438a626e24cc404a8dc840a12a3"
+        },
+        {
+          "start": 79011754,
+          "size": 1812,
+          "sha256": "207709282eb61674b44b6d770bf6deb771e8e62d5f1dcc3de86066ca821eaa65"
+        },
+        {
+          "start": 79013566,
+          "size": 1717,
+          "sha256": "8475f6c074dd0c9c7cddad69a0885be78ee4b1db216c69d7d303e907c0b7686b"
+        },
+        {
+          "start": 79015283,
+          "size": 1928,
+          "sha256": "f0c7f64f25760d34986e81384d90828f910ebe4ffa64bbe780d783a08a729a13"
+        },
+        {
+          "start": 79017211,
+          "size": 2311,
+          "sha256": "89ad9621efa6785f519cf3534aa9fd6001d9eec783c000baa3e36dcd1ef99fd4"
+        },
+        {
+          "start": 79019522,
+          "size": 1912,
+          "sha256": "ac1b13d9aaf9d35e6f8c3e1125623df101afb7f29549d3493f7e48efee6eea51"
+        },
+        {
+          "start": 79021434,
+          "size": 1764,
+          "sha256": "1a253b2cbd7f5e2fa599192bcae54b3541737209454bfab1809ed511e97570e3"
+        },
+        {
+          "start": 79023198,
+          "size": 1715,
+          "sha256": "72bcf93d9bd0667f00d1e116928c642d896e77d494aadd931f0a6f11b5a44fa8"
+        },
+        {
+          "start": 79024913,
+          "size": 1674,
+          "sha256": "ec4ffe96e03ce6b93bc52984e119fb6cf79f425e5551314ddc029616c3f8f124"
+        },
+        {
+          "start": 79026587,
+          "size": 1709,
+          "sha256": "75da7a16f6c772adff23e01b7f746322fc1bd9904ae3b6cb44976aaf6bf0d9eb"
+        },
+        {
+          "start": 79028296,
+          "size": 1798,
+          "sha256": "42524fc4fb2ce2f83b5237a5fc41d2b2a161de384da23e0b8a868c6f65bdff02"
+        }
+      ],
+      "score_handling": "Source float32 scores unchanged; intervals clipped at window boundaries only"
+    },
+    {
+      "species": "Dsim",
+      "kind": "RNA-seq",
+      "sample": "GSM7039340",
+      "strand": "+",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM7039nnn/GSM7039340/suppl/GSM7039340_Dsim_RNA_rep1.Forward.bw",
+      "source_seqname": "X",
+      "chromosome_length": 22976950,
+      "expected_chromosome_length": 23123156,
+      "included": false,
+      "reason": "Reference mismatch; exact source genome could not be retrieved; no coordinate shift inferred",
+      "range_requests_verified": true,
+      "byte_ranges": [
+        {
+          "start": 0,
+          "size": 64,
+          "sha256": "1b73f0978293590bc2d37bf15e2b1571493a20f9a329a6c611373fe1b3100676"
+        },
+        {
+          "start": 344,
+          "size": 32,
+          "sha256": "7ecdef7c9c35c1820e9017baecb7d6dad937e97490e1464cce74e2399b6e94b2"
+        },
+        {
+          "start": 376,
+          "size": 4,
+          "sha256": "3ae95dd4fee75ea4fc56378db6b5e89c6cbfb0c52dda3a0f109301d28470e47a"
+        },
+        {
+          "start": 380,
+          "size": 224,
+          "sha256": "249d0746ca55149dabe4eb8d7e416b9ae554e4dcf0d5de5ed35544523e16051f"
+        }
+      ]
+    },
+    {
+      "species": "Dsim",
+      "kind": "RNA-seq",
+      "sample": "GSM7039340",
+      "strand": "-",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM7039nnn/GSM7039340/suppl/GSM7039340_Dsim_RNA_rep1.Reverse.bw",
+      "source_seqname": "X",
+      "chromosome_length": 22976950,
+      "expected_chromosome_length": 23123156,
+      "included": false,
+      "reason": "Reference mismatch; exact source genome could not be retrieved; no coordinate shift inferred",
+      "range_requests_verified": true,
+      "byte_ranges": [
+        {
+          "start": 0,
+          "size": 64,
+          "sha256": "05e81806a61788b037a52d9d50a30ae8b70d172ace4b7e2cd86d0f0cea10dadc"
+        },
+        {
+          "start": 344,
+          "size": 32,
+          "sha256": "7ecdef7c9c35c1820e9017baecb7d6dad937e97490e1464cce74e2399b6e94b2"
+        },
+        {
+          "start": 376,
+          "size": 4,
+          "sha256": "3ae95dd4fee75ea4fc56378db6b5e89c6cbfb0c52dda3a0f109301d28470e47a"
+        },
+        {
+          "start": 380,
+          "size": 224,
+          "sha256": "249d0746ca55149dabe4eb8d7e416b9ae554e4dcf0d5de5ed35544523e16051f"
+        }
+      ]
+    },
+    {
+      "species": "Dsech",
+      "kind": "RNA-seq",
+      "sample": "GSM5611560",
+      "strand": "+",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM5611nnn/GSM5611560/suppl/GSM5611560_Dsech_RNA_rep1.Forward.bw",
+      "source_seqname": "X",
+      "chromosome_length": 22909512,
+      "n_intervals": 11115,
+      "included": true,
+      "range_requests_verified": true,
+      "byte_ranges": [
+        {
+          "start": 0,
+          "size": 64,
+          "sha256": "93158e58ffc52b471456fc91f218961ff96426f45181f0aba8b8a612ca509290"
+        },
+        {
+          "start": 344,
+          "size": 32,
+          "sha256": "7ecdef7c9c35c1820e9017baecb7d6dad937e97490e1464cce74e2399b6e94b2"
+        },
+        {
+          "start": 376,
+          "size": 4,
+          "sha256": "3ae95dd4fee75ea4fc56378db6b5e89c6cbfb0c52dda3a0f109301d28470e47a"
+        },
+        {
+          "start": 380,
+          "size": 224,
+          "sha256": "79ec7f7f801084fad0d1493b82818a67c01d122b228c5ab3e3c7fad8c346ceac"
+        },
+        {
+          "start": 82967056,
+          "size": 48,
+          "sha256": "7ff533f07ca23d2be1922202eb1bf09437255f72099fc26d0894db74ce3c3f90"
+        },
+        {
+          "start": 82967104,
+          "size": 4,
+          "sha256": "077b21ba9a93d2dc15904d491b5b39ed8d37ce1d3eca4e0c485b45ca40931c3f"
+        },
+        {
+          "start": 82967108,
+          "size": 3648,
+          "sha256": "ad3a6b2fef56ce021282a0a5873d4873d08e75f769a3423e4ba24fb0ab4465a9"
+        },
+        {
+          "start": 84071516,
+          "size": 4,
+          "sha256": "afa7518106309c22d325df6d2663249d158d2f36f1976269d6d4104d9198a108"
+        },
+        {
+          "start": 84071520,
+          "size": 8192,
+          "sha256": "bddd4c9e1c86b890e5bf65d1f9296b60c863add1bee0f80ed3c2cfe6d5614104"
+        },
+        {
+          "start": 73921584,
+          "size": 1853,
+          "sha256": "84a0248e723376ddb1841ee4239d572d85f8e648c55a4cc52737efb21e1e0143"
+        },
+        {
+          "start": 73923437,
+          "size": 1911,
+          "sha256": "064edff949e601dbd4db0f0be939c05f14005ddaa6d94faa6787a6bca998f373"
+        },
+        {
+          "start": 73925348,
+          "size": 1897,
+          "sha256": "f17abb603ea105f480dd2217dcc9543c58f5a003850f4507811d449fa2dabdc3"
+        },
+        {
+          "start": 73927245,
+          "size": 1946,
+          "sha256": "4cb95944ba199ed7ee947fc52044259627858e53d46e098d1e09078b731f4246"
+        },
+        {
+          "start": 73929191,
+          "size": 1732,
+          "sha256": "0099163c9fcb7a05c38cfad6781ba99186680306314ba422f1cd277c2a0a5cf7"
+        },
+        {
+          "start": 73930923,
+          "size": 1720,
+          "sha256": "a27203b269786045770d3d92598fe5c4a9c439b71e16c0611043e6ed46ad3319"
+        },
+        {
+          "start": 73932643,
+          "size": 1852,
+          "sha256": "80dbfa5e8be6b1af2561d43b9f340794119eed0adec0755bf86a7089a5320ffc"
+        },
+        {
+          "start": 73934495,
+          "size": 2455,
+          "sha256": "893b686a82091ef97d5c6e85b3cf6426c988e1729aee4525c28b9f49705b27c2"
+        },
+        {
+          "start": 73936950,
+          "size": 2408,
+          "sha256": "4d0b99eaab23d75c5a06faf60833bf28412b7673f155b6d47f7982c70518e2ef"
+        },
+        {
+          "start": 73939358,
+          "size": 1979,
+          "sha256": "24f585fd9e03211c7e5c83d5fe41378872ed1b0a66ae3d1020777d802123d3ab"
+        },
+        {
+          "start": 73941337,
+          "size": 1703,
+          "sha256": "89e66bbc333da5e93438cbbec80dbf54fbd4a11884ea68844c3c73e1477a8608"
+        },
+        {
+          "start": 73943040,
+          "size": 1713,
+          "sha256": "b4c1cbab384a32b03a5dd6b735e37a8e539068878f78d72ae4d9e83e05d786d6"
+        }
+      ],
+      "score_handling": "Source float32 scores unchanged; intervals clipped at window boundaries only"
+    },
+    {
+      "species": "Dsech",
+      "kind": "RNA-seq",
+      "sample": "GSM5611560",
+      "strand": "-",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM5611nnn/GSM5611560/suppl/GSM5611560_Dsech_RNA_rep1.Reverse.bw",
+      "source_seqname": "X",
+      "chromosome_length": 22909512,
+      "n_intervals": 21221,
+      "included": true,
+      "range_requests_verified": true,
+      "byte_ranges": [
+        {
+          "start": 0,
+          "size": 64,
+          "sha256": "79ffac129d6f61d53bc4a64d7313d39d039176667bcd0f2e1f105fd1c32eb54f"
+        },
+        {
+          "start": 344,
+          "size": 32,
+          "sha256": "7ecdef7c9c35c1820e9017baecb7d6dad937e97490e1464cce74e2399b6e94b2"
+        },
+        {
+          "start": 376,
+          "size": 4,
+          "sha256": "3ae95dd4fee75ea4fc56378db6b5e89c6cbfb0c52dda3a0f109301d28470e47a"
+        },
+        {
+          "start": 380,
+          "size": 224,
+          "sha256": "79ec7f7f801084fad0d1493b82818a67c01d122b228c5ab3e3c7fad8c346ceac"
+        },
+        {
+          "start": 84263135,
+          "size": 48,
+          "sha256": "ddfc5e7292c3bdc30a0c9f8c4890917380cc0204b7811a7589bb0b48440fbd99"
+        },
+        {
+          "start": 84263183,
+          "size": 4,
+          "sha256": "2fa930102d7ce5ff75062eaa8ee2eafa180f9b6c1f6f3c76c321f847eb5f724b"
+        },
+        {
+          "start": 84263187,
+          "size": 3672,
+          "sha256": "bf79c63e6d72e9435cfd631fc345c62e5f69b2a42a6bd11de945b0576c8d21f2"
+        },
+        {
+          "start": 85383987,
+          "size": 4,
+          "sha256": "afa7518106309c22d325df6d2663249d158d2f36f1976269d6d4104d9198a108"
+        },
+        {
+          "start": 85383991,
+          "size": 8192,
+          "sha256": "d04573ecda9d24878995a3b87d1d7a279e2a2b553ecdb0fe4ca54da739ceb409"
+        },
+        {
+          "start": 75361203,
+          "size": 1829,
+          "sha256": "58246bcdd5bdc1535860b1d8f5a01d15219a062c78c02680faaad805c981d595"
+        },
+        {
+          "start": 75363032,
+          "size": 1883,
+          "sha256": "e64a74171cf4e54a403149a37de0fb96f1e30e869187051abd082ad0539fd626"
+        },
+        {
+          "start": 75364915,
+          "size": 1981,
+          "sha256": "cdcff118ff756fc144907d74836efa69fa551c3a3205b2b9589709b9f7e5edde"
+        },
+        {
+          "start": 75366896,
+          "size": 2131,
+          "sha256": "650988cc24fd6b5f642dac17910c11b516c8017263cc0f359c3b6ac5dd99856e"
+        },
+        {
+          "start": 75369027,
+          "size": 2868,
+          "sha256": "52c64a779e9150213394aca03ebff21543325a013e7acac5dce5a2df8702af6b"
+        },
+        {
+          "start": 75371895,
+          "size": 2695,
+          "sha256": "decd2f5c6d942437bf5eb105131519aefdcefbc87ac2184c7353800b892297af"
+        },
+        {
+          "start": 75374590,
+          "size": 1710,
+          "sha256": "9a0ed0c2d93a9496613cd928cf3da0e530ce1beb4aca52d7d814b2124521ef3a"
+        },
+        {
+          "start": 75376300,
+          "size": 1681,
+          "sha256": "5a848071d5a6be7642fe12fb9efe4a7a87b037b84bec6962253a2aabc770f028"
+        },
+        {
+          "start": 75377981,
+          "size": 1701,
+          "sha256": "790e310872cad3013e3458b782096f614123d764eb383d21c2d46a0f1c15707a"
+        },
+        {
+          "start": 75379682,
+          "size": 1835,
+          "sha256": "86e3fd803497e243bd1c0068b22ea1c98692ed5c91c02cf11cfb002849709e20"
+        },
+        {
+          "start": 75381517,
+          "size": 1810,
+          "sha256": "0d17cbb5fae0ff7e815671d41387ba6e13ced04efbf8c4939a12499f0e26b0f2"
+        },
+        {
+          "start": 75383327,
+          "size": 1735,
+          "sha256": "35b0471337485295c9d8e170d16a3386d6d027405f98c196f46112d1e93c9299"
+        },
+        {
+          "start": 75385062,
+          "size": 1716,
+          "sha256": "1929d70f10b081a3e6dae6f3550ee95f3b659b3f3b217b3564694d7204e02e77"
+        },
+        {
+          "start": 75386778,
+          "size": 1954,
+          "sha256": "f6d131ffc5f741555ef803b9d96f1f5962d8a24781887f0538ef334bea5c33d5"
+        },
+        {
+          "start": 75388732,
+          "size": 2139,
+          "sha256": "48c44a53f2f6613b9fb2c9f392cc910f953c1c5c3943e844a6450881b6a9444c"
+        },
+        {
+          "start": 75390871,
+          "size": 1957,
+          "sha256": "73c31bf55084ff791fcb9a52e9949508b0f43197515abdac34bab9a31e4ab843"
+        },
+        {
+          "start": 75392828,
+          "size": 1699,
+          "sha256": "9a8ae4f6325cd341a470f301bb977e6d0c0ca232ff574a5f06354ac701ae5a9a"
+        },
+        {
+          "start": 75394527,
+          "size": 1714,
+          "sha256": "a3f5c454e0959939f90c106b15bb211181e186124b73dba85767312149ca7859"
+        },
+        {
+          "start": 75396241,
+          "size": 1669,
+          "sha256": "1eedc775c2e0a62b36784e5b2b671411263fa4c875ce6533c6595de099224b54"
+        },
+        {
+          "start": 75397910,
+          "size": 1738,
+          "sha256": "203f9e7b4b062d5248ce9ae0bf1fef9fece59f071fdcc187f32f8212e8088f8c"
+        },
+        {
+          "start": 75399648,
+          "size": 1782,
+          "sha256": "503c421e9dbff9ef3aaa7c85a2af6d18ea207b624634e40f8fc92d8f71fbb4fc"
+        }
+      ],
+      "score_handling": "Source float32 scores unchanged; intervals clipped at window boundaries only"
+    },
+    {
+      "species": "Dsim",
+      "kind": "RNA-seq remapped",
+      "sample": "GSM7039340",
+      "run": "SRR23418969",
+      "strand": "+",
+      "included": true,
+      "source_seqname": "CM015611.1",
+      "chromosome_length": 23123156,
+      "url": "https://www.ebi.ac.uk/ena/browser/view/SRR23418969",
+      "n_intervals": 2477,
+      "signal_units": "Per-base primary read depth; no library normalization",
+      "score_handling": "Positive/negative signed depths encode transcript strand; introns/deletions excluded; overlapping mates each count",
+      "min_mapq": 20,
+      "provenance_file": "Dsim-remapping-qc.json"
+    },
+    {
+      "species": "Dsim",
+      "kind": "RNA-seq remapped",
+      "sample": "GSM7039340",
+      "run": "SRR23418969",
+      "strand": "-",
+      "included": true,
+      "source_seqname": "CM015611.1",
+      "chromosome_length": 23123156,
+      "url": "https://www.ebi.ac.uk/ena/browser/view/SRR23418969",
+      "n_intervals": 3408,
+      "signal_units": "Per-base primary read depth; no library normalization",
+      "score_handling": "Positive/negative signed depths encode transcript strand; introns/deletions excluded; overlapping mates each count",
+      "min_mapq": 20,
+      "provenance_file": "Dsim-remapping-qc.json"
+    }
+  ],
+  "outputs": [
+    {
+      "file": "Dmau.fa",
+      "md5": "38a630f71bc5a118e937a23cd7898bc3"
+    },
+    {
+      "file": "Dox-published-CDS.fa",
+      "md5": "747982c794f5fb027ae47f3a85e74793"
+    },
+    {
+      "file": "Dsech.fa",
+      "md5": "c109080c9466abb270e10c6796930408"
+    },
+    {
+      "file": "Dsim-remapping-qc.json",
+      "md5": "3e7bd2e3efe9b45d7786f52549090c74"
+    },
+    {
+      "file": "Dsim.fa",
+      "md5": "498d55d1a522baa7882346e236dc8121"
+    },
+    {
+      "file": "coverage.tsv.gz",
+      "md5": "d55eaed2dbe1e79218da10ddd6531e08"
+    },
+    {
+      "file": "features.tsv",
+      "md5": "410c270064f2a366e4f9c51425958421"
+    },
+    {
+      "file": "genes.tsv",
+      "md5": "7a87f8ec0bc225199272f572566ccf9e"
+    },
+    {
+      "file": "links.tsv",
+      "md5": "bec633d2c9a77cb43d1d750b222a430f"
+    },
+    {
+      "file": "windows.tsv",
+      "md5": "2fb0ed796b0c96e758e697a483a78008"
+    }
+  ],
+  "dox_cds_mapping": {
+    "cigar": "285M63N42M63N147M",
+    "identity": 100,
+    "length": 474,
+    "genomic_start": 9250280,
+    "genomic_end": 9250879,
+    "strand": "-"
+  }
+}

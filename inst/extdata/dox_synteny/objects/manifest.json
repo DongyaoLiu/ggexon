@@ -1,0 +1,83 @@
+{
+  "description": "Native file views of the verified Dox tables; no new alignment or signal estimation",
+  "coordinates": "GTF: 1-based closed; PAF source: 0-based half-open; BigWig: standard interval encoding; X is a seqname alias",
+  "annotation": "Gene/transcript spans plus disjoint mapped CDS/UTR pieces; Dox has coding exons only",
+  "signal": "Plus and reverse-magnitude files store nonnegative abs(source score), without smoothing or normalization",
+  "chromosome_lengths": {
+    "Dmau": 23222241,
+    "Dsim": 23123156,
+    "Dsech": 22909512
+  },
+  "inputs": [
+    {
+      "file": "windows.tsv",
+      "md5": "2fb0ed796b0c96e758e697a483a78008"
+    },
+    {
+      "file": "genes.tsv",
+      "md5": "7a87f8ec0bc225199272f572566ccf9e"
+    },
+    {
+      "file": "features.tsv",
+      "md5": "410c270064f2a366e4f9c51425958421"
+    },
+    {
+      "file": "links.tsv",
+      "md5": "bec633d2c9a77cb43d1d750b222a430f"
+    },
+    {
+      "file": "coverage.tsv.gz",
+      "md5": "d55eaed2dbe1e79218da10ddd6531e08"
+    }
+  ],
+  "outputs": [
+    {
+      "file": "Dmau_Dsim.paf",
+      "md5": "23e0c3ab7cd72943d78b332b0cc4c432"
+    },
+    {
+      "file": "Dmau.gtf",
+      "md5": "2f09a048c8b50a66dc7bb3d82a0f60b3"
+    },
+    {
+      "file": "Dmau.RNAminus.bw",
+      "md5": "a29bc2da961e23851cb545182c46d0ac"
+    },
+    {
+      "file": "Dmau.RNAplus.bw",
+      "md5": "0d06de178787e4f060dff76006d9ff17"
+    },
+    {
+      "file": "Dsech.gtf",
+      "md5": "05da000d135494dadfc355082305462e"
+    },
+    {
+      "file": "Dsech.RNAminus.bw",
+      "md5": "835ef8a915fde54143ed51f4fa69b02a"
+    },
+    {
+      "file": "Dsech.RNAplus.bw",
+      "md5": "8574a0aa18035b23e3a3015a2219350d"
+    },
+    {
+      "file": "Dsim_Dsech.paf",
+      "md5": "1b7a4241ba465221c18db7ef5fb9d673"
+    },
+    {
+      "file": "Dsim.gtf",
+      "md5": "ff82f5c911daf049c5999413a81f174e"
+    },
+    {
+      "file": "Dsim.RNAminus.bw",
+      "md5": "fe15adabad593de65c7d69969cf84a68"
+    },
+    {
+      "file": "Dsim.RNAplus.bw",
+      "md5": "f9b74804a477514c15f5bb60fe6c520d"
+    }
+  ],
+  "versions": {
+    "R": "4.4.1",
+    "rtracklayer": "1.66.0"
+  }
+}
