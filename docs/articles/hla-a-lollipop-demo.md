@@ -1,6 +1,6 @@
 # HLA-A Protein Variants: Dense Multiallelic Lollipops
 
-## A dense landscape of HLA-A variation
+## Overview
 
 This example summarizes **5,998 named HLA-A alleles**, an MHC class I
 heavy chain, from IPD-IMGT/HLA release **3.66.0**. Comparison with
@@ -31,7 +31,7 @@ sequences, but is not deduplicated to those proteins. Counts reflect
 database representation, not individuals, independent observations, or
 population frequencies.
 
-## Load the offline inputs
+## Step 1. Load the offline inputs
 
 ``` r
 library(ggexon)
@@ -89,7 +89,7 @@ amino-acid change are grouped into one substitution. The protein view
 uses amino-acid coordinates; the gene-model section below projects them
 to the exact reference allele’s coding structure.
 
-## Dense lollipop summary
+## Step 2. Draw the dense lollipop summary
 
 ``` r
 plots <- plot_hla_a_example(hla)
@@ -163,7 +163,7 @@ head(hla$mutations[, c("mutation", "allele_count", "n_alternatives", "amino_acid
 #> 6      S2F            3              4         Aromatic
 ```
 
-## Multiple alternatives at residue 156
+## Step 3. Compare multiple alternatives at residue 156
 
 The reference has **L** at mature residue 156. In this expanded panel
 there are **five** alternative amino acids, each counted separately:
@@ -209,7 +209,7 @@ Each summary row includes up to three example allele names. The complete
 manifest and source sequences retain all eligible alleles without
 producing unwieldy lists of thousands of names in each table cell.
 
-## Project onto the reference exon–intron model
+## Step 4. Project onto the reference exon–intron model
 
 The same 1,212 substitutions can be placed above the **eight coding
 exons and seven introns** of A\*02:01:01:01. The bundled IPD HLA00005
@@ -303,7 +303,7 @@ inclusive endpoints. Codon anchors retain their original genomic
 base-centre coordinates. The guide reports **73 bp** for the
 representative exon and **130 bp /3** for the intron.
 
-## Reproduce and customize
+## Reproducing and customizing
 
 From the repository root:
 
@@ -326,7 +326,7 @@ width. The default 240 × 135 mm canvas provides space for the dense
 overview. Every substitution is drawn in both the vector and raster
 exports.
 
-### Sources and attribution
+## Sources and attribution
 
 - [IPD-IMGT/HLA](https://www.ebi.ac.uk/ipd/imgt/hla/) release 3.66.0,
   [pinned source

@@ -40,7 +40,7 @@
     <li><a class="dropdown-item" href="../articles/cd44-splice-variants-demo.html">CD44 splice variant alignment</a></li>
     <li><a class="dropdown-item" href="../articles/as3mt-splice-variants-demo.html">AS3MT transcripts, DNA and RNA-seq</a></li>
     <li><a class="dropdown-item" href="../articles/hla-a-lollipop-demo.html">HLA-A protein variant lollipops</a></li>
-    <li><a class="dropdown-item" href="../articles/mhc-continuous-demo.html">Continuous MHC comparison</a></li>
+    <li><a class="dropdown-item" href="../articles/mhc-continuous-demo.html">MHC haplotypes across apes</a></li>
     <li><a class="dropdown-item" href="../articles/bigwig-coverage-demo.html">PEEL-1 raw BigWig coverage</a></li>
     <li><a class="dropdown-item" href="../articles/ggexon-classes-and-verbs.html">Classes, geoms, facets, and guides</a></li>
   </ul>
@@ -90,6 +90,10 @@ nor expands the stored intervals to one row per base.</p>
 Windows. The code below is shown on every platform and executed only on
 macOS and Linux. Windows readers can view the rendered figure in the <a href="https://dongyaoliu.github.io/ggexon/articles/bigwig-coverage-demo.html">online
 tutorial</a>.</p>
+</div>
+<div class="section level2">
+<h2 id="step-1--plot-raw-coverage-for-thirteen-strains">Step 1. Plot raw coverage for thirteen strains<a class="anchor" aria-label="anchor" href="#step-1--plot-raw-coverage-for-thirteen-strains"></a>
+</h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dongyaoliu.github.io/ggexon/">ggexon</a></span><span class="op">)</span></span>
 <span></span>
@@ -155,10 +159,9 @@ Higher peaks are clipped in the view only; raw BigWig values remain
 unchanged.
 </p>
 </div>
-</div>
-<div class="section level2">
-<h2 id="reading-the-tracks">Reading the tracks<a class="anchor" aria-label="anchor" href="#reading-the-tracks"></a>
-</h2>
+<div class="section level3">
+<h3 id="reading-the-tracks">Reading the tracks<a class="anchor" aria-label="anchor" href="#reading-the-tracks"></a>
+</h3>
 <p>The BigWig values are raw, nonnegative depth. Each file owns a
 first-class coverage panel, and
 <code>scale_panel_coverage("free_y", auto = TRUE)</code> gives every
@@ -177,8 +180,9 @@ panels; <code><a href="../reference/center_panel_annotation.html">center_panel_a
 within its panel without changing annotation data or any coverage scale.
 No synthetic negative annotation band is added to a coverage panel.</p>
 </div>
+</div>
 <div class="section level2">
-<h2 id="compress-introns">Compress introns<a class="anchor" aria-label="anchor" href="#compress-introns"></a>
+<h2 id="step-2--compress-introns">Step 2. Compress introns<a class="anchor" aria-label="anchor" href="#step-2--compress-introns"></a>
 </h2>
 <p>Add the genomic scale to align every coverage track with the
 representative gene model while shortening introns:</p>

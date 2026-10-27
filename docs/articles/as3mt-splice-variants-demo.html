@@ -40,7 +40,7 @@
     <li><a class="dropdown-item" href="../articles/cd44-splice-variants-demo.html">CD44 splice variant alignment</a></li>
     <li><a class="dropdown-item" href="../articles/as3mt-splice-variants-demo.html">AS3MT transcripts, DNA and RNA-seq</a></li>
     <li><a class="dropdown-item" href="../articles/hla-a-lollipop-demo.html">HLA-A protein variant lollipops</a></li>
-    <li><a class="dropdown-item" href="../articles/mhc-continuous-demo.html">Continuous MHC comparison</a></li>
+    <li><a class="dropdown-item" href="../articles/mhc-continuous-demo.html">MHC haplotypes across apes</a></li>
     <li><a class="dropdown-item" href="../articles/bigwig-coverage-demo.html">PEEL-1 raw BigWig coverage</a></li>
     <li><a class="dropdown-item" href="../articles/ggexon-classes-and-verbs.html">Classes, geoms, facets, and guides</a></li>
   </ul>
@@ -75,7 +75,7 @@
     
     
 <div class="section level2">
-<h2 id="load-the-example">Load the example<a class="anchor" aria-label="anchor" href="#load-the-example"></a>
+<h2 id="step-1--load-the-example">Step 1. Load the example<a class="anchor" aria-label="anchor" href="#step-1--load-the-example"></a>
 </h2>
 <p>Compare human full-length AS3MT, a <strong>paper-defined d2d3
 reconstruction</strong>, and chimpanzee full-length AS3MT. Coordinates
@@ -89,7 +89,7 @@ respectively. All inputs are bundled; no downloads are needed.</p>
 <span><span class="va">as3mt</span> <span class="op">&lt;-</span> <span class="fu">load_as3mt_example</span><span class="op">(</span><span class="va">demo_dir</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="transcripts-and-compressed-introns">1. Transcripts and compressed introns<a class="anchor" aria-label="anchor" href="#transcripts-and-compressed-introns"></a>
+<h2 id="step-2--transcripts-and-compressed-introns">Step 2. Transcripts and compressed introns<a class="anchor" aria-label="anchor" href="#step-2--transcripts-and-compressed-introns"></a>
 </h2>
 <p><code><a href="../reference/geom_exon2.html">geom_exon2()</a></code> shows CDS as thick boxes and UTR as thin
 boxes. Keep the full-reference exon numbering: d2d3 retains <strong>E1
@@ -103,11 +103,7 @@ change the exon/intron boundaries.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">as3mt_plot</span> <span class="op">&lt;-</span> <span class="fu">plot_as3mt_example</span><span class="op">(</span><span class="va">as3mt</span>, intron_factor <span class="op">=</span> <span class="fl">30</span><span class="op">)</span></span>
 <span><span class="va">as3mt_plot</span><span class="op">$</span><span class="va">plot</span></span></code></pre></div>
-<div class="figure">
-<img src="as3mt-splice-variants-demo_files/figure-html/as3mt-pairwise-1.png" class="r-plt" alt="Human full-length and paper-defined d2d3 transcript rows above the chimpanzee reference. Gold E2/E3 are skipped in d2d3; ribbons follow 30-fold intron compression." width="1980"><p class="caption">
-Transcript comparison; introns compressed 30-fold.
-</p>
-</div>
+<p><img src="as3mt-splice-variants-demo_files/figure-html/as3mt-pairwise-1.png" class="r-plt" alt="Human full-length and paper-defined d2d3 transcript rows above the chimpanzee reference. Gold E2/E3 are skipped in d2d3; ribbons follow 30-fold intron compression." width="1980"></p>
 <p>The helper uses this grammar:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">as3mt</span><span class="op">$</span><span class="va">comparison</span><span class="op">)</span> <span class="op">+</span></span>
@@ -126,13 +122,16 @@ ungapped blocks split into 57 polygon pieces at scale boundaries. They
 show DNA similarity, not expression or proof of exon skipping.</p>
 </div>
 <div class="section level2">
-<h2 id="dna-detail-at-the-exon-1-repeat">2. DNA detail at the exon-1 repeat<a class="anchor" aria-label="anchor" href="#dna-detail-at-the-exon-1-repeat"></a>
+<h2 id="step-3--dna-detail-at-the-exon-1-repeat">Step 3. DNA detail at the exon-1 repeat<a class="anchor" aria-label="anchor" href="#step-3--dna-detail-at-the-exon-1-repeat"></a>
 </h2>
-<p>The selected human reference contains three <strong>36-bp
-VNTR</strong> units; the chimp reference has one imperfect homolog
-(34/36 matching bases). The terminal unit contains 24 exonic and 12
-intronic bases. Both references retain the <strong>GT</strong>
-donor:</p>
+<p>The repeat is a <strong>variable number tandem repeat (VNTR)</strong>
+of 36-bp units at the exon 1 / intron 1 boundary. Each unit contains 24
+exonic and 12 intronic bases, and the terminal unit retains the
+<strong>GT</strong> donor. The selected human reference has three
+copies; the chimp reference has one imperfect homolog (34/36 matching
+bases). The <strong>−72 bp</strong> difference is therefore two missing
+36-bp units (2 × 36 = 72 bp), not a 72-bp indel. Both references retain
+the donor:</p>
 <pre class="text"><code>CCTGAGTCGCAGGCCGAGGAGACA | GTGAGTGCGCGC
          human exon 1  | intron 1</code></pre>
 <p>Prepare two aligned strings with an explicitly named human reference.
@@ -163,7 +162,7 @@ references. Two base differences in the chimp homolog are context, not
 demonstrated causal SNVs.</p>
 </div>
 <div class="section level2">
-<h2 id="rna-seq-and-splice-junctions">3. RNA-seq and splice junctions<a class="anchor" aria-label="anchor" href="#rna-seq-and-splice-junctions"></a>
+<h2 id="step-4--rna-seq-and-splice-junctions">Step 4. RNA-seq and splice junctions<a class="anchor" aria-label="anchor" href="#step-4--rna-seq-and-splice-junctions"></a>
 </h2>
 <p>The bundled GTEx frontal-cortex (BA9) sample
 <strong>GTEX-15G19-0011-R10b-SM-7KUG4.1</strong> has both exon-2/3
@@ -177,11 +176,7 @@ automatically.</p>
 <code class="sourceCode R"><span><span class="va">rna_example</span> <span class="op">&lt;-</span> <span class="fu">plot_as3mt_coverage</span><span class="op">(</span><span class="va">demo_dir</span>, intron_factor <span class="op">=</span> <span class="fl">30</span>,</span>
 <span>  junction_panel <span class="op">=</span> <span class="st">"coverage"</span><span class="op">)</span></span>
 <span><span class="va">rna_example</span><span class="op">$</span><span class="va">plot</span></span></code></pre></div>
-<div class="figure">
-<img src="as3mt-splice-variants-demo_files/figure-html/as3mt-rnaseq-1.png" class="r-plt" alt="Matched GTEx coverage and counted blue inclusion/orange E1-to-E4 skipping arcs in the same panel, above the human AS3MT transcripts. All follow 30-fold intron compression; ungapped links connect the chimp reference." width="1980"><p class="caption">
-Matched human coverage and splice-junction reads.
-</p>
-</div>
+<p><img src="as3mt-splice-variants-demo_files/figure-html/as3mt-rnaseq-1.png" class="r-plt" alt="Matched GTEx coverage and counted blue inclusion/orange E1-to-E4 skipping arcs in the same panel, above the human AS3MT transcripts. All follow 30-fold intron compression; ungapped links connect the chimp reference." width="1980"></p>
 <p>Arc labels are <strong>junction read counts</strong>: E1→E2, 9;
 E2→E3, 10; E3→E4, 11; E1→E4, 12. Line width reflects these counts. The
 layer takes exon-edge genomic anchors; it draws the curve and centres
@@ -210,6 +205,22 @@ is not inferred from the reference DNA or the separate minigene
 experiment.</p>
 </div>
 <div class="section level2">
+<h2 id="step-5--combined-result">Step 5. Combined result<a class="anchor" aria-label="anchor" href="#step-5--combined-result"></a>
+</h2>
+<p>The green RNA-seq signal and counted splice arcs occupy the same
+panel and share the human gene model’s compressed scale. Blue arcs
+support exon inclusion; the orange arc supports E1→E4 skipping. Purple
+outlines locate the VNTR; each species keeps its own DNA callout.
+Separate bars below the legend show exon and compressed-intron scales.
+The lower human transcript remains a <strong>paper-defined
+reconstruction</strong>; the repeat-count strip summarizes the tested
+human alleles schematically.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/grid.newpage.html" class="external-link">grid.newpage</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/grid.draw.html" class="external-link">grid.draw</a></span><span class="op">(</span><span class="va">sequence_example</span><span class="op">$</span><span class="va">grob</span><span class="op">)</span></span></code></pre></div>
+<p><img src="as3mt-splice-variants-demo_files/figure-html/as3mt-alignseq-1.png" class="r-plt" alt="Matched human RNA-seq and counted inclusion/skipping arcs share the top panel above the AS3MT transcript comparison. The same figure includes ungapped links, purple VNTR units, species-specific DNA callouts, exon/intron scale bars and the human minigene comparison." width="1980"></p>
+</div>
+<div class="section level2">
 <h2 id="sources-and-reproducibility">Sources and reproducibility<a class="anchor" aria-label="anchor" href="#sources-and-reproducibility"></a>
 </h2>
 <ul>
@@ -227,26 +238,6 @@ coverage and exon-junction reads.</li>
 plotting helper, input snapshots and provenance. Repository
 preparation/export scripts are in <code>data-raw/as3mt</code>; the
 genomic ribbons use LASTZ <code>--nogapped --chain</code> blocks.</p>
-</div>
-<div class="section level2">
-<h2 id="combined-result">Combined result<a class="anchor" aria-label="anchor" href="#combined-result"></a>
-</h2>
-<p>The green RNA-seq signal and counted splice arcs occupy the same
-panel and share the human gene model’s compressed scale. Blue arcs
-support exon inclusion; the orange arc supports E1→E4 skipping. Purple
-outlines locate the VNTR; each species keeps its own DNA callout.
-Separate bars below the legend show exon and compressed-intron scales.
-The lower human transcript remains a <strong>paper-defined
-reconstruction</strong>; the repeat-count strip summarizes the tested
-human alleles schematically.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/grid.newpage.html" class="external-link">grid.newpage</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/grid.draw.html" class="external-link">grid.draw</a></span><span class="op">(</span><span class="va">sequence_example</span><span class="op">$</span><span class="va">grob</span><span class="op">)</span></span></code></pre></div>
-<div class="figure">
-<img src="as3mt-splice-variants-demo_files/figure-html/as3mt-alignseq-1.png" class="r-plt" alt="Matched human RNA-seq and counted inclusion/skipping arcs share the top panel above the AS3MT transcript comparison. The same figure includes ungapped links, purple VNTR units, species-specific DNA callouts, exon/intron scale bars and the human minigene comparison." width="1980"><p class="caption">
-AS3MT coverage, splice junctions and exon-1 VNTR.
-</p>
-</div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

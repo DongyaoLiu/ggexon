@@ -1,6 +1,6 @@
 # HOX Cluster Expansion Across Chordates
 
-## Why a cluster matrix?
+## Overview
 
 This example replaces the former HOXA ribbon tutorial with a view of HOX
 cluster expansion. Early vertebrate whole-genome duplications produced
@@ -84,7 +84,7 @@ panels$species_row <- factor(panels$matrix_row, levels = row_levels)
 panels$cluster_column <- factor(panels$matrix_column, levels = column_levels)
 ```
 
-## Exact shared Hox slots
+## Step 1. Place genes in exact shared Hox slots
 
 [`geom_genebox()`](https://dongyaoliu.github.io/ggexon/reference/geom_genebox.md)
 uses a square whose side length is measured in x and y data units, like
@@ -287,7 +287,7 @@ corresponding gene model, consistent with the failure to identify *B.
 lanceolatum* Hox13 in the expression study of [Pascual-Anaya et
 al. 2012](https://pmc.ncbi.nlm.nih.gov/articles/PMC3534614/).
 
-## What does the anchor mean?
+## Step 2. Choose the gene anchor
 
 For Syn-backed data, `geom_genebox(anchor = ...)` first keeps
 protein-coding transcripts with usable CDS, then selects the transcript

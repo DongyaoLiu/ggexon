@@ -19,6 +19,8 @@ below is shown on every platform and executed only on macOS and Linux.
 Windows readers can view the rendered figure in the [online
 tutorial](https://dongyaoliu.github.io/ggexon/articles/bigwig-coverage-demo.html).
 
+## Step 1. Plot raw coverage for thirteen strains
+
 ``` r
 library(ggexon)
 
@@ -90,7 +92,7 @@ the span-weighted median depth occupies 85 percent of the panel height.
 Higher peaks are clipped in the view only; raw BigWig values remain
 unchanged.
 
-## Reading the tracks
+### Reading the tracks
 
 The BigWig values are raw, nonnegative depth. Each file owns a
 first-class coverage panel, and
@@ -114,7 +116,7 @@ centers that gene model within its panel without changing annotation
 data or any coverage scale. No synthetic negative annotation band is
 added to a coverage panel.
 
-## Compress introns
+## Step 2. Compress introns
 
 Add the genomic scale to align every coverage track with the
 representative gene model while shortening introns:

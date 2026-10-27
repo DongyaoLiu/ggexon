@@ -37,7 +37,7 @@ knitr::kable(gene_table)
 | Fission yeast | Schizosaccharomyces pombe      | PomBase | cox1 | SPMIT.01 |          3 |       2 |
 | Budding yeast | Saccharomyces cerevisiae S288C | SGD     | COX1 | Q0045    |          8 |       7 |
 
-## Pairwise mitochondrial plot
+## Step 1. Draw the pairwise mitochondrial plot
 
 The plotting table has one row per CDS interval. The introns are visible
 as gaps on the transcript backbone. LASTZ links are computed from
@@ -159,7 +159,7 @@ Fission and budding yeast mitochondrial cox1/COX1 gene structures. CDS
 intervals are green, introns are represented by backbone gaps, and LASTZ
 genomic DNA alignment blocks are colored by percent-identity range.
 
-## What the alignment layer contributes
+### What the alignment layer contributes
 
 The nucleotide links are deliberately separate from the annotation rows:
 

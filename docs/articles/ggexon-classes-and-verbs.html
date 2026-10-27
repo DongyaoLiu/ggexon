@@ -40,7 +40,7 @@
     <li><a class="dropdown-item" href="../articles/cd44-splice-variants-demo.html">CD44 splice variant alignment</a></li>
     <li><a class="dropdown-item" href="../articles/as3mt-splice-variants-demo.html">AS3MT transcripts, DNA and RNA-seq</a></li>
     <li><a class="dropdown-item" href="../articles/hla-a-lollipop-demo.html">HLA-A protein variant lollipops</a></li>
-    <li><a class="dropdown-item" href="../articles/mhc-continuous-demo.html">Continuous MHC comparison</a></li>
+    <li><a class="dropdown-item" href="../articles/mhc-continuous-demo.html">MHC haplotypes across apes</a></li>
     <li><a class="dropdown-item" href="../articles/bigwig-coverage-demo.html">PEEL-1 raw BigWig coverage</a></li>
     <li><a class="dropdown-item" href="../articles/ggexon-classes-and-verbs.html">Classes, geoms, facets, and guides</a></li>
   </ul>
@@ -90,7 +90,7 @@ objects.</p>
 </ol>
 </div>
 <div class="section level2">
-<h2 id="data-storage-classes">Data-storage classes<a class="anchor" aria-label="anchor" href="#data-storage-classes"></a>
+<h2 id="step-1--data-storage-classes">Step 1. Data-storage classes<a class="anchor" aria-label="anchor" href="#step-1--data-storage-classes"></a>
 </h2>
 <p>The object model keeps stable biological identifiers for computation
 while allowing readable labels and plot-specific layout state to be
@@ -342,7 +342,7 @@ expects your pairwise alignment and already parsed MAF data.</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="plot-entry-point-and-geoms">Plot entry point and geoms<a class="anchor" aria-label="anchor" href="#plot-entry-point-and-geoms"></a>
+<h2 id="step-2--plot-entry-point-and-geoms">Step 2. Plot entry point and geoms<a class="anchor" aria-label="anchor" href="#step-2--plot-entry-point-and-geoms"></a>
 </h2>
 <p><code><a href="../reference/ggexon.html">ggexon()</a></code> starts a plot like <code><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot()</a></code>, but
 it understands <code>SynIndividual</code> and <code>SynSpecies</code>
@@ -654,7 +654,7 @@ straddles an intron returns one row per exonic fragment.</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="facets-tree-alignment-and-guides">Facets, tree alignment, and guides<a class="anchor" aria-label="anchor" href="#facets-tree-alignment-and-guides"></a>
+<h2 id="step-3--facets-tree-alignment-and-guides">Step 3. Facets, tree alignment, and guides<a class="anchor" aria-label="anchor" href="#step-3--facets-tree-alignment-and-guides"></a>
 </h2>
 <p><code>ggexon</code> uses facet systems to keep genomic panels,
 alignment links, trees, and other plots in register.</p>
@@ -822,7 +822,7 @@ with compressed intronic or intergenic distances.</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="verbs-that-manage-stored-data">Verbs that manage stored data<a class="anchor" aria-label="anchor" href="#verbs-that-manage-stored-data"></a>
+<h2 id="step-4--manage-stored-data-with-verbs">Step 4. Manage stored data with verbs<a class="anchor" aria-label="anchor" href="#step-4--manage-stored-data-with-verbs"></a>
 </h2>
 <p>The function families follow one rule: use classes to remember the
 data, then use verbs and geoms to operate on those classes.</p>

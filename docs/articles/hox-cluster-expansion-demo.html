@@ -40,7 +40,7 @@
     <li><a class="dropdown-item" href="../articles/cd44-splice-variants-demo.html">CD44 splice variant alignment</a></li>
     <li><a class="dropdown-item" href="../articles/as3mt-splice-variants-demo.html">AS3MT transcripts, DNA and RNA-seq</a></li>
     <li><a class="dropdown-item" href="../articles/hla-a-lollipop-demo.html">HLA-A protein variant lollipops</a></li>
-    <li><a class="dropdown-item" href="../articles/mhc-continuous-demo.html">Continuous MHC comparison</a></li>
+    <li><a class="dropdown-item" href="../articles/mhc-continuous-demo.html">MHC haplotypes across apes</a></li>
     <li><a class="dropdown-item" href="../articles/bigwig-coverage-demo.html">PEEL-1 raw BigWig coverage</a></li>
     <li><a class="dropdown-item" href="../articles/ggexon-classes-and-verbs.html">Classes, geoms, facets, and guides</a></li>
   </ul>
@@ -75,7 +75,7 @@
     
     
 <div class="section level2">
-<h2 id="why-a-cluster-matrix">Why a cluster matrix?<a class="anchor" aria-label="anchor" href="#why-a-cluster-matrix"></a>
+<h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
 <p>This example replaces the former HOXA ribbon tutorial with a view of
 HOX cluster expansion. Early vertebrate whole-genome duplications
@@ -156,7 +156,7 @@ specifically to HOXA. Its HOXB–HOXD cells are structural blanks.</p>
 <span><span class="va">panels</span><span class="op">$</span><span class="va">cluster_column</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">panels</span><span class="op">$</span><span class="va">matrix_column</span>, levels <span class="op">=</span> <span class="va">column_levels</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="exact-shared-hox-slots">Exact shared Hox slots<a class="anchor" aria-label="anchor" href="#exact-shared-hox-slots"></a>
+<h2 id="step-1--place-genes-in-exact-shared-hox-slots">Step 1. Place genes in exact shared Hox slots<a class="anchor" aria-label="anchor" href="#step-1--place-genes-in-exact-shared-hox-slots"></a>
 </h2>
 <p><code><a href="../reference/geom_genebox.html">geom_genebox()</a></code> uses a square whose side length is
 measured in x and y data units, like a ggplot2 bar width. The default is
@@ -375,7 +375,7 @@ lanceolatum</em> Hox13 in the expression study of <a href="https://pmc.ncbi.nlm.
 et al. 2012</a>.</p>
 </div>
 <div class="section level2">
-<h2 id="what-does-the-anchor-mean">What does the anchor mean?<a class="anchor" aria-label="anchor" href="#what-does-the-anchor-mean"></a>
+<h2 id="step-2--choose-the-gene-anchor">Step 2. Choose the gene anchor<a class="anchor" aria-label="anchor" href="#step-2--choose-the-gene-anchor"></a>
 </h2>
 <p>For Syn-backed data, <code>geom_genebox(anchor = ...)</code> first
 keeps protein-coding transcripts with usable CDS, then selects the

@@ -68,7 +68,7 @@
       <h1>Haplotype representation of the MHC region across apes</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/DongyaoLiu/ggexon/blob/HEAD/vignettes/mhc-continuous-demo.Rmd" class="external-link"><code>vignettes/mhc-continuous-demo.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/DongyaoLiu/ggexon/blob/main/vignettes/mhc-continuous-demo.Rmd" class="external-link"><code>vignettes/mhc-continuous-demo.Rmd</code></a></small>
       <div class="d-none name"><code>mhc-continuous-demo.Rmd</code></div>
     </div>
 
@@ -411,13 +411,13 @@ model table <code>m</code>), so their <code>xmin</code> and
 <span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">sp</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_gene</span><span class="op">(</span></span>
 <span>    data <span class="op">=</span> <span class="va">context_arrows</span>,</span>
-<span>    <span class="fu">aes</span><span class="op">(</span>xmin <span class="op">=</span> <span class="va">xmin</span>, xmax <span class="op">=</span> <span class="va">xmax</span>, ymin <span class="op">=</span> <span class="va">ymin</span>, transcripts <span class="op">=</span> <span class="va">transcripts</span>,</span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>xmin <span class="op">=</span> <span class="va">xmin</span>, xmax <span class="op">=</span> <span class="va">xmax</span>, ymin <span class="op">=</span> <span class="va">ymin</span>, transcripts <span class="op">=</span> <span class="va">transcripts</span>,</span>
 <span>        strand <span class="op">=</span> <span class="va">strand</span>, track <span class="op">=</span> <span class="va">track</span>, fill <span class="op">=</span> <span class="va">kind</span><span class="op">)</span>,</span>
 <span>    exon_height <span class="op">=</span> <span class="fl">0.5</span>, colour <span class="op">=</span> <span class="cn">NA</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">geom_gene</span><span class="op">(</span></span>
 <span>    data <span class="op">=</span> <span class="va">native_mhc_arrows</span>,</span>
-<span>    <span class="fu">aes</span><span class="op">(</span>xmin <span class="op">=</span> <span class="va">xmin</span>, xmax <span class="op">=</span> <span class="va">xmax</span>, ymin <span class="op">=</span> <span class="va">ymin</span>, transcripts <span class="op">=</span> <span class="va">transcripts</span>,</span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>xmin <span class="op">=</span> <span class="va">xmin</span>, xmax <span class="op">=</span> <span class="va">xmax</span>, ymin <span class="op">=</span> <span class="va">ymin</span>, transcripts <span class="op">=</span> <span class="va">transcripts</span>,</span>
 <span>        strand <span class="op">=</span> <span class="va">strand</span>, track <span class="op">=</span> <span class="va">track</span>, fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html" class="external-link">I</a></span><span class="op">(</span><span class="va">ortholog_fill</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>    exon_height <span class="op">=</span> <span class="fl">0.5</span>, show.legend <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
@@ -482,7 +482,7 @@ not evidence that the gene is absent.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="../reference/geom_gene_lollipop.html">geom_gene_lollipop</a></span><span class="op">(</span></span>
 <span>  data <span class="op">=</span> <span class="va">mhc</span>,</span>
-<span>  <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">true_midpoint</span>, y <span class="op">=</span> <span class="fl">0</span>, strand <span class="op">=</span> <span class="va">display_oriented_strand</span>,</span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">true_midpoint</span>, y <span class="op">=</span> <span class="fl">0</span>, strand <span class="op">=</span> <span class="va">display_oriented_strand</span>,</span>
 <span>      label <span class="op">=</span> <span class="va">gene_label</span>, fill <span class="op">=</span> <span class="va">kind</span>, track <span class="op">=</span> <span class="va">track</span>, head_row <span class="op">=</span> <span class="va">head_row</span><span class="op">)</span>,</span>
 <span>  headroom <span class="op">=</span> <span class="fl">8</span>,</span>
 <span>  head_layout <span class="op">=</span> <span class="st">"columns"</span>,</span>
@@ -493,7 +493,7 @@ not evidence that the gene is absent.</p>
 <span>  row_gap_mm <span class="op">=</span> <span class="fl">0.8</span>,</span>
 <span>  stem_height_mm <span class="op">=</span> <span class="fl">1.5</span>,</span>
 <span>  family <span class="op">=</span> <span class="st">"Times"</span>,</span>
-<span>  size <span class="op">=</span> <span class="fl">8</span> <span class="op">/</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/ggplot2/man/graphical-units.html" class="external-link">.pt</a></span></span>
+<span>  size <span class="op">=</span> <span class="fl">8</span> <span class="op">/</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="va"><a href="https://ggplot2.tidyverse.org/reference/graphical-units.html" class="external-link">.pt</a></span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p><code>y = 0</code> is the gene anchor line and
 <code>headroom = 8</code> is the y-space above it that the heads may
@@ -555,14 +555,14 @@ they are not inferred from the ribbons.</p>
 faceting. They are ordinary annotations below the gene anchors:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="va">p</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_rect</span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_rect</a></span><span class="op">(</span></span>
 <span>    data <span class="op">=</span> <span class="va">regions</span>,</span>
-<span>    <span class="fu">aes</span><span class="op">(</span>xmin <span class="op">=</span> <span class="va">xmin</span>, xmax <span class="op">=</span> <span class="va">xmax</span>, ymin <span class="op">=</span> <span class="va">ymin</span>, ymax <span class="op">=</span> <span class="va">ymax</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>xmin <span class="op">=</span> <span class="va">xmin</span>, xmax <span class="op">=</span> <span class="va">xmax</span>, ymin <span class="op">=</span> <span class="va">ymin</span>, ymax <span class="op">=</span> <span class="va">ymax</span><span class="op">)</span>,</span>
 <span>    fill <span class="op">=</span> <span class="st">"grey85"</span>, colour <span class="op">=</span> <span class="cn">NA</span>, inherit.aes <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_segment</span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_segment.html" class="external-link">geom_segment</a></span><span class="op">(</span></span>
 <span>    data <span class="op">=</span> <span class="va">class_spans</span>,</span>
-<span>    <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">xmin</span>, xend <span class="op">=</span> <span class="va">xmax</span>, y <span class="op">=</span> <span class="va">y</span>, yend <span class="op">=</span> <span class="va">y</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">xmin</span>, xend <span class="op">=</span> <span class="va">xmax</span>, y <span class="op">=</span> <span class="va">y</span>, yend <span class="op">=</span> <span class="va">y</span><span class="op">)</span>,</span>
 <span>    colour <span class="op">=</span> <span class="st">"grey55"</span>, inherit.aes <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
 <p>The renderer computes the shared VR lane’s <code>ymin</code> and
@@ -574,7 +574,7 @@ types is controlled by <code>link_panel_height</code>:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="va">p</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/facet_genomics.html">facet_genomics</a></span><span class="op">(</span></span>
-<span>    <span class="fu">vars</span><span class="op">(</span><span class="va">track</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">track</span><span class="op">)</span>,</span>
 <span>    scales <span class="op">=</span> <span class="st">"free"</span>,</span>
 <span>    ncol <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>    strip.position <span class="op">=</span> <span class="st">"left"</span>,</span>
@@ -583,7 +583,7 @@ types is controlled by <code>link_panel_height</code>:</p>
 <span>    link_panel_height <span class="op">=</span> <span class="fl">0.35</span>,</span>
 <span>    link_axis <span class="op">=</span> <span class="st">"none"</span>,</span>
 <span>    link_strip <span class="op">=</span> <span class="st">"blank"</span>,</span>
-<span>    labeller <span class="op">=</span> <span class="fu">labeller</span><span class="op">(</span>track <span class="op">=</span> <span class="va">strip_labels</span><span class="op">)</span></span>
+<span>    labeller <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labeller.html" class="external-link">labeller</a></span><span class="op">(</span>track <span class="op">=</span> <span class="va">strip_labels</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/scale_panel_annotation.html">scale_panel_annotation</a></span><span class="op">(</span><span class="st">"free_y"</span>, limits <span class="op">=</span> <span class="va">panel_limits</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/theme_ggexon_track.html">theme_ggexon_track</a></span><span class="op">(</span>base_family <span class="op">=</span> <span class="st">"Times"</span>, base_size <span class="op">=</span> <span class="fl">8</span>,</span>
@@ -629,9 +629,9 @@ geometry, the tick spacing still proves the common base-pair scale.</p>
 <span></span>
 <span><span class="co"># heads measured, panel heights assigned, native axes installed here</span></span>
 <span></span>
-<span><span class="fu">ggsave</span><span class="op">(</span><span class="st">"mhc_continuous.pdf"</span>, <span class="va">tab</span>, width <span class="op">=</span> <span class="fl">180</span>, height <span class="op">=</span> <span class="va">measured_height_mm</span>,</span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span><span class="st">"mhc_continuous.pdf"</span>, <span class="va">tab</span>, width <span class="op">=</span> <span class="fl">180</span>, height <span class="op">=</span> <span class="va">measured_height_mm</span>,</span>
 <span>       units <span class="op">=</span> <span class="st">"mm"</span>, device <span class="op">=</span> <span class="va">cairo_pdf</span>, bg <span class="op">=</span> <span class="st">"white"</span><span class="op">)</span></span>
-<span><span class="fu">ggsave</span><span class="op">(</span><span class="st">"mhc_continuous.png"</span>, <span class="va">tab</span>, width <span class="op">=</span> <span class="fl">180</span>, height <span class="op">=</span> <span class="va">measured_height_mm</span>,</span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span><span class="st">"mhc_continuous.png"</span>, <span class="va">tab</span>, width <span class="op">=</span> <span class="fl">180</span>, height <span class="op">=</span> <span class="va">measured_height_mm</span>,</span>
 <span>       units <span class="op">=</span> <span class="st">"mm"</span>, dpi <span class="op">=</span> <span class="fl">150</span>, bg <span class="op">=</span> <span class="st">"white"</span><span class="op">)</span></span></code></pre></div>
 <p>The script fails loudly if the built object does not match the
 intended design. Its assertions and exported QC tables check, among
@@ -731,7 +731,7 @@ re-running the source-data renderer during site builds.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

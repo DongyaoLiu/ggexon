@@ -1,6 +1,6 @@
 # ggexon Workflow
 
-## From data to a genomic figure
+## Overview
 
 Genomic figures often combine exon positions on a chromosome, links
 between genomes, signal depth, and positions along a protein. ggexon
@@ -1549,7 +1549,7 @@ vcf_plot
 A transcript
 models.](ggexon-workflow_files/figure-html/workflow-vcf-plot-1.png)
 
-## Choose a view for your question
+## Choosing a view for your question
 
 | Question                                            | Object or preparation                                                                                      | Geometry                                                                                                                                                                                                                                                                    | Scale and theme                                                                                                        |
 |-----------------------------------------------------|------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------|

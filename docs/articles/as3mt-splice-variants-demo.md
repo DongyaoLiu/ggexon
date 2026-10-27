@@ -1,6 +1,6 @@
 # AS3MT: transcripts, DNA and RNA-seq
 
-## Load the example
+## Step 1. Load the example
 
 Compare human full-length AS3MT, a **paper-defined d2d3
 reconstruction**, and chimpanzee full-length AS3MT. Coordinates use
@@ -15,7 +15,7 @@ source(file.path(demo_dir, "load-as3mt-example.R"), local = TRUE)
 as3mt <- load_as3mt_example(demo_dir)
 ```
 
-## 1. Transcripts and compressed introns
+## Step 2. Transcripts and compressed introns
 
 [`geom_exon2()`](https://dongyaoliu.github.io/ggexon/reference/geom_exon2.md)
 shows CDS as thick boxes and UTR as thin boxes. Keep the full-reference
@@ -38,8 +38,6 @@ chimpanzee reference. Gold E2/E3 are skipped in d2d3; ribbons follow
 30-fold intron
 compression.](as3mt-splice-variants-demo_files/figure-html/as3mt-pairwise-1.png)
 
-Transcript comparison; introns compressed 30-fold.
-
 The helper uses this grammar:
 
 ``` r
@@ -60,12 +58,15 @@ and **98.3–100%**. The 37 ungapped blocks split into 57 polygon pieces
 at scale boundaries. They show DNA similarity, not expression or proof
 of exon skipping.
 
-## 2. DNA detail at the exon-1 repeat
+## Step 3. DNA detail at the exon-1 repeat
 
-The selected human reference contains three **36-bp VNTR** units; the
-chimp reference has one imperfect homolog (34/36 matching bases). The
-terminal unit contains 24 exonic and 12 intronic bases. Both references
-retain the **GT** donor:
+The repeat is a **variable number tandem repeat (VNTR)** of 36-bp units
+at the exon 1 / intron 1 boundary. Each unit contains 24 exonic and 12
+intronic bases, and the terminal unit retains the **GT** donor. The
+selected human reference has three copies; the chimp reference has one
+imperfect homolog (34/36 matching bases). The **−72 bp** difference is
+therefore two missing 36-bp units (2 × 36 = 72 bp), not a 72-bp indel.
+Both references retain the donor:
 
 ``` text
 CCTGAGTCGCAGGCCGAGGAGACA | GTGAGTGCGCGC
@@ -106,7 +107,7 @@ differs by **36 bp**; the figure’s **−72 bp** marker instead compares
 the selected chimp and human references. Two base differences in the
 chimp homolog are context, not demonstrated causal SNVs.
 
-## 3. RNA-seq and splice junctions
+## Step 4. RNA-seq and splice junctions
 
 The bundled GTEx frontal-cortex (BA9) sample
 **GTEX-15G19-0011-R10b-SM-7KUG4.1** has both exon-2/3 inclusion and
@@ -129,8 +130,6 @@ rna_example$plot
 skipping arcs in the same panel, above the human AS3MT transcripts. All
 follow 30-fold intron compression; ungapped links connect the chimp
 reference.](as3mt-splice-variants-demo_files/figure-html/as3mt-rnaseq-1.png)
-
-Matched human coverage and splice-junction reads.
 
 Arc labels are **junction read counts**: E1→E2, 9; E2→E3, 10; E3→E4, 11;
 E1→E4, 12. Line width reflects these counts. The layer takes exon-edge
@@ -161,24 +160,7 @@ events, not complete transcript abundances. This independent donor’s
 VNTR genotype is not inferred from the reference DNA or the separate
 minigene experiment.
 
-## Sources and reproducibility
-
-- [Li et al. (2016),
-  doi:10.1038/nm.4096](https://doi.org/10.1038/nm.4096): d2d3
-  reconstruction and repeat sequence.
-- [Cai et al. (2021),
-  doi:10.1093/schbul/sbaa098](https://doi.org/10.1093/schbul/sbaa098):
-  human VNTR minigene comparison.
-- [recount3](https://rna.recount.bio/) and
-  [Snaptron](https://snaptron.cs.jhu.edu/data.html): matched GTEx
-  coverage and exon-junction reads.
-
-The installed `extdata/as3mt` directory contains the plotting helper,
-input snapshots and provenance. Repository preparation/export scripts
-are in `data-raw/as3mt`; the genomic ribbons use LASTZ
-`--nogapped --chain` blocks.
-
-## Combined result
+## Step 5. Combined result
 
 The green RNA-seq signal and counted splice arcs occupy the same panel
 and share the human gene model’s compressed scale. Blue arcs support
@@ -199,4 +181,19 @@ includes ungapped links, purple VNTR units, species-specific DNA
 callouts, exon/intron scale bars and the human minigene
 comparison.](as3mt-splice-variants-demo_files/figure-html/as3mt-alignseq-1.png)
 
-AS3MT coverage, splice junctions and exon-1 VNTR.
+## Sources and reproducibility
+
+- [Li et al. (2016),
+  doi:10.1038/nm.4096](https://doi.org/10.1038/nm.4096): d2d3
+  reconstruction and repeat sequence.
+- [Cai et al. (2021),
+  doi:10.1093/schbul/sbaa098](https://doi.org/10.1093/schbul/sbaa098):
+  human VNTR minigene comparison.
+- [recount3](https://rna.recount.bio/) and
+  [Snaptron](https://snaptron.cs.jhu.edu/data.html): matched GTEx
+  coverage and exon-junction reads.
+
+The installed `extdata/as3mt` directory contains the plotting helper,
+input snapshots and provenance. Repository preparation/export scripts
+are in `data-raw/as3mt`; the genomic ribbons use LASTZ
+`--nogapped --chain` blocks.

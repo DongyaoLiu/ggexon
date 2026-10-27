@@ -13,7 +13,7 @@ The package is easiest to learn in this order:
 3.  facet systems and genomic guides
 4.  verbs that manage, query, and transform stored data
 
-## Data-storage classes
+## Step 1. Data-storage classes
 
 The object model keeps stable biological identifiers for computation
 while allowing readable labels and plot-specific layout state to be
@@ -244,7 +244,7 @@ sp <- add_multiple_alignment(
 )
 ```
 
-## Plot entry point and geoms
+## Step 2. Plot entry point and geoms
 
 [`ggexon()`](https://dongyaoliu.github.io/ggexon/reference/ggexon.md)
 starts a plot like
@@ -570,7 +570,7 @@ fragment.
 project_mutations_to_genome(xz, chr = "RagTag_V", start = 21574445, end = 21584356)
 ```
 
-## Facets, tree alignment, and guides
+## Step 3. Facets, tree alignment, and guides
 
 `ggexon` uses facet systems to keep genomic panels, alignment links,
 trees, and other plots in register.
@@ -716,7 +716,7 @@ ggexon(sp) +
 Use this guide when a figure mixes detailed exon-scale interpretation
 with compressed intronic or intergenic distances.
 
-## Verbs that manage stored data
+## Step 4. Manage stored data with verbs
 
 The function families follow one rule: use classes to remember the data,
 then use verbs and geoms to operate on those classes.

@@ -40,7 +40,7 @@
     <li><a class="dropdown-item" href="../articles/cd44-splice-variants-demo.html">CD44 splice variant alignment</a></li>
     <li><a class="dropdown-item" href="../articles/as3mt-splice-variants-demo.html">AS3MT transcripts, DNA and RNA-seq</a></li>
     <li><a class="dropdown-item" href="../articles/hla-a-lollipop-demo.html">HLA-A protein variant lollipops</a></li>
-    <li><a class="dropdown-item" href="../articles/mhc-continuous-demo.html">Continuous MHC comparison</a></li>
+    <li><a class="dropdown-item" href="../articles/mhc-continuous-demo.html">MHC haplotypes across apes</a></li>
     <li><a class="dropdown-item" href="../articles/bigwig-coverage-demo.html">PEEL-1 raw BigWig coverage</a></li>
     <li><a class="dropdown-item" href="../articles/ggexon-classes-and-verbs.html">Classes, geoms, facets, and guides</a></li>
   </ul>
@@ -75,7 +75,7 @@
     
     
 <div class="section level2">
-<h2 id="a-dense-landscape-of-hla-a-variation">A dense landscape of HLA-A variation<a class="anchor" aria-label="anchor" href="#a-dense-landscape-of-hla-a-variation"></a>
+<h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
 <p>This example summarizes <strong>5,998 named HLA-A alleles</strong>,
 an MHC class I heavy chain, from IPD-IMGT/HLA release
@@ -106,7 +106,7 @@ Counts reflect database representation, not individuals, independent
 observations, or population frequencies.</p>
 </div>
 <div class="section level2">
-<h2 id="load-the-offline-inputs">Load the offline inputs<a class="anchor" aria-label="anchor" href="#load-the-offline-inputs"></a>
+<h2 id="step-1--load-the-offline-inputs">Step 1. Load the offline inputs<a class="anchor" aria-label="anchor" href="#step-1--load-the-offline-inputs"></a>
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dongyaoliu.github.io/ggexon/">ggexon</a></span><span class="op">)</span></span>
@@ -191,7 +191,7 @@ to the exact reference allele’s coding structure.</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="dense-lollipop-summary">Dense lollipop summary<a class="anchor" aria-label="anchor" href="#dense-lollipop-summary"></a>
+<h2 id="step-2--draw-the-dense-lollipop-summary">Step 2. Draw the dense lollipop summary<a class="anchor" aria-label="anchor" href="#step-2--draw-the-dense-lollipop-summary"></a>
 </h2>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">plots</span> <span class="op">&lt;-</span> <span class="fu">plot_hla_a_example</span><span class="op">(</span><span class="va">hla</span><span class="op">)</span></span>
@@ -257,7 +257,7 @@ this example; the package’s default spreading API is unchanged.</p>
 <span><span class="co">#&gt; 6      S2F            3              4         Aromatic</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="multiple-alternatives-at-residue-156">Multiple alternatives at residue 156<a class="anchor" aria-label="anchor" href="#multiple-alternatives-at-residue-156"></a>
+<h2 id="step-3--compare-multiple-alternatives-at-residue-156">Step 3. Compare multiple alternatives at residue 156<a class="anchor" aria-label="anchor" href="#step-3--compare-multiple-alternatives-at-residue-156"></a>
 </h2>
 <p>The reference has <strong>L</strong> at mature residue 156. In this
 expanded panel there are <strong>five</strong> alternative amino acids,
@@ -341,7 +341,7 @@ without producing unwieldy lists of thousands of names in each table
 cell.</p>
 </div>
 <div class="section level2">
-<h2 id="project-onto-the-reference-exonintron-model">Project onto the reference exon–intron model<a class="anchor" aria-label="anchor" href="#project-onto-the-reference-exonintron-model"></a>
+<h2 id="step-4--project-onto-the-reference-exonintron-model">Step 4. Project onto the reference exon–intron model<a class="anchor" aria-label="anchor" href="#step-4--project-onto-the-reference-exonintron-model"></a>
 </h2>
 <p>The same 1,212 substitutions can be placed above the <strong>eight
 coding exons and seven introns</strong> of A*02:01:01:01. The bundled
@@ -522,7 +522,7 @@ guide reports <strong>73 bp</strong> for the representative exon and
 <strong>130 bp /3</strong> for the intron.</p>
 </div>
 <div class="section level2">
-<h2 id="reproduce-and-customize">Reproduce and customize<a class="anchor" aria-label="anchor" href="#reproduce-and-customize"></a>
+<h2 id="reproducing-and-customizing">Reproducing and customizing<a class="anchor" aria-label="anchor" href="#reproducing-and-customizing"></a>
 </h2>
 <p>From the repository root:</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="ex">python3</span> data-raw/hla_a_lollipop/build-hla-a-demo.py</span>
@@ -539,9 +539,10 @@ counts to <code>data-raw/hla_a_lollipop/preview</code>.</p>
 size, head size, stem opacity, or the maximum local fan width. The
 default 240 × 135 mm canvas provides space for the dense overview. Every
 substitution is drawn in both the vector and raster exports.</p>
-<div class="section level3">
-<h3 id="sources-and-attribution">Sources and attribution<a class="anchor" aria-label="anchor" href="#sources-and-attribution"></a>
-</h3>
+</div>
+<div class="section level2">
+<h2 id="sources-and-attribution">Sources and attribution<a class="anchor" aria-label="anchor" href="#sources-and-attribution"></a>
+</h2>
 <ul>
 <li>
 <a href="https://www.ebi.ac.uk/ipd/imgt/hla/" class="external-link">IPD-IMGT/HLA</a>
@@ -567,7 +568,6 @@ snapshot and source SHA-256 values are bundled.</li>
 alignment conventions</a>: mature-protein numbering and alignment
 symbols.</li>
 </ul>
-</div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

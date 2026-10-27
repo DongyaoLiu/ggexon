@@ -26,7 +26,7 @@ Coordinates remain in their original genome assemblies: human GRCh38
 strand, so the plot below reverses the mouse panel at draw time while
 keeping tick labels in original genomic coordinates.
 
-## Build one comparative data object
+## Step 1. Build one comparative data object
 
 The comparison is stored in one `SynSpecies` object named `cd44`. It
 contains human and mouse `SynIndividual` objects with loaded
@@ -88,7 +88,7 @@ knitr::kable(isoform_table)
 | Mouse   | Cd44-204   | ENSMUST00000111190 |    11 | RefSeq-backed intermediate Cd44 splice isoform (NM_001177787)          |
 | Mouse   | Cd44-208   | ENSMUST00000111198 |    16 | RefSeq-backed expanded Cd44 splice isoform (NM_001177785)              |
 
-## Pairwise splice-variant plot
+## Step 2. Draw the pairwise splice-variant plot
 
 The geoms resolve their data from `ggexon(cd44)`. The feature annotation
 retains `exon_role`, `transcript_name`, `selection_order`, and
@@ -194,7 +194,7 @@ reversed. Exons present in every selected isoform are green; variable
 splice exons are orange. LASTZ genomic DNA alignment blocks are drawn as
 nucleotide links and colored by percent-identity range.
 
-## What the alignment layer contributes
+### What the alignment layer contributes
 
 [`geom_nuclink()`](https://dongyaoliu.github.io/ggexon/reference/geom_nuclink.md)
 uses a table of target/query genomic intervals. Here those intervals
@@ -357,7 +357,7 @@ knitr::kable(protein_identity_table, row.names = FALSE)
 |         19 |          2 | common     | common     |               53.880 |               26 |               26 |           25 |         26 |      0 |                 96.2 |
 |         20 |          1 | common     | common     |               59.770 |               67 |               67 |           60 |         67 |      0 |                 89.6 |
 
-## Reusing the pattern
+## Step 3. Reuse the pattern
 
 Save the comparative object to keep its loaded annotations, normalized
 links, sequence windows, and supporting tables together:
@@ -383,7 +383,7 @@ Ensembl release, source URLs, strand-aware flank sizes, UCSC sequence
 windows, LASTZ command, selected isoforms, common-exon calls, and
 exon-homology candidate tables.
 
-## Object construction code
+## Appendix. Object construction code
 
 This is the loader sourced above. The annotation is loaded into each
 `SynIndividual` and enriched by matching transcript IDs and exon

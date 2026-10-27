@@ -18,7 +18,6 @@ data object first. Run the code from a repository checkout root; these
 helpers are repository example functions, not exported package APIs.
 
 ``` r
-
 library(ggexon)
 source("data-raw/ape_paper/mhc_tutorial_data.R")
 
@@ -35,7 +34,6 @@ two direct bridges used by the later subset example; the full view draws
 only its 12 adjacent comparisons.
 
 ``` r
-
 full_plot <- render_mhc_data(
   mhc_all,
   output_dir = "data-raw/ape_paper/results/mhc_full_example/figures"
@@ -64,7 +62,6 @@ so only one is shown. Human has only the CHM13 reference in these
 inputs.
 
 ``` r
-
 keep <- c("SSYh1", "GGOh2", "GGOh1", "HSAh1")  # top to bottom
 mhc_small <- subset_mhc_data(mhc_all, tracks = keep)
 
@@ -86,7 +83,6 @@ from the cached DNA, rather than inferred through removed tracks. A
 requested pair without a stored direct alignment raises an error.
 
 ``` r
-
 compact_plot <- render_mhc_data(
   mhc_small,
   output_dir = "data-raw/ape_paper/results/mhc_compact/figures"
@@ -116,15 +112,15 @@ Helper definitions are in `data-raw/ape_paper/mhc_tutorial_data.R`.
 All inputs are tab-separated tables under
 `data-raw/ape_paper/results/mhc_continuous/`. The main files are:
 
-| File | One row per | Key columns |
-|----|----|----|
-| `windows.tsv` | haplotype window | `track`, `label`, `chr`, `start0`, `end0`, `length`, `orientation` |
+| File                                            | One row per               | Key columns                                                                                                                                 |
+|-------------------------------------------------|---------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|
+| `windows.tsv`                                   | haplotype window          | `track`, `label`, `chr`, `start0`, `end0`, `length`, `orientation`                                                                          |
 | `gene_models_with_recovered_context/models.tsv` | representative transcript | `track`, `model_id`, `gene_symbol`, `chromStart`, `chromEnd`, `strand`, `annotation_evidence`, `projection_coverage`, `projection_identity` |
-| `gene_models_with_recovered_context/exons.tsv` | supporting exon | `model_id`, `start0`, `end0` |
-| `mhc_full/genes.tsv` | curated MHC gene | `track`, `locus`, `start`, `end`, `strand`, `gene_name`, `functionality` |
-| `links.tsv` | alignment block | `tspecies`, `qspecies`, `tstart`, `tend`, `qstart`, `qend`, `strand`, `identity` |
-| `discordant_regions.tsv` | variable-region piece | `track`, `region`, `start0`, `end0`, `display_start0`, `display_end0` |
-| `source_metadata/mhc_continuous/colors.txt` | ortholog key | gene key, RGB |
+| `gene_models_with_recovered_context/exons.tsv`  | supporting exon           | `model_id`, `start0`, `end0`                                                                                                                |
+| `mhc_full/genes.tsv`                            | curated MHC gene          | `track`, `locus`, `start`, `end`, `strand`, `gene_name`, `functionality`                                                                    |
+| `links.tsv`                                     | alignment block           | `tspecies`, `qspecies`, `tstart`, `tend`, `qstart`, `qend`, `strand`, `identity`                                                            |
+| `discordant_regions.tsv`                        | variable-region piece     | `track`, `region`, `start0`, `end0`, `display_start0`, `display_end0`                                                                       |
+| `source_metadata/mhc_continuous/colors.txt`     | ortholog key              | gene key, RGB                                                                                                                               |
 
 Coordinate conventions matter here: `windows.tsv` and the derived tables
 use BED0, half-open coordinates (`start0`, `end0`). The curated
@@ -158,7 +154,6 @@ explicitly labelled same-species Liftoff projections, with
 `annotation_evidence` distinguishing the two.
 
 ``` r
-
 B <- "data-raw/ape_paper/results/mhc_continuous"
 
 windows <- read.delim(file.path(B, "windows.tsv"))
@@ -183,12 +178,12 @@ panels.**
 This example’s preparation step brings its particular inputs into one
 consistent coordinate system:
 
-| Input | Stored coordinates | Composition for this example |
-|----|----|----|
-| Curated MHC gene spans | One-based closed native assembly coordinates | Convert to BED0, then express relative to the extracted window |
-| Context models and VR intervals | BED0 native assembly coordinates | Express relative to the same window |
-| Minimap2 alignment blocks | Coordinates relative to extracted sequences | Already window-relative; use the same convention as the gene layers |
-| Siamang records | Native assembly orientation is reversed | Reflect gene and annotation coordinates to match the reverse-complemented alignment sequence |
+| Input                           | Stored coordinates                           | Composition for this example                                                                 |
+|---------------------------------|----------------------------------------------|----------------------------------------------------------------------------------------------|
+| Curated MHC gene spans          | One-based closed native assembly coordinates | Convert to BED0, then express relative to the extracted window                               |
+| Context models and VR intervals | BED0 native assembly coordinates             | Express relative to the same window                                                          |
+| Minimap2 alignment blocks       | Coordinates relative to extracted sequences  | Already window-relative; use the same convention as the gene layers                          |
+| Siamang records                 | Native assembly orientation is reversed      | Reflect gene and annotation coordinates to match the reverse-complemented alignment sequence |
 
 The gene tables and alignment tables must agree about what a position
 means. For this dataset, the renderer uses window-relative display
@@ -202,7 +197,6 @@ The helper below shows that data preparation in the renderer. It is not
 an additional ggexon panel-fitting requirement:
 
 ``` r
-
 transform_native <- function(d, a, b, trackcol = "track") {
   z  <- windows[match(d[[trackcol]], windows$track), ]
   lo <- pmax(d[[a]], z$start0)
@@ -222,7 +216,6 @@ therefore gives every panel the same display span, taken from the full
 object’s longest window:
 
 ``` r
-
 max_bp <- mhc_all$max_bp
 panel_xlim <- setNames(rep(list(c(0, max_bp)), nrow(windows)), windows$track)
 panel_chr <- setNames(rep("MHC", nrow(windows)), windows$track)
@@ -239,7 +232,6 @@ full view, retaining all track IDs selects its original 12 adjacent
 direct alignments and prepares the chain layout:
 
 ``` r
-
 full_data <- subset_mhc_data(mhc_all, tracks = mhc_all$windows$track)
 sp <- full_data$species
 pair_names <- names(pairwise_alignments(sp))
@@ -265,7 +257,6 @@ the transformed tables from Step 2 (the renderer calls the model table
 coordinates.
 
 ``` r
-
 context_arrows <- data.frame(
   track = models$track,
   xmin = models$xmin, xmax = models$xmax, ymin = -0.5,
@@ -317,13 +308,13 @@ carries the true span.
 
 The curated table is extended with these plotting columns:
 
-| Column | Meaning |
-|----|----|
-| `true_midpoint` | midpoint of the curated span in display coordinates |
-| `display_oriented_strand` | strand flipped for a reverse-oriented track |
-| `gene_label` | source gene name, with `*` for a pseudogene |
-| `kind` | color/legend key (ortholog class, pseudogene, other gene) |
-| `head_row` | one of six shared physical rows for that source gene key |
+| Column                    | Meaning                                                   |
+|---------------------------|-----------------------------------------------------------|
+| `true_midpoint`           | midpoint of the curated span in display coordinates       |
+| `display_oriented_strand` | strand flipped for a reverse-oriented track               |
+| `gene_label`              | source gene name, with `*` for a pseudogene               |
+| `kind`                    | color/legend key (ortholog class, pseudogene, other gene) |
+| `head_row`                | one of six shared physical rows for that source gene key  |
 
 `head_row` is the key to the layout. Each of the 41 source gene keys is
 assigned a fixed row (1-6) from a template, so the same gene appears at
@@ -333,7 +324,6 @@ side by side on that row. An empty slot is a layout vacancy, not
 evidence that the gene is absent.
 
 ``` r
-
 p <- p + geom_gene_lollipop(
   data = mhc,
   aes(x = true_midpoint, y = 0, strand = display_oriented_strand,
@@ -366,7 +356,6 @@ call is added for each adjacent pair of haplotypes, using the stored
 `SynPairAlignment`:
 
 ``` r
-
 for (nm in pair_names) {
   p <- p + geom_nuclink(
     alignment = nm,
@@ -412,7 +401,6 @@ The script also adds the VR1-VR3 lane and the class I/II spans before
 faceting. They are ordinary annotations below the gene anchors:
 
 ``` r
-
 p <- p +
   geom_rect(
     data = regions,
@@ -434,7 +422,6 @@ between each adjacent pair. The ratio between those two panel types is
 controlled by `link_panel_height`:
 
 ``` r
-
 p <- p +
   facet_genomics(
     vars(track),
@@ -491,7 +478,6 @@ Because the axis grobs are positioned through the shared display
 geometry, the tick spacing still proves the common base-pair scale.
 
 ``` r
-
 built <- ggexon_build(p)
 tab   <- ggexon_gtable(built)
 

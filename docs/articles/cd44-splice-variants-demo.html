@@ -40,7 +40,7 @@
     <li><a class="dropdown-item" href="../articles/cd44-splice-variants-demo.html">CD44 splice variant alignment</a></li>
     <li><a class="dropdown-item" href="../articles/as3mt-splice-variants-demo.html">AS3MT transcripts, DNA and RNA-seq</a></li>
     <li><a class="dropdown-item" href="../articles/hla-a-lollipop-demo.html">HLA-A protein variant lollipops</a></li>
-    <li><a class="dropdown-item" href="../articles/mhc-continuous-demo.html">Continuous MHC comparison</a></li>
+    <li><a class="dropdown-item" href="../articles/mhc-continuous-demo.html">MHC haplotypes across apes</a></li>
     <li><a class="dropdown-item" href="../articles/bigwig-coverage-demo.html">PEEL-1 raw BigWig coverage</a></li>
     <li><a class="dropdown-item" href="../articles/ggexon-classes-and-verbs.html">Classes, geoms, facets, and guides</a></li>
   </ul>
@@ -104,7 +104,7 @@ the reverse strand, so the plot below reverses the mouse panel at draw
 time while keeping tick labels in original genomic coordinates.</p>
 </div>
 <div class="section level2">
-<h2 id="build-one-comparative-data-object">Build one comparative data object<a class="anchor" aria-label="anchor" href="#build-one-comparative-data-object"></a>
+<h2 id="step-1--build-one-comparative-data-object">Step 1. Build one comparative data object<a class="anchor" aria-label="anchor" href="#step-1--build-one-comparative-data-object"></a>
 </h2>
 <p>The comparison is stored in one <code>SynSpecies</code> object named
 <code>cd44</code>. It contains human and mouse
@@ -234,7 +234,7 @@ object rather than read again from a separate file:</p>
 </table>
 </div>
 <div class="section level2">
-<h2 id="pairwise-splice-variant-plot">Pairwise splice-variant plot<a class="anchor" aria-label="anchor" href="#pairwise-splice-variant-plot"></a>
+<h2 id="step-2--draw-the-pairwise-splice-variant-plot">Step 2. Draw the pairwise splice-variant plot<a class="anchor" aria-label="anchor" href="#step-2--draw-the-pairwise-splice-variant-plot"></a>
 </h2>
 <p>The geoms resolve their data from <code>ggexon(cd44)</code>. The
 feature annotation retains <code>exon_role</code>,
@@ -335,10 +335,9 @@ splice exons are orange. LASTZ genomic DNA alignment blocks are drawn as
 nucleotide links and colored by percent-identity range.
 </p>
 </div>
-</div>
-<div class="section level2">
-<h2 id="what-the-alignment-layer-contributes">What the alignment layer contributes<a class="anchor" aria-label="anchor" href="#what-the-alignment-layer-contributes"></a>
-</h2>
+<div class="section level3">
+<h3 id="what-the-alignment-layer-contributes">What the alignment layer contributes<a class="anchor" aria-label="anchor" href="#what-the-alignment-layer-contributes"></a>
+</h3>
 <p><code><a href="../reference/geom_nuclink.html">geom_nuclink()</a></code> uses a table of target/query genomic
 intervals. Here those intervals come from LASTZ alignments of genomic
 DNA windows spanning the human and mouse gene loci plus 20 kb
@@ -639,8 +638,9 @@ amino-acid columns, including gap columns.</p>
 </tbody>
 </table>
 </div>
+</div>
 <div class="section level2">
-<h2 id="reusing-the-pattern">Reusing the pattern<a class="anchor" aria-label="anchor" href="#reusing-the-pattern"></a>
+<h2 id="step-3--reuse-the-pattern">Step 3. Reuse the pattern<a class="anchor" aria-label="anchor" href="#step-3--reuse-the-pattern"></a>
 </h2>
 <p>Save the comparative object to keep its loaded annotations,
 normalized links, sequence windows, and supporting tables together:</p>
@@ -662,7 +662,7 @@ sequence windows, LASTZ command, selected isoforms, common-exon calls,
 and exon-homology candidate tables.</p>
 </div>
 <div class="section level2">
-<h2 id="object-construction-code">Object construction code<a class="anchor" aria-label="anchor" href="#object-construction-code"></a>
+<h2 id="appendix--object-construction-code">Appendix. Object construction code<a class="anchor" aria-label="anchor" href="#appendix--object-construction-code"></a>
 </h2>
 <p>This is the loader sourced above. The annotation is loaded into each
 <code>SynIndividual</code> and enriched by matching transcript IDs and
