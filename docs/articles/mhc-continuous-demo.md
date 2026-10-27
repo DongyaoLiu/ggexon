@@ -1,45 +1,21 @@
 # Haplotype representation of the MHC region across apes
 
-This article builds the MHC haplotype figure step by step: inspect the
-data, put every haplotype on one scale, add genes, then the enlarged MHC
-heads, then the nucleotide links, and finally the facet layout that sets
-the link-panel height. The view recombines the gene identity and status
-information of Extended Data Fig. 3a/b with the continuous region and
-alignment design of Fig. 3c in [Yoo et
+This tutorial first renders the complete MHC data object, then subsets
+it for a concise comparison. The remaining steps explain data
+composition, gene and lollipop layers, nucleotide links and the facet
+layout. The view recombines the gene identity and status information of
+Extended Data Fig. 3a/b with the continuous region and alignment design
+of Fig. 3c in [Yoo et
 al. (2025)](https://www.nature.com/articles/s41586-025-08816-3). It is a
 source-backed reconstruction, not a pixel reproduction of the published
 figure.
 
-The complete source dataset contains 13 haplotype tracks and 285 curated
-MHC genes. The worked example below first loads that **whole data
-object**, then subsets it to **human CHM13, gorilla h1/h2 and siamang
-h1** before plotting. The compact figure has four annotation tracks, 97
-curated MHC heads and three nucleotide-link panels, while preserving the
-full native windows, common bp scale and shared head rows. Human has
-only the CHM13 reference in these inputs. Gorilla’s two curated head
-profiles differ; siamang’s two profiles match in gene identity, copy
-count, order, strand and status, so only h1 is shown.
+## Full MHC comparison
 
-![Compact four-track MHC comparison: siamang h1, gorilla h2, gorilla h1
-and human CHM13. All tracks retain native gene spans, shared enlarged
-MHC head rows, grey context genes and lower variable-region annotations.
-Three direct nucleotide-alignment panels connect adjacent
-tracks.](figures/mhc-three-species.png)
-
-## Compact example: subset the full object first
-
-Run these blocks from a repository checkout root after installing the
-package and its dependencies. The helpers are repository example
-functions, loaded with [`source()`](https://rdrr.io/r/base/source.html);
-they are not exported package APIs. The source tables are not installed
-with the package, so the website embeds the verified render above.
-
-### Load all haplotypes and annotations together
-
-`read_mhc_data()` returns a list containing the complete `SynSpecies`
-object (`species`) plus its native windows, MHC genes, context models,
-exons, variable regions and alignment tables. It also records `max_bp`
-from **all 13 windows**. No species selection happens while reading:
+The complete source dataset contains 13 haplotype tracks: human CHM13
+and both haplotypes of six ape species. Build and render the complete
+data object first. Run the code from a repository checkout root; these
+helpers are repository example functions, not exported package APIs.
 
 ``` r
 
@@ -51,14 +27,41 @@ stopifnot(length(individual_names(mhc_all$species)) == 13L,
           nrow(mhc_all$mhc) == 285L)
 ```
 
-The full alignment collection includes the original 12 adjacent
-comparisons plus two direct bridges needed for the compact order:
-siamang h1 → gorilla h2 and gorilla h1 → human CHM13. These were
-computed directly from the cached DNA with the same minimap2 and
-block-filter settings. Subsetting does not invent alignments across
-removed tracks.
+`mhc_all` contains the `SynSpecies` object (`species`), native windows,
+MHC genes, context models, exons, variable regions and direct alignment
+tables. `max_bp` records the longest window in the complete dataset. The
+alignment collection contains the original 12 adjacent comparisons plus
+two direct bridges used by the later subset example; the full view draws
+only its 12 adjacent comparisons.
 
-### Select a reusable smaller data object
+``` r
+
+full_plot <- render_mhc_data(
+  mhc_all,
+  output_dir = "data-raw/ape_paper/results/mhc_full_example/figures"
+)
+full_plot$pdf  # exported vector figure
+```
+
+The full view below contains 285 curated MHC heads, the native-scale
+gene arrows and grey context genes, lower annotation lanes, and 624
+nucleotide ribbons. Each track retains its native distances and assembly
+coordinate labels.
+
+![Full thirteen-track MHC comparison. From top to bottom: both
+haplotypes of siamang, Sumatran orangutan, Bornean orangutan, gorilla,
+bonobo and chimpanzee, followed by human CHM13. Native gene spans,
+enlarged MHC heads on shared rows, grey context genes, variable-region
+annotations and adjacent nucleotide ribbons are
+retained.](figures/mhc-continuous.png)
+
+## Subset the full data object
+
+For a shorter example, retain human CHM13, both gorilla haplotypes and
+siamang h1. Gorilla’s two curated head profiles differ; siamang’s
+profiles match in gene identity, copy count, order, strand and status,
+so only one is shown. Human has only the CHM13 reference in these
+inputs.
 
 ``` r
 
@@ -74,16 +77,13 @@ stopifnot(
 )
 ```
 
-The subset copies the selected individuals with their attached
-annotations, filters every annotation table consistently, retains only
-the direct alignments for adjacent selected tracks and rebuilds the
-chain layout. A requested pair without a stored direct alignment raises
-an error rather than drawing a false bridge. The original `mhc_all`
-remains available for another selection. The full object’s `max_bp` is
-retained, so selecting fewer tracks does not rescale each haplotype or
-move any genomic anchor.
-
-### Render the selected object
+The subset retains the selected individuals with their attached
+annotations, filters every annotation table, keeps the direct alignments
+for adjacent selected tracks and rebuilds the chain layout. It preserves
+the full object’s `max_bp` and leaves `mhc_all` unchanged. The siamang
+h1 → gorilla h2 and gorilla h1 → human bridges were computed directly
+from the cached DNA, rather than inferred through removed tracks. A
+requested pair without a stored direct alignment raises an error.
 
 ``` r
 
@@ -91,34 +91,25 @@ compact_plot <- render_mhc_data(
   mhc_small,
   output_dir = "data-raw/ape_paper/results/mhc_compact/figures"
 )
-grid::grid.newpage()
-grid::grid.draw(compact_plot$gtable)
+compact_plot$pdf
 ```
 
-`render_mhc_data()` passes the **subsetted `SynSpecies`** and its
-associated tables to the shared renderer. It returns the plot, measured
-gtable and PDF/PNG paths. It keeps the exact small MHC arrows, grey
-context, ortholog colors, pseudogene markings, six shared head rows and
-lower annotation lanes. The export is 180 × 267.5 mm, about 67% shorter
-than the full comparison, with 252 ribbons and 860 grey context arrows.
-The helper definitions are in `data-raw/ape_paper/mhc_tutorial_data.R`;
-the short runnable entry point is
-`data-raw/ape_paper/render_mhc_compact.R`.
+The concise view below has four annotation tracks, 97 MHC heads, 860
+grey context arrows and 252 ribbons. It keeps the small native MHC
+arrows, six shared head rows, ortholog colors, pseudogene markings and
+lower annotation lanes. At 180 × 267.5 mm it is about 67% shorter than
+the full comparison.
 
-The remaining steps explain the shared rendering pipeline and the
-complete source data. Their full-dataset counts (13 tracks, 285 heads,
-624 original ribbons) describe the original seven-species view, not the
-compact subset.
+![Concise four-track MHC comparison: siamang h1, gorilla h2, gorilla h1
+and human CHM13. The subset preserves native gene spans, shared enlarged
+head rows, grey context and lower annotations, with three direct
+nucleotide-link panels.](figures/mhc-three-species.png)
 
-![Two gorilla haplotypes compared at MHC class II, showing enlarged
-directional gene heads on shared rows, small native-span arrows, grey
-context genes and grey nucleotide
-ribbons.](figures/mhc-classii-comparison.png)
-
-The class II detail isolates the two gorilla haplotypes. It shows the
-small native arrows and enlarged heads from Steps 3-4 and the ribbons
-from Step 5. The exact code below also adds the VR lane and the class
-I/II spans before the facet call.
+Both examples use the same renderer. The following steps explain its
+data composition and layers. Full-dataset counts in these steps refer to
+the 13-track view. The website embeds verified previews because the
+source tables under `data-raw/` are not installed with the package.
+Helper definitions are in `data-raw/ape_paper/mhc_tutorial_data.R`.
 
 ## Step 1. What is in the MHC data?
 
@@ -178,84 +169,80 @@ exons   <- read.delim(file.path(B, "gene_models_with_recovered_context/exons.tsv
 mhc     <- read.delim("data-raw/ape_paper/results/mhc_full/genes.tsv")
 ```
 
-## Step 2. Put every haplotype on one scale
+## Step 2. Data composition
 
-This is the part that is easy to misread. Each track comes from a
-**different assembly window**. Human starts at 28.7 Mb, chimpanzee at
-34.7 Mb, and siamang at 37.5 Mb; the windows also differ in length
-(4.79-5.80 Mb) and siamang is stored in the reverse orientation. If you
-plotted the raw coordinates on one x-axis, the rows would not line up
-and one base pair would have a different width in each row.
+Each track already has its own panel.
+[`facet_genomics()`](https://dongyaoliu.github.io/ggexon/reference/facet_genomics.md)
+uses the panel’s x scale to position its data, and
+[`geom_nuclink()`](https://dongyaoliu.github.io/ggexon/reference/geom_nuclink.md)
+uses the corresponding source panel scales when placing ribbon
+endpoints. Panel limits handle fitting and zooming. **A manual
+coordinate conversion is not required merely to display separate genomic
+panels.**
 
-The figure therefore converts every native coordinate to a **display
-coordinate** that starts at 0 for every track:
+This example’s preparation step brings its particular inputs into one
+consistent coordinate system:
 
-- plus orientation: `display = native - window_start`
-- minus orientation: `display = window_end - native`
+| Input | Stored coordinates | Composition for this example |
+|----|----|----|
+| Curated MHC gene spans | One-based closed native assembly coordinates | Convert to BED0, then express relative to the extracted window |
+| Context models and VR intervals | BED0 native assembly coordinates | Express relative to the same window |
+| Minimap2 alignment blocks | Coordinates relative to extracted sequences | Already window-relative; use the same convention as the gene layers |
+| Siamang records | Native assembly orientation is reversed | Reflect gene and annotation coordinates to match the reverse-complemented alignment sequence |
 
-For example:
+The gene tables and alignment tables must agree about what a position
+means. For this dataset, the renderer uses window-relative display
+coordinates. On a plus-oriented track it subtracts the window start; on
+a reverse-oriented track it reflects around the window end. These
+operations change the origin and orientation, **not the genomic
+distances**. Each row’s axis is labelled with its original native
+assembly coordinates at export.
 
-| track | native window (`start0`-`end0`) | orientation | feature start | display |
-|-------|---------------------------------|------------:|--------------:|--------:|
-| HSAh1 | 28,669,878-33,979,214           |          \+ |    28,670,000 |     122 |
-| PTRh1 | 34,745,920-40,035,224           |          \+ |    34,746,500 |     580 |
-| SSYh1 | 37,530,567-42,365,376           |          \- |    42,364,000 |   1,376 |
-
-The display coordinate is a **drawing coordinate**, not a biological
-one. It makes every track start at the left edge of the page. A
-reverse-oriented track is reflected, so its genes run in the comparable
-left-to-right order. Because the longest window defines the display
-range, one base pair occupies the same horizontal distance in all 13
-rows. That is what allows the gene positions and the ribbons to line up.
+The helper below shows that data preparation in the renderer. It is not
+an additional ggexon panel-fitting requirement:
 
 ``` r
 
 transform_native <- function(d, a, b, trackcol = "track") {
   z  <- windows[match(d[[trackcol]], windows$track), ]
-  lo <- pmax(d[[a]], z$start0)   # clip features that cross the window edge
+  lo <- pmax(d[[a]], z$start0)
   hi <- pmin(d[[b]], z$end0)
   d$xmin <- ifelse(z$orientation == "+", lo - z$start0, z$end0 - hi)
   d$xmax <- ifelse(z$orientation == "+", hi - z$start0, z$end0 - lo)
   d
 }
-
-max_bp <- max(windows$length)   # shared bp-to-display scale for every track
 ```
 
-Native coordinates are not discarded. The tick labels are rebuilt from
-`windows.tsv` at the end, so each row still shows its own assembly
-coordinates even though all rows share the display geometry.
-
-Next, the per-track annotation and the adjacent pairwise alignments are
-stored in one `SynSpecies` object. The 12 alignments are what the link
-panels will use.
+**Independent fitting and a common bp scale are different choices.** If
+each panel fills the same width with its own complete region, a 4.83-Mb
+window and a 5.31-Mb window have different bp-per-mm ratios. That is a
+valid zoomed view. Here we keep one bp scale across haplotypes so
+expansions and deletions retain their relative sizes. The renderer
+therefore gives every panel the same display span, taken from the full
+object’s longest window:
 
 ``` r
 
-sp <- SynSpecies(name = "continuous_MHC")
+max_bp <- mhc_all$max_bp
+panel_xlim <- setNames(rep(list(c(0, max_bp)), nrow(windows)), windows$track)
+panel_chr <- setNames(rep("MHC", nrow(windows)), windows$track)
+```
 
-for (id in windows$track) {
-  # the renderer writes a tiny curated GFF from the MHC spans for this track
-  sp <- add_individual(
-    sp,
-    load_annotation(SynIndividual(id = id, annotation_file = gff_for(id),
-                                  annotation_format = "gff"))
-  )
-}
+The subset keeps this full-dataset span; it does not refit each retained
+region to occupy the full width. Translation/reflection composes the
+input coordinates; `xlim` and the panel scales control the view. Native
+coordinates could also be used directly if gene, annotation and link
+tables were all expressed in those same native coordinates.
 
-pair_names <- character()
-for (i in seq_len(nrow(windows) - 1L)) {
-  nm <- paste(windows$track[i], windows$track[i + 1L], sep = "__")
-  pair_names <- c(pair_names, nm)
-  sp <- add_pairwise_alignment(sp, SynPairAlignment(
-    nm,
-    target_individual = windows$track[i],
-    query_individual  = windows$track[i + 1L],
-    data = links_for_pair(i)
-  ))
-}
+The `SynSpecies` part is already assembled by `read_mhc_data()`. For the
+full view, retaining all track IDs selects its original 12 adjacent
+direct alignments and prepares the chain layout:
 
-sp <- store_chain_layout(sp, free = list(x = TRUE, y = TRUE))
+``` r
+
+full_data <- subset_mhc_data(mhc_all, tracks = mhc_all$windows$track)
+sp <- full_data$species
+pair_names <- names(pairwise_alignments(sp))
 ```
 
 ## Step 3. Genes first with `geom_gene()`
@@ -270,12 +257,12 @@ The first layer is the gene annotation. There are two kinds of arrows:
 
 Neither layer draws exon glyphs: the transcript structure is used for
 model selection, but the figure shows one span per representative gene.
-Helper objects such as `gff_for()`, `links_for_pair()`, `strip_labels`,
-`panel_limits` and `class_spans` are built a few lines earlier in the
-renderer and omitted here so that the layer code stays readable.
-`models` and `mhc` in the code below are the transformed tables from
-Step 2 (the renderer calls the model table `m`), so their `xmin` and
-`xmax` columns are already display coordinates.
+Helper objects such as `strip_labels`, `panel_limits` and `class_spans`
+are built a few lines earlier in the renderer and omitted here so that
+the layer code stays readable. `models` and `mhc` in the code below are
+the transformed tables from Step 2 (the renderer calls the model table
+`m`), so their `xmin` and `xmax` columns are already display
+coordinates.
 
 ``` r
 
@@ -454,6 +441,8 @@ p <- p +
     scales = "free",
     ncol = 1,
     strip.position = "left",
+    xlim = panel_xlim,
+    xlim_chr = panel_chr,
     link_panel_height = 0.35,
     link_axis = "none",
     link_strip = "blank",
@@ -532,6 +521,15 @@ The QC outputs are written beside the figure as
 `layout-qc.tsv` and `figure-dimensions.tsv`, together with the plotted
 tables.
 
+### Gorilla class II detail
+
+After composing the genes, heads, links and panel layout, the paired
+gorilla class II detail makes the h1/h2 differences easier to inspect:
+
+![Gorilla h2 and h1 class II detail with enlarged heads on shared rows,
+true-span gene arrows, grey context and nucleotide
+ribbons.](figures/mhc-classii-comparison.png)
+
 ## Reading the figure
 
 The small arrows retain each gene’s true curated span and source
@@ -579,7 +577,8 @@ Regenerating those alignments uses
 `python3 data-raw/ape_paper/prepare_mhc_compact.py` and requires the
 previously acquired regional FASTA caches and minimap2.
 
-The original full view remains available as the [13-track
+The original full view is displayed first above and is also available as
+the [13-track
 preview](https://dongyaoliu.github.io/ggexon/articles/figures/mhc-continuous.png).
 Its bounded inputs and figure are under
 `data-raw/ape_paper/results/mhc_continuous/`. From the repository root:
