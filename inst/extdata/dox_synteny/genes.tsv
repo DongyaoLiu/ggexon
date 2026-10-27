@@ -1,0 +1,8 @@
+species	seqnames	gene_id	gene_name	transcript_id	start	end	strand	model_source	source_transcript
+Dmau	X	Dmau_CG42797	CG42797	Dmau_NM_132346.3	9389708	9403119	+	UCSC GenArk mapped RefSeq	NM_132346
+Dmau	X	Dmau_Ptpmeg2	Ptpmeg2	Dmau_NM_132348.3	9408524	9430312	-	UCSC GenArk mapped RefSeq	NM_132348
+Dsim	X	Dsim_CG42797	CG42797	Dsim_NM_132346.3	9233164	9246558	+	UCSC GenArk mapped RefSeq	NM_132346.3
+Dsim	X	Dsim_Dox	Dox	Dsim_Dox_published_CDS	9250280	9250879	-	Published CDS, uniquely mapped end-to-end with 100% identity; UTR not reconstructed	Supplementary Table 1, row Dox, nucleotide CDS
+Dsim	X	Dsim_Ptpmeg2	Ptpmeg2	Dsim_NM_132348.3	9255161	9276944	-	UCSC GenArk mapped RefSeq	NM_132348.3
+Dsech	X	Dsech_CG42797	CG42797	Dsech_NM_132346.3	9396969	9410256	+	UCSC GenArk mapped RefSeq	NM_132346
+Dsech	X	Dsech_Ptpmeg2	Ptpmeg2	Dsech_NM_132348.3	9414663	9436811	-	UCSC GenArk mapped RefSeq	NM_132348

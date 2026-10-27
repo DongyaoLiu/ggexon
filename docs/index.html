@@ -40,6 +40,7 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-tutorials">
 <li><a class="dropdown-item" href="articles/ggexon-workflow.html">Complete workflow</a></li>
     <li><a class="dropdown-item" href="articles/hox-cluster-expansion-demo.html">HOX cluster expansion</a></li>
+    <li><a class="dropdown-item" href="articles/dox-synteny-demo.html">Three-species synteny and RNA-seq</a></li>
     <li><a class="dropdown-item" href="articles/cd44-splice-variants-demo.html">CD44 splice variant alignment</a></li>
     <li><a class="dropdown-item" href="articles/as3mt-splice-variants-demo.html">AS3MT transcripts, DNA and RNA-seq</a></li>
     <li><a class="dropdown-item" href="articles/hla-a-lollipop-demo.html">HLA-A protein variant lollipops</a></li>
@@ -101,6 +102,15 @@
 <p>The AS3MT tutorial compares the human and chimpanzee full-length transcripts with a paper-defined human AS3MTd2d3 reconstruction. <code><a href="reference/geom_exon2.html">geom_exon2()</a></code> distinguishes CDS from UTR, and <code>scale_x_ggexon_genomic(intron_factor = 30)</code> compresses introns while retaining exon widths. <code><a href="reference/geom_nuclink.html">geom_nuclink()</a></code> automatically subdivides raw genomic alignment blocks at both panels’ scale boundaries and maps the pieces to the same exon/intron scales. The plot retains only the two highest identity categories of the ungapped LASTZ alignment.</p>
 <p>The tutorial also aligns matched human GTEx coverage and counted splice junctions to the compressed gene model. <code><a href="reference/geom_junction.html">geom_junction()</a></code> distinguishes exon inclusion from E1→E4 skipping, while preserving source signal values.</p>
 <p>See the <a href="https://dongyaoliu.github.io/ggexon/articles/as3mt-splice-variants-demo.html">AS3MT transcript, DNA and RNA-seq tutorial</a> for the reproducible offline example and aligned DNA repeat detail.</p>
+</div>
+<div class="section level2">
+<h2 id="compact-three-species-dox-synteny">Compact Three-Species Dox Synteny<a class="anchor" aria-label="anchor" href="#compact-three-species-dox-synteny"></a>
+</h2>
+<div class="float">
+<img src="reference/figures/dox-three-species-demo.png" alt="Three Drosophila species with two DNA-link panels, conserved CG42797 and Ptpmeg2 flanks, an additional Dox coding model in D. simulans, and testis RNA-seq for all three species"><div class="figcaption">Three Drosophila species with two DNA-link panels, conserved CG42797 and Ptpmeg2 flanks, an additional Dox coding model in D. simulans, and testis RNA-seq for all three species</div>
+</div>
+<p>This offline example compares <em>D. mauritiana</em>, <em>D. simulans</em>, and <em>D. sechellia</em>, with 2/3/2 displayed genes and two nucleotide-link panels. Each species has a separate RNA-seq subpanel above its annotation. It connects conserved gene order to exon structure, local DNA alignments, and testis RNA-seq. The additional <code>Dox</code> model contains three coding exons mapped exactly from the published CDS. RNA-seq is shown for all three species. The full <em>D. simulans</em> replicate-1 read library is remapped directly to the plotted assembly; the two outer species retain deposited signals. Both original genomic scale and gap compression are demonstrated. <code>facet_genomics(coverage_panel_height = 0.5, link_panel_height = 0.5)</code> sets annotation : link : RNA heights to 1 : 0.5 : 0.5. Independent RNA y limits make all three peaks similarly tall while preserving signal values. Dsim read depth and the outer-species deposited signal units are identified separately.</p>
+<p>The detailed <code><a href="articles/dox-synteny-demo.html">vignette("dox-synteny-demo", package = "ggexon")</a></code> constructs <code>SynIndividual</code>/<code>SynSpecies</code> data objects from bundled GTF, PAF, and BigWig files, then adds annotations, linkage, and RNA-seq layer by layer. Model descriptions, signal units, and source details are in the tutorial text.</p>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>

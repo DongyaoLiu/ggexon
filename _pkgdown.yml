@@ -27,6 +27,8 @@ navbar:
         href: articles/ggexon-workflow.html
       - text: HOX cluster expansion
         href: articles/hox-cluster-expansion-demo.html
+      - text: Three-species synteny and RNA-seq
+        href: articles/dox-synteny-demo.html
       - text: CD44 splice variant alignment
         href: articles/cd44-splice-variants-demo.html
       - text: AS3MT transcripts, DNA and RNA-seq
@@ -44,6 +46,7 @@ articles:
   contents:
   - ggexon-workflow
   - hox-cluster-expansion-demo
+  - dox-synteny-demo
   - cd44-splice-variants-demo
   - as3mt-splice-variants-demo
   - hla-a-lollipop-demo

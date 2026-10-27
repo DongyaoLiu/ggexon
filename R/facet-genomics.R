@@ -40,6 +40,15 @@
 #'   single positive number to use a `null` unit relative to ordinary panel
 #'   rows, or a single grid unit. When `NULL`, link panels keep the default
 #'   ggplot2 facet row height.
+#' @param coverage_panel_height Optional height for first-class coverage
+#'   panels. A positive number supplies a relative `null` height, so `0.5`
+#'   makes coverage rows half as high as ordinary annotation rows. A single
+#'   grid unit can instead set an absolute height. `NULL` keeps the default.
+#'   Only rows containing exclusively coverage panels are resized; rows shared
+#'   with another panel role retain their height. This changes physical panel
+#'   size, not signal values or y limits; use [`scale_panel_coverage()`] for
+#'   independent coverage y ranges. Legacy combined annotation/coverage panels
+#'   are not resized.
 #' @param link_axis Link-panel axis handling. `"inherit"` keeps the axes drawn
 #'   by the facet. `"none"` removes both x and y axes from link panels. `"x"`
 #'   keeps only x axes, and `"y"` keeps only y axes.
@@ -123,7 +132,8 @@ facet_genomics <- function(facets, nrow = NULL, ncol = NULL, scales = "fixed",
                        vertical = c("default", "center"),
                        reverse_x = NULL,
                        reverse_x_match_by = c("auto", "species", "strain", "id", "track"),
-                       xlim = NULL, xlim_chr = NULL) {
+                       xlim = NULL, xlim_chr = NULL,
+                       coverage_panel_height = NULL) {
   scales <- arg_match0(scales %||% "fixed", c("fixed", "free_x", "free_y", "free"))
   dir <- arg_match0(dir, c("h", "v", "lt", "tl", "lb", "bl", "rt", "tr", "rb", "br"))
   link_axis <- arg_match0(link_axis %||% "inherit", c("inherit", "none", "x", "y"))
@@ -133,6 +143,9 @@ facet_genomics <- function(facets, nrow = NULL, ncol = NULL, scales = "fixed",
   reverse_x <- .validate_facet_reverse_x(reverse_x)
   reverse_x_match_by <- match.arg(reverse_x_match_by)
   link_panel_height <- .validate_link_panel_height(link_panel_height)
+  coverage_panel_height <- .validate_link_panel_height(
+    coverage_panel_height, argument = "coverage_panel_height"
+  )
 
   if (nchar(dir) == 1) {
     dir <- base::switch(
@@ -207,6 +220,7 @@ facet_genomics <- function(facets, nrow = NULL, ncol = NULL, scales = "fixed",
       panel_xlim = xlim,
       panel_xlim_chr = xlim_chr,
       link_panel_height = link_panel_height,
+      coverage_panel_height = coverage_panel_height,
       link_axis = link_axis,
       link_strip = link_strip,
       annotation_axis = annotation_axis,
@@ -243,20 +257,21 @@ facet_genomics <- function(facets, nrow = NULL, ncol = NULL, scales = "fixed",
   cli::cli_abort("{.arg reverse_x} must be {.code NULL}, one logical value, or a character vector.")
 }
 
-.validate_link_panel_height <- function(link_panel_height) {
+.validate_link_panel_height <- function(link_panel_height,
+                                        argument = "link_panel_height") {
   if (is.null(link_panel_height)) {
     return(NULL)
   }
   if (inherits(link_panel_height, "unit")) {
     if (length(link_panel_height) != 1L) {
-      cli::cli_abort("{.arg link_panel_height} must be a single grid unit.")
+      cli::cli_abort("{.arg {argument}} must be a single grid unit.")
     }
     return(link_panel_height)
   }
 
   value <- suppressWarnings(as.numeric(link_panel_height))
   if (length(value) != 1L || is.na(value) || !is.finite(value) || value <= 0) {
-    cli::cli_abort("{.arg link_panel_height} must be one positive number or one grid unit.")
+    cli::cli_abort("{.arg {argument}} must be one positive number or one grid unit.")
   }
   value
 }
@@ -299,6 +314,17 @@ facet_genomics <- function(facets, nrow = NULL, ncol = NULL, scales = "fixed",
 #' @seealso [SynLayout]
 #' @export
 FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
+
+  # Syn layouts share scale identities between non-adjacent role panels.
+  # FacetWrap otherwise indexes per-panel ranges by SCALE_X/SCALE_Y, which
+  # selects another panel's guides once a shared identity is repeated.
+  attach_axes = function(table, layout, ranges, coord, theme, params) {
+    if ("panel_type" %in% names(layout)) {
+      layout$SCALE_X <- as.integer(layout$PANEL)
+      layout$SCALE_Y <- as.integer(layout$PANEL)
+    }
+    ggplot2::FacetWrap$attach_axes(table, layout, ranges, coord, theme, params)
+  },
 
   # Custom helper used by ggexon to classify layers as annotation vs link-like
   # from their columns before a Syn-aware panel layout is assembled.
@@ -1346,10 +1372,11 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
   }
 
   stored_tracks <- as.character(stored_coverage$track %||% character())
+  # A complete user-specified grid owns its row order, including stacked
+  # coverage/annotation pairs in a single column.
   complete_stored_role_grid <- nrow(stored_coverage) > 0L &&
     all(c("ROW", "COL") %in% names(panels)) &&
     !anyNA(panels$ROW) && !anyNA(panels$COL) &&
-    length(unique(panels$COL)) > 1L &&
     nrow(unique(panels[, c("ROW", "COL"), drop = FALSE])) == nrow(panels)
   all_coverage_already_stored <- length(coverage_tracks) == length(stored_tracks) &&
     !anyDuplicated(stored_tracks) &&
@@ -1696,6 +1723,17 @@ synspecies_chain_layout <- function(x,
 
   keep <- keep_annotation | keep_coverage | keep_link | keep_extension
   filtered <- panels[keep, , drop = FALSE]
+  # Filtering a stacked role layout removes the omitted panels' rows, while
+  # retaining the relative order and any intentionally empty stored rows.
+  if (any(panel_type == "coverage", na.rm = TRUE) &&
+      all(c("ROW", "COL") %in% names(panels)) &&
+      !anyNA(panels$ROW) && !anyNA(panels$COL) &&
+      length(unique(panels$COL)) == 1L) {
+    removed_rows <- sort(setdiff(panels$ROW, filtered$ROW))
+    if (length(removed_rows) > 0L) {
+      filtered$ROW <- filtered$ROW - findInterval(filtered$ROW, removed_rows)
+    }
+  }
   if (nrow(filtered) == 0L) {
     return(SynLayout(
       panels = panels,
@@ -2250,7 +2288,13 @@ synspecies_chain_layout <- function(x,
     return(layout)
   }
 
-  if ("track" %in% names(layout) && is.factor(layout$track)) {
+  complete_coverage_grid <- any(link_panel_type(layout) == "coverage", na.rm = TRUE) &&
+    all(c("ROW", "COL") %in% names(layout)) &&
+    !anyNA(layout$ROW) && !anyNA(layout$COL) &&
+    nrow(unique(layout[, c("ROW", "COL"), drop = FALSE])) == nrow(layout)
+  if (complete_coverage_grid) {
+    layout <- layout[order(layout$ROW, layout$COL), , drop = FALSE]
+  } else if ("track" %in% names(layout) && is.factor(layout$track)) {
     layout <- layout[order(layout$track), , drop = FALSE]
   }
 
@@ -2280,7 +2324,7 @@ synspecies_chain_layout <- function(x,
   complete_multi_column_grid <- all(c("ROW", "COL") %in% names(layout)) &&
     !anyNA(layout$ROW) && !anyNA(layout$COL) &&
     length(unique(layout$COL)) > 1L
-  if (!complete_multi_column_grid) {
+  if (!complete_multi_column_grid && !complete_coverage_grid) {
     layout$ROW <- seq_len(nrow(layout))
   }
   layout$PANEL <- new_panel

@@ -1305,6 +1305,9 @@ apply_link_panel_layout <- function(table, build) {
   }
 
   layout_df$.ggexon_panel_type <- link_panel_type(layout_df)
+  table <- apply_coverage_panel_height(
+    table, layout_df, params$coverage_panel_height %||% NULL
+  )
   link_rows <- layout_df$.ggexon_panel_type == "link"
   link_rows[is.na(link_rows)] <- FALSE
   if (!any(link_rows) && identical(annotation_axis, "all")) {
@@ -1352,6 +1355,25 @@ apply_link_panel_layout <- function(table, build) {
     table <- collapse_interior_annotation_axes(table, layout_df)
   }
 
+  table
+}
+
+apply_coverage_panel_height <- function(table, layout_df, height) {
+  if (is.null(height)) return(table)
+  height_unit <- link_panel_height_unit(height)
+  coverage <- layout_df$.ggexon_panel_type == "coverage"
+  coverage[is.na(coverage)] <- FALSE
+  for (row in unique(layout_df$ROW[coverage])) {
+    members <- which(layout_df$ROW == row)
+    if (!all(coverage[members])) next
+    first <- members[[1L]]
+    panel_idx <- panel_gtable_index(table,
+      ggexon_gtable_index(layout_df$COL[[first]]),
+      ggexon_gtable_index(row), n_panels = nrow(layout_df))
+    if (length(panel_idx) != 1L) next
+    height_rows <- seq.int(table$layout$t[[panel_idx]], table$layout$b[[panel_idx]])
+    for (height_row in height_rows) table$heights[[height_row]] <- height_unit
+  }
   table
 }
 
