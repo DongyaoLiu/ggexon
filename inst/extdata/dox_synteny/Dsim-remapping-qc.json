@@ -1,0 +1,114 @@
+{
+  "sample": "GSM7039340",
+  "run": "SRR23418969",
+  "experiment": "SRX19338860",
+  "read_pairs": 40381684,
+  "primary_records": 80763368,
+  "assembly": "GCA_004382185.1",
+  "chrom": "CM015611.1",
+  "chromosome_length": 23123156,
+  "start": 9233164,
+  "end": 9276944,
+  "min_mapq": 20,
+  "excluded_flags": 2308,
+  "library": "reverse-stranded paired-end; read1 antisense, read2 sense",
+  "strand_evidence": {
+    "method": "One canonical genomic splice motif per local MAPQ-filtered read",
+    "counts": {
+      "reverse_library_agreement": 780,
+      "forward_library_agreement": 2
+    },
+    "agreement": 0.9974424552429667
+  },
+  "signal_units": "Per-base primary read depth; no library normalization",
+  "score_handling": "Positive/negative signed depths encode transcript strand; introns/deletions excluded; overlapping mates each count",
+  "independent_depth_verified": true,
+  "verified_genomic_bases": 43781,
+  "full_reference_dictionary_verified": true,
+  "reference_sequence_sha256": "cc17c119200f78b71cbb691b97f5c09ff28647211544545667834035bb926c2f",
+  "locus_sequence_sha256": "bb607691c821dccdfcfdcc4122c49970f7108a8cbd3e73caf12c73b69dca51ca",
+  "coverage_file": "Dsim-remapped-coverage.tsv.gz",
+  "coverage_md5": "9f3226dbbbca9fd876e3c915491c6e50",
+  "locus_stats": {
+    "accepted_alignments": 7527,
+    "accepted_spliced_alignments": 1000,
+    "plus_alignments": 2694,
+    "minus_alignments": 4833
+  },
+  "maxima": {
+    "+": 212,
+    "-": 276
+  },
+  "inputs": [
+    {
+      "file": "SRR23418969_1.fastq.gz",
+      "url": "https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR234/069/SRR23418969/SRR23418969_1.fastq.gz",
+      "md5": "093d1bbce10343a70c83fdb212d06c79"
+    },
+    {
+      "file": "SRR23418969_2.fastq.gz",
+      "url": "https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR234/069/SRR23418969/SRR23418969_2.fastq.gz",
+      "md5": "c741f7a08fe4c49a899d10e1d1bf5c9a"
+    },
+    {
+      "file": "GCA_004382185.1_ASM438218v1_genomic.fna.gz",
+      "url": "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/004/382/185/GCA_004382185.1_ASM438218v1/GCA_004382185.1_ASM438218v1_genomic.fna.gz",
+      "md5": "70b1a5aa5706a03139e6853138437f31"
+    }
+  ],
+  "versions": {
+    "minimap2": "2.31-r1302",
+    "samtools": "samtools 1.14"
+  },
+  "mapping_program_headers": [
+    "@PG\tID:minimap2\tPN:minimap2\tVN:2.31-r1302\tCL:minimap2 -ax splice:sr --secondary=no -t 6 -K 50M -R @RG\\tID:SRR23418969\\tSM:GSM7039340\\tLB:Dsim_testis_rep1\\tPL:ILLUMINA data-raw/dox_synteny/downloads/remapping/Dsim-splice-sr.mmi data-raw/dox_synteny/downloads/remapping/SRR23418969_1.fastq.gz data-raw/dox_synteny/downloads/remapping/SRR23418969_2.fastq.gz",
+    "@PG\tID:samtools\tPN:samtools\tPP:minimap2\tVN:1.14\tCL:samtools sort -@ 2 -m 256M -T data-raw/dox_synteny/downloads/remapping/sort-rnaseq -o data-raw/dox_synteny/downloads/remapping/SRR23418969.sorted.bam",
+    "@PG\tID:samtools.1\tPN:samtools\tPP:samtools\tVN:1.14\tCL:samtools view -H data-raw/dox_synteny/downloads/remapping/SRR23418969.sorted.bam"
+  ],
+  "mapping_statistics": {
+    "QC-passed reads": {
+      "total": 80791691,
+      "primary": 80763368,
+      "secondary": 0,
+      "supplementary": 28323,
+      "duplicates": 0,
+      "primary duplicates": 0,
+      "mapped": 77495747,
+      "mapped %": 95.92,
+      "primary mapped": 77467424,
+      "primary mapped %": 95.92,
+      "paired in sequencing": 80763368,
+      "read1": 40381684,
+      "read2": 40381684,
+      "properly paired": 75260736,
+      "properly paired %": 93.19,
+      "with itself and mate mapped": 76724984,
+      "singletons": 742440,
+      "singletons %": 0.92,
+      "with mate mapped to a different chr": 437100,
+      "with mate mapped to a different chr (mapQ >= 5)": 275976
+    },
+    "QC-failed reads": {
+      "total": 0,
+      "primary": 0,
+      "secondary": 0,
+      "supplementary": 0,
+      "duplicates": 0,
+      "primary duplicates": 0,
+      "mapped": 0,
+      "mapped %": null,
+      "primary mapped": 0,
+      "primary mapped %": null,
+      "paired in sequencing": 0,
+      "read1": 0,
+      "read2": 0,
+      "properly paired": 0,
+      "properly paired %": null,
+      "with itself and mate mapped": 0,
+      "singletons": 0,
+      "singletons %": null,
+      "with mate mapped to a different chr": 0,
+      "with mate mapped to a different chr (mapQ >= 5)": 0
+    }
+  }
+}
