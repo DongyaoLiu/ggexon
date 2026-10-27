@@ -6,6 +6,8 @@
   Workflow](https://dongyaoliu.github.io/ggexon/articles/ggexon-workflow.md):
 - [HOX Cluster Expansion Across
   Chordates](https://dongyaoliu.github.io/ggexon/articles/hox-cluster-expansion-demo.md):
+- [Build a three-species synteny figure layer by
+  layer](https://dongyaoliu.github.io/ggexon/articles/dox-synteny-demo.md):
 - [CD44 Splice Variant Alignment
   Demo](https://dongyaoliu.github.io/ggexon/articles/cd44-splice-variants-demo.md):
 - [AS3MT: transcripts, DNA and
