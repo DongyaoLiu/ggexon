@@ -129,6 +129,40 @@ See the [AS3MT transcript, DNA and RNA-seq
 tutorial](https://dongyaoliu.github.io/ggexon/articles/as3mt-splice-variants-demo.html)
 for the reproducible offline example and aligned DNA repeat detail.
 
+## Compact Three-Species Dox Synteny
+
+![Three Drosophila species with two DNA-link panels, conserved CG42797
+and Ptpmeg2 flanks, an additional Dox coding model in D. simulans, and
+testis RNA-seq for all three
+species](reference/figures/dox-three-species-demo.png)
+
+Three Drosophila species with two DNA-link panels, conserved CG42797 and
+Ptpmeg2 flanks, an additional Dox coding model in D. simulans, and
+testis RNA-seq for all three species
+
+This offline example compares *D. mauritiana*, *D. simulans*, and *D.
+sechellia*, with 2/3/2 displayed genes and two nucleotide-link panels.
+Each species has a separate RNA-seq subpanel above its annotation. It
+connects conserved gene order to exon structure, local DNA alignments,
+and testis RNA-seq. The additional `Dox` model contains three coding
+exons mapped exactly from the published CDS. RNA-seq is shown for all
+three species. The full *D. simulans* replicate-1 read library is
+remapped directly to the plotted assembly; the two outer species retain
+deposited signals. Both original genomic scale and gap compression are
+demonstrated.
+`facet_genomics(coverage_panel_height = 0.5, link_panel_height = 0.5)`
+sets annotation : link : RNA heights to 1 : 0.5 : 0.5. Independent RNA y
+limits make all three peaks similarly tall while preserving signal
+values. Dsim read depth and the outer-species deposited signal units are
+identified separately.
+
+The detailed
+[`vignette("dox-synteny-demo", package = "ggexon")`](https://dongyaoliu.github.io/ggexon/articles/dox-synteny-demo.md)
+constructs `SynIndividual`/`SynSpecies` data objects from bundled GTF,
+PAF, and BigWig files, then adds annotations, linkage, and RNA-seq layer
+by layer. Model descriptions, signal units, and source details are in
+the tutorial text.
+
 ## Installation
 
 `ggexon` is currently a development package.
@@ -827,6 +861,8 @@ and reexports.
   Workflow](https://dongyaoliu.github.io/ggexon/articles/ggexon-workflow.md):
 - [HOX Cluster Expansion Across
   Chordates](https://dongyaoliu.github.io/ggexon/articles/hox-cluster-expansion-demo.md):
+- [Build a three-species synteny figure layer by
+  layer](https://dongyaoliu.github.io/ggexon/articles/dox-synteny-demo.md):
 - [CD44 Splice Variant Alignment
   Demo](https://dongyaoliu.github.io/ggexon/articles/cd44-splice-variants-demo.md):
 - [AS3MT: transcripts, DNA and

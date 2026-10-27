@@ -6,12 +6,13 @@ articles:
   bigwig-coverage-demo: bigwig-coverage-demo.html
   cd44-splice-variants-demo: cd44-splice-variants-demo.html
   cox1-yeast-demo: cox1-yeast-demo.html
+  dox-synteny-demo: dox-synteny-demo.html
   ggexon-classes-and-verbs: ggexon-classes-and-verbs.html
   ggexon-workflow: ggexon-workflow.html
   hla-a-lollipop-demo: hla-a-lollipop-demo.html
   hox-cluster-expansion-demo: hox-cluster-expansion-demo.html
   mhc-continuous-demo: mhc-continuous-demo.html
-last_built: 2026-10-26T05:57Z
+last_built: 2026-10-27T05:13Z
 urls:
   reference: https://dongyaoliu.github.io/ggexon/reference
   article: https://dongyaoliu.github.io/ggexon/articles

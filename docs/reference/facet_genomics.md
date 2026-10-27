@@ -31,7 +31,8 @@ facet_genomics(
   reverse_x = NULL,
   reverse_x_match_by = c("auto", "species", "strain", "id", "track"),
   xlim = NULL,
-  xlim_chr = NULL
+  xlim_chr = NULL,
+  coverage_panel_height = NULL
 )
 ```
 
@@ -166,6 +167,19 @@ facet_genomics(
   tries to infer the seqname from attached alignments or single-seqname
   annotations. Link layers can only be filtered by panel limits when the
   seqname can be resolved.
+
+- coverage_panel_height:
+
+  Optional height for first-class coverage panels. A positive number
+  supplies a relative `null` height, so `0.5` makes coverage rows half
+  as high as ordinary annotation rows. A single grid unit can instead
+  set an absolute height. `NULL` keeps the default. Only rows containing
+  exclusively coverage panels are resized; rows shared with another
+  panel role retain their height. This changes physical panel size, not
+  signal values or y limits; use
+  [`scale_panel_coverage()`](https://dongyaoliu.github.io/ggexon/reference/scale_panel_coverage.md)
+  for independent coverage y ranges. Legacy combined annotation/coverage
+  panels are not resized.
 
 ## Value
 
