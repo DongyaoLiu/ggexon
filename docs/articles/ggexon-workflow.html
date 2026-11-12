@@ -5,14 +5,14 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>ggexon Workflow • ggexon</title>
+<title>0. Basic usage • ggexon</title>
 <script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_3-0.4.10/font.css" rel="stylesheet">
 <link href="../deps/Source_Code_Pro-0.4.10/font.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="ggexon Workflow">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="0. Basic usage">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -34,13 +34,11 @@
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-tutorials" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Tutorials</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-tutorials">
-<li><a class="dropdown-item" href="../articles/ggexon-workflow.html">Complete workflow</a></li>
-    <li><a class="dropdown-item" href="../articles/hox-cluster-expansion-demo.html">HOX cluster expansion</a></li>
-    <li><a class="dropdown-item" href="../articles/cd44-splice-variants-demo.html">CD44 splice variant alignment</a></li>
-    <li><a class="dropdown-item" href="../articles/as3mt-splice-variants-demo.html">AS3MT transcripts and DNA repeats</a></li>
-    <li><a class="dropdown-item" href="../articles/hla-a-lollipop-demo.html">HLA-A protein variant lollipops</a></li>
-    <li><a class="dropdown-item" href="../articles/bigwig-coverage-demo.html">PEEL-1 raw BigWig coverage</a></li>
-    <li><a class="dropdown-item" href="../articles/ggexon-classes-and-verbs.html">Classes, geoms, facets, and guides</a></li>
+    <li><a class="dropdown-item" href="../articles/ggexon-workflow.html">0. Basic usage</a></li>
+    <li><a class="dropdown-item" href="../articles/hla-a-lollipop-demo.html">1. Projecting amino acid changes onto transcript models</a></li>
+    <li><a class="dropdown-item" href="../articles/as3mt-splice-variants-demo.html">2. Comparing alternatively spliced transcripts</a></li>
+    <li><a class="dropdown-item" href="../articles/dox-synteny-demo.html">3. Visualizing local synteny across species</a></li>
+    <li><a class="dropdown-item" href="../articles/mhc-continuous-demo.html">4. Visualizing megabase-scale haplotypes</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
@@ -63,7 +61,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
-      <h1>ggexon Workflow</h1>
+      <h1>0. Basic usage</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/DongyaoLiu/ggexon/blob/HEAD/vignettes/ggexon-workflow.Rmd" class="external-link"><code>vignettes/ggexon-workflow.Rmd</code></a></small>
@@ -1198,10 +1196,7 @@ selects all stored individuals. Select it explicitly for a subset. For
 repeated figures, <code><a href="../reference/set_panel_xlim.html">set_panel_xlim()</a></code> stores named
 per-individual windows on the comparison’s <code>SynLayout</code>;
 <code><a href="../reference/clear_panel_xlim.html">clear_panel_xlim()</a></code> removes the overrides.</p>
-<p><code>SynMultiAlignment</code> supports ODGI-backed comparisons. It
-can store already parsed MAF data through <code>data</code>, but
-<code><a href="../reference/load_alignment.html">load_alignment()</a></code> does not parse MAF files. The <a href="ggexon-classes-and-verbs.html">class and verb reference</a>
-describes these larger workflows.</p>
+<p><code>SynMultiAlignment</code> supports ODGI-backed comparisons. It can store already parsed MAF data through <code>data</code>, but <code>load_alignment()</code> does not parse MAF files. See the <a href="../reference/SynMultiAlignment.html">alignment class reference</a> for supported inputs.</p>
 </div>
 </div>
 <div class="section level2">
@@ -1453,10 +1448,7 @@ for continuous coverage tracks.</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">coverage_layers</span> <span class="op">+</span> <span class="fu"><a href="../reference/scale_panel_coverage.html">scale_panel_coverage</a></span><span class="op">(</span><span class="st">"free_y"</span>, auto <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ggexon-workflow_files/figure-html/workflow-coverage-free-1.png" class="r-plt" alt="The same raw coverage signals on separate y ranges, with each median depth at 85 percent of panel height and higher peaks clipped." width="1440"></p>
-<p>This second view reveals local signal structure in each strain. The
-peak clipping and independent y ranges mean its panel heights cannot be
-compared as absolute depths. See the <a href="bigwig-coverage-demo.html">coverage example</a> for the full
-strain panel and fixture provenance.</p>
+<p>This second view reveals local signal structure in each strain. The peak clipping and independent y ranges mean its panel heights cannot be compared as absolute depths. Fixture provenance is recorded in the bundled <code>extdata/peel1_coverage/manifest.tsv</code>.</p>
 </div>
 </div>
 <div class="section level2">
@@ -2149,12 +2141,7 @@ theme retains ordinary axis labels.</p>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.title <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>, axis.text.y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>        panel.grid <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>, legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ggexon-workflow_files/figure-html/workflow-slots-1.png" class="r-plt" alt="Two three-slot gene clusters. Cluster B has an empty middle slot; occupied slots contain strand arrows." width="1440"></p>
-<p>The x axis now names supplied slots, not base pairs. With Syn-backed
-data, <code>geom_genebox(anchor = "start")</code>,
-<code>"middle"</code>, or <code>"end"</code> chooses the coding anchor
-before scaling. See the <a href="hox-cluster-expansion-demo.html">Hox
-example</a> for real annotations, slot curation, and anchor
-comparisons.</p>
+<p>The x axis now names supplied slots, not base pairs. With Syn-backed data, <code>geom_genebox(anchor = "start")</code>, <code>"middle"</code>, or <code>"end"</code> chooses the coding anchor before scaling.</p>
 </div>
 </div>
 <div class="section level2">
@@ -2642,10 +2629,7 @@ after the complete theme.</p>
 result. For example,
 <code>ggsave("exon-models.pdf", plot = p_exons, width = 9, height = 3.5)</code>
 exports the first model view.</p>
-<p>The <a href="ggexon-classes-and-verbs.html">Classes, Geoms, Facets,
-and Guides</a> article provides the full object hierarchy and less
-common workflows. The linked biological examples expand these recipes
-with documented sources.</p>
+<p>The <a href="../reference/index.html">function reference</a> describes individual classes, geoms, facets, and scales. The four <a href="index.html">biological tutorials</a> expand these recipes with documented sources.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

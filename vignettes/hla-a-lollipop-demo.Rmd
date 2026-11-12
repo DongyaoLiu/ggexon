@@ -1,8 +1,8 @@
 ---
-title: "HLA-A Protein Variants: Dense Multiallelic Lollipops"
+title: "1. Projecting amino acid changes onto transcript models"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{HLA-A Protein Variants: Dense Multiallelic Lollipops}
+  %\VignetteIndexEntry{1. Projecting amino acid changes onto transcript models}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

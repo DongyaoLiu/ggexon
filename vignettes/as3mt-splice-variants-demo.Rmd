@@ -1,8 +1,8 @@
 ---
-title: "AS3MT: transcripts, DNA and RNA-seq"
+title: "2. Comparing alternatively spliced transcripts"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{AS3MT: transcripts, DNA and RNA-seq}
+  %\VignetteIndexEntry{2. Comparing alternatively spliced transcripts}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

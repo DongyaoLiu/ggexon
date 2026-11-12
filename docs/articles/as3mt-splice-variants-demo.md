@@ -1,4 +1,4 @@
-# AS3MT: transcripts, DNA and RNA-seq
+# 2. Comparing alternatively spliced transcripts
 
 ## Load the example
 

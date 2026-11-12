@@ -1,137 +1,21 @@
 # ggexon
 
-**Grammar of genomic annotations, synteny, and associated data.**
+## Genomic visualization across scales
 
-[Documentation and tutorials](https://dongyaoliu.github.io/ggexon/)
+Understanding genomic variation often means moving between individual
+bases, transcripts, genes, and larger regions shared across genomes.
+`ggexon` extends ggplot2 so you can connect these views in static
+figures, combining gene models, nucleotide alignments, RNA-seq coverage,
+and protein features through a familiar layered plotting grammar.
 
-`ggexon` is a ggplot2 extension for drawing genomic annotation together
-with comparative and track-level data. It was developed while
-visualizing the `sept-1`/`zina-1` toxin-antidote locus described in the
-preprint [sept-1/zina-1 is an Ancient Toxin-Antidote System in
-Caenorhabditis
-elegans](https://www.biorxiv.org/content/10.1101/2025.11.28.691152v1).
+The examples below progress from amino acid substitutions within one
+gene to synteny across megabase-sized haplotypes. Each figure links to a
+tutorial with the data, plotting steps, and guidance for interpreting
+the result.
 
-The package has two connected parts:
+### **Installation**
 
-1.  S4 classes store genomes, annotation layers, alignments, and
-    reusable layout state.
-2.  Functions load, query, modify, and draw those classes with a
-    ggplot2-style grammar.
-
-If you already think in `ggplot2`, the goal is that genomic coordinates,
-annotation tracks, alignments, and tree-aligned panels can all be
-composed with familiar plotting ideas.
-
-## Flagship HOX Cluster Expansion Example
-
-![A seven-row by four-column HOX matrix with cluster-specific human gene
-symbols on the x axes, square gene boxes, the ancestral amphioxus
-cluster displayed under HOXA, grey not-applicable cells, and a marked
-zebrafish HOXDB cluster-not-retained
-cell](reference/figures/hox-cluster-expansion-demo.png)
-
-A seven-row by four-column HOX matrix with cluster-specific human gene
-symbols on the x axes, square gene boxes, the ancestral amphioxus
-cluster displayed under HOXA, grey not-applicable cells, and a marked
-zebrafish HOXDB cluster-not-retained cell
-
-The bundled HOX cluster-expansion tutorial compares six chordate species
-in a seven-row by four-column matrix. HOXA through HOXD show the four
-vertebrate cluster families and the duplicated zebrafish `a` and `b`
-rows. The single ancestral amphioxus cluster is displayed under HOXA
-only as a compact layout anchor; this placement does not assign it
-specifically to HOXA. Its HOXB–HOXD cells are structural blanks. A
-not-retained zebrafish HOXDB cluster and unoccupied gene slots within
-retained clusters remain visually distinct.
-
-Genes are drawn with
-[`geom_genebox()`](https://dongyaoliu.github.io/ggexon/reference/geom_genebox.md)
-as data-unit squares containing strand-direction arrows. Its default
-`box_size = 1` spans one x and y data unit; `coord_fixed(ratio = 1)`
-keeps the boxes visually square when the figure is rendered or exported.
-`strip_scale_x(slot_order = ...)` aligns every gene to a shared
-Hox15-to-Hox1 template, so genes assigned to the same curated Hox-number
-slot occupy exactly the same x coordinate. Box position represents that
-paralog-slot alignment, whereas the arrow independently represents
-transcription direction; amphioxus therefore retains its left-pointing
-arrows without breaking homolog-slot alignment. Unoccupied positions
-remain visible and do not by themselves imply gene loss.
-[`scale_x_facet_labels()`](https://dongyaoliu.github.io/ggexon/reference/scale_x_facet_labels.md)
-supplies cluster-specific human reference gene symbols from an explicit
-named list, with `HoxN` fallback labels for slots absent from the human
-reference cluster. All facets retain the same fixed x-coordinate range
-and break positions, so changing the labels preserves slot alignment and
-works with `coord_fixed(ratio = 1)`. Labels are rotated 90 degrees to
-fit the 15 slots in each narrow column. The example uses
-[`theme_ggexon_clean()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_clean.md)
-to remove panel outlines and facet-strip backgrounds. The tutorial
-removes nucleotide and synteny links, and also demonstrates initiation,
-genomic coding-midpoint, and stop anchor modes on the human HOXA
-cluster, with any terminal-CDS positional proxies flagged in the bundled
-data. Its annotations are pinned to Ensembl release 116 for vertebrates
-and Ensembl Metazoa release 63 for amphioxus.
-
-Open
-[`vignette("hox-cluster-expansion-demo", package = "ggexon")`](https://dongyaoliu.github.io/ggexon/articles/hox-cluster-expansion-demo.md)
-for the full example, selected-transcript provenance, and source audit
-trail.
-
-## HLA-A Alleles on an Exon–Intron Gene Model
-
-![Dense amino-acid variant lollipops projected onto the HLA-A reference
-gene, with eight coding exons and seven introns compressed
-three-fold](reference/figures/hla-a-genomic-lollipop-demo.png)
-
-Dense amino-acid variant lollipops projected onto the HLA-A reference
-gene, with eight coding exons and seven introns compressed three-fold
-
-The HLA-A tutorial summarizes 5,998 eligible named alleles as 1,212
-amino-acid substitutions. It shows both a protein-domain view and a
-splice-aware projection onto the exact A\*02:01:01:01 reference gene.
-Exons retain their native scale;
-`scale_x_ggexon_genomic(intron_factor = 3)` compresses introns
-three-fold, with separate exon and intron scale bars. Counts describe
-database representation, not population frequencies.
-
-See the [HLA-A protein and gene-model
-tutorial](https://dongyaoliu.github.io/ggexon/articles/hla-a-lollipop-demo.html).
-
-## AS3MT Exon Skipping with Intron-Compressed Alignment Links
-
-![Human and chimpanzee AS3MT transcripts with native exon widths,
-30-fold intron compression, and ungapped genomic alignment links
-following the same piecewise
-scale](reference/figures/as3mt-splice-variants-demo.png)
-
-Human and chimpanzee AS3MT transcripts with native exon widths, 30-fold
-intron compression, and ungapped genomic alignment links following the
-same piecewise scale
-
-The AS3MT tutorial compares the human and chimpanzee full-length
-transcripts with a paper-defined human AS3MTd2d3 reconstruction.
-[`geom_exon2()`](https://dongyaoliu.github.io/ggexon/reference/geom_exon2.md)
-distinguishes CDS from UTR, and
-`scale_x_ggexon_genomic(intron_factor = 30)` compresses introns while
-retaining exon widths.
-[`geom_nuclink()`](https://dongyaoliu.github.io/ggexon/reference/geom_nuclink.md)
-automatically subdivides raw genomic alignment blocks at both panels’
-scale boundaries and maps the pieces to the same exon/intron scales. The
-plot retains only the two highest identity categories of the ungapped
-LASTZ alignment.
-
-The tutorial also aligns matched human GTEx coverage and counted splice
-junctions to the compressed gene model.
-[`geom_junction()`](https://dongyaoliu.github.io/ggexon/reference/geom_junction.md)
-distinguishes exon inclusion from E1→E4 skipping, while preserving
-source signal values.
-
-See the [AS3MT transcript, DNA and RNA-seq
-tutorial](https://dongyaoliu.github.io/ggexon/articles/as3mt-splice-variants-demo.html)
-for the reproducible offline example and aligned DNA repeat detail.
-
-## Installation
-
-`ggexon` is currently a development package.
+`ggexon` is currently a development package. Install it from GitHub:
 
 ``` r
 
@@ -139,106 +23,101 @@ install.packages("remotes")
 remotes::install_github("DongyaoLiu/ggexon")
 ```
 
-Some dependencies are from Bioconductor. If your R installation cannot
-resolve them automatically, install them first:
+If your R installation cannot resolve the Bioconductor dependencies
+automatically, install them first:
 
 ``` r
 
 install.packages("BiocManager")
 BiocManager::install(c(
-  "Biostrings",
-  "GenomeInfoDb",
-  "GenomicRanges",
-  "Rsamtools",
-  "rtracklayer"
+  "Biostrings", "GenomeInfoDb", "GenomicRanges", "Rsamtools", "rtracklayer"
 ))
 ```
 
-For ODGI-backed graph alignment workflows, install the system tools
-listed in `DESCRIPTION`:
+BigWig-backed examples run on macOS and Linux. ODGI-backed graph
+alignment workflows additionally require Python 3.8 or newer and `odgi`.
 
-- Python 3.8 or newer
-- `odgi`
+### **1. Projecting amino acid changes onto transcript models**
 
-## Package Map
+Project protein variation onto an exon-intron model to see where
+substitutions fall within the coding sequence. This example places 1,212
+substitutions from 5,998 eligible named HLA-A alleles onto the reference
+gene, preserving exon widths while shortening introns. Lollipop heights
+show database allele counts, not population frequencies.
 
-### Part 1: Classes Store Data
+[![HLA-A amino acid substitutions projected onto eight coding exons,
+with lollipop heights showing named allele counts and introns compressed
+three-fold.](reference/figures/hla-a-genomic-lollipop-demo.png)](https://dongyaoliu.github.io/ggexon/articles/hla-a-lollipop-demo.md)
 
-The core data containers are:
+[Explore the HLA-A protein and gene-model
+tutorial](https://dongyaoliu.github.io/ggexon/articles/hla-a-lollipop-demo.md).
 
-| Class | Role |
-|----|----|
-| `SynSpecies` | Project-level container for individuals, alignments, trees, and layout state |
-| `SynIndividual` | One genome, strain, species, or sample |
-| `SynFeatureAnnotation` | Genes, transcripts, exons, CDS, labels, and annotation patches |
-| `SynVCFAnnotation` | VCF querying is supported. BCF parsing is not implemented; BCF input raises an unsupported-format error. |
-| `SynBigWigAnnotation` | Signal tracks queried by genomic interval |
-| `SynProteinDomainAnnotation` | Protein-domain intervals from InterProScan-like tables |
-| `SynProteinMutationAnnotation` | Protein mutation summaries for lollipop-style tracks |
-| `HomologyAnnotation` | Cross-species gene homology mappings from BLAST results |
-| `SynPairAlignment` | Pairwise genome links from PAF, PSL, or ODGI-derived data |
-| `SynMultiAlignment` | Stores already parsed MAF data supplied through `data`; loading a MAF file remains unavailable. ODGI-backed loading is available. |
-| `SynLayout` | Stored panel windows and layout decisions |
+### **2. Comparing alternatively spliced transcripts**
 
-### Part 2: Functions Manipulate and Draw Classes
+Compare human and chimpanzee AS3MT gene models alongside a paper-defined
+human exon-skipping reconstruction. The combined view connects
+transcript structure, aligned DNA at an exon-intron junction, RNA-seq
+coverage, and counted splice junctions. Exon widths are preserved while
+introns are compressed, keeping sequence detail aligned with the
+surrounding gene structure.
 
-The public API is organized around a few function families:
+[![Human and chimpanzee AS3MT models with aligned repeat sequences,
+nucleotide ribbons, and human RNA-seq coverage and splice-junction
+counts on a shared intron-compressed
+display.](articles/as3mt-splice-variants-demo_files/figure-html/as3mt-alignseq-1.png)](https://dongyaoliu.github.io/ggexon/articles/as3mt-splice-variants-demo.md)
 
-| Task | Main functions |
-|----|----|
-| Build object graphs | [`add_individual()`](https://dongyaoliu.github.io/ggexon/reference/add_individual.md), [`add_annotation()`](https://dongyaoliu.github.io/ggexon/reference/add_annotation.md), [`add_homology_annotation()`](https://dongyaoliu.github.io/ggexon/reference/add_homology_annotation.md), [`add_pairwise_alignment()`](https://dongyaoliu.github.io/ggexon/reference/add_pairwise_alignment.md), [`add_multiple_alignment()`](https://dongyaoliu.github.io/ggexon/reference/add_multiple_alignment.md), [`add_tree()`](https://dongyaoliu.github.io/ggexon/reference/add_tree.md) |
-| Load and query data | [`load_annotation()`](https://dongyaoliu.github.io/ggexon/reference/load_annotation.md), [`load_alignment()`](https://dongyaoliu.github.io/ggexon/reference/load_alignment.md), [`import_blast_homology()`](https://dongyaoliu.github.io/ggexon/reference/import_blast_homology.md), [`query_features()`](https://dongyaoliu.github.io/ggexon/reference/query_features.md), [`query_variants()`](https://dongyaoliu.github.io/ggexon/reference/query_variants.md), [`query_signal()`](https://dongyaoliu.github.io/ggexon/reference/query_signal.md), [`query_domains()`](https://dongyaoliu.github.io/ggexon/reference/query_domains.md) |
-| Derive sequence/protein data | [`extract_cds_seq()`](https://dongyaoliu.github.io/ggexon/reference/extract_cds_seq.md), [`translate_protein()`](https://dongyaoliu.github.io/ggexon/reference/translate_protein.md), [`project_domains_to_genome()`](https://dongyaoliu.github.io/ggexon/reference/project_domains_to_genome.md) |
-| Subset and curate objects | [`subset_species()`](https://dongyaoliu.github.io/ggexon/reference/subset_species.md), [`subset_individual()`](https://dongyaoliu.github.io/ggexon/reference/subset_individual.md), [`subset_pairwise_alignment()`](https://dongyaoliu.github.io/ggexon/reference/subset_pairwise_alignment.md), [`set_gene_labels()`](https://dongyaoliu.github.io/ggexon/reference/set_gene_labels.md), [`patch_annotation_from_gff()`](https://dongyaoliu.github.io/ggexon/reference/patch_annotation_from_gff.md) |
-| Draw genomic layers | [`ggexon()`](https://dongyaoliu.github.io/ggexon/reference/ggexon.md), [`geom_exon()`](https://dongyaoliu.github.io/ggexon/reference/geom_exon.md), [`geom_coverage()`](https://dongyaoliu.github.io/ggexon/reference/geom_coverage.md), [`geom_junction()`](https://dongyaoliu.github.io/ggexon/reference/geom_junction.md), [`geom_genetag()`](https://dongyaoliu.github.io/ggexon/reference/geom_genetag.md), [`geom_genebox()`](https://dongyaoliu.github.io/ggexon/reference/geom_genebox.md), [`geom_genelabel()`](https://dongyaoliu.github.io/ggexon/reference/geom_genelabel.md), [`geom_nuclink()`](https://dongyaoliu.github.io/ggexon/reference/geom_nuclink.md), [`geom_synteny_link()`](https://dongyaoliu.github.io/ggexon/reference/geom_synteny_link.md), [`geom_protein_lollipop()`](https://dongyaoliu.github.io/ggexon/reference/geom_protein_lollipop.md) |
-| Arrange panels and guides | [`facet_genomics()`](https://dongyaoliu.github.io/ggexon/reference/facet_genomics.md), [`scale_panel_annotation()`](https://dongyaoliu.github.io/ggexon/reference/scale_panel_annotation.md), [`scale_panel_coverage()`](https://dongyaoliu.github.io/ggexon/reference/scale_panel_coverage.md), [`center_panel_annotation()`](https://dongyaoliu.github.io/ggexon/reference/center_panel_annotation.md), [`facet_genomictree()`](https://dongyaoliu.github.io/ggexon/reference/facet_genomictree.md), [`scale_x_ggexon_genomic()`](https://dongyaoliu.github.io/ggexon/reference/scale_x_ggexon_genomic.md), [`scale_x_facet_labels()`](https://dongyaoliu.github.io/ggexon/reference/scale_x_facet_labels.md), [`guide_x_ggexon_piecewise()`](https://dongyaoliu.github.io/ggexon/reference/guide_x_ggexon_piecewise.md) |
-| Style plots | [`theme_ggexon_clean()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_clean.md), [`theme_ggexon_base()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_base.md), [`theme_ggexon_track()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_track.md), [`theme_ggexon_pairwise()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_pairwise.md) |
+[Explore the AS3MT transcript, DNA, and RNA-seq
+tutorial](https://dongyaoliu.github.io/ggexon/articles/as3mt-splice-variants-demo.md).
 
-The typical workflow is:
+### **3. Visualizing local synteny across species**
 
-``` r
+Place a gene in its surrounding genomic context. This three-species
+*Drosophila* comparison combines conserved flanking genes, an additional
+*Dox* coding model in *D. simulans*, nucleotide-alignment ribbons, and
+testis RNA-seq tracks. The tutorial builds the figure layer by layer,
+showing how gene order, exon structure, and transcriptional signal can
+be inspected together. RNA panels use independent y scales and retain
+their source units.
 
-library(ggexon)
+[![Three Drosophila loci with conserved flanking genes, an additional
+Dox model in D. simulans, nucleotide-alignment ribbons, and separate
+testis RNA-seq
+tracks.](reference/figures/dox-three-species-demo.png)](https://dongyaoliu.github.io/ggexon/articles/dox-synteny-demo.md)
 
-x <- SynIndividual(
-  genome_file = "genome.fasta",
-  annotation_file = "annotation.gff3",
-  id = "sample"
-)
+[Explore the three-species Dox synteny
+tutorial](https://dongyaoliu.github.io/ggexon/articles/dox-synteny-demo.md).
 
-sp <- SynSpecies(name = "project") |>
-  add_individual(x)
+### **4. Visualizing megabase-scale haplotypes**
 
-ggexon(sp) +
-  geom_exon(species = "sample", chr = "chr1")
-```
+Compare gene organization and sequence alignments across the major
+histocompatibility complex (MHC). This compact view shows human CHM13,
+two gorilla haplotypes, and one siamang haplotype on a common base-pair
+scale. Small arrows retain gene spans and direction; enlarged labels
+identify MHC genes above the surrounding annotations and alignment
+ribbons. The tutorial also includes the complete thirteen-track
+comparison across apes.
 
-## Learn More
+[![Four megabase-scale MHC haplotypes from siamang, gorilla, and human,
+with native gene spans, enlarged gene labels, variable-region
+annotations, and nucleotide-alignment
+ribbons.](articles/figures/mhc-three-species.png)](https://dongyaoliu.github.io/ggexon/articles/mhc-continuous-demo.md)
 
-The package site contains the longer cookbook-style documentation:
+[Explore the MHC haplotype
+tutorial](https://dongyaoliu.github.io/ggexon/articles/mhc-continuous-demo.md).
 
-- [`vignette("ggexon-classes-and-verbs", package = "ggexon")`](https://dongyaoliu.github.io/ggexon/articles/ggexon-classes-and-verbs.md)
-  for the class model, every geom, facet systems, and the genomic guide.
-- [`vignette("ggexon-workflow", package = "ggexon")`](https://dongyaoliu.github.io/ggexon/articles/ggexon-workflow.md)
-  for a step-by-step workflow using individuals, annotations,
-  alignments, and direct plotting.
-- [`vignette("cd44-splice-variants-demo", package = "ggexon")`](https://dongyaoliu.github.io/ggexon/articles/cd44-splice-variants-demo.md)
-  for human and mouse splice variants, LASTZ links, sequence windows,
-  and supporting tables stored together in one `SynSpecies` object.
-- [`vignette("hox-cluster-expansion-demo", package = "ggexon")`](https://dongyaoliu.github.io/ggexon/articles/hox-cluster-expansion-demo.md)
-  for the Ensembl-pinned HOX cluster matrix, exact curated Hox-number
-  slots, and
-  [`geom_genebox()`](https://dongyaoliu.github.io/ggexon/reference/geom_genebox.md)
-  anchor modes.
-- [`vignette("bigwig-coverage-demo", package = "ggexon")`](https://dongyaoliu.github.io/ggexon/articles/bigwig-coverage-demo.md)
-  for thirteen independent raw-depth BigWig panels with automatic
-  span-weighted median-at-85%-height scales above one shared, centered
-  gene annotation.
-- [`?ggexon`](https://dongyaoliu.github.io/ggexon/reference/ggexon.md)
-  and the reference index for function-level documentation.
+### Build your own figure
 
-If you use `ggexon` in work, please also cite the preprint:
+Start with [0. Basic
+usage](https://dongyaoliu.github.io/ggexon/articles/ggexon-workflow.md)
+to prepare data and draw your first genomic tracks. A `SynIndividual`
+stores one genome or sample and its annotation layers; a `SynSpecies`
+groups individuals with their comparative relationships. Plotting layers
+retrieve the data they need from these containers, or use prepared
+tables directly.
 
-> Liu D, Zheng C. sept-1/zina-1 is an Ancient Toxin-Antidote System in
-> Caenorhabditis elegans. bioRxiv. 2025.
-> <https://www.biorxiv.org/content/10.1101/2025.11.28.691152v1>
+Use the [function
+reference](https://dongyaoliu.github.io/ggexon/reference/index.md) to
+choose geoms, facets, and scales. Browse the four
+[tutorials](https://dongyaoliu.github.io/ggexon/articles/index.md) for
+protein variation, alternative splicing, local synteny, and
+megabase-scale haplotypes.

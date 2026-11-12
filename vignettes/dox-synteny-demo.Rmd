@@ -1,8 +1,8 @@
 ---
-title: "Build a three-species synteny figure layer by layer"
+title: "3. Visualizing local synteny across species"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Build a three-species synteny figure layer by layer}
+  %\VignetteIndexEntry{3. Visualizing local synteny across species}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

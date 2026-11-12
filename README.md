@@ -56,8 +56,9 @@ terminal-CDS positional proxies flagged in the bundled data. Its
 annotations are pinned to Ensembl release 116 for vertebrates and Ensembl
 Metazoa release 63 for amphioxus.
 
-Open `vignette("hox-cluster-expansion-demo", package = "ggexon")` for the full
-example, selected-transcript provenance, and source audit trail.
+The [archived HOX example](pkgdown/archive/hox-cluster-expansion-demo.Rmd)
+retains the plotting code, selected-transcript provenance, and source audit
+trail.
 
 ## HLA-A Alleles on an Exon–Intron Gene Model
 
@@ -197,22 +198,15 @@ ggexon(sp) +
 
 ## Learn More
 
-The package site contains the longer cookbook-style documentation:
+The package site contains five tutorials:
 
-- `vignette("ggexon-classes-and-verbs", package = "ggexon")` for the class
-  model, every geom, facet systems, and the genomic guide.
-- `vignette("ggexon-workflow", package = "ggexon")` for a step-by-step workflow
-  using individuals, annotations, alignments, and direct plotting.
-- `vignette("cd44-splice-variants-demo", package = "ggexon")` for human and mouse
-  splice variants, LASTZ links, sequence windows, and supporting tables stored
-  together in one `SynSpecies` object.
-- `vignette("hox-cluster-expansion-demo", package = "ggexon")` for the
-  Ensembl-pinned HOX cluster matrix, exact curated Hox-number slots, and
-  `geom_genebox()` anchor modes.
-- `vignette("bigwig-coverage-demo", package = "ggexon")` for thirteen independent
-  raw-depth BigWig panels with automatic span-weighted median-at-85%-height
-  scales above one shared, centered gene annotation.
-- `?ggexon` and the reference index for function-level documentation.
+- [0. Basic usage](https://dongyaoliu.github.io/ggexon/articles/ggexon-workflow.html)
+- [1. Projecting amino acid changes onto transcript models](https://dongyaoliu.github.io/ggexon/articles/hla-a-lollipop-demo.html)
+- [2. Comparing alternatively spliced transcripts](https://dongyaoliu.github.io/ggexon/articles/as3mt-splice-variants-demo.html)
+- [3. Visualizing local synteny across species](https://dongyaoliu.github.io/ggexon/articles/dox-synteny-demo.html)
+- [4. Visualizing megabase-scale haplotypes](https://dongyaoliu.github.io/ggexon/articles/mhc-continuous-demo.html)
+
+Use `?ggexon` or the function reference for individual classes and functions.
 
 If you use `ggexon` in work, please also cite the preprint:
 

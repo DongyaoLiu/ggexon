@@ -1,8 +1,8 @@
 ---
-title: "ggexon Workflow"
+title: "0. Basic usage"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{ggexon Workflow}
+  %\VignetteIndexEntry{0. Basic usage}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -443,8 +443,8 @@ individuals. Select it explicitly for a subset. For repeated figures,
 
 `SynMultiAlignment` supports ODGI-backed comparisons. It can store already
 parsed MAF data through `data`, but `load_alignment()` does not parse MAF
-files. The [class and verb reference](ggexon-classes-and-verbs.html)
-describes these larger workflows.
+files. See the [alignment class reference](../reference/SynMultiAlignment.html)
+for supported inputs.
 
 # 5. Gene-level synteny from an interval table
 
@@ -609,8 +609,8 @@ coverage_layers + scale_panel_coverage("free_y", auto = TRUE)
 
 This second view reveals local signal structure in each strain. The peak
 clipping and independent y ranges mean its panel heights cannot be compared
-as absolute depths. See the [coverage example](bigwig-coverage-demo.html)
-for the full strain panel and fixture provenance.
+as absolute depths. Fixture provenance is recorded in the bundled
+`extdata/peel1_coverage/manifest.tsv`.
 
 # 7. Protein mutation counts and domains
 
@@ -951,8 +951,7 @@ ggexon(slot_data) +
 
 The x axis now names supplied slots, not base pairs. With Syn-backed data,
 `geom_genebox(anchor = "start")`, `"middle"`, or `"end"` chooses the coding
-anchor before scaling. See the [Hox example](hox-cluster-expansion-demo.html)
-for real annotations, slot curation, and anchor comparisons.
+anchor before scaling.
 
 # 10. Align genomic tracks to a tree
 
@@ -1181,6 +1180,6 @@ Export a saved plot object with explicit dimensions and inspect the result.
 For example, `ggsave("exon-models.pdf", plot = p_exons, width = 9, height = 3.5)`
 exports the first model view.
 
-The [Classes, Geoms, Facets, and Guides](ggexon-classes-and-verbs.html)
-article provides the full object hierarchy and less common workflows.
-The linked biological examples expand these recipes with documented sources.
+The [function reference](../reference/index.html) describes individual classes,
+geoms, facets, and scales. The four [biological tutorials](index.html) expand
+these recipes with documented sources.

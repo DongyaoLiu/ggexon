@@ -23,36 +23,26 @@ navbar:
     articles:
       text: Tutorials
       menu:
-      - text: Complete workflow
+      - text: 0. Basic usage
         href: articles/ggexon-workflow.html
-      - text: HOX cluster expansion
-        href: articles/hox-cluster-expansion-demo.html
-      - text: Three-species synteny and RNA-seq
-        href: articles/dox-synteny-demo.html
-      - text: CD44 splice variant alignment
-        href: articles/cd44-splice-variants-demo.html
-      - text: AS3MT transcripts, DNA and RNA-seq
-        href: articles/as3mt-splice-variants-demo.html
-      - text: HLA-A protein variant lollipops
+      - text: 1. Projecting amino acid changes onto transcript models
         href: articles/hla-a-lollipop-demo.html
-      - text: PEEL-1 raw BigWig coverage
-        href: articles/bigwig-coverage-demo.html
-      - text: Classes, geoms, facets, and guides
-        href: articles/ggexon-classes-and-verbs.html
+      - text: 2. Comparing alternatively spliced transcripts
+        href: articles/as3mt-splice-variants-demo.html
+      - text: 3. Visualizing local synteny across species
+        href: articles/dox-synteny-demo.html
+      - text: 4. Visualizing megabase-scale haplotypes
+        href: articles/mhc-continuous-demo.html
 
 articles:
 - title: Learn ggexon
   navbar: ~
   contents:
   - ggexon-workflow
-  - hox-cluster-expansion-demo
-  - dox-synteny-demo
-  - cd44-splice-variants-demo
-  - as3mt-splice-variants-demo
   - hla-a-lollipop-demo
-  - bigwig-coverage-demo
-  - cox1-yeast-demo
-  - ggexon-classes-and-verbs
+  - as3mt-splice-variants-demo
+  - dox-synteny-demo
+  - mhc-continuous-demo
 
 reference:
 - title: Data-storage classes

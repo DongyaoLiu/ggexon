@@ -3,14 +3,11 @@
 <url><loc>https://dongyaoliu.github.io/ggexon/LICENSE-text.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/LICENSE.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/articles/as3mt-splice-variants-demo.html</loc></url>
-<url><loc>https://dongyaoliu.github.io/ggexon/articles/bigwig-coverage-demo.html</loc></url>
-<url><loc>https://dongyaoliu.github.io/ggexon/articles/cd44-splice-variants-demo.html</loc></url>
-<url><loc>https://dongyaoliu.github.io/ggexon/articles/cox1-yeast-demo.html</loc></url>
-<url><loc>https://dongyaoliu.github.io/ggexon/articles/ggexon-classes-and-verbs.html</loc></url>
+<url><loc>https://dongyaoliu.github.io/ggexon/articles/dox-synteny-demo.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/articles/ggexon-workflow.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/articles/hla-a-lollipop-demo.html</loc></url>
-<url><loc>https://dongyaoliu.github.io/ggexon/articles/hox-cluster-expansion-demo.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/articles/index.html</loc></url>
+<url><loc>https://dongyaoliu.github.io/ggexon/articles/mhc-continuous-demo.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/authors.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/index.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/FacetGenomicTree.html</loc></url>
@@ -78,7 +75,6 @@
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/check_syn_files.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/class_ggexon_built.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/clear_panel_xlim.html</loc></url>
-<url><loc>https://dongyaoliu.github.io/ggexon/reference/clear_patches.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/compile_ggtree_genetag.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/compile_ggtree_genomic_alignment.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/compile_ggtree_rectangular_segments.html</loc></url>
@@ -178,7 +174,6 @@
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/reexports.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/reference_species.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/remove_missing.html</loc></url>
-<url><loc>https://dongyaoliu.github.io/ggexon/reference/rename_domain_annotation_ids.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/resolve_syn_individual.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/scale_panel_annotation.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/scale_panel_coverage.html</loc></url>

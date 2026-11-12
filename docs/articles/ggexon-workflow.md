@@ -1,4 +1,4 @@
-# ggexon Workflow
+# 0. Basic usage
 
 ## From data to a genomic figure
 
@@ -570,11 +570,10 @@ stores named per-individual windows on the comparison’s `SynLayout`;
 removes the overrides.
 
 `SynMultiAlignment` supports ODGI-backed comparisons. It can store
-already parsed MAF data through `data`, but
-[`load_alignment()`](https://dongyaoliu.github.io/ggexon/reference/load_alignment.md)
-does not parse MAF files. The [class and verb
-reference](https://dongyaoliu.github.io/ggexon/articles/ggexon-classes-and-verbs.md)
-describes these larger workflows.
+already parsed MAF data through `data`, but `load_alignment()` does not
+parse MAF files. See the [alignment class
+reference](https://dongyaoliu.github.io/ggexon/reference/SynMultiAlignment.md)
+for supported inputs.
 
 ## 5. Gene-level synteny from an interval table
 
@@ -798,9 +797,8 @@ clipped.](ggexon-workflow_files/figure-html/workflow-coverage-free-1.png)
 
 This second view reveals local signal structure in each strain. The peak
 clipping and independent y ranges mean its panel heights cannot be
-compared as absolute depths. See the [coverage
-example](https://dongyaoliu.github.io/ggexon/articles/bigwig-coverage-demo.md)
-for the full strain panel and fixture provenance.
+compared as absolute depths. Fixture provenance is recorded in the
+bundled `extdata/peel1_coverage/manifest.tsv`.
 
 ## 7. Protein mutation counts and domains
 
@@ -1290,9 +1288,7 @@ arrows.](ggexon-workflow_files/figure-html/workflow-slots-1.png)
 
 The x axis now names supplied slots, not base pairs. With Syn-backed
 data, `geom_genebox(anchor = "start")`, `"middle"`, or `"end"` chooses
-the coding anchor before scaling. See the [Hox
-example](https://dongyaoliu.github.io/ggexon/articles/hox-cluster-expansion-demo.md)
-for real annotations, slot curation, and anchor comparisons.
+the coding anchor before scaling.
 
 ## 10. Align genomic tracks to a tree
 
@@ -1583,8 +1579,9 @@ result. For example,
 `ggsave("exon-models.pdf", plot = p_exons, width = 9, height = 3.5)`
 exports the first model view.
 
-The [Classes, Geoms, Facets, and
-Guides](https://dongyaoliu.github.io/ggexon/articles/ggexon-classes-and-verbs.md)
-article provides the full object hierarchy and less common workflows.
-The linked biological examples expand these recipes with documented
-sources.
+The [function
+reference](https://dongyaoliu.github.io/ggexon/reference/index.md)
+describes individual classes, geoms, facets, and scales. The four
+[biological
+tutorials](https://dongyaoliu.github.io/ggexon/articles/index.md) expand
+these recipes with documented sources.
