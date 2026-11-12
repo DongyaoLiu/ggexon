@@ -1793,6 +1793,12 @@ inject_genomic_piecewise_axis <- function(table, build) {
   if (is.null(text_gp) && is.null(line_gp) && is.null(tick_gp)) {
     return(table)
   }
+  if (!is.null(scale_spec$guide$linewidth)) {
+    line_gp <- line_gp %||% grid::gpar(col = "grey40")
+    tick_gp <- tick_gp %||% grid::gpar(col = "grey45")
+    line_gp$lwd <- scale_spec$guide$linewidth * ggplot2::.pt
+    tick_gp$lwd <- scale_spec$guide$linewidth * ggplot2::.pt
+  }
 
   max_groups <- max(axis_data$axis_group_count, na.rm = TRUE)
   axis_height <- grid::unit(max(18, 16 * max_groups + 4), "pt")
@@ -1883,24 +1889,42 @@ drawDetails.ggexonGenomicPiecewiseAxisGrob <- function(x, recording = TRUE) {
   }
 
   ordered_data <- x$data[order(x$data$axis_group_index, x$data$region_type), , drop = FALSE]
+  label_x <- rel_x((ordered_data$plot_start + ordered_data$plot_end) / 2)
+  if (!is.null(x$text_gp)) {
+    visible_labels <- !is.na(ordered_data$label) & nzchar(ordered_data$label)
+    label_width <- numeric(nrow(ordered_data))
+    label_width[visible_labels] <- vapply(ordered_data$label[visible_labels], function(label) {
+      text <- grid::textGrob(label, gp = x$text_gp)
+      grid::convertWidth(grid::grobWidth(text), "npc", valueOnly = TRUE)
+    }, numeric(1))
+    label_gap <- grid::convertWidth(grid::unit(2, "pt"), "npc", valueOnly = TRUE)
+    for (group in unique(ordered_data$axis_group_index)) {
+      idx <- which(visible_labels & ordered_data$axis_group_index == group)
+      idx <- idx[order(label_x[idx])]
+      widths <- label_width[idx]
+      centers <- pmin(pmax(label_x[idx], widths / 2), 1 - widths / 2)
+      if (length(idx) == 2L && diff(centers) < sum(widths) / 2 + label_gap) {
+        half_span <- (sum(widths) + label_gap) / 2
+        center <- pmin(pmax(mean(centers), half_span), 1 - half_span)
+        centers <- center + c(-(widths[[2L]] + label_gap) / 2,
+          (widths[[1L]] + label_gap) / 2)
+      }
+      label_x[idx] <- centers
+    }
+  }
   for (i in seq_len(nrow(ordered_data))) {
     row <- ordered_data[i, , drop = FALSE]
     group_index <- as.integer(row$axis_group_index[[1L]])
     group_top <- 1 - (group_index - 1L) / group_count
     group_bottom <- 1 - group_index / group_count
     group_height <- group_top - group_bottom
-    region_y <- if (identical(row$region_type[[1L]], "exon")) {
-      group_top - group_height * 0.32
-    } else {
-      group_top - group_height * 0.68
-    }
+    region_y <- group_top - group_height * 0.35
 
     x0 <- rel_x(row$plot_start[[1L]])
     x1 <- rel_x(row$plot_end[[1L]])
     if (!is.finite(x0) || !is.finite(x1) || abs(x1 - x0) <= 0) {
       next
     }
-    xmid <- (x0 + x1) / 2
     segment_gp <- x$line_gp %||% grid::gpar(col = "grey40", lwd = 0.25)
     if (identical(row$region_type[[1L]], "intron")) {
       segment_gp$lty <- 2
@@ -1925,15 +1949,10 @@ drawDetails.ggexonGenomicPiecewiseAxisGrob <- function(x, recording = TRUE) {
     )
 
     if (!is.null(x$text_gp) && !is.na(row$label[[1L]]) && nzchar(row$label[[1L]])) {
-      label_y <- if (identical(row$region_type[[1L]], "exon")) {
-        min(region_y + group_height * 0.18, 0.95)
-      } else {
-        max(region_y - group_height * 0.18, 0.05)
-      }
-      label_x <- pmin(pmax(xmid, 0.08), 0.92)
+      label_y <- group_bottom + group_height * 0.2
       grid::grid.text(
         row$label[[1L]],
-        x = grid::unit(label_x, "npc"),
+        x = grid::unit(label_x[[i]], "npc"),
         y = grid::unit(label_y, "npc"),
         just = "center",
         gp = x$text_gp

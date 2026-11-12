@@ -109,7 +109,8 @@ scale_x_ggexon_genomic <- function(intron_factor = 10,
 #' `guide_x_ggexon_piecewise()` is used with [scale_x_ggexon_genomic()] to
 #' replace ordinary x-axis ticks with representative first-exon and first-intron
 #' scale bars. This is useful because intron-compressed tracks use different
-#' display scales for exon and intron regions.
+#' display scales for exon and intron regions. Within each group, the bars share
+#' one horizontal baseline and their labels show only original lengths in bp.
 #'
 #' @param by Grouping used to choose representative intervals. `"transcripts"`
 #'   draws one first-exon/first-intron pair per transcript, `"track"` draws one
@@ -120,6 +121,8 @@ scale_x_ggexon_genomic <- function(intron_factor = 10,
 #' @param label Logical; draw text labels for representative intervals.
 #' @param show_exon,show_intron Logical; include representative exon and/or
 #'   intron scale bars.
+#' @param linewidth Optional non-negative line width in millimetres for both
+#'   bars and their end ticks. `NULL` uses the corresponding axis theme settings.
 #'
 #' @return A ggexon genomic x-axis guide specification.
 #' @export
@@ -128,7 +131,8 @@ guide_x_ggexon_piecewise <- function(by = c("transcripts", "track", "panel"),
                                      position = c("bottom"),
                                      label = TRUE,
                                      show_exon = TRUE,
-                                     show_intron = TRUE) {
+                                     show_intron = TRUE,
+                                     linewidth = NULL) {
   by <- match.arg(by)
   representative <- match.arg(representative)
   position <- match.arg(position)
@@ -144,6 +148,11 @@ guide_x_ggexon_piecewise <- function(by = c("transcripts", "track", "panel"),
   if (!isTRUE(show_exon) && !isTRUE(show_intron)) {
     stop("At least one of `show_exon` or `show_intron` must be `TRUE`.", call. = FALSE)
   }
+  if (!is.null(linewidth) &&
+      (!is.numeric(linewidth) || length(linewidth) != 1L ||
+       is.na(linewidth) || !is.finite(linewidth) || linewidth < 0)) {
+    stop("`linewidth` must be one non-negative finite number.", call. = FALSE)
+  }
 
   structure(
     list(
@@ -153,7 +162,8 @@ guide_x_ggexon_piecewise <- function(by = c("transcripts", "track", "panel"),
       position = position,
       label = label,
       show_exon = show_exon,
-      show_intron = show_intron
+      show_intron = show_intron,
+      linewidth = linewidth
     ),
     class = c("ggexon_genomic_x_piecewise_guide", "ggexon_genomic_x_guide")
   )
@@ -565,13 +575,9 @@ ggexon_genomic_x_axis_interval <- function(group_df,
 }
 
 ggexon_genomic_x_axis_label <- function(region_type, genomic_width, plot_width) {
-  if (identical(region_type, "intron") && is.finite(plot_width) && plot_width > 0) {
-    factor <- genomic_width / plot_width
-    if (is.finite(factor) && factor > 1.01) {
-      return(paste0("intron ", ggexon_format_bp(genomic_width), " /", signif(factor, 3)))
-    }
-  }
-  paste(region_type, ggexon_format_bp(genomic_width))
+  if (!is.finite(genomic_width)) return(NA_character_)
+  paste0(format(round(abs(genomic_width)), trim = TRUE, big.mark = ",",
+    scientific = FALSE), " bp")
 }
 
 ggexon_format_bp <- function(x) {

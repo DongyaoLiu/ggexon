@@ -1,4 +1,5 @@
-<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<?xml version='1.0' encoding='UTF-8'?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url><loc>https://dongyaoliu.github.io/ggexon/404.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/LICENSE-text.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/LICENSE.html</loc></url>
@@ -145,6 +146,7 @@
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/locus_grid_layout.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/locus_sets.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/locus_table.html</loc></url>
+<url><loc>https://dongyaoliu.github.io/ggexon/reference/map_domain_ids.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/multiple_alignment_data.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/odgi_multi_alignment.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/odgi_node_table.html</loc></url>
@@ -174,6 +176,7 @@
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/reexports.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/reference_species.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/remove_missing.html</loc></url>
+<url><loc>https://dongyaoliu.github.io/ggexon/reference/reset_patches.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/resolve_syn_individual.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/scale_panel_annotation.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/scale_panel_coverage.html</loc></url>
@@ -209,4 +212,3 @@
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/use_locus_grid.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/waiver.html</loc></url>
 </urlset>
-

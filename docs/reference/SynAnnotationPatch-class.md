@@ -1,6 +1,6 @@
 # SynAnnotationPatch class
 
-`SynAnnotationPatch` records a patch that replaces, adds, or drops a
+`SynAnnotationPatch` records a patch that replaces, adds, or removes a
 subset of features from a `SynFeatureAnnotation`. As a genome-coordinate
 annotation, it inherits the shared `SynGenomeAnnotation` metadata used
 across nucleotide-level annotation layers.
@@ -33,7 +33,8 @@ In addition to the slots listed below, the class inherits `name`,
 
 - `mode`:
 
-  Patch mode. One of `"replace"`, `"add"`, or `"drop"`.
+  Patch mode. One of `"replace"`, `"add"`, `"remove"`, or legacy
+  `"drop"`.
 
 - `metadata`:
 
@@ -57,6 +58,7 @@ In addition to the slots listed below, the class inherits `name`,
 
 ## Validity rules
 
-- `mode` must be one of `"replace"`, `"add"`, or `"drop"`.
+- `mode` must be one of `"replace"`, `"add"`, `"remove"`, or legacy
+  `"drop"`.
 
 - `patch_data` is required when `mode` is `"replace"` or `"add"`.

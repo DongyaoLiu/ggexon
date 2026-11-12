@@ -11,7 +11,6 @@ downloads are needed.
 
 library(ggexon)
 library(ggplot2)
-#> Warning: package 'ggplot2' was built under R version 4.4.3
 demo_dir <- system.file("extdata", "as3mt", package = "ggexon")
 source(file.path(demo_dir, "load-as3mt-example.R"), local = TRUE)
 as3mt <- load_as3mt_example(demo_dir)

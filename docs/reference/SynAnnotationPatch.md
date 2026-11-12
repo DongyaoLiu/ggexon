@@ -9,7 +9,7 @@ SynAnnotationPatch(
   name,
   patch_data = NULL,
   target_ids = character(),
-  mode = c("replace", "add", "drop"),
+  mode = c("replace", "add", "remove", "drop"),
   source_file = "<patch>",
   metadata = list()
 )
@@ -27,11 +27,12 @@ SynAnnotationPatch(
 
 - target_ids:
 
-  Target gene IDs to replace, add, or drop.
+  Target gene IDs to replace, add, or remove.
 
 - mode:
 
-  One of `"replace"`, `"add"`, or `"drop"`.
+  One of `"replace"`, `"add"`, or `"remove"`. Legacy `"drop"` remains
+  supported with the same removal behavior.
 
 - source_file:
 

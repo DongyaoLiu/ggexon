@@ -109,14 +109,42 @@ not select a genomic window or transform coordinates.
 | [`project_domains_to_genome()`](https://dongyaoliu.github.io/ggexon/reference/project_domains_to_genome.md), [`project_mutations_to_genome()`](https://dongyaoliu.github.io/ggexon/reference/project_mutations_to_genome.md) | Map protein positions through transcript CDS blocks to genomic intervals |
 | [`ggexon_output_size()`](https://dongyaoliu.github.io/ggexon/reference/ggexon_output_size.md) | Record the intended figure dimensions for downstream layout |
 
-Functions such as [`aes()`](https://rdrr.io/pkg/ggplot2/man/aes.html),
-[`scale_fill_manual()`](https://rdrr.io/pkg/ggplot2/man/scale_manual.html),
-[`scale_x_continuous()`](https://rdrr.io/pkg/ggplot2/man/scale_continuous.html),
-[`facet_wrap()`](https://rdrr.io/pkg/ggplot2/man/facet_wrap.html),
-[`coord_fixed()`](https://rdrr.io/pkg/ggplot2/man/coord_fixed.html),
-[`theme()`](https://rdrr.io/pkg/ggplot2/man/theme.html), and
-[`ggsave()`](https://rdrr.io/pkg/ggplot2/man/ggsave.html) come from
-ggplot2. The examples combine these with the ggexon functions above.
+Functions such as
+[`aes()`](https://ggplot2.tidyverse.org/reference/aes.html),
+[`scale_fill_manual()`](https://ggplot2.tidyverse.org/reference/scale_manual.html),
+[`scale_x_continuous()`](https://ggplot2.tidyverse.org/reference/scale_continuous.html),
+[`facet_wrap()`](https://ggplot2.tidyverse.org/reference/facet_wrap.html),
+[`coord_fixed()`](https://ggplot2.tidyverse.org/reference/coord_fixed.html),
+[`theme()`](https://ggplot2.tidyverse.org/reference/theme.html), and
+[`ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html) come
+from ggplot2. The examples combine these with the ggexon functions
+above.
+
+### Curating elements within data objects
+
+Curation verbs describe the change made to stored biological
+information. Updating selected fields differs from replacing a complete
+gene model; resetting patches restores the base annotation.
+
+| Operation | Function | Effect |
+|----|----|----|
+| Add relationships | [`add_homology()`](https://dongyaoliu.github.io/ggexon/reference/homology-crud.md) | Insert query-to-reference gene relationships |
+| Update fields | [`update_homology()`](https://dongyaoliu.github.io/ggexon/reference/homology-crud.md) | Change supplied columns for matched query genes while preserving other fields |
+| Remove relationships | [`remove_homology()`](https://dongyaoliu.github.io/ggexon/reference/homology-crud.md) | Remove selected homology rows, with an optional reference-gene guard |
+| Set display labels | [`set_gene_labels()`](https://dongyaoliu.github.io/ggexon/reference/set_gene_labels.md) | Assign labels while retaining stable biological IDs |
+| Map identifiers | [`map_domain_ids()`](https://dongyaoliu.github.io/ggexon/reference/map_domain_ids.md) | Map domain annotation identifier values to the key used by transcript models |
+| Patch gene models | [`patch_annotation()`](https://dongyaoliu.github.io/ggexon/reference/patch_annotation.md) | Record an addition, replacement, or removal using `mode = "add"`, `"replace"`, or `"remove"` |
+| Reset patches | [`reset_patches()`](https://dongyaoliu.github.io/ggexon/reference/reset_patches.md) | Restore the base feature annotation and retain assigned display labels |
+
+[`replace_homology()`](https://dongyaoliu.github.io/ggexon/reference/homology-crud.md),
+[`delete_homology()`](https://dongyaoliu.github.io/ggexon/reference/homology-crud.md),
+[`rename_domain_annotation_ids()`](https://dongyaoliu.github.io/ggexon/reference/map_domain_ids.md),
+and
+[`clear_patches()`](https://dongyaoliu.github.io/ggexon/reference/reset_patches.md)
+remain supported aliases for the corresponding operations above. Patch
+mode `"drop"` remains an alias for `"remove"`. Use `query_*()` to
+inspect data and `subset_*()` or `filter_*()` to select the data to
+keep.
 
 ## 1. Exons and alternative transcripts
 
@@ -259,6 +287,147 @@ The x distances are base pairs. The missing middle exon in `A_skip`
 comes from the input annotation; ggexon does not infer alternative
 splicing.
 
+### Compare the same annotation with other geoms
+
+The same `model` can support several views. Keep chromosome 1 and the
+same genomic window, then choose a geom according to the detail you want
+to show.
+
+#### `geom_exon2()`: exon and intron structure
+
+[`geom_exon2()`](https://dongyaoliu.github.io/ggexon/reference/geom_exon2.md)
+keeps the three transcript rows and draws introns as chevrons between
+exon blocks. Reuse the transcript colours from `p_exons`.
+`compress_introns = FALSE` preserves genomic distances for this
+comparison; the next example shows its schematic compression option.
+
+``` r
+
+p_exon2 <- ggexon(model) +
+  geom_exon2(
+    aes(fill = transcript_id), chr = "chr1", subset = c(80, 1600),
+    compress_introns = FALSE, arrow_width = 12
+  ) +
+  scale_fill_manual(values = transcript_colours, name = "Transcript") +
+  scale_x_continuous(limits = c(80, 1600),
+                     breaks = c(100, 500, 900, 1300, 1600),
+                     labels = scales::label_number(big.mark = ",")) +
+  theme_ggexon_track(base_size = 10, show_legend = TRUE)
+p_exon2
+```
+
+![The same three synthetic transcripts drawn with geom_exon2: gene A has
+full and exon-skipping isoforms, gene B is on the minus strand, and
+chevron introns retain genomic
+spacing.](ggexon-workflow_files/figure-html/workflow-geom-exon2-1.png)
+
+##### A compact transcript schematic
+
+Long introns can dominate a transcript diagram and make exon structure
+hard to see. Use `compress_introns = TRUE` when you want a compact
+cartoon of exon order and exon skipping. Exon widths are retained, while
+`intron_width = 50` replaces each intron with a 50-unit schematic gap.
+
+``` r
+
+p_exon2_schematic <- ggexon(model) +
+  geom_exon2(
+    aes(fill = transcript_id), chr = "chr1", subset = c(80, 1600),
+    compress_introns = TRUE, intron_width = 50, arrow_width = 12
+  ) +
+  scale_fill_manual(values = transcript_colours, name = "Transcript") +
+  theme_ggexon_track(
+    base_size = 10, show_legend = TRUE,
+    show_x_axis = FALSE, show_x_grid = FALSE
+  )
+p_exon2_schematic
+```
+
+![The same three transcripts drawn as compact schematics with
+fixed-width intron gaps. The x axis and grid are hidden because the
+transcripts no longer share genomic
+spacing.](ggexon-workflow_files/figure-html/workflow-geom-exon2-schematic-1.png)
+
+Each transcript is rearranged independently, so shared exons may no
+longer line up across isoforms. Hide the x axis and grid because these
+schematic positions do not represent shared genomic coordinates. The
+next section uses
+[`scale_x_ggexon_genomic()`](https://dongyaoliu.github.io/ggexon/reference/scale_x_ggexon_genomic.md)
+to compress introns while keeping transcripts and other genomic layers
+aligned.
+
+#### `geom_genetag()`: whole-gene spans
+
+[`geom_genetag()`](https://dongyaoliu.github.io/ggexon/reference/geom_genetag.md)
+draws one directional span per gene. Gene A’s two isoforms therefore
+become one gene-level shape, and individual exons are no longer shown.
+Map fill to `gene_id` and use a gene palette for the two genes. Set
+`arrow_width = 50` to give both strand-direction triangles the same
+50-bp width, independent of gene length. Set `ylim` in
+[`coord_cartesian()`](https://ggplot2.tidyverse.org/reference/coord_cartesian.html)
+to leave vertical space around the tags.
+
+``` r
+
+gene_colours <- c(geneA = "#0072B2", geneB = "#009E73")
+p_gene_spans <- ggexon(model) +
+  geom_genetag(
+    aes(fill = gene_id), chr = "chr1", subset = c(80, 1600),
+    show_label = FALSE, arrow_width = 50
+  ) +
+  scale_fill_manual(values = gene_colours, name = "Gene") +
+  scale_x_continuous(limits = c(80, 1600),
+                     breaks = c(100, 500, 900, 1300, 1600),
+                     labels = scales::label_number(big.mark = ",")) +
+  coord_cartesian(ylim = c(-1, 2)) +
+  theme_ggexon_track(base_size = 10, show_legend = TRUE)
+p_gene_spans
+```
+
+![Gene A and gene B drawn as whole-gene tags with equal 50-bp
+strand-direction triangles and vertical space around them. Gene A points
+right and gene B points left; their total widths retain the annotated
+gene
+spans.](ggexon-workflow_files/figure-html/workflow-geom-genetag-fixed-arrow-1.png)
+
+#### `geom_genebox()`: gene positions and strand
+
+[`geom_genebox()`](https://dongyaoliu.github.io/ggexon/reference/geom_genebox.md)
+draws equal-size squares with internal strand arrows. Query the same
+model’s gene rows and place each square at the midpoint of its annotated
+span. Using this table includes both genes, including gene B, which has
+no CDS records in the teaching annotation.
+
+Here `box_size = 120` sets a fixed display size, and
+`coord_fixed(ratio = 1)` keeps the boxes square. Their positions remain
+genomic coordinates; their widths do not represent gene lengths. The
+hidden y axis only positions the boxes.
+
+``` r
+
+gene_rows <- as.data.frame(query_features(
+  model, chr = "chr1", start = 80, end = 1600, feature_type = "gene"
+))
+gene_rows$x <- (gene_rows$start + gene_rows$end) / 2
+gene_rows$y <- 0
+
+p_gene_boxes <- ggexon(gene_rows) +
+  geom_genebox(aes(x = x, y = y, strand = strand, fill = gene_id),
+               box_size = 120) +
+  scale_fill_manual(values = gene_colours, name = "Gene") +
+  scale_x_continuous(limits = c(80, 1600),
+                     breaks = c(100, 500, 900, 1300, 1600),
+                     labels = scales::label_number(big.mark = ",")) +
+  coord_fixed(ratio = 1, ylim = c(-120, 120)) +
+  theme_ggexon_track(base_size = 10, show_legend = TRUE)
+p_gene_boxes
+```
+
+![Equal-size blue and green squares at the annotated midpoints of gene A
+and gene B. Internal arrows indicate opposite strands, while the x axis
+retains genomic
+coordinates.](ggexon-workflow_files/figure-html/workflow-geom-genebox-1.png)
+
 ## 2. Compress introns while retaining genomic labels
 
 Long introns can make exons too small to compare. A shared exon-aware
@@ -312,11 +481,12 @@ query_features(gene_a, feature_type = "exon", all = TRUE)
 ### Choose the geom, scales, and theme
 
 [`geom_exon2()`](https://dongyaoliu.github.io/ggexon/reference/geom_exon2.md)
-draws explicit chevron introns. Disable its schematic compression so
+draws explicit chevron introns.
 [`scale_x_ggexon_genomic()`](https://dongyaoliu.github.io/ggexon/reference/scale_x_ggexon_genomic.md)
-controls the transformation across the panel. A factor of 8 displays
-eligible gaps at one eighth of their genomic length while preserving
-exon widths.
+applies a shared transformation to the original genomic coordinates,
+taking precedence over the geom’s schematic compression. A factor of 8
+displays eligible gaps at one eighth of their genomic length while
+preserving exon widths.
 
 ``` r
 
@@ -338,7 +508,9 @@ labels.](ggexon-workflow_files/figure-html/workflow-compressed-exons-1.png)
 Ticks report original genomic positions, but equal display distances
 across exons and introns no longer imply equal base-pair distances. A
 piecewise guide can show separate representative exon and intron scale
-bars.
+bars. The solid exon bar and dashed intron bar share one horizontal
+baseline; labels show their original lengths in bp. Use `linewidth` to
+set the thickness of both bars and their end ticks in millimetres.
 
 ``` r
 
@@ -348,19 +520,20 @@ ggexon(gene_a) +
     arrow_width = 12
   ) +
   scale_x_ggexon_genomic(
-    intron_factor = 8, guide = guide_x_ggexon_piecewise(by = "panel")
+    intron_factor = 8,
+    guide = guide_x_ggexon_piecewise(by = "panel", linewidth = 0.6)
   ) +
   scale_fill_manual(values = transcript_colours) +
   theme_ggexon_track(base_size = 10)
 ```
 
-![The compressed gene A models with representative exon and intron scale
-bars.](ggexon-workflow_files/figure-html/workflow-piecewise-guide-1.png)
+![The compressed gene A models with solid exon and dashed intron scale
+bars on one horizontal baseline, labeled only with their original
+lengths in
+bp.](ggexon-workflow_files/figure-html/workflow-piecewise-guide-aligned-1.png)
 
 With explicit CDS and UTR records, `geom_exon2(annotation_type = "all")`
-can distinguish their box heights. Its default `compress_introns = TRUE`
-offers another schematic view; choose one compression method
-deliberately.
+can distinguish their box heights.
 
 ## 3. Gene spans and readable labels
 
@@ -570,8 +743,9 @@ stores named per-individual windows on the comparison’s `SynLayout`;
 removes the overrides.
 
 `SynMultiAlignment` supports ODGI-backed comparisons. It can store
-already parsed MAF data through `data`, but `load_alignment()` does not
-parse MAF files. See the [alignment class
+already parsed MAF data through `data`, but
+[`load_alignment()`](https://dongyaoliu.github.io/ggexon/reference/load_alignment.md)
+does not parse MAF files. See the [alignment class
 reference](https://dongyaoliu.github.io/ggexon/reference/SynMultiAlignment.md)
 for supported inputs.
 
@@ -1263,7 +1437,7 @@ uses equal-size squares with strand arrows.
 reserves every slot, including unoccupied ones.
 [`scale_x_facet_labels()`](https://dongyaoliu.github.io/ggexon/reference/scale_x_facet_labels.md)
 names each facet’s slots, and
-[`coord_fixed()`](https://rdrr.io/pkg/ggplot2/man/coord_fixed.html)
+[`coord_fixed()`](https://ggplot2.tidyverse.org/reference/coord_fixed.html)
 keeps boxes square. The clean theme retains ordinary axis labels.
 
 ``` r
@@ -1423,6 +1597,28 @@ names(list_patches(corrected_model))
 imports corrections from a small GFF. Replacing models clears stale
 sequence caches; recompute derived sequences afterwards.
 
+[`reset_patches()`](https://dongyaoliu.github.io/ggexon/reference/reset_patches.md)
+clears all recorded patches and restores the base feature annotation. A
+removal is also recorded as a patch, so it can be inspected and reset in
+the same way. These operations return updated objects; `model` remains
+available for the comparison below.
+
+``` r
+
+restored_model <- reset_patches(corrected_model)
+length(list_patches(restored_model))
+#> [1] 0
+
+without_gene_b <- patch_annotation(
+  model, patch = NULL, target_ids = "geneB", mode = "remove",
+  name = "remove-gene-b"
+)
+names(list_patches(without_gene_b))
+#> [1] "remove-gene-b"
+unique(as.character(S4Vectors::mcols(annotation_data(without_gene_b))$gene_id))
+#> [1] "geneA"
+```
+
 ### Choose the geom, scales, facet, and theme
 
 Retain the same base-pair scale before and after to compare the
@@ -1523,10 +1719,11 @@ variant_rows$allele <- paste0(variant_rows$REF, ">", variant_rows$ALT)
 ### Choose the geoms, scales, and theme
 
 Use the stored feature annotation for exon models and an ordinary
-[`geom_vline()`](https://rdrr.io/pkg/ggplot2/man/geom_abline.html) for
-the queried variant positions. Both use the same genomic x coordinates.
-The lines mark sites across transcript rows; they do not represent
-frequencies, coverage, or allele-specific transcript structures.
+[`geom_vline()`](https://ggplot2.tidyverse.org/reference/geom_abline.html)
+for the queried variant positions. Both use the same genomic x
+coordinates. The lines mark sites across transcript rows; they do not
+represent frequencies, coverage, or allele-specific transcript
+structures.
 
 ``` r
 
@@ -1559,7 +1756,7 @@ models.](ggexon-workflow_files/figure-html/workflow-vcf-plot-1.png)
 | Which curated genes or blocks correspond? | Matched interval table | [`geom_synteny_link()`](https://dongyaoliu.github.io/ggexon/reference/geom_synteny_link.md) | Shared family palette; pairwise theme |
 | How does signal vary across a locus? | `SynBigWigAnnotation` | [`geom_coverage()`](https://dongyaoliu.github.io/ggexon/reference/geom_coverage.md) | Genomic x; explicit coverage y policy |
 | Where are protein domains and mutations? | Mutation and domain tables/layers | [`geom_protein_lollipop()`](https://dongyaoliu.github.io/ggexon/reference/geom_protein_lollipop.md), [`geom_motif()`](https://dongyaoliu.github.io/ggexon/reference/geom_motif.md), [`geom_aa_variant()`](https://dongyaoliu.github.io/ggexon/reference/geom_aa_variant.md) | Protein residues or projected genomic bp |
-| Where are genomic variants recorded? | `SynVCFAnnotation` + [`query_variants()`](https://dongyaoliu.github.io/ggexon/reference/query_variants.md) | Exons + ordinary [`geom_vline()`](https://rdrr.io/pkg/ggplot2/man/geom_abline.html) | Genomic bp; track theme |
+| Where are genomic variants recorded? | `SynVCFAnnotation` + [`query_variants()`](https://dongyaoliu.github.io/ggexon/reference/query_variants.md) | Exons + ordinary [`geom_vline()`](https://ggplot2.tidyverse.org/reference/geom_abline.html) | Genomic bp; track theme |
 | Which bases differ in an existing alignment? | [`alignseq_data()`](https://dongyaoliu.github.io/ggexon/reference/alignseq_data.md) | [`geom_alignseq()`](https://dongyaoliu.github.io/ggexon/reference/geom_alignseq.md) | Anchored genomic coordinates; track theme |
 | Which comparison slots are occupied? | Gene-slot table | [`geom_genebox()`](https://dongyaoliu.github.io/ggexon/reference/geom_genebox.md) | [`strip_scale_x()`](https://dongyaoliu.github.io/ggexon/reference/strip_scale_x.md), facet labels; clean theme |
 | How do loci relate to a supplied tree? | Matching tracks and tree | [`geom_genomic_tree()`](https://dongyaoliu.github.io/ggexon/reference/geom_genomic_tree.md) | [`facet_genomictree()`](https://dongyaoliu.github.io/ggexon/reference/facet_genomictree.md); genomic-tree theme |
@@ -1571,8 +1768,8 @@ keeps ordinary axes and grids. Choose the track theme when y only
 positions annotations; retain a numeric y axis for quantitative
 summaries. Side-strip styling supplements a theme and must match the
 facet’s `strip.position`. Add ordinary
-[`theme()`](https://rdrr.io/pkg/ggplot2/man/theme.html) overrides after
-the complete theme.
+[`theme()`](https://ggplot2.tidyverse.org/reference/theme.html)
+overrides after the complete theme.
 
 Export a saved plot object with explicit dimensions and inspect the
 result. For example,

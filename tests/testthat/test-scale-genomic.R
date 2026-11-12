@@ -226,7 +226,7 @@ test_that("scale_x_ggexon_genomic can build a piecewise representative axis", {
   expect_equal(axis_data$region_type, c("exon", "intron"))
   expect_equal(axis_data$genomic_width, c(99, 900))
   expect_equal(axis_data$plot_width, c(99, 90))
-  expect_equal(axis_data$label, c("exon 99 bp", "intron 900 bp /10"))
+  expect_equal(axis_data$label, c("99 bp", "900 bp"))
 
   x_view <- built@layout$panel_params[[1L]]$x
   expect_equal(unname(x_view$get_breaks()), numeric())
@@ -267,6 +267,70 @@ test_that("piecewise genomic axis replaces bottom axis grobs", {
   axis_idx <- grep("^axis-b", table$layout$name)
 
   expect_true(any(vapply(table$grobs[axis_idx], inherits, logical(1), "ggexonGenomicPiecewiseAxisGrob")))
+
+  axis <- Filter(function(grob) inherits(grob, "ggexonGenomicPiecewiseAxisGrob"),
+    table$grobs[axis_idx])[[1L]]
+  drawn <- grid::grid.grabExpr(grid::drawDetails(axis))
+  bars <- Filter(function(grob) inherits(grob, "segments") && length(grob$y0) == 1L,
+    as.list(drawn$children))
+  labels <- Filter(function(grob) inherits(grob, "text"), as.list(drawn$children))
+  expect_length(bars, 2L)
+  expect_equal(as.numeric(bars[[1L]]$y0), as.numeric(bars[[2L]]$y0))
+  expect_equal(as.numeric(labels[[1L]]$y), as.numeric(labels[[2L]]$y))
+})
+
+test_that("piecewise linewidth controls bars and end ticks in millimetres", {
+  exon <- data.frame(xmin = c(1, 1000), xmax = c(100, 1100), ymin = 1,
+    track = "reference", transcripts = "tx", strand = "+", type = "exon", group = 1)
+  plot <- ggexon(exon, ggplot2::aes(xmin = xmin, xmax = xmax, ymin = ymin,
+    track = track, transcripts = transcripts, strand = strand, type = type, group = group)) +
+    geom_exon2(compress_introns = FALSE) +
+    scale_x_ggexon_genomic(guide = guide_x_ggexon_piecewise(by = "panel", linewidth = 0.7)) +
+    theme_ggexon_track() +
+    ggplot2::theme(axis.line.x = ggplot2::element_line(linewidth = 0.1),
+      axis.ticks.x = ggplot2::element_line(linewidth = 0.2))
+  table <- ggplot_gtable(ggexon_build(plot))
+  axis <- Filter(function(grob) inherits(grob, "ggexonGenomicPiecewiseAxisGrob"),
+    table$grobs)[[1L]]
+  drawn <- grid::grid.grabExpr(grid::drawDetails(axis))
+  lines <- Filter(function(grob) inherits(grob, "segments"), as.list(drawn$children))
+  expect_length(lines, 4L)
+  expect_equal(vapply(lines, function(grob) grob$gp$lwd, numeric(1)),
+    rep(0.7 * ggplot2::.pt, 4L), ignore_attr = TRUE)
+})
+
+test_that("piecewise labels use only base-pair lengths", {
+  expect_equal(ggexon_genomic_x_axis_label("exon", 1500, 1500), "1,500 bp")
+  expect_equal(ggexon_genomic_x_axis_label("intron", 1500, 150), "1,500 bp")
+})
+
+test_that("piecewise length labels do not overlap near the panel edge", {
+  data <- data.frame(plot_start = c(0, 1), plot_end = c(1, 1.1),
+    region_type = c("exon", "intron"), label = c("124 bp", "211 bp"),
+    axis_group_index = 1L, axis_group_count = 1L)
+  axis <- ggexon_genomic_piecewise_axis_grob(data, x_range = c(0, 100),
+    text_gp = grid::gpar(fontsize = 9))
+  drawn <- grid::grid.grabExpr(grid::drawDetails(axis), width = 7, height = 1)
+  labels <- Filter(function(grob) inherits(grob, "text"), as.list(drawn$children))
+  x <- vapply(labels, function(grob) as.numeric(grob$x), numeric(1))
+  grDevices::pdf(NULL, width = 7, height = 1)
+  widths <- tryCatch(
+    vapply(labels, function(grob) grid::convertWidth(grid::grobWidth(grob),
+      "npc", valueOnly = TRUE), numeric(1)),
+    finally = grDevices::dev.off()
+  )
+  expect_gt(x[[2L]] - widths[[2L]] / 2, x[[1L]] + widths[[1L]] / 2)
+  expect_gte(x[[1L]] - widths[[1L]] / 2, -1e-9)
+  expect_lte(x[[2L]] + widths[[2L]] / 2, 1 + 1e-9)
+})
+
+test_that("piecewise linewidth accepts theme defaults and non-negative finite values", {
+  expect_null(guide_x_ggexon_piecewise()$linewidth)
+  expect_identical(guide_x_ggexon_piecewise(linewidth = 0)$linewidth, 0)
+  for (value in list(-1, NA_real_, Inf, c(0.2, 0.3), "thick")) {
+    expect_error(guide_x_ggexon_piecewise(linewidth = value),
+      "`linewidth` must be one non-negative finite number.", fixed = TRUE)
+  }
 })
 
 test_that("guide_x_ggexon_piecewise can hide selected representative bars and labels", {

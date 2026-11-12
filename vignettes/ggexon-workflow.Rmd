@@ -238,6 +238,115 @@ p_exons
 The x distances are base pairs. The missing middle exon in `A_skip` comes
 from the input annotation; ggexon does not infer alternative splicing.
 
+## Compare the same annotation with other geoms
+
+The same `model` can support several views. Keep chromosome 1 and the same
+genomic window, then choose a geom according to the detail you want to show.
+
+### `geom_exon2()`: exon and intron structure
+
+`geom_exon2()` keeps the three transcript rows and draws introns as chevrons
+between exon blocks. Reuse the transcript colours from `p_exons`.
+`compress_introns = FALSE` preserves genomic distances for this comparison;
+the next example shows its schematic compression option.
+
+```{r workflow-geom-exon2, fig.bg = "white", fig.alt = "The same three synthetic transcripts drawn with geom_exon2: gene A has full and exon-skipping isoforms, gene B is on the minus strand, and chevron introns retain genomic spacing."}
+p_exon2 <- ggexon(model) +
+  geom_exon2(
+    aes(fill = transcript_id), chr = "chr1", subset = c(80, 1600),
+    compress_introns = FALSE, arrow_width = 12
+  ) +
+  scale_fill_manual(values = transcript_colours, name = "Transcript") +
+  scale_x_continuous(limits = c(80, 1600),
+                     breaks = c(100, 500, 900, 1300, 1600),
+                     labels = scales::label_number(big.mark = ",")) +
+  theme_ggexon_track(base_size = 10, show_legend = TRUE)
+p_exon2
+```
+
+#### A compact transcript schematic
+
+Long introns can dominate a transcript diagram and make exon structure hard
+to see. Use `compress_introns = TRUE` when you want a compact cartoon of exon
+order and exon skipping. Exon widths are retained, while `intron_width = 50`
+replaces each intron with a 50-unit schematic gap.
+
+```{r workflow-geom-exon2-schematic, fig.bg = "white", fig.alt = "The same three transcripts drawn as compact schematics with fixed-width intron gaps. The x axis and grid are hidden because the transcripts no longer share genomic spacing."}
+p_exon2_schematic <- ggexon(model) +
+  geom_exon2(
+    aes(fill = transcript_id), chr = "chr1", subset = c(80, 1600),
+    compress_introns = TRUE, intron_width = 50, arrow_width = 12
+  ) +
+  scale_fill_manual(values = transcript_colours, name = "Transcript") +
+  theme_ggexon_track(
+    base_size = 10, show_legend = TRUE,
+    show_x_axis = FALSE, show_x_grid = FALSE
+  )
+p_exon2_schematic
+```
+
+Each transcript is rearranged independently, so shared exons may no longer
+line up across isoforms. Hide the x axis and grid because these schematic
+positions do not represent shared genomic coordinates. The next section uses
+`scale_x_ggexon_genomic()` to compress introns while keeping transcripts and
+other genomic layers aligned.
+
+### `geom_genetag()`: whole-gene spans
+
+`geom_genetag()` draws one directional span per gene. Gene A's two isoforms
+therefore become one gene-level shape, and individual exons are no longer
+shown. Map fill to `gene_id` and use a gene palette for the two genes.
+Set `arrow_width = 50` to give both strand-direction triangles the same
+50-bp width, independent of gene length.
+Set `ylim` in `coord_cartesian()` to leave vertical space around the tags.
+
+```{r workflow-geom-genetag-fixed-arrow, fig.height = 2.8, fig.bg = "white", fig.alt = "Gene A and gene B drawn as whole-gene tags with equal 50-bp strand-direction triangles and vertical space around them. Gene A points right and gene B points left; their total widths retain the annotated gene spans."}
+gene_colours <- c(geneA = "#0072B2", geneB = "#009E73")
+p_gene_spans <- ggexon(model) +
+  geom_genetag(
+    aes(fill = gene_id), chr = "chr1", subset = c(80, 1600),
+    show_label = FALSE, arrow_width = 50
+  ) +
+  scale_fill_manual(values = gene_colours, name = "Gene") +
+  scale_x_continuous(limits = c(80, 1600),
+                     breaks = c(100, 500, 900, 1300, 1600),
+                     labels = scales::label_number(big.mark = ",")) +
+  coord_cartesian(ylim = c(-1, 2)) +
+  theme_ggexon_track(base_size = 10, show_legend = TRUE)
+p_gene_spans
+```
+
+### `geom_genebox()`: gene positions and strand
+
+`geom_genebox()` draws equal-size squares with internal strand arrows. Query
+the same model's gene rows and place each square at the midpoint of its
+annotated span. Using this table includes both genes, including gene B, which
+has no CDS records in the teaching annotation.
+
+Here `box_size = 120` sets a fixed display size, and `coord_fixed(ratio = 1)`
+keeps the boxes square. Their positions remain genomic coordinates; their
+widths do not represent gene lengths. The hidden y axis only positions the
+boxes.
+
+```{r workflow-geom-genebox, fig.height = 2.8, fig.bg = "white", fig.alt = "Equal-size blue and green squares at the annotated midpoints of gene A and gene B. Internal arrows indicate opposite strands, while the x axis retains genomic coordinates."}
+gene_rows <- as.data.frame(query_features(
+  model, chr = "chr1", start = 80, end = 1600, feature_type = "gene"
+))
+gene_rows$x <- (gene_rows$start + gene_rows$end) / 2
+gene_rows$y <- 0
+
+p_gene_boxes <- ggexon(gene_rows) +
+  geom_genebox(aes(x = x, y = y, strand = strand, fill = gene_id),
+               box_size = 120) +
+  scale_fill_manual(values = gene_colours, name = "Gene") +
+  scale_x_continuous(limits = c(80, 1600),
+                     breaks = c(100, 500, 900, 1300, 1600),
+                     labels = scales::label_number(big.mark = ",")) +
+  coord_fixed(ratio = 1, ylim = c(-120, 120)) +
+  theme_ggexon_track(base_size = 10, show_legend = TRUE)
+p_gene_boxes
+```
+
 # 2. Compress introns while retaining genomic labels
 
 Long introns can make exons too small to compare. A shared exon-aware scale
@@ -263,10 +372,11 @@ query_features(gene_a, feature_type = "exon", all = TRUE)
 
 ## Choose the geom, scales, and theme
 
-`geom_exon2()` draws explicit chevron introns. Disable its schematic
-compression so `scale_x_ggexon_genomic()` controls the transformation across
-the panel. A factor of 8 displays eligible gaps at one eighth of their
-genomic length while preserving exon widths.
+`geom_exon2()` draws explicit chevron introns. `scale_x_ggexon_genomic()`
+applies a shared transformation to the original genomic coordinates, taking
+precedence over the geom's schematic compression. A factor of 8 displays
+eligible gaps at one eighth of their genomic length while preserving exon
+widths.
 
 ```{r workflow-compressed-exons, fig.alt = "Two gene A transcripts with chevron introns compressed eightfold and original genomic tick labels."}
 p_compressed <- ggexon(gene_a) +
@@ -283,23 +393,26 @@ p_compressed
 Ticks report original genomic positions, but equal display distances across
 exons and introns no longer imply equal base-pair distances. A piecewise
 guide can show separate representative exon and intron scale bars.
+The solid exon bar and dashed intron bar share one horizontal baseline;
+labels show their original lengths in bp. Use `linewidth` to set the thickness
+of both bars and their end ticks in millimetres.
 
-```{r workflow-piecewise-guide, fig.alt = "The compressed gene A models with representative exon and intron scale bars."}
+```{r workflow-piecewise-guide-aligned, fig.alt = "The compressed gene A models with solid exon and dashed intron scale bars on one horizontal baseline, labeled only with their original lengths in bp."}
 ggexon(gene_a) +
   geom_exon2(
     aes(fill = transcript_id), chr = "chr1", compress_introns = FALSE,
     arrow_width = 12
   ) +
   scale_x_ggexon_genomic(
-    intron_factor = 8, guide = guide_x_ggexon_piecewise(by = "panel")
+    intron_factor = 8,
+    guide = guide_x_ggexon_piecewise(by = "panel", linewidth = 0.6)
   ) +
   scale_fill_manual(values = transcript_colours) +
   theme_ggexon_track(base_size = 10)
 ```
 
 With explicit CDS and UTR records, `geom_exon2(annotation_type = "all")`
-can distinguish their box heights. Its default `compress_introns = TRUE`
-offers another schematic view; choose one compression method deliberately.
+can distinguish their box heights.
 
 # 3. Gene spans and readable labels
 

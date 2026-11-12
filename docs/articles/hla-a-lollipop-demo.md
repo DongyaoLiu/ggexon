@@ -37,6 +37,7 @@ population frequencies.
 
 library(ggexon)
 library(ggplot2)
+#> Warning: package 'ggplot2' was built under R version 4.4.3
 
 demo_dir <- system.file("extdata", "hla_a_lollipop", package = "ggexon")
 source(file.path(demo_dir, "load-hla-a-example.R"), local = TRUE)
@@ -312,7 +313,7 @@ and last base. This makes a 73-base exon exactly 73 coordinate units
 wide and the first intron exactly 130, avoiding an off-by-one error from
 inclusive endpoints. Codon anchors retain their original genomic
 base-centre coordinates. The guide reports **73 bp** for the
-representative exon and **130 bp /3** for the intron.
+representative exon and **130 bp** for the intron.
 
 ## Reproduce and customize
 

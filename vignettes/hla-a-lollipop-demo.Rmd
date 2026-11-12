@@ -214,7 +214,7 @@ Rectangles run from `start - 0.5` to `end + 0.5`, the edges of the first and las
 base. This makes a 73-base exon exactly 73 coordinate units wide and the first
 intron exactly 130, avoiding an off-by-one error from inclusive endpoints.
 Codon anchors retain their original genomic base-centre coordinates. The guide
-reports **73 bp** for the representative exon and **130 bp /3** for the intron.
+reports **73 bp** for the representative exon and **130 bp** for the intron.
 
 # Reproduce and customize
 
