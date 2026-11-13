@@ -856,141 +856,211 @@ tags.
 resolves the alignment stored in `local_synteny` without inferring gene
 relationships. Neither layer needs a separately prepared plotting table.
 
-## 6. Raw BigWig coverage beside gene annotation
+## 6. RNA-seq coverage beside gene annotation
 
-Comparing a continuous signal with a gene model requires a shared
-genomic window and a separate quantitative y scale. Signal layers keep
-the raw measurements attached to the individual rather than mixing them
-into feature annotation rows.
+RNA-seq coverage and gene models share genomic coordinates but use
+different y scales. Here forward- and reverse-strand testis RNA-seq from
+*D. sechellia* occupy separate panels above the two gene models,
+*CG42797* and *Ptpmeg2*. Both signal annotations and the gene models
+belong to one individual in a `SynSpecies` object.
 
 ### Present the input
 
-The bundled PEEL-1 fixture contains raw depth BigWigs and a WS285 GTF
-subset. Here two strains share one chromosome-I window. Start by
-inspecting the GTF as text: its nine columns contain genomic coordinates
-and feature attributes. BigWig is binary, so inspect its records with a
-region query instead of a text reader. The BigWig backend runs on macOS
-and Linux, and is unsupported on Windows.
+Reuse the bundled GTF and forward- and reverse-strand BigWigs from the
+[local synteny
+tutorial](https://dongyaoliu.github.io/ggexon/articles/dox-synteny-demo.md).
+These files use chromosome-X coordinates on the *D. sechellia* assembly
+GCF_004382195.1. Keep the full tutorial window, with a one-base display
+margin, to include both genes. The GTF contains CDS and UTR pieces for
+the two mapped transcript models. The BigWig backend runs on macOS and
+Linux, and is unsupported on Windows.
 
 ``` r
 
-coverage_dir <- system.file("extdata", "peel1_coverage", package = "ggexon")
-coverage_gtf <- file.path(coverage_dir, "WS285.ugt31-zeel1-peel1-nekl1.gtf")
-coverage_strains <- c("XZ1516", "ECA2091")
-cat(readLines(coverage_gtf, n = 5), sep = "\n")
-#> #!genebuild-version WS285
-#> I    WormBase    gene    2333338 2338693 .   +   .   gene_id "WBGene00021464"; gene_version "1"; gene_source "WormBase"; gene_biotype "protein_coding"; gene_name "ugt-31";
-#> I    WormBase    transcript  2333338 2338693 .   +   .   gene_id "WBGene00021464"; gene_version "1"; transcript_id "Y39G10AR.6.1"; gene_source "WormBase"; gene_biotype "protein_coding"; transcript_source "WormBase"; transcript_biotype "protein_coding";
-#> I    WormBase    exon    2333338 2333485 .   +   .   gene_id "WBGene00021464"; gene_version "1"; transcript_id "Y39G10AR.6.1"; exon_number "1"; gene_source "WormBase"; gene_biotype "protein_coding"; transcript_source "WormBase"; transcript_biotype "protein_coding"; exon_id "Y39G10AR.6.1.e1";
-#> I    WormBase    CDS 2333342 2333485 .   +   0   gene_id "WBGene00021464"; gene_version "1"; transcript_id "Y39G10AR.6.1"; exon_number "1"; gene_source "WormBase"; gene_biotype "protein_coding"; transcript_source "WormBase"; transcript_biotype "protein_coding"; protein_id "Y39G10AR.6.1";
-
-first_signal <- SynBigWigAnnotation(
-  name = "coverage",
-  bigwig_file = file.path(coverage_dir, "XZ1516.raw.bw"),
-  metadata = list(signal_unit = "raw_depth")
-)
-head(as.data.frame(query_signal(
-  first_signal, chr = "I", start = 2332338L, end = 2373985L
-)))
-#>   seqnames   start     end width strand score
-#> 1        I 2332338 2332339     2      *    41
-#> 2        I 2332340 2332343     4      *    39
-#> 3        I 2332344 2332344     1      *    40
-#> 4        I 2332345 2332350     6      *    39
-#> 5        I 2332351 2332351     1      *    41
-#> 6        I 2332352 2332352     1      *    40
+rna_dir <- system.file("extdata", "dox_synteny", "objects", package = "ggexon")
+rna_gtf <- file.path(rna_dir, "Dsech.gtf")
+rna_plus_file <- file.path(rna_dir, "Dsech.RNAplus.bw")
+rna_minus_file <- file.path(rna_dir, "Dsech.RNAminus.bw")
+rna_window <- c(9396968L, 9444822L)
+cat(readLines(rna_gtf, n = 8), sep = "\n")
+#> ##gff-version 2
+#> ##source-version rtracklayer 1.66.0
+#> ##date 2026-10-27
+#> X    ggexon_curated_Dox_demo UTR 9396969 9397323 .   +   .   gene_id "Dsech_CG42797"; gene_name "CG42797"; transcript_id "Dsech_NM_132346.3"
+#> X    ggexon_curated_Dox_demo gene    9396969 9410256 .   +   .   gene_id "Dsech_CG42797"; gene_name "CG42797";
+#> X    ggexon_curated_Dox_demo transcript  9396969 9410256 .   +   .   gene_id "Dsech_CG42797"; gene_name "CG42797"; transcript_id "Dsech_NM_132346.3"
+#> X    ggexon_curated_Dox_demo CDS 9397324 9397422 .   +   .   gene_id "Dsech_CG42797"; gene_name "CG42797"; transcript_id "Dsech_NM_132346.3"
+#> X    ggexon_curated_Dox_demo CDS 9397483 9397637 .   +   .   gene_id "Dsech_CG42797"; gene_name "CG42797"; transcript_id "Dsech_NM_132346.3"
 ```
 
-[`query_signal()`](https://dongyaoliu.github.io/ggexon/reference/query_signal.md)
-returns intervals with a `score`, rather than requiring one row for
-every base. The imported table uses 1-based inclusive genomic
-coordinates. The metadata records the unit; it does not normalize the
-scores.
+The two BigWigs retain the deposited RNA-seq signal scores from testis
+biological replicate 1. They are not raw read counts. `RNA_plus`
+represents the forward transcript strand; `RNA_minus` stores the
+reverse-strand scores as positive values. *CG42797* is on the plus
+strand and *Ptpmeg2* is on the minus strand.
 
 ### Construct and inspect the objects
 
 ``` r
 
-coverage_species <- SynSpecies(name = "PEEL-1 coverage")
-for (strain in coverage_strains) {
-  one_strain <- SynIndividual(
-    annotation_file = coverage_gtf, annotation_format = "gtf", id = strain
-  )
-  one_strain <- add_annotation(one_strain, SynBigWigAnnotation(
-    name = "coverage",
-    bigwig_file = file.path(coverage_dir, paste0(strain, ".raw.bw")),
-    metadata = list(signal_unit = "raw_depth")
-  ))
-  coverage_species <- add_individual(coverage_species, one_strain)
-}
-individual_names(coverage_species)
-#> [1] "XZ1516"  "ECA2091"
+rna_individual <- SynIndividual(
+  id = "Dsech", annotation_file = rna_gtf, annotation_format = "gtf",
+  metadata = list(assembly = "GCF_004382195.1")
+)
+rna_individual <- add_annotation(rna_individual, SynBigWigAnnotation(
+  name = "RNA_plus", bigwig_file = rna_plus_file,
+  metadata = list(transcript_strand = "+", signal_unit = "deposited signal")
+))
+rna_individual <- add_annotation(rna_individual, SynBigWigAnnotation(
+  name = "RNA_minus", bigwig_file = rna_minus_file,
+  metadata = list(transcript_strand = "-", signal_unit = "deposited signal",
+                  score_handling = "positive reverse-strand scores")
+))
+rna_comparison <- add_individual(
+  SynSpecies(name = "D. sechellia testis RNASeq"), rna_individual
+)
+individual_names(rna_comparison)
+#> [1] "Dsech"
+
+head(as.data.frame(query_signal(
+  get_annotation(rna_individual, "RNA_minus"), chr = "X",
+  start = rna_window[1], end = rna_window[2]
+)))
+#>   seqnames   start     end width strand score
+#> 1        X 9398376 9398376     1      *  0.99
+#> 2        X 9398377 9398377     1      *  0.99
+#> 3        X 9398378 9398378     1      *  0.99
+#> 4        X 9398379 9398379     1      *  0.99
+#> 5        X 9398380 9398380     1      *  0.99
+#> 6        X 9398381 9398381     1      *  0.99
 ```
 
-Each individual owns a gene model and a named signal layer.
-[`geom_coverage()`](https://dongyaoliu.github.io/ggexon/reference/geom_coverage.md)
-resolves that layer for both strains; the exon request supplies their
-common viewing window and draws one representative gene model below the
-signals.
+[`query_signal()`](https://dongyaoliu.github.io/ggexon/reference/query_signal.md)
+inspects the stored signal as intervals with a `score`. The returned
+coordinates are 1-based inclusive. This inspection is separate from
+plotting: each geom below reads directly from `rna_comparison`.
+
+### Give each strand its own panel
+
+Store a three-row layout on the object. `track` names the panels; the
+`individual` and `species` columns connect each row to the stored *D.
+sechellia* individual. `RNASeq +` and `RNASeq -` are two coverage-panel
+aliases for that same individual. The gene annotation occupies the third
+panel, with the `Dsech` ID. All three rows share the same genomic
+window.
+
+``` r
+
+species_layout(rna_comparison) <- SynLayout(
+  panels = data.frame(
+    PANEL = 1:3, ROW = 1:3, COL = 1L,
+    track = c("RNASeq +", "RNASeq -", "Dsech"),
+    panel_type = c("coverage", "coverage", "annotation"),
+    individual = c("Dsech", "Dsech", NA_character_),
+    species = c(NA_character_, NA_character_, "Dsech"),
+    xlim_chr = "X", xlim_min = rna_window[1], xlim_max = rna_window[2]
+  ),
+  free = list(x = FALSE, y = TRUE)
+)
+```
 
 ### Choose the geom, scales, facet, and theme
 
+Select a panel alias with `species` in each
+[`geom_coverage()`](https://dongyaoliu.github.io/ggexon/reference/geom_coverage.md)
+layer and choose its stored BigWig with `annotation`. This routes the
+forward signal to `RNASeq +` and the reverse signal to `RNASeq -`, while
+both layers read from the same individual.
+`scale_panel_coverage("free_y")` gives each panel its own y-range and
+axis. Both signals retain their original scores.
+
 ``` r
 
-coverage_layers <- ggexon(coverage_species) +
-  geom_coverage(annotation = "coverage", fill = "#4C78A8") +
-  geom_exon(
-    species = "XZ1516", chr = "I", subset = c(2332338L, 2373985L),
-    annotation_type = "exon"
+rna_gene_colours <- c(CG42797 = "#0072B2", Ptpmeg2 = "#009E73")
+```
+
+`geom_exon2(annotation_type = "all")` draws thick CDS and thinner UTR
+pieces, with genomic intron lengths retained. Both annotation layers
+explicitly select `Dsech`. Gene models and coverage share an
+uncompressed genomic x-axis.
+
+``` r
+
+coverage_plot <- ggexon(rna_comparison) +
+  geom_coverage(
+    species = "RNASeq +", annotation = "RNA_plus", fill = "#0072B2", alpha = 0.8
   ) +
-  facet_genomics(vars(track), ncol = 1, strip.position = "left") +
-  center_panel_annotation() +
-  scale_x_continuous(labels = scales::label_comma(), oob = scales::oob_keep) +
-  labs(x = "Chromosome I position (bp)") +
-  theme_ggexon_track(base_size = 10) +
+  geom_coverage(
+    species = "RNASeq -", annotation = "RNA_minus", fill = "#009E73", alpha = 0.8
+  ) +
+  geom_exon2(
+    aes(ymin = 1, fill = gene_name, colour = gene_name),
+    species = "Dsech", chr = "X", subset = rna_window, annotation_type = "all",
+    exon_height = 0.45, cds_height = 1, utr_height = 0.45,
+    compress_introns = FALSE, arrow_width = 450, linewidth = 0.2,
+    show.legend = FALSE
+  ) +
+  geom_genelabel(
+    aes(ymin = 1, colour = gene_name), species = "Dsech", chr = "X",
+    subset = rna_window, exon_height = 0.45, label_direction = "bottom",
+    label_offset_fraction = 0.12,
+    fontface = "italic", size = 3, show_link = FALSE, show.legend = FALSE
+  ) +
+  facet_genomics(vars(track), ncol = 1, strip.position = "left",
+                 coverage_panel_height = 1 / 3,
+                 labeller = as_labeller(c("RNASeq +" = "RNASeq +",
+                                          "RNASeq -" = "RNASeq -",
+                                          Dsech = "D. sechellia"))) +
+  scale_panel_annotation("free_y", limits = list(Dsech = c(0.84, 1.48))) +
+  scale_panel_coverage("free_y") +
+  scale_fill_manual(values = rna_gene_colours, guide = "none") +
+  scale_colour_manual(values = rna_gene_colours, guide = "none") +
+  scale_x_continuous(limits = rna_window,
+                     breaks = seq(9400000, 9440000, by = 10000),
+                     labels = scales::label_number(scale = 1e-6, suffix = " Mb",
+                                                    accuracy = 0.01),
+                     oob = scales::oob_keep) +
+  scale_y_continuous(
+    name = "RNASeq signal", breaks = seq(0, 150, by = 25),
+    guide = guide_axis(check.overlap = TRUE),
+    expand = expansion(mult = c(0, 0.08))
+  ) +
+  labs(x = "Chromosome X position") +
+  theme_ggexon_track(base_size = 10, show_y_axis = TRUE,
+                     show_x_grid = FALSE) +
   theme_ggexon_side_strips("left", base_size = 10) +
-  theme(axis.title.x = element_text())
-coverage_plot <- coverage_layers + scale_panel_coverage("fixed_y")
+  theme(axis.title.x = element_text(), axis.title.y = element_text(),
+        panel.spacing.y = grid::unit(6, "pt"))
 coverage_plot
 ```
 
-![Raw coverage from two C. elegans strains above a shared four-gene
-annotation, with one shared depth
-scale.](ggexon-workflow_files/figure-html/workflow-coverage-plot-1.png)
+![A compact stack of three aligned D. sechellia panels. RNASeq + is blue
+and RNASeq - is green, each with its own y-axis and unmodified scores.
+The CG42797 and Ptpmeg2 models sit directly beneath the RNASeq tracks,
+with little vertical padding and italic names below their gene bodies.
+Each RNASeq panel is one-third the annotation panel's
+height.](ggexon-workflow_files/figure-html/workflow-coverage-dsech-tight-annotation-1.png)
 
-The explicit `fixed_y` policy makes equal vertical heights comparable
-across coverage panels.
-[`center_panel_annotation()`](https://dongyaoliu.github.io/ggexon/reference/center_panel_annotation.md)
-adjusts the separate annotation panel’s view. The track theme hides y
-labels used for annotation layout, while the side strip helper turns
-strain labels into readable horizontal text. This view compares signal
-shape and shared heights; inspect the queried `score` values for exact
-depths because y tick labels are hidden. The large ECA2091 peak sets the
-shared depth range, making the other signal look low. `oob_keep` retains
-boundary intervals for clipping at the panel edge.
+The panel labels identify the strands, so a separate legend is
+unnecessary. There is no magnification or secondary-axis transformation.
+Because the coverage panels have independent y-ranges, equal heights in
+the two panels need not represent equal signal values; read each panel’s
+own tick labels.
 
-Replace the coverage policy with `scale_panel_coverage("free_y")` to
-inspect each strain on its own depth range; equal heights then need not
-mean equal depth. Adding `auto = TRUE` places each panel’s span-weighted
-median at 85% of its height and clips higher peaks in the view. Neither
-option changes raw scores. Keep a linear genomic x axis: exon/intron
-compression through
-[`scale_x_ggexon_genomic()`](https://dongyaoliu.github.io/ggexon/reference/scale_x_ggexon_genomic.md)
-is unsupported for continuous coverage tracks.
+`show_y_axis = TRUE` keeps the signal ticks. The annotation y-range
+closely brackets the gene bodies and their labels below, bringing the
+models close to the RNASeq tracks. A small panel gap keeps adjacent axis
+labels readable. `coverage_panel_height = 1 / 3` makes each RNASeq panel
+one-third as tall as the annotation panel, giving the three panels a
+height ratio of **1:1:3**. `oob_keep` retains boundary intervals for
+clipping at the genomic window’s edge.
 
-``` r
-
-coverage_layers + scale_panel_coverage("free_y", auto = TRUE)
-```
-
-![The same raw coverage signals on separate y ranges, with each median
-depth at 85 percent of panel height and higher peaks
-clipped.](ggexon-workflow_files/figure-html/workflow-coverage-free-1.png)
-
-This second view reveals local signal structure in each strain. The peak
-clipping and independent y ranges mean its panel heights cannot be
-compared as absolute depths. Fixture provenance is recorded in the
-bundled `extdata/peel1_coverage/manifest.tsv`.
+Use `scale_panel_coverage("fixed_y")` instead if you want all coverage
+panels to share one signal range, so equal heights represent equal
+values. This example retains a linear genomic x-axis to align RNASeq and
+annotation. The [Dox
+tutorial](https://dongyaoliu.github.io/ggexon/articles/dox-synteny-demo.html#data-provenance-and-interpretation)
+describes the source library, deposited signals, and coverage checks.
 
 ## 7. Protein mutation counts and domains
 
