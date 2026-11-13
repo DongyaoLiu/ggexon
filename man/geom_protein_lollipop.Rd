@@ -5,7 +5,7 @@
 \title{Draw lollipop annotations on a protein-coordinate track}
 \usage{
 geom_protein_lollipop(
-  mutations,
+  mutations = NULL,
   domains = NULL,
   protein_length = NULL,
   position = "position",
@@ -41,18 +41,31 @@ geom_protein_lollipop(
   stem_linewidth = 0.4,
   point_size = 4,
   point_colour = "black",
-  show.legend = NA
+  show.legend = NA,
+  data = NULL,
+  annotation = NULL,
+  domain_annotation = NULL,
+  individual = NULL,
+  species = NULL,
+  genes = NULL,
+  ids = NULL,
+  event_type = NULL,
+  min_sample_count = NULL,
+  strains = NULL,
+  mutation = NULL
 )
 }
 \arguments{
-\item{mutations}{A data frame with one row per mutation.}
+\item{mutations}{Optional mutation table or Syn object. Omit to inherit
+the plot's Syn object.}
 
 \item{domains}{Optional interval table, \code{S4Vectors::DataFrame}, or
 \code{SynProteinDomainAnnotation} object. Intervals must use the same coordinate
 system as \code{mutations}.}
 
-\item{protein_length}{Optional track length. When \code{NULL}, the maximum
-mutation position/domain end is used.}
+\item{protein_length}{Optional full protein length. For Syn input, omitted
+values are resolved from stored lengths or a matching protein sequence.
+For explicit tables, the maximum mutation position/domain end is used.}
 
 \item{position}{Column in \code{mutations} containing mutation positions.}
 
@@ -120,13 +133,46 @@ only when \code{score} is \code{NULL}; otherwise point colour is mapped to
 \code{lollipop_score}.}
 
 \item{show.legend}{Passed to generated ggplot2 layers.}
+
+\item{data}{Optional layer data, an alternative to \code{mutations}.}
+
+\item{annotation}{Name of an attached \code{SynProteinMutationAnnotation}.
+Defaults to the first mutation annotation.}
+
+\item{domain_annotation}{Name of an attached \code{SynProteinDomainAnnotation}.
+Defaults to the first domain annotation, if available.}
+
+\item{individual, species}{Individual selector for \code{SynSpecies}; \code{species}
+is an alias consistent with other Syn-aware geoms.}
+
+\item{genes, event_type, min_sample_count, strains, mutation}{Mutation filters
+passed to \code{\link[=query_protein_mutations]{query_protein_mutations()}}. Filters on counts or events do not
+truncate the selected protein's backbone or domains.}
+
+\item{ids}{Protein, transcript, or gene identifiers matching the mutation
+annotation's \code{keytype}. Use to distinguish isoforms of the same gene.}
 }
 \value{
 A list of ggplot2 layers.
 }
 \description{
-This helper returns a list of ggplot2 layers: backbone, optional domains,
-curved stems, and mutation heads. It is designed for protein tracks
-but only assumes that mutations and domains share the same linear coordinate
-system.
+Draw a backbone, optional domains, curved stems, and mutation heads. With
+\code{ggexon(SynIndividual)} or \code{ggexon(SynSpecies)}, each component resolves its
+data from attached protein annotations during plot build. Coordinates stay
+in amino-acid units; no genomic projection is performed.
+}
+\details{
+Select one protein per individual using \code{genes} or \code{ids}. Domain records
+are matched through their annotation's \code{keytype}; when it differs from the
+mutation key, that identifier column must also be present in the mutation
+records. Use \code{\link[=map_domain_ids]{map_domain_ids()}} to reconcile identifiers when necessary.
+
+For Syn input, the full length comes from \code{protein_length}, a stored
+\code{protein_length} column, or one matching sequence in \code{\link[=protein_seq]{protein_seq()}}. A
+terminal stop character is excluded from sequence length. A missing full
+length is an error rather than an inference from the last mutation.
+
+Explicit mutation/domain tables remain supported, including their existing
+length inference. \code{\link[=protein_lollipop_data]{protein_lollipop_data()}} is available for inspecting
+layout tables but is not required before plotting a Syn object.
 }

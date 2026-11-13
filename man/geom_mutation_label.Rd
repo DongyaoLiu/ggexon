@@ -15,6 +15,7 @@ geom_mutation_label(
   individual = NULL,
   species = NULL,
   genes = NULL,
+  ids = NULL,
   event_type = NULL,
   min_sample_count = NULL,
   strains = NULL,
@@ -53,6 +54,9 @@ ggplot2 layer arguments.}
 
 \item{genes, event_type, min_sample_count, strains, mutation}{Optional filters
 passed to \code{query_protein_mutations()}.}
+
+\item{ids}{Optional identifiers matching the mutation annotation's \code{keytype}.
+Use the same selector as \code{geom_protein_lollipop()} to label one isoform.}
 
 \item{mutation_position}{Column containing mutation coordinates.}
 

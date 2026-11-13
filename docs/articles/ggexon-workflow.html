@@ -1674,12 +1674,12 @@ coverage checks.</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="protein-mutation-counts-and-domains">7. Protein mutation counts and domains<a class="anchor" aria-label="anchor" href="#protein-mutation-counts-and-domains"></a>
+<h2 id="place-protein-mutation-labels-on-genomic-gene-models">7. Place protein mutation labels on genomic gene models<a class="anchor" aria-label="anchor" href="#place-protein-mutation-labels-on-genomic-gene-models"></a>
 </h2>
-<p>A protein summary removes introns from the view and places mutation
-counts next to functional regions. This helps compare residues across a
-protein without treating their genomic distances as protein
-distances.</p>
+<p>Plot amino-acid substitutions along a protein to see where they fall
+within protein domains. Lollipop heights show the number of samples
+carrying each substitution. We first summarize substitutions in protein
+coordinates, then place their labels on genomic gene models.</p>
 <div class="section level3">
 <h3 id="present-the-input-6">Present the input<a class="anchor" aria-label="anchor" href="#present-the-input-6"></a>
 </h3>
@@ -1696,6 +1696,7 @@ each mutation.</p>
 <span>  sample_count <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2L</span>, <span class="fl">5L</span>, <span class="fl">12L</span>, <span class="fl">20L</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">protein_domains</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  gene_id <span class="op">=</span> <span class="st">"demo-protein"</span>, protein_length <span class="op">=</span> <span class="fl">160L</span>,</span>
 <span>  start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10L</span>, <span class="fl">85L</span><span class="op">)</span>, end <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">60L</span>, <span class="fl">145L</span><span class="op">)</span>,</span>
 <span>  Domain <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Binding"</span>, <span class="st">"Catalytic"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
@@ -1706,92 +1707,113 @@ each mutation.</p>
 <span><span class="co">#&gt; 3 demo-protein substitution                    G#88#D           12</span></span>
 <span><span class="co">#&gt; 4 demo-protein substitution                   S#140#F           20</span></span>
 <span><span class="va">protein_domains</span></span>
-<span><span class="co">#&gt;   start end    Domain</span></span>
-<span><span class="co">#&gt; 1    10  60   Binding</span></span>
-<span><span class="co">#&gt; 2    85 145 Catalytic</span></span></code></pre></div>
-<p>The reader bridges a raw count file and the normalized mutation table
-expected by the annotation object. It adds <code>gene_id</code>,
-<code>position</code>, <code>ref</code>, <code>alt</code>,
-<code>mutation</code>, and <code>source_row_id</code>. Passing
-<code>mutation_data</code> to the constructor stores this already
-normalized table; the constructor does not parse it again.</p>
+<span><span class="co">#&gt;        gene_id protein_length start end    Domain</span></span>
+<span><span class="co">#&gt; 1 demo-protein            160    10  60   Binding</span></span>
+<span><span class="co">#&gt; 2 demo-protein            160    85 145 Catalytic</span></span></code></pre></div>
+<p>The mutation reader normalizes <code>gene</code> to
+<code>gene_id</code>, matching the domain table’s key.
+<code>protein_length</code> records the full 160-residue protein; the
+last mutation at residue 140 does not define its end. Protein
+coordinates here are one-based amino-acid positions.</p>
 </div>
 <div class="section level3">
 <h3 id="construct-and-inspect-the-object-1">Construct and inspect the object<a class="anchor" aria-label="anchor" href="#construct-and-inspect-the-object-1"></a>
 </h3>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mutation_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".tsv"</span><span class="op">)</span></span>
+<span><span class="va">domain_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".tsv"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.table</a></span><span class="op">(</span><span class="va">raw_mutations</span>, <span class="va">mutation_file</span>, sep <span class="op">=</span> <span class="st">"\t"</span>, quote <span class="op">=</span> <span class="cn">FALSE</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="va">normalized_mutations</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_protein_mutation_counts.html">read_protein_mutation_counts</a></span><span class="op">(</span><span class="va">mutation_file</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.table</a></span><span class="op">(</span><span class="va">protein_domains</span>, <span class="va">domain_file</span>, sep <span class="op">=</span> <span class="st">"\t"</span>, quote <span class="op">=</span> <span class="cn">FALSE</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="va">protein_individual</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_annotation.html">add_annotation</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="../reference/SynIndividual.html">SynIndividual</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"synthetic-cohort"</span><span class="op">)</span>,</span>
 <span>  <span class="fu"><a href="../reference/SynProteinMutationAnnotation.html">SynProteinMutationAnnotation</a></span><span class="op">(</span></span>
-<span>    name <span class="op">=</span> <span class="st">"mutation_counts"</span>, mutation_file <span class="op">=</span> <span class="va">mutation_file</span>,</span>
-<span>    mutation_data <span class="op">=</span> <span class="va">normalized_mutations</span></span>
+<span>    name <span class="op">=</span> <span class="st">"mutation_counts"</span>, mutation_file <span class="op">=</span> <span class="va">mutation_file</span>, keytype <span class="op">=</span> <span class="st">"gene_id"</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="va">protein_mutations</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/query_protein_mutations.html">query_protein_mutations</a></span><span class="op">(</span></span>
+<span><span class="va">protein_individual</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_annotation.html">add_annotation</a></span><span class="op">(</span><span class="va">protein_individual</span>, <span class="fu"><a href="../reference/SynProteinDomainAnnotation.html">SynProteinDomainAnnotation</a></span><span class="op">(</span></span>
+<span>  name <span class="op">=</span> <span class="st">"protein_domains"</span>, domain_file <span class="op">=</span> <span class="va">domain_file</span>, keytype <span class="op">=</span> <span class="st">"gene_id"</span></span>
+<span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">protein_individual</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "SynIndividual"</span></span>
+<span><span class="co">#&gt; attr(,"package")</span></span>
+<span><span class="co">#&gt; [1] "ggexon"</span></span>
+<span><span class="fu"><a href="../reference/query_protein_mutations.html">query_protein_mutations</a></span><span class="op">(</span></span>
 <span>  <span class="va">protein_individual</span>, annotation <span class="op">=</span> <span class="st">"mutation_counts"</span>, genes <span class="op">=</span> <span class="st">"demo-protein"</span></span>
-<span><span class="op">)</span></span>
-<span><span class="va">protein_mutations</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gene_id"</span>, <span class="st">"position"</span>, <span class="st">"ref"</span>, <span class="st">"alt"</span>, <span class="st">"mutation"</span>, <span class="st">"sample_count"</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="op">)</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"gene_id"</span>, <span class="st">"position"</span>, <span class="st">"ref"</span>, <span class="st">"alt"</span>, <span class="st">"mutation"</span>, <span class="st">"sample_count"</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="co">#&gt;        gene_id position ref alt mutation sample_count</span></span>
 <span><span class="co">#&gt; 1 demo-protein       18   A   V     A18V            2</span></span>
 <span><span class="co">#&gt; 2 demo-protein       42   K   R     K42R            5</span></span>
 <span><span class="co">#&gt; 3 demo-protein       88   G   D     G88D           12</span></span>
 <span><span class="co">#&gt; 4 demo-protein      140   S   F    S140F           20</span></span></code></pre></div>
-<p><code><a href="../reference/geom_protein_lollipop.html">geom_protein_lollipop()</a></code> takes ordinary mutation and
-domain tables, so query the attached annotation first. Inspect its
-preparation helper to see how positions become backbone, domain, stem,
-and head data. With the identity transform and the target range equal to
-the observed count range, the helper keeps head heights equal to sample
-counts for these data.</p>
+<p>The object owns both annotations. Loading is deferred until
+inspection or plotting; mutation queries parse hash notation such as
+<code>A#18#V</code> into a position, reference residue, alternate
+residue, and label. The query above inspects the input. Neither plotting
+layer below needs its returned table.</p>
 </div>
 <div class="section level3">
 <h3 id="choose-the-geom-scales-and-theme-3">Choose the geom, scales, and theme<a class="anchor" aria-label="anchor" href="#choose-the-geom-scales-and-theme-3"></a>
 </h3>
+<p>At plot build, <code><a href="../reference/geom_protein_lollipop.html">geom_protein_lollipop()</a></code> reads
+<code>mutation_counts</code>, selects <code>demo-protein</code>, matches
+its domains in <code>protein_domains</code>, and prepares the backbone,
+stems, and heads. The stored protein length sets the backbone end. Here
+the target height range equals the input count range, so the identity
+transform preserves the observed sample counts as head heights.</p>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">count_range</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">protein_mutations</span><span class="op">$</span><span class="va">sample_count</span><span class="op">)</span></span>
-<span><span class="va">prepared_protein</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/protein_lollipop_data.html">protein_lollipop_data</a></span><span class="op">(</span></span>
-<span>  mutations <span class="op">=</span> <span class="va">protein_mutations</span>, domains <span class="op">=</span> <span class="va">protein_domains</span>, protein_length <span class="op">=</span> <span class="fl">160</span>,</span>
-<span>  mutation_y_by <span class="op">=</span> <span class="st">"sample_count"</span>, mutation_y_range <span class="op">=</span> <span class="va">count_range</span>,</span>
-<span>  track_ymin <span class="op">=</span> <span class="op">-</span><span class="fl">1.5</span>, track_ymax <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>,</span>
-<span>  domain_default_ymin <span class="op">=</span> <span class="op">-</span><span class="fl">1.8</span>, domain_default_ymax <span class="op">=</span> <span class="op">-</span><span class="fl">0.7</span></span>
-<span><span class="op">)</span></span>
-<span><span class="va">prepared_protein</span><span class="op">$</span><span class="va">mutations</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"position"</span>, <span class="st">"lollipop_x"</span>, <span class="st">"lollipop_y"</span>, <span class="st">"lollipop_domain"</span><span class="op">)</span><span class="op">]</span></span>
-<span><span class="co">#&gt;   position lollipop_x lollipop_y lollipop_domain</span></span>
-<span><span class="co">#&gt; 1       18         18          2         Binding</span></span>
-<span><span class="co">#&gt; 2       42         42          5         Binding</span></span>
-<span><span class="co">#&gt; 3       88         88         12       Catalytic</span></span>
-<span><span class="co">#&gt; 4      140        140         20       Catalytic</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">count_range</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">raw_mutations</span><span class="op">$</span><span class="va">sample_count</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">protein_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<code class="sourceCode R"><span><span class="va">protein_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">protein_individual</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_protein_lollipop.html">geom_protein_lollipop</a></span><span class="op">(</span></span>
-<span>    mutations <span class="op">=</span> <span class="va">protein_mutations</span>, domains <span class="op">=</span> <span class="va">protein_domains</span>, protein_length <span class="op">=</span> <span class="fl">160</span>,</span>
+<span>    annotation <span class="op">=</span> <span class="st">"mutation_counts"</span>, domain_annotation <span class="op">=</span> <span class="st">"protein_domains"</span>,</span>
+<span>    genes <span class="op">=</span> <span class="st">"demo-protein"</span>,</span>
 <span>    mutation_y_by <span class="op">=</span> <span class="st">"sample_count"</span>, mutation_y_range <span class="op">=</span> <span class="va">count_range</span>,</span>
-<span>    track_ymin <span class="op">=</span> <span class="op">-</span><span class="fl">1.5</span>, track_ymax <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>,</span>
-<span>    domain_default_ymin <span class="op">=</span> <span class="op">-</span><span class="fl">1.8</span>, domain_default_ymax <span class="op">=</span> <span class="op">-</span><span class="fl">0.7</span>,</span>
+<span>    track_ymin <span class="op">=</span> <span class="fl">0.60</span>, track_ymax <span class="op">=</span> <span class="fl">0.68</span>,</span>
+<span>    domain_default_ymin <span class="op">=</span> <span class="fl">0.55</span>, domain_default_ymax <span class="op">=</span> <span class="fl">0.75</span>,</span>
+<span>    stem_linewidth <span class="op">=</span> <span class="fl">0.9</span>,</span>
 <span>    point_colour <span class="op">=</span> <span class="st">"#222222"</span>, point_size <span class="op">=</span> <span class="fl">2.5</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_mutation_label.html">geom_mutation_label</a></span><span class="op">(</span></span>
-<span>    mutations <span class="op">=</span> <span class="va">protein_mutations</span>, mutation_y_by <span class="op">=</span> <span class="st">"sample_count"</span>,</span>
-<span>    mutation_y_range <span class="op">=</span> <span class="va">count_range</span>, label_nudge_y <span class="op">=</span> <span class="fl">0.8</span>,</span>
-<span>    angle <span class="op">=</span> <span class="fl">0</span>, vjust <span class="op">=</span> <span class="fl">0</span>, size <span class="op">=</span> <span class="fl">3</span></span>
+<span>    annotation <span class="op">=</span> <span class="st">"mutation_counts"</span>, genes <span class="op">=</span> <span class="st">"demo-protein"</span>,</span>
+<span>    mutation_y_by <span class="op">=</span> <span class="st">"sample_count"</span>,</span>
+<span>    mutation_y_range <span class="op">=</span> <span class="va">count_range</span>, label_nudge_y <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>    angle <span class="op">=</span> <span class="fl">0</span>, vjust <span class="op">=</span> <span class="op">-</span><span class="fl">0.6</span>, size <span class="op">=</span> <span class="fl">3</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>Binding <span class="op">=</span> <span class="st">"#0072B2"</span>, Catalytic <span class="op">=</span> <span class="st">"#E69F00"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">160</span>, <span class="fl">40</span><span class="op">)</span>, limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">160</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span>, <span class="fl">10</span>, <span class="fl">15</span>, <span class="fl">20</span><span class="op">)</span>, limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span>, <span class="fl">23</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Amino-acid position"</span>, y <span class="op">=</span> <span class="st">"Samples with mutation"</span>, fill <span class="op">=</span> <span class="st">"Domain"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_log10</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">5</span>, <span class="fl">10</span>, <span class="fl">20</span><span class="op">)</span>, limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.4</span>, <span class="fl">28</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Amino-acid position"</span>, y <span class="op">=</span> <span class="st">"Samples with mutation (log10 scale)"</span>,</span>
+<span>       fill <span class="op">=</span> <span class="st">"Domain"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/theme_ggexon_track.html">theme_ggexon_track</a></span><span class="op">(</span>base_size <span class="op">=</span> <span class="fl">10</span>, show_y_axis <span class="op">=</span> <span class="cn">TRUE</span>, show_legend <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">protein_plot</span></span></code></pre></div>
-<p><img src="ggexon-workflow_files/figure-html/workflow-protein-plot-1.png" class="r-plt" alt="Synthetic protein domains with four mutation lollipops whose heights show sample counts of two, five, twelve, and twenty." width="1440"></p>
-<p>The label layer repeats the head-height settings so each label
-follows its mutation. Domain blocks sit below zero; the labeled y ticks
-refer to sample counts. Keeping <code>show_y_axis = TRUE</code> matters
-here because y carries a measured quantity. With the default lollipop
-height range, heights would be rescaled layout positions and should not
-be labeled as raw counts. No genomic x scale or facet is needed for this
-single protein-coordinate track.</p>
+<p><img src="ggexon-workflow_files/figure-html/workflow-protein-plot-1.png" class="r-plt" alt="Synthetic protein domains with thicker grey stems and four mutation lollipops showing sample counts of two, five, twelve, and twenty on a logarithmic y-axis." width="1440"></p>
+<p>The label layer selects the same annotation and gene, and repeats the
+head-height settings so each label follows its mutation.
+<code><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_log10()</a></code> changes the axis spacing while keeping tick
+labels in sample counts. The backbone and domains sit below count 1 at
+positive layout coordinates; their vertical positions do not encode
+counts. A log scale requires positive values.
+<code>label_nudge_y = 0</code> anchors labels at their heads, and
+<code>vjust = -0.6</code> keeps the text above them.
+<code>stem_linewidth = 0.9</code> thickens the grey stems. Keeping
+<code>show_y_axis = TRUE</code> matters here because y carries a
+measured quantity. With the default lollipop height range, heights would
+be rescaled layout positions and should not be labeled as raw counts. No
+genomic x scale or facet is needed for this single protein-coordinate
+track.</p>
+<p>For transcript- or protein-specific records, set the annotations’
+<code>keytype</code> to <code>"transcript_id"</code> or
+<code>"protein_id"</code> and give both geoms the same <code>ids</code>
+selector. Select one protein per individual; multiple proteins have
+separate coordinate systems. A <code>SynSpecies</code> can hold several
+individuals, selected with <code>species</code> and displayed with
+<code>facet_genomics(vars(track))</code>.</p>
+<p>When a domain table does not contain <code>protein_length</code>, the
+geom can use one matching sequence stored in <code><a href="../reference/protein_seq.html">protein_seq()</a></code>,
+excluding a terminal stop character. Otherwise supply
+<code>protein_length</code> explicitly. It does not estimate the full
+length from the last observed mutation.</p>
 </div>
 <div class="section level3">
 <h3 id="project-protein-features-onto-the-genomic-model">Project protein features onto the genomic model<a class="anchor" aria-label="anchor" href="#project-protein-features-onto-the-genomic-model"></a>
@@ -1844,11 +1866,12 @@ phases are zero.</p>
 </table>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">domain_input</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
-<span>  transcript_id <span class="op">=</span> <span class="st">"A_full"</span>, domain <span class="op">=</span> <span class="st">"Teaching domain"</span>,</span>
+<span>  transcript_id <span class="op">=</span> <span class="st">"A_full"</span>, domain <span class="op">=</span> <span class="st">"Domain"</span>,</span>
 <span>  start <span class="op">=</span> <span class="fl">15L</span>, end <span class="op">=</span> <span class="fl">30L</span>, analysis <span class="op">=</span> <span class="st">"Pfam"</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">mutation_input</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
-<span>  gene_id <span class="op">=</span> <span class="st">"geneA"</span>, position <span class="op">=</span> <span class="fl">25L</span>, ref <span class="op">=</span> <span class="st">"A"</span>, alt <span class="op">=</span> <span class="st">"V"</span>,</span>
+<span>  gene_id <span class="op">=</span> <span class="st">"geneA"</span>, transcript_id <span class="op">=</span> <span class="st">"A_full"</span>,</span>
+<span>  position <span class="op">=</span> <span class="fl">25L</span>, ref <span class="op">=</span> <span class="st">"A"</span>, alt <span class="op">=</span> <span class="st">"V"</span>,</span>
 <span>  sample_count <span class="op">=</span> <span class="fl">4L</span>, mutation <span class="op">=</span> <span class="st">"A25V"</span>, source_row_id <span class="op">=</span> <span class="fl">1L</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">domain_input</span><span class="op">)</span></span></code></pre></div>
@@ -1862,7 +1885,7 @@ phases are zero.</p>
 </tr></thead>
 <tbody><tr class="odd">
 <td align="left">A_full</td>
-<td align="left">Teaching domain</td>
+<td align="left">Domain</td>
 <td align="right">15</td>
 <td align="right">30</td>
 <td align="left">Pfam</td>
@@ -1871,8 +1894,19 @@ phases are zero.</p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">mutation_input</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
+<colgroup>
+<col width="10%">
+<col width="18%">
+<col width="12%">
+<col width="5%">
+<col width="5%">
+<col width="17%">
+<col width="12%">
+<col width="18%">
+</colgroup>
 <thead><tr class="header">
 <th align="left">gene_id</th>
+<th align="left">transcript_id</th>
 <th align="right">position</th>
 <th align="left">ref</th>
 <th align="left">alt</th>
@@ -1882,6 +1916,7 @@ phases are zero.</p>
 </tr></thead>
 <tbody><tr class="odd">
 <td align="left">geneA</td>
+<td align="left">A_full</td>
 <td align="right">25</td>
 <td align="left">A</td>
 <td align="left">V</td>
@@ -1892,9 +1927,9 @@ phases are zero.</p>
 </table>
 <p>Domain bounds and mutation positions above are one-based
 <strong>amino-acid</strong> coordinates. The mutation table is already
-normalized; <code>source_row_id</code> records its input row. It
-describes one synthetic gene-level mutation, which will be projected
-separately onto each matching isoform.</p>
+normalized; <code>source_row_id</code> records its input row. The
+mutation belongs to <code>A_full</code>: A25V describes residue 25 of
+that transcript’s protein, not residue 25 of every isoform.</p>
 </div>
 <div class="section level4">
 <h4 id="construct-the-sequence-and-annotation-objects">Construct the sequence and annotation objects<a class="anchor" aria-label="anchor" href="#construct-the-sequence-and-annotation-objects"></a>
@@ -1954,8 +1989,9 @@ for <code>A_skip</code>, including a terminal <code>*</code>.</p>
 </tr>
 </tbody>
 </table>
-<p>Attach domains using an explicit transcript key, and store the
-normalized mutation table in memory. The <code>analysis</code> column
+<p>Attach both annotations with <code>keytype = "transcript_id"</code>,
+and store the normalized mutation table in memory. This restricts the
+mutation to its own transcript. The <code>analysis</code> column
 identifies the domain model; <code>model = "Pfam"</code> selects its
 records during projection.</p>
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
@@ -1968,7 +2004,7 @@ records during projection.</p>
 <span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">sequence_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_annotation.html">add_annotation</a></span><span class="op">(</span><span class="va">sequence_model</span>, <span class="fu"><a href="../reference/SynProteinMutationAnnotation.html">SynProteinMutationAnnotation</a></span><span class="op">(</span></span>
 <span>  name <span class="op">=</span> <span class="st">"teaching_mutations"</span>, mutation_file <span class="op">=</span> <span class="st">"&lt;in-memory&gt;"</span>,</span>
-<span>  keytype <span class="op">=</span> <span class="st">"gene_id"</span>, mutation_data <span class="op">=</span> <span class="va">mutation_input</span>, lazy <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  keytype <span class="op">=</span> <span class="st">"transcript_id"</span>, mutation_data <span class="op">=</span> <span class="va">mutation_input</span>, lazy <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">domain_projection</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/project_domains_to_genome.html">project_domains_to_genome</a></span><span class="op">(</span></span>
 <span>  <span class="va">sequence_model</span>, annotation <span class="op">=</span> <span class="st">"teaching_domains"</span>, model <span class="op">=</span> <span class="st">"Pfam"</span>,</span>
@@ -1990,13 +2026,13 @@ records during projection.</p>
 <td align="left">A_full</td>
 <td align="right">143</td>
 <td align="right">160</td>
-<td align="left">Teaching domain</td>
+<td align="left">Domain</td>
 </tr>
 <tr class="even">
 <td align="left">A_full</td>
 <td align="right">501</td>
 <td align="right">530</td>
-<td align="left">Teaching domain</td>
+<td align="left">Domain</td>
 </tr>
 </tbody>
 </table>
@@ -2009,51 +2045,56 @@ records during projection.</p>
 <th align="right">xmax</th>
 <th align="left">mutation</th>
 </tr></thead>
-<tbody>
-<tr class="odd">
+<tbody><tr class="odd">
 <td align="left">A_full</td>
 <td align="right">513</td>
 <td align="right">515</td>
 <td align="left">A25V</td>
-</tr>
-<tr class="even">
-<td align="left">A_skip</td>
-<td align="right">913</td>
-<td align="right">915</td>
-<td align="left">A25V</td>
-</tr>
-</tbody>
+</tr></tbody>
 </table>
-<p>The domain splits into genomic intervals 143-160 and 501-530. Residue
-25 maps to 513-515 in <code>A_full</code> and 913-915 in
-<code>A_skip</code>: identical protein positions need not refer to
-identical genomic bases across isoforms.</p>
+<p>The domain splits into genomic intervals 143-160 and 501-530. A25V
+maps to 513-515 in <code>A_full</code> and does not appear on
+<code>A_skip</code>. Using <code>keytype = "gene_id"</code> would
+instead project the supplied residue number onto every matching isoform.
+That does not establish an equivalent protein consequence in each
+isoform; transcript-specific mutations should use a transcript key.</p>
 </div>
 <div class="section level4">
 <h4 id="choose-the-geoms-scale-and-theme">Choose the geoms, scale, and theme<a class="anchor" aria-label="anchor" href="#choose-the-geoms-scale-and-theme"></a>
 </h4>
 <p>Draw neutral exon models, overlay the projected domain on the
-<code>A_full</code> row, and add mutation lollipops aligned to their
-matching transcripts. Here <code>y_offset = 2</code> places the single
+<code>A_full</code> row, and add the mutation lollipop to its own
+transcript. A shared <code>exon_height</code> makes the domain blocks as
+tall as the exons. Here <code>y_offset = 2</code> places the single
 domain row over <code>A_full</code> in this two-isoform layout; inspect
-row placement when changing transcripts or domain models.</p>
+row placement when changing transcripts or domain models. The y-axis
+limits leave balanced space above and below the transcript models and
+mutation marker. The x-axis includes space before the first exon and
+beyond the terminal direction triangles, which extend past the last
+exon.</p>
 <div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">projection_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">sequence_model</span><span class="op">)</span> <span class="op">+</span></span>
+<code class="sourceCode R"><span><span class="va">projection_exon_height</span> <span class="op">&lt;-</span> <span class="fl">0.8</span></span>
+<span><span class="va">projection_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">sequence_model</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_exon.html">geom_exon</a></span><span class="op">(</span>chr <span class="op">=</span> <span class="st">"chr1"</span>, subset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">80</span>, <span class="fl">980</span><span class="op">)</span>, fill <span class="op">=</span> <span class="st">"grey85"</span>,</span>
+<span>            exon_height <span class="op">=</span> <span class="va">projection_exon_height</span>,</span>
 <span>            colour <span class="op">=</span> <span class="st">"grey50"</span>, transcript_arrow_length <span class="op">=</span> <span class="fl">25</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_motif.html">geom_motif</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">motif</span><span class="op">)</span>, annotation <span class="op">=</span> <span class="st">"teaching_domains"</span>, model <span class="op">=</span> <span class="st">"Pfam"</span>,</span>
-<span>             chr <span class="op">=</span> <span class="st">"chr1"</span>, subset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">80</span>, <span class="fl">980</span><span class="op">)</span>, y_offset <span class="op">=</span> <span class="fl">2</span>, exon_height <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
+<span>             chr <span class="op">=</span> <span class="st">"chr1"</span>, subset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">80</span>, <span class="fl">980</span><span class="op">)</span>, y_offset <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>             exon_height <span class="op">=</span> <span class="va">projection_exon_height</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_aa_variant.html">geom_aa_variant</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">mutation</span>, label <span class="op">=</span> <span class="va">mutation</span><span class="op">)</span>,</span>
 <span>    annotation <span class="op">=</span> <span class="st">"teaching_mutations"</span>, genes <span class="op">=</span> <span class="st">"geneA"</span>,</span>
 <span>    chr <span class="op">=</span> <span class="st">"chr1"</span>, subset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">80</span>, <span class="fl">980</span><span class="op">)</span>, spread <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>    exon_height <span class="op">=</span> <span class="va">projection_exon_height</span>,</span>
 <span>    colour <span class="op">=</span> <span class="st">"grey20"</span>, label_angle <span class="op">=</span> <span class="fl">0</span>, label_size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Teaching domain"</span> <span class="op">=</span> <span class="st">"#0072B2"</span>, A25V <span class="op">=</span> <span class="st">"#D55E00"</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>Domain <span class="op">=</span> <span class="st">"#0072B2"</span>, A25V <span class="op">=</span> <span class="st">"#D55E00"</span><span class="op">)</span>,</span>
 <span>                    name <span class="op">=</span> <span class="st">"Protein feature"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">500</span>, <span class="fl">900</span><span class="op">)</span>,</span>
-<span>                     labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org/reference/label_number.html" class="external-link">label_number</a></span><span class="op">(</span>big.mark <span class="op">=</span> <span class="st">","</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1500</span><span class="op">)</span>, breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">500</span>, <span class="fl">900</span>, <span class="fl">1300</span><span class="op">)</span>,</span>
+<span>                     labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org/reference/label_number.html" class="external-link">label_number</a></span><span class="op">(</span>big.mark <span class="op">=</span> <span class="st">","</span><span class="op">)</span>,</span>
+<span>                     expand <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/expansion.html" class="external-link">expansion</a></span><span class="op">(</span>mult <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.8</span>, <span class="fl">6.6</span><span class="op">)</span>, expand <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/expansion.html" class="external-link">expansion</a></span><span class="op">(</span>mult <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/theme_ggexon_track.html">theme_ggexon_track</a></span><span class="op">(</span>base_size <span class="op">=</span> <span class="fl">10</span>, show_legend <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">projection_plot</span></span></code></pre></div>
-<p><img src="ggexon-workflow_files/figure-html/workflow-projection-plot-1.png" class="r-plt" alt="Gene A exon models in genomic coordinates, with a split domain on the full isoform and residue 25 mutation markers at different genomic codons in the two isoforms." width="1440"></p>
+<p><img src="ggexon-workflow_files/figure-html/workflow-projection-plot-1.png" class="r-plt" alt="Two centered Gene A transcript models with blank space on all sides and visible right-pointing terminal triangles. Domain blocks match exon height, and A25V appears only on the full isoform." width="1440"></p>
 <p>This x axis measures genomic base pairs. The preceding protein
 lollipop example measures amino-acid positions. Projection uses
 annotation structure; the plotted mutation is supplied teaching data,

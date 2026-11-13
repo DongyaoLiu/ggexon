@@ -66,6 +66,7 @@ rows from attached <code>SynProteinMutationAnnotation</code> layers.</p>
 <span>  individual <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  species <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  genes <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  ids <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  event_type <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  min_sample_count <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  strains <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -119,6 +120,11 @@ ggplot2 layer arguments.</p></dd>
 <dt id="arg-genes-event-type-min-sample-count-strains-mutation">genes, event_type, min_sample_count, strains, mutation<a class="anchor" aria-label="anchor" href="#arg-genes-event-type-min-sample-count-strains-mutation"></a></dt>
 <dd><p>Optional filters
 passed to <code><a href="query_protein_mutations.html">query_protein_mutations()</a></code>.</p></dd>
+
+
+<dt id="arg-ids">ids<a class="anchor" aria-label="anchor" href="#arg-ids"></a></dt>
+<dd><p>Optional identifiers matching the mutation annotation's <code>keytype</code>.
+Use the same selector as <code><a href="geom_protein_lollipop.html">geom_protein_lollipop()</a></code> to label one isoform.</p></dd>
 
 
 <dt id="arg-mutation-position">mutation_position<a class="anchor" aria-label="anchor" href="#arg-mutation-position"></a></dt>

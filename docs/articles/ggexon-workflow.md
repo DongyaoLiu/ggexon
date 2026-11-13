@@ -1062,11 +1062,12 @@ annotation. The [Dox
 tutorial](https://dongyaoliu.github.io/ggexon/articles/dox-synteny-demo.html#data-provenance-and-interpretation)
 describes the source library, deposited signals, and coverage checks.
 
-## 7. Protein mutation counts and domains
+## 7. Place protein mutation labels on genomic gene models
 
-A protein summary removes introns from the view and places mutation
-counts next to functional regions. This helps compare residues across a
-protein without treating their genomic distances as protein distances.
+Plot amino-acid substitutions along a protein to see where they fall
+within protein domains. Lollipop heights show the number of samples
+carrying each substitution. We first summarize substitutions in protein
+coordinates, then place their labels on genomic gene models.
 
 ### Present the input
 
@@ -1085,6 +1086,7 @@ raw_mutations <- data.frame(
   sample_count = c(2L, 5L, 12L, 20L)
 )
 protein_domains <- data.frame(
+  gene_id = "demo-protein", protein_length = 160L,
   start = c(10L, 85L), end = c(60L, 145L),
   Domain = c("Binding", "Catalytic")
 )
@@ -1095,35 +1097,40 @@ raw_mutations
 #> 3 demo-protein substitution                    G#88#D           12
 #> 4 demo-protein substitution                   S#140#F           20
 protein_domains
-#>   start end    Domain
-#> 1    10  60   Binding
-#> 2    85 145 Catalytic
+#>        gene_id protein_length start end    Domain
+#> 1 demo-protein            160    10  60   Binding
+#> 2 demo-protein            160    85 145 Catalytic
 ```
 
-The reader bridges a raw count file and the normalized mutation table
-expected by the annotation object. It adds `gene_id`, `position`, `ref`,
-`alt`, `mutation`, and `source_row_id`. Passing `mutation_data` to the
-constructor stores this already normalized table; the constructor does
-not parse it again.
+The mutation reader normalizes `gene` to `gene_id`, matching the domain
+table’s key. `protein_length` records the full 160-residue protein; the
+last mutation at residue 140 does not define its end. Protein
+coordinates here are one-based amino-acid positions.
 
 ### Construct and inspect the object
 
 ``` r
 
 mutation_file <- tempfile(fileext = ".tsv")
+domain_file <- tempfile(fileext = ".tsv")
 write.table(raw_mutations, mutation_file, sep = "\t", quote = FALSE, row.names = FALSE)
-normalized_mutations <- read_protein_mutation_counts(mutation_file)
+write.table(protein_domains, domain_file, sep = "\t", quote = FALSE, row.names = FALSE)
 protein_individual <- add_annotation(
   SynIndividual(id = "synthetic-cohort"),
   SynProteinMutationAnnotation(
-    name = "mutation_counts", mutation_file = mutation_file,
-    mutation_data = normalized_mutations
+    name = "mutation_counts", mutation_file = mutation_file, keytype = "gene_id"
   )
 )
-protein_mutations <- query_protein_mutations(
+protein_individual <- add_annotation(protein_individual, SynProteinDomainAnnotation(
+  name = "protein_domains", domain_file = domain_file, keytype = "gene_id"
+))
+class(protein_individual)
+#> [1] "SynIndividual"
+#> attr(,"package")
+#> [1] "ggexon"
+query_protein_mutations(
   protein_individual, annotation = "mutation_counts", genes = "demo-protein"
-)
-protein_mutations[, c("gene_id", "position", "ref", "alt", "mutation", "sample_count")]
+)[, c("gene_id", "position", "ref", "alt", "mutation", "sample_count")]
 #>        gene_id position ref alt mutation sample_count
 #> 1 demo-protein       18   A   V     A18V            2
 #> 2 demo-protein       42   K   R     K42R            5
@@ -1131,67 +1138,87 @@ protein_mutations[, c("gene_id", "position", "ref", "alt", "mutation", "sample_c
 #> 4 demo-protein      140   S   F    S140F           20
 ```
 
-[`geom_protein_lollipop()`](https://dongyaoliu.github.io/ggexon/reference/geom_protein_lollipop.md)
-takes ordinary mutation and domain tables, so query the attached
-annotation first. Inspect its preparation helper to see how positions
-become backbone, domain, stem, and head data. With the identity
-transform and the target range equal to the observed count range, the
-helper keeps head heights equal to sample counts for these data.
+The object owns both annotations. Loading is deferred until inspection
+or plotting; mutation queries parse hash notation such as `A#18#V` into
+a position, reference residue, alternate residue, and label. The query
+above inspects the input. Neither plotting layer below needs its
+returned table.
 
 ### Choose the geom, scales, and theme
 
+At plot build,
+[`geom_protein_lollipop()`](https://dongyaoliu.github.io/ggexon/reference/geom_protein_lollipop.md)
+reads `mutation_counts`, selects `demo-protein`, matches its domains in
+`protein_domains`, and prepares the backbone, stems, and heads. The
+stored protein length sets the backbone end. Here the target height
+range equals the input count range, so the identity transform preserves
+the observed sample counts as head heights.
+
 ``` r
 
-count_range <- range(protein_mutations$sample_count)
-prepared_protein <- protein_lollipop_data(
-  mutations = protein_mutations, domains = protein_domains, protein_length = 160,
-  mutation_y_by = "sample_count", mutation_y_range = count_range,
-  track_ymin = -1.5, track_ymax = -1,
-  domain_default_ymin = -1.8, domain_default_ymax = -0.7
-)
-prepared_protein$mutations[, c("position", "lollipop_x", "lollipop_y", "lollipop_domain")]
-#>   position lollipop_x lollipop_y lollipop_domain
-#> 1       18         18          2         Binding
-#> 2       42         42          5         Binding
-#> 3       88         88         12       Catalytic
-#> 4      140        140         20       Catalytic
+count_range <- range(raw_mutations$sample_count)
 ```
 
 ``` r
 
-protein_plot <- ggplot() +
+protein_plot <- ggexon(protein_individual) +
   geom_protein_lollipop(
-    mutations = protein_mutations, domains = protein_domains, protein_length = 160,
+    annotation = "mutation_counts", domain_annotation = "protein_domains",
+    genes = "demo-protein",
     mutation_y_by = "sample_count", mutation_y_range = count_range,
-    track_ymin = -1.5, track_ymax = -1,
-    domain_default_ymin = -1.8, domain_default_ymax = -0.7,
+    track_ymin = 0.60, track_ymax = 0.68,
+    domain_default_ymin = 0.55, domain_default_ymax = 0.75,
+    stem_linewidth = 0.9,
     point_colour = "#222222", point_size = 2.5
   ) +
   geom_mutation_label(
-    mutations = protein_mutations, mutation_y_by = "sample_count",
-    mutation_y_range = count_range, label_nudge_y = 0.8,
-    angle = 0, vjust = 0, size = 3
+    annotation = "mutation_counts", genes = "demo-protein",
+    mutation_y_by = "sample_count",
+    mutation_y_range = count_range, label_nudge_y = 0,
+    angle = 0, vjust = -0.6, size = 3
   ) +
   scale_fill_manual(values = c(Binding = "#0072B2", Catalytic = "#E69F00")) +
   scale_x_continuous(breaks = seq(0, 160, 40), limits = c(0, 160)) +
-  scale_y_continuous(breaks = c(0, 5, 10, 15, 20), limits = c(-2, 23)) +
-  labs(x = "Amino-acid position", y = "Samples with mutation", fill = "Domain") +
+  scale_y_log10(breaks = c(1, 2, 5, 10, 20), limits = c(0.4, 28)) +
+  labs(x = "Amino-acid position", y = "Samples with mutation (log10 scale)",
+       fill = "Domain") +
   theme_ggexon_track(base_size = 10, show_y_axis = TRUE, show_legend = TRUE) +
   theme(axis.title = element_text())
 protein_plot
 ```
 
-![Synthetic protein domains with four mutation lollipops whose heights
-show sample counts of two, five, twelve, and
-twenty.](ggexon-workflow_files/figure-html/workflow-protein-plot-1.png)
+![Synthetic protein domains with thicker grey stems and four mutation
+lollipops showing sample counts of two, five, twelve, and twenty on a
+logarithmic
+y-axis.](ggexon-workflow_files/figure-html/workflow-protein-plot-1.png)
 
-The label layer repeats the head-height settings so each label follows
-its mutation. Domain blocks sit below zero; the labeled y ticks refer to
-sample counts. Keeping `show_y_axis = TRUE` matters here because y
-carries a measured quantity. With the default lollipop height range,
-heights would be rescaled layout positions and should not be labeled as
-raw counts. No genomic x scale or facet is needed for this single
-protein-coordinate track.
+The label layer selects the same annotation and gene, and repeats the
+head-height settings so each label follows its mutation.
+[`scale_y_log10()`](https://ggplot2.tidyverse.org/reference/scale_continuous.html)
+changes the axis spacing while keeping tick labels in sample counts. The
+backbone and domains sit below count 1 at positive layout coordinates;
+their vertical positions do not encode counts. A log scale requires
+positive values. `label_nudge_y = 0` anchors labels at their heads, and
+`vjust = -0.6` keeps the text above them. `stem_linewidth = 0.9`
+thickens the grey stems. Keeping `show_y_axis = TRUE` matters here
+because y carries a measured quantity. With the default lollipop height
+range, heights would be rescaled layout positions and should not be
+labeled as raw counts. No genomic x scale or facet is needed for this
+single protein-coordinate track.
+
+For transcript- or protein-specific records, set the annotations’
+`keytype` to `"transcript_id"` or `"protein_id"` and give both geoms the
+same `ids` selector. Select one protein per individual; multiple
+proteins have separate coordinate systems. A `SynSpecies` can hold
+several individuals, selected with `species` and displayed with
+`facet_genomics(vars(track))`.
+
+When a domain table does not contain `protein_length`, the geom can use
+one matching sequence stored in
+[`protein_seq()`](https://dongyaoliu.github.io/ggexon/reference/protein_seq.md),
+excluding a terminal stop character. Otherwise supply `protein_length`
+explicitly. It does not estimate the full length from the last observed
+mutation.
 
 ### Project protein features onto the genomic model
 
@@ -1229,33 +1256,35 @@ knitr::kable(coding_blocks[, c("start", "end", "width")])
 ``` r
 
 domain_input <- data.frame(
-  transcript_id = "A_full", domain = "Teaching domain",
+  transcript_id = "A_full", domain = "Domain",
   start = 15L, end = 30L, analysis = "Pfam"
 )
 mutation_input <- data.frame(
-  gene_id = "geneA", position = 25L, ref = "A", alt = "V",
+  gene_id = "geneA", transcript_id = "A_full",
+  position = 25L, ref = "A", alt = "V",
   sample_count = 4L, mutation = "A25V", source_row_id = 1L
 )
 knitr::kable(domain_input)
 ```
 
-| transcript_id | domain          | start | end | analysis |
-|:--------------|:----------------|------:|----:|:---------|
-| A_full        | Teaching domain |    15 |  30 | Pfam     |
+| transcript_id | domain | start | end | analysis |
+|:--------------|:-------|------:|----:|:---------|
+| A_full        | Domain |    15 |  30 | Pfam     |
 
 ``` r
 
 knitr::kable(mutation_input)
 ```
 
-| gene_id | position | ref | alt | sample_count | mutation | source_row_id |
-|:--------|---------:|:----|:----|-------------:|:---------|--------------:|
-| geneA   |       25 | A   | V   |            4 | A25V     |             1 |
+| gene_id | transcript_id | position | ref | alt | sample_count | mutation | source_row_id |
+|:--------|:--------------|---------:|:----|:----|-------------:|:---------|--------------:|
+| geneA   | A_full        |       25 | A   | V   |            4 | A25V     |             1 |
 
 Domain bounds and mutation positions above are one-based **amino-acid**
 coordinates. The mutation table is already normalized; `source_row_id`
-records its input row. It describes one synthetic gene-level mutation,
-which will be projected separately onto each matching isoform.
+records its input row. The mutation belongs to `A_full`: A25V describes
+residue 25 of that transcript’s protein, not residue 25 of every
+isoform.
 
 #### Construct the sequence and annotation objects
 
@@ -1291,10 +1320,10 @@ knitr::kable(data.frame(
 | A_full | A_full     |                      70 | MAAAAAAAAAAA   | \*                 |
 | A_skip | A_skip     |                      40 | MAAAAAAAAAAA   | \*                 |
 
-Attach domains using an explicit transcript key, and store the
-normalized mutation table in memory. The `analysis` column identifies
-the domain model; `model = "Pfam"` selects its records during
-projection.
+Attach both annotations with `keytype = "transcript_id"`, and store the
+normalized mutation table in memory. This restricts the mutation to its
+own transcript. The `analysis` column identifies the domain model;
+`model = "Pfam"` selects its records during projection.
 
 ``` r
 
@@ -1307,7 +1336,7 @@ sequence_model <- add_annotation(sequence_model, SynProteinDomainAnnotation(
 ))
 sequence_model <- add_annotation(sequence_model, SynProteinMutationAnnotation(
   name = "teaching_mutations", mutation_file = "<in-memory>",
-  keytype = "gene_id", mutation_data = mutation_input, lazy = FALSE
+  keytype = "transcript_id", mutation_data = mutation_input, lazy = FALSE
 ))
 domain_projection <- project_domains_to_genome(
   sequence_model, annotation = "teaching_domains", model = "Pfam",
@@ -1319,10 +1348,10 @@ mutation_projection <- project_mutations_to_genome(
 knitr::kable(domain_projection[, c("transcripts", "xmin", "xmax", "motif")])
 ```
 
-| transcripts | xmin | xmax | motif           |
-|:------------|-----:|-----:|:----------------|
-| A_full      |  143 |  160 | Teaching domain |
-| A_full      |  501 |  530 | Teaching domain |
+| transcripts | xmin | xmax | motif  |
+|:------------|-----:|-----:|:-------|
+| A_full      |  143 |  160 | Domain |
+| A_full      |  501 |  530 | Domain |
 
 ``` r
 
@@ -1332,43 +1361,55 @@ knitr::kable(mutation_projection[, c("transcripts", "xmin", "xmax", "mutation")]
 | transcripts | xmin | xmax | mutation |
 |:------------|-----:|-----:|:---------|
 | A_full      |  513 |  515 | A25V     |
-| A_skip      |  913 |  915 | A25V     |
 
-The domain splits into genomic intervals 143-160 and 501-530. Residue 25
-maps to 513-515 in `A_full` and 913-915 in `A_skip`: identical protein
-positions need not refer to identical genomic bases across isoforms.
+The domain splits into genomic intervals 143-160 and 501-530. A25V maps
+to 513-515 in `A_full` and does not appear on `A_skip`. Using
+`keytype = "gene_id"` would instead project the supplied residue number
+onto every matching isoform. That does not establish an equivalent
+protein consequence in each isoform; transcript-specific mutations
+should use a transcript key.
 
 #### Choose the geoms, scale, and theme
 
 Draw neutral exon models, overlay the projected domain on the `A_full`
-row, and add mutation lollipops aligned to their matching transcripts.
-Here `y_offset = 2` places the single domain row over `A_full` in this
+row, and add the mutation lollipop to its own transcript. A shared
+`exon_height` makes the domain blocks as tall as the exons. Here
+`y_offset = 2` places the single domain row over `A_full` in this
 two-isoform layout; inspect row placement when changing transcripts or
-domain models.
+domain models. The y-axis limits leave balanced space above and below
+the transcript models and mutation marker. The x-axis includes space
+before the first exon and beyond the terminal direction triangles, which
+extend past the last exon.
 
 ``` r
 
+projection_exon_height <- 0.8
 projection_plot <- ggexon(sequence_model) +
   geom_exon(chr = "chr1", subset = c(80, 980), fill = "grey85",
+            exon_height = projection_exon_height,
             colour = "grey50", transcript_arrow_length = 25) +
   geom_motif(aes(fill = motif), annotation = "teaching_domains", model = "Pfam",
-             chr = "chr1", subset = c(80, 980), y_offset = 2, exon_height = 0.5) +
+             chr = "chr1", subset = c(80, 980), y_offset = 2,
+             exon_height = projection_exon_height) +
   geom_aa_variant(aes(fill = mutation, label = mutation),
     annotation = "teaching_mutations", genes = "geneA",
     chr = "chr1", subset = c(80, 980), spread = FALSE,
+    exon_height = projection_exon_height,
     colour = "grey20", label_angle = 0, label_size = 3) +
-  scale_fill_manual(values = c("Teaching domain" = "#0072B2", A25V = "#D55E00"),
+  scale_fill_manual(values = c(Domain = "#0072B2", A25V = "#D55E00"),
                     name = "Protein feature") +
-  scale_x_continuous(breaks = c(100, 500, 900),
-                     labels = scales::label_number(big.mark = ",")) +
+  scale_x_continuous(limits = c(0, 1500), breaks = c(100, 500, 900, 1300),
+                     labels = scales::label_number(big.mark = ","),
+                     expand = expansion(mult = 0)) +
+  scale_y_continuous(limits = c(0.8, 6.6), expand = expansion(mult = 0)) +
   theme_ggexon_track(base_size = 10, show_legend = TRUE)
 projection_plot
 ```
 
-![Gene A exon models in genomic coordinates, with a split domain on the
-full isoform and residue 25 mutation markers at different genomic codons
-in the two
-isoforms.](ggexon-workflow_files/figure-html/workflow-projection-plot-1.png)
+![Two centered Gene A transcript models with blank space on all sides
+and visible right-pointing terminal triangles. Domain blocks match exon
+height, and A25V appears only on the full
+isoform.](ggexon-workflow_files/figure-html/workflow-projection-plot-1.png)
 
 This x axis measures genomic base pairs. The preceding protein lollipop
 example measures amino-acid positions. Projection uses annotation

@@ -1,15 +1,16 @@
 # Draw lollipop annotations on a protein-coordinate track
 
-This helper returns a list of ggplot2 layers: backbone, optional
-domains, curved stems, and mutation heads. It is designed for protein
-tracks but only assumes that mutations and domains share the same linear
-coordinate system.
+Draw a backbone, optional domains, curved stems, and mutation heads.
+With `ggexon(SynIndividual)` or `ggexon(SynSpecies)`, each component
+resolves its data from attached protein annotations during plot build.
+Coordinates stay in amino-acid units; no genomic projection is
+performed.
 
 ## Usage
 
 ``` r
 geom_protein_lollipop(
-  mutations,
+  mutations = NULL,
   domains = NULL,
   protein_length = NULL,
   position = "position",
@@ -45,7 +46,18 @@ geom_protein_lollipop(
   stem_linewidth = 0.4,
   point_size = 4,
   point_colour = "black",
-  show.legend = NA
+  show.legend = NA,
+  data = NULL,
+  annotation = NULL,
+  domain_annotation = NULL,
+  individual = NULL,
+  species = NULL,
+  genes = NULL,
+  ids = NULL,
+  event_type = NULL,
+  min_sample_count = NULL,
+  strains = NULL,
+  mutation = NULL
 )
 ```
 
@@ -53,7 +65,8 @@ geom_protein_lollipop(
 
 - mutations:
 
-  A data frame with one row per mutation.
+  Optional mutation table or Syn object. Omit to inherit the plot's Syn
+  object.
 
 - domains:
 
@@ -64,8 +77,9 @@ geom_protein_lollipop(
 
 - protein_length:
 
-  Optional track length. When `NULL`, the maximum mutation
-  position/domain end is used.
+  Optional full protein length. For Syn input, omitted values are
+  resolved from stored lengths or a matching protein sequence. For
+  explicit tables, the maximum mutation position/domain end is used.
 
 - position:
 
@@ -177,6 +191,58 @@ geom_protein_lollipop(
 
   Passed to generated ggplot2 layers.
 
+- data:
+
+  Optional layer data, an alternative to `mutations`.
+
+- annotation:
+
+  Name of an attached `SynProteinMutationAnnotation`. Defaults to the
+  first mutation annotation.
+
+- domain_annotation:
+
+  Name of an attached `SynProteinDomainAnnotation`. Defaults to the
+  first domain annotation, if available.
+
+- individual, species:
+
+  Individual selector for `SynSpecies`; `species` is an alias consistent
+  with other Syn-aware geoms.
+
+- genes, event_type, min_sample_count, strains, mutation:
+
+  Mutation filters passed to
+  [`query_protein_mutations()`](https://dongyaoliu.github.io/ggexon/reference/query_protein_mutations.md).
+  Filters on counts or events do not truncate the selected protein's
+  backbone or domains.
+
+- ids:
+
+  Protein, transcript, or gene identifiers matching the mutation
+  annotation's `keytype`. Use to distinguish isoforms of the same gene.
+
 ## Value
 
 A list of ggplot2 layers.
+
+## Details
+
+Select one protein per individual using `genes` or `ids`. Domain records
+are matched through their annotation's `keytype`; when it differs from
+the mutation key, that identifier column must also be present in the
+mutation records. Use
+[`map_domain_ids()`](https://dongyaoliu.github.io/ggexon/reference/map_domain_ids.md)
+to reconcile identifiers when necessary.
+
+For Syn input, the full length comes from `protein_length`, a stored
+`protein_length` column, or one matching sequence in
+[`protein_seq()`](https://dongyaoliu.github.io/ggexon/reference/protein_seq.md).
+A terminal stop character is excluded from sequence length. A missing
+full length is an error rather than an inference from the last mutation.
+
+Explicit mutation/domain tables remain supported, including their
+existing length inference.
+[`protein_lollipop_data()`](https://dongyaoliu.github.io/ggexon/reference/protein_lollipop_data.md)
+is available for inspecting layout tables but is not required before
+plotting a Syn object.

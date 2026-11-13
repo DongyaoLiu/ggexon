@@ -59,7 +59,8 @@
 <span>  domains <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  protein_domains <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  ref <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  protein_length <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  protein_length <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  ids <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -125,6 +126,11 @@ amino-acid codes.</p></dd>
 <dt id="arg-protein-length">protein_length<a class="anchor" aria-label="anchor" href="#arg-protein-length"></a></dt>
 <dd><p>Optional protein length used to clamp
 <code>protein_ranges</code>.</p></dd>
+
+
+<dt id="arg-ids">ids<a class="anchor" aria-label="anchor" href="#arg-ids"></a></dt>
+<dd><p>Optional identifiers matched against the annotation's <code>keytype</code>,
+for example transcript IDs when <code>keytype = "transcript_id"</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">

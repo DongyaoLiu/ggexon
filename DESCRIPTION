@@ -110,6 +110,7 @@ Collate:
     'strip-scale.R'
     'subsetting-overview.R'
     'syn-layer.R'
+    'syn-protein-lollipop.R'
     'theme-ggexon.R'
     'transformation_functions.R'
     'utilities-checks.R'

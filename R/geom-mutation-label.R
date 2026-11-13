@@ -16,7 +16,7 @@ GeomMutationLabel <- ggproto(
   ),
   extra_params = c(
     "na.rm", "annotation", "individual", "species", "genes", "event_type",
-    "min_sample_count", "strains", "mutation", "mutation_position", "label_col",
+    "min_sample_count", "strains", "mutation", "ids", "mutation_position", "label_col",
     "ref", "alt", "spread_threshold", "mutation_y", "mutation_y_by",
     "mutation_y_strategy", "mutation_y_range", "mutation_y_trans",
     "mutation_y_breaks", "mutation_y_values", "label_nudge_y", "show_empty"
@@ -27,6 +27,7 @@ GeomMutationLabel <- ggproto(
       individual = NULL,
       species = NULL,
       genes = NULL,
+      ids = NULL,
       event_type = NULL,
       min_sample_count = NULL,
       strains = NULL,
@@ -56,6 +57,7 @@ GeomMutationLabel <- ggproto(
       individual = params$individual,
       species = params$species,
       genes = params$genes,
+      ids = params$ids,
       event_type = params$event_type,
       min_sample_count = params$min_sample_count,
       strains = params$strains,
@@ -96,6 +98,8 @@ GeomMutationLabel <- ggproto(
 #' @param species Alias for `individual`, matching other Syn-aware geoms.
 #' @param genes,event_type,min_sample_count,strains,mutation Optional filters
 #'   passed to `query_protein_mutations()`.
+#' @param ids Optional identifiers matching the mutation annotation's `keytype`.
+#'   Use the same selector as `geom_protein_lollipop()` to label one isoform.
 #' @param mutation_position Column containing mutation coordinates.
 #' @param label Column used for text labels. Defaults to `"mutation"`.
 #' @param ref,alt Optional residue/base columns used to build labels when
@@ -122,6 +126,7 @@ geom_mutation_label <- function(mapping = NULL,
                                 individual = NULL,
                                 species = NULL,
                                 genes = NULL,
+                                ids = NULL,
                                 event_type = NULL,
                                 min_sample_count = NULL,
                                 strains = NULL,
@@ -179,6 +184,7 @@ geom_mutation_label <- function(mapping = NULL,
     individual = individual,
     species = species,
     genes = genes,
+    ids = ids,
     event_type = event_type,
     min_sample_count = min_sample_count,
     strains = strains,
@@ -226,7 +232,8 @@ mutation_label_data <- function(mutations,
                                 mutation_y_breaks = NULL,
                                 mutation_y_values = NULL,
                                 label_nudge_y = 0.35,
-                                show_empty = FALSE) {
+                                show_empty = FALSE,
+                                group_cols = NULL) {
   mut_df <- .lollipop_as_data_frame(mutations, "mutations")
   .lollipop_check_column(mut_df, mutation_position, "mutation_position")
 
@@ -246,7 +253,8 @@ mutation_label_data <- function(mutations,
   mut_df$x <- .spread_mutation_label_positions(
     data = mut_df,
     positions = positions,
-    threshold = spread_threshold
+    threshold = spread_threshold,
+    group_cols = group_cols
   )
   mut_df$y <- .lollipop_mutation_y_values(
     mut_df = mut_df,
@@ -275,6 +283,7 @@ syn_to_mutation_label_df <- function(x,
                                      individual = NULL,
                                      species = NULL,
                                      genes = NULL,
+                                     ids = NULL,
                                      event_type = NULL,
                                      min_sample_count = NULL,
                                      strains = NULL,
@@ -298,12 +307,31 @@ syn_to_mutation_label_df <- function(x,
   if (methods::is(x, "SynSpecies") && is.null(target_individual)) {
     target_individual <- resolve_context_species_params(x, species = NULL, context = context)
   }
+  if (methods::is(x, "SynSpecies")) {
+    return(dplyr::bind_rows(lapply(target_individual, function(target) {
+      one <- resolve_syn_individual(x, species = target)
+      ann <- resolve_syn_protein_mutation_annotation(one, annotation, allow_missing = TRUE)
+      if (is.null(ann)) return(data.frame())
+      syn_to_mutation_label_df(
+        one, annotation = annotation_name(ann), genes = genes, ids = ids,
+        event_type = event_type, min_sample_count = min_sample_count,
+        strains = strains, mutation = mutation, mutation_position = mutation_position,
+        label = label, ref = ref, alt = alt, spread_threshold = spread_threshold,
+        mutation_y = mutation_y, mutation_y_by = mutation_y_by,
+        mutation_y_strategy = mutation_y_strategy, mutation_y_range = mutation_y_range,
+        mutation_y_trans = mutation_y_trans, mutation_y_breaks = mutation_y_breaks,
+        mutation_y_values = mutation_y_values, label_nudge_y = label_nudge_y,
+        show_empty = show_empty
+      )
+    })))
+  }
 
   mutations <- query_protein_mutations(
     x,
     annotation = annotation,
     individual = target_individual,
     genes = genes,
+    ids = ids,
     event_type = event_type,
     min_sample_count = min_sample_count,
     strains = strains,
@@ -329,27 +357,31 @@ syn_to_mutation_label_df <- function(x,
     mutation_y_breaks = mutation_y_breaks,
     mutation_y_values = mutation_y_values,
     label_nudge_y = label_nudge_y,
-    show_empty = show_empty
+    show_empty = show_empty,
+    group_cols = if (methods::is(x, "SynIndividual")) {
+      ann <- resolve_syn_protein_mutation_annotation(x, annotation)
+      ann@keytype
+    }
   )
 
-  if (!"track" %in% names(out)) {
+  if (methods::is(x, "SynIndividual")) {
+    out$track <- rep(syn_id(x), nrow(out))
+  } else if (!"track" %in% names(out)) {
     if ("individual" %in% names(out)) {
       out$track <- as.character(out$individual)
-    } else if (methods::is(x, "SynIndividual")) {
-      out$track <- syn_id(x)
     } else {
       out$track <- NA_character_
     }
   }
-  out$PANEL <- 1L
+  out$PANEL <- rep(1L, nrow(out))
   out
 }
 
-.spread_mutation_label_positions <- function(data, positions, threshold = 7) {
-  group_cols <- intersect(
+.spread_mutation_label_positions <- function(data, positions, threshold = 7,
+                                              group_cols = NULL) {
+  group_cols <- intersect(group_cols %||%
     c("individual", "track", "gene_id", "gene", "gene_name", "transcript_id", "protein_id"),
-    names(data)
-  )
+    names(data))
   if (length(group_cols) == 0L || length(positions) == 0L) {
     return(.spread_lollipop_positions(positions, threshold = threshold))
   }

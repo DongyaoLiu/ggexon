@@ -192,12 +192,43 @@ protein_lollipop_data <- function(mutations,
 
 #' Draw lollipop annotations on a protein-coordinate track
 #'
-#' This helper returns a list of ggplot2 layers: backbone, optional domains,
-#' curved stems, and mutation heads. It is designed for protein tracks
-#' but only assumes that mutations and domains share the same linear coordinate
-#' system.
+#' Draw a backbone, optional domains, curved stems, and mutation heads. With
+#' `ggexon(SynIndividual)` or `ggexon(SynSpecies)`, each component resolves its
+#' data from attached protein annotations during plot build. Coordinates stay
+#' in amino-acid units; no genomic projection is performed.
+#'
+#' Select one protein per individual using `genes` or `ids`. Domain records
+#' are matched through their annotation's `keytype`; when it differs from the
+#' mutation key, that identifier column must also be present in the mutation
+#' records. Use [map_domain_ids()] to reconcile identifiers when necessary.
+#'
+#' For Syn input, the full length comes from `protein_length`, a stored
+#' `protein_length` column, or one matching sequence in [protein_seq()]. A
+#' terminal stop character is excluded from sequence length. A missing full
+#' length is an error rather than an inference from the last mutation.
+#'
+#' Explicit mutation/domain tables remain supported, including their existing
+#' length inference. [protein_lollipop_data()] is available for inspecting
+#' layout tables but is not required before plotting a Syn object.
 #'
 #' @inheritParams protein_lollipop_data
+#' @param mutations Optional mutation table or Syn object. Omit to inherit
+#'   the plot's Syn object.
+#' @param protein_length Optional full protein length. For Syn input, omitted
+#'   values are resolved from stored lengths or a matching protein sequence.
+#'   For explicit tables, the maximum mutation position/domain end is used.
+#' @param data Optional layer data, an alternative to `mutations`.
+#' @param annotation Name of an attached `SynProteinMutationAnnotation`.
+#'   Defaults to the first mutation annotation.
+#' @param domain_annotation Name of an attached `SynProteinDomainAnnotation`.
+#'   Defaults to the first domain annotation, if available.
+#' @param individual,species Individual selector for `SynSpecies`; `species`
+#'   is an alias consistent with other Syn-aware geoms.
+#' @param genes,event_type,min_sample_count,strains,mutation Mutation filters
+#'   passed to [query_protein_mutations()]. Filters on counts or events do not
+#'   truncate the selected protein's backbone or domains.
+#' @param ids Protein, transcript, or gene identifiers matching the mutation
+#'   annotation's `keytype`. Use to distinguish isoforms of the same gene.
 #' @param show_backbone,show_domains,show_stems,show_points Logical
 #'   switches for layer components.
 #' @param backbone_fill,backbone_colour Backbone rectangle styling.
@@ -210,7 +241,7 @@ protein_lollipop_data <- function(mutations,
 #'
 #' @return A list of ggplot2 layers.
 #' @export
-geom_protein_lollipop <- function(mutations,
+geom_protein_lollipop <- function(mutations = NULL,
                                   domains = NULL,
                                   protein_length = NULL,
                                   position = "position",
@@ -246,9 +277,25 @@ geom_protein_lollipop <- function(mutations,
                                   stem_linewidth = 0.4,
                                   point_size = 4,
                                   point_colour = "black",
-                                  show.legend = NA) {
-  prepared <- protein_lollipop_data(
-    mutations = mutations,
+                                  show.legend = NA,
+                                  data = NULL,
+                                  annotation = NULL,
+                                  domain_annotation = NULL,
+                                  individual = NULL,
+                                  species = NULL,
+                                  genes = NULL,
+                                  ids = NULL,
+                                  event_type = NULL,
+                                  min_sample_count = NULL,
+                                  strains = NULL,
+                                  mutation = NULL) {
+  if (!is.null(data) && !is.null(mutations)) {
+    stop("Supply only one of `data` and `mutations`.", call. = FALSE)
+  }
+  data <- data %||% mutations
+  syn_input <- is.null(data) || methods::is(data, "SynIndividual") ||
+    methods::is(data, "SynSpecies")
+  preparation <- list(
     domains = domains,
     protein_length = protein_length,
     position = position,
@@ -274,13 +321,34 @@ geom_protein_lollipop <- function(mutations,
     stem_points = stem_points,
     curve_k = curve_k
   )
+  prepared <- if (syn_input) NULL else do.call(
+    protein_lollipop_data, c(list(mutations = data), preparation)
+  )
+  selectors <- list(
+    annotation = annotation, domain_annotation = domain_annotation,
+    individual = individual, species = species, genes = genes, ids = ids,
+    event_type = event_type, min_sample_count = min_sample_count,
+    strains = strains, mutation = mutation
+  )
+  component_layer <- function(component, mapping, ..., show.legend = NA) {
+    if (syn_input) {
+      return(.syn_protein_lollipop_layer(
+        component, data, mapping, c(preparation, selectors), list(...), show.legend
+      ))
+    }
+    geom <- switch(component, stems = ggplot2::geom_line,
+      backbone = ggplot2::geom_rect, domains = ggplot2::geom_rect,
+      mutations = ggplot2::geom_point)
+    geom(data = prepared[[component]], mapping = mapping, ...,
+      inherit.aes = FALSE, show.legend = show.legend)
+  }
 
   layers <- list()
 
-  if (isTRUE(show_stems) && nrow(prepared$stems) > 0L) {
+  if (isTRUE(show_stems) && (syn_input || nrow(prepared$stems) > 0L)) {
     layers <- c(layers, list(
-      ggplot2::geom_line(
-        data = prepared$stems,
+      component_layer(
+        "stems",
         mapping = ggplot2::aes(
           x = .data$lollipop_x,
           y = .data$lollipop_y,
@@ -290,7 +358,6 @@ geom_protein_lollipop <- function(mutations,
         linewidth = stem_linewidth,
         lineend = "round",
         linejoin = "bevel",
-        inherit.aes = FALSE,
         show.legend = FALSE
       )
     ))
@@ -298,8 +365,8 @@ geom_protein_lollipop <- function(mutations,
 
   if (isTRUE(show_backbone)) {
     layers <- c(layers, list(
-      ggplot2::geom_rect(
-        data = prepared$backbone,
+      component_layer(
+        "backbone",
         mapping = ggplot2::aes(
           xmin = .data$xmin,
           xmax = .data$xmax,
@@ -308,16 +375,15 @@ geom_protein_lollipop <- function(mutations,
         ),
         fill = backbone_fill,
         colour = backbone_colour,
-        inherit.aes = FALSE,
         show.legend = FALSE
       )
     ))
   }
 
-  if (isTRUE(show_domains) && nrow(prepared$domains) > 0L) {
+  if (isTRUE(show_domains) && (syn_input || nrow(prepared$domains) > 0L)) {
     layers <- c(layers, list(
-      ggplot2::geom_rect(
-        data = prepared$domains,
+      component_layer(
+        "domains",
         mapping = ggplot2::aes(
           xmin = .data$lollipop_start,
           xmax = .data$lollipop_end,
@@ -326,14 +392,13 @@ geom_protein_lollipop <- function(mutations,
           fill = .data$lollipop_domain
         ),
         colour = domain_colour,
-        inherit.aes = FALSE,
         show.legend = show.legend
       )
     ))
   }
 
   if (isTRUE(show_points)) {
-    point_mapping <- if ("lollipop_score" %in% names(prepared$mutations)) {
+    point_mapping <- if (!is.null(score)) {
       ggplot2::aes(
         x = .data$lollipop_x,
         y = .data$lollipop_y,
@@ -346,21 +411,19 @@ geom_protein_lollipop <- function(mutations,
       )
     }
 
-    point_layer <- if ("lollipop_score" %in% names(prepared$mutations)) {
-      ggplot2::geom_point(
-        data = prepared$mutations,
+    point_layer <- if (!is.null(score)) {
+      component_layer(
+        "mutations",
         mapping = point_mapping,
         size = point_size,
-        inherit.aes = FALSE,
         show.legend = show.legend
       )
     } else {
-      ggplot2::geom_point(
-        data = prepared$mutations,
+      component_layer(
+        "mutations",
         mapping = point_mapping,
         size = point_size,
         colour = point_colour,
-        inherit.aes = FALSE,
         show.legend = show.legend
       )
     }
