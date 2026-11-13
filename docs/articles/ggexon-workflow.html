@@ -80,9 +80,9 @@ grammar.</p>
 <p>Each example below presents the input, constructs or prepares the
 ggexon object, and chooses geoms, scales, and a theme. The small gene
 models, gene-order matrix, protein counts, and DNA strings are synthetic
-teaching data. The pairwise and coverage examples use bundled files. Run
-the chunks in order in an R session with the current version of ggexon
-installed.</p>
+teaching data. The pairwise, synteny, and coverage examples use bundled
+files. Run the chunks in order in an R session with the current version
+of ggexon installed.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dongyaoliu.github.io/ggexon/">ggexon</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></code></pre></div>
@@ -809,7 +809,10 @@ inspect them before drawing.</p>
 <p>Map transcript IDs to fill to distinguish isoforms. The ordinary
 continuous x scale preserves genomic spacing. The track theme hides the
 y axis used to position models; <code>show_legend = TRUE</code> retains
-the transcript legend.</p>
+the transcript legend. Use <code>transcript_arrow_length = 30</code> for
+a fixed 30-bp horizontal triangle width on every transcript.
+<code>transcript_arrow_ratio</code> controls the triangle’s height
+relative to exon height, rather than its length along the x axis.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">transcript_colours</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>A_full <span class="op">=</span> <span class="st">"#0072B2"</span>, A_skip <span class="op">=</span> <span class="st">"#D55E00"</span>, B_only <span class="op">=</span> <span class="st">"#009E73"</span><span class="op">)</span></span>
 <span><span class="va">p_exons</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span> <span class="op">+</span></span>
@@ -1138,18 +1141,30 @@ plot labels alongside the original IDs.</p>
 </h3>
 <p>Suppress built-in tag labels and add <code><a href="../reference/geom_genelabel.html">geom_genelabel()</a></code>
 for explicit placement. <code>collapse_tandem = TRUE</code> also
-combines adjacent genes sharing a label. Retain a base-pair axis because
-gene spans and spacing matter here.</p>
+combines adjacent genes sharing a label. Use the same x limits,
+<code>c(80, 1600)</code>, and y limits, <code>c(-1, 2)</code>, as in
+<code>p_gene_spans</code> to keep the gene bodies near the middle of the
+plot. Set <code>fontface = "italic"</code> in
+<code><a href="../reference/geom_genelabel.html">geom_genelabel()</a></code> to italicize the displayed gene names.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">labelled_model</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/geom_genetag.html">geom_genetag</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">gene_id</span><span class="op">)</span>, chr <span class="op">=</span> <span class="st">"chr1"</span>, show_label <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/geom_genelabel.html">geom_genelabel</a></span><span class="op">(</span>chr <span class="op">=</span> <span class="st">"chr1"</span>, label_direction <span class="op">=</span> <span class="st">"top"</span>, size <span class="op">=</span> <span class="fl">3</span>,</span>
-<span>                 collapse_tandem <span class="op">=</span> <span class="cn">TRUE</span>, panel_width_inch <span class="op">=</span> <span class="fl">7</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>geneA <span class="op">=</span> <span class="st">"#0072B2"</span>, geneB <span class="op">=</span> <span class="st">"#009E73"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org/reference/label_number.html" class="external-link">label_number</a></span><span class="op">(</span>big.mark <span class="op">=</span> <span class="st">","</span><span class="op">)</span>,</span>
-<span>                     expand <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/expansion.html" class="external-link">expansion</a></span><span class="op">(</span>mult <span class="op">=</span> <span class="fl">0.08</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/theme_ggexon_track.html">theme_ggexon_track</a></span><span class="op">(</span>base_size <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
-<p><img src="ggexon-workflow_files/figure-html/workflow-genetags-1.png" class="r-plt" alt="Directional gene spans with readable labels above the synthetic locus." width="1440"></p>
+<code class="sourceCode R"><span><span class="va">p_gene_labels</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">labelled_model</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_genetag.html">geom_genetag</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">gene_id</span><span class="op">)</span>, chr <span class="op">=</span> <span class="st">"chr1"</span>, subset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">80</span>, <span class="fl">1600</span><span class="op">)</span>,</span>
+<span>    show_label <span class="op">=</span> <span class="cn">FALSE</span>, arrow_width <span class="op">=</span> <span class="fl">50</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_genelabel.html">geom_genelabel</a></span><span class="op">(</span></span>
+<span>    chr <span class="op">=</span> <span class="st">"chr1"</span>, subset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">80</span>, <span class="fl">1600</span><span class="op">)</span>, label_direction <span class="op">=</span> <span class="st">"top"</span>,</span>
+<span>    size <span class="op">=</span> <span class="fl">3</span>, fontface <span class="op">=</span> <span class="st">"italic"</span>, collapse_tandem <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>    panel_width_inch <span class="op">=</span> <span class="fl">7</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="va">gene_colours</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">80</span>, <span class="fl">1600</span><span class="op">)</span>,</span>
+<span>                     breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">500</span>, <span class="fl">900</span>, <span class="fl">1300</span>, <span class="fl">1600</span><span class="op">)</span>,</span>
+<span>                     labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org/reference/label_number.html" class="external-link">label_number</a></span><span class="op">(</span>big.mark <span class="op">=</span> <span class="st">","</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span>ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/theme_ggexon_track.html">theme_ggexon_track</a></span><span class="op">(</span>base_size <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
+<span><span class="va">p_gene_labels</span></span></code></pre></div>
+<p><img src="ggexon-workflow_files/figure-html/workflow-genetags-italic-centred-1.png" class="r-plt" alt="Gene A and gene B shown near the middle of the plot with italic gene labels above their directional spans. The x limits and vertical padding match the preceding gene-tag example, and both triangles have a fixed 50-bp width." width="1440"></p>
 <p>For crowded loci, <code>gene_layout = "stack"</code> or
 <code>"nested"</code> separates overlapping bodies. For cross-species
 names, attach a <code>HomologyAnnotation</code> to a
@@ -1392,141 +1407,82 @@ for supported inputs.</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="gene-level-synteny-from-an-interval-table">5. Gene-level synteny from an interval table<a class="anchor" aria-label="anchor" href="#gene-level-synteny-from-an-interval-table"></a>
+<h2 id="local-synteny-from-real-alignment-blocks">5. Local synteny from real alignment blocks<a class="anchor" aria-label="anchor" href="#local-synteny-from-real-alignment-blocks"></a>
 </h2>
-<p>A curated ortholog link has a different interpretation from a
-nucleotide alignment. <code><a href="../reference/geom_synteny_link.html">geom_synteny_link()</a></code> draws supplied
-interval relationships with the same panel machinery; it does not infer
-those relationships.</p>
+<p>Reuse the <code>comparison</code> object from the previous example.
+Gene tags show the annotated gene spans, and
+<code><a href="../reference/geom_synteny_link.html">geom_synteny_link()</a></code> connects the stored PAF alignment
+intervals. Both layers read from the same <code>SynSpecies</code>
+object.</p>
 <div class="section level3">
 <h3 id="present-the-input-4">Present the input<a class="anchor" aria-label="anchor" href="#present-the-input-4"></a>
 </h3>
-<p>Two synthetic loci contain matched genes at different positions. The
-<code>family</code> assignments are supplied teaching data.</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">panel_order</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"reference"</span>, <span class="st">"link_reference_query"</span>, <span class="st">"query"</span><span class="op">)</span></span>
-<span><span class="va">genes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
-<span>  track <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"reference"</span>, <span class="st">"query"</span><span class="op">)</span>, each <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>, levels <span class="op">=</span> <span class="va">panel_order</span><span class="op">)</span>,</span>
-<span>  xmin <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">400</span>, <span class="fl">1100</span>, <span class="fl">1600</span><span class="op">)</span>, xmax <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">250</span>, <span class="fl">600</span>, <span class="fl">1300</span>, <span class="fl">1750</span><span class="op">)</span>,</span>
-<span>  y <span class="op">=</span> <span class="fl">1</span>, strand <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"+"</span>, <span class="st">"-"</span>, <span class="st">"+"</span>, <span class="st">"-"</span><span class="op">)</span>, gene <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span><span class="va">relationships</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
-<span>  family <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span><span class="op">)</span>, tstart <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">400</span><span class="op">)</span>, tend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">250</span>, <span class="fl">600</span><span class="op">)</span>,</span>
-<span>  qstart <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1100</span>, <span class="fl">1600</span><span class="op">)</span>, qend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1300</span>, <span class="fl">1750</span><span class="op">)</span>, strand <span class="op">=</span> <span class="st">"+"</span></span>
-<span><span class="op">)</span></span>
-<span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">genes</span><span class="op">)</span></span></code></pre></div>
-<table class="table">
-<thead><tr class="header">
-<th align="left">track</th>
-<th align="right">xmin</th>
-<th align="right">xmax</th>
-<th align="right">y</th>
-<th align="left">strand</th>
-<th align="left">gene</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">reference</td>
-<td align="right">100</td>
-<td align="right">250</td>
-<td align="right">1</td>
-<td align="left">+</td>
-<td align="left">A</td>
-</tr>
-<tr class="even">
-<td align="left">reference</td>
-<td align="right">400</td>
-<td align="right">600</td>
-<td align="right">1</td>
-<td align="left">-</td>
-<td align="left">B</td>
-</tr>
-<tr class="odd">
-<td align="left">query</td>
-<td align="right">1100</td>
-<td align="right">1300</td>
-<td align="right">1</td>
-<td align="left">+</td>
-<td align="left">A</td>
-</tr>
-<tr class="even">
-<td align="left">query</td>
-<td align="right">1600</td>
-<td align="right">1750</td>
-<td align="right">1</td>
-<td align="left">-</td>
-<td align="left">B</td>
-</tr>
-</tbody>
-</table>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">relationships</span><span class="op">)</span></span></code></pre></div>
-<table class="table">
-<thead><tr class="header">
-<th align="left">family</th>
-<th align="right">tstart</th>
-<th align="right">tend</th>
-<th align="right">qstart</th>
-<th align="right">qend</th>
-<th align="left">strand</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">A</td>
-<td align="right">100</td>
-<td align="right">250</td>
-<td align="right">1100</td>
-<td align="right">1300</td>
-<td align="left">+</td>
-</tr>
-<tr class="even">
-<td align="left">B</td>
-<td align="right">400</td>
-<td align="right">600</td>
-<td align="right">1600</td>
-<td align="right">1750</td>
-<td align="left">+</td>
-</tr>
-</tbody>
-</table>
+<p>The <code>comparison</code> object already contains the XZ1516 GFF3,
+N2 WS285 GTF, and <code>XZ1516_vs_N2</code> alignment. Select a local
+window in each assembly using its chromosome name: <code>V_RagTag</code>
+for XZ1516 and <code>V</code> for N2.</p>
 </div>
 <div class="section level3">
-<h3 id="prepare-the-plotting-data">Prepare the plotting data<a class="anchor" aria-label="anchor" href="#prepare-the-plotting-data"></a>
+<h3 id="set-the-windows-on-the-object">Set the windows on the object<a class="anchor" aria-label="anchor" href="#set-the-windows-on-the-object"></a>
 </h3>
-<p>Tables are valid inputs too. Add source track and chromosome names to
-route ribbons to their annotation panels. This prepared table workflow
-does not require a <code>SynPairAlignment</code>.</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">synteny</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/transform.html" class="external-link">transform</a></span><span class="op">(</span></span>
-<span>  <span class="va">relationships</span>,</span>
-<span>  track <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="st">"link_reference_query"</span>, levels <span class="op">=</span> <span class="va">panel_order</span><span class="op">)</span>,</span>
-<span>  tspecies <span class="op">=</span> <span class="st">"reference"</span>, tchr <span class="op">=</span> <span class="st">"chr1"</span>,</span>
-<span>  qspecies <span class="op">=</span> <span class="st">"query"</span>, qchr <span class="op">=</span> <span class="st">"chr2"</span>, group <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">relationships</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<p><code><a href="../reference/store_chain_layout.html">store_chain_layout()</a></code> creates the
+annotation-link-annotation panel layout. <code><a href="../reference/set_panel_xlim.html">set_panel_xlim()</a></code>
+then stores each assembly’s window on that layout. The geoms use these
+windows to select gene annotations and alignment blocks when the plot is
+built.</p>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">local_synteny</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/store_chain_layout.html">store_chain_layout</a></span><span class="op">(</span></span>
+<span>  <span class="va">comparison</span>, free <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x <span class="op">=</span> <span class="cn">TRUE</span>, y <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">local_synteny</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/set_panel_xlim.html">set_panel_xlim</a></span><span class="op">(</span></span>
+<span>  <span class="va">local_synteny</span>, individual <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"XZ1516"</span>, <span class="st">"N2"</span><span class="op">)</span>,</span>
+<span>  xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>XZ1516 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">21574000</span>, <span class="fl">21585000</span><span class="op">)</span>, N2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">20456500</span>, <span class="fl">20465500</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  xlim_chr <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>XZ1516 <span class="op">=</span> <span class="st">"V_RagTag"</span>, N2 <span class="op">=</span> <span class="st">"V"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/effective_panel_windows.html">effective_panel_windows</a></span><span class="op">(</span><span class="va">local_synteny</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   PANEL  track panel_type individual      chr    start      end</span></span>
+<span><span class="co">#&gt; 1     1 XZ1516 annotation     XZ1516 V_RagTag 21574000 21585000</span></span>
+<span><span class="co">#&gt; 3     3     N2 annotation         N2        V 20456500 20465500</span></span></code></pre></div>
+<p>Two N2 genes and four XZ1516 genes lie in these windows. Three
+alignment blocks remain, all in reverse orientation. The fourth PAF hit
+maps outside the selected N2 locus and is excluded by the panel windows.
+This creates a new object carrying the local layout;
+<code>comparison</code> remains available for other views.</p>
 </div>
 <div class="section level3">
 <h3 id="choose-the-geom-scales-facet-and-theme-1">Choose the geom, scales, facet, and theme<a class="anchor" aria-label="anchor" href="#choose-the-geom-scales-facet-and-theme-1"></a>
 </h3>
-<p>Share a named palette between tags and ribbons so colour has one
-meaning. Independent base-pair axes retain the two loci’s native
-coordinates.</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/geom_genetag.html">geom_genetag</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">genes</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">gene</span><span class="op">)</span>, show_label <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
+<p>Pass <code>local_synteny</code> directly to <code><a href="../reference/ggexon.html">ggexon()</a></code>.
+Use grey tags for the genes and one blue fill for all alignment ribbons.
+<code>gene_layout = "stack"</code> separates the overlapping N2 gene
+spans. Built-in tag labels use the annotation names, with
+<code>label_fontface = "italic"</code> and
+<code>label_position = "outside"</code> to place them above the gene
+bodies. Independent base-pair axes retain each assembly’s coordinates;
+the middle panel has no genomic axis of its own.</p>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">p_synteny</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">local_synteny</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_genetag.html">geom_genetag</a></span><span class="op">(</span></span>
+<span>    fill <span class="op">=</span> <span class="st">"grey75"</span>, colour <span class="op">=</span> <span class="st">"grey35"</span>, arrow_width <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>    gene_layout <span class="op">=</span> <span class="st">"stack"</span>, label_size <span class="op">=</span> <span class="fl">2.5</span>,</span>
+<span>    label_fontface <span class="op">=</span> <span class="st">"italic"</span>, label_position <span class="op">=</span> <span class="st">"outside"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_synteny_link.html">geom_synteny_link</a></span><span class="op">(</span></span>
-<span>    data <span class="op">=</span> <span class="va">synteny</span>,</span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>tspecies <span class="op">=</span> <span class="va">tspecies</span>, tchr <span class="op">=</span> <span class="va">tchr</span>, tstart <span class="op">=</span> <span class="va">tstart</span>, tend <span class="op">=</span> <span class="va">tend</span>,</span>
-<span>        qspecies <span class="op">=</span> <span class="va">qspecies</span>, qchr <span class="op">=</span> <span class="va">qchr</span>, qstart <span class="op">=</span> <span class="va">qstart</span>, qend <span class="op">=</span> <span class="va">qend</span>,</span>
-<span>        strand <span class="op">=</span> <span class="va">strand</span>, group <span class="op">=</span> <span class="va">group</span>, fill <span class="op">=</span> <span class="va">family</span><span class="op">)</span>,</span>
-<span>    inherit.aes <span class="op">=</span> <span class="cn">FALSE</span>, alpha <span class="op">=</span> <span class="fl">0.45</span></span>
+<span>    alignment <span class="op">=</span> <span class="st">"XZ1516_vs_N2"</span>, fill <span class="op">=</span> <span class="st">"#56B4E9"</span>, alpha <span class="op">=</span> <span class="fl">0.5</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/facet_genomics.html">facet_genomics</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">track</span><span class="op">)</span>, scales <span class="op">=</span> <span class="st">"free_x"</span>, ncol <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>                 strip.position <span class="op">=</span> <span class="st">"left"</span>, vertical <span class="op">=</span> <span class="st">"center"</span>,</span>
 <span>                 link_axis <span class="op">=</span> <span class="st">"none"</span>, link_strip <span class="op">=</span> <span class="st">"blank"</span>, link_panel_height <span class="op">=</span> <span class="fl">0.6</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>A <span class="op">=</span> <span class="st">"#0072B2"</span>, B <span class="op">=</span> <span class="st">"#D55E00"</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">"Family"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org/reference/label_number.html" class="external-link">label_number</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/theme_ggexon_pairwise.html">theme_ggexon_pairwise</a></span><span class="op">(</span>base_size <span class="op">=</span> <span class="fl">10</span>, show_legend <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="ggexon-workflow_files/figure-html/workflow-synteny-plot-1.png" class="r-plt" alt="Synthetic gene pairs connected by ribbons coloured by supplied family assignments." width="1440"></p>
+<span>  <span class="fu"><a href="../reference/scale_panel_annotation.html">scale_panel_annotation</a></span><span class="op">(</span><span class="st">"fixed_y"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org/reference/label_number.html" class="external-link">label_number</a></span><span class="op">(</span>big.mark <span class="op">=</span> <span class="st">","</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/theme_ggexon_pairwise.html">theme_ggexon_pairwise</a></span><span class="op">(</span>base_size <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
+<span><span class="va">p_synteny</span></span></code></pre></div>
+<p><img src="ggexon-workflow_files/figure-html/workflow-synteny-synspecies-1.png" class="r-plt" alt="Real XZ1516 and N2 gene annotations resolved directly from a SynSpecies object and joined by three blue reverse-oriented PAF alignment ribbons. Four XZ1516 genes appear above two overlapping N2 gene spans. Grey tags show gene spans and italic labels give annotation names." width="1440"></p>
+<p>The ribbons show sequence-alignment spans, not independently curated
+gene-to-gene orthology assignments. A ribbon may cross several gene
+tags. <code><a href="../reference/geom_synteny_link.html">geom_synteny_link()</a></code> resolves the alignment stored in
+<code>local_synteny</code> without inferring gene relationships. Neither
+layer needs a separately prepared plotting table.</p>
 </div>
 </div>
 <div class="section level2">
@@ -1545,7 +1501,7 @@ inspecting the GTF as text: its nine columns contain genomic coordinates
 and feature attributes. BigWig is binary, so inspect its records with a
 region query instead of a text reader. The BigWig backend runs on macOS
 and Linux, and is unsupported on Windows.</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">coverage_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"peel1_coverage"</span>, package <span class="op">=</span> <span class="st">"ggexon"</span><span class="op">)</span></span>
 <span><span class="va">coverage_gtf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">coverage_dir</span>, <span class="st">"WS285.ugt31-zeel1-peel1-nekl1.gtf"</span><span class="op">)</span></span>
 <span><span class="va">coverage_strains</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"XZ1516"</span>, <span class="st">"ECA2091"</span><span class="op">)</span></span>
@@ -1579,7 +1535,7 @@ records the unit; it does not normalize the scores.</p>
 <div class="section level3">
 <h3 id="construct-and-inspect-the-objects-1">Construct and inspect the objects<a class="anchor" aria-label="anchor" href="#construct-and-inspect-the-objects-1"></a>
 </h3>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">coverage_species</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SynSpecies.html">SynSpecies</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"PEEL-1 coverage"</span><span class="op">)</span></span>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">strain</span> <span class="kw">in</span> <span class="va">coverage_strains</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">one_strain</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SynIndividual.html">SynIndividual</a></span><span class="op">(</span></span>
@@ -1602,7 +1558,7 @@ representative gene model below the signals.</p>
 <div class="section level3">
 <h3 id="choose-the-geom-scales-facet-and-theme-2">Choose the geom, scales, facet, and theme<a class="anchor" aria-label="anchor" href="#choose-the-geom-scales-facet-and-theme-2"></a>
 </h3>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">coverage_layers</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">coverage_species</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_coverage.html">geom_coverage</a></span><span class="op">(</span>annotation <span class="op">=</span> <span class="st">"coverage"</span>, fill <span class="op">=</span> <span class="st">"#4C78A8"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_exon.html">geom_exon</a></span><span class="op">(</span></span>
@@ -1637,7 +1593,7 @@ at 85% of its height and clips higher peaks in the view. Neither option
 changes raw scores. Keep a linear genomic x axis: exon/intron
 compression through <code><a href="../reference/scale_x_ggexon_genomic.html">scale_x_ggexon_genomic()</a></code> is unsupported
 for continuous coverage tracks.</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">coverage_layers</span> <span class="op">+</span> <span class="fu"><a href="../reference/scale_panel_coverage.html">scale_panel_coverage</a></span><span class="op">(</span><span class="st">"free_y"</span>, auto <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ggexon-workflow_files/figure-html/workflow-coverage-free-1.png" class="r-plt" alt="The same raw coverage signals on separate y ranges, with each median depth at 85 percent of panel height and higher peaks clipped." width="1440"></p>
 <p>This second view reveals local signal structure in each strain. The
@@ -1661,7 +1617,7 @@ systems. For this example, create a synthetic mutation summary for a
 160-residue protein, plus two synthetic domain intervals. These are
 teaching data, not biological claims. Counts describe samples carrying
 each mutation.</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">raw_mutations</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  gene <span class="op">=</span> <span class="st">"demo-protein"</span>,</span>
 <span>  event_type <span class="op">=</span> <span class="st">"substitution"</span>,</span>
@@ -1692,7 +1648,7 @@ normalized table; the constructor does not parse it again.</p>
 <div class="section level3">
 <h3 id="construct-and-inspect-the-object-1">Construct and inspect the object<a class="anchor" aria-label="anchor" href="#construct-and-inspect-the-object-1"></a>
 </h3>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mutation_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".tsv"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.table</a></span><span class="op">(</span><span class="va">raw_mutations</span>, <span class="va">mutation_file</span>, sep <span class="op">=</span> <span class="st">"\t"</span>, quote <span class="op">=</span> <span class="cn">FALSE</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="va">normalized_mutations</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/read_protein_mutation_counts.html">read_protein_mutation_counts</a></span><span class="op">(</span><span class="va">mutation_file</span><span class="op">)</span></span>
@@ -1722,7 +1678,7 @@ counts for these data.</p>
 <div class="section level3">
 <h3 id="choose-the-geom-scales-and-theme-3">Choose the geom, scales, and theme<a class="anchor" aria-label="anchor" href="#choose-the-geom-scales-and-theme-3"></a>
 </h3>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">count_range</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">protein_mutations</span><span class="op">$</span><span class="va">sample_count</span><span class="op">)</span></span>
 <span><span class="va">prepared_protein</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/protein_lollipop_data.html">protein_lollipop_data</a></span><span class="op">(</span></span>
 <span>  mutations <span class="op">=</span> <span class="va">protein_mutations</span>, domains <span class="op">=</span> <span class="va">protein_domains</span>, protein_length <span class="op">=</span> <span class="fl">160</span>,</span>
@@ -1736,7 +1692,7 @@ counts for these data.</p>
 <span><span class="co">#&gt; 2       42         42          5         Binding</span></span>
 <span><span class="co">#&gt; 3       88         88         12       Catalytic</span></span>
 <span><span class="co">#&gt; 4      140        140         20       Catalytic</span></span></code></pre></div>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">protein_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_protein_lollipop.html">geom_protein_lollipop</a></span><span class="op">(</span></span>
 <span>    mutations <span class="op">=</span> <span class="va">protein_mutations</span>, domains <span class="op">=</span> <span class="va">protein_domains</span>, protein_length <span class="op">=</span> <span class="fl">160</span>,</span>
@@ -1783,7 +1739,7 @@ and last. Fill a 1,700-base <code>chr1</code> with unknown bases, then
 insert complete coding blocks. The first block starts with
 <code>ATG</code>, the last ends with <code>TAA</code>, and all CDS
 phases are zero.</p>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">coding_blocks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">101L</span>, <span class="fl">501L</span>, <span class="fl">901L</span><span class="op">)</span>, end <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">160L</span>, <span class="fl">590L</span>, <span class="fl">960L</span><span class="op">)</span>,</span>
 <span>  dna <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"ATG"</span>, <span class="fu"><a href="https://rdrr.io/r/base/strrep.html" class="external-link">strrep</a></span><span class="op">(</span><span class="st">"GCC"</span>, <span class="fl">19</span><span class="op">)</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/strrep.html" class="external-link">strrep</a></span><span class="op">(</span><span class="st">"GCC"</span>, <span class="fl">30</span><span class="op">)</span>,</span>
@@ -1815,7 +1771,7 @@ phases are zero.</p>
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">domain_input</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  transcript_id <span class="op">=</span> <span class="st">"A_full"</span>, domain <span class="op">=</span> <span class="st">"Teaching domain"</span>,</span>
 <span>  start <span class="op">=</span> <span class="fl">15L</span>, end <span class="op">=</span> <span class="fl">30L</span>, analysis <span class="op">=</span> <span class="st">"Pfam"</span></span>
@@ -1841,7 +1797,7 @@ phases are zero.</p>
 <td align="left">Pfam</td>
 </tr></tbody>
 </table>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">mutation_input</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
@@ -1876,7 +1832,7 @@ separately onto each matching isoform.</p>
 existing GTF. Translation joins each transcript’s CDS in coding order.
 The output below contains 70 characters for <code>A_full</code> and 40
 for <code>A_skip</code>, including a terminal <code>*</code>.</p>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sequence_bases</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"N"</span>, <span class="fl">1700</span><span class="op">)</span></span>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">coding_blocks</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">positions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq.int</a></span><span class="op">(</span><span class="va">coding_blocks</span><span class="op">$</span><span class="va">start</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>, <span class="va">coding_blocks</span><span class="op">$</span><span class="va">end</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span></span>
@@ -1931,7 +1887,7 @@ for <code>A_skip</code>, including a terminal <code>*</code>.</p>
 normalized mutation table in memory. The <code>analysis</code> column
 identifies the domain model; <code>model = "Pfam"</code> selects its
 records during projection.</p>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">teaching_domain_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>fileext <span class="op">=</span> <span class="st">".tsv"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html" class="external-link">write.table</a></span><span class="op">(</span><span class="va">domain_input</span>, <span class="va">teaching_domain_file</span>, sep <span class="op">=</span> <span class="st">"\t"</span>, quote <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>            row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
@@ -1973,7 +1929,7 @@ records during projection.</p>
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">mutation_projection</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"transcripts"</span>, <span class="st">"xmin"</span>, <span class="st">"xmax"</span>, <span class="st">"mutation"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
@@ -2010,7 +1966,7 @@ identical genomic bases across isoforms.</p>
 matching transcripts. Here <code>y_offset = 2</code> places the single
 domain row over <code>A_full</code> in this two-isoform layout; inspect
 row placement when changing transcripts or domain models.</p>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">projection_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">sequence_model</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_exon.html">geom_exon</a></span><span class="op">(</span>chr <span class="op">=</span> <span class="st">"chr1"</span>, subset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">80</span>, <span class="fl">980</span><span class="op">)</span>, fill <span class="op">=</span> <span class="st">"grey85"</span>,</span>
 <span>            colour <span class="op">=</span> <span class="st">"grey50"</span>, transcript_arrow_length <span class="op">=</span> <span class="fl">25</span><span class="op">)</span> <span class="op">+</span></span>
@@ -2047,7 +2003,7 @@ differ. For a short verified pairwise alignment,
 <p>Supply two already aligned strings. A dash is a gap; each start
 coordinate identifies the first non-gap base in the supplied
 orientation.</p>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dna</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>reference <span class="op">=</span> <span class="st">"AC-GTAC"</span>, query <span class="op">=</span> <span class="st">"ATCG-AC"</span><span class="op">)</span></span>
 <span><span class="va">anchors</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  sequence <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">dna</span><span class="op">)</span>, start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">900</span><span class="op">)</span>, strand <span class="op">=</span> <span class="st">"+"</span>,</span>
@@ -2070,7 +2026,7 @@ orientation.</p>
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">anchors</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
@@ -2104,7 +2060,7 @@ orientation.</p>
 <p>The helper returns a data frame rather than an S4 container. It
 classifies differences relative to the named reference; it does not
 compute an alignment or infer evolutionary direction.</p>
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dna_columns</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/alignseq_data.html">alignseq_data</a></span><span class="op">(</span></span>
 <span>  aligned <span class="op">=</span> <span class="va">dna</span>, anchors <span class="op">=</span> <span class="va">anchors</span>, reference <span class="op">=</span> <span class="st">"reference"</span>,</span>
 <span>  details <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">101</span>, <span class="fl">103</span><span class="op">)</span>, flank <span class="op">=</span> <span class="fl">1</span></span>
@@ -2228,7 +2184,7 @@ own genomic axis. Base callouts have equal column spacing; gaps consume
 no genomic bases. The geom supplies fixed event colours and nucleotide
 backgrounds, leaving the plot’s fill scale available for other
 layers.</p>
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_alignseq.html">geom_alignseq</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">dna_columns</span>, mode <span class="op">=</span> <span class="st">"rows"</span>, size <span class="op">=</span> <span class="fl">3.5</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">track</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">1</span>, scales <span class="op">=</span> <span class="st">"free_x"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -2254,7 +2210,7 @@ changing the meaning of the x axis to comparison slots.</p>
 <p>These synthetic clusters have genes assigned to three slots. Cluster
 B has no row for slot 2; this input omission alone does not establish
 gene loss.</p>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">slot_input</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  cluster <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"A"</span>, <span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"B"</span><span class="op">)</span>,</span>
 <span>  position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">300</span>, <span class="fl">1000</span>, <span class="fl">500</span>, <span class="fl">900</span><span class="op">)</span>,</span>
@@ -2304,12 +2260,12 @@ gene loss.</p>
 </table>
 </div>
 <div class="section level3">
-<h3 id="prepare-the-plotting-data-1">Prepare the plotting data<a class="anchor" aria-label="anchor" href="#prepare-the-plotting-data-1"></a>
+<h3 id="prepare-the-plotting-data">Prepare the plotting data<a class="anchor" aria-label="anchor" href="#prepare-the-plotting-data"></a>
 </h3>
 <p>Retain genomic positions in <code>x</code>. The strip scale maps
 these to the explicit template rather than requiring us to overwrite
 source coordinates.</p>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">slot_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/transform.html" class="external-link">transform</a></span><span class="op">(</span><span class="va">slot_input</span>, x <span class="op">=</span> <span class="va">position</span>, y <span class="op">=</span> <span class="fl">1</span>, track <span class="op">=</span> <span class="va">cluster</span>,</span>
 <span>                       gene_key <span class="op">=</span> <span class="va">slot</span>, genomic_x <span class="op">=</span> <span class="va">position</span><span class="op">)</span></span>
 <span><span class="va">slot_order</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"s1"</span>, <span class="st">"s2"</span>, <span class="st">"s3"</span><span class="op">)</span></span></code></pre></div>
@@ -2322,7 +2278,7 @@ arrows. <code><a href="../reference/strip_scale_x.html">strip_scale_x()</a></cod
 unoccupied ones. <code><a href="../reference/scale_x_facet_labels.html">scale_x_facet_labels()</a></code> names each facet’s
 slots, and <code><a href="https://ggplot2.tidyverse.org/reference/coord_fixed.html" class="external-link">coord_fixed()</a></code> keeps boxes square. The clean
 theme retains ordinary axis labels.</p>
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">slot_data</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_genebox.html">geom_genebox</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">slot_data</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">slot</span><span class="op">)</span>, box_size <span class="op">=</span> <span class="fl">0.65</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span><span class="va">.</span> <span class="op">~</span> <span class="va">cluster</span><span class="op">)</span> <span class="op">+</span></span>
@@ -2351,11 +2307,16 @@ without manual positioning of separate plots.</p>
 <div class="section level3">
 <h3 id="present-the-input-9">Present the input<a class="anchor" aria-label="anchor" href="#present-the-input-9"></a>
 </h3>
-<p>Reuse the synthetic gene intervals from example 5 and supply a
-synthetic Newick tree. Its branch lengths are illustrative. This
-optional example requires <code>ape</code> and <code>ggtree</code>.</p>
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">tree_text</span> <span class="op">&lt;-</span> <span class="st">"(reference:0.1,query:0.2);"</span></span>
+<p>Create two small synthetic gene tracks and supply a synthetic Newick
+tree. The intervals and branch lengths are illustrative. This optional
+example requires <code>ape</code> and <code>ggtree</code>.</p>
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">genes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  track <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"reference"</span>, <span class="st">"query"</span><span class="op">)</span>, each <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>,</span>
+<span>  xmin <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">400</span>, <span class="fl">1100</span>, <span class="fl">1600</span><span class="op">)</span>, xmax <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">250</span>, <span class="fl">600</span>, <span class="fl">1300</span>, <span class="fl">1750</span><span class="op">)</span>,</span>
+<span>  y <span class="op">=</span> <span class="fl">1</span>, strand <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"+"</span>, <span class="st">"-"</span>, <span class="st">"+"</span>, <span class="st">"-"</span><span class="op">)</span>, gene <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">tree_text</span> <span class="op">&lt;-</span> <span class="st">"(reference:0.1,query:0.2);"</span></span>
 <span><span class="va">tree_text</span></span>
 <span><span class="co">#&gt; [1] "(reference:0.1,query:0.2);"</span></span>
 <span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">genes</span><span class="op">)</span></span></code></pre></div>
@@ -2410,7 +2371,7 @@ optional example requires <code>ape</code> and <code>ggtree</code>.</p>
 <p>Tree-tip names must match track IDs, or be mapped with the
 <code>individual</code> argument to
 <code><a href="../reference/geom_genomic_tree.html">geom_genomic_tree()</a></code>.</p>
-<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">tree_available</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"ape"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">&amp;&amp;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"ggtree"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="va">tree_available</span><span class="op">)</span> <span class="op">{</span></span>
@@ -2426,7 +2387,7 @@ optional example requires <code>ape</code> and <code>ggtree</code>.</p>
 ranges and tree branch lengths have separate scales and meanings. This
 compact view hides the branch-length ruler; branch lengths remain
 specified in the Newick input.</p>
-<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="va">tree_available</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">tree_tracks</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/geom_genetag.html">geom_genetag</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">gene</span><span class="op">)</span>, show_label <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
@@ -2457,7 +2418,7 @@ the target, replacement features, and a name for the change.</p>
 <p>Shorten gene A’s middle exon from 590 to 560 in this synthetic
 exercise. Supply the complete corrected gene model, including its
 unchanged children.</p>
-<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">corrected_ranges</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/query_features.html">query_features</a></span><span class="op">(</span><span class="va">model</span>, genes <span class="op">=</span> <span class="st">"geneA"</span>, feature_type <span class="op">=</span> <span class="cn">NULL</span>, all <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">change</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="fu">S4Vectors</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/S4Vectors/man/Vector-class.html" class="external-link">mcols</a></span><span class="op">(</span><span class="va">corrected_ranges</span><span class="op">)</span><span class="op">$</span><span class="va">type</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"exon"</span>, <span class="st">"CDS"</span><span class="op">)</span> <span class="op">&amp;</span></span>
 <span>  <span class="fu">BiocGenerics</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/start.html" class="external-link">start</a></span><span class="op">(</span><span class="va">corrected_ranges</span><span class="op">)</span> <span class="op">==</span> <span class="fl">501</span></span>
@@ -2570,7 +2531,7 @@ unchanged children.</p>
 <div class="section level3">
 <h3 id="construct-and-apply-the-patch">Construct and apply the patch<a class="anchor" aria-label="anchor" href="#construct-and-apply-the-patch"></a>
 </h3>
-<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">correction</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SynAnnotationPatch.html">SynAnnotationPatch</a></span><span class="op">(</span></span>
 <span>  name <span class="op">=</span> <span class="st">"shorter-middle-exon"</span>, target_ids <span class="op">=</span> <span class="st">"geneA"</span>, mode <span class="op">=</span> <span class="st">"replace"</span>,</span>
 <span>  patch_data <span class="op">=</span> <span class="va">corrected_ranges</span></span>
@@ -2586,7 +2547,7 @@ the base feature annotation. A removal is also recorded as a patch, so
 it can be inspected and reset in the same way. These operations return
 updated objects; <code>model</code> remains available for the comparison
 below.</p>
-<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">restored_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/reset_patches.html">reset_patches</a></span><span class="op">(</span><span class="va">corrected_model</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="../reference/list_patches.html">list_patches</a></span><span class="op">(</span><span class="va">restored_model</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 0</span></span>
@@ -2607,7 +2568,7 @@ below.</p>
 boundary. Use uncompressed <code><a href="../reference/geom_exon2.html">geom_exon2()</a></code> models so the
 direction arrows sit at the terminal exons in this compact
 comparison.</p>
-<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">before</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/load_annotation.html">load_annotation</a></span><span class="op">(</span><span class="fu"><a href="../reference/SynIndividual.html">SynIndividual</a></span><span class="op">(</span></span>
 <span>  annotation_file <span class="op">=</span> <span class="va">gtf_file</span>, annotation_format <span class="op">=</span> <span class="st">"gtf"</span>, id <span class="op">=</span> <span class="st">"before"</span></span>
 <span><span class="op">)</span><span class="op">)</span></span>
@@ -2643,7 +2604,7 @@ the first example.</p>
 <code>chr1</code> as the teaching GTF. VCF <code>POS</code> uses
 one-based coordinates; these example alleles are teaching labels and
 have not been checked against a reference FASTA.</p>
-<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">vcf_lines</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>  <span class="st">"##fileformat=VCFv4.2"</span>,</span>
 <span>  <span class="st">"#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO"</span>,</span>
@@ -2667,7 +2628,7 @@ have not been checked against a reference FASTA.</p>
 the displayed interval. Plain-text VCF is sufficient for this small
 example. Large BGZF VCFs can use a tabix index for regional access. BCF
 parsing is unavailable.</p>
-<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">variant_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_annotation.html">add_annotation</a></span><span class="op">(</span></span>
 <span>  <span class="va">model</span>, <span class="fu"><a href="../reference/SynVCFAnnotation.html">SynVCFAnnotation</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"variants"</span>, vcf_file <span class="op">=</span> <span class="va">vcf_file</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
@@ -2708,7 +2669,7 @@ parsing is unavailable.</p>
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">variant_rows</span><span class="op">$</span><span class="va">allele</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">variant_rows</span><span class="op">$</span><span class="va">REF</span>, <span class="st">"&gt;"</span>, <span class="va">variant_rows</span><span class="op">$</span><span class="va">ALT</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -2719,7 +2680,7 @@ parsing is unavailable.</p>
 the same genomic x coordinates. The lines mark sites across transcript
 rows; they do not represent frequencies, coverage, or allele-specific
 transcript structures.</p>
-<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">vcf_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">variant_model</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_exon.html">geom_exon</a></span><span class="op">(</span>chr <span class="op">=</span> <span class="st">"chr1"</span>, subset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">80</span>, <span class="fl">980</span><span class="op">)</span>, fill <span class="op">=</span> <span class="st">"grey65"</span>,</span>
 <span>            transcript_arrow_length <span class="op">=</span> <span class="fl">25</span><span class="op">)</span> <span class="op">+</span></span>
@@ -2783,10 +2744,13 @@ transcript structures.</p>
 <td>Independent genomic x; pairwise theme</td>
 </tr>
 <tr class="odd">
-<td>Which curated genes or blocks correspond?</td>
-<td>Matched interval table</td>
-<td><code><a href="../reference/geom_synteny_link.html">geom_synteny_link()</a></code></td>
-<td>Shared family palette; pairwise theme</td>
+<td>How do gene spans relate to aligned blocks?</td>
+<td>
+<code>SynSpecies</code> + stored alignment and panel windows</td>
+<td>
+<code><a href="../reference/geom_genetag.html">geom_genetag()</a></code>, <code><a href="../reference/geom_synteny_link.html">geom_synteny_link()</a></code>
+</td>
+<td>Independent genomic x; pairwise theme</td>
 </tr>
 <tr class="even">
 <td>How does signal vary across a locus?</td>

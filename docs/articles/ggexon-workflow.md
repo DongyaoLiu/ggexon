@@ -10,9 +10,9 @@ grammar.
 Each example below presents the input, constructs or prepares the ggexon
 object, and chooses geoms, scales, and a theme. The small gene models,
 gene-order matrix, protein counts, and DNA strings are synthetic
-teaching data. The pairwise and coverage examples use bundled files. Run
-the chunks in order in an R session with the current version of ggexon
-installed.
+teaching data. The pairwise, synteny, and coverage examples use bundled
+files. Run the chunks in order in an R session with the current version
+of ggexon installed.
 
 ``` r
 
@@ -262,7 +262,10 @@ knitr::kable(as.data.frame(exons)[,
 Map transcript IDs to fill to distinguish isoforms. The ordinary
 continuous x scale preserves genomic spacing. The track theme hides the
 y axis used to position models; `show_legend = TRUE` retains the
-transcript legend.
+transcript legend. Use `transcript_arrow_length = 30` for a fixed 30-bp
+horizontal triangle width on every transcript. `transcript_arrow_ratio`
+controls the triangle’s height relative to exon height, rather than its
+length along the x axis.
 
 ``` r
 
@@ -575,23 +578,38 @@ labelled_model <- set_gene_labels(model, labels)
 Suppress built-in tag labels and add
 [`geom_genelabel()`](https://dongyaoliu.github.io/ggexon/reference/geom_genelabel.md)
 for explicit placement. `collapse_tandem = TRUE` also combines adjacent
-genes sharing a label. Retain a base-pair axis because gene spans and
-spacing matter here.
+genes sharing a label. Use the same x limits, `c(80, 1600)`, and y
+limits, `c(-1, 2)`, as in `p_gene_spans` to keep the gene bodies near
+the middle of the plot. Set `fontface = "italic"` in
+[`geom_genelabel()`](https://dongyaoliu.github.io/ggexon/reference/geom_genelabel.md)
+to italicize the displayed gene names.
 
 ``` r
 
-ggexon(labelled_model) +
-  geom_genetag(aes(fill = gene_id), chr = "chr1", show_label = FALSE) +
-  geom_genelabel(chr = "chr1", label_direction = "top", size = 3,
-                 collapse_tandem = TRUE, panel_width_inch = 7) +
-  scale_fill_manual(values = c(geneA = "#0072B2", geneB = "#009E73")) +
-  scale_x_continuous(labels = scales::label_number(big.mark = ","),
-                     expand = expansion(mult = 0.08)) +
+p_gene_labels <- ggexon(labelled_model) +
+  geom_genetag(
+    aes(fill = gene_id), chr = "chr1", subset = c(80, 1600),
+    show_label = FALSE, arrow_width = 50
+  ) +
+  geom_genelabel(
+    chr = "chr1", subset = c(80, 1600), label_direction = "top",
+    size = 3, fontface = "italic", collapse_tandem = TRUE,
+    panel_width_inch = 7
+  ) +
+  scale_fill_manual(values = gene_colours) +
+  scale_x_continuous(limits = c(80, 1600),
+                     breaks = c(100, 500, 900, 1300, 1600),
+                     labels = scales::label_number(big.mark = ",")) +
+  coord_cartesian(ylim = c(-1, 2)) +
   theme_ggexon_track(base_size = 10)
+p_gene_labels
 ```
 
-![Directional gene spans with readable labels above the synthetic
-locus.](ggexon-workflow_files/figure-html/workflow-genetags-1.png)
+![Gene A and gene B shown near the middle of the plot with italic gene
+labels above their directional spans. The x limits and vertical padding
+match the preceding gene-tag example, and both triangles have a fixed
+50-bp
+width.](ggexon-workflow_files/figure-html/workflow-genetags-italic-centred-1.png)
 
 For crowded loci, `gene_layout = "stack"` or `"nested"` separates
 overlapping bodies. For cross-species names, attach a
@@ -749,94 +767,94 @@ does not parse MAF files. See the [alignment class
 reference](https://dongyaoliu.github.io/ggexon/reference/SynMultiAlignment.md)
 for supported inputs.
 
-## 5. Gene-level synteny from an interval table
+## 5. Local synteny from real alignment blocks
 
-A curated ortholog link has a different interpretation from a nucleotide
-alignment.
+Reuse the `comparison` object from the previous example. Gene tags show
+the annotated gene spans, and
 [`geom_synteny_link()`](https://dongyaoliu.github.io/ggexon/reference/geom_synteny_link.md)
-draws supplied interval relationships with the same panel machinery; it
-does not infer those relationships.
+connects the stored PAF alignment intervals. Both layers read from the
+same `SynSpecies` object.
 
 ### Present the input
 
-Two synthetic loci contain matched genes at different positions. The
-`family` assignments are supplied teaching data.
+The `comparison` object already contains the XZ1516 GFF3, N2 WS285 GTF,
+and `XZ1516_vs_N2` alignment. Select a local window in each assembly
+using its chromosome name: `V_RagTag` for XZ1516 and `V` for N2.
+
+### Set the windows on the object
+
+[`store_chain_layout()`](https://dongyaoliu.github.io/ggexon/reference/store_chain_layout.md)
+creates the annotation-link-annotation panel layout.
+[`set_panel_xlim()`](https://dongyaoliu.github.io/ggexon/reference/set_panel_xlim.md)
+then stores each assembly’s window on that layout. The geoms use these
+windows to select gene annotations and alignment blocks when the plot is
+built.
 
 ``` r
 
-panel_order <- c("reference", "link_reference_query", "query")
-genes <- data.frame(
-  track = factor(rep(c("reference", "query"), each = 2), levels = panel_order),
-  xmin = c(100, 400, 1100, 1600), xmax = c(250, 600, 1300, 1750),
-  y = 1, strand = c("+", "-", "+", "-"), gene = rep(c("A", "B"), 2)
+local_synteny <- store_chain_layout(
+  comparison, free = list(x = TRUE, y = FALSE)
 )
-relationships <- data.frame(
-  family = c("A", "B"), tstart = c(100, 400), tend = c(250, 600),
-  qstart = c(1100, 1600), qend = c(1300, 1750), strand = "+"
+local_synteny <- set_panel_xlim(
+  local_synteny, individual = c("XZ1516", "N2"),
+  xlim = list(XZ1516 = c(21574000, 21585000), N2 = c(20456500, 20465500)),
+  xlim_chr = c(XZ1516 = "V_RagTag", N2 = "V")
 )
-knitr::kable(genes)
+effective_panel_windows(local_synteny)
+#>   PANEL  track panel_type individual      chr    start      end
+#> 1     1 XZ1516 annotation     XZ1516 V_RagTag 21574000 21585000
+#> 3     3     N2 annotation         N2        V 20456500 20465500
 ```
 
-| track     | xmin | xmax |   y | strand | gene |
-|:----------|-----:|-----:|----:|:-------|:-----|
-| reference |  100 |  250 |   1 | \+     | A    |
-| reference |  400 |  600 |   1 | \-     | B    |
-| query     | 1100 | 1300 |   1 | \+     | A    |
-| query     | 1600 | 1750 |   1 | \-     | B    |
-
-``` r
-
-knitr::kable(relationships)
-```
-
-| family | tstart | tend | qstart | qend | strand |
-|:-------|-------:|-----:|-------:|-----:|:-------|
-| A      |    100 |  250 |   1100 | 1300 | \+     |
-| B      |    400 |  600 |   1600 | 1750 | \+     |
-
-### Prepare the plotting data
-
-Tables are valid inputs too. Add source track and chromosome names to
-route ribbons to their annotation panels. This prepared table workflow
-does not require a `SynPairAlignment`.
-
-``` r
-
-synteny <- transform(
-  relationships,
-  track = factor("link_reference_query", levels = panel_order),
-  tspecies = "reference", tchr = "chr1",
-  qspecies = "query", qchr = "chr2", group = seq_len(nrow(relationships))
-)
-```
+Two N2 genes and four XZ1516 genes lie in these windows. Three alignment
+blocks remain, all in reverse orientation. The fourth PAF hit maps
+outside the selected N2 locus and is excluded by the panel windows. This
+creates a new object carrying the local layout; `comparison` remains
+available for other views.
 
 ### Choose the geom, scales, facet, and theme
 
-Share a named palette between tags and ribbons so colour has one
-meaning. Independent base-pair axes retain the two loci’s native
-coordinates.
+Pass `local_synteny` directly to
+[`ggexon()`](https://dongyaoliu.github.io/ggexon/reference/ggexon.md).
+Use grey tags for the genes and one blue fill for all alignment ribbons.
+`gene_layout = "stack"` separates the overlapping N2 gene spans.
+Built-in tag labels use the annotation names, with
+`label_fontface = "italic"` and `label_position = "outside"` to place
+them above the gene bodies. Independent base-pair axes retain each
+assembly’s coordinates; the middle panel has no genomic axis of its own.
 
 ``` r
 
-ggexon() +
-  geom_genetag(data = genes, aes(fill = gene), show_label = FALSE) +
+p_synteny <- ggexon(local_synteny) +
+  geom_genetag(
+    fill = "grey75", colour = "grey35", arrow_width = 100,
+    gene_layout = "stack", label_size = 2.5,
+    label_fontface = "italic", label_position = "outside"
+  ) +
   geom_synteny_link(
-    data = synteny,
-    aes(tspecies = tspecies, tchr = tchr, tstart = tstart, tend = tend,
-        qspecies = qspecies, qchr = qchr, qstart = qstart, qend = qend,
-        strand = strand, group = group, fill = family),
-    inherit.aes = FALSE, alpha = 0.45
+    alignment = "XZ1516_vs_N2", fill = "#56B4E9", alpha = 0.5
   ) +
   facet_genomics(vars(track), scales = "free_x", ncol = 1,
                  strip.position = "left", vertical = "center",
                  link_axis = "none", link_strip = "blank", link_panel_height = 0.6) +
-  scale_fill_manual(values = c(A = "#0072B2", B = "#D55E00"), name = "Family") +
-  scale_x_continuous(labels = scales::label_number()) +
-  theme_ggexon_pairwise(base_size = 10, show_legend = TRUE)
+  scale_panel_annotation("fixed_y") +
+  scale_x_continuous(labels = scales::label_number(big.mark = ",")) +
+  theme_ggexon_pairwise(base_size = 10)
+p_synteny
 ```
 
-![Synthetic gene pairs connected by ribbons coloured by supplied family
-assignments.](ggexon-workflow_files/figure-html/workflow-synteny-plot-1.png)
+![Real XZ1516 and N2 gene annotations resolved directly from a
+SynSpecies object and joined by three blue reverse-oriented PAF
+alignment ribbons. Four XZ1516 genes appear above two overlapping N2
+gene spans. Grey tags show gene spans and italic labels give annotation
+names.](ggexon-workflow_files/figure-html/workflow-synteny-synspecies-1.png)
+
+The ribbons show sequence-alignment spans, not independently curated
+gene-to-gene orthology assignments. A ribbon may cross several gene
+tags.
+[`geom_synteny_link()`](https://dongyaoliu.github.io/ggexon/reference/geom_synteny_link.md)
+resolves the alignment stored in `local_synteny` without inferring gene
+relationships. Neither layer needs a separately prepared plotting table.
 
 ## 6. Raw BigWig coverage beside gene annotation
 
@@ -1472,12 +1490,17 @@ without manual positioning of separate plots.
 
 ### Present the input
 
-Reuse the synthetic gene intervals from example 5 and supply a synthetic
-Newick tree. Its branch lengths are illustrative. This optional example
-requires `ape` and `ggtree`.
+Create two small synthetic gene tracks and supply a synthetic Newick
+tree. The intervals and branch lengths are illustrative. This optional
+example requires `ape` and `ggtree`.
 
 ``` r
 
+genes <- data.frame(
+  track = rep(c("reference", "query"), each = 2),
+  xmin = c(100, 400, 1100, 1600), xmax = c(250, 600, 1300, 1750),
+  y = 1, strand = c("+", "-", "+", "-"), gene = rep(c("A", "B"), 2)
+)
 tree_text <- "(reference:0.1,query:0.2);"
 tree_text
 #> [1] "(reference:0.1,query:0.2);"
@@ -1753,7 +1776,7 @@ models.](ggexon-workflow_files/figure-html/workflow-vcf-plot-1.png)
 | How do exon structures compare across long introns? | Feature layer | [`geom_exon2()`](https://dongyaoliu.github.io/ggexon/reference/geom_exon2.md) | [`scale_x_ggexon_genomic()`](https://dongyaoliu.github.io/ggexon/reference/scale_x_ggexon_genomic.md); piecewise guide |
 | What is the order and direction of genes? | Feature layer + plot labels | [`geom_genetag()`](https://dongyaoliu.github.io/ggexon/reference/geom_genetag.md), [`geom_genelabel()`](https://dongyaoliu.github.io/ggexon/reference/geom_genelabel.md) | Genomic bp or strip scale; track theme |
 | Which intervals align between genomes? | `SynSpecies` + `SynPairAlignment` | [`geom_nuclink()`](https://dongyaoliu.github.io/ggexon/reference/geom_nuclink.md) | Independent genomic x; pairwise theme |
-| Which curated genes or blocks correspond? | Matched interval table | [`geom_synteny_link()`](https://dongyaoliu.github.io/ggexon/reference/geom_synteny_link.md) | Shared family palette; pairwise theme |
+| How do gene spans relate to aligned blocks? | `SynSpecies` + stored alignment and panel windows | [`geom_genetag()`](https://dongyaoliu.github.io/ggexon/reference/geom_genetag.md), [`geom_synteny_link()`](https://dongyaoliu.github.io/ggexon/reference/geom_synteny_link.md) | Independent genomic x; pairwise theme |
 | How does signal vary across a locus? | `SynBigWigAnnotation` | [`geom_coverage()`](https://dongyaoliu.github.io/ggexon/reference/geom_coverage.md) | Genomic x; explicit coverage y policy |
 | Where are protein domains and mutations? | Mutation and domain tables/layers | [`geom_protein_lollipop()`](https://dongyaoliu.github.io/ggexon/reference/geom_protein_lollipop.md), [`geom_motif()`](https://dongyaoliu.github.io/ggexon/reference/geom_motif.md), [`geom_aa_variant()`](https://dongyaoliu.github.io/ggexon/reference/geom_aa_variant.md) | Protein residues or projected genomic bp |
 | Where are genomic variants recorded? | `SynVCFAnnotation` + [`query_variants()`](https://dongyaoliu.github.io/ggexon/reference/query_variants.md) | Exons + ordinary [`geom_vline()`](https://ggplot2.tidyverse.org/reference/geom_abline.html) | Genomic bp; track theme |
