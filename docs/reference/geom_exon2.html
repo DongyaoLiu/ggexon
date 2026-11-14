@@ -81,7 +81,8 @@ and uses thinner boxes for UTR features when UTR/CDS rows are available.</p>
 <span>  arrow_width <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  transcript_backbone_fill <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  transcript_backbone_colour <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  inherit.aes <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  inherit.aes <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  genomic_layout <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -196,6 +197,12 @@ aesthetics for backwards compatibility.</p></dd>
 
 <dt id="arg-inherit-aes">inherit.aes<a class="anchor" aria-label="anchor" href="#arg-inherit-aes"></a></dt>
 <dd><p>If <code>FALSE</code>, overrides inherited aesthetics.</p></dd>
+
+
+<dt id="arg-genomic-layout">genomic_layout<a class="anchor" aria-label="anchor" href="#arg-genomic-layout"></a></dt>
+<dd><p>Optional prepared genomic layout name. Its stored
+exon coordinates and height are used; independent intron compression and
+coordinate overrides are disabled.</p></dd>
 
 </dl></div>
     <div class="section level2">

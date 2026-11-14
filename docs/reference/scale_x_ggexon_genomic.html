@@ -66,7 +66,9 @@ genomic coordinates.</p>
 <span>  labels <span class="op">=</span> <span class="fu"><a href="waiver.html">waiver</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  minor_breaks <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  n.breaks <span class="op">=</span> <span class="fl">5</span>,</span>
-<span>  guide <span class="op">=</span> <span class="fu"><a href="waiver.html">waiver</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  guide <span class="op">=</span> <span class="fu"><a href="waiver.html">waiver</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  genomic_layout <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -118,6 +120,17 @@ genomic break values.</p></dd>
 <dd><p>Axis guide. Use <code><a href="waiver.html">waiver()</a></code> or <code>"genomic"</code> for ordinary
 genomic-coordinate ticks, <code>"none"</code> to hide transformed x-axis ticks, or
 <code><a href="guide_x_ggexon_piecewise.html">guide_x_ggexon_piecewise()</a></code> for representative exon/intron scale bars.</p></dd>
+
+
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
+<dd><p>Reserved for future arguments. Must be empty.</p></dd>
+
+
+<dt id="arg-genomic-layout">genomic_layout<a class="anchor" aria-label="anchor" href="#arg-genomic-layout"></a></dt>
+<dd><p>Optional name of a prepared genomic layout stored on
+the plot's <code>SynIndividual</code> objects. Its cached exon map replaces training
+from visible exon layers. An explicitly supplied <code>intron_factor</code> must
+agree with the prepared layout.</p></dd>
 
 </dl></div>
     <div class="section level2">

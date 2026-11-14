@@ -6,8 +6,9 @@ source(file.path(demo_dir, "plot-hla-a-example.R"))
 source(file.path(demo_dir, "project-hla-a-example.R"))
 hla <- load_hla_a_example(demo_dir)
 plots <- plot_hla_a_example(hla)
-gene <- load_hla_a_gene_model(hla, demo_dir)
-plots$genomic <- plot_hla_a_gene_example(hla, gene, intron_factor = 3)$plot
+hla <- prepare_hla_a_gene_layout(hla, intron_factor = 3)
+gene <- hla_a_projected_mutations(hla)
+plots$genomic <- plot_hla_a_gene_example(hla, intron_factor = 3)$plot
 out_dir <- file.path("data-raw", "hla_a_lollipop", "preview")
 dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
 for (name in c("overview", "focus", "genomic")) {
@@ -20,9 +21,12 @@ for (name in c("overview", "focus", "genomic")) {
     )
   }
 }
-utils::write.table(hla$mutations, file.path(out_dir, "hla_a_substitutions.tsv"),
+mutations <- ggexon::query_protein_mutations(hla, annotation = "hla_substitutions")
+# Keep the exported summary's position column in mature coordinates.
+mutations$position <- mutations$mature_position
+utils::write.table(mutations, file.path(out_dir, "hla_a_substitutions.tsv"),
                    sep = "\t", row.names = FALSE, quote = FALSE)
-utils::write.table(hla$states, file.path(out_dir, "hla_a_residue_states.tsv"),
+utils::write.table(hla_a_evidence(hla)$states, file.path(out_dir, "hla_a_residue_states.tsv"),
                    sep = "\t", row.names = FALSE, quote = FALSE)
 utils::write.table(gene$projection, file.path(out_dir, "hla_a_projected_codon_segments.tsv"),
                    sep = "\t", row.names = FALSE, quote = FALSE)

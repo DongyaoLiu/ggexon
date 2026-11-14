@@ -987,6 +987,13 @@ build_ggexon <- S7::method(ggexon_build, class_ggexon) <- function(plot, ...) {
     plot@layers <- layers
     data <- rep(list(NULL), length(layers))
 
+    prepared_layouts <- unique(Filter(Negate(is.null), lapply(layers, function(layer)
+      layer$geom_params$genomic_layout %||% NULL)))
+    if (length(prepared_layouts) && (length(prepared_layouts) != 1L ||
+        !identical(plot@genomic_x_scale$genomic_layout, prepared_layouts[[1L]]))) {
+      stop("Prepared layers must use one matching `scale_x_ggexon_genomic(genomic_layout = ...)`.", call. = FALSE)
+    }
+
     syn_plot_context <- collect_syn_plot_context(layers, plot@data, facet = plot@facet)
     if (!is.null(syn_plot_context)) {
       for (i in seq_along(layers)) {

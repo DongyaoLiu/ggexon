@@ -31,6 +31,7 @@
   }
   pieces <- lapply(unique(as.character(targets)), function(target) {
     individual <- resolve_syn_individual(x, species = target)
+    if (!is.null(params$genomic_layout)) return(.prepared_lollipop_component(individual, params, component))
     ann <- resolve_syn_protein_mutation_annotation(individual, params$annotation,
       allow_missing = methods::is(x, "SynSpecies") && !explicit_targets)
     if (is.null(ann)) return(NULL)

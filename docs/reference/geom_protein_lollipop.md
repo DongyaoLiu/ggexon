@@ -3,8 +3,9 @@
 Draw a backbone, optional domains, curved stems, and mutation heads.
 With `ggexon(SynIndividual)` or `ggexon(SynSpecies)`, each component
 resolves its data from attached protein annotations during plot build.
-Coordinates stay in amino-acid units; no genomic projection is
-performed.
+Coordinates stay in amino-acid units unless `genomic_layout` selects
+coordinates already prepared on the Syn object. That mode reads stored
+geometry without projecting or spreading mutations during plotting.
 
 ## Usage
 
@@ -57,7 +58,11 @@ geom_protein_lollipop(
   event_type = NULL,
   min_sample_count = NULL,
   strains = NULL,
-  mutation = NULL
+  mutation = NULL,
+  ...,
+  genomic_layout = NULL,
+  stem_alpha = 1,
+  point_alpha = 1
 )
 ```
 
@@ -221,6 +226,24 @@ geom_protein_lollipop(
 
   Protein, transcript, or gene identifiers matching the mutation
   annotation's `keytype`. Use to distinguish isoforms of the same gene.
+
+- ...:
+
+  Reserved; must be empty.
+
+- genomic_layout:
+
+  Optional name prepared by
+  [`prepare_genomic_layout()`](https://dongyaoliu.github.io/ggexon/reference/prepare_genomic_layout.md).
+  The layout supplies shared stem/head positions and heights. Set
+  geometry at preparation time; layer arguments control styling. Use the
+  same layout in exon/label layers and in
+  [`scale_x_ggexon_genomic()`](https://dongyaoliu.github.io/ggexon/reference/scale_x_ggexon_genomic.md).
+
+- stem_alpha, point_alpha:
+
+  Opacity of stems and mutation heads. With `stem_colour = NULL` and
+  `score` supplied, stems share the head colours.
 
 ## Value
 

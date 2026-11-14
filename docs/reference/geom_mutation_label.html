@@ -87,7 +87,8 @@ rows from attached <code>SynProteinMutationAnnotation</code> layers.</p>
 <span>  show_empty <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  na.rm <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  show.legend <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  inherit.aes <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  inherit.aes <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  genomic_layout <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -164,6 +165,11 @@ multi-height lollipop heads.</p></dd>
 
 <dt id="arg-show-empty">show_empty<a class="anchor" aria-label="anchor" href="#arg-show-empty"></a></dt>
 <dd><p>Logical; keep empty/<code>NA</code> labels when <code>TRUE</code>.</p></dd>
+
+
+<dt id="arg-genomic-layout">genomic_layout<a class="anchor" aria-label="anchor" href="#arg-genomic-layout"></a></dt>
+<dd><p>Optional prepared genomic layout name. Labels read
+stored head positions, with label_nudge_y applied as a text offset.</p></dd>
 
 </dl></div>
     <div class="section level2">

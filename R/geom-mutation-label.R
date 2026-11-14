@@ -19,7 +19,7 @@ GeomMutationLabel <- ggproto(
     "min_sample_count", "strains", "mutation", "ids", "mutation_position", "label_col",
     "ref", "alt", "spread_threshold", "mutation_y", "mutation_y_by",
     "mutation_y_strategy", "mutation_y_range", "mutation_y_trans",
-    "mutation_y_breaks", "mutation_y_values", "label_nudge_y", "show_empty"
+    "mutation_y_breaks", "mutation_y_values", "label_nudge_y", "show_empty", "genomic_layout"
   ),
   default_params = function() {
     list(
@@ -51,6 +51,7 @@ GeomMutationLabel <- ggproto(
   syn_data = function(x, layer) {
     params <- syn_layer_params(layer)
     context <- layer$syn_plot_context %||% NULL
+    if (!is.null(params$genomic_layout)) return(.prepared_mutation_labels(x, params, context))
     syn_to_mutation_label_df(
       x = x,
       annotation = params$annotation,
@@ -113,6 +114,8 @@ GeomMutationLabel <- ggproto(
 #'   Height-mapping controls shared with `protein_lollipop_data()`.
 #' @param label_nudge_y Vertical offset above mutation heads.
 #' @param show_empty Logical; keep empty/`NA` labels when `TRUE`.
+#' @param genomic_layout Optional prepared genomic layout name. Labels read
+#'   stored head positions, with label_nudge_y applied as a text offset.
 #'
 #' @return A ggplot layer.
 #' @export
@@ -147,10 +150,24 @@ geom_mutation_label <- function(mapping = NULL,
                                 show_empty = FALSE,
                                 na.rm = FALSE,
                                 show.legend = FALSE,
-                                inherit.aes = TRUE) {
+                                inherit.aes = TRUE, genomic_layout = NULL) {
+  if (!is.null(genomic_layout)) {
+    .genomic_name(genomic_layout, "genomic_layout")
+    .prepared_mapping_arguments(mapping)
+    .prepared_mapping_arguments(list(...))
+    if (!identical(position, "identity") || !identical(stat, "identity"))
+      stop("Prepared geometry requires identity stat and position.", call. = FALSE)
+    .prepared_geometry_arguments(match.call(), c("mutation_position", "spread_threshold",
+      "mutation_y", "mutation_y_by", "mutation_y_strategy", "mutation_y_range", "mutation_y_trans",
+      "mutation_y_breaks", "mutation_y_values", "genes", "ids", "event_type", "min_sample_count",
+      "strains", "mutation"))
+  }
   if (is.null(data) && !is.null(mutations)) {
     data <- mutations
   }
+  if (!is.null(genomic_layout) && !is.null(data) &&
+      !methods::is(data, "SynIndividual") && !methods::is(data, "SynSpecies"))
+    stop("A prepared genomic layout requires Syn object input.", call. = FALSE)
 
   if ((is.data.frame(data) || methods::is(data, "DataFrame")) &&
       !methods::is(data, "SynIndividual") &&
@@ -180,6 +197,7 @@ geom_mutation_label <- function(mapping = NULL,
   params <- Filter(Negate(is.null), list(
     ...,
     na.rm = na.rm,
+    genomic_layout = genomic_layout,
     annotation = annotation,
     individual = individual,
     species = species,

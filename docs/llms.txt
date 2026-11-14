@@ -172,6 +172,8 @@ Slot-level reference pages for ggexon’s S4 object hierarchy.
   : SynFeatureAnnotation class
 - [`SynGenomeAnnotation-class`](https://dongyaoliu.github.io/ggexon/reference/SynGenomeAnnotation-class.md)
   : SynGenomeAnnotation class
+- [`SynGenomicProjectionAnnotation-class`](https://dongyaoliu.github.io/ggexon/reference/SynGenomicProjectionAnnotation-class.md)
+  : Stored genomic projection of a protein annotation
 - [`SynIndAnnotation-class`](https://dongyaoliu.github.io/ggexon/reference/SynIndAnnotation-class.md)
   : SynIndAnnotation class
 - [`SynIndividual-class`](https://dongyaoliu.github.io/ggexon/reference/SynIndividual-class.md)
@@ -404,6 +406,9 @@ stored layout information to Syn containers.
 - [`store_projected_domains()`](https://dongyaoliu.github.io/ggexon/reference/store_projected_domains.md)
   : Store a projected protein-domain table on a SynIndividual
 
+- [`prepare_genomic_layout()`](https://dongyaoliu.github.io/ggexon/reference/prepare_genomic_layout.md)
+  : Prepare shared genomic geometry on a Syn object
+
 ## Load, query, and transform annotations
 
 Materialize annotation data, query layer payloads, import homology, and
@@ -439,6 +444,10 @@ derive sequence or protein-level summaries.
   : Project protein-domain coordinates onto genomic coordinates
 - [`project_mutations_to_genome()`](https://dongyaoliu.github.io/ggexon/reference/project_mutations_to_genome.md)
   : Project amino-acid variants onto genomic coordinates
+- [`query_genomic_projection()`](https://dongyaoliu.github.io/ggexon/reference/query_genomic_projection.md)
+  : Inspect a stored genomic protein projection
+- [`query_genomic_layout()`](https://dongyaoliu.github.io/ggexon/reference/query_genomic_layout.md)
+  : Inspect shared prepared genomic coordinates
 - [`projected_domains()`](https://dongyaoliu.github.io/ggexon/reference/projected_domains.md)
   : Access stored projected protein-domain tables
 - [`homology_table()`](https://dongyaoliu.github.io/ggexon/reference/homology_table.md)

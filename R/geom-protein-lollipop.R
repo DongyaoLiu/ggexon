@@ -178,6 +178,7 @@ protein_lollipop_data <- function(mutations,
     n = stem_points,
     k = curve_k
   )
+  if (!is.null(score)) stems$lollipop_score <- mut_df$lollipop_score[stems$lollipop_curve_id]
 
   structure(
     list(
@@ -195,7 +196,9 @@ protein_lollipop_data <- function(mutations,
 #' Draw a backbone, optional domains, curved stems, and mutation heads. With
 #' `ggexon(SynIndividual)` or `ggexon(SynSpecies)`, each component resolves its
 #' data from attached protein annotations during plot build. Coordinates stay
-#' in amino-acid units; no genomic projection is performed.
+#' in amino-acid units unless `genomic_layout` selects coordinates already
+#' prepared on the Syn object. That mode reads stored geometry without
+#' projecting or spreading mutations during plotting.
 #'
 #' Select one protein per individual using `genes` or `ids`. Domain records
 #' are matched through their annotation's `keytype`; when it differs from the
@@ -238,6 +241,13 @@ protein_lollipop_data <- function(mutations,
 #'   only when `score` is `NULL`; otherwise point colour is mapped to
 #'   `lollipop_score`.
 #' @param show.legend Passed to generated ggplot2 layers.
+#' @param ... Reserved; must be empty.
+#' @param genomic_layout Optional name prepared by [prepare_genomic_layout()].
+#'   The layout supplies shared stem/head positions and heights. Set geometry
+#'   at preparation time; layer arguments control styling. Use the same layout
+#'   in exon/label layers and in [scale_x_ggexon_genomic()].
+#' @param stem_alpha,point_alpha Opacity of stems and mutation heads.
+#'   With `stem_colour = NULL` and `score` supplied, stems share the head colours.
 #'
 #' @return A list of ggplot2 layers.
 #' @export
@@ -288,13 +298,26 @@ geom_protein_lollipop <- function(mutations = NULL,
                                   event_type = NULL,
                                   min_sample_count = NULL,
                                   strains = NULL,
-                                  mutation = NULL) {
+                                  mutation = NULL, ..., genomic_layout = NULL,
+                                  stem_alpha = 1, point_alpha = 1) {
+  if (length(list(...))) stop("Unused lollipop arguments.", call. = FALSE)
+  if (!is.null(genomic_layout)) {
+    .genomic_name(genomic_layout, "genomic_layout")
+    .prepared_geometry_arguments(match.call(), c("domains", "protein_length", "position",
+      "domain_start", "domain_end", "domain", "domain_ymin", "domain_ymax", "spread_threshold",
+      "protein_start", "track_ymin", "track_ymax", "domain_default_ymin", "domain_default_ymax",
+      "mutation_y", "mutation_y_by", "mutation_y_strategy", "mutation_y_range", "mutation_y_trans",
+      "mutation_y_breaks", "mutation_y_values", "stem_points", "curve_k", "genes", "ids",
+      "event_type", "min_sample_count", "strains", "mutation", "domain_annotation"))
+  }
   if (!is.null(data) && !is.null(mutations)) {
     stop("Supply only one of `data` and `mutations`.", call. = FALSE)
   }
   data <- data %||% mutations
   syn_input <- is.null(data) || methods::is(data, "SynIndividual") ||
     methods::is(data, "SynSpecies")
+  if (!is.null(genomic_layout) && !syn_input)
+    stop("A prepared genomic layout requires Syn object input.", call. = FALSE)
   preparation <- list(
     domains = domains,
     protein_length = protein_length,
@@ -325,36 +348,39 @@ geom_protein_lollipop <- function(mutations = NULL,
     protein_lollipop_data, c(list(mutations = data), preparation)
   )
   selectors <- list(
+    genomic_layout = genomic_layout,
     annotation = annotation, domain_annotation = domain_annotation,
     individual = individual, species = species, genes = genes, ids = ids,
     event_type = event_type, min_sample_count = min_sample_count,
     strains = strains, mutation = mutation
   )
   component_layer <- function(component, mapping, ..., show.legend = NA) {
+    style <- list(...)
+    if (!is.null(mapping$colour) && is.null(style$colour)) style$colour <- NULL
     if (syn_input) {
       return(.syn_protein_lollipop_layer(
-        component, data, mapping, c(preparation, selectors), list(...), show.legend
+        component, data, mapping, c(preparation, selectors), style, show.legend
       ))
     }
     geom <- switch(component, stems = ggplot2::geom_line,
       backbone = ggplot2::geom_rect, domains = ggplot2::geom_rect,
       mutations = ggplot2::geom_point)
-    geom(data = prepared[[component]], mapping = mapping, ...,
-      inherit.aes = FALSE, show.legend = show.legend)
+    do.call(geom, c(list(data = prepared[[component]], mapping = mapping,
+      inherit.aes = FALSE, show.legend = show.legend), style))
   }
 
   layers <- list()
 
   if (isTRUE(show_stems) && (syn_input || nrow(prepared$stems) > 0L)) {
+    stem_mapping <- ggplot2::aes(x = .data$lollipop_x, y = .data$lollipop_y,
+      group = .data$lollipop_curve_id)
+    if (is.null(stem_colour) && !is.null(score)) stem_mapping$colour <- rlang::quo(.data$lollipop_score)
     layers <- c(layers, list(
       component_layer(
         "stems",
-        mapping = ggplot2::aes(
-          x = .data$lollipop_x,
-          y = .data$lollipop_y,
-          group = .data$lollipop_curve_id
-        ),
+        mapping = stem_mapping,
         colour = stem_colour,
+        alpha = stem_alpha,
         linewidth = stem_linewidth,
         lineend = "round",
         linejoin = "bevel",
@@ -416,6 +442,7 @@ geom_protein_lollipop <- function(mutations = NULL,
         "mutations",
         mapping = point_mapping,
         size = point_size,
+        alpha = point_alpha,
         show.legend = show.legend
       )
     } else {
@@ -424,6 +451,7 @@ geom_protein_lollipop <- function(mutations = NULL,
         mapping = point_mapping,
         size = point_size,
         colour = point_colour,
+        alpha = point_alpha,
         show.legend = show.legend
       )
     }

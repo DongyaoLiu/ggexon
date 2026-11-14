@@ -36,7 +36,8 @@ geom_mutation_label(
   show_empty = FALSE,
   na.rm = FALSE,
   show.legend = FALSE,
-  inherit.aes = TRUE
+  inherit.aes = TRUE,
+  genomic_layout = NULL
 )
 }
 \arguments{
@@ -78,6 +79,9 @@ multi-height lollipop heads.}
 \item{label_nudge_y}{Vertical offset above mutation heads.}
 
 \item{show_empty}{Logical; keep empty/\code{NA} labels when \code{TRUE}.}
+
+\item{genomic_layout}{Optional prepared genomic layout name. Labels read
+stored head positions, with label_nudge_y applied as a text offset.}
 }
 \value{
 A ggplot layer.

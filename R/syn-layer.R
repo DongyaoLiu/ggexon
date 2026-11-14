@@ -1686,7 +1686,7 @@ syn_to_motif_df <- function(x,
   }
 
   individual <- resolve_syn_individual(x, species = species)
-  ann <- resolve_syn_domain_annotation(
+  ann <- .find_genomic_projection(individual, annotation, "domain") %||% resolve_syn_domain_annotation(
     individual,
     annotation = annotation,
     allow_missing = TRUE
@@ -1802,8 +1802,11 @@ syn_to_motif_df <- function(x,
 #'   projected proteins.
 #' @param chr Optional chromosome name used to define the genomic window.
 #' @param start,end Optional genomic window bounds.
+#' @param store Logical; with TRUE attach a genomic projection and return the updated SynIndividual.
+#' @param name Name of the genomic projection when store is TRUE.
 #'
-#' @return A data frame with projected genomic motif segments.
+#' @return A data frame with projected genomic motif segments, or the updated
+#'   SynIndividual when store is TRUE.
 #' @export
 project_domains_to_genome <- function(x,
                                       annotation = NULL,
@@ -1815,9 +1818,18 @@ project_domains_to_genome <- function(x,
                                       transcripts = NULL,
                                       chr = NULL,
                                       start = NULL,
-                                      end = NULL) {
+                                      end = NULL, store = FALSE, name = "genomic_domains") {
   if (!methods::is(x, "SynIndividual")) {
     stop("`project_domains_to_genome()` expects a SynIndividual object.", call. = FALSE)
+  }
+
+  if (!is.logical(store) || length(store) != 1L || is.na(store))
+    stop("`store` must be TRUE or FALSE.", call. = FALSE)
+  recipe <- list(ids = ids, domains = domains, model = model, motif = motif, genes = genes, transcripts = transcripts, chr = chr, start = start, end = end)
+  stored <- .find_genomic_projection(x, annotation, "domain")
+  if (!is.null(stored)) {
+    if (store) stop("The selected annotation is already genomic; project its original protein annotation instead.", call. = FALSE)
+    return(.query_stored_projection(x, stored, recipe))
   }
 
   if (!is.null(chr)) {
@@ -1825,13 +1837,19 @@ project_domains_to_genome <- function(x,
   }
 
   ann <- resolve_syn_domain_annotation(x, annotation = annotation)
-  
+  finish <- function(out) .finish_genomic_projection(x, out, annotation_name(ann),
+    "domain", store, name, recipe)
 
-  domain_df <- query_domains(ann, ids = ids, domains = domains)
+  projection_ann <- ann
+  if (store) {
+    projection_ann@domain_data <- query_domains(ann)
+    projection_ann@domain_data$.ggexon_projection_row <- seq_len(nrow(projection_ann@domain_data))
+  }
+  domain_df <- query_domains(projection_ann, ids = ids, domains = domains)
 
   domain_df <- .filter_projectable_domains(domain_df, model = model, motif = motif)
   if (nrow(domain_df) == 0L) {
-    return(data.frame())
+    return(finish(data.frame()))
   }
 
   key_col <- ann@keytype
@@ -1862,7 +1880,7 @@ project_domains_to_genome <- function(x,
       all = FALSE
     )
     if (length(seed_gr) == 0L) {
-      return(data.frame())
+      return(finish(data.frame()))
     }
     candidate_df <- .domain_projection_candidates(seed_gr)
     key_values <- unique(candidate_df$match_key)
@@ -1873,7 +1891,7 @@ project_domains_to_genome <- function(x,
       drop = FALSE
     ]
     if (nrow(domain_df) == 0L) {
-      return(data.frame())
+      return(finish(data.frame()))
     }
   }
 
@@ -1902,7 +1920,7 @@ project_domains_to_genome <- function(x,
     transcript_ids <- unique(.annotation_transcript_ids(seed_gr))
     transcript_ids <- transcript_ids[!is.na(transcript_ids) & nzchar(transcript_ids)]
     if (length(transcript_ids) == 0L) {
-      return(data.frame())
+      return(finish(data.frame()))
     }
     target_cds <- query_features(
       x,
@@ -1912,7 +1930,7 @@ project_domains_to_genome <- function(x,
   }
 
   if (length(target_cds) == 0L) {
-    return(data.frame())
+    return(finish(data.frame()))
   }
 
   text_col <- if ("domain_name" %in% colnames(domain_df)) {
@@ -1923,13 +1941,15 @@ project_domains_to_genome <- function(x,
 
   transcript_meta <- .domain_projection_transcript_meta(target_cds)
   out <- lapply(seq_len(nrow(domain_df)), function(i) {
-    .project_one_domain_row(
+    projected <- .project_one_domain_row(
       domain_row = domain_df[i, , drop = FALSE],
       key_col = key_col,
       text_col = text_col,
       transcript_meta = transcript_meta,
       cds_gr = target_cds
     )
+    if (store) projected$.ggexon_projection_row <- rep(domain_df$.ggexon_projection_row[i], nrow(projected))
+    projected
   })
   out <- dplyr::bind_rows(out)
 
@@ -1945,7 +1965,7 @@ project_domains_to_genome <- function(x,
   }
 
   rownames(out) <- NULL
-  out
+  finish(out)
 }
 
 #' Project amino-acid variants onto genomic coordinates
@@ -1969,11 +1989,15 @@ project_domains_to_genome <- function(x,
 #' @param strains,mutation,event_type,min_sample_count,protein_ranges,ref
 #'   Optional variant filters forwarded to [query_protein_mutations()].
 #' @param chr,start,end Optional genomic window used to clip the projection.
+#' @param store Logical; with TRUE attach fragments and shared exonic anchors
+#'   and return the updated SynIndividual. Original protein annotations remain.
+#' @param name Name of the genomic projection when store is TRUE.
 #'
 #' @return A data frame with one row per (variant, overlapped CDS segment),
 #'   containing the projected `seqnames`, `xmin`, `xmax`, `strand`,
 #'   `transcripts`, and the variant metadata columns (`position`, `ref`, `alt`,
 #'   `mutation`, ...). Returns an empty data frame when nothing projects.
+#'   With store = TRUE, returns the updated SynIndividual instead.
 #' @seealso [project_domains_to_genome()], [geom_aa_variant()]
 #' @export
 project_mutations_to_genome <- function(x,
@@ -1988,9 +2012,18 @@ project_mutations_to_genome <- function(x,
                                         ref = NULL,
                                         chr = NULL,
                                         start = NULL,
-                                        end = NULL) {
+                                        end = NULL, store = FALSE, name = "genomic_mutations") {
   if (!methods::is(x, "SynIndividual")) {
     stop("`project_mutations_to_genome()` expects a SynIndividual object.", call. = FALSE)
+  }
+
+  if (!is.logical(store) || length(store) != 1L || is.na(store))
+    stop("`store` must be TRUE or FALSE.", call. = FALSE)
+  recipe <- list(genes = genes, transcripts = transcripts, strains = strains, mutation = mutation, event_type = event_type, min_sample_count = min_sample_count, protein_ranges = protein_ranges, ref = ref, chr = chr, start = start, end = end)
+  stored <- .find_genomic_projection(x, annotation, "mutation")
+  if (!is.null(stored)) {
+    if (store) stop("The selected annotation is already genomic; project its original protein annotation instead.", call. = FALSE)
+    return(.query_stored_projection(x, stored, recipe))
   }
 
   if (!is.null(chr)) {
@@ -1998,6 +2031,9 @@ project_mutations_to_genome <- function(x,
   }
 
   ann <- resolve_syn_protein_mutation_annotation(x, annotation = annotation)
+  finish <- function(out) .finish_genomic_projection(x, out, annotation_name(ann),
+    "mutation", store, name, recipe)
+
   key_col <- ann@keytype
 
   mut <- query_protein_mutations(
@@ -2012,7 +2048,7 @@ project_mutations_to_genome <- function(x,
     ref = ref
   )
   if (nrow(mut) == 0L) {
-    return(data.frame())
+    return(finish(data.frame()))
   }
   if (!key_col %in% names(mut)) {
     stop("The mutation table does not contain the key column: ", key_col, call. = FALSE)
@@ -2024,8 +2060,10 @@ project_mutations_to_genome <- function(x,
   key_values <- unique(as.character(mut[[key_col]]))
   key_values <- key_values[!is.na(key_values) & nzchar(key_values)]
   if (length(key_values) == 0L) {
-    return(data.frame())
+    return(finish(data.frame()))
   }
+
+  if (store) mut$.ggexon_projection_row <- seq_len(nrow(mut))
 
   # Resolve the transcripts whose CDS to project onto, mirroring the seed-and-CDS
   # lookup used by project_domains_to_genome().
@@ -2044,16 +2082,16 @@ project_mutations_to_genome <- function(x,
     all = FALSE
   )
   if (length(seed_gr) == 0L) {
-    return(data.frame())
+    return(finish(data.frame()))
   }
   transcript_ids <- unique(.annotation_transcript_ids(seed_gr))
   transcript_ids <- transcript_ids[!is.na(transcript_ids) & nzchar(transcript_ids)]
   if (length(transcript_ids) == 0L) {
-    return(data.frame())
+    return(finish(data.frame()))
   }
   target_cds <- query_features(x, transcripts = transcript_ids, feature_type = "CDS")
   if (length(target_cds) == 0L) {
-    return(data.frame())
+    return(finish(data.frame()))
   }
 
   transcript_meta <- .domain_projection_transcript_meta(target_cds)
@@ -2067,7 +2105,7 @@ project_mutations_to_genome <- function(x,
   })
   out <- dplyr::bind_rows(out)
   if (nrow(out) == 0L) {
-    return(out)
+    return(finish(out))
   }
 
   if (!is.null(chr)) {
@@ -2081,7 +2119,7 @@ project_mutations_to_genome <- function(x,
   }
 
   rownames(out) <- NULL
-  out
+  finish(out)
 }
 
 .project_one_mutation_row <- function(mut_row, key_col, transcript_meta, cds_gr) {

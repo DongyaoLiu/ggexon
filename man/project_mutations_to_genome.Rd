@@ -17,7 +17,9 @@ project_mutations_to_genome(
   ref = NULL,
   chr = NULL,
   start = NULL,
-  end = NULL
+  end = NULL,
+  store = FALSE,
+  name = "genomic_mutations"
 )
 }
 \arguments{
@@ -32,12 +34,18 @@ variants are projected onto.}
 \item{strains, mutation, event_type, min_sample_count, protein_ranges, ref}{Optional variant filters forwarded to \code{\link[=query_protein_mutations]{query_protein_mutations()}}.}
 
 \item{chr, start, end}{Optional genomic window used to clip the projection.}
+
+\item{store}{Logical; with TRUE attach fragments and shared exonic anchors
+and return the updated SynIndividual. Original protein annotations remain.}
+
+\item{name}{Name of the genomic projection when store is TRUE.}
 }
 \value{
 A data frame with one row per (variant, overlapped CDS segment),
 containing the projected \code{seqnames}, \code{xmin}, \code{xmax}, \code{strand},
 \code{transcripts}, and the variant metadata columns (\code{position}, \code{ref}, \code{alt},
 \code{mutation}, ...). Returns an empty data frame when nothing projects.
+With store = TRUE, returns the updated SynIndividual instead.
 }
 \description{
 Converts protein-coordinate variants (for example \code{C316H} at residue 316)

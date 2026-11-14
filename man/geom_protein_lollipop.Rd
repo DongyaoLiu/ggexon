@@ -52,7 +52,11 @@ geom_protein_lollipop(
   event_type = NULL,
   min_sample_count = NULL,
   strains = NULL,
-  mutation = NULL
+  mutation = NULL,
+  ...,
+  genomic_layout = NULL,
+  stem_alpha = 1,
+  point_alpha = 1
 )
 }
 \arguments{
@@ -151,6 +155,16 @@ truncate the selected protein's backbone or domains.}
 
 \item{ids}{Protein, transcript, or gene identifiers matching the mutation
 annotation's \code{keytype}. Use to distinguish isoforms of the same gene.}
+
+\item{...}{Reserved; must be empty.}
+
+\item{genomic_layout}{Optional name prepared by \code{\link[=prepare_genomic_layout]{prepare_genomic_layout()}}.
+The layout supplies shared stem/head positions and heights. Set geometry
+at preparation time; layer arguments control styling. Use the same layout
+in exon/label layers and in \code{\link[=scale_x_ggexon_genomic]{scale_x_ggexon_genomic()}}.}
+
+\item{stem_alpha, point_alpha}{Opacity of stems and mutation heads.
+With \code{stem_colour = NULL} and \code{score} supplied, stems share the head colours.}
 }
 \value{
 A list of ggplot2 layers.
@@ -159,7 +173,9 @@ A list of ggplot2 layers.
 Draw a backbone, optional domains, curved stems, and mutation heads. With
 \code{ggexon(SynIndividual)} or \code{ggexon(SynSpecies)}, each component resolves its
 data from attached protein annotations during plot build. Coordinates stay
-in amino-acid units; no genomic projection is performed.
+in amino-acid units unless \code{genomic_layout} selects coordinates already
+prepared on the Syn object. That mode reads stored geometry without
+projecting or spreading mutations during plotting.
 }
 \details{
 Select one protein per individual using \code{genes} or \code{ids}. Domain records

@@ -41,7 +41,8 @@ geom_mutation_label(
   show_empty = FALSE,
   na.rm = FALSE,
   show.legend = FALSE,
-  inherit.aes = TRUE
+  inherit.aes = TRUE,
+  genomic_layout = NULL
 )
 ```
 
@@ -118,6 +119,11 @@ geom_mutation_label(
 - show_empty:
 
   Logical; keep empty/`NA` labels when `TRUE`.
+
+- genomic_layout:
+
+  Optional prepared genomic layout name. Labels read stored head
+  positions, with label_nudge_y applied as a text offset.
 
 ## Value
 

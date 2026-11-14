@@ -36,7 +36,8 @@ geom_exon2(
   arrow_width = NULL,
   transcript_backbone_fill = NULL,
   transcript_backbone_colour = NULL,
-  inherit.aes = TRUE
+  inherit.aes = TRUE,
+  genomic_layout = NULL
 )
 ```
 
@@ -149,6 +150,12 @@ geom_exon2(
 - inherit.aes:
 
   If `FALSE`, overrides inherited aesthetics.
+
+- genomic_layout:
+
+  Optional prepared genomic layout name. Its stored exon coordinates and
+  height are used; independent intron compression and coordinate
+  overrides are disabled.
 
 ## Value
 

@@ -4,8 +4,13 @@ demo_dir <- file.path("inst", "extdata", "hla_a_lollipop")
 source(file.path(demo_dir, "load-hla-a-example.R"))
 source(file.path(demo_dir, "plot-hla-a-example.R"))
 source(file.path(demo_dir, "project-hla-a-example.R"))
-hla <- load_hla_a_example(demo_dir)
-gene <- load_hla_a_gene_model(hla, demo_dir)
+hla <- prepare_hla_a_gene_layout(load_hla_a_example(demo_dir), intron_factor = 3)
+evidence <- hla_a_evidence(hla)
+mutations <- ggexon::query_protein_mutations(hla, annotation = "hla_substitutions")
+structure <- hla_a_gene_structure(hla)
+gene <- hla_a_projected_mutations(hla)
+gene$exons <- structure[structure$type == "exon", ]
+gene$introns <- structure[structure$type == "intron", ]
 stopifnot(nrow(gene$exons) == 8L, nrow(gene$introns) == 7L,
           nrow(gene$anchors) == 1212L)
 genomic <- as.character(Biostrings::readDNAStringSet(file.path(
@@ -13,13 +18,13 @@ genomic <- as.character(Biostrings::readDNAStringSet(file.path(
 )))[[1L]]
 cds <- paste0(substring(genomic, gene$exons$start, gene$exons$end), collapse = "")
 protein <- as.character(Biostrings::translate(Biostrings::DNAString(cds)))
-ref <- as.character(hla$proteins[hla$alleles$reference])
+ref <- as.character(evidence$proteins[evidence$alleles$reference])
 stopifnot(identical(protein, paste0(ref, "*")), nchar(cds) == 1098L)
 # Independently enumerate every genomic CDS base; check each projected codon.
 coding_bases <- unlist(Map(seq.int, gene$exons$start, gene$exons$end))
-for (i in seq_len(nrow(hla$mutations))) {
-  mutation <- hla$mutations[i, ]
-  precursor <- mutation$position + 24L
+for (i in seq_len(nrow(mutations))) {
+  mutation <- mutations[i, ]
+  precursor <- mutation$mature_position + 24L
   expected <- coding_bases[(precursor * 3L - 2L):(precursor * 3L)]
   rows <- gene$projection[gene$projection$mutation == mutation$mutation, ]
   actual <- unlist(Map(seq.int, as.integer(rows$xmin), as.integer(rows$xmax)))
@@ -32,8 +37,8 @@ for (i in seq_len(nrow(hla$mutations))) {
 first <- gene$projection[gene$projection$mature_position == 1L, ]
 stopifnot(nrow(first) > length(unique(first$mutation)),
           all(gene$anchors$anchor[gene$anchors$mature_position == 1L] == 504.5))
-compressed <- plot_hla_a_gene_example(hla, gene, intron_factor = 3)
-native <- plot_hla_a_gene_example(hla, gene, intron_factor = 1)
+compressed <- plot_hla_a_gene_example(hla, intron_factor = 3)
+native <- plot_hla_a_gene_example(prepare_hla_a_gene_layout(hla, intron_factor = 1), intron_factor = 1)
 b3 <- ggplot2::ggplot_build(compressed$plot)
 b1 <- ggplot2::ggplot_build(native$plot)
 e3 <- b3$data[[1L]]

@@ -12,7 +12,9 @@ scale_x_ggexon_genomic(
   labels = waiver(),
   minor_breaks = NULL,
   n.breaks = 5,
-  guide = waiver()
+  guide = waiver(),
+  ...,
+  genomic_layout = NULL
 )
 }
 \arguments{
@@ -45,6 +47,13 @@ genomic break values.}
 \item{guide}{Axis guide. Use \code{waiver()} or \code{"genomic"} for ordinary
 genomic-coordinate ticks, \code{"none"} to hide transformed x-axis ticks, or
 \code{\link[=guide_x_ggexon_piecewise]{guide_x_ggexon_piecewise()}} for representative exon/intron scale bars.}
+
+\item{...}{Reserved for future arguments. Must be empty.}
+
+\item{genomic_layout}{Optional name of a prepared genomic layout stored on
+the plot's \code{SynIndividual} objects. Its cached exon map replaces training
+from visible exon layers. An explicitly supplied \code{intron_factor} must
+agree with the prepared layout.}
 }
 \value{
 A ggexon x-scale specification.

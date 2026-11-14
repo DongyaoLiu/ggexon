@@ -152,6 +152,7 @@ reference:
   - matches("^annotation_data<-$")
   - store_chain_layout
   - store_projected_domains
+  - prepare_genomic_layout
 
 - title: Load, query, and transform annotations
   desc: Materialize annotation data, query layer payloads, import homology, and derive sequence or protein-level summaries.
@@ -171,6 +172,8 @@ reference:
   - translate_protein
   - project_domains_to_genome
   - project_mutations_to_genome
+  - query_genomic_projection
+  - query_genomic_layout
   - projected_domains
   - homology_table
   - reference_species

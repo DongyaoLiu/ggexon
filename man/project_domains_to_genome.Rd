@@ -15,7 +15,9 @@ project_domains_to_genome(
   transcripts = NULL,
   chr = NULL,
   start = NULL,
-  end = NULL
+  end = NULL,
+  store = FALSE,
+  name = "genomic_domains"
 )
 }
 \arguments{
@@ -42,9 +44,14 @@ projected proteins.}
 \item{chr}{Optional chromosome name used to define the genomic window.}
 
 \item{start, end}{Optional genomic window bounds.}
+
+\item{store}{Logical; with TRUE attach a genomic projection and return the updated SynIndividual.}
+
+\item{name}{Name of the genomic projection when store is TRUE.}
 }
 \value{
-A data frame with projected genomic motif segments.
+A data frame with projected genomic motif segments, or the updated
+SynIndividual when store is TRUE.
 }
 \description{
 Uses transcript CDS structure from a \code{SynIndividual} to convert

@@ -26,7 +26,9 @@ project_mutations_to_genome(
   ref = NULL,
   chr = NULL,
   start = NULL,
-  end = NULL
+  end = NULL,
+  store = FALSE,
+  name = "genomic_mutations"
 )
 ```
 
@@ -55,13 +57,22 @@ project_mutations_to_genome(
 
   Optional genomic window used to clip the projection.
 
+- store:
+
+  Logical; with TRUE attach fragments and shared exonic anchors and
+  return the updated SynIndividual. Original protein annotations remain.
+
+- name:
+
+  Name of the genomic projection when store is TRUE.
+
 ## Value
 
 A data frame with one row per (variant, overlapped CDS segment),
 containing the projected `seqnames`, `xmin`, `xmax`, `strand`,
 `transcripts`, and the variant metadata columns (`position`, `ref`,
 `alt`, `mutation`, ...). Returns an empty data frame when nothing
-projects.
+projects. With store = TRUE, returns the updated SynIndividual instead.
 
 ## Details
 

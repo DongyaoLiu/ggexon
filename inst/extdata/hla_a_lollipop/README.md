@@ -29,8 +29,12 @@ allele-local coordinates from the exact HLA00005 reference, not GRCh38.
   UniProt's displayed sequence is A*03:01; only shared region boundaries are used.
 - `hla_a_sources.tsv`: source URLs and SHA-256 values, including the official
   alignment used to validate coordinate correspondence.
-- `load-hla-a-example.R`: all residue states, per-substitution counts, and up to
-  three example names for each state.
+- `load-hla-a-example.R`: returns one reference `SynIndividual` with its
+  FASTA/GFF3, translated reference protein, transcript-keyed substitution counts,
+  and structural-region annotations. Original alleles, proteins, residue states,
+  and provenance remain in the object's metadata, accessed with `hla_a_evidence()`.
+  Canonical annotation coordinates describe the precursor; explicit mature
+  coordinate columns support the protein summary without duplicating annotations.
 - `plot-hla-a-example.R`: bounded symmetric fanning, log10(count + 1) heights,
   chemical-group colours, and the labelled residue-156 close-up.
 - `ipd-HLA00005-reference.json`: original release-3.66.0 reference snapshot,
@@ -38,8 +42,10 @@ allele-local coordinates from the exact HLA00005 reference, not GRCh38.
 - `hla_a_reference_genomic.fasta`, `hla_a_reference.gff3`, and
   `hla_a_gene_structure.tsv`: reference sequence and derived coding model.
   The display spans ATG to stop, with eight coding exons and seven introns.
-- `project-hla-a-example.R`: constructs a SynIndividual, attaches the summary
-  annotation, and projects precursor residues through the reference CDS.
+- `project-hla-a-example.R`: queries that same object and projects its stored
+  precursor residues through the reference CDS. The preparation helper uses the public projection and layout verbs to store
+  genomic fragments, exonic anchors, a shared intron map, and bounded heads/stems
+  before plotting. Native exon/lollipop layers then read that prepared state.
   Splice-split codons anchor to an exonic fragment. The scale compresses introns
   three-fold, with separate scale bars; base-edge exon geometry preserves exact
   bp lengths. Other alleles are projected to this one reference model.
