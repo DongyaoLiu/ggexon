@@ -90,8 +90,9 @@ sequence_data <- alignseq_data(v$aligned, v$anchors, reference = "human",
 [`geom_alignseq()`](https://dongyaoliu.github.io/ggexon/reference/geom_alignseq.md)
 places each species’ DNA on its own panel. Default markers show
 differences, with DNA callouts for selected details. Letters are equally
-spaced schematically; smooth connectors retain genomic anchors. For a
-short window, `mode = "rows"` shows all selected bases:
+spaced schematically. One curved connector joins each block’s lower
+centre to the midpoint of its displayed genomic interval. For a short
+window, `mode = "rows"` shows all selected bases:
 
 ``` r
 

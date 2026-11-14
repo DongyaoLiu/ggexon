@@ -6,7 +6,8 @@
 #' explicitly selected `details` windows receive DNA callouts on their respective annotation panels. Nearby
 #' windows are merged by the preparation helper.
 #'
-#' Smooth curved connectors retain their exact genomic and callout endpoints.
+#' Each sequence block has one smooth curved connector from the midpoint of
+#' its displayed genomic interval to the bottom centre of the sequence block.
 #' Marker and connector anchors follow [scale_x_ggexon_genomic()] automatically.
 #' Callout columns are equally spaced in panel space **after** genomic scaling:
 #' they are schematic alignment detail, not an additional genomic ruler.
@@ -22,16 +23,37 @@
 #'   facet, never a link-panel track.
 #' @param mode `"markers"` (default) or `"rows"`. Rows display all selected
 #'   columns as an equally spaced DNA row in each sequence's own annotation panel,
-#'   connected to its genomic extent.
+#'   connected to the midpoint of its displayed genomic interval.
 #'   Row mode requires one contiguous alignment-column selection per sequence.
+#' @param sequence_position Horizontal placement of sequence blocks:
+#'   `"auto"` (default), `"left"`, `"center"`, or `"right"`. Automatic placement
+#'   stays near the genomic anchor and moves blocks apart before stacking.
+#'   Explicit positions keep their horizontal alignment and stack overlapping
+#'   blocks vertically. Placement is in panel space after genomic scaling,
+#'   including on reversed panels. Blocks are kept within the available space
+#'   with room for sequence names, so wide centred blocks may shift right to fit.
 #' @param size DNA character size in mm.
 #' @param family Character font, default `"mono"`.
-#' @param background Logical; draw pale nucleotide backgrounds.
+#' @param background Logical; draw nucleotide backgrounds.
+#' @param colour_scheme `"nucleotide"` (default) colours A/C/G/T bases
+#'   separately. `"difference"` uses a neutral background for aligned columns,
+#'   one colour for substitutions, and another for insertions and deletions.
+#'   Both sequences highlight the same differing alignment columns. Ambiguous
+#'   IUPAC bases remain neutral rather than being called verified mismatches.
+#' @param difference_colours Named character vector of three colours with keys
+#'   `aligned`, `mismatch`, and `indel`. Used with `colour_scheme = "difference"`.
+#'   Defaults to grey aligned columns, orange mismatches, and red indels.
+#'   Text switches between black and white for readable contrast, assuming a
+#'   white panel background when colours are translucent. With
+#'   `background = FALSE`, mismatch and indel colours apply to the letters,
+#'   while aligned letters retain their neutral grey shade.
 #' @param max_columns Maximum columns in a callout or row view (default 60).
 #'   Longer windows raise an error requesting a narrower selection.
 #' @param na.rm,show.legend,... Standard layer arguments. Event colours and
-#'   shapes are fixed: substitution blue circle, insertion orange triangle,
-#'   deletion purple inverted triangle, ambiguous grey cross. No fill scale is
+#'   shapes use the default nucleotide scheme: substitution blue circle,
+#'   insertion orange triangle, deletion purple inverted triangle, ambiguous
+#'   grey cross. The difference scheme also uses its palette for substitution
+#'   and indel markers. No fill scale is
 #'   added, so existing exon and link palettes remain available.
 #' @return A ggplot2 layer using a native annotation geom. Cartesian coordinates
 #'   are required. In ggexon, use with annotation data and [facet_genomics()].
@@ -39,8 +61,15 @@
 #' @export
 geom_alignseq <- function(data, mapping = NULL, mode = c("markers", "rows"),
                           size = 2.5, family = "mono", background = TRUE,
-                          max_columns = 60, na.rm = FALSE, show.legend = FALSE, ...) {
+                          max_columns = 60, na.rm = FALSE, show.legend = FALSE, ...,
+                          sequence_position = c("auto", "left", "center", "right"),
+                          colour_scheme = c("nucleotide", "difference"),
+                          difference_colours = c(aligned = "#E6E6E6",
+                            mismatch = "#E69F00", indel = "#D73027")) {
   mode <- match.arg(mode)
+  sequence_position <- match.arg(sequence_position)
+  colour_scheme <- match.arg(colour_scheme)
+  if (colour_scheme == "difference") .alignseq_validate_difference_colours(difference_colours)
   fields <- c("x", "y", "track", "sequence", "reference", "query", "column", "base",
     "reference_base", "query_base", "event_type", "event_id", "event_length", "detail_id")
   if (missing(data) || !is.data.frame(data) || !all(fields %in% names(data)))
@@ -63,7 +92,9 @@ geom_alignseq <- function(data, mapping = NULL, mode = c("markers", "rows"),
   for (nm in names(mapping)) defaults[[nm]] <- mapping[[nm]]
   ggplot2::layer(data = data, mapping = defaults, stat = "identity", position = "identity",
     geom = GeomAlignseq, inherit.aes = FALSE, show.legend = show.legend,
-    params = list(mode = mode, size = size, family = family, background = background,
+    params = list(mode = mode, sequence_position = sequence_position,
+      colour_scheme = colour_scheme, difference_colours = difference_colours,
+      size = size, family = family, background = background,
       na.rm = na.rm, ...))
 }
 
@@ -74,7 +105,8 @@ GeomAlignseq <- ggplot2::ggproto("GeomAlignseq", ggplot2::Geom,
     "reference_base", "query_base", "event_type", "event_id", "event_length", "detail_id",
     "boundary_after", "boundary_label"),
   default_aes = ggplot2::aes(colour = "grey20", alpha = NA),
-  extra_params = c("na.rm", "mode", "size", "family", "background"),
+  extra_params = c("na.rm", "mode", "sequence_position", "colour_scheme",
+    "difference_colours", "size", "family", "background"),
   setup_data = function(data, params) {
     # Reserve vertical space for callouts without adding synthetic x positions.
     count <- length(unique(stats::na.omit(data$detail_id)))
@@ -85,11 +117,15 @@ GeomAlignseq <- ggplot2::ggproto("GeomAlignseq", ggplot2::Geom,
   },
   draw_key = ggplot2::draw_key_point,
   draw_panel = function(data, panel_params, coord, mode = "markers", size = 2.5,
-                        family = "mono", background = TRUE, na.rm = FALSE) {
+                        family = "mono", background = TRUE, na.rm = FALSE,
+                        sequence_position = "auto", colour_scheme = "nucleotide",
+                        difference_colours = c(aligned = "#E6E6E6",
+                          mismatch = "#E69F00", indel = "#D73027")) {
     if (!nrow(data)) return(grid::zeroGrob())
     if (!inherits(coord, "CoordCartesian") || inherits(coord, "CoordFlip"))
       stop("geom_alignseq() requires unflipped Cartesian coordinates.", call. = FALSE)
     grobs <- list()
+    stem_grobs <- list()
     # Multiple sequence tracks can share an annotation panel; each y row is independent.
     tracks <- split(data, interaction(match(data$sequence, unique(data$sequence)),
       match(data$y, unique(data$y)), drop = TRUE))
@@ -103,6 +139,10 @@ GeomAlignseq <- ggplot2::ggproto("GeomAlignseq", ggplot2::Geom,
             e$x[1] <- mean(range(e$x)); e[1, , drop = FALSE]
           }))
           colours <- c(substitution = "#0072B2", insertion = "#D55E00", deletion = "#CC79A7", ambiguous = "grey55")
+          if (colour_scheme == "difference") {
+            colours[c("substitution", "insertion", "deletion")] <-
+              difference_colours[c("mismatch", "indel", "indel")]
+          }
           shapes <- c(substitution = 16, insertion = 17, deletion = 25, ambiguous = 4)
           ev$y <- base_y + .2
           ev$colour <- unname(colours[ev$event_type]); ev$fill <- ev$colour
@@ -129,10 +169,9 @@ GeomAlignseq <- ggplot2::ggproto("GeomAlignseq", ggplot2::Geom,
         chunk <- chunk[!duplicated(chunk$column), , drop = FALSE]
         n <- nrow(chunk)
         width <- min(.70, max(.16, n * .027))
-        anchor_fraction <- coord$transform(data.frame(x = mean(range(chunk$x)), y = base_y), panel_params)$x
-        ideal <- min(1 - width / 2 - .03, max(.22 + width / 2, anchor_fraction))
-        candidates <- unique(c(ideal, seq(.22 + width / 2, .97 - width / 2, length.out = 100)))
-        candidates <- candidates[order(abs(candidates - ideal))]
+        anchor_x <- mean(range(chunk$x))
+        anchor_fraction <- coord$transform(data.frame(x = anchor_x, y = base_y), panel_params)$x
+        candidates <- .alignseq_position_candidates(width, anchor_fraction, sequence_position)
         lane <- 1L
         repeat {
           free <- vapply(candidates, function(centre) {
@@ -149,27 +188,25 @@ GeomAlignseq <- ggplot2::ggproto("GeomAlignseq", ggplot2::Geom,
         occupied[[lane]][[length(occupied[[lane]]) + 1L]] <- c(left - .19, right)
         y0 <- base_y + .7 + (lane - 1) * .65
         xs <- from_fraction(left + (seq_len(n) - .5) * width / n)
-        ends <- chunk$x[c(1L, n)]
-        connectors <- data.frame(x = ends, y = base_y + .23,
-          xend = from_fraction(c(left, right)), yend = y0 - .13,
+        connectors <- data.frame(x = anchor_x, y = base_y + .23,
+          xend = from_fraction(centre), yend = y0 - .15,
           colour = "grey60", linewidth = .25, linetype = 1, alpha = NA)
         curves <- .generate_lollipop_stems(connectors$x, connectors$y,
           connectors$xend, connectors$yend, n = 60, k = .9)
         paths <- data.frame(x = curves$lollipop_x, y = curves$lollipop_y,
           group = curves$lollipop_curve_id, colour = "grey60", linewidth = .25,
           linetype = 1, alpha = NA)
-        grobs[[length(grobs) + 1L]] <- ggplot2::GeomPath$draw_panel(paths, panel_params, coord)
+        stem_grobs[[length(stem_grobs) + 1L]] <- ggplot2::GeomPath$draw_panel(paths, panel_params, coord)
         for (row in 1L) {
           letters <- chunk$base
+          palette <- .alignseq_base_colours(chunk, colour_scheme, difference_colours, background)
           chars <- data.frame(x = xs, y = y0,
-            label = letters, colour = ifelse(chunk$event_type == "match", "grey45", "grey10"))
+            label = letters, colour = palette$text)
           if (isTRUE(background)) {
-            nt <- c(A = "#D9EDD7", C = "#D9EAF5", G = "#FAEBC5", T = "#F4DADB", `-` = "#EEEEEE")
-            fill <- unname(nt[letters]); fill[is.na(fill)] <- "#EEEEEE"
             boxes <- data.frame(xmin = xs - diff(range_x) * width / n / 2,
               xmax = xs + diff(range_x) * width / n / 2,
               ymin = chars$y - .15, ymax = chars$y + .15,
-              fill = fill, colour = NA, linewidth = 0, linetype = 1, alpha = NA)
+              fill = palette$fill, colour = NA, linewidth = 0, linetype = 1, alpha = NA)
             grobs[[length(grobs) + 1L]] <- ggplot2::GeomRect$draw_panel(boxes, panel_params, coord)
           }
           grobs[[length(grobs) + 1L]] <- .alignseq_text(chars, panel_params, coord, size, family)
@@ -192,9 +229,62 @@ GeomAlignseq <- ggplot2::ggproto("GeomAlignseq", ggplot2::Geom,
         }
       }
     }
-    grid::gTree(children = do.call(grid::gList, grobs), name = "geom_alignseq")
+    # Stems from upper lanes must not paint over lower sequence blocks.
+    grid::gTree(children = do.call(grid::gList, c(stem_grobs, grobs)), name = "geom_alignseq")
   }
 )
+
+.alignseq_validate_difference_colours <- function(colours) {
+  keys <- c("aligned", "mismatch", "indel")
+  if (!is.character(colours) || length(colours) != 3L || anyNA(colours) ||
+      any(!nzchar(colours)) || anyDuplicated(names(colours)) ||
+      !setequal(names(colours), keys)) {
+    stop("`difference_colours` must supply named colours for aligned, mismatch, and indel.", call. = FALSE)
+  }
+  tryCatch(grDevices::col2rgb(colours), error = function(e) {
+    stop("`difference_colours` contains an invalid colour.", call. = FALSE)
+  })
+  invisible(NULL)
+}
+
+.alignseq_base_colours <- function(chunk, scheme, colours, background) {
+  text <- ifelse(chunk$event_type == "match", "grey45", "grey10")
+  if (scheme == "nucleotide") {
+    nt <- c(A = "#D9EDD7", C = "#D9EAF5", G = "#FAEBC5", T = "#F4DADB", `-` = "#EEEEEE")
+    fill <- unname(nt[chunk$base])
+    fill[is.na(fill)] <- "#EEEEEE"
+  } else {
+    event <- rep("aligned", nrow(chunk))
+    event[chunk$event_type %in% "substitution"] <- "mismatch"
+    event[chunk$event_type %in% c("insertion", "deletion")] <- "indel"
+    fill <- unname(colours[event])
+    if (isTRUE(background)) {
+      rgba <- grDevices::col2rgb(fill, alpha = TRUE) / 255
+      # Composite translucent fills over the default white panel before
+      # choosing glyph contrast.
+      rgb <- sweep(rgba[1:3, , drop = FALSE], 2, rgba[4, ], "*")
+      rgb <- sweep(rgb, 2, 1 - rgba[4, ], "+")
+      rgb <- ifelse(rgb <= 0.04045, rgb / 12.92, ((rgb + 0.055) / 1.055)^2.4)
+      luminance <- colSums(rgb * c(0.2126, 0.7152, 0.0722))
+      text <- ifelse(luminance < sqrt(0.0525) - 0.05, "white", "black")
+    } else {
+      changed <- event != "aligned"
+      text[changed] <- unname(colours[event[changed]])
+    }
+  }
+  list(fill = fill, text = unname(text))
+}
+
+.alignseq_position_candidates <- function(width, anchor, sequence_position) {
+  lower <- .22 + width / 2
+  upper <- .97 - width / 2
+  ideal <- switch(sequence_position,
+    auto = anchor, left = lower, center = .5, right = upper)
+  ideal <- min(upper, max(lower, ideal))
+  if (sequence_position != "auto") return(ideal)
+  candidates <- unique(c(ideal, seq(lower, upper, length.out = 100)))
+  candidates[order(abs(candidates - ideal))]
+}
 
 .alignseq_text <- function(data, panel_params, coord, size, family, hjust = .5) {
   data$size <- size; data$family <- family; data$fontface <- 1

@@ -1423,90 +1423,170 @@ differ. For a short verified pairwise alignment,
 [`alignseq_data()`](https://dongyaoliu.github.io/ggexon/reference/alignseq_data.md)
 attaches columns to genomic positions and
 [`geom_alignseq()`](https://dongyaoliu.github.io/ggexon/reference/geom_alignseq.md)
-draws the sequence detail.
+draws the sequence detail above gene models. Reuse the annotation behind
+`p_exon2` to keep the gene structure visible while inspecting nucleotide
+differences.
 
 ### Present the input
 
-Supply two already aligned strings. A dash is a gap; each start
-coordinate identifies the first non-gap base in the supplied
-orientation.
+Create two synthetic samples with the same teaching gene models and a
+short alignment inside gene A’s first exon. The strings below are
+supplied teaching data, not DNA inferred from the GTF. Each contains six
+genomic bases, starting at position 131 on `chr1`. A dash is an
+alignment gap and consumes no base.
 
 ``` r
 
-dna <- c(reference = "AC-GTAC", query = "ATCG-AC")
+dna <- c(sample_A = "AC-GTAC", sample_B = "ATCG-AC")
 anchors <- data.frame(
-  sequence = names(dna), start = c(100, 900), strand = "+",
-  track = names(dna), chr = c("chr1", "chr2")
+  sequence = names(dna), start = 131L, strand = "+",
+  track = names(dna), chr = "chr1", y = 4.6
 )
 knitr::kable(data.frame(sequence = names(dna), aligned_DNA = unname(dna)))
 ```
 
-| sequence  | aligned_DNA |
-|:----------|:------------|
-| reference | AC-GTAC     |
-| query     | ATCG-AC     |
+| sequence | aligned_DNA |
+|:---------|:------------|
+| sample_A | AC-GTAC     |
+| sample_B | ATCG-AC     |
 
 ``` r
 
 knitr::kable(anchors)
 ```
 
-| sequence  | start | strand | track     | chr  |
-|:----------|------:|:-------|:----------|:-----|
-| reference |   100 | \+     | reference | chr1 |
-| query     |   900 | \+     | query     | chr2 |
+| sequence | start | strand | track    | chr  |   y |
+|:---------|------:|:-------|:---------|:-----|----:|
+| sample_A |   131 | \+     | sample_A | chr1 | 4.6 |
+| sample_B |   131 | \+     | sample_B | chr1 | 4.6 |
 
-### Prepare and inspect the data
+### Construct and inspect the objects
 
-The helper returns a data frame rather than an S4 container. It
-classifies differences relative to the named reference; it does not
-compute an alignment or infer evolutionary direction.
+Attach the same `gtf_file` used by `model` and `p_exon2` to each sample
+in a `SynSpecies`. Each panel will read its gene models from that
+object. Focus on the gene A window, which contains `A_full` and
+`A_skip`. The anchor’s `y = 4.6` places the sequence detail just above
+the upper transcript model.
 
 ``` r
 
+dna_models <- SynSpecies(name = "Teaching DNA alignment")
+for (sample_id in names(dna)) {
+  dna_models <- add_individual(dna_models, SynIndividual(
+    id = sample_id, annotation_file = gtf_file, annotation_format = "gtf"
+  ))
+}
+individual_names(dna_models)
+#> [1] "sample_A" "sample_B"
 dna_columns <- alignseq_data(
-  aligned = dna, anchors = anchors, reference = "reference",
-  details = c(101, 103), flank = 1
+  aligned = dna, anchors = anchors, reference = "sample_A",
+  details = c(131, 136), flank = 0
 )
 knitr::kable(dna_columns[, c("track", "column", "base", "position", "event_type")])
 ```
 
-| track     | column | base | position | event_type   |
-|:----------|-------:|:-----|---------:|:-------------|
-| reference |      1 | A    |      100 | match        |
-| reference |      2 | C    |      101 | substitution |
-| reference |      3 | \-   |       NA | insertion    |
-| reference |      4 | G    |      102 | match        |
-| reference |      5 | T    |      103 | deletion     |
-| reference |      6 | A    |      104 | match        |
-| reference |      7 | C    |      105 | match        |
-| query     |      1 | A    |      900 | match        |
-| query     |      2 | T    |      901 | substitution |
-| query     |      3 | C    |      902 | insertion    |
-| query     |      4 | G    |      903 | match        |
-| query     |      5 | \-   |       NA | deletion     |
-| query     |      6 | A    |      904 | match        |
-| query     |      7 | C    |      905 | match        |
+| track    | column | base | position | event_type   |
+|:---------|-------:|:-----|---------:|:-------------|
+| sample_A |      1 | A    |      131 | match        |
+| sample_A |      2 | C    |      132 | substitution |
+| sample_A |      3 | \-   |       NA | insertion    |
+| sample_A |      4 | G    |      133 | match        |
+| sample_A |      5 | T    |      134 | deletion     |
+| sample_A |      6 | A    |      135 | match        |
+| sample_A |      7 | C    |      136 | match        |
+| sample_B |      1 | A    |      131 | match        |
+| sample_B |      2 | T    |      132 | substitution |
+| sample_B |      3 | C    |      133 | insertion    |
+| sample_B |      4 | G    |      134 | match        |
+| sample_B |      5 | \-   |       NA | deletion     |
+| sample_B |      6 | A    |      135 | match        |
+| sample_B |      7 | C    |      136 | match        |
+
+[`alignseq_data()`](https://dongyaoliu.github.io/ggexon/reference/alignseq_data.md)
+returns an inspectable table. It classifies differences relative to
+`sample_A`; it does not compute the alignment or infer evolutionary
+direction. These are two illustrative samples, not sequence differences
+inferred between the isoforms of one genome.
 
 ### Choose the geom, scales, and theme
 
-The row view suits this seven-column alignment. Each panel keeps its own
-genomic axis. Base callouts have equal column spacing; gaps consume no
-genomic bases. The geom supplies fixed event colours and nucleotide
-backgrounds, leaving the plot’s fill scale available for other layers.
+Start with the gene models, then add the alignment as another layer.
+Keep genomic intron lengths with `compress_introns = FALSE`. Reuse
+`transcript_colours` from `p_exon2`: blue for `A_full` and orange for
+`A_skip`. Nucleotide colours have their own palette and do not change
+the transcript fill scale.
 
 ``` r
 
-ggexon() +
-  geom_alignseq(data = dna_columns, mode = "rows", size = 3.5) +
-  facet_wrap(vars(track), ncol = 1, scales = "free_x") +
-  scale_x_continuous(breaks = scales::breaks_pretty(n = 4)) +
-  theme_ggexon_track(base_size = 10, show_x_grid = FALSE)
+dna_gene_plot <- ggexon(dna_models) +
+  geom_exon2(
+    aes(fill = transcript_id), chr = "chr1", subset = c(80, 980),
+    annotation_type = "exon", compress_introns = FALSE,
+    exon_height = 0.8, arrow_width = 12, colour = "grey55"
+  ) +
+  scale_fill_manual(values = transcript_colours, name = "Transcript") +
+  facet_genomics(vars(track), ncol = 1) +
+  scale_x_continuous(limits = c(80, 980), breaks = c(100, 500, 900)) +
+  scale_y_continuous(limits = c(1.2, 6.2), expand = expansion(mult = 0)) +
+  theme_ggexon_track(base_size = 10, show_x_grid = FALSE, show_legend = TRUE)
 ```
 
-![Two aligned DNA rows anchored to their genomic coordinates, showing a
-substitution and two gap
-events.](ggexon-workflow_files/figure-html/workflow-dna-plot-1.png)
+The row view suits this seven-column alignment. Sequence letters have
+equal column spacing within each callout; the gene models retain genomic
+spacing. Each sequence block has one curved connector from its genomic
+interval’s displayed midpoint to the centre of the block’s lower edge.
+
+``` r
+
+dna_gene_plot +
+  geom_alignseq(data = dna_columns, mode = "rows", size = 3.5,
+                sequence_position = "center", colour_scheme = "nucleotide")
+```
+
+![Two synthetic sample panels reuse the p_exon2 gene models. Each has a
+centered nucleotide-coloured sequence block above the full and
+exon-skipping transcripts, joined to the first-exon region by one
+connector.](ggexon-workflow_files/figure-html/workflow-dna-plot-1.png)
+
+Use `sequence_position = "left"`, `"center"`, or `"right"` to choose the
+sequence block’s horizontal position. The default, `"auto"`, places it
+near its genomic anchor and moves nearby blocks apart before stacking
+them. Explicit positions keep blocks aligned and stack overlapping
+details vertically. Wide blocks are kept inside the panel with room for
+sequence names. This setting works in both modes and on reversed genomic
+panels.
+
+#### Highlight differences instead of nucleotide identity
+
+Set `colour_scheme = "difference"` to use one colour for mismatches and
+another for indels, with a neutral colour for the other alignment
+columns. Here orange marks the mismatch, red marks both insertion and
+deletion columns, and grey keeps aligned bases in the background. Both
+samples highlight the same alignment columns, including the gap
+character.
+
+``` r
+
+difference_palette <- c(aligned = "#E6E6E6", mismatch = "#E69F00", indel = "#D73027")
+dna_difference_plot <- dna_gene_plot +
+  geom_alignseq(
+    data = dna_columns, mode = "rows", size = 3.5,
+    sequence_position = "center", colour_scheme = "difference",
+    difference_colours = difference_palette
+  )
+dna_difference_plot
+```
+
+![The same two sample gene models and DNA alignment, with mismatches
+highlighted orange, insertion and deletion columns red, and aligned
+columns grey. Each sequence block has one midpoint
+connector.](ggexon-workflow_files/figure-html/workflow-dna-difference-colours-1.png)
+
+Change the three named values in `difference_colours` to customize this
+palette. Text switches between black and white to stay readable against
+the background. With `background = FALSE`, only the mismatch and indel
+letters receive highlight colours. Ambiguous IUPAC bases remain neutral
+and are not classified as verified mismatches.
 
 For larger regions, `mode = "markers"` draws differences and uses
 `details` only for selected callouts. Match `track` names to existing

@@ -142,9 +142,10 @@ copies.</p>
 <span>  regions <span class="op">=</span> <span class="va">v</span><span class="op">$</span><span class="va">regions</span>, details <span class="op">=</span> <span class="va">v</span><span class="op">$</span><span class="va">details</span>, flank <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div>
 <p><code><a href="../reference/geom_alignseq.html">geom_alignseq()</a></code> places each species’ DNA on its own
 panel. Default markers show differences, with DNA callouts for selected
-details. Letters are equally spaced schematically; smooth connectors
-retain genomic anchors. For a short window, <code>mode = "rows"</code>
-shows all selected bases:</p>
+details. Letters are equally spaced schematically. One curved connector
+joins each block’s lower centre to the midpoint of its displayed genomic
+interval. For a short window, <code>mode = "rows"</code> shows all
+selected bases:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">sequence_example</span> <span class="op">&lt;-</span> <span class="fu">plot_as3mt_alignseq</span><span class="op">(</span><span class="va">demo_dir</span>, intron_factor <span class="op">=</span> <span class="fl">30</span><span class="op">)</span></span>
 <span><span class="va">sequence_example</span><span class="op">$</span><span class="va">rows</span></span></code></pre></div>

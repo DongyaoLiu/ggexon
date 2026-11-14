@@ -84,8 +84,9 @@ sequence_data <- alignseq_data(v$aligned, v$anchors, reference = "human",
 
 `geom_alignseq()` places each species' DNA on its own panel. Default markers
 show differences, with DNA callouts for selected details. Letters are equally
-spaced schematically; smooth connectors retain genomic anchors. For a short
-window, `mode = "rows"` shows all selected bases:
+spaced schematically. One curved connector joins each block's lower centre to
+the midpoint of its displayed genomic interval. For a short window,
+`mode = "rows"` shows all selected bases:
 
 ```{r as3mt-alignseq-rows, fig.height=3.75, fig.alt="Human and chimp terminal repeat DNA on separate annotation panels. The donor divides 24 exonic from 12 intronic bases."}
 sequence_example <- plot_as3mt_alignseq(demo_dir, intron_factor = 30)

@@ -68,7 +68,10 @@ windows are merged by the preparation helper.</p>
 <span>  max_columns <span class="op">=</span> <span class="fl">60</span>,</span>
 <span>  na.rm <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  show.legend <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  <span class="va">...</span></span>
+<span>  <span class="va">...</span>,</span>
+<span>  sequence_position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"auto"</span>, <span class="st">"left"</span>, <span class="st">"center"</span>, <span class="st">"right"</span><span class="op">)</span>,</span>
+<span>  colour_scheme <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"nucleotide"</span>, <span class="st">"difference"</span><span class="op">)</span>,</span>
+<span>  difference_colours <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>aligned <span class="op">=</span> <span class="st">"#E6E6E6"</span>, mismatch <span class="op">=</span> <span class="st">"#E69F00"</span>, indel <span class="op">=</span> <span class="st">"#D73027"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -92,7 +95,7 @@ facet, never a link-panel track.</p></dd>
 <dt id="arg-mode">mode<a class="anchor" aria-label="anchor" href="#arg-mode"></a></dt>
 <dd><p><code>"markers"</code> (default) or <code>"rows"</code>. Rows display all selected
 columns as an equally spaced DNA row in each sequence's own annotation panel,
-connected to its genomic extent.
+connected to the midpoint of its displayed genomic interval.
 Row mode requires one contiguous alignment-column selection per sequence.</p></dd>
 
 
@@ -105,7 +108,7 @@ Row mode requires one contiguous alignment-column selection per sequence.</p></d
 
 
 <dt id="arg-background">background<a class="anchor" aria-label="anchor" href="#arg-background"></a></dt>
-<dd><p>Logical; draw pale nucleotide backgrounds.</p></dd>
+<dd><p>Logical; draw nucleotide backgrounds.</p></dd>
 
 
 <dt id="arg-max-columns">max_columns<a class="anchor" aria-label="anchor" href="#arg-max-columns"></a></dt>
@@ -115,9 +118,39 @@ Longer windows raise an error requesting a narrower selection.</p></dd>
 
 <dt id="arg-na-rm-show-legend-">na.rm, show.legend, ...<a class="anchor" aria-label="anchor" href="#arg-na-rm-show-legend-"></a></dt>
 <dd><p>Standard layer arguments. Event colours and
-shapes are fixed: substitution blue circle, insertion orange triangle,
-deletion purple inverted triangle, ambiguous grey cross. No fill scale is
+shapes use the default nucleotide scheme: substitution blue circle,
+insertion orange triangle, deletion purple inverted triangle, ambiguous
+grey cross. The difference scheme also uses its palette for substitution
+and indel markers. No fill scale is
 added, so existing exon and link palettes remain available.</p></dd>
+
+
+<dt id="arg-sequence-position">sequence_position<a class="anchor" aria-label="anchor" href="#arg-sequence-position"></a></dt>
+<dd><p>Horizontal placement of sequence blocks:
+<code>"auto"</code> (default), <code>"left"</code>, <code>"center"</code>, or <code>"right"</code>. Automatic placement
+stays near the genomic anchor and moves blocks apart before stacking.
+Explicit positions keep their horizontal alignment and stack overlapping
+blocks vertically. Placement is in panel space after genomic scaling,
+including on reversed panels. Blocks are kept within the available space
+with room for sequence names, so wide centred blocks may shift right to fit.</p></dd>
+
+
+<dt id="arg-colour-scheme">colour_scheme<a class="anchor" aria-label="anchor" href="#arg-colour-scheme"></a></dt>
+<dd><p><code>"nucleotide"</code> (default) colours A/C/G/T bases
+separately. <code>"difference"</code> uses a neutral background for aligned columns,
+one colour for substitutions, and another for insertions and deletions.
+Both sequences highlight the same differing alignment columns. Ambiguous
+IUPAC bases remain neutral rather than being called verified mismatches.</p></dd>
+
+
+<dt id="arg-difference-colours">difference_colours<a class="anchor" aria-label="anchor" href="#arg-difference-colours"></a></dt>
+<dd><p>Named character vector of three colours with keys
+<code>aligned</code>, <code>mismatch</code>, and <code>indel</code>. Used with <code>colour_scheme = "difference"</code>.
+Defaults to grey aligned columns, orange mismatches, and red indels.
+Text switches between black and white for readable contrast, assuming a
+white panel background when colours are translucent. With
+<code>background = FALSE</code>, mismatch and indel colours apply to the letters,
+while aligned letters retain their neutral grey shade.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -127,7 +160,8 @@ are required. In ggexon, use with annotation data and <code><a href="facet_genom
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>Smooth curved connectors retain their exact genomic and callout endpoints.
+    <p>Each sequence block has one smooth curved connector from the midpoint of
+its displayed genomic interval to the bottom centre of the sequence block.
 Marker and connector anchors follow <code><a href="scale_x_ggexon_genomic.html">scale_x_ggexon_genomic()</a></code> automatically.
 Callout columns are equally spaced in panel space <strong>after</strong> genomic scaling:
 they are schematic alignment detail, not an additional genomic ruler.
