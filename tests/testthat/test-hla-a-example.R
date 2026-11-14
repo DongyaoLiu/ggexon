@@ -91,3 +91,33 @@ test_that("HLA genomic plots resolve exons and splice-aware anchors from the sam
   points <- which(vapply(b3@plot@layers, function(layer) inherits(layer$geom, "GeomPoint"), logical(1)))
   expect_equal(nrow(b3@data[[points]]), 1212L)
 })
+
+test_that("HLA protein regions project through the reference CDS and share the exon band", {
+  fixture <- hla_example_fixture()
+  model <- fixture$helpers$prepare_hla_a_gene_layout(fixture$model)
+  projected <- query_genomic_projection(model, "hla_genomic_regions")
+  regions <- as.data.frame(query_domains(get_annotation(model, "hla_regions")))
+  cds <- as.data.frame(query_features(model, transcripts = "HLA_A0201_tx", feature_type = "CDS"))
+  cds <- cds[order(cds$start), ]
+  coding_bases <- unlist(Map(seq.int, cds$start, cds$end))
+  expect_setequal(projected$motif, regions$domain)
+  expect_equal(sum(projected$xmax - projected$xmin + 1), 341L * 3L)
+  for (i in seq_len(nrow(regions))) {
+    fragments <- projected[projected$motif == regions$domain[i], ]
+    actual <- unlist(Map(seq.int, as.integer(fragments$xmin), as.integer(fragments$xmax)))
+    expected <- coding_bases[seq.int((regions$start[i] - 1L) * 3L + 1L, regions$end[i] * 3L)]
+    expect_equal(sort(actual), expected)
+  }
+  plot <- fixture$helpers$plot_hla_a_gene_example(model)$plot
+  built <- ggexon_build(plot)
+  motifs <- which(vapply(built@plot@layers, function(layer) inherits(layer$geom, "GeomMotif"), logical(1)))
+  expect_length(motifs, 1L)
+  blocks <- built@data[[motifs]]
+  expect_equal(nrow(blocks), nrow(projected))
+  expect_length(unique(blocks$fill), 6L)
+  expect_true(all(blocks$ymin == -0.34 & blocks$ymax == -0.08))
+  exons <- built@data[[1L]]
+  expect_true(all(vapply(seq_len(nrow(blocks)), function(i) any(
+    blocks$xmin[i] >= exons$xmin - 1e-8 & blocks$xmax[i] <= exons$xmax + 1e-8
+  ), logical(1))))
+})

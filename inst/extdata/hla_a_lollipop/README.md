@@ -46,6 +46,8 @@ allele-local coordinates from the exact HLA00005 reference, not GRCh38.
   precursor residues through the reference CDS. The preparation helper uses the public projection and layout verbs to store
   genomic fragments, exonic anchors, a shared intron map, and bounded heads/stems
   before plotting. Native exon/lollipop layers then read that prepared state.
+  The same preparation stores projected protein regions; `geom_motif()` overlays
+  their exonic fragments within the exon band, with a separate region legend.
   Splice-split codons anchor to an exonic fragment. The scale compresses introns
   three-fold, with separate scale bars; base-edge exon geometry preserves exact
   bp lengths. Other alleles are projected to this one reference model.

@@ -18,6 +18,10 @@ prepare_hla_a_gene_layout <- function(hla, intron_factor = 3,
     hla, annotation = "hla_substitutions", transcripts = "HLA_A0201_tx",
     store = TRUE, name = "hla_genomic"
   )
+  hla <- ggexon::project_domains_to_genome(
+    hla, annotation = "hla_regions", transcripts = "HLA_A0201_tx",
+    store = TRUE, name = "hla_genomic_regions"
+  )
   counts <- ggexon::query_protein_mutations(hla, annotation = "hla_substitutions")$allele_count
   ggexon::prepare_genomic_layout(
     hla, annotation = "hla_genomic", name = "hla_lollipops",
@@ -38,14 +42,19 @@ plot_hla_a_gene_example <- function(hla, intron_factor = 3,
   p <- parameters
   exon_labels <- function(model) ggexon::query_genomic_layout(model, "hla_lollipops", "exons")
   group_names <- c("Aliphatic", "Aromatic", "Polar", "Basic", "Acidic", "Gly / Pro")
+  region_colours <- stats::setNames(p$region_colours, hla_a_regions(hla)$domain)
   count_breaks <- c(1, 10, 100, 1000, 5000)
   template <- plot_hla_a_example(hla, p)$overview
   plot <- ggexon::ggexon(hla) +
     ggexon::geom_exon2(
       genomic_layout = "hla_lollipops",
       intron_peak = 0.12, intron_shape = "chevron",
-      fill = "#263D52", colour = "#263D52", linewidth = 0.35,
+      fill = "#DDE3E8", colour = "#8193A1", linewidth = 0.35,
       transcript_backbone_colour = "#647E8A", show.legend = FALSE
+    ) +
+    ggexon::geom_motif(
+      ggplot2::aes(fill = motif), annotation = "hla_genomic_regions",
+      genomic_layout = "hla_lollipops", colour = NA
     ) +
     ggexon::geom_protein_lollipop(
       genomic_layout = "hla_lollipops", show_backbone = FALSE, show_domains = FALSE,
@@ -63,6 +72,8 @@ plot_hla_a_gene_example <- function(hla, intron_factor = 3,
     ) +
     ggplot2::scale_colour_manual("Alternative amino acid",
       values = stats::setNames(p$wong, group_names), breaks = group_names, drop = FALSE) +
+    ggplot2::scale_fill_manual("Protein region", values = region_colours,
+      breaks = names(region_colours), drop = FALSE) +
     ggplot2::scale_y_continuous(breaks = log10(count_breaks + 1),
       labels = scales::label_comma()(count_breaks),
       limits = c(-0.8, log10(5001) + 0.18),
@@ -75,12 +86,16 @@ plot_hla_a_gene_example <- function(hla, intron_factor = 3,
       y = "Allele count (log scale)",
       caption = paste0("Stem anchors follow the reference CDS, including splice-split codons. ",
                        "The numbered coding-exon model spans ATG to stop.\n",
+                       "Coloured exon segments show mature-protein regions; grey bases are outside them.\n",
                        "Exons at native scale; intron gaps ÷ ", intron_factor,
                        ". Scale bars show actual base-pair lengths. ",
                        "Database counts, not population frequencies.")
     ) +
-    ggplot2::guides(colour = ggplot2::guide_legend(nrow = 1,
-      override.aes = list(size = 2.4, alpha = 1))) + template$theme
+    ggplot2::guides(
+      colour = ggplot2::guide_legend(nrow = 1, order = 1,
+        override.aes = list(size = 2.4, alpha = 1)),
+      fill = ggplot2::guide_legend(nrow = 1, order = 2)
+    ) + template$theme + ggplot2::theme(legend.box = "vertical")
   list(plot = plot, prepared = list(
     mutations = ggexon::query_genomic_layout(hla, "hla_lollipops", "mutations"),
     stems = ggexon::query_genomic_layout(hla, "hla_lollipops", "stems")

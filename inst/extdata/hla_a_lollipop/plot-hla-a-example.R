@@ -4,7 +4,8 @@ hla_a_plot_parameters <- list(
   point_size = 0.65, stem_linewidth = 0.14, stem_alpha = 0.27,
   head_half_span = 1.6, focus_half_span = 3.2, stem_points = 24L,
   wong = c("#E69F00", "#56B4E9", "#009E73", "#CC79A7", "#D55E00", "#0072B2"),
-  region_colours = c("#263D52", "#3A586E", "#54768A", "#8A9BA6", "#425A68", "#647E8A")
+  # Paul Tol's Bright qualitative scheme (six region colours).
+  region_colours = c("#4477AA", "#EE6677", "#228833", "#CCBB44", "#66CCEE", "#AA3377")
 )
 
 # Fan heads locally; a crowded region cannot push later heads off the protein.
@@ -52,6 +53,7 @@ plot_hla_a_example <- function(hla, parameters = hla_a_plot_parameters) {
     regions <- hla_a_regions(model)
     regions$midpoint <- (regions$start + regions$end) / 2
     regions$short_label <- c("ALPHA 1", "ALPHA 2", "ALPHA 3", "CP", "TM", "TAIL")
+    regions$label_colour <- c("white", "#17212B", "white", "#17212B", "#17212B", "white")
     regions
   }
   count_breaks <- c(1, 10, 100, 1000, 5000)
@@ -115,8 +117,9 @@ plot_hla_a_example <- function(hla, parameters = hla_a_plot_parameters) {
     model, p$head_half_span, p
   )
   overview <- draw(overview_layout) +
-    ggplot2::geom_text(data = region_labels, ggplot2::aes(x = midpoint, label = short_label),
-                       y = -0.21, colour = "white", fontface = "bold",
+    ggplot2::geom_text(data = region_labels, ggplot2::aes(
+                       x = midpoint, label = short_label, colour = I(label_colour)),
+                       y = -0.21, fontface = "bold", show.legend = FALSE,
                        size = text_mm * 0.8, family = p$family) +
     ggplot2::scale_x_continuous(breaks = c(1, 50, 100, 150, 200, 250, 300, 341),
                                limits = c(-1, 343), expand = c(0, 0)) +

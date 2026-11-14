@@ -247,6 +247,17 @@ knitr::kable(unique(subset(
 The marker anchor for this split codon is **504.5**, the centre of bases
 504–505. It lies on coding sequence even though the codon crosses an intron.
 
+Project the attached protein regions through the same reference CDS. Their
+stored boundaries also use precursor positions. The projection splits each
+region into its exonic fragments:
+
+```{r hla-a-domain-projection}
+hla <- project_domains_to_genome(
+  hla, annotation = "hla_regions", transcripts = "HLA_A0201_tx",
+  store = TRUE, name = "hla_genomic_regions"
+)
+```
+
 ## Prepare one layout for every layer
 
 Prepare intron spacing and head positions on the same object. `intron_factor`
@@ -277,29 +288,43 @@ All spatial layers and the x scale select `genomic_layout = "hla_lollipops"`.
 They read the prepared geometry without projecting or spreading positions
 again. The shared map is applied once across the plot.
 
-First define the amino-acid colours and the counts to label on the y axis:
+Define separate palettes for amino-acid alternatives and protein regions,
+plus the counts to label on the y axis. Protein regions use six colours from
+[Paul Tol's Bright qualitative palette](https://sronpersonalpages.nl/~pault/#sec:qualitative),
+so neighbouring regions differ in hue:
 
 ```{r hla-a-gene-style}
 aa_colours <- c(
   Aliphatic = "#E69F00", Aromatic = "#56B4E9", Polar = "#009E73",
   Basic = "#CC79A7", Acidic = "#D55E00", `Gly / Pro` = "#0072B2"
 )
+region_colours <- c(
+  `Alpha-1` = "#4477AA", `Alpha-2` = "#EE6677", `Alpha-3` = "#228833",
+  `Connecting peptide` = "#CCBB44", Transmembrane = "#66CCEE", Cytoplasmic = "#AA3377"
+)
 count_breaks <- c(1, 10, 100, 1000, 5000)
 ```
 
 Build the plot directly from `hla`. `geom_exon2()` draws the prepared exon
-model; `geom_protein_lollipop()` draws its anchored stems and heads.
+model; `geom_motif()` overlays the projected protein regions at the same
+height; `geom_protein_lollipop()` draws the anchored stems and heads.
+The region blocks use the same intron map as the exon model. Grey bases
+represent the signal peptide and stop codon, outside the mature-protein regions.
 The exon-number labels read the stored exon coordinates from the same object.
 The code below includes all colours, axis labels, and theme settings used in
 the rendered figure:
 
-```{r hla-a-gene-plot, message = FALSE, fig.alt = "The 1212 HLA-A substitution lollipops projected above eight numbered coding exons and seven visible introns. Introns are compressed three-fold while exon widths retain their native scale. Separate exon and intron scale bars show their different display scales.", fig.cap = "Amino-acid positions are first projected through the A*02:01:01:01 transcript's CDS to genomic codon positions. The genomic x scale then displays each intron at one-third its original length while preserving exon lengths."}
+```{r hla-a-gene-plot, message = FALSE, fig.alt = "The 1212 HLA-A substitution lollipops projected above eight numbered coding exons, with six protein regions shown as distinct blue, rose, green, yellow, cyan and purple segments within the exon band. Introns are compressed three-fold while exon widths retain their native scale. Separate legends identify mutation alternatives and protein regions.", fig.cap = "Amino-acid substitutions and protein regions are projected through the same reference CDS. Region blocks split at splice junctions and occupy the full exon height. One shared genomic map compresses introns three-fold while preserving exon lengths."}
 genomic_plot <- ggexon(hla) +
   geom_exon2(
     genomic_layout = "hla_lollipops",
     intron_shape = "chevron", intron_peak = 0.12,
-    fill = "#263D52", colour = "#263D52", linewidth = 0.35,
+    fill = "#DDE3E8", colour = "#8193A1", linewidth = 0.35,
     transcript_backbone_colour = "#647E8A", show.legend = FALSE
+  ) +
+  geom_motif(
+    aes(fill = motif), annotation = "hla_genomic_regions",
+    genomic_layout = "hla_lollipops", colour = NA
   ) +
   geom_protein_lollipop(
     genomic_layout = "hla_lollipops", score = "amino_acid_group",
@@ -321,6 +346,10 @@ genomic_plot <- ggexon(hla) +
     "Alternative amino acid", values = aa_colours,
     breaks = names(aa_colours), drop = FALSE
   ) +
+  scale_fill_manual(
+    "Protein region", values = region_colours,
+    breaks = names(region_colours), drop = FALSE
+  ) +
   scale_y_continuous(
     breaks = log10(count_breaks + 1),
     labels = scales::label_comma()(count_breaks),
@@ -335,13 +364,15 @@ genomic_plot <- ggexon(hla) +
     caption = paste0(
       "Stem anchors follow the reference CDS, including splice-split codons. ",
       "The numbered coding-exon model spans ATG to stop.\n",
+      "Coloured exon segments show mature-protein regions; grey bases are outside them.\n",
       "Exons at native scale; intron gaps ÷ 3. Scale bars show actual base-pair lengths. ",
       "Database counts, not population frequencies."
     )
   ) +
-  guides(colour = guide_legend(
-    nrow = 1, override.aes = list(size = 2.4, alpha = 1)
-  )) +
+  guides(
+    colour = guide_legend(nrow = 1, order = 1, override.aes = list(size = 2.4, alpha = 1)),
+    fill = guide_legend(nrow = 1, order = 2)
+  ) +
   theme_minimal(base_size = 10, base_family = "Helvetica") +
   theme(
     panel.grid.minor = element_blank(),
@@ -358,7 +389,8 @@ genomic_plot <- ggexon(hla) +
       size = 9, hjust = 0, colour = "#697884", margin = margin(t = 14)
     ),
     plot.title.position = "plot", plot.caption.position = "plot",
-    legend.position = "bottom", legend.title = element_text(face = "bold"),
+    legend.position = "bottom", legend.box = "vertical",
+    legend.title = element_text(face = "bold"),
     legend.key.width = grid::unit(9, "mm"),
     plot.margin = margin(16, 18, 12, 14)
   )
