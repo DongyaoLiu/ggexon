@@ -47,10 +47,8 @@ alleles, and attaches these annotations. No separate mutation, domain,
 or exon tables need to be prepared before plotting.
 
 ``` r
-
 library(ggexon)
 library(ggplot2)
-#> Warning: package 'ggplot2' was built under R version 4.4.3
 
 demo_dir <- system.file("extdata", "hla_a_lollipop", package = "ggexon")
 source(file.path(demo_dir, "load-hla-a-example.R"), local = TRUE)
@@ -80,7 +78,6 @@ inputs. The helpers are example functions, rather than exported package
 functions.
 
 ``` r
-
 data.frame(
   named_alleles = nrow(hla_a_evidence(hla)$alleles),
   distinct_mature_proteins = hla_a_evidence(hla)$distinct_mature_proteins,
@@ -116,7 +113,6 @@ shared structural boundaries annotate this equal-length HLA-A track. All
 substitutions are computed against the selected A\*02:01 reference.
 
 ``` r
-
 knitr::kable(as.data.frame(query_domains(get_annotation(hla, "hla_regions")))[,
   c("domain", "mature_start", "mature_end")],
   col.names = c("Protein region", "Mature start", "Mature end"))
@@ -141,7 +137,6 @@ to the exact reference allele’s coding structure.
 ## Dense lollipop summary
 
 ``` r
-
 plots <- plot_hla_a_example(hla)
 #> Scale for y is already present.
 #> Adding another scale for y, which will replace the existing scale.
@@ -187,7 +182,6 @@ resolves the mutation and region annotations from that object during
 plot build. The core protein-coordinate recipe is:
 
 ``` r
-
 ggexon(hla) +
   geom_protein_lollipop(
     annotation = "hla_substitutions", domain_annotation = "hla_regions",
@@ -209,7 +203,6 @@ Bounded fanning is specific to this example; the package’s default
 spreading API is unchanged.
 
 ``` r
-
 head(query_protein_mutations(hla, annotation = "hla_substitutions")[,
   c("mutation", "allele_count", "n_alternatives", "amino_acid_group")])
 #>   mutation allele_count n_alternatives amino_acid_group
@@ -227,7 +220,6 @@ The reference has **L** at mature residue 156. In this expanded panel
 there are **five** alternative amino acids, each counted separately:
 
 ``` r
-
 focus_states <- subset(hla_a_evidence(hla)$states, position == 156)
 knitr::kable(focus_states[, c("ref", "alt", "is_reference", "allele_count")],
              col.names = c("Reference", "Observed", "Reference match", "Named alleles"))
@@ -243,7 +235,6 @@ knitr::kable(focus_states[, c("ref", "alt", "is_reference", "allele_count")],
 | 861 | L         | W        | FALSE           |          1043 |
 
 ``` r
-
 stopifnot(sum(focus_states$allele_count) == nrow(hla_a_evidence(hla)$alleles))
 ```
 
@@ -253,7 +244,6 @@ sum to 5,998. Reference matches remain in the state table and are not
 substitution heads.
 
 ``` r
-
 plots$focus
 ```
 
@@ -285,7 +275,6 @@ substitutions are projected onto this one reference structure, not onto
 separate allele-specific intron models.
 
 ``` r
-
 knitr::kable(hla_a_gene_structure(hla),
   col.names = c("Feature", "Number", "Start", "End", "Length (bp)"))
 ```
@@ -316,7 +305,6 @@ it returns the updated Syn object and attaches a named genomic
 annotation:
 
 ``` r
-
 hla <- project_mutations_to_genome(
   hla, annotation = "hla_substitutions", transcripts = "HLA_A0201_tx",
   store = TRUE, name = "hla_genomic"
@@ -342,7 +330,6 @@ example:
 Inspect the stored result directly, without projecting again:
 
 ``` r
-
 knitr::kable(unique(subset(
   query_genomic_projection(hla, "hla_genomic"), mature_position == 1,
   select = c("mature_position", "position", "seqnames", "xmin", "xmax")
@@ -351,9 +338,9 @@ knitr::kable(unique(subset(
 ```
 
 | Mature residue | Precursor residue | Reference sequence | Genomic start (bp) | Genomic end (bp) |
-|---:|---:|:---|---:|---:|
-| 1 | 25 | HLA00005 | 373 | 373 |
-| 1 | 25 | HLA00005 | 504 | 505 |
+|---------------:|------------------:|:-------------------|-------------------:|-----------------:|
+|              1 |                25 | HLA00005           |                373 |              373 |
+|              1 |                25 | HLA00005           |                504 |              505 |
 
 The marker anchor for this split codon is **504.5**, the centre of bases
 504–505. It lies on coding sequence even though the codon crosses an
@@ -364,7 +351,6 @@ Their stored boundaries also use precursor positions. The projection
 splits each region into its exonic fragments:
 
 ``` r
-
 hla <- project_domains_to_genome(
   hla, annotation = "hla_regions", transcripts = "HLA_A0201_tx",
   store = TRUE, name = "hla_genomic_regions"
@@ -381,7 +367,6 @@ existing `log10(count + 1)` convention; the exon model sits below count
 1.
 
 ``` r
-
 hla <- prepare_genomic_layout(
   hla, annotation = "hla_genomic", name = "hla_lollipops",
   intron_factor = 3, head_spread = 4.8,
@@ -411,7 +396,6 @@ palette](https://sronpersonalpages.nl/~pault/#sec:qualitative), so
 neighbouring regions differ in hue:
 
 ``` r
-
 aa_colours <- c(
   Aliphatic = "#E69F00", Aromatic = "#56B4E9", Polar = "#009E73",
   Basic = "#CC79A7", Acidic = "#D55E00", `Gly / Pro` = "#0072B2"
@@ -437,7 +421,6 @@ below includes all colours, axis labels, and theme settings used in the
 rendered figure:
 
 ``` r
-
 genomic_plot <- ggexon(hla) +
   geom_exon2(
     genomic_layout = "hla_lollipops",

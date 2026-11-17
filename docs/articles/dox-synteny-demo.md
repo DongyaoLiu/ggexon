@@ -23,11 +23,11 @@ windows. RNA-seq comes from **testis biological replicate 1** in [GEO
 series
 GSE185361](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE185361):
 
-| Species | RNA-seq sample | Signal used here |
-|:---|:---|:---|
-| *D. mauritiana* | [GSM5611558](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM5611558) | Deposited forward and reverse BigWigs |
-| *D. simulans* | [GSM7039340](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM7039340) | Original paired-end reads, [SRR23418969](https://www.ebi.ac.uk/ena/browser/view/SRR23418969), remapped to the plotted assembly |
-| *D. sechellia* | [GSM5611560](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM5611560) | Deposited forward and reverse BigWigs |
+| Species         | RNA-seq sample                                                              | Signal used here                                                                                                               |
+|:----------------|:----------------------------------------------------------------------------|:-------------------------------------------------------------------------------------------------------------------------------|
+| *D. mauritiana* | [GSM5611558](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM5611558) | Deposited forward and reverse BigWigs                                                                                          |
+| *D. simulans*   | [GSM7039340](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM7039340) | Original paired-end reads, [SRR23418969](https://www.ebi.ac.uk/ena/browser/view/SRR23418969), remapped to the plotted assembly |
+| *D. sechellia*  | [GSM5611560](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM5611560) | Deposited forward and reverse BigWigs                                                                                          |
 
 The deposited *D. simulans* BigWigs use a different assembly, so the
 bundle uses coverage recomputed from the complete original read library
@@ -53,7 +53,6 @@ in Basic usage.
 Locate the installed files and inspect their assembly windows:
 
 ``` r
-
 library(ggexon)
 library(ggplot2)
 
@@ -73,11 +72,11 @@ knitr::kable(windows[, c("name", "accession", "chrom", "start", "end", "sample")
 | D. simulans   | GCA_004382185.1 | CM015611.1  | 9233164 | 9276944 | GSM7039340 |
 | D. sechellia  | GCF_004382195.1 | NC_045954.1 | 9396969 | 9444821 | GSM5611560 |
 
-| Files in `objects/` | Contents | Object used below |
-|:---|:---|:---|
-| `Dmau.gtf`, `Dsim.gtf`, `Dsech.gtf` | Gene/transcript spans and disjoint CDS/UTR pieces | `SynIndividual`, with a feature annotation |
-| `Dmau_Dsim.paf`, `Dsim_Dsech.paf` | Ungapped LASTZ alignment blocks | `SynPairAlignment` |
-| `Dmau.RNA.bw`, `Dsim.RNA.bw`, `Dsech.RNA.bw` | Combined RNA-seq signal | `SynBigWigAnnotation` |
+| Files in `objects/`                          | Contents                                          | Object used below                          |
+|:---------------------------------------------|:--------------------------------------------------|:-------------------------------------------|
+| `Dmau.gtf`, `Dsim.gtf`, `Dsech.gtf`          | Gene/transcript spans and disjoint CDS/UTR pieces | `SynIndividual`, with a feature annotation |
+| `Dmau_Dsim.paf`, `Dsim_Dsech.paf`            | Ungapped LASTZ alignment blocks                   | `SynPairAlignment`                         |
+| `Dmau.RNA.bw`, `Dsim.RNA.bw`, `Dsech.RNA.bw` | Combined RNA-seq signal                           | `SynBigWigAnnotation`                      |
 
 All plotting files use `X` as a chromosome-name alias and retain
 coordinates on the listed assemblies. GTF and queried feature intervals
@@ -103,7 +102,6 @@ individuals in one `SynSpecies`. Keep the assembly accession, sample ID,
 and signal units with the data:
 
 ``` r
-
 comparison <- SynSpecies(name = "Dox insertion locus")
 for (id in species_ids) {
   w <- windows[windows$species == id, ]
@@ -141,7 +139,6 @@ lower species is the query. Use the same IDs as in the individual
 constructors:
 
 ``` r
-
 comparison <- add_pairwise_alignment(comparison,
   SynPairAlignment(name = "Dmau_Dsim", target_individual = "Dmau",
     query_individual = "Dsim", file = file.path(object_dir, "Dmau_Dsim.paf"),
@@ -178,7 +175,6 @@ extraction ranges; Dmau’s added right-edge space extends beyond its
 bundled data.
 
 ``` r
-
 window_limits <- setNames(lapply(seq_len(nrow(windows)), function(i)
   c(windows$start[i] - 1L, windows$end[i] + 1L)), species_ids)
 for (id in c("Dmau", "Dsech")) window_limits[[id]][2] <- 9440000L
@@ -216,7 +212,6 @@ individuals, annotations, and alignments; only their panel layouts
 differ:
 
 ``` r
-
 annotation_view <- comparison
 annotation_panels <- panels[panels$panel_type == "annotation", ]
 annotation_panels$PANEL <- annotation_panels$ROW <- seq_len(nrow(annotation_panels))
@@ -238,7 +233,6 @@ the same y range for all three RNA panels, from zero to
 rescaling any scores:
 
 ``` r
-
 dsim_genes <- query_features(comparison@individuals[["Dsim"]],
   chr = "X", feature_type = "gene", all = TRUE)
 as.data.frame(dsim_genes)[, c("seqnames", "start", "end", "strand", "gene_name")]
@@ -249,7 +243,6 @@ as.data.frame(dsim_genes)[, c("seqnames", "start", "end", "strand", "gene_name")
 ```
 
 ``` r
-
 peaks <- setNames(vapply(species_ids, function(id) {
   individual <- comparison@individuals[[id]]
   w <- windows[windows$species == id, ]
@@ -279,7 +272,6 @@ RNA panels share one y scale. Keep genomic spacing with
 `intron_factor = 1`.
 
 ``` r
-
 palette <- c(
   "CG42797" = "#246589", "Ptpmeg2" = "#246589", "Dox" = "#D55E00",
   "RNA-seq" = "#749CB5",
@@ -347,7 +339,6 @@ base positions.
 reads the gene records and adds italic names:
 
 ``` r
-
 annotation_layers <- list(
   geom_exon2(
     aes(fill = gene_name, colour = gene_name, ymin = 1,
@@ -363,7 +354,6 @@ annotation_layers <- list(
 ```
 
 ``` r
-
 p_annotation <- ggexon(annotation_view) + annotation_layers + plot_style
 p_annotation
 ```
@@ -386,7 +376,6 @@ object. Fill encodes `100 * nmatch / alen`, the percentage of matching
 bases in an ungapped block:
 
 ``` r
-
 identity_breaks <- c(85, 95, 98, 100)
 identity_labels <- c("85-95%", "95-98%", "98-100%")
 link_layers <- list(
@@ -405,7 +394,6 @@ Use the prepared five-panel view and reuse the annotation layers and
 style:
 
 ``` r
-
 p_links <- ggexon(link_view) + annotation_layers + link_layers + plot_style
 p_links
 ```
@@ -431,7 +419,6 @@ quantitative y scale. The legend marks the signal as **×1**: no region
 or track receives a height multiplier.
 
 ``` r
-
 rna_layers <- list(
   geom_coverage(aes(fill = "RNA-seq"), annotation = "RNA_seq", alpha = 0.85)
 )
@@ -449,7 +436,6 @@ p_rna <- ggexon(comparison) +
 ```
 
 ``` r
-
 p_rna
 ```
 
@@ -488,7 +474,6 @@ different physical heights. Reuse the other facet settings so the
 genomic windows and strip labels remain the same.
 
 ``` r
-
 p_rna + facet_genomics(vars(track), ncol = 1, scales = "free_x",
   strip.position = "left", strip_group = "individual",
   labeller = as_labeller(strip_labels),
@@ -509,7 +494,6 @@ RNA intervals, and both ends of every link. Tick labels remain original
 genomic coordinates.
 
 ``` r
-
 p_compressed <- p_rna + scale_x_ggexon_genomic(intron_factor = 3,
   n.breaks = 4,
   labels = scales::label_number(scale = 1e-6, suffix = " Mb", accuracy = 0.01))
@@ -539,7 +523,6 @@ can export each stage or reuse it in a presentation. These commands
 write to your chosen working directory, not into the installed package.
 
 ``` r
-
 ggsave("dox-annotation.pdf", p_annotation, width = 9.5, height = 3.4,
   units = "in", device = grDevices::cairo_pdf, bg = "white")
 ggsave("dox-with-links.pdf", p_links, width = 9.5, height = 4.6,

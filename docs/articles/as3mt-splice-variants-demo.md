@@ -19,7 +19,6 @@ alignment. Original repeat sequences, source specifications and
 supporting evidence stay in the object’s metadata.
 
 ``` r
-
 library(ggexon)
 library(ggplot2)
 
@@ -46,7 +45,6 @@ two highest original identity categories.
 Prepare the remaining overlays on the same object before plotting:
 
 ``` r
-
 as3mt <- prepare_as3mt_example(as3mt)
 
 head(as3mt_plot_data(as3mt, "exon_labels")[,
@@ -85,7 +83,6 @@ E4–E11**, including its untranslated first exon.
 Define the colours and text settings used below:
 
 ``` r
-
 base_size <- 8
 base_family <- "serif"
 text_mm <- base_size / ggplot2::.pt
@@ -106,7 +103,6 @@ with the transcript models. Select the `human` and `chimp` annotation
 panels explicitly.
 
 ``` r
-
 transcript_plot <- ggexon(as3mt) +
   geom_exon2(
     aes(xmin = xmin - 0.5, xmax = xmax + 0.5, ymin = isoform_y,
@@ -193,7 +189,6 @@ currently requires its prepared table explicitly, so query the stored
 `dna_rows` view. Gene models still resolve from the Syn object:
 
 ``` r
-
 sequence_model <- as3mt
 species_layout(sequence_model) <- SynLayout(
   panels = data.frame(PANEL = 1:2, ROW = 1:2, COL = 1,
@@ -255,7 +250,6 @@ chimpanzee annotation. The chimpanzee panel is half the human panel’s
 height; the link panel keeps its compact height.
 
 ``` r
-
 combined_plot <- transcript_plot +
   geom_alignseq(
     data = as3mt_plot_data(as3mt, "dna_markers"), colour_scheme = "difference",

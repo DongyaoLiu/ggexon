@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Grammar of genomic annotations, synteny, and associated data • ggexon</title>
 <script src="lightswitch.js"></script><script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/Source_Sans_3-0.4.10/font.css" rel="stylesheet">
+<link href="deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="deps/Source_Sans_3-0.4.10/font.css" rel="stylesheet">
 <link href="deps/Source_Code_Pro-0.4.10/font.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
@@ -80,11 +80,11 @@
 <p><code>ggexon</code> is a development package. Install it from GitHub:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"DongyaoLiu/ggexon"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"DongyaoLiu/ggexon"</span><span class="op">)</span></span></code></pre></div>
 <p>If your R installation cannot resolve the Bioconductor dependencies, install them first:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span></span>
-<span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://bioconductor.github.io/BiocManager/reference/install.html" class="external-link">install</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu">install</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>  <span class="st">"Biostrings"</span>, <span class="st">"GenomeInfoDb"</span>, <span class="st">"GenomicRanges"</span>, <span class="st">"Rsamtools"</span>, <span class="st">"rtracklayer"</span></span>
 <span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>BigWig-backed examples run on macOS and Linux. ODGI-backed graph alignment workflows also require Python 3.8 or newer and <code>odgi</code>.</p>
@@ -160,60 +160,60 @@
 <col width="50%">
 <col width="50%">
 </colgroup>
-<thead><tr>
+<thead><tr class="header">
 <th>Task</th>
 <th>Objects or functions</th>
 </tr></thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td>Store genomes and annotations</td>
 <td>
 <code>SynIndividual</code>, <code>SynFeatureAnnotation</code>, <code>SynBigWigAnnotation</code>, <code>SynVCFAnnotation</code>
 </td>
 </tr>
-<tr>
+<tr class="even">
 <td>Store protein features</td>
 <td>
 <code>SynProteinDomainAnnotation</code>, <code>SynProteinMutationAnnotation</code>
 </td>
 </tr>
-<tr>
+<tr class="odd">
 <td>Build comparisons</td>
 <td>
 <code>SynSpecies</code>, <code>SynPairAlignment</code>, <code>SynMultiAlignment</code>, <code>HomologyAnnotation</code>
 </td>
 </tr>
-<tr>
+<tr class="even">
 <td>Attach evidence</td>
 <td>
 <code><a href="reference/add_individual.html">add_individual()</a></code>, <code><a href="reference/add_annotation.html">add_annotation()</a></code>, <code><a href="reference/add_pairwise_alignment.html">add_pairwise_alignment()</a></code>, <code><a href="reference/add_homology_annotation.html">add_homology_annotation()</a></code>
 </td>
 </tr>
-<tr>
+<tr class="odd">
 <td>Inspect stored data</td>
 <td>
 <code><a href="reference/query_features.html">query_features()</a></code>, <code><a href="reference/query_signal.html">query_signal()</a></code>, <code><a href="reference/query_variants.html">query_variants()</a></code>, <code><a href="reference/query_domains.html">query_domains()</a></code>
 </td>
 </tr>
-<tr>
+<tr class="even">
 <td>Prepare reusable views</td>
 <td>
 <code><a href="reference/project_mutations_to_genome.html">project_mutations_to_genome()</a></code>, <code><a href="reference/prepare_genomic_layout.html">prepare_genomic_layout()</a></code>, <code><a href="reference/prepare_gene_lollipop.html">prepare_gene_lollipop()</a></code>
 </td>
 </tr>
-<tr>
+<tr class="odd">
 <td>Prepare panel layouts</td>
 <td>
 <code><a href="reference/store_chain_layout.html">store_chain_layout()</a></code>, <code><a href="reference/set_panel_xlim.html">set_panel_xlim()</a></code>, <code>SynLayout</code>, <code>SynLocusSet</code>
 </td>
 </tr>
-<tr>
+<tr class="even">
 <td>Draw models and evidence</td>
 <td>
 <code><a href="reference/geom_exon2.html">geom_exon2()</a></code>, <code><a href="reference/geom_genetag.html">geom_genetag()</a></code>, <code><a href="reference/geom_gene_lollipop.html">geom_gene_lollipop()</a></code>, <code><a href="reference/geom_nuclink.html">geom_nuclink()</a></code>, <code><a href="reference/geom_coverage.html">geom_coverage()</a></code>, <code><a href="reference/geom_protein_lollipop.html">geom_protein_lollipop()</a></code>
 </td>
 </tr>
-<tr>
+<tr class="odd">
 <td>Set scales and appearance</td>
 <td>
 <code><a href="reference/facet_genomics.html">facet_genomics()</a></code>, <code><a href="reference/scale_x_ggexon_genomic.html">scale_x_ggexon_genomic()</a></code>, <code><a href="reference/theme_ggexon_track.html">theme_ggexon_track()</a></code>, <code><a href="reference/theme_ggexon_clean.html">theme_ggexon_clean()</a></code>
@@ -281,7 +281,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

@@ -19,7 +19,6 @@ coordinate transformations; themes control appearance.
 `ggexon` is a development package. Install it from GitHub:
 
 ``` r
-
 install.packages("remotes")
 remotes::install_github("DongyaoLiu/ggexon")
 ```
@@ -28,7 +27,6 @@ If your R installation cannot resolve the Bioconductor dependencies,
 install them first:
 
 ``` r
-
 install.packages("BiocManager")
 BiocManager::install(c(
   "Biostrings", "GenomeInfoDb", "GenomicRanges", "Rsamtools", "rtracklayer"
@@ -44,7 +42,6 @@ Start with the bundled HLA-A reference annotation. Construct and inspect
 an individual, add it to a comparison, then draw its exon-intron model:
 
 ``` r
-
 library(ggexon)
 library(ggplot2)
 
@@ -159,17 +156,17 @@ tutorial](https://dongyaoliu.github.io/ggexon/articles/mhc-continuous-demo.md).
 
 The main containers and preparation functions are:
 
-| Task | Objects or functions |
-|----|----|
-| Store genomes and annotations | `SynIndividual`, `SynFeatureAnnotation`, `SynBigWigAnnotation`, `SynVCFAnnotation` |
-| Store protein features | `SynProteinDomainAnnotation`, `SynProteinMutationAnnotation` |
-| Build comparisons | `SynSpecies`, `SynPairAlignment`, `SynMultiAlignment`, `HomologyAnnotation` |
-| Attach evidence | [`add_individual()`](https://dongyaoliu.github.io/ggexon/reference/add_individual.md), [`add_annotation()`](https://dongyaoliu.github.io/ggexon/reference/add_annotation.md), [`add_pairwise_alignment()`](https://dongyaoliu.github.io/ggexon/reference/add_pairwise_alignment.md), [`add_homology_annotation()`](https://dongyaoliu.github.io/ggexon/reference/add_homology_annotation.md) |
-| Inspect stored data | [`query_features()`](https://dongyaoliu.github.io/ggexon/reference/query_features.md), [`query_signal()`](https://dongyaoliu.github.io/ggexon/reference/query_signal.md), [`query_variants()`](https://dongyaoliu.github.io/ggexon/reference/query_variants.md), [`query_domains()`](https://dongyaoliu.github.io/ggexon/reference/query_domains.md) |
-| Prepare reusable views | [`project_mutations_to_genome()`](https://dongyaoliu.github.io/ggexon/reference/project_mutations_to_genome.md), [`prepare_genomic_layout()`](https://dongyaoliu.github.io/ggexon/reference/prepare_genomic_layout.md), [`prepare_gene_lollipop()`](https://dongyaoliu.github.io/ggexon/reference/prepare_gene_lollipop.md) |
-| Prepare panel layouts | [`store_chain_layout()`](https://dongyaoliu.github.io/ggexon/reference/store_chain_layout.md), [`set_panel_xlim()`](https://dongyaoliu.github.io/ggexon/reference/set_panel_xlim.md), `SynLayout`, `SynLocusSet` |
-| Draw models and evidence | [`geom_exon2()`](https://dongyaoliu.github.io/ggexon/reference/geom_exon2.md), [`geom_genetag()`](https://dongyaoliu.github.io/ggexon/reference/geom_genetag.md), [`geom_gene_lollipop()`](https://dongyaoliu.github.io/ggexon/reference/geom_gene_lollipop.md), [`geom_nuclink()`](https://dongyaoliu.github.io/ggexon/reference/geom_nuclink.md), [`geom_coverage()`](https://dongyaoliu.github.io/ggexon/reference/geom_coverage.md), [`geom_protein_lollipop()`](https://dongyaoliu.github.io/ggexon/reference/geom_protein_lollipop.md) |
-| Set scales and appearance | [`facet_genomics()`](https://dongyaoliu.github.io/ggexon/reference/facet_genomics.md), [`scale_x_ggexon_genomic()`](https://dongyaoliu.github.io/ggexon/reference/scale_x_ggexon_genomic.md), [`theme_ggexon_track()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_track.md), [`theme_ggexon_clean()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_clean.md) |
+| Task                          | Objects or functions                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+|-------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Store genomes and annotations | `SynIndividual`, `SynFeatureAnnotation`, `SynBigWigAnnotation`, `SynVCFAnnotation`                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| Store protein features        | `SynProteinDomainAnnotation`, `SynProteinMutationAnnotation`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| Build comparisons             | `SynSpecies`, `SynPairAlignment`, `SynMultiAlignment`, `HomologyAnnotation`                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| Attach evidence               | [`add_individual()`](https://dongyaoliu.github.io/ggexon/reference/add_individual.md), [`add_annotation()`](https://dongyaoliu.github.io/ggexon/reference/add_annotation.md), [`add_pairwise_alignment()`](https://dongyaoliu.github.io/ggexon/reference/add_pairwise_alignment.md), [`add_homology_annotation()`](https://dongyaoliu.github.io/ggexon/reference/add_homology_annotation.md)                                                                                                                                                 |
+| Inspect stored data           | [`query_features()`](https://dongyaoliu.github.io/ggexon/reference/query_features.md), [`query_signal()`](https://dongyaoliu.github.io/ggexon/reference/query_signal.md), [`query_variants()`](https://dongyaoliu.github.io/ggexon/reference/query_variants.md), [`query_domains()`](https://dongyaoliu.github.io/ggexon/reference/query_domains.md)                                                                                                                                                                                         |
+| Prepare reusable views        | [`project_mutations_to_genome()`](https://dongyaoliu.github.io/ggexon/reference/project_mutations_to_genome.md), [`prepare_genomic_layout()`](https://dongyaoliu.github.io/ggexon/reference/prepare_genomic_layout.md), [`prepare_gene_lollipop()`](https://dongyaoliu.github.io/ggexon/reference/prepare_gene_lollipop.md)                                                                                                                                                                                                                  |
+| Prepare panel layouts         | [`store_chain_layout()`](https://dongyaoliu.github.io/ggexon/reference/store_chain_layout.md), [`set_panel_xlim()`](https://dongyaoliu.github.io/ggexon/reference/set_panel_xlim.md), `SynLayout`, `SynLocusSet`                                                                                                                                                                                                                                                                                                                             |
+| Draw models and evidence      | [`geom_exon2()`](https://dongyaoliu.github.io/ggexon/reference/geom_exon2.md), [`geom_genetag()`](https://dongyaoliu.github.io/ggexon/reference/geom_genetag.md), [`geom_gene_lollipop()`](https://dongyaoliu.github.io/ggexon/reference/geom_gene_lollipop.md), [`geom_nuclink()`](https://dongyaoliu.github.io/ggexon/reference/geom_nuclink.md), [`geom_coverage()`](https://dongyaoliu.github.io/ggexon/reference/geom_coverage.md), [`geom_protein_lollipop()`](https://dongyaoliu.github.io/ggexon/reference/geom_protein_lollipop.md) |
+| Set scales and appearance     | [`facet_genomics()`](https://dongyaoliu.github.io/ggexon/reference/facet_genomics.md), [`scale_x_ggexon_genomic()`](https://dongyaoliu.github.io/ggexon/reference/scale_x_ggexon_genomic.md), [`theme_ggexon_track()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_track.md), [`theme_ggexon_clean()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_clean.md)                                                                                                                                                   |
 
 Use the function reference for supported inputs, selectors, and
 additional geoms. Ordinary ggplot2 layers, scales, themes, and

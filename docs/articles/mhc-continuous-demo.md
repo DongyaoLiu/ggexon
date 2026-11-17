@@ -21,12 +21,12 @@ README](https://github.com/DongyaoLiu/ggexon/blob/HEAD/inst/extdata/mhc_haplotyp
 The bundle contains one gene annotation per haplotype and one direct
 alignment for each adjacent pair:
 
-| Files | Contents | Syn object |
-|:---|:---|:---|
-| `SSYh1.gff3`, `GGOh1.gff3`, `HSAh1.gff3` | Curated MHC spans and representative background gene spans | `SynIndividual`, with a feature annotation |
-| `SSYh1_GGOh1.paf` | Siamang H1 versus Gorilla H1 | `SynPairAlignment` |
-| `GGOh1_HSAh1.paf` | Gorilla H1 versus Human CHM13 | `SynPairAlignment` |
-| `windows.tsv` | Native chromosomes, assembly coordinates, and display orientation | Stored panel limits |
+| Files                                    | Contents                                                          | Syn object                                 |
+|:-----------------------------------------|:------------------------------------------------------------------|:-------------------------------------------|
+| `SSYh1.gff3`, `GGOh1.gff3`, `HSAh1.gff3` | Curated MHC spans and representative background gene spans        | `SynIndividual`, with a feature annotation |
+| `SSYh1_GGOh1.paf`                        | Siamang H1 versus Gorilla H1                                      | `SynPairAlignment`                         |
+| `GGOh1_HSAh1.paf`                        | Gorilla H1 versus Human CHM13                                     | `SynPairAlignment`                         |
+| `windows.tsv`                            | Native chromosomes, assembly coordinates, and display orientation | Stored panel limits                        |
 
 Curated MHC pseudogenes and background records annotated as pseudogenes
 are excluded before writing the GFF3 files. One representative
@@ -38,7 +38,6 @@ reconstructed exon structures.
 Locate the installed inputs and inspect the selected windows:
 
 ``` r
-
 library(ggexon)
 library(ggplot2)
 
@@ -70,7 +69,6 @@ the facet will reverse the Siamang axis when drawing.
 Create one individual per haplotype and collect them in a `SynSpecies`:
 
 ``` r
-
 comparison <- SynSpecies(name = "Three MHC haplotypes")
 for (id in haplotype_ids) {
   w <- windows[windows$track == id, ]
@@ -95,7 +93,6 @@ The upper haplotype is the target and the lower haplotype is the query.
 Use the same individual IDs as above:
 
 ``` r
-
 for (i in seq_len(length(haplotype_ids) - 1L)) {
   target <- haplotype_ids[i]
   query <- haplotype_ids[i + 1L]
@@ -111,7 +108,7 @@ for (i in seq_len(length(haplotype_ids) - 1L)) {
 alignment_names <- names(comparison@pairwise_alignments)
 vapply(alignment_names, function(name)
   nrow(pairwise_alignment_data(comparison, alignment = name)), integer(1))
-#> SSYh1_GGOh1 GGOh1_HSAh1
+#> SSYh1_GGOh1 GGOh1_HSAh1 
 #>         108          44
 ```
 
@@ -127,7 +124,6 @@ object. Use their curated source keys to identify matching genes, and
 Human CHM13 to define the reference gene order:
 
 ``` r
-
 mhc_order <- c("F", "G", "H", "OKO", "A", "J", "E", "C", "B", "DRA",
   "DRB3", "DRB5", "DRB1", "DQA1", "DQB1", "DQA2", "DQB2", "DOB",
   "DMB", "DMA", "DOA", "DPA1", "DPB1")
@@ -178,7 +174,6 @@ spans; it does not compute lollipop data or head positions.
 Prepare a five-row chain and store its genomic bounds before plotting:
 
 ``` r
-
 comparison <- store_chain_layout(comparison, free = list(x = TRUE, y = FALSE))
 for (id in haplotype_ids) {
   w <- windows[windows$track == id, ]
@@ -217,7 +212,6 @@ display; its tick labels count down and the ribbons inherit that
 source-panel transformation.
 
 ``` r
-
 base_size <- 8
 base_family <- "serif"
 strip_labels <- setNames(paste(windows$label, windows$chr, sep = "\n"), haplotype_ids)
@@ -252,7 +246,6 @@ colours. Both layers use actual gene widths and strands. Colours pass
 directly from the stored annotation through the prepared views:
 
 ``` r
-
 gene_layers <- list(
   geom_genetag(data = function(model) mhc_plot_data(model, "context"),
     aes(xmin = xmin, xmax = xmax, y = ymin + 0.15,
@@ -267,7 +260,6 @@ gene_layers <- list(
 ```
 
 ``` r
-
 p_genes <- ggexon(annotation_view) + gene_layers + plot_style +
   scale_panel_annotation("free_y", limits = gene_limits)
 p_genes
@@ -297,7 +289,6 @@ anchors. Read each column from top to bottom, then move to the next
 column. Empty cells remain reserved and do not establish gene absence.
 
 ``` r
-
 head_layer <- geom_gene_lollipop(
   y = 0.3, headroom = 8, max_rows = 4, max_shift_mm = 85,
   head_height_mm = 3.6, padding_mm = 0.5, tip_mm = 1.5,
@@ -312,7 +303,6 @@ head_layer <- geom_gene_lollipop(
 ```
 
 ``` r
-
 p_heads <- ggexon(annotation_view) + gene_layers + head_layer + plot_style +
   scale_panel_annotation("free_y", limits = head_limits)
 p_heads
@@ -337,7 +327,6 @@ Select the two alignments stored in `comparison` by name, then use the
 complete five-panel object:
 
 ``` r
-
 link_layers <- lapply(alignment_names, function(name)
   geom_nuclink(alignment = name, fill = "grey65", colour = NA, alpha = 0.4))
 
@@ -346,7 +335,6 @@ p_mhc <- ggexon(comparison) + gene_layers + head_layer + link_layers +
 ```
 
 ``` r
-
 p_mhc
 ```
 
@@ -373,7 +361,6 @@ annotation row’s relative height. Reduce this value for a tighter
 figure, or use a physical height such as `grid::unit(7, "mm")`:
 
 ``` r
-
 p_mhc + facet_genomics(vars(track), ncol = 1, scales = "free_x",
   strip.position = "left", reverse_x = "SSYh1",
   link_panel_height = grid::unit(7, "mm"),
@@ -387,7 +374,6 @@ Keep the three plot stages as reusable objects. Export the complete
 figure at a compact width and height:
 
 ``` r
-
 ggsave("mhc-three-haplotypes.pdf", p_mhc, width = 9, height = 4.8,
   units = "in", device = grDevices::cairo_pdf, bg = "white")
 ggsave("mhc-three-haplotypes.png", p_mhc, width = 9, height = 4.8,
