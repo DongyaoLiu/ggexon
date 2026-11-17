@@ -1,8 +1,9 @@
 # Ignoring and exposing data
 
 The `.ignore_data()` function is used to hide `<AsIs>` columns during
-scale interactions in `ggplot_build()`. The `.expose_data()` function is
-used to restore hidden columns.
+scale interactions in
+[`ggplot_build()`](https://ggplot2.tidyverse.org/reference/ggplot_build.html).
+The `.expose_data()` function is used to restore hidden columns.
 
 ## Usage
 

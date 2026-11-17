@@ -17,7 +17,9 @@ scale_x_ggexon_genomic(
   labels = waiver(),
   minor_breaks = NULL,
   n.breaks = 5,
-  guide = waiver()
+  guide = waiver(),
+  ...,
+  genomic_layout = NULL
 )
 ```
 
@@ -73,6 +75,17 @@ scale_x_ggexon_genomic(
   transformed x-axis ticks, or
   [`guide_x_ggexon_piecewise()`](https://dongyaoliu.github.io/ggexon/reference/guide_x_ggexon_piecewise.md)
   for representative exon/intron scale bars.
+
+- ...:
+
+  Reserved for future arguments. Must be empty.
+
+- genomic_layout:
+
+  Optional name of a prepared genomic layout stored on the plot's
+  `SynIndividual` objects. Its cached exon map replaces training from
+  visible exon layers. An explicitly supplied `intron_factor` must agree
+  with the prepared layout.
 
 ## Value
 

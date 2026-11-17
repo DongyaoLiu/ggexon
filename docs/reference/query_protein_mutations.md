@@ -18,7 +18,8 @@ query_protein_mutations(
   domains = NULL,
   protein_domains = NULL,
   ref = NULL,
-  protein_length = NULL
+  protein_length = NULL,
+  ids = NULL
 )
 ```
 
@@ -81,6 +82,11 @@ query_protein_mutations(
 - protein_length:
 
   Optional protein length used to clamp `protein_ranges`.
+
+- ids:
+
+  Optional identifiers matched against the annotation's `keytype`, for
+  example transcript IDs when `keytype = "transcript_id"`.
 
 ## Value
 

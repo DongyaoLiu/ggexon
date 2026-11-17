@@ -27,6 +27,9 @@ for (extension in c("png", "pdf")) {
 }
 message("Refreshed offline AS3MT bundle.")
 
+# Re-encode the verified GTEx interval snapshot for native coverage dispatch.
+source("data-raw/as3mt/prepare-coverage-bigwig.R")
+
 # Rebuild the gapped-DNA payload after refreshing its FASTA/PAF sources.
 # With the development package loaded: source("data-raw/as3mt/prepare-alignseq.R").
 

@@ -20,6 +20,7 @@ geom_mutation_label(
   individual = NULL,
   species = NULL,
   genes = NULL,
+  ids = NULL,
   event_type = NULL,
   min_sample_count = NULL,
   strains = NULL,
@@ -40,7 +41,8 @@ geom_mutation_label(
   show_empty = FALSE,
   na.rm = FALSE,
   show.legend = FALSE,
-  inherit.aes = TRUE
+  inherit.aes = TRUE,
+  genomic_layout = NULL
 )
 ```
 
@@ -70,6 +72,13 @@ geom_mutation_label(
 
   Optional filters passed to
   [`query_protein_mutations()`](https://dongyaoliu.github.io/ggexon/reference/query_protein_mutations.md).
+
+- ids:
+
+  Optional identifiers matching the mutation annotation's `keytype`. Use
+  the same selector as
+  [`geom_protein_lollipop()`](https://dongyaoliu.github.io/ggexon/reference/geom_protein_lollipop.md)
+  to label one isoform.
 
 - mutation_position:
 
@@ -110,6 +119,11 @@ geom_mutation_label(
 - show_empty:
 
   Logical; keep empty/`NA` labels when `TRUE`.
+
+- genomic_layout:
+
+  Optional prepared genomic layout name. Labels read stored head
+  positions, with label_nudge_y applied as a text offset.
 
 ## Value
 

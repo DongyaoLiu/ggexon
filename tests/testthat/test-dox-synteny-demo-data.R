@@ -62,6 +62,36 @@ test_that("Dox native BigWigs retain per-base strand magnitudes on the correct a
   }
 })
 
+test_that("Dox combined BigWigs sum both strand magnitudes at every genomic base", {
+  skip_on_os("windows")
+  demo_dir <- system.file("extdata", "dox_synteny", package = "ggexon")
+  windows <- utils::read.delim(file.path(demo_dir, "windows.tsv"))
+  signal <- utils::read.delim(file.path(demo_dir, "coverage.tsv.gz"))
+  for (i in seq_len(nrow(windows))) {
+    w <- windows[i, ]
+    path <- file.path(demo_dir, "objects", paste0(w$species, ".RNA.bw"))
+    expect_true(file.exists(path), info = w$species)
+    if (!file.exists(path)) next
+    expected <- numeric(w$end - w$start + 1L)
+    source <- signal[signal$species == w$species, ]
+    for (j in seq_len(nrow(source))) {
+      positions <- seq.int(source$start[j], source$end[j]) - w$start + 1L
+      expected[positions] <- expected[positions] + abs(source$score[j])
+    }
+    actual <- numeric(length(expected))
+    gr <- query_signal(SynBigWigAnnotation(name = "RNA", bigwig_file = path),
+      "X", w$start, w$end)
+    for (j in seq_along(gr)) {
+      positions <- seq.int(IRanges::start(gr)[j], IRanges::end(gr)[j]) - w$start + 1L
+      actual[positions] <- S4Vectors::mcols(gr)$score[j]
+    }
+    expect_equal(actual, expected, tolerance = 1e-6, info = w$species)
+    expect_true(all(actual >= 0))
+    expect_equal(unname(GenomeInfoDb::seqlengths(gr)),
+      c(Dmau = 23222241, Dsim = 23123156, Dsech = 22909512)[[w$species]])
+  }
+})
+
 test_that("Dox example has three real compact loci and verified RNA-seq coverage", {
   demo_dir <- system.file("extdata", "dox_synteny", package = "ggexon")
   manifest <- file.path(demo_dir, "manifest.json")
@@ -167,7 +197,7 @@ test_that("Dox nucleotide ribbons match the actual bundled genomic sequences", {
   }
 })
 
-test_that("Dox figure pairs independent RNA subpanels with each species annotation", {
+test_that("Dox figure pairs RNA panels sharing one y scale with each species annotation", {
   demo_dir <- system.file("extdata", "dox_synteny", package = "ggexon")
   helper <- file.path(demo_dir, "load-dox-example.R")
   expect_true(file.exists(helper))
@@ -190,13 +220,16 @@ test_that("Dox figure pairs independent RNA subpanels with each species annotati
     expect_identical(as.character(coverage$track), as.character(annotation$track))
     expect_identical(as.integer(coverage$x_source_panel), as.integer(annotation$PANEL))
     expect_identical(coverage$SCALE_X, annotation$SCALE_X)
+    expect_length(unique(coverage$SCALE_Y), 1L)
     expect_true(all(as.integer(built@data[[1L]]$PANEL) %in% annotation$PANEL))
+    for (panel in as.integer(annotation$PANEL)) {
+      expect_equal(mean(built@layout$panel_params[[panel]]$y.range), 1.24)
+    }
     for (id in c("Dmau", "Dsim", "Dsech")) {
       panel <- as.integer(coverage$PANEL[coverage$track == id])
       yrange <- built@layout$panel_params[[panel]]$y.range
-      peak <- max(abs(example$coverage$score[example$coverage$species == id]))
+      peak <- max(example$coverage_total$signal)
       expect_equal(yrange, c(0, peak * 1.1))
-      expect_equal(peak / diff(yrange), 1 / 1.1)
     }
     link <- layout[layout$panel_type == "link", ]
     expect_true(all(link$t_panel %in% annotation$PANEL))
@@ -208,8 +241,8 @@ test_that("Dox figure pairs independent RNA subpanels with each species annotati
     labels <- unlist(lapply(built@data, function(data)
       if ("label" %in% names(data)) as.character(data$label) else character()))
     expect_false(any(grepl("RNA-seq unavailable", labels, fixed = TRUE)))
-    source_key <- paste(example$coverage$track, example$coverage$start,
-      example$coverage$end, example$coverage$signal)
+    source_key <- paste(example$coverage_total$track, example$coverage_total$start,
+      example$coverage_total$end, example$coverage_total$signal)
     rendered_key <- paste(signal$track, signal$interval_start,
       signal$interval_end, signal$coverage)
     expect_true(all(rendered_key %in% source_key))

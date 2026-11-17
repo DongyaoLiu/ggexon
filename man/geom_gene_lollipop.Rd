@@ -37,6 +37,7 @@ geom_gene_lollipop(
   species = NULL,
   chr = NULL,
   subset = NULL,
+  lollipop_layout = NULL,
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = FALSE
@@ -99,6 +100,10 @@ retains the original untransformed genomic coordinate.}
 
 \item{species, chr, subset}{Optional Syn individual, chromosome and genomic
 window selectors.}
+
+\item{lollipop_layout}{Name prepared by \code{\link[=prepare_gene_lollipop]{prepare_gene_lollipop()}}. A single
+applicable preparation is used automatically for Syn input. Multiple
+preparations require a name. Explicit dataframes use their own data.}
 }
 \value{
 A ggplot layer.
@@ -109,6 +114,13 @@ ranges. Their stems retain the mapped genomic positions. Heads are packed
 above a shared baseline, in genomic order, using physical millimetres.
 }
 \details{
+With Syn input, a grid stored by \code{\link[=prepare_gene_lollipop]{prepare_gene_lollipop()}} supplies native
+anchors and shared row/column slots. The only applicable preparation is
+discovered automatically. Heads use a regular grid across panels; missing
+and cropped genes leave their cells reserved. Reversing a panel changes
+anchors and arrow directions without reversing the reference grid. A shared
+grid may need a larger explicit \code{max_shift_mm} than local packing.
+
 Use one shared \code{y} baseline per panel. The common width includes arrow-tip
 space so labels fit inside the arrow body. Missing labels remain unlabelled
 heads. Unknown strands produce rectangular heads. Reversing the x scale or
@@ -118,9 +130,9 @@ supported. Heads outside a coordinate zoom are omitted with their anchors.
 Heads are stylised gene symbols, not scaled transcript structures. For
 Syn-backed input the anchor is the midpoint of the complete gene span,
 including genes without coding transcripts. Retain native-scale context
-genes in a separate \code{geom_gene()} layer if needed.
+genes in a separate \code{geom_genetag(show_label = FALSE)} layer if needed.
 
-Compact packing uses the smallest feasible number of round-robin rows with ordered
+For unprepared input, compact packing uses the smallest feasible number of round-robin rows with ordered
 head centres and bounded displacement. Automatic column packing uses the smallest
 feasible number of rows with one common x centre per group of consecutive
 genes. Read each column top to bottom, then the next column to its right.

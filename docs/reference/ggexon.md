@@ -29,8 +29,9 @@ ggexon(data = NULL, mapping = aes(), ..., environment = parent.frame())
 
 - ...:
 
-  Additional arguments passed to `fortify()` when `data` is not a ggexon
-  Syn object.
+  Additional arguments passed to
+  [`fortify()`](https://ggplot2.tidyverse.org/reference/fortify.html)
+  when `data` is not a ggexon Syn object.
 
 - environment:
 

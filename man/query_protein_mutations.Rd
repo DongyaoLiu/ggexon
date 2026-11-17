@@ -17,7 +17,8 @@ query_protein_mutations(
   domains = NULL,
   protein_domains = NULL,
   ref = NULL,
-  protein_length = NULL
+  protein_length = NULL,
+  ids = NULL
 )
 }
 \arguments{
@@ -54,6 +55,9 @@ amino-acid codes.}
 
 \item{protein_length}{Optional protein length used to clamp
 \code{protein_ranges}.}
+
+\item{ids}{Optional identifiers matched against the annotation's \code{keytype},
+for example transcript IDs when \code{keytype = "transcript_id"}.}
 }
 \value{
 A \code{data.frame} of matching mutation records.

@@ -10,7 +10,8 @@ guide_x_ggexon_piecewise(
   position = c("bottom"),
   label = TRUE,
   show_exon = TRUE,
-  show_intron = TRUE
+  show_intron = TRUE,
+  linewidth = NULL
 )
 }
 \arguments{
@@ -27,6 +28,9 @@ per track, and \code{"panel"} draws one per panel.}
 
 \item{show_exon, show_intron}{Logical; include representative exon and/or
 intron scale bars.}
+
+\item{linewidth}{Optional non-negative line width in millimetres for both
+bars and their end ticks. \code{NULL} uses the corresponding axis theme settings.}
 }
 \value{
 A ggexon genomic x-axis guide specification.
@@ -35,5 +39,6 @@ A ggexon genomic x-axis guide specification.
 \code{guide_x_ggexon_piecewise()} is used with \code{\link[=scale_x_ggexon_genomic]{scale_x_ggexon_genomic()}} to
 replace ordinary x-axis ticks with representative first-exon and first-intron
 scale bars. This is useful because intron-compressed tracks use different
-display scales for exon and intron regions.
+display scales for exon and intron regions. Within each group, the bars share
+one horizontal baseline and their labels show only original lengths in bp.
 }

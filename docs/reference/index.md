@@ -48,6 +48,8 @@ Slot-level reference pages for ggexon’s S4 object hierarchy.
   : SynFeatureAnnotation class
 - [`SynGenomeAnnotation-class`](https://dongyaoliu.github.io/ggexon/reference/SynGenomeAnnotation-class.md)
   : SynGenomeAnnotation class
+- [`SynGenomicProjectionAnnotation-class`](https://dongyaoliu.github.io/ggexon/reference/SynGenomicProjectionAnnotation-class.md)
+  : Stored genomic projection of a protein annotation
 - [`SynIndAnnotation-class`](https://dongyaoliu.github.io/ggexon/reference/SynIndAnnotation-class.md)
   : SynIndAnnotation class
 - [`SynIndividual-class`](https://dongyaoliu.github.io/ggexon/reference/SynIndividual-class.md)
@@ -96,6 +98,9 @@ links, trees, and protein mutation summaries.
   : Draw splice junction arcs on annotation or coverage panels
 - [`geom_genetag()`](https://dongyaoliu.github.io/ggexon/reference/geom_genetag.md)
   : Draw gene tags as exon bodies with strand-direction triangles
+- [`geom_gene_lollipop()`](https://dongyaoliu.github.io/ggexon/reference/geom_gene_lollipop.md)
+  [`GeomGeneLollipop`](https://dongyaoliu.github.io/ggexon/reference/geom_gene_lollipop.md)
+  : Draw labelled gene arrows on stems at true genomic positions
 - [`geom_genebox()`](https://dongyaoliu.github.io/ggexon/reference/geom_genebox.md)
   : Draw fixed-size gene boxes with internal strand arrows
 - [`GeomGeneBox`](https://dongyaoliu.github.io/ggexon/reference/GeomGeneBox.md)
@@ -122,9 +127,6 @@ links, trees, and protein mutation summaries.
   : Draw link lines between pairs of coordinates
 - [`geom_protein_lollipop()`](https://dongyaoliu.github.io/ggexon/reference/geom_protein_lollipop.md)
   : Draw lollipop annotations on a protein-coordinate track
-- [`geom_gene_lollipop()`](https://dongyaoliu.github.io/ggexon/reference/geom_gene_lollipop.md)
-  [`GeomGeneLollipop`](https://dongyaoliu.github.io/ggexon/reference/geom_gene_lollipop.md)
-  : Draw labelled gene arrows on stems at true genomic positions
 
 ## Facets, tree alignment, and guides
 
@@ -283,6 +285,12 @@ stored layout information to Syn containers.
 - [`store_projected_domains()`](https://dongyaoliu.github.io/ggexon/reference/store_projected_domains.md)
   : Store a projected protein-domain table on a SynIndividual
 
+- [`prepare_genomic_layout()`](https://dongyaoliu.github.io/ggexon/reference/prepare_genomic_layout.md)
+  : Prepare shared genomic geometry on a Syn object
+
+- [`prepare_gene_lollipop()`](https://dongyaoliu.github.io/ggexon/reference/prepare_gene_lollipop.md)
+  : Prepare a shared gene-lollipop grid
+
 ## Load, query, and transform annotations
 
 Materialize annotation data, query layer payloads, import homology, and
@@ -318,6 +326,12 @@ derive sequence or protein-level summaries.
   : Project protein-domain coordinates onto genomic coordinates
 - [`project_mutations_to_genome()`](https://dongyaoliu.github.io/ggexon/reference/project_mutations_to_genome.md)
   : Project amino-acid variants onto genomic coordinates
+- [`query_genomic_projection()`](https://dongyaoliu.github.io/ggexon/reference/query_genomic_projection.md)
+  : Inspect a stored genomic protein projection
+- [`query_genomic_layout()`](https://dongyaoliu.github.io/ggexon/reference/query_genomic_layout.md)
+  : Inspect shared prepared genomic coordinates
+- [`query_gene_lollipop()`](https://dongyaoliu.github.io/ggexon/reference/query_gene_lollipop.md)
+  : Inspect a prepared gene-lollipop grid
 - [`projected_domains()`](https://dongyaoliu.github.io/ggexon/reference/projected_domains.md)
   : Access stored projected protein-domain tables
 - [`homology_table()`](https://dongyaoliu.github.io/ggexon/reference/homology_table.md)
@@ -491,6 +505,10 @@ and reexports.
   : v=1.0 author = "LIU Dongyao" LabWebsite: "www.zhenglabhku.org"
   E-mail = "dongyao@connect.hku.hk" Description: designed to draw gene
   without exon information. An arrow.
+
+- [`geom_gene_lollipop()`](https://dongyaoliu.github.io/ggexon/reference/geom_gene_lollipop.md)
+  [`GeomGeneLollipop`](https://dongyaoliu.github.io/ggexon/reference/geom_gene_lollipop.md)
+  : Draw labelled gene arrows on stems at true genomic positions
 
 - [`GeomCoverage`](https://dongyaoliu.github.io/ggexon/reference/GeomCoverage.md)
   : Coverage geom ggproto

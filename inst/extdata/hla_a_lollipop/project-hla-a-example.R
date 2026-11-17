@@ -1,91 +1,79 @@
-# Project mature-protein substitutions through the exact reference allele CDS.
-load_hla_a_gene_model <- function(hla, data_dir = system.file(
-  "extdata", "hla_a_lollipop", package = "ggexon"
-)) {
-  structure <- utils::read.delim(file.path(data_dir, "hla_a_gene_structure.tsv"),
-                                 stringsAsFactors = FALSE)
-  individual <- ggexon::SynIndividual(
-    id = "HLA_A0201", annotation_file = file.path(data_dir, "hla_a_reference.gff3"),
-    metadata = list(reference_allele = hla$reference,
-                    coordinate_system = "HLA00005 allele-local genomic bases, one-based closed")
-  )
-  individual <- ggexon::load_annotation(individual)
-  mutations <- hla$mutations
-  mutations$gene_id <- "HLA_A0201"
-  mutations$mature_position <- mutations$position
-  mutations$position <- mutations$precursor_position
-  mutations$sample_count <- mutations$allele_count
-  individual <- ggexon::add_annotation(individual,
-    ggexon::SynProteinMutationAnnotation(
-      name = "hla_substitutions", mutation_file = "<computed HLA-A allele summary>",
-      mutation_data = mutations, keytype = "gene_id", lazy = FALSE
-    ), set_active = FALSE)
-  projection <- ggexon::project_mutations_to_genome(
-    individual, annotation = "hla_substitutions", transcripts = "HLA_A0201_tx"
-  )
-  # A splice-split codon yields several exonic fragments. Anchor its head on
-  # the longest fragment, never the midpoint of an intron-spanning envelope.
-  fragments <- split(seq_len(nrow(projection)), projection$mutation)
-  picks <- vapply(fragments, function(indices) {
-    indices[which.max(projection$xmax[indices] - projection$xmin[indices] + 1)]
-  }, integer(1))
-  anchors <- projection[picks, , drop = FALSE]
-  anchors <- anchors[match(hla$mutations$mutation, anchors$mutation), , drop = FALSE]
-  anchors$anchor <- (anchors$xmin + anchors$xmax) / 2
-  rownames(anchors) <- NULL
-  list(individual = individual, projection = projection, anchors = anchors,
-       exons = structure[structure$type == "exon", ],
-       introns = structure[structure$type == "intron", ], structure = structure)
+# Inspect the reference structure already attached to the SynIndividual.
+hla_a_gene_structure <- function(hla) {
+  features <- as.data.frame(ggexon::query_features(hla, feature_type = "exon", all = TRUE))
+  features <- features[order(features$start), , drop = FALSE]
+  exons <- data.frame(type = "exon", number = as.integer(features$exon_number),
+    start = features$start, end = features$end, length = features$width)
+  introns <- data.frame(type = "intron", number = seq_len(nrow(exons) - 1L),
+    start = head(exons$end, -1L) + 1L, end = tail(exons$start, -1L) - 1L)
+  introns$length <- introns$end - introns$start + 1L
+  structure <- rbind(exons, introns)
+  structure[order(structure$start), , drop = FALSE]
 }
 
-plot_hla_a_gene_example <- function(hla, gene, intron_factor = 3,
+# Materialize projection and one shared display layout before plotting.
+prepare_hla_a_gene_layout <- function(hla, intron_factor = 3,
+                                       parameters = hla_a_plot_parameters) {
+  hla <- ggexon::project_mutations_to_genome(
+    hla, annotation = "hla_substitutions", transcripts = "HLA_A0201_tx",
+    store = TRUE, name = "hla_genomic"
+  )
+  hla <- ggexon::project_domains_to_genome(
+    hla, annotation = "hla_regions", transcripts = "HLA_A0201_tx",
+    store = TRUE, name = "hla_genomic_regions"
+  )
+  counts <- ggexon::query_protein_mutations(hla, annotation = "hla_substitutions")$allele_count
+  ggexon::prepare_genomic_layout(
+    hla, annotation = "hla_genomic", name = "hla_lollipops",
+    intron_factor = intron_factor, head_spread = parameters$head_half_span * 3,
+    mutation_y_by = "allele_count", mutation_y_trans = "log10",
+    mutation_y_range = range(log10(counts + 1)), track_ymin = -0.34, track_ymax = -0.08,
+    stem_points = parameters$stem_points
+  )
+}
+
+hla_a_projected_mutations <- function(hla) {
+  list(projection = ggexon::query_genomic_projection(hla, "hla_genomic"),
+       anchors = ggexon::query_genomic_projection(hla, "hla_genomic", component = "anchors"))
+}
+
+plot_hla_a_gene_example <- function(hla, intron_factor = 3,
                                     parameters = hla_a_plot_parameters) {
   p <- parameters
-  exons <- gene$exons
-  # Draw base edges, not inclusive base centres: widths now equal bp counts.
-  exons$xmin <- exons$start - 0.5
-  exons$xmax <- exons$end + 0.5
-  exons$ymin <- -0.34
-  exons$transcripts <- "HLA_A0201_tx"
-  exons$strand <- "+"
-  exons$track <- "HLA_A0201"
-  exons$group <- 1L
-  domains <- data.frame(start = exons$start, end = exons$end, domain = "CDS")
-  prepared <- hla_a_lollipop_layout(
-    gene$anchors, hla, half_span = p$head_half_span * 3, parameters = p,
-    position = "anchor", domains = domains, track_length = max(exons$end)
-  )
+  exon_labels <- function(model) ggexon::query_genomic_layout(model, "hla_lollipops", "exons")
   group_names <- c("Aliphatic", "Aromatic", "Polar", "Basic", "Acidic", "Gly / Pro")
+  region_colours <- stats::setNames(p$region_colours, hla_a_regions(hla)$domain)
   count_breaks <- c(1, 10, 100, 1000, 5000)
   template <- plot_hla_a_example(hla, p)$overview
-  plot <- ggexon::ggexon(exons, ggplot2::aes(
-    xmin = xmin, xmax = xmax, ymin = ymin, transcripts = transcripts,
-    strand = strand, track = track, type = type, group = group
-  )) +
+  plot <- ggexon::ggexon(hla) +
     ggexon::geom_exon2(
-      annotation_type = "exon", compress_introns = FALSE,
-      exon_height = 0.26, intron_peak = 0.12, intron_shape = "chevron",
-      fill = "#263D52", colour = "#263D52", linewidth = 0.35,
+      genomic_layout = "hla_lollipops",
+      intron_peak = 0.12, intron_shape = "chevron",
+      fill = "#DDE3E8", colour = "#8193A1", linewidth = 0.35,
       transcript_backbone_colour = "#647E8A", show.legend = FALSE
     ) +
-    ggplot2::geom_line(data = prepared$stems, ggplot2::aes(
-      x = lollipop_x, y = lollipop_y, group = lollipop_curve_id,
-      colour = amino_acid_group
-    ), linewidth = p$stem_linewidth, alpha = p$stem_alpha,
-    inherit.aes = FALSE, show.legend = FALSE) +
-    ggplot2::geom_point(data = prepared$mutations, ggplot2::aes(
-      x = lollipop_x, y = lollipop_y, colour = amino_acid_group
-    ), size = p$point_size, alpha = 0.9, inherit.aes = FALSE) +
-    ggplot2::geom_text(data = exons, ggplot2::aes(
-      x = (start + end) / 2, label = number
+    ggexon::geom_motif(
+      ggplot2::aes(fill = motif), annotation = "hla_genomic_regions",
+      genomic_layout = "hla_lollipops", colour = NA
+    ) +
+    ggexon::geom_protein_lollipop(
+      genomic_layout = "hla_lollipops", show_backbone = FALSE, show_domains = FALSE,
+      score = "amino_acid_group", stem_colour = NULL,
+      stem_linewidth = p$stem_linewidth, stem_alpha = p$stem_alpha,
+      point_size = p$point_size, point_alpha = 0.9
+    ) +
+    ggplot2::geom_text(data = exon_labels, ggplot2::aes(
+      x = (xmin + xmax) / 2, label = exon_number
     ), y = -0.53, size = p$text_size_pt / ggplot2::.pt * 0.8,
     colour = "#344854", inherit.aes = FALSE) +
     ggexon::scale_x_ggexon_genomic(
-      intron_factor = intron_factor,
+      intron_factor = intron_factor, genomic_layout = "hla_lollipops",
       guide = ggexon::guide_x_ggexon_piecewise(by = "panel")
     ) +
     ggplot2::scale_colour_manual("Alternative amino acid",
       values = stats::setNames(p$wong, group_names), breaks = group_names, drop = FALSE) +
+    ggplot2::scale_fill_manual("Protein region", values = region_colours,
+      breaks = names(region_colours), drop = FALSE) +
     ggplot2::scale_y_continuous(breaks = log10(count_breaks + 1),
       labels = scales::label_comma()(count_breaks),
       limits = c(-0.8, log10(5001) + 0.18),
@@ -98,11 +86,18 @@ plot_hla_a_gene_example <- function(hla, gene, intron_factor = 3,
       y = "Allele count (log scale)",
       caption = paste0("Stem anchors follow the reference CDS, including splice-split codons. ",
                        "The numbered coding-exon model spans ATG to stop.\n",
+                       "Coloured exon segments show mature-protein regions; grey bases are outside them.\n",
                        "Exons at native scale; intron gaps ÷ ", intron_factor,
                        ". Scale bars show actual base-pair lengths. ",
                        "Database counts, not population frequencies.")
     ) +
-    ggplot2::guides(colour = ggplot2::guide_legend(nrow = 1,
-      override.aes = list(size = 2.4, alpha = 1))) + template$theme
-  list(plot = plot, prepared = prepared)
+    ggplot2::guides(
+      colour = ggplot2::guide_legend(nrow = 1, order = 1,
+        override.aes = list(size = 2.4, alpha = 1)),
+      fill = ggplot2::guide_legend(nrow = 1, order = 2)
+    ) + template$theme + ggplot2::theme(legend.box = "vertical")
+  list(plot = plot, prepared = list(
+    mutations = ggexon::query_genomic_layout(hla, "hla_lollipops", "mutations"),
+    stems = ggexon::query_genomic_layout(hla, "hla_lollipops", "stems")
+  ))
 }

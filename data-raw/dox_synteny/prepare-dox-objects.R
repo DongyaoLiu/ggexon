@@ -43,6 +43,10 @@ for (id in e$windows$species) {
     export(gr, file.path(out, paste0(id,
       if (strand == "+") ".RNAplus.bw" else ".RNAminus.bw")), format = "BigWig")
   }
+  s <- e$coverage_total[e$coverage_total$species == id, ]
+  gr <- GRanges("X", IRanges(s$start, s$end), score = s$signal,
+    seqinfo = Seqinfo("X", seqlengths = lengths[[id]]))
+  export(gr, file.path(out, paste0(id, ".RNA.bw")), format = "BigWig")
 }
 
 for (pair in list(c("Dmau", "Dsim"), c("Dsim", "Dsech"))) {
@@ -64,7 +68,8 @@ manifest <- list(
   description = "Native file views of the verified Dox tables; no new alignment or signal estimation",
   coordinates = "GTF: 1-based closed; PAF source: 0-based half-open; BigWig: standard interval encoding; X is a seqname alias",
   annotation = "Gene/transcript spans plus disjoint mapped CDS/UTR pieces; Dox has coding exons only",
-  signal = "Plus and reverse-magnitude files store nonnegative abs(source score), without smoothing or normalization",
+  signal = paste("Combined .RNA.bw files sum abs(forward) + abs(reverse) at each genomic base.",
+    "Original plus and reverse-magnitude files are retained. No smoothing or additional normalization."),
   chromosome_lengths = as.list(lengths),
   inputs = records(inputs, base), outputs = records(outputs, out),
   versions = list(R = as.character(getRversion()), rtracklayer = as.character(packageVersion("rtracklayer")))

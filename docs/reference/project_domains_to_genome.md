@@ -17,7 +17,9 @@ project_domains_to_genome(
   transcripts = NULL,
   chr = NULL,
   start = NULL,
-  end = NULL
+  end = NULL,
+  store = FALSE,
+  name = "genomic_domains"
 )
 ```
 
@@ -66,6 +68,16 @@ project_domains_to_genome(
 
   Optional genomic window bounds.
 
+- store:
+
+  Logical; with TRUE attach a genomic projection and return the updated
+  SynIndividual.
+
+- name:
+
+  Name of the genomic projection when store is TRUE.
+
 ## Value
 
-A data frame with projected genomic motif segments.
+A data frame with projected genomic motif segments, or the updated
+SynIndividual when store is TRUE.

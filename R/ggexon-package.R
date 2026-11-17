@@ -1,6 +1,13 @@
 #' @keywords internal
 "_PACKAGE"
 
+# Register methods for external generics when loading an installed namespace.
+# Source loading already registers them and can otherwise hide missing print
+# dispatch, which bypasses ggexon's panel layout and guides.
+.onLoad <- function(libname, pkgname) {
+  S7::methods_register()
+}
+
 ## ggexon namespace imports -----------------------------------------------------
 ## Imports are declared selectively here so the package no longer relies on a
 ## broad `Depends:` search path. Symbols are grouped by their source package.

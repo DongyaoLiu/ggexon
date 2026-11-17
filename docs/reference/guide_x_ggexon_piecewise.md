@@ -4,7 +4,9 @@
 [`scale_x_ggexon_genomic()`](https://dongyaoliu.github.io/ggexon/reference/scale_x_ggexon_genomic.md)
 to replace ordinary x-axis ticks with representative first-exon and
 first-intron scale bars. This is useful because intron-compressed tracks
-use different display scales for exon and intron regions.
+use different display scales for exon and intron regions. Within each
+group, the bars share one horizontal baseline and their labels show only
+original lengths in bp.
 
 ## Usage
 
@@ -15,7 +17,8 @@ guide_x_ggexon_piecewise(
   position = c("bottom"),
   label = TRUE,
   show_exon = TRUE,
-  show_intron = TRUE
+  show_intron = TRUE,
+  linewidth = NULL
 )
 ```
 
@@ -43,6 +46,11 @@ guide_x_ggexon_piecewise(
 - show_exon, show_intron:
 
   Logical; include representative exon and/or intron scale bars.
+
+- linewidth:
+
+  Optional non-negative line width in millimetres for both bars and
+  their end ticks. `NULL` uses the corresponding axis theme settings.
 
 ## Value
 

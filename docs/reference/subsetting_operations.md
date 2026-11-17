@@ -12,6 +12,7 @@ Syn-aware annotation geoms subset lazily at build time by combining
 workflow when you want to display only one genomic window from a larger
 GFF/GTF file.
 
+
     ggexon(sp) +
       geom_exon(
         species = "XZ1516",
@@ -29,6 +30,7 @@ Use
 when you want the subsetted annotation ranges as a `GRanges` object
 instead of a plot layer. This is useful for inspection, downstream
 computation, or building a custom plotting table.
+
 
     ind <- individuals(sp)[["XZ1516"]]
     gr <- query_features(
@@ -50,6 +52,7 @@ query. These helpers return trimmed snapshots that are ready to pass
 back into
 [`ggexon()`](https://dongyaoliu.github.io/ggexon/reference/ggexon.md) or
 to inspect directly.
+
 
     ind <- individuals(sp)[["XZ1516"]]
     ann <- get_annotation(ind, "default")
@@ -86,6 +89,7 @@ when you want one reference window and the corresponding linked window
 on the partner genome. This helper returns both annotation subsets and
 the retained link rows.
 
+
     out <- subset_synspecies_window(
       sp,
       reference_species = "XZ1516",
@@ -111,6 +115,7 @@ ranges, use
 with `subset =`. Use
 [`subset_pairwise_alignment()`](https://dongyaoliu.github.io/ggexon/reference/subset_pairwise_alignment.md)
 when you want an updated alignment object or updated `SynSpecies`.
+
 
     paf <- pairwise_alignment_data(
       sp,

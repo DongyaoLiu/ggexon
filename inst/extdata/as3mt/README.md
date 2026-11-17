@@ -1,8 +1,20 @@
 # Offline AS3MT example inputs
 
-Source `load-as3mt-example.R`, then call `load_as3mt_example()` and
-`plot_as3mt_example()`. The latter uses native piecewise genomic scaling for
-raw-coordinate nucleotide links, without an endpoint conversion adapter.
+Source `load-as3mt-example.R` and `as3mt-object-data.R`. `load_as3mt_example()`
+returns one `SynSpecies` containing human/chimpanzee annotations, the selected
+alignment. Run `prepare_as3mt_example()` once to attach named views for exon
+labels, aligned DNA, repeat outlines and donor marks. The tutorial shows the
+plotting commands directly from `ggexon(as3mt)`.
+`as3mt_evidence()` reads original evidence, and `as3mt_plot_data()` reads a
+prepared view. Existing figure-export helpers remain available.
+
+`human-rnaseq-GTEX-15G19.bw` is a small BigWig re-encoding of the verified TSV
+snapshot, rebuilt by `data-raw/as3mt/prepare-coverage-bigwig.R`. Every interval
+and score is preserved, including explicit zeros; missing intervals remain
+missing. `geom_coverage(species = "human", annotation = "gtex_ba9")` reads it
+through native Syn dispatch on the loaded object. This total signal combines
+transcripts and strands and cannot be divided into isoform-specific coverage.
+`geom_exon2(species = c("human", "chimp"))` selects the annotation panels.
 
 `handoff/` preserves the supplied plotting specification, source annotation
 snapshots, original percentage values and biological interpretation caveats.
@@ -24,7 +36,7 @@ The short human transcript is a paper-defined reconstruction, not a stable
 accession. The organoid sampling unit is not defined by the publication; n=7/11
 counts reported values, not established independent donors or organoids.
 
-`plot_as3mt_coverage()` and the combined `plot_as3mt_alignseq()` view use matched
+The legacy `plot_as3mt_coverage()` and combined `plot_as3mt_alignseq()` exports use matched
 GTEx BA9 total-coverage and splice-junction snapshots. `geom_junction()` draws
 counted inclusion and E1-to-E4 skipping arcs on the human coverage panel by
 default. Set `junction_panel = "annotation"` in either helper to use the gene

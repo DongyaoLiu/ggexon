@@ -36,6 +36,7 @@ geom_gene_lollipop(
   species = NULL,
   chr = NULL,
   subset = NULL,
+  lollipop_layout = NULL,
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = FALSE
@@ -147,11 +148,28 @@ An object of class `GeomGeneLollipop` (inherits from `Geom`, `ggproto`,
 
   Optional Syn individual, chromosome and genomic window selectors.
 
+- lollipop_layout:
+
+  Name prepared by
+  [`prepare_gene_lollipop()`](https://dongyaoliu.github.io/ggexon/reference/prepare_gene_lollipop.md).
+  A single applicable preparation is used automatically for Syn input.
+  Multiple preparations require a name. Explicit dataframes use their
+  own data.
+
 ## Value
 
 A ggplot layer.
 
 ## Details
+
+With Syn input, a grid stored by
+[`prepare_gene_lollipop()`](https://dongyaoliu.github.io/ggexon/reference/prepare_gene_lollipop.md)
+supplies native anchors and shared row/column slots. The only applicable
+preparation is discovered automatically. Heads use a regular grid across
+panels; missing and cropped genes leave their cells reserved. Reversing
+a panel changes anchors and arrow directions without reversing the
+reference grid. A shared grid may need a larger explicit `max_shift_mm`
+than local packing.
 
 Use one shared `y` baseline per panel. The common width includes
 arrow-tip space so labels fit inside the arrow body. Missing labels
@@ -163,20 +181,20 @@ omitted with their anchors.
 Heads are stylised gene symbols, not scaled transcript structures. For
 Syn-backed input the anchor is the midpoint of the complete gene span,
 including genes without coding transcripts. Retain native-scale context
-genes in a separate `geom_gene()` layer if needed.
+genes in a separate `geom_genetag(show_label = FALSE)` layer if needed.
 
-Compact packing uses the smallest feasible number of round-robin rows
-with ordered head centres and bounded displacement. Automatic column
-packing uses the smallest feasible number of rows with one common x
-centre per group of consecutive genes. Read each column top to bottom,
-then the next column to its right. Map optional numeric `head_row` to
-keep matching genes in shared rows across facets. Rows are positive
-integers numbered bottom to top. Supply a row for every gene in the
-layer, and use `head_layout = "columns"`. Fixed-row packing finds the
-smallest feasible number of ordered, contiguous columns while retaining
-every supplied row index. Unused slots stay blank; duplicated genes
-remain separate heads. Shared rows are supplied layout metadata, not
-inferred orthology or evidence of gene absence.
+For unprepared input, compact packing uses the smallest feasible number
+of round-robin rows with ordered head centres and bounded displacement.
+Automatic column packing uses the smallest feasible number of rows with
+one common x centre per group of consecutive genes. Read each column top
+to bottom, then the next column to its right. Map optional numeric
+`head_row` to keep matching genes in shared rows across facets. Rows are
+positive integers numbered bottom to top. Supply a row for every gene in
+the layer, and use `head_layout = "columns"`. Fixed-row packing finds
+the smallest feasible number of ordered, contiguous columns while
+retaining every supplied row index. Unused slots stay blank; duplicated
+genes remain separate heads. Shared rows are supplied layout metadata,
+not inferred orthology or evidence of gene absence.
 
 Leaders run through a clear band and ordered lanes to each head's left
 edge, avoiding the other heads. Both layouts are recomputed on the

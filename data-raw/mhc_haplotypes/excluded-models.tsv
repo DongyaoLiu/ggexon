@@ -1,0 +1,363 @@
+track	model_id	gene_name	reason
+SSYh1	SSYh1:200:GCA_028878055.2T00000370599	HLA-DPB1	curated MHC supersedes source transcript
+SSYh1	SSYh1:201:GCA_028878055.2T00000370612	HLA-DPB1	curated MHC supersedes source transcript
+SSYh1	SSYh1:202:GCA_028878055.2T00000370625	HLA-DPB1	curated MHC supersedes source transcript
+SSYh1	SSYh1:203:GCA_028878055.2T00000370634	HLA-DPB1	curated MHC supersedes source transcript
+SSYh1	SSYh1:204:GCA_028878055.2T00000370637	HLA-DPB1	curated MHC supersedes source transcript
+SSYh1	SSYh1:205:GCA_028878055.2T00000370641	HLA-DPB1	curated MHC supersedes source transcript
+SSYh1	SSYh1:206:GCA_028878055.2T00000370645	HLA-DPB1	curated MHC supersedes source transcript
+SSYh1	SSYh1:207:GCA_028878055.2T00000370649	HLA-DPB1	curated MHC supersedes source transcript
+SSYh1	SSYh1:208:GCA_028878055.2T00000370652	HLA-DPA1	curated MHC supersedes source transcript
+SSYh1	SSYh1:209:GCA_028878055.2T00000370659	HLA-DPA1	curated MHC supersedes source transcript
+SSYh1	SSYh1:210:GCA_028878055.2T00000370670	HLA-DPA1	curated MHC supersedes source transcript
+SSYh1	SSYh1:211:GCA_028878055.2T00000370674	HLA-DPA1	curated MHC supersedes source transcript
+SSYh1	SSYh1:212:GCA_028878055.2T00000370691	HLA-DPA1	curated MHC supersedes source transcript
+SSYh1	SSYh1:213:GCA_028878055.2T00000370695	HLA-DPA1	curated MHC supersedes source transcript
+SSYh1	SSYh1:214:GCA_028878055.2T00000370698	HLA-DPA1	curated MHC supersedes source transcript
+SSYh1	SSYh1:215:GCA_028878055.2T00000370706	HLA-DOA	curated MHC supersedes source transcript
+SSYh1	SSYh1:216:GCA_028878055.2T00000370721	HLA-DOA	curated MHC supersedes source transcript
+SSYh1	SSYh1:217:GCA_028878055.2T00000370724	HLA-DOA	curated MHC supersedes source transcript
+SSYh1	SSYh1:218:GCA_028878055.2T00000370733	HLA-DOA	curated MHC supersedes source transcript
+SSYh1	SSYh1:219:GCA_028878055.2T00000370736	HLA-DOA	curated MHC supersedes source transcript
+SSYh1	SSYh1:220:GCA_028878055.2T00000370740	HLA-DOA	curated MHC supersedes source transcript
+SSYh1	SSYh1:240:GCA_028878055.2T00000371035	HLA-DMA	curated MHC supersedes source transcript
+SSYh1	SSYh1:241:GCA_028878055.2T00000371044	HLA-DMA	curated MHC supersedes source transcript
+SSYh1	SSYh1:243:GCA_028878055.2T00000371049	HLA-DMA	curated MHC supersedes source transcript
+SSYh1	SSYh1:244:GCA_028878055.2T00000371064	HLA-DMA	curated MHC supersedes source transcript
+SSYh1	SSYh1:245:GCA_028878055.2T00000371069	HLA-DMA	curated MHC supersedes source transcript
+SSYh1	SSYh1:246:GCA_028878055.2T00000371084	HLA-DMA	curated MHC supersedes source transcript
+SSYh1	SSYh1:247:GCA_028878055.2T00000371097	HLA-DMA	curated MHC supersedes source transcript
+SSYh1	SSYh1:248:GCA_028878055.2T00000371101	HLA-DMA	curated MHC supersedes source transcript
+SSYh1	SSYh1:249:GCA_028878055.2T00000371110	HLA-DMA	curated MHC supersedes source transcript
+SSYh1	SSYh1:250:GCA_028878055.2T00000371126	HLA-DMB	curated MHC supersedes source transcript
+SSYh1	SSYh1:251:GCA_028878055.2T00000371143	HLA-DMB	curated MHC supersedes source transcript
+SSYh1	SSYh1:252:GCA_028878055.2T00000371146	HLA-DMB	curated MHC supersedes source transcript
+SSYh1	SSYh1:253:GCA_028878055.2T00000371157	HLA-DMB	curated MHC supersedes source transcript
+SSYh1	SSYh1:254:GCA_028878055.2T00000371166	HLA-DMB	curated MHC supersedes source transcript
+SSYh1	SSYh1:255:GCA_028878055.2T00000371169	HLA-DMB	curated MHC supersedes source transcript
+SSYh1	SSYh1:280:GCA_028878055.2T00000371506	HLA-DOB	curated MHC supersedes source transcript
+SSYh1	SSYh1:281:GCA_028878055.2T00000371525	HLA-DOB	curated MHC supersedes source transcript
+SSYh1	SSYh1:282:GCA_028878055.2T00000371542	HLA-DOB	curated MHC supersedes source transcript
+SSYh1	SSYh1:283:GCA_028878055.2T00000371548	HLA-DOB	curated MHC supersedes source transcript
+SSYh1	SSYh1:284:GCA_028878055.2T00000371565	HLA-DOB	curated MHC supersedes source transcript
+SSYh1	SSYh1:285:GCA_028878055.2T00000371573	HLA-DQB2	curated MHC supersedes source transcript
+SSYh1	SSYh1:286:GCA_028878055.2T00000371588	HLA-DQB2	curated MHC supersedes source transcript
+SSYh1	SSYh1:287:GCA_028878055.2T00000371605	HLA-DQB2	curated MHC supersedes source transcript
+SSYh1	SSYh1:288:GCA_028878055.2T00000371620	HLA-DQB2	curated MHC supersedes source transcript
+SSYh1	SSYh1:289:GCA_028878055.2T00000371632	HLA-DQA2	curated MHC supersedes source transcript
+SSYh1	SSYh1:290:GCA_028878055.2T00000371648	HLA-DQB1	curated MHC supersedes source transcript
+SSYh1	SSYh1:291:GCA_028878055.2T00000371663	HLA-DQB1	curated MHC supersedes source transcript
+SSYh1	SSYh1:292:GCA_028878055.2T00000371680	HLA-DQB1	curated MHC supersedes source transcript
+SSYh1	SSYh1:293:GCA_028878055.2T00000371695	HLA-DQB1	curated MHC supersedes source transcript
+SSYh1	SSYh1:294:GCA_028878055.2T00000371708	HLA-DQB1	curated MHC supersedes source transcript
+SSYh1	SSYh1:295:GCA_028878055.2T00000371719	HLA-DQB1	curated MHC supersedes source transcript
+SSYh1	SSYh1:296:GCA_028878055.2T00000371734	HLA-DQB1	curated MHC supersedes source transcript
+SSYh1	SSYh1:297:GCA_028878055.2T00000371739	HLA-DQB1	curated MHC supersedes source transcript
+SSYh1	SSYh1:299:GCA_028878055.2T00000371746	HLA-DQA1	curated MHC supersedes source transcript
+SSYh1	SSYh1:300:GCA_028878055.2T00000371751	HLA-DQA1	curated MHC supersedes source transcript
+SSYh1	SSYh1:301:GCA_028878055.2T00000371766	HLA-DQA1	curated MHC supersedes source transcript
+SSYh1	SSYh1:302:GCA_028878055.2T00000371781	HLA-DQA1	curated MHC supersedes source transcript
+SSYh1	SSYh1:303:GCA_028878055.2T00000371800	HLA-DQA1	curated MHC supersedes source transcript
+SSYh1	SSYh1:304:GCA_028878055.2T00000371813	HLA-DQA1	curated MHC supersedes source transcript
+SSYh1	SSYh1:305:GCA_028878055.2T00000371824	HLA-DQA1	curated MHC supersedes source transcript
+SSYh1	SSYh1:306:GCA_028878055.2T00000371836	HLA-DRB1	curated MHC supersedes source transcript
+SSYh1	SSYh1:308:GCA_028878055.2T00000371860	HLA-DRA	curated MHC supersedes source transcript
+SSYh1	SSYh1:309:GCA_028878055.2T00000371875	HLA-DRA	curated MHC supersedes source transcript
+SSYh1	SSYh1:648:GCA_028878055.2T00000378029	LY6G6E	background symbol annotated as pseudogene in CHM13
+SSYh1	SSYh1:649:GCA_028878055.2T00000378040	LY6G6E	background symbol annotated as pseudogene in CHM13
+SSYh1	SSYh1:650:GCA_028878055.2T00000378048	LY6G6E	background symbol annotated as pseudogene in CHM13
+SSYh1	SSYh1:651:GCA_028878055.2T00000378058	LY6G6E	background symbol annotated as pseudogene in CHM13
+SSYh1	SSYh1:829:GCA_028878055.2T00000380591	HLA-B	curated MHC supersedes source transcript
+SSYh1	SSYh1:830:GCA_028878055.2T00000380600	HLA-B	curated MHC supersedes source transcript
+SSYh1	SSYh1:831:GCA_028878055.2T00000380604	HLA-B	curated MHC supersedes source transcript
+SSYh1	SSYh1:836:GCA_028878055.2T00000380625	HLA-B	curated MHC supersedes source transcript
+SSYh1	SSYh1:839:GCA_028878055.2T00000380641	HLA-B	curated MHC supersedes source transcript
+SSYh1	SSYh1:840:GCA_028878055.2T00000380644	HLA-B	curated MHC supersedes source transcript
+SSYh1	SSYh1:842:GCA_028878055.2T00000380647	HLA-B	curated MHC supersedes source transcript
+SSYh1	SSYh1:843:GCA_028878055.2T00000380652	HLA-B	curated MHC supersedes source transcript
+SSYh1	SSYh1:844:GCA_028878055.2T00000380659	HLA-B	curated MHC supersedes source transcript
+SSYh1	SSYh1:846:GCA_028878055.2T00000380663	HLA-B	curated MHC supersedes source transcript
+SSYh1	SSYh1:1090:GCA_028878055.2T00000384351	HLA-E	curated MHC supersedes source transcript
+SSYh1	SSYh1:1091:GCA_028878055.2T00000384372	HLA-E	curated MHC supersedes source transcript
+SSYh1	SSYh1:1092:GCA_028878055.2T00000384376	HLA-E	curated MHC supersedes source transcript
+SSYh1	SSYh1:1154:GCA_028878055.2T00000385151	HLA-A	curated MHC supersedes source transcript
+SSYh1	SSYh1:1155:GCA_028878055.2T00000385159	HLA-A	curated MHC supersedes source transcript
+SSYh1	SSYh1:1156:GCA_028878055.2T00000385174	HLA-A	curated MHC supersedes source transcript
+SSYh1	SSYh1:1157:GCA_028878055.2T00000385182	HLA-A	curated MHC supersedes source transcript
+SSYh1	SSYh1:1158:GCA_028878055.2T00000385203	HLA-A	curated MHC supersedes source transcript
+SSYh1	SSYh1:1159:GCA_028878055.2T00000385228	HLA-A	curated MHC supersedes source transcript
+SSYh1	SSYh1:1160:GCA_028878055.2T00000385249	HLA-A	curated MHC supersedes source transcript
+SSYh1	SSYh1:1161:GCA_028878055.2T00000385256	HLA-A	curated MHC supersedes source transcript
+SSYh1	SSYh1:1162:GCA_028878055.2T00000385263	HLA-A	curated MHC supersedes source transcript
+SSYh1	SSYh1:1163:GCA_028878055.2T00000385278	HLA-F	curated MHC supersedes source transcript
+SSYh1	SSYh1:1164:GCA_028878055.2T00000385285	HLA-F	curated MHC supersedes source transcript
+SSYh1	SSYh1:1165:GCA_028878055.2T00000385294	HLA-F	curated MHC supersedes source transcript
+SSYh1	SSYh1:1166:GCA_028878055.2T00000385313	HLA-F	curated MHC supersedes source transcript
+SSYh1	SSYh1:1167:GCA_028878055.2T00000385319	HLA-F	curated MHC supersedes source transcript
+SSYh1	SSYh1:1168:GCA_028878055.2T00000385324	HLA-F	curated MHC supersedes source transcript
+SSYh1	SSYh1:1169:GCA_028878055.2T00000385331	HLA-F	curated MHC supersedes source transcript
+SSYh1	SSYh1:1170:GCA_028878055.2T00000385347	HLA-F	curated MHC supersedes source transcript
+SSYh1	SSYh1:1171:GCA_028878055.2T00000385353	HLA-F	curated MHC supersedes source transcript
+SSYh1	SSYh1:1172:GCA_028878055.2T00000385374	HLA-F	curated MHC supersedes source transcript
+SSYh1	SSYh1:1173:GCA_028878055.2T00000385393	HLA-F	curated MHC supersedes source transcript
+SSYh1	SSYh1:1174:GCA_028878055.2T00000385400	HLA-F	curated MHC supersedes source transcript
+SSYh1	SSYh1:1175:GCA_028878055.2T00000385403	HLA-F	curated MHC supersedes source transcript
+SSYh1	SSYh1:1176:GCA_028878055.2T00000385408	HLA-F	curated MHC supersedes source transcript
+SSYh1	SSYh1:1177:GCA_028878055.2T00000385411	HLA-F	curated MHC supersedes source transcript
+GGOh1	GGOh1:88:GCA_029281585.2T00001613310	HLA-F	curated MHC supersedes source transcript
+GGOh1	GGOh1:89:GCA_029281585.2T00001613331	HLA-F	curated MHC supersedes source transcript
+GGOh1	GGOh1:90:GCA_029281585.2T00001613350	HLA-F	curated MHC supersedes source transcript
+GGOh1	GGOh1:91:GCA_029281585.2T00001613353	HLA-F	curated MHC supersedes source transcript
+GGOh1	GGOh1:92:GCA_029281585.2T00001613359	HLA-F	curated MHC supersedes source transcript
+GGOh1	GGOh1:93:GCA_029281585.2T00001613364	HLA-F	curated MHC supersedes source transcript
+GGOh1	GGOh1:94:GCA_029281585.2T00001613383	HLA-F	curated MHC supersedes source transcript
+GGOh1	GGOh1:95:GCA_029281585.2T00001613399	HLA-F	curated MHC supersedes source transcript
+GGOh1	GGOh1:96:GCA_029281585.2T00001613402	HLA-F	curated MHC supersedes source transcript
+GGOh1	GGOh1:97:GCA_029281585.2T00001613405	HLA-F	curated MHC supersedes source transcript
+GGOh1	GGOh1:98:GCA_029281585.2T00001613412	HLA-F	curated MHC supersedes source transcript
+GGOh1	GGOh1:99:GCA_029281585.2T00001613417	HLA-F	curated MHC supersedes source transcript
+GGOh1	GGOh1:100:GCA_029281585.2T00001613423	HLA-F	curated MHC supersedes source transcript
+GGOh1	GGOh1:101:GCA_029281585.2T00001613436	HLA-F	curated MHC supersedes source transcript
+GGOh1	GGOh1:102:GCA_029281585.2T00001613443	HLA-F	curated MHC supersedes source transcript
+GGOh1	GGOh1:103:GCA_029281585.2T00001613453	HLA-G	curated MHC supersedes source transcript
+GGOh1	GGOh1:104:GCA_029281585.2T00001613474	HLA-G	curated MHC supersedes source transcript
+GGOh1	GGOh1:105:GCA_029281585.2T00001613495	HLA-G	curated MHC supersedes source transcript
+GGOh1	GGOh1:106:GCA_029281585.2T00001613514	HLA-G	curated MHC supersedes source transcript
+GGOh1	GGOh1:107:GCA_029281585.2T00001613528	HLA-G	curated MHC supersedes source transcript
+GGOh1	GGOh1:108:GCA_029281585.2T00001613544	HLA-G	curated MHC supersedes source transcript
+GGOh1	GGOh1:109:GCA_029281585.2T00001613551	HLA-G	curated MHC supersedes source transcript
+GGOh1	GGOh1:180:GCA_029281585.2T00001614468	HLA-E	curated MHC supersedes source transcript
+GGOh1	GGOh1:181:GCA_029281585.2T00001614489	HLA-E	curated MHC supersedes source transcript
+GGOh1	GGOh1:182:GCA_029281585.2T00001614492	HLA-E	curated MHC supersedes source transcript
+GGOh1	GGOh1:426:GCA_029281585.2T00001618179	HLA-C	curated MHC supersedes source transcript
+GGOh1	GGOh1:427:GCA_029281585.2T00001618182	HLA-C	curated MHC supersedes source transcript
+GGOh1	GGOh1:428:GCA_029281585.2T00001618187	HLA-C	curated MHC supersedes source transcript
+GGOh1	GGOh1:429:GCA_029281585.2T00001618194	HLA-C	curated MHC supersedes source transcript
+GGOh1	GGOh1:430:GCA_029281585.2T00001618215	HLA-C	curated MHC supersedes source transcript
+GGOh1	GGOh1:431:GCA_029281585.2T00001618236	HLA-C	curated MHC supersedes source transcript
+GGOh1	GGOh1:432:GCA_029281585.2T00001618257	HLA-C	curated MHC supersedes source transcript
+GGOh1	GGOh1:433:GCA_029281585.2T00001618295	HLA-B	curated MHC supersedes source transcript
+GGOh1	GGOh1:434:GCA_029281585.2T00001618276	HLA-C	curated MHC supersedes source transcript
+GGOh1	GGOh1:435:GCA_029281585.2T00001618287	HLA-C	curated MHC supersedes source transcript
+GGOh1	GGOh1:436:GCA_029281585.2T00001618291	HLA-C	curated MHC supersedes source transcript
+GGOh1	GGOh1:437:GCA_029281585.2T00001618302	HLA-B	curated MHC supersedes source transcript
+GGOh1	GGOh1:438:GCA_029281585.2T00001618305	HLA-B	curated MHC supersedes source transcript
+GGOh1	GGOh1:439:GCA_029281585.2T00001618309	HLA-B	curated MHC supersedes source transcript
+GGOh1	GGOh1:440:GCA_029281585.2T00001618330	HLA-B	curated MHC supersedes source transcript
+GGOh1	GGOh1:441:GCA_029281585.2T00001618346	HLA-B	curated MHC supersedes source transcript
+GGOh1	GGOh1:442:GCA_029281585.2T00001618353	HLA-B	curated MHC supersedes source transcript
+GGOh1	GGOh1:443:GCA_029281585.2T00001618356	HLA-B	curated MHC supersedes source transcript
+GGOh1	GGOh1:444:GCA_029281585.2T00001618360	HLA-B	curated MHC supersedes source transcript
+GGOh1	GGOh1:445:GCA_029281585.2T00001618369	HLA-B	curated MHC supersedes source transcript
+GGOh1	GGOh1:626:GCA_029281585.2T00001620877	LY6G6E	background symbol annotated as pseudogene in CHM13
+GGOh1	GGOh1:627:GCA_029281585.2T00001620888	LY6G6E	background symbol annotated as pseudogene in CHM13
+GGOh1	GGOh1:628:GCA_029281585.2T00001620898	LY6G6E	background symbol annotated as pseudogene in CHM13
+GGOh1	GGOh1:629:GCA_029281585.2T00001620906	LY6G6E	background symbol annotated as pseudogene in CHM13
+GGOh1	GGOh1:1000:GCA_029281585.2T00001627395	HLA-DRA	curated MHC supersedes source transcript
+GGOh1	GGOh1:1001:GCA_029281585.2T00001627410	HLA-DRA	curated MHC supersedes source transcript
+GGOh1	GGOh1:1003:GCA_029281585.2T00001627444	HLA-DRB1	curated MHC supersedes source transcript
+GGOh1	GGOh1:1004:GCA_029281585.2T00001627450	HLA-DQA1	curated MHC supersedes source transcript
+GGOh1	GGOh1:1005:GCA_029281585.2T00001627461	HLA-DQA1	curated MHC supersedes source transcript
+GGOh1	GGOh1:1006:GCA_029281585.2T00001627476	HLA-DQA1	curated MHC supersedes source transcript
+GGOh1	GGOh1:1007:GCA_029281585.2T00001627487	HLA-DQA1	curated MHC supersedes source transcript
+GGOh1	GGOh1:1008:GCA_029281585.2T00001627502	HLA-DQA1	curated MHC supersedes source transcript
+GGOh1	GGOh1:1009:GCA_029281585.2T00001627515	HLA-DQA1	curated MHC supersedes source transcript
+GGOh1	GGOh1:1010:GCA_029281585.2T00001627536	HLA-DQA1	curated MHC supersedes source transcript
+GGOh1	GGOh1:1011:GCA_029281585.2T00001627542	HLA-DQB1	curated MHC supersedes source transcript
+GGOh1	GGOh1:1012:GCA_029281585.2T00001627547	HLA-DQB1	curated MHC supersedes source transcript
+GGOh1	GGOh1:1013:GCA_029281585.2T00001627558	HLA-DQB1	curated MHC supersedes source transcript
+GGOh1	GGOh1:1014:GCA_029281585.2T00001627571	HLA-DQB1	curated MHC supersedes source transcript
+GGOh1	GGOh1:1015:GCA_029281585.2T00001627588	HLA-DQB1	curated MHC supersedes source transcript
+GGOh1	GGOh1:1016:GCA_029281585.2T00001627603	HLA-DQB1	curated MHC supersedes source transcript
+GGOh1	GGOh1:1017:GCA_029281585.2T00001627620	HLA-DQB1	curated MHC supersedes source transcript
+GGOh1	GGOh1:1018:GCA_029281585.2T00001627623	HLA-DQB1	curated MHC supersedes source transcript
+GGOh1	GGOh1:1019:GCA_029281585.2T00001627626	HLA-DQB1	curated MHC supersedes source transcript
+GGOh1	GGOh1:1020:GCA_029281585.2T00001627642	HLA-DQA2	curated MHC supersedes source transcript
+GGOh1	GGOh1:1021:GCA_029281585.2T00001627658	HLA-DQB2	curated MHC supersedes source transcript
+GGOh1	GGOh1:1022:GCA_029281585.2T00001627673	HLA-DQB2	curated MHC supersedes source transcript
+GGOh1	GGOh1:1023:GCA_029281585.2T00001627688	HLA-DQB2	curated MHC supersedes source transcript
+GGOh1	GGOh1:1024:GCA_029281585.2T00001627705	HLA-DQB2	curated MHC supersedes source transcript
+GGOh1	GGOh1:1025:GCA_029281585.2T00001627717	HLA-DOB	curated MHC supersedes source transcript
+GGOh1	GGOh1:1026:GCA_029281585.2T00001627734	HLA-DOB	curated MHC supersedes source transcript
+GGOh1	GGOh1:1027:GCA_029281585.2T00001627751	HLA-DOB	curated MHC supersedes source transcript
+GGOh1	GGOh1:1028:GCA_029281585.2T00001627770	HLA-DOB	curated MHC supersedes source transcript
+GGOh1	GGOh1:1030:GCA_029281585.2T00001627776	HLA-DOB	curated MHC supersedes source transcript
+GGOh1	GGOh1:1054:GCA_029281585.2T00001628116	HLA-DMB	curated MHC supersedes source transcript
+GGOh1	GGOh1:1055:GCA_029281585.2T00001628120	HLA-DMB	curated MHC supersedes source transcript
+GGOh1	GGOh1:1056:GCA_029281585.2T00001628123	HLA-DMB	curated MHC supersedes source transcript
+GGOh1	GGOh1:1057:GCA_029281585.2T00001628132	HLA-DMB	curated MHC supersedes source transcript
+GGOh1	GGOh1:1058:GCA_029281585.2T00001628143	HLA-DMB	curated MHC supersedes source transcript
+GGOh1	GGOh1:1059:GCA_029281585.2T00001628146	HLA-DMB	curated MHC supersedes source transcript
+GGOh1	GGOh1:1061:GCA_029281585.2T00001628176	HLA-DMA	curated MHC supersedes source transcript
+GGOh1	GGOh1:1062:GCA_029281585.2T00001628179	HLA-DMA	curated MHC supersedes source transcript
+GGOh1	GGOh1:1063:GCA_029281585.2T00001628192	HLA-DMA	curated MHC supersedes source transcript
+GGOh1	GGOh1:1064:GCA_029281585.2T00001628207	HLA-DMA	curated MHC supersedes source transcript
+GGOh1	GGOh1:1065:GCA_029281585.2T00001628212	HLA-DMA	curated MHC supersedes source transcript
+GGOh1	GGOh1:1066:GCA_029281585.2T00001628227	HLA-DMA	curated MHC supersedes source transcript
+GGOh1	GGOh1:1067:GCA_029281585.2T00001628232	HLA-DMA	curated MHC supersedes source transcript
+GGOh1	GGOh1:1068:GCA_029281585.2T00001628241	HLA-DMA	curated MHC supersedes source transcript
+GGOh1	GGOh1:1069:GCA_029281585.2T00001628250	HLA-DMA	curated MHC supersedes source transcript
+GGOh1	GGOh1:1089:GCA_029281585.2T00001628545	HLA-DOA	curated MHC supersedes source transcript
+GGOh1	GGOh1:1090:GCA_029281585.2T00001628560	HLA-DOA	curated MHC supersedes source transcript
+GGOh1	GGOh1:1091:GCA_029281585.2T00001628564	HLA-DOA	curated MHC supersedes source transcript
+GGOh1	GGOh1:1092:GCA_029281585.2T00001628568	HLA-DOA	curated MHC supersedes source transcript
+GGOh1	GGOh1:1093:GCA_029281585.2T00001628571	HLA-DOA	curated MHC supersedes source transcript
+GGOh1	GGOh1:1094:GCA_029281585.2T00001628580	HLA-DOA	curated MHC supersedes source transcript
+GGOh1	GGOh1:1095:GCA_029281585.2T00001628584	HLA-DPA1	curated MHC supersedes source transcript
+GGOh1	GGOh1:1096:GCA_029281585.2T00001628601	HLA-DPA1	curated MHC supersedes source transcript
+GGOh1	GGOh1:1097:GCA_029281585.2T00001628604	HLA-DPA1	curated MHC supersedes source transcript
+GGOh1	GGOh1:1098:GCA_029281585.2T00001628611	HLA-DPA1	curated MHC supersedes source transcript
+GGOh1	GGOh1:1099:GCA_029281585.2T00001628622	HLA-DPA1	curated MHC supersedes source transcript
+GGOh1	GGOh1:1100:GCA_029281585.2T00001628626	HLA-DPA1	curated MHC supersedes source transcript
+GGOh1	GGOh1:1101:GCA_029281585.2T00001628630	HLA-DPA1	curated MHC supersedes source transcript
+GGOh1	GGOh1:1102:GCA_029281585.2T00001628638	HLA-DPB1	curated MHC supersedes source transcript
+GGOh1	GGOh1:1103:GCA_029281585.2T00001628655	HLA-DPB1	curated MHC supersedes source transcript
+GGOh1	GGOh1:1104:GCA_029281585.2T00001628658	HLA-DPB1	curated MHC supersedes source transcript
+GGOh1	GGOh1:1105:GCA_029281585.2T00001628662	HLA-DPB1	curated MHC supersedes source transcript
+GGOh1	GGOh1:1106:GCA_029281585.2T00001628666	HLA-DPB1	curated MHC supersedes source transcript
+GGOh1	GGOh1:1107:GCA_029281585.2T00001628669	HLA-DPB1	curated MHC supersedes source transcript
+GGOh1	GGOh1:1108:GCA_029281585.2T00001628678	HLA-DPB1	curated MHC supersedes source transcript
+GGOh1	GGOh1:1109:GCA_029281585.2T00001628691	HLA-DPB1	curated MHC supersedes source transcript
+HSAh1	HSAh1:122:OR2H5P	OR2H5P	source pseudogene biotype
+HSAh1	HSAh1:123:TMEM183AP1	TMEM183AP1	source pseudogene biotype
+HSAh1	HSAh1:125:RPL13AP	RPL13AP	source pseudogene biotype
+HSAh1	HSAh1:139:SUMO2P1	SUMO2P1	source pseudogene biotype
+HSAh1	HSAh1:152:ZDHHC20P1	ZDHHC20P1	source pseudogene biotype
+HSAh1	HSAh1:153:HCG4P11	HCG4P11	source pseudogene biotype
+HSAh1	HSAh1:154:HLA-F	HLA-F	curated MHC supersedes source transcript
+HSAh1	HSAh1:155:HLA-F	HLA-F	curated MHC supersedes source transcript
+HSAh1	HSAh1:156:HLA-F	HLA-F	curated MHC supersedes source transcript
+HSAh1	HSAh1:157:HLA-F	HLA-F	curated MHC supersedes source transcript
+HSAh1	HSAh1:158:HLA-F	HLA-F	curated MHC supersedes source transcript
+HSAh1	HSAh1:159:HLA-F	HLA-F	curated MHC supersedes source transcript
+HSAh1	HSAh1:160:HLA-F	HLA-F	curated MHC supersedes source transcript
+HSAh1	HSAh1:161:HLA-F	HLA-F	curated MHC supersedes source transcript
+HSAh1	HSAh1:162:HLA-F	HLA-F	curated MHC supersedes source transcript
+HSAh1	HSAh1:163:HLA-F	HLA-F	curated MHC supersedes source transcript
+HSAh1	HSAh1:164:HLA-F	HLA-F	curated MHC supersedes source transcript
+HSAh1	HSAh1:165:HLA-F	HLA-F	curated MHC supersedes source transcript
+HSAh1	HSAh1:166:HLA-F	HLA-F	curated MHC supersedes source transcript
+HSAh1	HSAh1:167:RPL23AP1	RPL23AP1	source pseudogene biotype
+HSAh1	HSAh1:170:MICE	MICE	source pseudogene biotype
+HSAh1	HSAh1:171:HCG9P5	HCG9P5	source pseudogene biotype
+HSAh1	HSAh1:172:IFITM4P	IFITM4P	source pseudogene biotype
+HSAh1	HSAh1:173:LOC353010	LOC353010	source pseudogene biotype
+HSAh1	HSAh1:175:HLA-V	HLA-V	curated MHC supersedes source transcript
+HSAh1	HSAh1:176:HCG4P9	HCG4P9	source pseudogene biotype
+HSAh1	HSAh1:177:HLA-P	HLA-P	curated MHC supersedes source transcript
+HSAh1	HSAh1:178:RPL7AP7	RPL7AP7	source pseudogene biotype
+HSAh1	HSAh1:179:MICG	MICG	source pseudogene biotype
+HSAh1	HSAh1:180:HCG4P8	HCG4P8	source pseudogene biotype
+HSAh1	HSAh1:181:HLA-G	HLA-G	curated MHC supersedes source transcript
+HSAh1	HSAh1:182:HLA-G	HLA-G	curated MHC supersedes source transcript
+HSAh1	HSAh1:183:HLA-G	HLA-G	curated MHC supersedes source transcript
+HSAh1	HSAh1:184:HLA-G	HLA-G	curated MHC supersedes source transcript
+HSAh1	HSAh1:185:HLA-G	HLA-G	curated MHC supersedes source transcript
+HSAh1	HSAh1:186:HLA-G	HLA-G	curated MHC supersedes source transcript
+HSAh1	HSAh1:187:HLA-G	HLA-G	curated MHC supersedes source transcript
+HSAh1	HSAh1:188:HCGVIII-2	HCGVIII-2	source pseudogene biotype
+HSAh1	HSAh1:192:MICF	MICF	source pseudogene biotype
+HSAh1	HSAh1:193:LOC353009	LOC353009	source pseudogene biotype
+HSAh1	HSAh1:195:HCG4P7	HCG4P7	source pseudogene biotype
+HSAh1	HSAh1:196:HLA-H	HLA-H	curated MHC supersedes source transcript
+HSAh1	HSAh1:197:HLA-T	HLA-T	curated MHC supersedes source transcript
+HSAh1	HSAh1:198:DDX39BP1	DDX39BP1	source pseudogene biotype
+HSAh1	HSAh1:199:MCCD1P1	MCCD1P1	source pseudogene biotype
+HSAh1	HSAh1:200:LOC353008	LOC353008	source pseudogene biotype
+HSAh1	HSAh1:202:HLA-K	HLA-K	curated MHC supersedes source transcript
+HSAh1	HSAh1:204:HLA-U	HLA-U	curated MHC supersedes source transcript
+HSAh1	HSAh1:205:HCG4P5	HCG4P5	source pseudogene biotype
+HSAh1	HSAh1:206:HLA-A	HLA-A	curated MHC supersedes source transcript
+HSAh1	HSAh1:207:HCG4P4	HCG4P4	source pseudogene biotype
+HSAh1	HSAh1:208:HLA-W	HLA-W	curated MHC supersedes source transcript
+HSAh1	HSAh1:209:MICD	MICD	source pseudogene biotype
+HSAh1	HSAh1:211:DDX39BP2	DDX39BP2	source pseudogene biotype
+HSAh1	HSAh1:212:MCCD1P2	MCCD1P2	source pseudogene biotype
+HSAh1	HSAh1:213:LOC353007	LOC353007	source pseudogene biotype
+HSAh1	HSAh1:214:ZNRD1ASP	ZNRD1ASP	source pseudogene biotype
+HSAh1	HSAh1:215:HCG4P3	HCG4P3	source pseudogene biotype
+HSAh1	HSAh1:216:HLA-J	HLA-J	curated MHC supersedes source transcript
+HSAh1	HSAh1:217:ZNRD1ASP	ZNRD1ASP	source pseudogene biotype
+HSAh1	HSAh1:218:ETF1P1	ETF1P1	source pseudogene biotype
+HSAh1	HSAh1:219:ZNRD1ASP	ZNRD1ASP	source pseudogene biotype
+HSAh1	HSAh1:220:ZNRD1ASP	ZNRD1ASP	source pseudogene biotype
+HSAh1	HSAh1:271:PAIP1P1	PAIP1P1	source pseudogene biotype
+HSAh1	HSAh1:273:TRIM26BP	TRIM26BP	source pseudogene biotype
+HSAh1	HSAh1:274:HLA-L	HLA-L	curated MHC supersedes source transcript
+HSAh1	HSAh1:288:HLA-N	HLA-N	curated MHC supersedes source transcript
+HSAh1	HSAh1:289:UBQLN1P1	UBQLN1P1	source pseudogene biotype
+HSAh1	HSAh1:290:MICC	MICC	source pseudogene biotype
+HSAh1	HSAh1:292:TMPOP1	TMPOP1	source pseudogene biotype
+HSAh1	HSAh1:293:SUCLA2P1	SUCLA2P1	source pseudogene biotype
+HSAh1	HSAh1:294:RANP1	RANP1	source pseudogene biotype
+HSAh1	HSAh1:295:HLA-E	HLA-E	curated MHC supersedes source transcript
+HSAh1	HSAh1:296:HLA-E	HLA-E	curated MHC supersedes source transcript
+HSAh1	HSAh1:323:PTMAP1	PTMAP1	source pseudogene biotype
+HSAh1	HSAh1:350:RPL7P4	RPL7P4	source pseudogene biotype
+HSAh1	HSAh1:386:RN7SL353P	RN7SL353P	source pseudogene biotype
+HSAh1	HSAh1:390:RN7SKP186	RN7SKP186	source pseudogene biotype
+HSAh1	HSAh1:463:NAPGP2	NAPGP2	source pseudogene biotype
+HSAh1	HSAh1:469:HCG22	HCG22	source pseudogene biotype
+HSAh1	HSAh1:470:HCG22	HCG22	source pseudogene biotype
+HSAh1	HSAh1:471:RNU6-1133P	RNU6-1133P	source pseudogene biotype
+HSAh1	HSAh1:476:POLR2LP1	POLR2LP1	source pseudogene biotype
+HSAh1	HSAh1:525:HLA-C	HLA-C	curated MHC supersedes source transcript
+HSAh1	HSAh1:526:USP8P1	USP8P1	source pseudogene biotype
+HSAh1	HSAh1:527:RPL3P2	RPL3P2	source pseudogene biotype
+HSAh1	HSAh1:528:WASF5P	WASF5P	source pseudogene biotype
+HSAh1	HSAh1:531:HLA-B	HLA-B	curated MHC supersedes source transcript
+HSAh1	HSAh1:535:DHFRP2	DHFRP2	source pseudogene biotype
+HSAh1	HSAh1:536:RNU6-283P	RNU6-283P	source pseudogene biotype
+HSAh1	HSAh1:537:FGFR3P1	FGFR3P1	source pseudogene biotype
+HSAh1	HSAh1:538:ZDHHC20P2	ZDHHC20P2	source pseudogene biotype
+HSAh1	HSAh1:539:HLA-S	HLA-S	curated MHC supersedes source transcript
+HSAh1	HSAh1:548:HLA-X	HLA-X	curated MHC supersedes source transcript
+HSAh1	HSAh1:555:PPIAP9	PPIAP9	source pseudogene biotype
+HSAh1	HSAh1:556:RPL15P4	RPL15P4	source pseudogene biotype
+HSAh1	HSAh1:598:UQCRHP1	UQCRHP1	source pseudogene biotype
+HSAh1	HSAh1:715:LY6G6E	LY6G6E	source pseudogene biotype
+HSAh1	HSAh1:716:LY6G6E	LY6G6E	source pseudogene biotype
+HSAh1	HSAh1:738:RNU6-850P	RNU6-850P	source pseudogene biotype
+HSAh1	HSAh1:814:CYP21A1P	CYP21A1P	source pseudogene biotype
+HSAh1	HSAh1:815:TNXA	TNXA	source pseudogene biotype
+HSAh1	HSAh1:816:STK19B	STK19B	source pseudogene biotype
+HSAh1	HSAh1:825:RNA5SP206	RNA5SP206	source pseudogene biotype
+HSAh1	HSAh1:880:HNRNPA1P2	HNRNPA1P2	source pseudogene biotype
+HSAh1	HSAh1:881:RNU6-603P	RNU6-603P	source pseudogene biotype
+HSAh1	HSAh1:884:HLA-DRA	HLA-DRA	curated MHC supersedes source transcript
+HSAh1	HSAh1:885:HLA-DRB9	HLA-DRB9	curated MHC supersedes source transcript
+HSAh1	HSAh1:886:HLA-DRB5	HLA-DRB5	curated MHC supersedes source transcript
+HSAh1	HSAh1:887:HLA-DRB5	HLA-DRB5	curated MHC supersedes source transcript
+HSAh1	HSAh1:888:RNU1-61P	RNU1-61P	source pseudogene biotype
+HSAh1	HSAh1:889:HLA-DRB6	HLA-DRB6	curated MHC supersedes source transcript
+HSAh1	HSAh1:890:RNU1-152P	RNU1-152P	source pseudogene biotype
+HSAh1	HSAh1:891:HLA-DRB1	HLA-DRB1	curated MHC supersedes source transcript
+HSAh1	HSAh1:893:HLA-DQA1	HLA-DQA1	curated MHC supersedes source transcript
+HSAh1	HSAh1:894:HLA-DQA1	HLA-DQA1	curated MHC supersedes source transcript
+HSAh1	HSAh1:895:HLA-DQB1	HLA-DQB1	curated MHC supersedes source transcript
+HSAh1	HSAh1:896:HLA-DQB1	HLA-DQB1	curated MHC supersedes source transcript
+HSAh1	HSAh1:898:MTCO3P1	MTCO3P1	source pseudogene biotype
+HSAh1	HSAh1:900:HLA-DQA2	HLA-DQA2	curated MHC supersedes source transcript
+HSAh1	HSAh1:903:HLA-DQB2	HLA-DQB2	curated MHC supersedes source transcript
+HSAh1	HSAh1:904:HLA-DQB2	HLA-DQB2	curated MHC supersedes source transcript
+HSAh1	HSAh1:905:HLA-DQB2	HLA-DQB2	curated MHC supersedes source transcript
+HSAh1	HSAh1:906:HLA-DQB2	HLA-DQB2	curated MHC supersedes source transcript
+HSAh1	HSAh1:907:HLA-DQB2	HLA-DQB2	curated MHC supersedes source transcript
+HSAh1	HSAh1:908:HLA-DOB	HLA-DOB	curated MHC supersedes source transcript
+HSAh1	HSAh1:920:PPP1R2P1	PPP1R2P1	source pseudogene biotype
+HSAh1	HSAh1:923:HLA-Z	HLA-Z	curated MHC supersedes source transcript
+HSAh1	HSAh1:924:HLA-DMB	HLA-DMB	curated MHC supersedes source transcript
+HSAh1	HSAh1:925:HLA-DMA	HLA-DMA	curated MHC supersedes source transcript
+HSAh1	HSAh1:935:HLA-DOA	HLA-DOA	curated MHC supersedes source transcript
+HSAh1	HSAh1:936:HLA-DPA1	HLA-DPA1	curated MHC supersedes source transcript
+HSAh1	HSAh1:937:HLA-DPA1	HLA-DPA1	curated MHC supersedes source transcript
+HSAh1	HSAh1:938:HLA-DPA1	HLA-DPA1	curated MHC supersedes source transcript
+HSAh1	HSAh1:939:HLA-DPA1	HLA-DPA1	curated MHC supersedes source transcript
+HSAh1	HSAh1:940:HLA-DPB1	HLA-DPB1	curated MHC supersedes source transcript
+HSAh1	HSAh1:941:RPL32P1	RPL32P1	source pseudogene biotype
+HSAh1	HSAh1:942:HLA-DPA2	HLA-DPA2	curated MHC supersedes source transcript
+HSAh1	HSAh1:943:COL11A2P1	COL11A2P1	source pseudogene biotype
+HSAh1	HSAh1:944:HLA-DPB2	HLA-DPB2	curated MHC supersedes source transcript
+HSAh1	HSAh1:947:HLA-DPA3	HLA-DPA3	curated MHC supersedes source transcript
+HSAh1	HSAh1:966:RNY4P10	RNY4P10	source pseudogene biotype
+HSAh1	HSAh1:975:ZNF70P1	ZNF70P1	source pseudogene biotype

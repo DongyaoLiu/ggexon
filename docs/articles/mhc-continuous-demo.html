@@ -5,14 +5,14 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Haplotype representation of the MHC region across apes • ggexon</title>
+<title>4. Visualizing megabase-scale haplotypes • ggexon</title>
 <script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_3-0.4.10/font.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_3-0.4.10/font.css" rel="stylesheet">
 <link href="../deps/Source_Code_Pro-0.4.10/font.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Haplotype representation of the MHC region across apes">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="4. Visualizing megabase-scale haplotypes">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -34,15 +34,11 @@
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-tutorials" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Tutorials</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-tutorials">
-<li><a class="dropdown-item" href="../articles/ggexon-workflow.html">Complete workflow</a></li>
-    <li><a class="dropdown-item" href="../articles/hox-cluster-expansion-demo.html">HOX cluster expansion</a></li>
-    <li><a class="dropdown-item" href="../articles/dox-synteny-demo.html">Three-species synteny and RNA-seq</a></li>
-    <li><a class="dropdown-item" href="../articles/cd44-splice-variants-demo.html">CD44 splice variant alignment</a></li>
-    <li><a class="dropdown-item" href="../articles/as3mt-splice-variants-demo.html">AS3MT transcripts, DNA and RNA-seq</a></li>
-    <li><a class="dropdown-item" href="../articles/hla-a-lollipop-demo.html">HLA-A protein variant lollipops</a></li>
-    <li><a class="dropdown-item" href="../articles/mhc-continuous-demo.html">MHC haplotypes across apes</a></li>
-    <li><a class="dropdown-item" href="../articles/bigwig-coverage-demo.html">PEEL-1 raw BigWig coverage</a></li>
-    <li><a class="dropdown-item" href="../articles/ggexon-classes-and-verbs.html">Classes, geoms, facets, and guides</a></li>
+<li><a class="dropdown-item" href="../articles/ggexon-workflow.html">0. Basic usage</a></li>
+    <li><a class="dropdown-item" href="../articles/hla-a-lollipop-demo.html">1. Projecting amino acid changes onto transcript models</a></li>
+    <li><a class="dropdown-item" href="../articles/as3mt-splice-variants-demo.html">2. Comparing alternatively spliced transcripts</a></li>
+    <li><a class="dropdown-item" href="../articles/dox-synteny-demo.html">3. Visualizing local synteny across species</a></li>
+    <li><a class="dropdown-item" href="../articles/mhc-continuous-demo.html">4. Visualizing megabase-scale haplotypes</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
@@ -65,660 +61,453 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
-      <h1>Haplotype representation of the MHC region across apes</h1>
-            
-      
-      <small class="dont-index">Source: <a href="https://github.com/DongyaoLiu/ggexon/blob/main/vignettes/mhc-continuous-demo.Rmd" class="external-link"><code>vignettes/mhc-continuous-demo.Rmd</code></a></small>
+      <h1>4. Visualizing megabase-scale haplotypes</h1>
+
+
+      <small class="dont-index">Source: <a href="https://github.com/DongyaoLiu/ggexon/blob/HEAD/vignettes/mhc-continuous-demo.Rmd" class="external-link"><code>vignettes/mhc-continuous-demo.Rmd</code></a></small>
       <div class="d-none name"><code>mhc-continuous-demo.Rmd</code></div>
     </div>
 
-    
-    
-<p>This tutorial first renders the complete MHC data object, then
-subsets it for a concise comparison. The remaining steps explain data
-composition, gene and lollipop layers, nucleotide links and the facet
-layout. The view recombines the gene identity and status information of
-Extended Data Fig. 3a/b with the continuous region and alignment design
-of Fig. 3c in <a href="https://www.nature.com/articles/s41586-025-08816-3" class="external-link">Yoo et
-al. (2025)</a>. It is a source-backed reconstruction, not a pixel
-reproduction of the published figure.</p>
+
+
 <div class="section level2">
-<h2 id="full-mhc-comparison">Full MHC comparison<a class="anchor" aria-label="anchor" href="#full-mhc-comparison"></a>
+<h2 id="compare-three-mhc-haplotypes">Compare three MHC haplotypes<a class="anchor" aria-label="anchor" href="#compare-three-mhc-haplotypes"></a>
 </h2>
-<p>The complete source dataset contains 13 haplotype tracks: human CHM13
-and both haplotypes of six ape species. Build and render the complete
-data object first. Run the code from a repository checkout root; these
-helpers are repository example functions, not exported package APIs.</p>
+<p>Compare <strong>Siamang H1</strong>, <strong>Gorilla H1</strong>, and
+<strong>Human CHM13</strong> across the major histocompatibility complex
+(MHC). Prepare their gene annotations, two direct DNA alignments, and
+panel layouts in one <code>SynSpecies</code>, then draw gene spans, add
+labelled gene-lollipop heads, and connect the haplotypes with nucleotide
+ribbons.</p>
+<p>The inputs retain <strong>58 curated functional MHC genes</strong>
+and non-pseudogene background models from the browser accompanying <a href="https://doi.org/10.1038/s41586-025-08816-3" class="external-link">Yoo et al. (2025)</a>.
+Each window covers <strong>3.63 Mb</strong> around the MHC genes, giving
+a shorter view than the earlier full-region comparison. All plotting
+inputs are bundled and work offline. Detailed sources and filtering
+rules are in the <a href="https://github.com/DongyaoLiu/ggexon/blob/HEAD/inst/extdata/mhc_haplotypes/README.md" class="external-link">data
+README</a>.</p>
+</div>
+<div class="section level2">
+<h2 id="present-the-inputs">Present the inputs<a class="anchor" aria-label="anchor" href="#present-the-inputs"></a>
+</h2>
+<p>The bundle contains one gene annotation per haplotype and one direct
+alignment for each adjacent pair:</p>
+<table class="table">
+<colgroup>
+<col width="33%">
+<col width="33%">
+<col width="33%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">Files</th>
+<th align="left">Contents</th>
+<th align="left">Syn object</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">
+<code>SSYh1.gff3</code>, <code>GGOh1.gff3</code>,
+<code>HSAh1.gff3</code>
+</td>
+<td align="left">Curated MHC spans and representative background gene
+spans</td>
+<td align="left">
+<code>SynIndividual</code>, with a feature
+annotation</td>
+</tr>
+<tr class="even">
+<td align="left"><code>SSYh1_GGOh1.paf</code></td>
+<td align="left">Siamang H1 versus Gorilla H1</td>
+<td align="left"><code>SynPairAlignment</code></td>
+</tr>
+<tr class="odd">
+<td align="left"><code>GGOh1_HSAh1.paf</code></td>
+<td align="left">Gorilla H1 versus Human CHM13</td>
+<td align="left"><code>SynPairAlignment</code></td>
+</tr>
+<tr class="even">
+<td align="left"><code>windows.tsv</code></td>
+<td align="left">Native chromosomes, assembly coordinates, and display
+orientation</td>
+<td align="left">Stored panel limits</td>
+</tr>
+</tbody>
+</table>
+<p>Curated MHC pseudogenes and background records annotated as
+pseudogenes are excluded before writing the GFF3 files. One
+representative transcript supplies each background gene span. Source
+transcripts overlapping the same curated MHC locus are excluded from the
+background layer to avoid duplicates. The GFF3 files contain
+<strong>gene spans</strong>, not reconstructed exon structures.</p>
+<p>Locate the installed inputs and inspect the selected windows:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dongyaoliu.github.io/ggexon/">ggexon</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/source.html" class="external-link">source</a></span><span class="op">(</span><span class="st">"data-raw/ape_paper/mhc_tutorial_data.R"</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">mhc_all</span> <span class="op">&lt;-</span> <span class="fu">read_mhc_data</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="../reference/individual_names.html">individual_names</a></span><span class="op">(</span><span class="va">mhc_all</span><span class="op">$</span><span class="va">species</span><span class="op">)</span><span class="op">)</span> <span class="op">==</span> <span class="fl">13L</span>,</span>
-<span>          <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">mhc_all</span><span class="op">$</span><span class="va">mhc</span><span class="op">)</span> <span class="op">==</span> <span class="fl">285L</span><span class="op">)</span></span></code></pre></div>
-<p><code>mhc_all</code> contains the <code>SynSpecies</code> object
-(<code>species</code>), native windows, MHC genes, context models,
-exons, variable regions and direct alignment tables. <code>max_bp</code>
-records the longest window in the complete dataset. The alignment
-collection contains the original 12 adjacent comparisons plus two direct
-bridges used by the later subset example; the full view draws only its
-12 adjacent comparisons.</p>
+<span><span class="va">demo_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"mhc_haplotypes"</span>, package <span class="op">=</span> <span class="st">"ggexon"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nchar.html" class="external-link">nzchar</a></span><span class="op">(</span><span class="va">demo_dir</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">windows</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.delim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">demo_dir</span>, <span class="st">"windows.tsv"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">haplotype_ids</span> <span class="op">&lt;-</span> <span class="va">windows</span><span class="op">$</span><span class="va">track</span></span>
+<span></span>
+<span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">windows</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"label"</span>, <span class="st">"assembly"</span>, <span class="st">"chr"</span>, <span class="st">"start"</span>, <span class="st">"end"</span>, <span class="st">"orientation"</span><span class="op">)</span><span class="op">]</span>,</span>
+<span>  row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<table class="table">
+<colgroup>
+<col width="17%">
+<col width="20%">
+<col width="20%">
+<col width="12%">
+<col width="12%">
+<col width="17%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">label</th>
+<th align="left">assembly</th>
+<th align="left">chr</th>
+<th align="right">start</th>
+<th align="right">end</th>
+<th align="left">orientation</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">Siamang H1</td>
+<td align="left">mSymSyn1_v2.0</td>
+<td align="left">chr23_hap1</td>
+<td align="right">38374018</td>
+<td align="right">42002223</td>
+<td align="left">-</td>
+</tr>
+<tr class="even">
+<td align="left">Gorilla H1</td>
+<td align="left">mGorGor1_v2.0</td>
+<td align="left">chr5_mat_hsa6</td>
+<td align="right">47277843</td>
+<td align="right">50906048</td>
+<td align="left">+</td>
+</tr>
+<tr class="odd">
+<td align="left">Human CHM13</td>
+<td align="left">T2T-CHM13v2.0</td>
+<td align="left">chr6</td>
+<td align="right">29439185</td>
+<td align="right">33067390</td>
+<td align="left">+</td>
+</tr>
+</tbody>
+</table>
+<p>GFF3 and the displayed windows use <strong>one-based inclusive native
+assembly coordinates</strong>. Raw PAF starts are zero-based; ggexon
+converts them on import. The Siamang chromosome runs in the opposite
+orientation to the other two haplotypes. Keep all input coordinates and
+strands unchanged; the facet will reverse the Siamang axis when
+drawing.</p>
+</div>
+<div class="section level2">
+<h2 id="prepare-the-comparative-syn-object">Prepare the comparative Syn object<a class="anchor" aria-label="anchor" href="#prepare-the-comparative-syn-object"></a>
+</h2>
+<div class="section level3">
+<h3 id="attach-the-gene-annotations">Attach the gene annotations<a class="anchor" aria-label="anchor" href="#attach-the-gene-annotations"></a>
+</h3>
+<p>Create one individual per haplotype and collect them in a
+<code>SynSpecies</code>:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">full_plot</span> <span class="op">&lt;-</span> <span class="fu">render_mhc_data</span><span class="op">(</span></span>
-<span>  <span class="va">mhc_all</span>,</span>
-<span>  output_dir <span class="op">=</span> <span class="st">"data-raw/ape_paper/results/mhc_full_example/figures"</span></span>
-<span><span class="op">)</span></span>
-<span><span class="va">full_plot</span><span class="op">$</span><span class="va">pdf</span>  <span class="co"># exported vector figure</span></span></code></pre></div>
-<p>The full view below contains 285 curated MHC heads, the native-scale
-gene arrows and grey context genes, lower annotation lanes, and 624
-nucleotide ribbons. Each track retains its native distances and assembly
-coordinate labels.</p>
-<p><img src="figures/mhc-continuous.png" class="r-plt" alt="Full thirteen-track MHC comparison. From top to bottom: both haplotypes of siamang, Sumatran orangutan, Bornean orangutan, gorilla, bonobo and chimpanzee, followed by human CHM13. Native gene spans, enlarged MHC heads on shared rows, grey context genes, variable-region annotations and adjacent nucleotide ribbons are retained." width="100%"></p>
-</div>
-<div class="section level2">
-<h2 id="subset-the-full-data-object">Subset the full data object<a class="anchor" aria-label="anchor" href="#subset-the-full-data-object"></a>
-</h2>
-<p>For a shorter example, retain human CHM13, both gorilla haplotypes
-and siamang h1. Gorilla’s two curated head profiles differ; siamang’s
-profiles match in gene identity, copy count, order, strand and status,
-so only one is shown. Human has only the CHM13 reference in these
-inputs.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">keep</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SSYh1"</span>, <span class="st">"GGOh2"</span>, <span class="st">"GGOh1"</span>, <span class="st">"HSAh1"</span><span class="op">)</span>  <span class="co"># top to bottom</span></span>
-<span><span class="va">mhc_small</span> <span class="op">&lt;-</span> <span class="fu">subset_mhc_data</span><span class="op">(</span><span class="va">mhc_all</span>, tracks <span class="op">=</span> <span class="va">keep</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="fu"><a href="../reference/individual_names.html">individual_names</a></span><span class="op">(</span><span class="va">mhc_small</span><span class="op">$</span><span class="va">species</span><span class="op">)</span>, <span class="va">keep</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu">pairwise_alignments</span><span class="op">(</span><span class="va">mhc_small</span><span class="op">$</span><span class="va">species</span><span class="op">)</span><span class="op">)</span> <span class="op">==</span> <span class="fl">3L</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">mhc_small</span><span class="op">$</span><span class="va">mhc</span><span class="op">)</span> <span class="op">==</span> <span class="fl">97L</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="va">mhc_small</span><span class="op">$</span><span class="va">max_bp</span>, <span class="va">mhc_all</span><span class="op">$</span><span class="va">max_bp</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="../reference/individual_names.html">individual_names</a></span><span class="op">(</span><span class="va">mhc_all</span><span class="op">$</span><span class="va">species</span><span class="op">)</span><span class="op">)</span> <span class="op">==</span> <span class="fl">13L</span>  <span class="co"># original unchanged</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<p>The subset retains the selected individuals with their attached
-annotations, filters every annotation table, keeps the direct alignments
-for adjacent selected tracks and rebuilds the chain layout. It preserves
-the full object’s <code>max_bp</code> and leaves <code>mhc_all</code>
-unchanged. The siamang h1 → gorilla h2 and gorilla h1 → human bridges
-were computed directly from the cached DNA, rather than inferred through
-removed tracks. A requested pair without a stored direct alignment
-raises an error.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">compact_plot</span> <span class="op">&lt;-</span> <span class="fu">render_mhc_data</span><span class="op">(</span></span>
-<span>  <span class="va">mhc_small</span>,</span>
-<span>  output_dir <span class="op">=</span> <span class="st">"data-raw/ape_paper/results/mhc_compact/figures"</span></span>
-<span><span class="op">)</span></span>
-<span><span class="va">compact_plot</span><span class="op">$</span><span class="va">pdf</span></span></code></pre></div>
-<p>The concise view below has four annotation tracks, 97 MHC heads, 860
-grey context arrows and 252 ribbons. It keeps the small native MHC
-arrows, six shared head rows, ortholog colors, pseudogene markings and
-lower annotation lanes. At 180 × 267.5 mm it is about 67% shorter than
-the full comparison.</p>
-<p><img src="figures/mhc-three-species.png" class="r-plt" alt="Concise four-track MHC comparison: siamang h1, gorilla h2, gorilla h1 and human CHM13. The subset preserves native gene spans, shared enlarged head rows, grey context and lower annotations, with three direct nucleotide-link panels." width="100%"></p>
-<p>Both examples use the same renderer. The following steps explain its
-data composition and layers. Full-dataset counts in these steps refer to
-the 13-track view. The website embeds verified previews because the
-source tables under <code>data-raw/</code> are not installed with the
-package. Helper definitions are in
-<code>data-raw/ape_paper/mhc_tutorial_data.R</code>.</p>
-</div>
-<div class="section level2">
-<h2 id="step-1--what-is-in-the-mhc-data">Step 1. What is in the MHC data?<a class="anchor" aria-label="anchor" href="#step-1--what-is-in-the-mhc-data"></a>
-</h2>
-<p>All inputs are tab-separated tables under
-<code>data-raw/ape_paper/results/mhc_continuous/</code>. The main files
-are:</p>
-<table class="table">
-<colgroup>
-<col width="33%">
-<col width="33%">
-<col width="33%">
-</colgroup>
-<thead><tr class="header">
-<th>File</th>
-<th>One row per</th>
-<th>Key columns</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td><code>windows.tsv</code></td>
-<td>haplotype window</td>
-<td>
-<code>track</code>, <code>label</code>, <code>chr</code>,
-<code>start0</code>, <code>end0</code>, <code>length</code>,
-<code>orientation</code>
-</td>
-</tr>
-<tr class="even">
-<td><code>gene_models_with_recovered_context/models.tsv</code></td>
-<td>representative transcript</td>
-<td>
-<code>track</code>, <code>model_id</code>, <code>gene_symbol</code>,
-<code>chromStart</code>, <code>chromEnd</code>, <code>strand</code>,
-<code>annotation_evidence</code>, <code>projection_coverage</code>,
-<code>projection_identity</code>
-</td>
-</tr>
-<tr class="odd">
-<td><code>gene_models_with_recovered_context/exons.tsv</code></td>
-<td>supporting exon</td>
-<td>
-<code>model_id</code>, <code>start0</code>, <code>end0</code>
-</td>
-</tr>
-<tr class="even">
-<td><code>mhc_full/genes.tsv</code></td>
-<td>curated MHC gene</td>
-<td>
-<code>track</code>, <code>locus</code>, <code>start</code>,
-<code>end</code>, <code>strand</code>, <code>gene_name</code>,
-<code>functionality</code>
-</td>
-</tr>
-<tr class="odd">
-<td><code>links.tsv</code></td>
-<td>alignment block</td>
-<td>
-<code>tspecies</code>, <code>qspecies</code>, <code>tstart</code>,
-<code>tend</code>, <code>qstart</code>, <code>qend</code>,
-<code>strand</code>, <code>identity</code>
-</td>
-</tr>
-<tr class="even">
-<td><code>discordant_regions.tsv</code></td>
-<td>variable-region piece</td>
-<td>
-<code>track</code>, <code>region</code>, <code>start0</code>,
-<code>end0</code>, <code>display_start0</code>,
-<code>display_end0</code>
-</td>
-</tr>
-<tr class="odd">
-<td><code>source_metadata/mhc_continuous/colors.txt</code></td>
-<td>ortholog key</td>
-<td>gene key, RGB</td>
-</tr>
-</tbody>
-</table>
-<p>Coordinate conventions matter here: <code>windows.tsv</code> and the
-derived tables use BED0, half-open coordinates (<code>start0</code>,
-<code>end0</code>). The curated <code>genes.tsv</code> table stores
-one-based closed coordinates (<code>start</code>, <code>end</code>), so
-the renderer converts <code>start</code> to
-<code>start0 = start - 1</code> before plotting.</p>
-<p>Representative rows look like this:</p>
-<pre class="text"><code>windows.tsv
-track   label          chr             start0     end0       length    orientation
-SSYh1   Siamang h1     chr23_hap1      37530567   42365376   4834809   -
-PTRh1   Chimpanzee h1  chr5_hap1_hsa6  34745920   40035224   5289304   +
-HSAh1   Human CHM13    chr6            28669878   33979214   5309336   +
-
-genes.tsv
-track   locus   start      end        strand  gene_name  functionality
-HSAh1   MHC_I   29595529   29610626   +       HLA-F      functional
-
-links.tsv
-tspecies  qspecies  tstart  tend     qstart  qend     identity
-SSYh2     SSYh1     1       113549   1       113407   97.9</code></pre>
-<p>The curated table has <strong>285</strong> records.
-<code>functionality</code> is the source call (<code>functional</code>
-or <code>pseudogene</code>); <code>locus</code> separates class I from
-class II; and <code>gene_name</code> supplies the identity key used for
-colors and for the shared head rows. The context tables contain released
-models and explicitly labelled same-species Liftoff projections, with
-<code>annotation_evidence</code> distinguishing the two.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">B</span> <span class="op">&lt;-</span> <span class="st">"data-raw/ape_paper/results/mhc_continuous"</span></span>
-<span></span>
-<span><span class="va">windows</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.delim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">B</span>, <span class="st">"windows.tsv"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">links</span>   <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.delim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">B</span>, <span class="st">"links.tsv"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">regions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.delim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">B</span>, <span class="st">"discordant_regions.tsv"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">models</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.delim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">B</span>, <span class="st">"gene_models_with_recovered_context/models.tsv"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">exons</span>   <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.delim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">B</span>, <span class="st">"gene_models_with_recovered_context/exons.tsv"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">mhc</span>     <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.delim</a></span><span class="op">(</span><span class="st">"data-raw/ape_paper/results/mhc_full/genes.tsv"</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="step-2--data-composition">Step 2. Data composition<a class="anchor" aria-label="anchor" href="#step-2--data-composition"></a>
-</h2>
-<p>Each track already has its own panel. <code><a href="../reference/facet_genomics.html">facet_genomics()</a></code>
-uses the panel’s x scale to position its data, and
-<code><a href="../reference/geom_nuclink.html">geom_nuclink()</a></code> uses the corresponding source panel scales
-when placing ribbon endpoints. Panel limits handle fitting and zooming.
-<strong>A manual coordinate conversion is not required merely to display
-separate genomic panels.</strong></p>
-<p>This example’s preparation step brings its particular inputs into one
-consistent coordinate system:</p>
-<table class="table">
-<colgroup>
-<col width="33%">
-<col width="33%">
-<col width="33%">
-</colgroup>
-<thead><tr class="header">
-<th>Input</th>
-<th>Stored coordinates</th>
-<th>Composition for this example</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td>Curated MHC gene spans</td>
-<td>One-based closed native assembly coordinates</td>
-<td>Convert to BED0, then express relative to the extracted window</td>
-</tr>
-<tr class="even">
-<td>Context models and VR intervals</td>
-<td>BED0 native assembly coordinates</td>
-<td>Express relative to the same window</td>
-</tr>
-<tr class="odd">
-<td>Minimap2 alignment blocks</td>
-<td>Coordinates relative to extracted sequences</td>
-<td>Already window-relative; use the same convention as the gene
-layers</td>
-</tr>
-<tr class="even">
-<td>Siamang records</td>
-<td>Native assembly orientation is reversed</td>
-<td>Reflect gene and annotation coordinates to match the
-reverse-complemented alignment sequence</td>
-</tr>
-</tbody>
-</table>
-<p>The gene tables and alignment tables must agree about what a position
-means. For this dataset, the renderer uses window-relative display
-coordinates. On a plus-oriented track it subtracts the window start; on
-a reverse-oriented track it reflects around the window end. These
-operations change the origin and orientation, <strong>not the genomic
-distances</strong>. Each row’s axis is labelled with its original native
-assembly coordinates at export.</p>
-<p>The helper below shows that data preparation in the renderer. It is
-not an additional ggexon panel-fitting requirement:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">transform_native</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">d</span>, <span class="va">a</span>, <span class="va">b</span>, <span class="va">trackcol</span> <span class="op">=</span> <span class="st">"track"</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">z</span>  <span class="op">&lt;-</span> <span class="va">windows</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/match.html" class="external-link">match</a></span><span class="op">(</span><span class="va">d</span><span class="op">[[</span><span class="va">trackcol</span><span class="op">]</span><span class="op">]</span>, <span class="va">windows</span><span class="op">$</span><span class="va">track</span><span class="op">)</span>, <span class="op">]</span></span>
-<span>  <span class="va">lo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmax</a></span><span class="op">(</span><span class="va">d</span><span class="op">[[</span><span class="va">a</span><span class="op">]</span><span class="op">]</span>, <span class="va">z</span><span class="op">$</span><span class="va">start0</span><span class="op">)</span></span>
-<span>  <span class="va">hi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmin</a></span><span class="op">(</span><span class="va">d</span><span class="op">[[</span><span class="va">b</span><span class="op">]</span><span class="op">]</span>, <span class="va">z</span><span class="op">$</span><span class="va">end0</span><span class="op">)</span></span>
-<span>  <span class="va">d</span><span class="op">$</span><span class="va">xmin</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">z</span><span class="op">$</span><span class="va">orientation</span> <span class="op">==</span> <span class="st">"+"</span>, <span class="va">lo</span> <span class="op">-</span> <span class="va">z</span><span class="op">$</span><span class="va">start0</span>, <span class="va">z</span><span class="op">$</span><span class="va">end0</span> <span class="op">-</span> <span class="va">hi</span><span class="op">)</span></span>
-<span>  <span class="va">d</span><span class="op">$</span><span class="va">xmax</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">z</span><span class="op">$</span><span class="va">orientation</span> <span class="op">==</span> <span class="st">"+"</span>, <span class="va">hi</span> <span class="op">-</span> <span class="va">z</span><span class="op">$</span><span class="va">start0</span>, <span class="va">z</span><span class="op">$</span><span class="va">end0</span> <span class="op">-</span> <span class="va">lo</span><span class="op">)</span></span>
-<span>  <span class="va">d</span></span>
-<span><span class="op">}</span></span></code></pre></div>
-<p><strong>Independent fitting and a common bp scale are different
-choices.</strong> If each panel fills the same width with its own
-complete region, a 4.83-Mb window and a 5.31-Mb window have different
-bp-per-mm ratios. That is a valid zoomed view. Here we keep one bp scale
-across haplotypes so expansions and deletions retain their relative
-sizes. The renderer therefore gives every panel the same display span,
-taken from the full object’s longest window:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">max_bp</span> <span class="op">&lt;-</span> <span class="va">mhc_all</span><span class="op">$</span><span class="va">max_bp</span></span>
-<span><span class="va">panel_xlim</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/setNames.html" class="external-link">setNames</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">max_bp</span><span class="op">)</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">windows</span><span class="op">)</span><span class="op">)</span>, <span class="va">windows</span><span class="op">$</span><span class="va">track</span><span class="op">)</span></span>
-<span><span class="va">panel_chr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/setNames.html" class="external-link">setNames</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"MHC"</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">windows</span><span class="op">)</span><span class="op">)</span>, <span class="va">windows</span><span class="op">$</span><span class="va">track</span><span class="op">)</span></span></code></pre></div>
-<p>The subset keeps this full-dataset span; it does not refit each
-retained region to occupy the full width. Translation/reflection
-composes the input coordinates; <code>xlim</code> and the panel scales
-control the view. Native coordinates could also be used directly if
-gene, annotation and link tables were all expressed in those same native
-coordinates.</p>
-<p>The <code>SynSpecies</code> part is already assembled by
-<code>read_mhc_data()</code>. For the full view, retaining all track IDs
-selects its original 12 adjacent direct alignments and prepares the
-chain layout:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">full_data</span> <span class="op">&lt;-</span> <span class="fu">subset_mhc_data</span><span class="op">(</span><span class="va">mhc_all</span>, tracks <span class="op">=</span> <span class="va">mhc_all</span><span class="op">$</span><span class="va">windows</span><span class="op">$</span><span class="va">track</span><span class="op">)</span></span>
-<span><span class="va">sp</span> <span class="op">&lt;-</span> <span class="va">full_data</span><span class="op">$</span><span class="va">species</span></span>
-<span><span class="va">pair_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu">pairwise_alignments</span><span class="op">(</span><span class="va">sp</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="step-3--genes-first-with-geom_gene">Step 3. Genes first with <code>geom_gene()</code><a class="anchor" aria-label="anchor" href="#step-3--genes-first-with-geom_gene"></a>
-</h2>
-<p>The first layer is the gene annotation. There are two kinds of
-arrows:</p>
-<ul>
-<li>
-<strong>Context genes</strong> are representative source transcripts
-outside the curated MHC set. They are drawn in neutral grey with
-<code>geom_gene()</code>.</li>
-<li>
-<strong>Native MHC arrows</strong> are one small arrow per curated
-MHC gene, using the exact curated native span and the source ortholog
-color. They sit in the same lane as the context genes.</li>
-</ul>
-<p>Neither layer draws exon glyphs: the transcript structure is used for
-model selection, but the figure shows one span per representative gene.
-Helper objects such as <code>strip_labels</code>,
-<code>panel_limits</code> and <code>class_spans</code> are built a few
-lines earlier in the renderer and omitted here so that the layer code
-stays readable. <code>models</code> and <code>mhc</code> in the code
-below are the transformed tables from Step 2 (the renderer calls the
-model table <code>m</code>), so their <code>xmin</code> and
-<code>xmax</code> columns are already display coordinates.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">context_arrows</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
-<span>  track <span class="op">=</span> <span class="va">models</span><span class="op">$</span><span class="va">track</span>,</span>
-<span>  xmin <span class="op">=</span> <span class="va">models</span><span class="op">$</span><span class="va">xmin</span>, xmax <span class="op">=</span> <span class="va">models</span><span class="op">$</span><span class="va">xmax</span>, ymin <span class="op">=</span> <span class="op">-</span><span class="fl">0.5</span>,</span>
-<span>  transcripts <span class="op">=</span> <span class="va">models</span><span class="op">$</span><span class="va">model_id</span>,</span>
-<span>  strand <span class="op">=</span> <span class="va">models</span><span class="op">$</span><span class="va">strand</span>,</span>
-<span>  kind <span class="op">=</span> <span class="va">models</span><span class="op">$</span><span class="va">kind</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">native_mhc_arrows</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
-<span>  track <span class="op">=</span> <span class="va">mhc</span><span class="op">$</span><span class="va">track</span>,</span>
-<span>  xmin <span class="op">=</span> <span class="va">mhc</span><span class="op">$</span><span class="va">xmin</span>, xmax <span class="op">=</span> <span class="va">mhc</span><span class="op">$</span><span class="va">xmax</span>, ymin <span class="op">=</span> <span class="op">-</span><span class="fl">0.5</span>,</span>
-<span>  transcripts <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"curated_native_mhc_"</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">mhc</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  strand <span class="op">=</span> <span class="va">mhc</span><span class="op">$</span><span class="va">display_oriented_strand</span>,</span>
-<span>  ortholog_fill <span class="op">=</span> <span class="va">mhc</span><span class="op">$</span><span class="va">ortholog_fill</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">sp</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_gene</span><span class="op">(</span></span>
-<span>    data <span class="op">=</span> <span class="va">context_arrows</span>,</span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>xmin <span class="op">=</span> <span class="va">xmin</span>, xmax <span class="op">=</span> <span class="va">xmax</span>, ymin <span class="op">=</span> <span class="va">ymin</span>, transcripts <span class="op">=</span> <span class="va">transcripts</span>,</span>
-<span>        strand <span class="op">=</span> <span class="va">strand</span>, track <span class="op">=</span> <span class="va">track</span>, fill <span class="op">=</span> <span class="va">kind</span><span class="op">)</span>,</span>
-<span>    exon_height <span class="op">=</span> <span class="fl">0.5</span>, colour <span class="op">=</span> <span class="cn">NA</span></span>
-<span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_gene</span><span class="op">(</span></span>
-<span>    data <span class="op">=</span> <span class="va">native_mhc_arrows</span>,</span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>xmin <span class="op">=</span> <span class="va">xmin</span>, xmax <span class="op">=</span> <span class="va">xmax</span>, ymin <span class="op">=</span> <span class="va">ymin</span>, transcripts <span class="op">=</span> <span class="va">transcripts</span>,</span>
-<span>        strand <span class="op">=</span> <span class="va">strand</span>, track <span class="op">=</span> <span class="va">track</span>, fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html" class="external-link">I</a></span><span class="op">(</span><span class="va">ortholog_fill</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>    exon_height <span class="op">=</span> <span class="fl">0.5</span>, show.legend <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span>  <span class="op">)</span></span></code></pre></div>
-<p><code>xmin</code>/<code>xmax</code> are display coordinates,
-<code>ymin</code> is the bottom of the gene lane,
-<code>transcripts</code> groups the rows, and <code>strand</code>
-controls the arrow direction. <code>fill = I(ortholog_fill)</code>
-bypasses the ggplot2 color scale, so each native arrow keeps the exact
-RGB value from <code>colors.txt</code>. The shared legend is supplied by
-the heads in the next step, not by this layer.</p>
-<p>At this point <code>p</code> contains only the gene arrows: no heads
-and no ribbons.</p>
-</div>
-<div class="section level2">
-<h2 id="step-4--add-the-mhc-heads-with-geom_gene_lollipop">Step 4. Add the MHC heads with
-<code>geom_gene_lollipop()</code><a class="anchor" aria-label="anchor" href="#step-4--add-the-mhc-heads-with-geom_gene_lollipop"></a>
-</h2>
-<p>Many MHC genes are only a few kilobases long, too small for a
-readable label at the native scale. The figure therefore adds one
-enlarged directional head per gene, anchored at the midpoint of the same
-curated span. The head is a fixed physical size; the small native arrow
-still carries the true span.</p>
-<p>The curated table is extended with these plotting columns:</p>
-<table class="table">
-<colgroup>
-<col width="50%">
-<col width="50%">
-</colgroup>
-<thead><tr class="header">
-<th>Column</th>
-<th>Meaning</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td><code>true_midpoint</code></td>
-<td>midpoint of the curated span in display coordinates</td>
-</tr>
-<tr class="even">
-<td><code>display_oriented_strand</code></td>
-<td>strand flipped for a reverse-oriented track</td>
-</tr>
-<tr class="odd">
-<td><code>gene_label</code></td>
-<td>source gene name, with <code>*</code> for a pseudogene</td>
-</tr>
-<tr class="even">
-<td><code>kind</code></td>
-<td>color/legend key (ortholog class, pseudogene, other gene)</td>
-</tr>
-<tr class="odd">
-<td><code>head_row</code></td>
-<td>one of six shared physical rows for that source gene key</td>
-</tr>
-</tbody>
-</table>
-<p><code>head_row</code> is the key to the layout. Each of the 41 source
-gene keys is assigned a fixed row (1-6) from a template, so the same
-gene appears at the same height in every haplotype even when its native
-position differs. Distinct duplicated copies remain separate heads and
-are placed side by side on that row. An empty slot is a layout vacancy,
-not evidence that the gene is absent.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="../reference/geom_gene_lollipop.html">geom_gene_lollipop</a></span><span class="op">(</span></span>
-<span>  data <span class="op">=</span> <span class="va">mhc</span>,</span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">true_midpoint</span>, y <span class="op">=</span> <span class="fl">0</span>, strand <span class="op">=</span> <span class="va">display_oriented_strand</span>,</span>
-<span>      label <span class="op">=</span> <span class="va">gene_label</span>, fill <span class="op">=</span> <span class="va">kind</span>, track <span class="op">=</span> <span class="va">track</span>, head_row <span class="op">=</span> <span class="va">head_row</span><span class="op">)</span>,</span>
-<span>  headroom <span class="op">=</span> <span class="fl">8</span>,</span>
-<span>  head_layout <span class="op">=</span> <span class="st">"columns"</span>,</span>
-<span>  head_height_mm <span class="op">=</span> <span class="fl">4</span>,</span>
-<span>  padding_mm <span class="op">=</span> <span class="fl">0.6</span>,</span>
-<span>  tip_mm <span class="op">=</span> <span class="fl">1.8</span>,</span>
-<span>  gap_mm <span class="op">=</span> <span class="fl">0.8</span>,</span>
-<span>  row_gap_mm <span class="op">=</span> <span class="fl">0.8</span>,</span>
-<span>  stem_height_mm <span class="op">=</span> <span class="fl">1.5</span>,</span>
-<span>  family <span class="op">=</span> <span class="st">"Times"</span>,</span>
-<span>  size <span class="op">=</span> <span class="fl">8</span> <span class="op">/</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="va"><a href="https://ggplot2.tidyverse.org/reference/graphical-units.html" class="external-link">.pt</a></span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<p><code>y = 0</code> is the gene anchor line and
-<code>headroom = 8</code> is the y-space above it that the heads may
-use. The <code>*_mm</code> arguments are physical sizes, not data units,
-so the heads stay legible when the figure is exported at 180 mm width.
-The stems rise from the exact midpoint ticks and fan into their columns;
-the layout is measured later and converted into panel heights.</p>
-</div>
-<div class="section level2">
-<h2 id="step-5--connect-haplotypes-with-geom_nuclink">Step 5. Connect haplotypes with <code>geom_nuclink()</code><a class="anchor" aria-label="anchor" href="#step-5--connect-haplotypes-with-geom_nuclink"></a>
-</h2>
-<p>The last data layer is the nucleotide links. One
-<code><a href="../reference/geom_nuclink.html">geom_nuclink()</a></code> call is added for each adjacent pair of
-haplotypes, using the stored <code>SynPairAlignment</code>:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw">for</span> <span class="op">(</span><span class="va">nm</span> <span class="kw">in</span> <span class="va">pair_names</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">p</span> <span class="op">&lt;-</span> <span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="../reference/geom_nuclink.html">geom_nuclink</a></span><span class="op">(</span></span>
-<span>    alignment <span class="op">=</span> <span class="va">nm</span>,</span>
-<span>    fill <span class="op">=</span> <span class="st">"grey60"</span>,</span>
-<span>    colour <span class="op">=</span> <span class="cn">NA</span>,</span>
-<span>    alpha <span class="op">=</span> <span class="fl">0.3</span></span>
+<code class="sourceCode R"><span><span class="va">comparison</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SynSpecies.html">SynSpecies</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"Three MHC haplotypes"</span><span class="op">)</span></span>
+<span><span class="kw">for</span> <span class="op">(</span><span class="va">id</span> <span class="kw">in</span> <span class="va">haplotype_ids</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">w</span> <span class="op">&lt;-</span> <span class="va">windows</span><span class="op">[</span><span class="va">windows</span><span class="op">$</span><span class="va">track</span> <span class="op">==</span> <span class="va">id</span>, <span class="op">]</span></span>
+<span>  <span class="va">individual</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SynIndividual.html">SynIndividual</a></span><span class="op">(</span></span>
+<span>    id <span class="op">=</span> <span class="va">id</span>,</span>
+<span>    annotation_file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">demo_dir</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">id</span>, <span class="st">".gff3"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    annotation_format <span class="op">=</span> <span class="st">"gff"</span>,</span>
+<span>    metadata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>assembly <span class="op">=</span> <span class="va">w</span><span class="op">$</span><span class="va">assembly</span>, chromosome <span class="op">=</span> <span class="va">w</span><span class="op">$</span><span class="va">chr</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
-<span><span class="op">}</span></span></code></pre></div>
-<p>Each row of <code>links.tsv</code> is one ungapped alignment block:
-an interval on the target track (<code>tspecies</code>,
-<code>tstart</code>, <code>tend</code>) aligned to an interval on the
-query track (<code>qspecies</code>, <code>qstart</code>,
-<code>qend</code>), with <code>strand</code> and <code>identity</code>.
-The layer maps both intervals into the link panel between the two
-annotation rows and draws a quadrilateral (four vertices) for the block.
-In this figure there are <strong>624 blocks</strong> across the 12
-adjacent pairs, all drawn with the same grey fill and transparency.</p>
-<p>The blocks were regenerated with minimap2 <code>asm20</code> from the
-exact extracted native sequences, not taken from the unavailable
-original Fig. 3c plot data. Blocks are split at indels of at least 1 kb;
-blocks shorter than 500 bp or from parent alignments below 70% identity
-are omitted for display.</p>
+<span>  <span class="va">comparison</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_individual.html">add_individual</a></span><span class="op">(</span><span class="va">comparison</span>, <span class="va">individual</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span><span class="fu"><a href="../reference/individual_names.html">individual_names</a></span><span class="op">(</span><span class="va">comparison</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "SSYh1" "GGOh1" "HSAh1"</span></span></code></pre></div>
+<p>Each feature annotation stores the native gene spans, strand, source
+label, and a role identifying either curated MHC or background
+context.</p>
+</div>
 <div class="section level3">
-<h3 id="what-the-ribbons-are---and-are-not">What the ribbons are - and are not<a class="anchor" aria-label="anchor" href="#what-the-ribbons-are---and-are-not"></a>
+<h3 id="attach-the-two-direct-alignments">Attach the two direct alignments<a class="anchor" aria-label="anchor" href="#attach-the-two-direct-alignments"></a>
 </h3>
-<p>The ribbons are <strong>pairwise alignments</strong>, not a
-difference track. They show where two haplotype sequences align and
-where the alignment breaks. They do not measure base-level nucleotide
-differences, expression, or repeat copy number. <code>identity</code> is
-stored in the table and could be mapped to <code>fill</code>, but this
-figure keeps every ribbon grey.</p>
-<p>If by “replica sequence” you mean duplicated or repetitive sequence:
-the links do not classify repeats. A tandem array or a duplication may
-produce repeated or non-colinear blocks, and an indel appears as a break
-between blocks, but that is an alignment pattern, not a repeat call.
-Repeats and segmental duplications need a separate annotation layer;
-they are not inferred from the ribbons.</p>
+<p>The upper haplotype is the target and the lower haplotype is the
+query. Use the same individual IDs as above:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">haplotype_ids</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1L</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">target</span> <span class="op">&lt;-</span> <span class="va">haplotype_ids</span><span class="op">[</span><span class="va">i</span><span class="op">]</span></span>
+<span>  <span class="va">query</span> <span class="op">&lt;-</span> <span class="va">haplotype_ids</span><span class="op">[</span><span class="va">i</span> <span class="op">+</span> <span class="fl">1L</span><span class="op">]</span></span>
+<span>  <span class="va">name</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">target</span>, <span class="va">query</span>, sep <span class="op">=</span> <span class="st">"_"</span><span class="op">)</span></span>
+<span>  <span class="va">comparison</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_pairwise_alignment.html">add_pairwise_alignment</a></span><span class="op">(</span><span class="va">comparison</span>, <span class="fu"><a href="../reference/SynPairAlignment.html">SynPairAlignment</a></span><span class="op">(</span></span>
+<span>    name <span class="op">=</span> <span class="va">name</span>,</span>
+<span>    target_individual <span class="op">=</span> <span class="va">target</span>,</span>
+<span>    query_individual <span class="op">=</span> <span class="va">query</span>,</span>
+<span>    file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">demo_dir</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">name</span>, <span class="st">".paf"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    format <span class="op">=</span> <span class="st">"paf"</span></span>
+<span>  <span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span><span class="va">alignment_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">comparison</span><span class="op">@</span><span class="va">pairwise_alignments</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">vapply</a></span><span class="op">(</span><span class="va">alignment_names</span>, <span class="kw">function</span><span class="op">(</span><span class="va">name</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="fu"><a href="../reference/pairwise_alignment_data.html">pairwise_alignment_data</a></span><span class="op">(</span><span class="va">comparison</span>, alignment <span class="op">=</span> <span class="va">name</span><span class="op">)</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">integer</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; SSYh1_GGOh1 GGOh1_HSAh1 </span></span>
+<span><span class="co">#&gt;         108          44</span></span></code></pre></div>
+<p>These are direct minimap2 alignments of the selected native DNA
+windows. The Siamang-Gorilla comparison uses <strong>H1 in both
+species</strong>. It is not inferred through a removed haplotype. Large
+indels split the alignment into ribbon spans; short internal indels
+remain within each span.</p>
+</div>
+<div class="section level3">
+<h3 id="prepare-the-shared-gene-lollipop-grid">Prepare the shared gene-lollipop grid<a class="anchor" aria-label="anchor" href="#prepare-the-shared-gene-lollipop-grid"></a>
+</h3>
+<p>Select functional MHC genes from the annotations already attached to
+the object. Use their curated source keys to identify matching genes,
+and Human CHM13 to define the reference gene order:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mhc_order</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"F"</span>, <span class="st">"G"</span>, <span class="st">"H"</span>, <span class="st">"OKO"</span>, <span class="st">"A"</span>, <span class="st">"J"</span>, <span class="st">"E"</span>, <span class="st">"C"</span>, <span class="st">"B"</span>, <span class="st">"DRA"</span>,</span>
+<span>  <span class="st">"DRB3"</span>, <span class="st">"DRB5"</span>, <span class="st">"DRB1"</span>, <span class="st">"DQA1"</span>, <span class="st">"DQB1"</span>, <span class="st">"DQA2"</span>, <span class="st">"DQB2"</span>, <span class="st">"DOB"</span>,</span>
+<span>  <span class="st">"DMB"</span>, <span class="st">"DMA"</span>, <span class="st">"DOA"</span>, <span class="st">"DPA1"</span>, <span class="st">"DPB1"</span><span class="op">)</span></span>
+<span><span class="va">comparison</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/prepare_gene_lollipop.html">prepare_gene_lollipop</a></span><span class="op">(</span><span class="va">comparison</span>,</span>
+<span>  name <span class="op">=</span> <span class="st">"mhc"</span>, reference <span class="op">=</span> <span class="st">"HSAh1"</span>, key <span class="op">=</span> <span class="st">"plot_label"</span>,</span>
+<span>  where <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>gene_role <span class="op">=</span> <span class="st">"MHC"</span><span class="op">)</span>, nrow <span class="op">=</span> <span class="fl">4</span>, ncol <span class="op">=</span> <span class="fl">6</span>,</span>
+<span>  order <span class="op">=</span> <span class="va">mhc_order</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">mhc_genes</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/query_gene_lollipop.html">query_gene_lollipop</a></span><span class="op">(</span><span class="va">comparison</span>, component <span class="op">=</span> <span class="st">"genes"</span><span class="op">)</span></span>
+<span><span class="va">mhc_slots</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/query_gene_lollipop.html">query_gene_lollipop</a></span><span class="op">(</span><span class="va">comparison</span>, component <span class="op">=</span> <span class="st">"slots"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># The example helper prepares only the grey native-span background view.</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/source.html" class="external-link">source</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">demo_dir</span>, <span class="st">"prepare-mhc-example.R"</span><span class="op">)</span>, local <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">comparison</span> <span class="op">&lt;-</span> <span class="fu">prepare_mhc_context</span><span class="op">(</span><span class="va">comparison</span><span class="op">)</span></span>
+<span><span class="va">context_genes</span> <span class="op">&lt;-</span> <span class="fu">mhc_plot_data</span><span class="op">(</span><span class="va">comparison</span>, <span class="st">"context"</span><span class="op">)</span></span>
+<span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  haplotype <span class="op">=</span> <span class="va">windows</span><span class="op">$</span><span class="va">label</span>,</span>
+<span>  MHC <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">mhc_genes</span><span class="op">$</span><span class="va">track</span>, <span class="va">haplotype_ids</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  background <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">context_genes</span><span class="op">$</span><span class="va">track</span>, <span class="va">haplotype_ids</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">)</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<table class="table">
+<thead><tr class="header">
+<th align="left">haplotype</th>
+<th align="right">MHC</th>
+<th align="right">background</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">Siamang H1</td>
+<td align="right">18</td>
+<td align="right">138</td>
+</tr>
+<tr class="even">
+<td align="left">Gorilla H1</td>
+<td align="right">21</td>
+<td align="right">121</td>
+</tr>
+<tr class="odd">
+<td align="left">Human CHM13</td>
+<td align="right">19</td>
+<td align="right">184</td>
+</tr>
+</tbody>
+</table>
+<p><code><a href="../reference/prepare_gene_lollipop.html">prepare_gene_lollipop()</a></code> stores native gene anchors and a
+shared <strong>four-row, six-column</strong> grid inside the Syn object.
+Matching keys occupy the same cell in every haplotype. The geom will
+discover this preparation automatically; use
+<code>lollipop_layout = "mhc"</code> when the object contains several
+prepared grids.</p>
+<p>Reference order is the default. The selected human genes lack
+<code>H</code>, <code>OKO</code>, <code>J</code>, and <code>DRB3</code>;
+flanking genes do not uniquely order every insertion relative to the
+other human genes. <code>mhc_order</code> records the explicit display
+order for this curated comparison instead of manually assigning rows or
+columns. For data with unambiguous flanks, omit <code>order</code> to
+assign the order automatically.</p>
+<p><code><a href="../reference/query_gene_lollipop.html">query_gene_lollipop()</a></code> lets us inspect both the native
+genes and slot occupancy before plotting. The small example helper is
+only for the grey background spans; it does not compute lollipop data or
+head positions.</p>
+<p>Prepare a five-row chain and store its genomic bounds before
+plotting:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">comparison</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/store_chain_layout.html">store_chain_layout</a></span><span class="op">(</span><span class="va">comparison</span>, free <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x <span class="op">=</span> <span class="cn">TRUE</span>, y <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="kw">for</span> <span class="op">(</span><span class="va">id</span> <span class="kw">in</span> <span class="va">haplotype_ids</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">w</span> <span class="op">&lt;-</span> <span class="va">windows</span><span class="op">[</span><span class="va">windows</span><span class="op">$</span><span class="va">track</span> <span class="op">==</span> <span class="va">id</span>, <span class="op">]</span></span>
+<span>  <span class="va">comparison</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/set_panel_xlim.html">set_panel_xlim</a></span><span class="op">(</span><span class="va">comparison</span>, individual <span class="op">=</span> <span class="va">id</span>,</span>
+<span>    xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">w</span><span class="op">$</span><span class="va">start</span>, <span class="va">w</span><span class="op">$</span><span class="va">end</span><span class="op">)</span>, xlim_chr <span class="op">=</span> <span class="va">w</span><span class="op">$</span><span class="va">chr</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span><span class="va">comparison</span><span class="op">@</span><span class="va">layout</span><span class="op">@</span><span class="va">panels</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PANEL"</span>, <span class="st">"track"</span>, <span class="st">"panel_type"</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="co">#&gt;   PANEL            track panel_type</span></span>
+<span><span class="co">#&gt; 1     1            SSYh1 annotation</span></span>
+<span><span class="co">#&gt; 2     2 link_SSYh1_GGOh1       link</span></span>
+<span><span class="co">#&gt; 3     3            GGOh1 annotation</span></span>
+<span><span class="co">#&gt; 4     4 link_GGOh1_HSAh1       link</span></span>
+<span><span class="co">#&gt; 5     5            HSAh1 annotation</span></span>
+<span></span>
+<span><span class="co"># Reuse the same annotations for the first two stages, without link rows.</span></span>
+<span><span class="va">annotation_view</span> <span class="op">&lt;-</span> <span class="va">comparison</span></span>
+<span><span class="va">annotation_panels</span> <span class="op">&lt;-</span> <span class="va">comparison</span><span class="op">@</span><span class="va">layout</span><span class="op">@</span><span class="va">panels</span></span>
+<span><span class="va">annotation_panels</span> <span class="op">&lt;-</span> <span class="va">annotation_panels</span><span class="op">[</span><span class="va">annotation_panels</span><span class="op">$</span><span class="va">panel_type</span> <span class="op">==</span> <span class="st">"annotation"</span>, <span class="op">]</span></span>
+<span><span class="va">annotation_panels</span><span class="op">$</span><span class="va">PANEL</span> <span class="op">&lt;-</span> <span class="va">annotation_panels</span><span class="op">$</span><span class="va">ROW</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">annotation_panels</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu">species_layout</span><span class="op">(</span><span class="va">annotation_view</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/SynLayout.html">SynLayout</a></span><span class="op">(</span>panels <span class="op">=</span> <span class="va">annotation_panels</span>,</span>
+<span>  free <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x <span class="op">=</span> <span class="cn">TRUE</span>, y <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>The complete object has three annotation panels and two link panels.
+The annotation-only view reuses its individuals, annotations, and
+prepared gene data. Its layout contains only the three annotation
+rows.</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="step-6--tune-the-link-panels-with-facet_genomics">Step 6. Tune the link panels with <code>facet_genomics()</code><a class="anchor" aria-label="anchor" href="#step-6--tune-the-link-panels-with-facet_genomics"></a>
+<h2 id="build-the-plot-layer-by-layer">Build the plot layer by layer<a class="anchor" aria-label="anchor" href="#build-the-plot-layer-by-layer"></a>
 </h2>
-<p>The script also adds the VR1-VR3 lane and the class I/II spans before
-faceting. They are ordinary annotations below the gene anchors:</p>
+<div class="section level3">
+<h3 id="define-the-shared-style">Define the shared style<a class="anchor" aria-label="anchor" href="#define-the-shared-style"></a>
+</h3>
+<p>Each haplotype has its own native genomic axis. The selected windows
+have equal base-pair spans, so equal horizontal distances represent
+equal genomic distances. <code>reverse_x = "SSYh1"</code> reverses only
+the Siamang display; its tick labels count down and the ribbons inherit
+that source-panel transformation.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">base_size</span> <span class="op">&lt;-</span> <span class="fl">8</span></span>
+<span><span class="va">base_family</span> <span class="op">&lt;-</span> <span class="st">"serif"</span></span>
+<span><span class="va">strip_labels</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/setNames.html" class="external-link">setNames</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">windows</span><span class="op">$</span><span class="va">label</span>, <span class="va">windows</span><span class="op">$</span><span class="va">chr</span>, sep <span class="op">=</span> <span class="st">"\n"</span><span class="op">)</span>, <span class="va">haplotype_ids</span><span class="op">)</span></span>
+<span><span class="va">gene_limits</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/setNames.html" class="external-link">setNames</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.15</span>, <span class="fl">0.65</span><span class="op">)</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">haplotype_ids</span><span class="op">)</span><span class="op">)</span>, <span class="va">haplotype_ids</span><span class="op">)</span></span>
+<span><span class="va">head_limits</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/setNames.html" class="external-link">setNames</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.2</span>, <span class="fl">9</span><span class="op">)</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">haplotype_ids</span><span class="op">)</span><span class="op">)</span>, <span class="va">haplotype_ids</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">plot_style</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span></span>
+<span>    breaks <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org/reference/breaks_width.html" class="external-link">breaks_width</a></span><span class="op">(</span><span class="fl">1e6</span><span class="op">)</span>,</span>
+<span>    labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org/reference/label_number.html" class="external-link">label_number</a></span><span class="op">(</span>scale <span class="op">=</span> <span class="fl">1e-6</span>, suffix <span class="op">=</span> <span class="st">" Mb"</span>, accuracy <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span>,</span>
+<span>    expand <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/expansion.html" class="external-link">expansion</a></span><span class="op">(</span>mult <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>, oob <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="va"><a href="https://scales.r-lib.org/reference/oob.html" class="external-link">oob_keep</a></span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="../reference/facet_genomics.html">facet_genomics</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">track</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">1</span>, scales <span class="op">=</span> <span class="st">"free_x"</span>,</span>
+<span>    strip.position <span class="op">=</span> <span class="st">"left"</span>, reverse_x <span class="op">=</span> <span class="st">"SSYh1"</span>,</span>
+<span>    link_panel_height <span class="op">=</span> <span class="fl">0.25</span>, link_axis <span class="op">=</span> <span class="st">"none"</span>, link_strip <span class="op">=</span> <span class="st">"blank"</span>,</span>
+<span>    annotation_axis <span class="op">=</span> <span class="st">"all"</span>, labeller <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/as_labeller.html" class="external-link">as_labeller</a></span><span class="op">(</span><span class="va">strip_labels</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="cn">NULL</span>, y <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="../reference/theme_ggexon_track.html">theme_ggexon_track</a></span><span class="op">(</span>base_size <span class="op">=</span> <span class="va">base_size</span>, base_family <span class="op">=</span> <span class="va">base_family</span>,</span>
+<span>    show_x_axis <span class="op">=</span> <span class="cn">TRUE</span>, show_y_axis <span class="op">=</span> <span class="cn">FALSE</span>, show_x_grid <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>    show_legend <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="../reference/theme_ggexon_side_strips.html">theme_ggexon_side_strips</a></span><span class="op">(</span><span class="st">"left"</span>, base_size <span class="op">=</span> <span class="va">base_size</span>, face <span class="op">=</span> <span class="st">"plain"</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>strip.text.y.left <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>,</span>
+<span>    panel.spacing.y <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">1.5</span>, <span class="st">"mm"</span><span class="op">)</span>,</span>
+<span>    plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">4</span>, <span class="fl">4</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="draw-native-gene-spans">Draw native gene spans<a class="anchor" aria-label="anchor" href="#draw-native-gene-spans"></a>
+</h3>
+<p>Draw background genes in grey and MHC genes in their source ortholog
+colours. Both layers use actual gene widths and strands. Colours pass
+directly from the stored annotation through the prepared views:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">gene_layers</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="../reference/geom_genetag.html">geom_genetag</a></span><span class="op">(</span>data <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">model</span><span class="op">)</span> <span class="fu">mhc_plot_data</span><span class="op">(</span><span class="va">model</span>, <span class="st">"context"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>xmin <span class="op">=</span> <span class="va">xmin</span>, xmax <span class="op">=</span> <span class="va">xmax</span>, y <span class="op">=</span> <span class="va">ymin</span> <span class="op">+</span> <span class="fl">0.15</span>,</span>
+<span>      strand <span class="op">=</span> <span class="va">strand</span>, track <span class="op">=</span> <span class="va">track</span><span class="op">)</span>,</span>
+<span>    exon_height <span class="op">=</span> <span class="fl">0.3</span>, show_label <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>    fill <span class="op">=</span> <span class="st">"grey70"</span>, colour <span class="op">=</span> <span class="cn">NA</span>, inherit.aes <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="../reference/geom_genetag.html">geom_genetag</a></span><span class="op">(</span>data <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">model</span><span class="op">)</span> <span class="fu">mhc_plot_data</span><span class="op">(</span><span class="va">model</span>, <span class="st">"MHC"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>xmin <span class="op">=</span> <span class="va">xmin</span>, xmax <span class="op">=</span> <span class="va">xmax</span>, y <span class="op">=</span> <span class="fl">0.15</span>,</span>
+<span>      strand <span class="op">=</span> <span class="va">strand</span>, track <span class="op">=</span> <span class="va">track</span>, fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html" class="external-link">I</a></span><span class="op">(</span><span class="va">fill</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    exon_height <span class="op">=</span> <span class="fl">0.3</span>, show_label <span class="op">=</span> <span class="cn">FALSE</span>, colour <span class="op">=</span> <span class="cn">NA</span>, inherit.aes <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">p_genes</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">annotation_view</span><span class="op">)</span> <span class="op">+</span> <span class="va">gene_layers</span> <span class="op">+</span> <span class="va">plot_style</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/scale_panel_annotation.html">scale_panel_annotation</a></span><span class="op">(</span><span class="st">"free_y"</span>, limits <span class="op">=</span> <span class="va">gene_limits</span><span class="op">)</span></span>
+<span><span class="va">p_genes</span></span></code></pre></div>
+<p><img src="mhc-continuous-demo_files/figure-html/mhc-gene-spans-1.png" class="r-plt" alt="Three compact native-coordinate MHC regions, ordered Siamang H1, Gorilla H1, and Human CHM13, with coloured functional MHC gene arrows and grey background genes." width="1620"></p>
+<p>Small MHC arrows are expected at a megabase scale. They retain the
+curated span; their widths are not expanded to fit a label.</p>
+</div>
+<div class="section level3">
+<h3 id="add-the-gene-lollipop-heads">Add the gene-lollipop heads<a class="anchor" aria-label="anchor" href="#add-the-gene-lollipop-heads"></a>
+</h3>
+<p>Add <code><a href="../reference/geom_gene_lollipop.html">geom_gene_lollipop()</a></code> above the native gene row. Each
+functional MHC gene gets an enlarged directional head with its label
+inside and a leader anchored at the true midpoint of its stored span.
+The small arrows below retain gene widths; the heads have a fixed
+physical size for readability at this scale.</p>
+<p>The prepared row <strong>and column</strong> assignments put matching
+source keys in the same grid cell across haplotypes. Head columns are
+evenly spaced and aligned across the three panels, while the leaders
+retain native genomic anchors. Read each column from top to bottom, then
+move to the next column. Empty cells remain reserved and do not
+establish gene absence.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">head_layer</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/geom_gene_lollipop.html">geom_gene_lollipop</a></span><span class="op">(</span></span>
+<span>  y <span class="op">=</span> <span class="fl">0.3</span>, headroom <span class="op">=</span> <span class="fl">8</span>, max_rows <span class="op">=</span> <span class="fl">4</span>, max_shift_mm <span class="op">=</span> <span class="fl">85</span>,</span>
+<span>  head_height_mm <span class="op">=</span> <span class="fl">3.6</span>, padding_mm <span class="op">=</span> <span class="fl">0.5</span>, tip_mm <span class="op">=</span> <span class="fl">1.5</span>,</span>
+<span>  gap_mm <span class="op">=</span> <span class="fl">0.8</span>, row_gap_mm <span class="op">=</span> <span class="fl">0.7</span>, stem_height_mm <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  anchor_tick_mm <span class="op">=</span> <span class="fl">0.7</span>, fan_height_mm <span class="op">=</span> <span class="fl">1.8</span>,</span>
+<span>  lane_spacing_mm <span class="op">=</span> <span class="fl">0.5</span>, lane_clearance_mm <span class="op">=</span> <span class="fl">0.4</span>,</span>
+<span>  stem_linewidth <span class="op">=</span> <span class="fl">0.18</span>, stem_halo_mm <span class="op">=</span> <span class="fl">0.1</span>,</span>
+<span>  size <span class="op">=</span> <span class="va">base_size</span> <span class="op">/</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="va"><a href="https://ggplot2.tidyverse.org/reference/graphical-units.html" class="external-link">.pt</a></span>, family <span class="op">=</span> <span class="va">base_family</span>,</span>
+<span>  colour <span class="op">=</span> <span class="st">"grey35"</span>, linewidth <span class="op">=</span> <span class="fl">0.2</span>,</span>
+<span>  inherit.aes <span class="op">=</span> <span class="cn">FALSE</span>, show.legend <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">p_heads</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">annotation_view</span><span class="op">)</span> <span class="op">+</span> <span class="va">gene_layers</span> <span class="op">+</span> <span class="va">head_layer</span> <span class="op">+</span> <span class="va">plot_style</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/scale_panel_annotation.html">scale_panel_annotation</a></span><span class="op">(</span><span class="st">"free_y"</span>, limits <span class="op">=</span> <span class="va">head_limits</span><span class="op">)</span></span>
+<span><span class="va">p_heads</span></span></code></pre></div>
+<p><img src="mhc-continuous-demo_files/figure-html/mhc-gene-heads-1.png" class="r-plt" alt="Siamang H1, Gorilla H1, and Human CHM13 with enlarged directional gene-lollipop heads on four shared rows, labelled inside and connected to their native gene spans; grey background genes remain visible." width="1620"></p>
+<p><code>headroom</code> reserves y space above the native gene row. The
+<code>*_mm</code> arguments control head sizes and spacing on the output
+device. This regular grid uses an explicit 85 mm displacement allowance
+because its columns align across panels rather than following each local
+cluster. Native gene spans and leader anchors remain unchanged. The
+short labels are source keys such as <code>B</code>, <code>DRA</code>,
+and <code>DQB1</code>; species prefixes remain in the stored gene
+names.</p>
+</div>
+<div class="section level3">
+<h3 id="connect-the-haplotypes-with-nucleotide-ribbons">Connect the haplotypes with nucleotide ribbons<a class="anchor" aria-label="anchor" href="#connect-the-haplotypes-with-nucleotide-ribbons"></a>
+</h3>
+<p>Select the two alignments stored in <code>comparison</code> by name,
+then use the complete five-panel object:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">link_layers</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">alignment_names</span>, <span class="kw">function</span><span class="op">(</span><span class="va">name</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="../reference/geom_nuclink.html">geom_nuclink</a></span><span class="op">(</span>alignment <span class="op">=</span> <span class="va">name</span>, fill <span class="op">=</span> <span class="st">"grey65"</span>, colour <span class="op">=</span> <span class="cn">NA</span>, alpha <span class="op">=</span> <span class="fl">0.4</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">p_mhc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">comparison</span><span class="op">)</span> <span class="op">+</span> <span class="va">gene_layers</span> <span class="op">+</span> <span class="va">head_layer</span> <span class="op">+</span> <span class="va">link_layers</span> <span class="op">+</span></span>
+<span>  <span class="va">plot_style</span> <span class="op">+</span> <span class="fu"><a href="../reference/scale_panel_annotation.html">scale_panel_annotation</a></span><span class="op">(</span><span class="st">"free_y"</span>, limits <span class="op">=</span> <span class="va">head_limits</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">p_mhc</span></span></code></pre></div>
+<div class="figure">
+<img src="mhc-continuous-demo_files/figure-html/mhc-with-links-1.png" class="r-plt" alt="A compact five-panel MHC comparison with Siamang H1, Gorilla H1, and Human CHM13, enlarged labelled gene-lollipop heads on a shared grid connected to native functional MHC gene spans, grey background genes, and two direct nucleotide-alignment panels." width="1620"><p class="caption">
+Curated MHC and CAT/RefSeq background annotations from the <a href="https://doi.org/10.1038/s41586-025-08816-3" class="external-link">Yoo et al. (2025)
+browser</a> accompany direct minimap2 alignments of Siamang H1, Gorilla
+H1, and Human CHM13; enlarged heads occupy a shared display grid and
+leaders mark native gene midpoints.
+</p>
+</div>
+<p>There are <strong>108 Siamang-Gorilla</strong> and <strong>44
+Gorilla-human</strong> ribbon spans. They show aligned DNA intervals,
+including short internal indels. Gaps between ribbons can reflect
+alignment filtering or unaligned sequence and do not establish gene
+absence. Source functional status is an annotation category, not
+experimental validation.</p>
+<p><code>link_panel_height = 0.25</code> keeps each link row one quarter
+of an annotation row’s relative height. Reduce this value for a tighter
+figure, or use a physical height such as
+<code>grid::unit(7, "mm")</code>:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="va">p</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_rect</a></span><span class="op">(</span></span>
-<span>    data <span class="op">=</span> <span class="va">regions</span>,</span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>xmin <span class="op">=</span> <span class="va">xmin</span>, xmax <span class="op">=</span> <span class="va">xmax</span>, ymin <span class="op">=</span> <span class="va">ymin</span>, ymax <span class="op">=</span> <span class="va">ymax</span><span class="op">)</span>,</span>
-<span>    fill <span class="op">=</span> <span class="st">"grey85"</span>, colour <span class="op">=</span> <span class="cn">NA</span>, inherit.aes <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_segment.html" class="external-link">geom_segment</a></span><span class="op">(</span></span>
-<span>    data <span class="op">=</span> <span class="va">class_spans</span>,</span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">xmin</span>, xend <span class="op">=</span> <span class="va">xmax</span>, y <span class="op">=</span> <span class="va">y</span>, yend <span class="op">=</span> <span class="va">y</span><span class="op">)</span>,</span>
-<span>    colour <span class="op">=</span> <span class="st">"grey55"</span>, inherit.aes <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span>  <span class="op">)</span></span></code></pre></div>
-<p>The renderer computes the shared VR lane’s <code>ymin</code> and
-<code>ymax</code> from <code>vr_top</code> and <code>vr_height</code>;
-<code>regions</code> supplies the x intervals.</p>
-<p>Faceting now creates one annotation panel per track and one link
-panel between each adjacent pair. The ratio between those two panel
-types is controlled by <code>link_panel_height</code>:</p>
+<code class="sourceCode R"><span><span class="va">p_mhc</span> <span class="op">+</span> <span class="fu"><a href="../reference/facet_genomics.html">facet_genomics</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">track</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">1</span>, scales <span class="op">=</span> <span class="st">"free_x"</span>,</span>
+<span>  strip.position <span class="op">=</span> <span class="st">"left"</span>, reverse_x <span class="op">=</span> <span class="st">"SSYh1"</span>,</span>
+<span>  link_panel_height <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">7</span>, <span class="st">"mm"</span><span class="op">)</span>,</span>
+<span>  link_axis <span class="op">=</span> <span class="st">"none"</span>, link_strip <span class="op">=</span> <span class="st">"blank"</span>, annotation_axis <span class="op">=</span> <span class="st">"all"</span>,</span>
+<span>  labeller <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/as_labeller.html" class="external-link">as_labeller</a></span><span class="op">(</span><span class="va">strip_labels</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+</div>
+</div>
+<div class="section level2">
+<h2 id="export-the-figure">Export the figure<a class="anchor" aria-label="anchor" href="#export-the-figure"></a>
+</h2>
+<p>Keep the three plot stages as reusable objects. Export the complete
+figure at a compact width and height:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="va">p</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/facet_genomics.html">facet_genomics</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">track</span><span class="op">)</span>,</span>
-<span>    scales <span class="op">=</span> <span class="st">"free"</span>,</span>
-<span>    ncol <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>    strip.position <span class="op">=</span> <span class="st">"left"</span>,</span>
-<span>    xlim <span class="op">=</span> <span class="va">panel_xlim</span>,</span>
-<span>    xlim_chr <span class="op">=</span> <span class="va">panel_chr</span>,</span>
-<span>    link_panel_height <span class="op">=</span> <span class="fl">0.35</span>,</span>
-<span>    link_axis <span class="op">=</span> <span class="st">"none"</span>,</span>
-<span>    link_strip <span class="op">=</span> <span class="st">"blank"</span>,</span>
-<span>    labeller <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labeller.html" class="external-link">labeller</a></span><span class="op">(</span>track <span class="op">=</span> <span class="va">strip_labels</span><span class="op">)</span></span>
-<span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/scale_panel_annotation.html">scale_panel_annotation</a></span><span class="op">(</span><span class="st">"free_y"</span>, limits <span class="op">=</span> <span class="va">panel_limits</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/theme_ggexon_track.html">theme_ggexon_track</a></span><span class="op">(</span>base_family <span class="op">=</span> <span class="st">"Times"</span>, base_size <span class="op">=</span> <span class="fl">8</span>,</span>
-<span>                     show_x_grid <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/theme_ggexon_side_strips.html">theme_ggexon_side_strips</a></span><span class="op">(</span><span class="st">"left"</span>, base_size <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span></code></pre></div>
-<p><code>link_panel_height</code> is a <strong>relative</strong> height,
-not a millimetre value. A positive number is turned into a
-<code>null</code> grid unit relative to an ordinary panel row, so
-<code>0.35</code> makes each link panel roughly 35% of a standard
-annotation panel. Raise it when the ribbons are too flat to read; lower
-it when the links dominate the figure. Values around 0.2-0.5 are usually
-enough. The final export later fixes the link panels at 8 mm after
-measuring the heads, because the annotation panels shrink or grow around
-their labels.</p>
-<p><code>scales = "free"</code> frees the y range for each annotation
-panel. The x limits are still the same <code>[0, max_bp]</code> range on
-every track, so the base-pair scale stays common even though the facet
-is “free”; the per-panel y limits are supplied through
-<code><a href="../reference/scale_panel_annotation.html">scale_panel_annotation()</a></code>. <code>link_axis = "none"</code>
-removes the axes from the link strips and
-<code>link_strip = "blank"</code> removes their strip labels. The
-left-side track labels come from
-<code><a href="../reference/theme_ggexon_side_strips.html">theme_ggexon_side_strips()</a></code>.</p>
-</div>
-<div class="section level2">
-<h2 id="step-7--measure-the-layout-fix-the-axes-and-export">Step 7. Measure the layout, fix the axes and export<a class="anchor" aria-label="anchor" href="#step-7--measure-the-layout-fix-the-axes-and-export"></a>
-</h2>
-<p>The figure is 180 mm wide, but its height cannot be fixed in advance:
-each MHC head contains a label whose rendered width depends on the font
-and the number of columns. The renderer therefore draws the gtable once
-on a roomy 1000 mm PDF and records every head’s device position through
-the <code>layout_callback</code> of <code><a href="../reference/geom_gene_lollipop.html">geom_gene_lollipop()</a></code>.
-It then gives each annotation panel exactly the height its heads need
-and gives every link panel a fixed 8 mm.</p>
-<p>Native axes are rebuilt in the same pass. The default bottom axis of
-each annotation panel is replaced with ticks in that track’s own
-one-based assembly coordinates; reverse-oriented tracks count down.
-Because the axis grobs are positioned through the shared display
-geometry, the tick spacing still proves the common base-pair scale.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">built</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ggexon_build.html">ggexon_build</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span>
-<span><span class="va">tab</span>   <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ggexon_gtable.html">ggexon_gtable</a></span><span class="op">(</span><span class="va">built</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># heads measured, panel heights assigned, native axes installed here</span></span>
-<span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span><span class="st">"mhc_continuous.pdf"</span>, <span class="va">tab</span>, width <span class="op">=</span> <span class="fl">180</span>, height <span class="op">=</span> <span class="va">measured_height_mm</span>,</span>
-<span>       units <span class="op">=</span> <span class="st">"mm"</span>, device <span class="op">=</span> <span class="va">cairo_pdf</span>, bg <span class="op">=</span> <span class="st">"white"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span><span class="st">"mhc_continuous.png"</span>, <span class="va">tab</span>, width <span class="op">=</span> <span class="fl">180</span>, height <span class="op">=</span> <span class="va">measured_height_mm</span>,</span>
-<span>       units <span class="op">=</span> <span class="st">"mm"</span>, dpi <span class="op">=</span> <span class="fl">150</span>, bg <span class="op">=</span> <span class="st">"white"</span><span class="op">)</span></span></code></pre></div>
-<p>The script fails loudly if the built object does not match the
-intended design. Its assertions and exported QC tables check, among
-other things:</p>
-<ul>
-<li>13 annotation panels, 12 link panels, no coverage panel;</li>
-<li>one identical bp-per-axis-unit value across all annotation
-scales;</li>
-<li>285 heads at the true midpoints, with the recorded strand, label and
-row;</li>
-<li>624 ribbon blocks, four vertices per block, correct target/query
-ownership;</li>
-<li>the shared VR lane, panel heights, figure dimensions and axis
-round-trips.</li>
-</ul>
-<p>The QC outputs are written beside the figure as
-<code>common-bp-scale-qc.tsv</code>,
-<code>native-geometry-qc.tsv</code>, <code>native-axis-qc.tsv</code>,
-<code>annotation-height-qc.tsv</code>, <code>link-qc.tsv</code>,
-<code>layout-qc.tsv</code> and <code>figure-dimensions.tsv</code>,
-together with the plotted tables.</p>
-<div class="section level3">
-<h3 id="gorilla-class-ii-detail">Gorilla class II detail<a class="anchor" aria-label="anchor" href="#gorilla-class-ii-detail"></a>
-</h3>
-<p>After composing the genes, heads, links and panel layout, the paired
-gorilla class II detail makes the h1/h2 differences easier to
-inspect:</p>
-<p><img src="figures/mhc-classii-comparison.png" class="r-plt" alt="Gorilla h2 and h1 class II detail with enlarged heads on shared rows, true-span gene arrows, grey context and nucleotide ribbons." width="100%"></p>
-</div>
-</div>
-<div class="section level2">
-<h2 id="reading-the-figure">Reading the figure<a class="anchor" aria-label="anchor" href="#reading-the-figure"></a>
-</h2>
-<p>The small arrows retain each gene’s true curated span and source
-ortholog color; the enlarged heads carry the readable labels and
-direction on six shared rows. An empty head slot is a layout vacancy,
-not evidence that the gene is absent. Occupied slots are read top to
-bottom within a column, then left to right.</p>
-<p>The grey VR1-VR3 bars are the published CHM13 variable-region
-intervals on the human track. On the ape tracks they show only the
-portions projected through human-to-ape chain blocks, so they describe
-shared comparative regions rather than independent ape-specific
-discordance. Asterisks mark pseudogene calls from the source annotation,
-not experimental validation.</p>
-<p>Context layers labelled “projected” are same-species Liftoff
-transfers that passed at least 95% exon coverage and 95% sequence
-identity. Five alternative shorter isoforms were recovered at the same
-threshold; nine complete models remain unresolved. Recoveries use
-shorter source isoforms, and their RNA support is partial and not
-haplotype-resolved. Projected context is visualization context, not a
-complete validated alternate-haplotype gene catalog, and gene counts
-have different ascertainment across released and projected tracks. The
-region boundaries and adjacent alignments are documented
-reconstructions, not exact reproductions of the source figure.</p>
-<p>Both versions are exported at 180 mm width, with height measured from
-the head layout. The original full vector PDF remains under
-<code>data-raw/ape_paper/results/mhc_continuous/figures/</code>; the
-compact version is under
-<code>data-raw/ape_paper/results/mhc_compact/figures/</code> and is
-shown above.</p>
-</div>
-<div class="section level2">
-<h2 id="reproducing-the-compact-and-full-figures">Reproducing the compact and full figures<a class="anchor" aria-label="anchor" href="#reproducing-the-compact-and-full-figures"></a>
-</h2>
-<p>The compact example is reproducible from the whole data object
-with:</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="ex">Rscript</span> data-raw/ape_paper/render_mhc_compact.R</span></code></pre></div>
-<p>That entry point executes the same read → subset → render sequence
-shown above. It reads the checked-in compact direct-alignment table, so
-rendering does not require rerunning minimap2 or fetching DNA.
-Regenerating those alignments uses
-<code>python3 data-raw/ape_paper/prepare_mhc_compact.py</code> and
-requires the previously acquired regional FASTA caches and minimap2.</p>
-<p>The original full view is displayed first above and is also available
-as the <a href="figures/mhc-continuous.png">13-track preview</a>. Its
-bounded inputs and figure are under
-<code>data-raw/ape_paper/results/mhc_continuous/</code>. From the
-repository root:</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="ex">Rscript</span> data-raw/ape_paper/render_mhc_continuous.R</span></code></pre></div>
-<p>That command uses the final merged inputs and writes both figure
-formats and the QC tables. Rebuilding the inputs from raw sources
-additionally requires the bounded fetch, Liftoff projection, minimap2
-and recovery steps documented in
-<code>data-raw/ape_paper/results/mhc_continuous/README.md</code>.
-<code>data-raw/</code> is source material and is not installed with the
-package, so this vignette embeds the verified previews instead of
-re-running the source-data renderer during site builds.</p>
+<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span><span class="st">"mhc-three-haplotypes.pdf"</span>, <span class="va">p_mhc</span>, width <span class="op">=</span> <span class="fl">9</span>, height <span class="op">=</span> <span class="fl">4.8</span>,</span>
+<span>  units <span class="op">=</span> <span class="st">"in"</span>, device <span class="op">=</span> <span class="fu">grDevices</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/r/grDevices/cairo.html" class="external-link">cairo_pdf</a></span>, bg <span class="op">=</span> <span class="st">"white"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span><span class="st">"mhc-three-haplotypes.png"</span>, <span class="va">p_mhc</span>, width <span class="op">=</span> <span class="fl">9</span>, height <span class="op">=</span> <span class="fl">4.8</span>,</span>
+<span>  units <span class="op">=</span> <span class="st">"in"</span>, dpi <span class="op">=</span> <span class="fl">300</span>, bg <span class="op">=</span> <span class="st">"white"</span><span class="op">)</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
@@ -731,7 +520,7 @@ re-running the source-data renderer during site builds.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

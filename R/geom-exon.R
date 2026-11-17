@@ -9,7 +9,7 @@ GeomExon <- ggproto("GeomExon", Geom,
                       extra_params = c("exon_height", "transcript_backbone_ratio", "transcript_arrow_ratio",
                                        "transcript_arrow_length", "transcript_backbone_fill",
                                        "transcript_backbone_colour", "na.rm", "x_translation", "subset", "annotation_type",
-                                       "breakdata", "species", "chr", "force_flat"),
+                                       "breakdata", "species", "chr", "force_flat", "genomic_layout"),
                       default_aes = aes(linewidth = 0, linejoin = "mitre", fill="black",
                         colour = NULL,
                         size = 15,
@@ -132,6 +132,7 @@ GeomExon <- ggproto("GeomExon", Geom,
                     draw_key = draw_key_polygon,
                     syn_data = function(x, layer) {
                       params <- syn_layer_params(layer)
+                      if (!is.null(params$genomic_layout)) return(.prepared_exon_layer_data(x, layer))
                       context <- layer$syn_plot_context %||% NULL
                       syn_to_exon_df(
                         x = x,
@@ -272,7 +273,7 @@ GeomExon2 <- ggproto("GeomExon2", GeomExon,
     "annotation_type", "breakdata", "species", "chr", "compress_introns",
     "intron_width", "intron_shape", "utr_height", "cds_height",
     "intron_peak", "chevron_direction", "arrow_width",
-    "transcript_backbone_fill", "transcript_backbone_colour"
+    "transcript_backbone_fill", "transcript_backbone_colour", "genomic_layout"
   ),
   default_aes = aes(
     linewidth = 0.4,
@@ -399,6 +400,9 @@ GeomExon2 <- ggproto("GeomExon2", GeomExon,
 #' @param data A data frame, `SynSpecies`, or `SynIndividual` object.
 #' @param stat,position Standard ggplot2 layer arguments.
 #' @param ... Additional parameters passed on to the layer.
+#' @param genomic_layout Optional prepared genomic layout name. Its stored
+#'   exon coordinates and height are used; independent intron compression and
+#'   coordinate overrides are disabled.
 #' @param na.rm If `FALSE`, missing values are removed with a warning.
 #' @param show.legend Logical. Should this layer be included in the legend?
 #' @param transcripts_track_ratio Optional transcript track ratio used by the
@@ -449,12 +453,27 @@ geom_exon2 <- function(mapping = NULL, data = NULL,
                        intron_peak = 0.35, arrow_width = NULL,
                        transcript_backbone_fill = NULL,
                        transcript_backbone_colour = NULL,
-                       inherit.aes = TRUE) {
+                       inherit.aes = TRUE, genomic_layout = NULL) {
+  if (!is.null(genomic_layout)) {
+    .genomic_name(genomic_layout, "genomic_layout")
+    if (!is.null(data) && !methods::is(data, "SynIndividual") && !methods::is(data, "SynSpecies"))
+      stop("A prepared genomic layout requires Syn object input.", call. = FALSE)
+    .prepared_mapping_arguments(mapping)
+    .prepared_mapping_arguments(list(...))
+    if (!identical(position, "identity") || !identical(stat, "identity"))
+      stop("Prepared geometry requires identity stat and position.", call. = FALSE)
+    if (!missing(compress_introns) && isTRUE(compress_introns))
+      stop("A prepared genomic layout supplies intron spacing; use compress_introns = FALSE.", call. = FALSE)
+    compress_introns <- FALSE
+    .prepared_geometry_arguments(match.call(), c("x_translation", "subset", "chr", "breakdata"))
+    if (!identical(annotation_type, "exon")) stop("Prepared genomic layouts provide exon rows.", call. = FALSE)
+  }
   intron_shape <- match.arg(intron_shape)
   chevron_direction <- match.arg(chevron_direction)
   params <- Filter(Negate(is.null), c(list(
     ...,
     na.rm = na.rm,
+    genomic_layout = genomic_layout,
     exon_height = exon_height,
     x_translation = x_translation,
     subset = subset,

@@ -30,7 +30,8 @@ geom_exon2(
   arrow_width = NULL,
   transcript_backbone_fill = NULL,
   transcript_backbone_colour = NULL,
-  inherit.aes = TRUE
+  inherit.aes = TRUE,
+  genomic_layout = NULL
 )
 }
 \arguments{
@@ -94,6 +95,10 @@ arrows. When \code{NULL}, ggexon preserves the existing inherited/default
 aesthetics for backwards compatibility.}
 
 \item{inherit.aes}{If \code{FALSE}, overrides inherited aesthetics.}
+
+\item{genomic_layout}{Optional prepared genomic layout name. Its stored
+exon coordinates and height are used; independent intron compression and
+coordinate overrides are disabled.}
 }
 \value{
 A ggplot2 layer using \code{GeomExon2}.

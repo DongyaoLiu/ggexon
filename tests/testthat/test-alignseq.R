@@ -123,12 +123,14 @@ test_that("long detail requires explicit narrower windows", {
   expect_error(alignseq_fixture(regions = c(105, 100)), "start")
 })
 
-test_that("reverse-strand callout edges connect in supplied alignment order", {
+test_that("reverse-strand callouts have one curved midpoint connector", {
   d <- alignseq_data(c(h = "ACGT", q = "ATGT"),
     data.frame(sequence = c("h", "q"), start = c(105, 700), strand = c("-", "+")),
     "h", details = c(102, 105), flank = 0)
   d <- d[d$sequence == "h", ]
-  gt <- ggplot2::ggplotGrob(ggplot2::ggplot() + geom_alignseq(data = d))
+  p <- ggplot2::ggplot() + geom_alignseq(data = d) +
+    ggplot2::scale_x_continuous(limits = c(0, 1000), expand = ggplot2::expansion(mult = 0))
+  gt <- ggplot2::ggplotGrob(p)
   find_geom <- function(g) c(if (identical(g$name, "geom_alignseq")) list(g),
     unlist(lapply(g$children, find_geom), recursive = FALSE),
     unlist(lapply(g$grobs, find_geom), recursive = FALSE))
@@ -140,15 +142,107 @@ test_that("reverse-strand callout edges connect in supplied alignment order", {
   starts <- which(!duplicated(ids))
   ends <- which(!duplicated(ids, fromLast = TRUE))
   x <- as.numeric(connectors$x); y <- as.numeric(connectors$y)
-  # Reverse-strand genomic endpoints stay in supplied alignment order.
-  expect_gt(x[starts[1]], x[starts[2]])
-  expect_lt(x[ends[1]], x[ends[2]])
+  expect_length(unique(ids), 1L)
+  expect_equal(x[starts], 0.1035)
+  texts <- Filter(function(g) inherits(g, "text"), find_geom(gt)[[1]]$children)
+  bases <- Filter(function(g) identical(as.character(g$label), c("A", "C", "G", "T")), texts)[[1]]
+  expect_equal(x[ends], mean(range(as.numeric(bases$x))))
   expect_true(all(diff(y[ids == ids[1]]) > 0))
   i <- which(ids == ids[1])
   straight <- x[i[1]] + (x[tail(i, 1)] - x[i[1]]) *
     (y[i] - y[i[1]]) / (y[tail(i, 1)] - y[i[1]])
   expect_gt(max(abs(x[i] - straight)), .01)
 
+})
+
+alignseq_test_grobs <- function(g) {
+  c(if (identical(g$name, "geom_alignseq")) list(g),
+    unlist(lapply(g$children, alignseq_test_grobs), recursive = FALSE),
+    unlist(lapply(g$grobs, alignseq_test_grobs), recursive = FALSE))
+}
+
+test_that("sequence positions move blocks while one stem retains its genomic midpoint", {
+  d <- alignseq_data(c(h = "ACGT", q = "ATGT"),
+    data.frame(sequence = c("h", "q"), start = c(100, 700), strand = "+"),
+    "h", details = c(100, 103), flank = 0)
+  d <- d[d$sequence == "h", ]
+  expected <- c(auto = 0.30, left = 0.30, center = 0.50, right = 0.89)
+  for (mode in c("markers", "rows")) for (position in names(expected)) {
+    p <- ggplot2::ggplot() + geom_alignseq(data = d, mode = mode,
+      sequence_position = position) +
+      ggplot2::scale_x_continuous(limits = c(0, 1000), expand = ggplot2::expansion(mult = 0))
+    g <- alignseq_test_grobs(ggplot2::ggplotGrob(p))[[1]]
+    texts <- Filter(function(g) inherits(g, "text"), g$children)
+    bases <- Filter(function(g) identical(as.character(g$label), c("A", "C", "G", "T")), texts)[[1]]
+    expect_equal(mean(range(as.numeric(bases$x))), unname(expected[position]))
+    paths <- Filter(function(g) inherits(g, "polyline"), g$children)
+    expect_length(paths, 1L)
+    stem <- paths[[1]]
+    expect_length(unique(stem$id), 1L)
+    expect_equal(as.numeric(stem$x)[1], 0.1015)
+    expect_equal(tail(as.numeric(stem$x), 1), unname(expected[position]))
+    expect_true(all(diff(as.numeric(bases$x)) > 0))
+  }
+  expect_error(geom_alignseq(data = d, sequence_position = "middle"), "auto.*left.*center.*right")
+})
+
+test_that("fixed sequence positions stack separate details without horizontal drift", {
+  d <- alignseq_fixture(details = data.frame(start = c(101, 103), end = c(101, 103)), flank = 0)
+  d <- d[d$sequence == "human", ]
+  p <- ggplot2::ggplot() + geom_alignseq(data = d, sequence_position = "center") +
+    ggplot2::scale_x_continuous(limits = c(0, 1000), expand = ggplot2::expansion(mult = 0))
+  g <- alignseq_test_grobs(ggplot2::ggplotGrob(p))[[1]]
+  texts <- Filter(function(g) inherits(g, "text"), g$children)
+  names <- Filter(function(g) identical(as.character(g$label), "human (reference)"), texts)
+  expect_length(names, 2L)
+  expect_equal(as.numeric(names[[1]]$x), as.numeric(names[[2]]$x))
+  expect_gt(abs(as.numeric(names[[1]]$y)-as.numeric(names[[2]]$y)), 0.1)
+  paths <- Filter(function(g) inherits(g, "polyline"), g$children)
+  expect_length(paths, 2L)
+  expect_true(all(vapply(paths, function(g) length(unique(g$id)) == 1L, logical(1))))
+  # Upper stems can cross a lower row: its nucleotide boxes and text must
+  # paint over the stem, rather than letting a late stem obscure the bases.
+  path_indices <- which(vapply(g$children, inherits, logical(1), "polyline"))
+  box_indices <- which(vapply(g$children, inherits, logical(1), "rect"))
+  text_indices <- which(vapply(g$children, inherits, logical(1), "text"))
+  expect_lt(max(path_indices), min(box_indices))
+  expect_lt(max(path_indices), min(text_indices))
+})
+
+test_that("fixed placement respects reversed panels after intron compression", {
+  d <- alignseq_fixture(details = c(101,103), flank = 1)
+  ex <- data.frame(xmin = c(99,104,899,904), xmax = c(101,106,901,906),
+    ymin = 1, transcripts = c("h","h","q","q"), strand = "+",
+    track = c("human","human","chimp","chimp"), type = "exon")
+  for (position in c("left", "center", "right")) {
+    p <- ggexon(ex, aes(xmin=xmin,xmax=xmax,ymin=ymin,transcripts=transcripts,
+      strand=strand,track=track,type=type)) +
+      geom_exon2(compress_introns=FALSE,annotation_type="all") +
+      geom_alignseq(data=d,mode="rows",sequence_position=position) +
+      facet_genomics(vars(track),scales="free_x",ncol=1,reverse_x=TRUE) +
+      scale_x_ggexon_genomic(intron_factor=10,match_by="track")
+    b <- ggexon_build(p)
+    for (species in c("human", "chimp")) {
+      own <- b@data[[2]][b@data[[2]]$sequence == species, ]
+      panel <- as.integer(own$PANEL[1])
+      g <- GeomAlignseq$draw_panel(own,b@layout$panel_params[[panel]],
+        b@plot@coordinates,mode="rows",sequence_position=position)
+      texts <- Filter(function(g) inherits(g,"text"),g$children)
+      bases <- Filter(function(g) length(g$label)==7L,texts)[[1]]
+      centre <- mean(range(as.numeric(bases$x)))
+      if (position=="left") expect_lt(centre,0.4)
+      if (position=="center") expect_equal(centre,0.5)
+      if (position=="right") expect_gt(centre,0.8)
+      expect_true(all(diff(as.numeric(bases$x))>0))
+      paths <- Filter(function(g) inherits(g,"polyline"),g$children)
+      expect_length(paths,1L)
+      expect_length(unique(paths[[1]]$id),1L)
+      expected <- b@plot@coordinates$transform(data.frame(
+        x=mean(range(own$x)),y=own$y[1]+.23),b@layout$panel_params[[panel]])$x
+      expect_equal(as.numeric(paths[[1]]$x)[1],expected)
+      expect_equal(tail(as.numeric(paths[[1]]$x),1),centre)
+    }
+  }
 })
 
 test_that("disjoint selections never concatenate omitted DNA into apparent alignment", {
@@ -224,4 +318,96 @@ test_that("sequence names and decimal y positions cannot merge independent rows"
   labels <- unlist(lapply(texts, function(x) as.character(x$label)))
   expect_true(all(c("a.1 (reference)", "a") %in% labels))
   expect_equal(sum(labels %in% c("A", "C", "G", "T")), 8L)
+})
+
+alignseq_test_rgb <- function(colours) unname(grDevices::col2rgb(colours))
+
+test_that("standard colour arguments still reach the layer", {
+  d <- alignseq_fixture(details=c(100,105),flank=0)
+  for (params in list(list(colour="grey30"), list(color="grey30"),
+      list(colour="grey30",colour_scheme="difference"))) {
+    expect_no_error(ggplot2::ggplotGrob(ggplot2::ggplot()+
+      do.call(geom_alignseq,c(list(data=d),params))))
+  }
+})
+
+test_that("difference colours highlight both partners of mismatch and indel columns", {
+  d <- alignseq_fixture(details=c(100,105),flank=0)
+  palette <- c(aligned="#E6E6E6",mismatch="#E69F00",indel="#D73027")
+  expected <- unname(palette[c("aligned","mismatch","indel","aligned","indel","aligned","aligned")])
+  for (mode in c("markers","rows")) for (species in c("human","chimp")) {
+    own <- d[d$sequence==species,]
+    p <- ggplot2::ggplot()+geom_alignseq(data=own,mode=mode,
+      colour_scheme="difference")
+    g <- alignseq_test_grobs(ggplot2::ggplotGrob(p))[[1]]
+    boxes <- Filter(function(x)inherits(x,"rect"),g$children)
+    expect_length(boxes,1L)
+    expect_equal(alignseq_test_rgb(boxes[[1]]$gp$fill),alignseq_test_rgb(expected))
+    texts <- Filter(function(x)inherits(x,"text"),g$children)
+    bases <- Filter(function(x)identical(as.character(x$label),own$base),texts)[[1]]
+    expect_equal(alignseq_test_rgb(bases$gp$col),
+      alignseq_test_rgb(c("black","black","white","black","white","black","black")))
+    if (mode=="markers") {
+      points <- Filter(function(x)inherits(x,"points"),g$children)
+      expect_equal(alignseq_test_rgb(points[[1]]$gp$col),
+        alignseq_test_rgb(c("#E69F00","#D73027","#D73027")))
+    }
+  }
+})
+
+test_that("nucleotide colours stay available and difference palettes are customizable", {
+  d <- alignseq_fixture(details=c(100,105),flank=0)
+  d <- d[d$sequence=="human",]
+  base <- ggplot2::ggplot()+geom_alignseq(data=d)
+  g <- alignseq_test_grobs(ggplot2::ggplotGrob(base))[[1]]
+  boxes <- Filter(function(x)inherits(x,"rect"),g$children)
+  expect_equal(alignseq_test_rgb(boxes[[1]]$gp$fill),
+    alignseq_test_rgb(c("#D9EDD7","#D9EAF5","#EEEEEE","#FAEBC5","#F4DADB","#D9EDD7","#D9EAF5")))
+  custom <- c(aligned="grey90",mismatch="purple",indel="gold")
+  g <- alignseq_test_grobs(ggplot2::ggplotGrob(ggplot2::ggplot()+
+    geom_alignseq(data=d,colour_scheme="difference",difference_colours=custom)))[[1]]
+  boxes <- Filter(function(x)inherits(x,"rect"),g$children)
+  expect_equal(alignseq_test_rgb(boxes[[1]]$gp$fill),
+    alignseq_test_rgb(c("grey90","purple","gold","grey90","gold","grey90","grey90")))
+  expect_error(geom_alignseq(data=d,colour_scheme="other"),"nucleotide.*difference")
+  expect_error(geom_alignseq(data=d,colour_scheme="difference",difference_colours=c(aligned="grey")),
+    "difference_colours")
+  expect_error(geom_alignseq(data=d,colour_scheme="difference",
+    difference_colours=c(aligned="grey",mismatch="not-a-colour",indel="orange")),"difference_colours")
+})
+
+test_that("difference colours can highlight letters without nucleotide backgrounds", {
+  d <- alignseq_fixture(details=c(100,105),flank=0)
+  d <- d[d$sequence=="human",]
+  g <- alignseq_test_grobs(ggplot2::ggplotGrob(ggplot2::ggplot()+
+    geom_alignseq(data=d,mode="rows",colour_scheme="difference",background=FALSE)))[[1]]
+  expect_length(Filter(function(x)inherits(x,"rect"),g$children),0L)
+  texts <- Filter(function(x)inherits(x,"text"),g$children)
+  bases <- Filter(function(x)identical(as.character(x$label),d$base),texts)[[1]]
+  expect_equal(alignseq_test_rgb(bases$gp$col),
+    alignseq_test_rgb(c("grey45","#E69F00","#D73027","grey45","#D73027","grey45","grey45")))
+})
+
+test_that("difference glyph contrast accounts for translucent backgrounds", {
+  d <- alignseq_fixture(details=c(100,105),flank=0)
+  d <- d[d$sequence=="human",]
+  palette <- c(aligned="#00000000",mismatch="#0072B21A",indel="transparent")
+  g <- alignseq_test_grobs(ggplot2::ggplotGrob(ggplot2::ggplot()+
+    geom_alignseq(data=d,mode="rows",colour_scheme="difference",
+      difference_colours=palette)))[[1]]
+  texts <- Filter(function(x)inherits(x,"text"),g$children)
+  bases <- Filter(function(x)identical(as.character(x$label),d$base),texts)[[1]]
+  expect_equal(alignseq_test_rgb(bases$gp$col),alignseq_test_rgb(rep("black",7L)))
+})
+
+test_that("ambiguous bases retain neutral backgrounds without claiming a verified mismatch", {
+  d <- alignseq_data(c(h="ANRY",q="ATRY"),
+    data.frame(sequence=c("h","q"),start=c(100,200),strand="+"),
+    reference="h",details=c(100,103),flank=0)
+  d <- d[d$sequence=="h",]
+  g <- alignseq_test_grobs(ggplot2::ggplotGrob(ggplot2::ggplot()+
+    geom_alignseq(data=d,mode="rows",colour_scheme="difference")))[[1]]
+  boxes <- Filter(function(x)inherits(x,"rect"),g$children)
+  expect_equal(alignseq_test_rgb(boxes[[1]]$gp$fill),alignseq_test_rgb(rep("#E6E6E6",4L)))
+  expect_equal(d$event_type,c("match","ambiguous","ambiguous","ambiguous"))
 })

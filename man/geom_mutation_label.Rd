@@ -15,6 +15,7 @@ geom_mutation_label(
   individual = NULL,
   species = NULL,
   genes = NULL,
+  ids = NULL,
   event_type = NULL,
   min_sample_count = NULL,
   strains = NULL,
@@ -35,7 +36,8 @@ geom_mutation_label(
   show_empty = FALSE,
   na.rm = FALSE,
   show.legend = FALSE,
-  inherit.aes = TRUE
+  inherit.aes = TRUE,
+  genomic_layout = NULL
 )
 }
 \arguments{
@@ -53,6 +55,9 @@ ggplot2 layer arguments.}
 
 \item{genes, event_type, min_sample_count, strains, mutation}{Optional filters
 passed to \code{query_protein_mutations()}.}
+
+\item{ids}{Optional identifiers matching the mutation annotation's \code{keytype}.
+Use the same selector as \code{geom_protein_lollipop()} to label one isoform.}
 
 \item{mutation_position}{Column containing mutation coordinates.}
 
@@ -74,6 +79,9 @@ multi-height lollipop heads.}
 \item{label_nudge_y}{Vertical offset above mutation heads.}
 
 \item{show_empty}{Logical; keep empty/\code{NA} labels when \code{TRUE}.}
+
+\item{genomic_layout}{Optional prepared genomic layout name. Labels read
+stored head positions, with label_nudge_y applied as a text offset.}
 }
 \value{
 A ggplot layer.

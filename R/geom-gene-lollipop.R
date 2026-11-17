@@ -38,8 +38,18 @@
 #'   retains the original untransformed genomic coordinate.
 #' @param species,chr,subset Optional Syn individual, chromosome and genomic
 #'   window selectors.
+#' @param lollipop_layout Name prepared by [prepare_gene_lollipop()]. A single
+#'   applicable preparation is used automatically for Syn input. Multiple
+#'   preparations require a name. Explicit dataframes use their own data.
 #'
 #' @details
+#' With Syn input, a grid stored by [prepare_gene_lollipop()] supplies native
+#' anchors and shared row/column slots. The only applicable preparation is
+#' discovered automatically. Heads use a regular grid across panels; missing
+#' and cropped genes leave their cells reserved. Reversing a panel changes
+#' anchors and arrow directions without reversing the reference grid. A shared
+#' grid may need a larger explicit `max_shift_mm` than local packing.
+#'
 #' Use one shared `y` baseline per panel. The common width includes arrow-tip
 #' space so labels fit inside the arrow body. Missing labels remain unlabelled
 #' heads. Unknown strands produce rectangular heads. Reversing the x scale or
@@ -49,9 +59,9 @@
 #' Heads are stylised gene symbols, not scaled transcript structures. For
 #' Syn-backed input the anchor is the midpoint of the complete gene span,
 #' including genes without coding transcripts. Retain native-scale context
-#' genes in a separate `geom_gene()` layer if needed.
+#' genes in a separate `geom_genetag(show_label = FALSE)` layer if needed.
 #'
-#' Compact packing uses the smallest feasible number of round-robin rows with ordered
+#' For unprepared input, compact packing uses the smallest feasible number of round-robin rows with ordered
 #' head centres and bounded displacement. Automatic column packing uses the smallest
 #' feasible number of rows with one common x centre per group of consecutive
 #' genes. Read each column top to bottom, then the next column to its right.
@@ -85,8 +95,15 @@ geom_gene_lollipop <- function(mapping = NULL, data = NULL, stat = "identity",
     anchor_tick_mm = .9, fan_height_mm = 2.5, lane_spacing_mm = .65,
     lane_clearance_mm = .5, stem_linewidth = .22, stem_halo_mm = .12,
     stem_halo_colour = "white", layout_callback = NULL, species = NULL, chr = NULL,
-    subset = NULL, na.rm = FALSE, show.legend = NA, inherit.aes = FALSE) {
+    subset = NULL, lollipop_layout = NULL, na.rm = FALSE, show.legend = NA, inherit.aes = FALSE) {
   head_layout <- match.arg(head_layout)
+  if (!is.null(lollipop_layout) && (is.data.frame(data) || methods::is(data, "DataFrame") || is.function(data)))
+    stop("`lollipop_layout` requires Syn input, not a dataframe or data callback.", call. = FALSE)
+  protected <- c("x", "y", "xmin", "xmax", "strand", "track", "individual", "gene_id",
+    "genomic_x", "genomic_xmin", "genomic_xmax", "head_row", "head_col",
+    "grid_nrow", "grid_ncol", "slot_key", "lollipop_grid")
+  supplied_coordinates <- union(intersect(names(mapping), protected),
+    intersect(names(Filter(Negate(is.null), list(...))), setdiff(protected, "y")))
   exprs <- if (is.null(mapping)) list() else as.list(mapping)
   for (col in if (isTRUE(inherit.aes)) character() else c("x", "y", "strand")) {
     if (is.null(exprs[[col]])) exprs[[col]] <- rlang::sym(col)
@@ -94,7 +111,8 @@ geom_gene_lollipop <- function(mapping = NULL, data = NULL, stat = "identity",
   if (!isTRUE(inherit.aes) && (is.data.frame(data) || methods::is(data, "DataFrame"))) {
     for (col in intersect(c("label", "track", "individual", "species", "gene_id",
                            "gene_name", "genomic_x", "genomic_xmin",
-                           "genomic_xmax", "strip_x_direction", "head_row"), colnames(data))) {
+                           "genomic_xmax", "strip_x_direction", "head_row", "head_col",
+                           "grid_nrow", "grid_ncol", "slot_key", "lollipop_grid"), colnames(data))) {
       if (is.null(exprs[[col]])) exprs[[col]] <- rlang::sym(col)
     }
   }
@@ -104,10 +122,13 @@ geom_gene_lollipop <- function(mapping = NULL, data = NULL, stat = "identity",
   # lets Syn's compiler install its mappings before genomic provenance is copied.
   layer_class <- ggproto(NULL, LayerSyn,
     setup_layer = function(self, data, plot) {
+      if (!is.null(self$geom_params$lollipop_layout) && !is_syn_layer_input(self, plot@data))
+        stop("`lollipop_layout` requires Syn input, not a dataframe or data callback.", call. = FALSE)
       data <- ggplot2::ggproto_parent(LayerSyn, self)$setup_layer(data, plot)
       fallback <- intersect(c("x", "y", "strand", "label", "track", "individual",
         "species", "gene_id", "gene_name", "genomic_x", "genomic_xmin",
-        "genomic_xmax", "strip_x_direction", "head_row"), names(data))
+        "genomic_xmax", "strip_x_direction", "head_row", "head_col",
+        "grid_nrow", "grid_ncol", "slot_key", "lollipop_grid"), names(data))
       for (col in fallback) {
         if (is.null(self$computed_mapping[[col]]))
           self$computed_mapping[[col]] <- rlang::new_quosure(rlang::sym(col))
@@ -116,7 +137,8 @@ geom_gene_lollipop <- function(mapping = NULL, data = NULL, stat = "identity",
         self$computed_mapping$genomic_x <- self$computed_mapping$x
       data
     })
-  layer(data = data, mapping = mapping, geom = GeomGeneLollipop, stat = stat,
+  explicit_syn <- methods::is(data, "SynIndividual") || methods::is(data, "SynSpecies")
+  result <- layer(data = if (explicit_syn) NULL else data, mapping = mapping, geom = GeomGeneLollipop, stat = stat,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     layer_class = layer_class, params = Filter(Negate(is.null), list(..., headroom = headroom,
       head_width_mm = head_width_mm, head_height_mm = head_height_mm,
@@ -128,7 +150,10 @@ geom_gene_lollipop <- function(mapping = NULL, data = NULL, stat = "identity",
       lane_clearance_mm = lane_clearance_mm, stem_linewidth = stem_linewidth,
       stem_halo_mm = stem_halo_mm, stem_halo_colour = stem_halo_colour,
       layout_callback = layout_callback, species = species, chr = chr,
-      subset = subset, na.rm = na.rm)))
+      subset = subset, lollipop_layout = lollipop_layout, na.rm = na.rm)))
+  result$lollipop_supplied_coordinates <- supplied_coordinates
+  if (explicit_syn) result$data <- data
+  result
 }
 
 #' Gene-lollipop geom
@@ -138,7 +163,9 @@ GeomGeneLollipop <- ggproto("GeomGeneLollipop", Geom,
   ggexon_panel_role = "annotation",
   required_aes = c("x", "y", "strand"),
   default_aes = aes(colour = "grey35", fill = "grey75", linewidth = .25,
-    linetype = 1, alpha = NA_real_, head_row = NA_real_, stem_colour = NA_character_, label = "", size = 3,
+    linetype = 1, alpha = NA_real_, head_row = NA_real_, head_col = NA_real_,
+    grid_nrow = NA_real_, grid_ncol = NA_real_, slot_key = NA_character_,
+    lollipop_grid = NA_character_, stem_colour = NA_character_, label = "", size = 3,
     family = "", fontface = 1, lineheight = 1.2, label_colour = NA_character_,
     track = NA_character_, individual = NA_character_, species = NA_character_,
     gene_id = NA_character_, gene_name = NA_character_, genomic_x = NA_real_,
@@ -147,8 +174,12 @@ GeomGeneLollipop <- ggproto("GeomGeneLollipop", Geom,
     "padding_mm", "tip_mm", "gap_mm", "row_gap_mm", "stem_height_mm",
     "max_shift_mm", "max_rows", "head_layout", "anchor_tick_mm", "fan_height_mm",
     "lane_spacing_mm", "lane_clearance_mm", "stem_linewidth", "stem_halo_mm",
-    "stem_halo_colour", "layout_callback", "species", "chr", "subset"),
+    "stem_halo_colour", "layout_callback", "species", "chr", "subset", "lollipop_layout",
+    "prepared_labels"),
   setup_data = function(data, params) {
+    # Fixed positional aesthetics are supplied in params before ggplot2 adds
+    # them to data. Include that baseline while reserving headroom as well.
+    if (is.null(data$y) && !is.null(params$y)) data$y <- rep_len(params$y, nrow(data))
     data$ymin <- data$y
     data$ymax <- data$y + .genebox_positive_number(params$headroom %||% 1, "headroom")
     data
@@ -167,6 +198,15 @@ GeomGeneLollipop <- ggproto("GeomGeneLollipop", Geom,
          any(data$head_row < 1 | data$head_row != floor(data$head_row))))
       stop("`head_row` must supply a positive integer for every gene in the layer.", call. = FALSE)
     params$global_label_metrics <- data
+    if (length(params$prepared_labels) && nrow(data)) {
+      # Keep the preparation's full label extent when genomic windows hide
+      # heads. Measure it in the effective text styles on the actual device.
+      styles <- unique(data[c("size", "family", "fontface", "lineheight")])
+      metrics <- data[rep(1L, nrow(styles) * length(params$prepared_labels)), , drop = FALSE]
+      metrics$label <- rep(params$prepared_labels, each = nrow(styles))
+      metrics[names(styles)] <- styles[rep(seq_len(nrow(styles)), length(params$prepared_labels)), , drop = FALSE]
+      params$global_label_metrics <- rbind(data, metrics)
+    }
     ggplot2::ggproto_parent(ggplot2::Geom, self)$draw_layer(data, params, layout, coord)
   },
   draw_panel = function(data, panel_params, coord, headroom = 1,
@@ -213,6 +253,16 @@ GeomGeneLollipop <- ggproto("GeomGeneLollipop", Geom,
   draw_key = ggplot2::draw_key_polygon,
   syn_data = function(x, layer) {
     p <- syn_layer_params(layer)
+    layer$geom_params$prepared_labels <- NULL
+    prepared <- .gene_lollipop_prepared_data(x, layer)
+    if (!is.null(prepared)) {
+      if (length(layer$lollipop_supplied_coordinates))
+        stop("Prepared coordinates and slots cannot be remapped; change `prepare_gene_lollipop()` instead.", call. = FALSE)
+      if (is.null(layer$mapping$fill) && is.null(layer$aes_params$fill))
+        layer$mapping$fill <- ggplot2::aes(fill = I(fill))$fill
+      layer$geom_params$prepared_labels <- attr(prepared, "gene_lollipop_labels", exact = TRUE)
+      return(prepared)
+    }
     d <- syn_to_gene_df(x, species = p$species, chr = p$chr, subset = p$subset,
                         context = layer$syn_plot_context %||% NULL)
     if (nrow(d)) {
@@ -226,7 +276,8 @@ GeomGeneLollipop <- ggproto("GeomGeneLollipop", Geom,
   },
   syn_default_aes = c("x", "y", "strand", "label", "track", "individual",
     "species", "gene_id", "gene_name", "genomic_x", "genomic_xmin",
-    "genomic_xmax", "strip_x_direction", "head_row")
+    "genomic_xmax", "strip_x_direction", "head_row", "head_col", "grid_nrow",
+    "grid_ncol", "slot_key", "lollipop_grid")
 )
 
 .gene_lollipop_text <- function(d, i, ...) {
@@ -265,11 +316,12 @@ makeContent.geneLollipopGrob <- function(x) {
   H <- grid::convertHeight(grid::unit(1, "npc"), "mm", valueOnly = TRUE)
   a <- x$coords$x * W
   ay <- x$coords$y * H
+  shared_grid <- any(!is.na(d$head_col))
   fixed_rows <- !all(is.na(d$head_row))
   outline <- if (fixed_rows) x$metrics$linewidth else d$linewidth
   stroke <- max(c(0, outline[is.finite(outline)]))
   row_gap <- p$row_gap_mm + stroke
-  columns <- identical(p$head_layout, "columns")
+  columns <- shared_grid || identical(p$head_layout, "columns")
   if (fixed_rows && !columns)
     stop("`head_row` requires head_layout = 'columns'.", call. = FALSE)
   routing_band <- if (columns) p$anchor_tick_mm + p$fan_height_mm else 0
@@ -282,7 +334,17 @@ makeContent.geneLollipopGrob <- function(x) {
     stop("Gene heads cannot fit vertically; increase output height or headroom.", call. = FALSE)
   # Reserve the centred outline on both panel edges and between heads.
   inset <- stroke / 2
-  if (columns) {
+  if (shared_grid) {
+    nr <- unique(d$grid_nrow)
+    nc <- unique(d$grid_ncol)
+    if (length(nr) != 1L || length(nc) != 1L || !is.finite(nr) || !is.finite(nc))
+      stop("Use one declared shared gene grid per panel.", call. = FALSE)
+    if (nr > min(p$max_rows, available_rows))
+      stop("Shared gene grid cannot fit vertically; increase output height or headroom/max_rows.", call. = FALSE)
+    z <- .gene_lollipop_grid(a - inset, w, W - 2 * inset,
+      d$head_row, d$head_col, nr, nc, p$gap_mm + stroke, p$max_shift_mm,
+      p$lane_spacing_mm, p$lane_clearance_mm)
+  } else if (columns) {
     z <- .gene_lollipop_columns(a - inset, w, W - 2 * inset,
       p$gap_mm + stroke, p$max_shift_mm, min(p$max_rows, available_rows),
       p$lane_spacing_mm, p$lane_clearance_mm, head_row = d$head_row)
@@ -311,7 +373,11 @@ makeContent.geneLollipopGrob <- function(x) {
   z$PANEL <- d$PANEL
   z$headroom_limit_mm <- min(x$upper * H, H)
   z$row_is_fixed <- fixed_rows
-  z$head_layout <- p$head_layout
+  z$head_layout <- if (shared_grid) "grid" else p$head_layout
+  if (shared_grid) {
+    z$slot_key <- d$slot_key
+    z$lollipop_grid <- d$lollipop_grid
+  }
   z$tick_top_mm <- ay + p$anchor_tick_mm
   z$fan_top_mm <- z$tick_top_mm + p$fan_height_mm
   z$stem_colour <- as.character(d$stem_colour)

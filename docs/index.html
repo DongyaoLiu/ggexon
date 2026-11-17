@@ -7,8 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Grammar of genomic annotations, synteny, and associated data • ggexon</title>
 <script src="lightswitch.js"></script><script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="deps/Source_Sans_3-0.4.10/font.css" rel="stylesheet">
+<link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/Source_Sans_3-0.4.10/font.css" rel="stylesheet">
 <link href="deps/Source_Code_Pro-0.4.10/font.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
@@ -38,15 +38,11 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-tutorials" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Tutorials</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-tutorials">
-<li><a class="dropdown-item" href="articles/ggexon-workflow.html">Complete workflow</a></li>
-    <li><a class="dropdown-item" href="articles/hox-cluster-expansion-demo.html">HOX cluster expansion</a></li>
-    <li><a class="dropdown-item" href="articles/dox-synteny-demo.html">Three-species synteny and RNA-seq</a></li>
-    <li><a class="dropdown-item" href="articles/cd44-splice-variants-demo.html">CD44 splice variant alignment</a></li>
-    <li><a class="dropdown-item" href="articles/as3mt-splice-variants-demo.html">AS3MT transcripts, DNA and RNA-seq</a></li>
-    <li><a class="dropdown-item" href="articles/hla-a-lollipop-demo.html">HLA-A protein variant lollipops</a></li>
-    <li><a class="dropdown-item" href="articles/mhc-continuous-demo.html">MHC haplotypes across apes</a></li>
-    <li><a class="dropdown-item" href="articles/bigwig-coverage-demo.html">PEEL-1 raw BigWig coverage</a></li>
-    <li><a class="dropdown-item" href="articles/ggexon-classes-and-verbs.html">Classes, geoms, facets, and guides</a></li>
+<li><a class="dropdown-item" href="articles/ggexon-workflow.html">0. Basic usage</a></li>
+    <li><a class="dropdown-item" href="articles/hla-a-lollipop-demo.html">1. Projecting amino acid changes onto transcript models</a></li>
+    <li><a class="dropdown-item" href="articles/as3mt-splice-variants-demo.html">2. Comparing alternatively spliced transcripts</a></li>
+    <li><a class="dropdown-item" href="articles/dox-synteny-demo.html">3. Visualizing local synteny across species</a></li>
+    <li><a class="dropdown-item" href="articles/mhc-continuous-demo.html">4. Visualizing megabase-scale haplotypes</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
@@ -66,239 +62,181 @@
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header"><h1 id="ggexon">ggexon<a class="anchor" aria-label="anchor" href="#ggexon"></a>
 </h1></div>
+<style>
+#main h3 {
+  font-weight: 500;
+}
+</style>
+<div class="section level2">
+<h2 id="genomic-visualization-across-scales">Genomic visualization across scales<a class="anchor" aria-label="anchor" href="#genomic-visualization-across-scales"></a>
+</h2>
 <p><strong>Grammar of genomic annotations, synteny, and associated data.</strong></p>
-<p><a href="https://dongyaoliu.github.io/ggexon/">Documentation and tutorials</a></p>
-<p><code>ggexon</code> is a ggplot2 extension for drawing genomic annotation together with comparative and track-level data. It was developed while visualizing the <code>sept-1</code>/<code>zina-1</code> toxin-antidote locus described in the preprint <a href="https://www.biorxiv.org/content/10.1101/2025.11.28.691152v1" class="external-link">sept-1/zina-1 is an Ancient Toxin-Antidote System in Caenorhabditis elegans</a>.</p>
-<p>The package has two connected parts:</p>
-<ol style="list-style-type: decimal">
-<li>S4 classes store genomes, annotation layers, alignments, and reusable layout state.</li>
-<li>Functions load, query, modify, and draw those classes with a ggplot2-style grammar.</li>
-</ol>
-<p>If you already think in <code>ggplot2</code>, the goal is that genomic coordinates, annotation tracks, alignments, and tree-aligned panels can all be composed with familiar plotting ideas.</p>
-<div class="section level2">
-<h2 id="flagship-hox-cluster-expansion-example">Flagship HOX Cluster Expansion Example<a class="anchor" aria-label="anchor" href="#flagship-hox-cluster-expansion-example"></a>
-</h2>
-<div class="float">
-<img src="reference/figures/hox-cluster-expansion-demo.png" alt="A seven-row by four-column HOX matrix with cluster-specific human gene symbols on the x axes, square gene boxes, the ancestral amphioxus cluster displayed under HOXA, grey not-applicable cells, and a marked zebrafish HOXDB cluster-not-retained cell"><div class="figcaption">A seven-row by four-column HOX matrix with cluster-specific human gene symbols on the x axes, square gene boxes, the ancestral amphioxus cluster displayed under HOXA, grey not-applicable cells, and a marked zebrafish HOXDB cluster-not-retained cell</div>
-</div>
-<p>The bundled HOX cluster-expansion tutorial compares six chordate species in a seven-row by four-column matrix. HOXA through HOXD show the four vertebrate cluster families and the duplicated zebrafish <code>a</code> and <code>b</code> rows. The single ancestral amphioxus cluster is displayed under HOXA only as a compact layout anchor; this placement does not assign it specifically to HOXA. Its HOXB–HOXD cells are structural blanks. A not-retained zebrafish HOXDB cluster and unoccupied gene slots within retained clusters remain visually distinct.</p>
-<p>Genes are drawn with <code><a href="reference/geom_genebox.html">geom_genebox()</a></code> as data-unit squares containing strand-direction arrows. Its default <code>box_size = 1</code> spans one x and y data unit; <code>coord_fixed(ratio = 1)</code> keeps the boxes visually square when the figure is rendered or exported. <code>strip_scale_x(slot_order = ...)</code> aligns every gene to a shared Hox15-to-Hox1 template, so genes assigned to the same curated Hox-number slot occupy exactly the same x coordinate. Box position represents that paralog-slot alignment, whereas the arrow independently represents transcription direction; amphioxus therefore retains its left-pointing arrows without breaking homolog-slot alignment. Unoccupied positions remain visible and do not by themselves imply gene loss. <code><a href="reference/scale_x_facet_labels.html">scale_x_facet_labels()</a></code> supplies cluster-specific human reference gene symbols from an explicit named list, with <code>HoxN</code> fallback labels for slots absent from the human reference cluster. All facets retain the same fixed x-coordinate range and break positions, so changing the labels preserves slot alignment and works with <code>coord_fixed(ratio = 1)</code>. Labels are rotated 90 degrees to fit the 15 slots in each narrow column. The example uses <code><a href="reference/theme_ggexon_clean.html">theme_ggexon_clean()</a></code> to remove panel outlines and facet-strip backgrounds. The tutorial removes nucleotide and synteny links, and also demonstrates initiation, genomic coding-midpoint, and stop anchor modes on the human HOXA cluster, with any terminal-CDS positional proxies flagged in the bundled data. Its annotations are pinned to Ensembl release 116 for vertebrates and Ensembl Metazoa release 63 for amphioxus.</p>
-<p>Open <code><a href="articles/hox-cluster-expansion-demo.html">vignette("hox-cluster-expansion-demo", package = "ggexon")</a></code> for the full example, selected-transcript provenance, and source audit trail.</p>
-</div>
-<div class="section level2">
-<h2 id="hla-a-alleles-on-an-exonintron-gene-model">HLA-A Alleles on an Exon–Intron Gene Model<a class="anchor" aria-label="anchor" href="#hla-a-alleles-on-an-exonintron-gene-model"></a>
-</h2>
-<div class="float">
-<img src="reference/figures/hla-a-genomic-lollipop-demo.png" alt="Dense amino-acid variant lollipops projected onto the HLA-A reference gene, with eight coding exons and seven introns compressed three-fold"><div class="figcaption">Dense amino-acid variant lollipops projected onto the HLA-A reference gene, with eight coding exons and seven introns compressed three-fold</div>
-</div>
-<p>The HLA-A tutorial summarizes 5,998 eligible named alleles as 1,212 amino-acid substitutions. It shows both a protein-domain view and a splice-aware projection onto the exact A*02:01:01:01 reference gene. Exons retain their native scale; <code>scale_x_ggexon_genomic(intron_factor = 3)</code> compresses introns three-fold, with separate exon and intron scale bars. Counts describe database representation, not population frequencies.</p>
-<p>See the <a href="https://dongyaoliu.github.io/ggexon/articles/hla-a-lollipop-demo.html">HLA-A protein and gene-model tutorial</a>.</p>
-</div>
-<div class="section level2">
-<h2 id="as3mt-exon-skipping-with-intron-compressed-alignment-links">AS3MT Exon Skipping with Intron-Compressed Alignment Links<a class="anchor" aria-label="anchor" href="#as3mt-exon-skipping-with-intron-compressed-alignment-links"></a>
-</h2>
-<div class="float">
-<img src="reference/figures/as3mt-splice-variants-demo.png" alt="Human and chimpanzee AS3MT transcripts with native exon widths, 30-fold intron compression, and ungapped genomic alignment links following the same piecewise scale"><div class="figcaption">Human and chimpanzee AS3MT transcripts with native exon widths, 30-fold intron compression, and ungapped genomic alignment links following the same piecewise scale</div>
-</div>
-<p>The AS3MT tutorial compares the human and chimpanzee full-length transcripts with a paper-defined human AS3MTd2d3 reconstruction. <code><a href="reference/geom_exon2.html">geom_exon2()</a></code> distinguishes CDS from UTR, and <code>scale_x_ggexon_genomic(intron_factor = 30)</code> compresses introns while retaining exon widths. <code><a href="reference/geom_nuclink.html">geom_nuclink()</a></code> automatically subdivides raw genomic alignment blocks at both panels’ scale boundaries and maps the pieces to the same exon/intron scales. The plot retains only the two highest identity categories of the ungapped LASTZ alignment.</p>
-<p>The tutorial also aligns matched human GTEx coverage and counted splice junctions to the compressed gene model. <code><a href="reference/geom_junction.html">geom_junction()</a></code> distinguishes exon inclusion from E1→E4 skipping, while preserving source signal values.</p>
-<p>See the <a href="https://dongyaoliu.github.io/ggexon/articles/as3mt-splice-variants-demo.html">AS3MT transcript, DNA and RNA-seq tutorial</a> for the reproducible offline example and aligned DNA repeat detail.</p>
-</div>
-<div class="section level2">
-<h2 id="compact-three-species-dox-synteny">Compact Three-Species Dox Synteny<a class="anchor" aria-label="anchor" href="#compact-three-species-dox-synteny"></a>
-</h2>
-<div class="float">
-<img src="reference/figures/dox-three-species-demo.png" alt="Three Drosophila species with two DNA-link panels, conserved CG42797 and Ptpmeg2 flanks, an additional Dox coding model in D. simulans, and testis RNA-seq for all three species"><div class="figcaption">Three Drosophila species with two DNA-link panels, conserved CG42797 and Ptpmeg2 flanks, an additional Dox coding model in D. simulans, and testis RNA-seq for all three species</div>
-</div>
-<p>This offline example compares <em>D. mauritiana</em>, <em>D. simulans</em>, and <em>D. sechellia</em>, with 2/3/2 displayed genes and two nucleotide-link panels. Each species has a separate RNA-seq subpanel above its annotation. It connects conserved gene order to exon structure, local DNA alignments, and testis RNA-seq. The additional <code>Dox</code> model contains three coding exons mapped exactly from the published CDS. RNA-seq is shown for all three species. The full <em>D. simulans</em> replicate-1 read library is remapped directly to the plotted assembly; the two outer species retain deposited signals. Both original genomic scale and gap compression are demonstrated. <code>facet_genomics(coverage_panel_height = 0.5, link_panel_height = 0.5)</code> sets annotation : link : RNA heights to 1 : 0.5 : 0.5. Independent RNA y limits make all three peaks similarly tall while preserving signal values. Dsim read depth and the outer-species deposited signal units are identified separately.</p>
-<p>The detailed <code><a href="articles/dox-synteny-demo.html">vignette("dox-synteny-demo", package = "ggexon")</a></code> constructs <code>SynIndividual</code>/<code>SynSpecies</code> data objects from bundled GTF, PAF, and BigWig files, then adds annotations, linkage, and RNA-seq layer by layer. Model descriptions, signal units, and source details are in the tutorial text.</p>
-</div>
-<div class="section level2">
-<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
-</h2>
-<p><code>ggexon</code> is currently a development package.</p>
+<p><code>ggexon</code> extends ggplot2 to combine gene models, DNA alignments, RNA-seq coverage, and protein variation in one figure. Prepare the data and layout in a Syn object, then add the layers you want to inspect.</p>
+<p>A <code>SynIndividual</code> stores one genome or sample and its annotation layers. A <code>SynSpecies</code> groups individuals with their alignments, homology mappings, and panel layouts. Syn-aware plotting layers retrieve stored data for the selected individuals and genomic windows. Scales control coordinate transformations; themes control appearance.</p>
+<div class="section level3">
+<h3 id="installation">
+<strong>Installation</strong><a class="anchor" aria-label="anchor" href="#installation"></a>
+</h3>
+<p><code>ggexon</code> is a development package. Install it from GitHub:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"DongyaoLiu/ggexon"</span><span class="op">)</span></span></code></pre></div>
-<p>Some dependencies are from Bioconductor. If your R installation cannot resolve them automatically, install them first:</p>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"DongyaoLiu/ggexon"</span><span class="op">)</span></span></code></pre></div>
+<p>If your R installation cannot resolve the Bioconductor dependencies, install them first:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span></span>
-<span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu">install</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>  <span class="st">"Biostrings"</span>,</span>
-<span>  <span class="st">"GenomeInfoDb"</span>,</span>
-<span>  <span class="st">"GenomicRanges"</span>,</span>
-<span>  <span class="st">"Rsamtools"</span>,</span>
-<span>  <span class="st">"rtracklayer"</span></span>
+<span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://bioconductor.github.io/BiocManager/reference/install.html" class="external-link">install</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>  <span class="st">"Biostrings"</span>, <span class="st">"GenomeInfoDb"</span>, <span class="st">"GenomicRanges"</span>, <span class="st">"Rsamtools"</span>, <span class="st">"rtracklayer"</span></span>
 <span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>For ODGI-backed graph alignment workflows, install the system tools listed in <code>DESCRIPTION</code>:</p>
-<ul>
-<li>Python 3.8 or newer</li>
-<li><code>odgi</code></li>
-</ul>
-</div>
-<div class="section level2">
-<h2 id="package-map">Package Map<a class="anchor" aria-label="anchor" href="#package-map"></a>
-</h2>
-<div class="section level3">
-<h3 id="part-1-classes-store-data">Part 1: Classes Store Data<a class="anchor" aria-label="anchor" href="#part-1-classes-store-data"></a>
-</h3>
-<p>The core data containers are:</p>
-<table class="table">
-<colgroup>
-<col width="50%">
-<col width="50%">
-</colgroup>
-<thead><tr class="header">
-<th>Class</th>
-<th>Role</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td><code>SynSpecies</code></td>
-<td>Project-level container for individuals, alignments, trees, and layout state</td>
-</tr>
-<tr class="even">
-<td><code>SynIndividual</code></td>
-<td>One genome, strain, species, or sample</td>
-</tr>
-<tr class="odd">
-<td><code>SynFeatureAnnotation</code></td>
-<td>Genes, transcripts, exons, CDS, labels, and annotation patches</td>
-</tr>
-<tr class="even">
-<td><code>SynVCFAnnotation</code></td>
-<td>VCF querying is supported. BCF parsing is not implemented; BCF input raises an unsupported-format error.</td>
-</tr>
-<tr class="odd">
-<td><code>SynBigWigAnnotation</code></td>
-<td>Signal tracks queried by genomic interval</td>
-</tr>
-<tr class="even">
-<td><code>SynProteinDomainAnnotation</code></td>
-<td>Protein-domain intervals from InterProScan-like tables</td>
-</tr>
-<tr class="odd">
-<td><code>SynProteinMutationAnnotation</code></td>
-<td>Protein mutation summaries for lollipop-style tracks</td>
-</tr>
-<tr class="even">
-<td><code>HomologyAnnotation</code></td>
-<td>Cross-species gene homology mappings from BLAST results</td>
-</tr>
-<tr class="odd">
-<td><code>SynPairAlignment</code></td>
-<td>Pairwise genome links from PAF, PSL, or ODGI-derived data</td>
-</tr>
-<tr class="even">
-<td><code>SynMultiAlignment</code></td>
-<td>Stores already parsed MAF data supplied through <code>data</code>; loading a MAF file remains unavailable. ODGI-backed loading is available.</td>
-</tr>
-<tr class="odd">
-<td><code>SynLayout</code></td>
-<td>Stored panel windows and layout decisions</td>
-</tr>
-</tbody>
-</table>
+<p>BigWig-backed examples run on macOS and Linux. ODGI-backed graph alignment workflows also require Python 3.8 or newer and <code>odgi</code>.</p>
 </div>
 <div class="section level3">
-<h3 id="part-2-functions-manipulate-and-draw-classes">Part 2: Functions Manipulate and Draw Classes<a class="anchor" aria-label="anchor" href="#part-2-functions-manipulate-and-draw-classes"></a>
+<h3 id="from-a-syn-object-to-a-plot">
+<strong>From a Syn object to a plot</strong><a class="anchor" aria-label="anchor" href="#from-a-syn-object-to-a-plot"></a>
 </h3>
-<p>The public API is organized around a few function families:</p>
-<table class="table">
-<colgroup>
-<col width="50%">
-<col width="50%">
-</colgroup>
-<thead><tr class="header">
-<th>Task</th>
-<th>Main functions</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td>Build object graphs</td>
-<td>
-<code><a href="reference/add_individual.html">add_individual()</a></code>, <code><a href="reference/add_annotation.html">add_annotation()</a></code>, <code><a href="reference/add_homology_annotation.html">add_homology_annotation()</a></code>, <code><a href="reference/add_pairwise_alignment.html">add_pairwise_alignment()</a></code>, <code><a href="reference/add_multiple_alignment.html">add_multiple_alignment()</a></code>, <code><a href="reference/add_tree.html">add_tree()</a></code>
-</td>
-</tr>
-<tr class="even">
-<td>Load and query data</td>
-<td>
-<code><a href="reference/load_annotation.html">load_annotation()</a></code>, <code><a href="reference/load_alignment.html">load_alignment()</a></code>, <code><a href="reference/import_blast_homology.html">import_blast_homology()</a></code>, <code><a href="reference/query_features.html">query_features()</a></code>, <code><a href="reference/query_variants.html">query_variants()</a></code>, <code><a href="reference/query_signal.html">query_signal()</a></code>, <code><a href="reference/query_domains.html">query_domains()</a></code>
-</td>
-</tr>
-<tr class="odd">
-<td>Derive sequence/protein data</td>
-<td>
-<code><a href="reference/extract_cds_seq.html">extract_cds_seq()</a></code>, <code><a href="reference/translate_protein.html">translate_protein()</a></code>, <code><a href="reference/project_domains_to_genome.html">project_domains_to_genome()</a></code>
-</td>
-</tr>
-<tr class="even">
-<td>Subset and curate objects</td>
-<td>
-<code><a href="reference/subset_species.html">subset_species()</a></code>, <code><a href="reference/subset_individual.html">subset_individual()</a></code>, <code><a href="reference/subset_pairwise_alignment.html">subset_pairwise_alignment()</a></code>, <code><a href="reference/set_gene_labels.html">set_gene_labels()</a></code>, <code><a href="reference/patch_annotation_from_gff.html">patch_annotation_from_gff()</a></code>
-</td>
-</tr>
-<tr class="odd">
-<td>Draw genomic layers</td>
-<td>
-<code><a href="reference/ggexon.html">ggexon()</a></code>, <code><a href="reference/geom_exon.html">geom_exon()</a></code>, <code><a href="reference/geom_coverage.html">geom_coverage()</a></code>, <code><a href="reference/geom_junction.html">geom_junction()</a></code>, <code><a href="reference/geom_genetag.html">geom_genetag()</a></code>, <code><a href="reference/geom_genebox.html">geom_genebox()</a></code>, <code><a href="reference/geom_genelabel.html">geom_genelabel()</a></code>, <code><a href="reference/geom_nuclink.html">geom_nuclink()</a></code>, <code><a href="reference/geom_synteny_link.html">geom_synteny_link()</a></code>, <code><a href="reference/geom_protein_lollipop.html">geom_protein_lollipop()</a></code>
-</td>
-</tr>
-<tr class="even">
-<td>Arrange panels and guides</td>
-<td>
-<code><a href="reference/facet_genomics.html">facet_genomics()</a></code>, <code><a href="reference/scale_panel_annotation.html">scale_panel_annotation()</a></code>, <code><a href="reference/scale_panel_coverage.html">scale_panel_coverage()</a></code>, <code><a href="reference/center_panel_annotation.html">center_panel_annotation()</a></code>, <code><a href="reference/facet_genomictree.html">facet_genomictree()</a></code>, <code><a href="reference/scale_x_ggexon_genomic.html">scale_x_ggexon_genomic()</a></code>, <code><a href="reference/scale_x_facet_labels.html">scale_x_facet_labels()</a></code>, <code><a href="reference/guide_x_ggexon_piecewise.html">guide_x_ggexon_piecewise()</a></code>
-</td>
-</tr>
-<tr class="odd">
-<td>Style plots</td>
-<td>
-<code><a href="reference/theme_ggexon_clean.html">theme_ggexon_clean()</a></code>, <code><a href="reference/theme_ggexon_base.html">theme_ggexon_base()</a></code>, <code><a href="reference/theme_ggexon_track.html">theme_ggexon_track()</a></code>, <code><a href="reference/theme_ggexon_pairwise.html">theme_ggexon_pairwise()</a></code>
-</td>
-</tr>
-</tbody>
-</table>
-<p>The typical workflow is:</p>
+<p>Start with the bundled HLA-A reference annotation. Construct and inspect an individual, add it to a comparison, then draw its exon-intron model:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dongyaoliu.github.io/ggexon/">ggexon</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/SynIndividual.html">SynIndividual</a></span><span class="op">(</span></span>
-<span>  genome_file <span class="op">=</span> <span class="st">"genome.fasta"</span>,</span>
-<span>  annotation_file <span class="op">=</span> <span class="st">"annotation.gff3"</span>,</span>
-<span>  id <span class="op">=</span> <span class="st">"sample"</span></span>
+<span><span class="va">demo_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"hla_a_lollipop"</span>, package <span class="op">=</span> <span class="st">"ggexon"</span><span class="op">)</span></span>
+<span><span class="va">reference</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/SynIndividual.html">SynIndividual</a></span><span class="op">(</span></span>
+<span>  id <span class="op">=</span> <span class="st">"HLA-A"</span>,</span>
+<span>  annotation_file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">demo_dir</span>, <span class="st">"hla_a_reference.gff3"</span><span class="op">)</span>,</span>
+<span>  annotation_format <span class="op">=</span> <span class="st">"gff"</span></span>
 <span><span class="op">)</span></span>
+<span><span class="va">reference</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/load_annotation.html">load_annotation</a></span><span class="op">(</span><span class="va">reference</span><span class="op">)</span></span>
+<span><span class="va">exons</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/query_features.html">query_features</a></span><span class="op">(</span><span class="va">reference</span>, feature_type <span class="op">=</span> <span class="st">"exon"</span>, all <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">sp</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/SynSpecies.html">SynSpecies</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"project"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="reference/add_individual.html">add_individual</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span><span class="va">comparison</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/SynSpecies.html">SynSpecies</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"HLA-A reference"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="reference/add_individual.html">add_individual</a></span><span class="op">(</span><span class="va">reference</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">sp</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="reference/geom_exon.html">geom_exon</a></span><span class="op">(</span>species <span class="op">=</span> <span class="st">"sample"</span>, chr <span class="op">=</span> <span class="st">"chr1"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">comparison</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="reference/geom_exon2.html">geom_exon2</a></span><span class="op">(</span>compress_introns <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="reference/facet_genomics.html">facet_genomics</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">track</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="reference/scale_x_ggexon_genomic.html">scale_x_ggexon_genomic</a></span><span class="op">(</span>intron_factor <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="reference/theme_ggexon_track.html">theme_ggexon_track</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p>This example uses allele-local HLA-A coordinates. Exon widths retain their native scale, and the shared x scale shortens introns three-fold. The GFF3 is enough for annotation plotting; supply <code>genome_file</code> for sequence extraction or translation.</p>
+<p>For comparative figures, attach alignments and signals to the same object, then store panel windows before plotting. Preparation verbs such as <code><a href="reference/prepare_genomic_layout.html">prepare_genomic_layout()</a></code> and <code><a href="reference/prepare_gene_lollipop.html">prepare_gene_lollipop()</a></code> store derived views for reuse. Inspect them with their <code>query_*()</code> counterparts before drawing.</p>
+<p>The four tutorials below use bundled data and follow the same sequence: prepare the Syn object, inspect its contents, and build the plot layer by layer.</p>
 </div>
+<div class="section level3">
+<h3 id="id_1-projecting-amino-acid-changes-onto-transcript-models">
+<strong>1. Projecting amino acid changes onto transcript models</strong><a class="anchor" aria-label="anchor" href="#id_1-projecting-amino-acid-changes-onto-transcript-models"></a>
+</h3>
+<p>Project 1,212 amino-acid substitutions from 5,998 eligible named HLA-A alleles onto the reference protein and its exon-intron model. The tutorial prepares protein annotations, projects them through the reference CDS, and stores a shared genomic layout before plotting. Lollipop heights describe database allele counts, not population frequencies.</p>
+<p><a href="articles/hla-a-lollipop-demo.html"><img src="articles/hla-a-lollipop-demo_files/figure-html/hla-a-gene-plot-1.png" alt="HLA-A substitutions projected onto eight coding exons, with introns compressed three-fold and lollipop heights showing named allele counts." width="100%" loading="lazy" style="background-color: white;"></a></p>
+<p><a href="articles/hla-a-lollipop-demo.html">Explore the HLA-A protein and gene-model tutorial</a>.</p>
 </div>
-<div class="section level2">
-<h2 id="learn-more">Learn More<a class="anchor" aria-label="anchor" href="#learn-more"></a>
-</h2>
-<p>The package site contains the longer cookbook-style documentation:</p>
-<ul>
-<li>
-<code><a href="articles/ggexon-classes-and-verbs.html">vignette("ggexon-classes-and-verbs", package = "ggexon")</a></code> for the class model, every geom, facet systems, and the genomic guide.</li>
-<li>
-<code><a href="articles/ggexon-workflow.html">vignette("ggexon-workflow", package = "ggexon")</a></code> for a step-by-step workflow using individuals, annotations, alignments, and direct plotting.</li>
-<li>
-<code><a href="articles/cd44-splice-variants-demo.html">vignette("cd44-splice-variants-demo", package = "ggexon")</a></code> for human and mouse splice variants, LASTZ links, sequence windows, and supporting tables stored together in one <code>SynSpecies</code> object.</li>
-<li>
-<code><a href="articles/hox-cluster-expansion-demo.html">vignette("hox-cluster-expansion-demo", package = "ggexon")</a></code> for the Ensembl-pinned HOX cluster matrix, exact curated Hox-number slots, and <code><a href="reference/geom_genebox.html">geom_genebox()</a></code> anchor modes.</li>
-<li>
-<code><a href="articles/mhc-continuous-demo.html">vignette("mhc-continuous-demo", package = "ggexon")</a></code> for the haplotype representation of the MHC region across apes, including the step-by-step gene, head, link and facet pipeline behind the figure.</li>
-<li>
-<code><a href="articles/bigwig-coverage-demo.html">vignette("bigwig-coverage-demo", package = "ggexon")</a></code> for thirteen independent raw-depth BigWig panels with automatic span-weighted median-at-85%-height scales above one shared, centered gene annotation.</li>
-<li>
-<code><a href="reference/ggexon.html">?ggexon</a></code> and the reference index for function-level documentation.</li>
-</ul>
-<p>If you use <code>ggexon</code> in work, please also cite the preprint:</p>
+<div class="section level3">
+<h3 id="id_2-comparing-alternatively-spliced-transcripts">
+<strong>2. Comparing alternatively spliced transcripts</strong><a class="anchor" aria-label="anchor" href="#id_2-comparing-alternatively-spliced-transcripts"></a>
+</h3>
+<p>Compare human and chimpanzee AS3MT transcripts with a paper-defined human exon-skipping reconstruction. Build the comparative object first, then add transcript models, nucleotide ribbons, and aligned DNA at the exon-1 repeat. One shared x scale compresses introns while preserving exon widths and the alignment between layers.</p>
+<p><a href="articles/as3mt-splice-variants-demo.html"><img src="articles/as3mt-splice-variants-demo_files/figure-html/as3mt-alignseq-1.png" alt="Human and chimpanzee AS3MT models with aligned repeat sequences and nucleotide ribbons on an intron-compressed display." width="100%" loading="lazy" style="background-color: white;"></a></p>
+<p><a href="articles/as3mt-splice-variants-demo.html">Explore the AS3MT transcript and DNA tutorial</a>.</p>
+</div>
+<div class="section level3">
+<h3 id="id_3-visualizing-local-synteny-across-species">
+<strong>3. Visualizing local synteny across species</strong><a class="anchor" aria-label="anchor" href="#id_3-visualizing-local-synteny-across-species"></a>
+</h3>
+<p>Combine conserved flanking genes, a reconstructed three-exon <em>Dox</em> model in <em>D. simulans</em>, nucleotide alignments, and testis RNA-seq across three <em>Drosophila</em> species. Prepare annotations, alignments, and combined RNA-seq tracks in one object, then build the figure layer by layer. Each assembly retains its genomic axis. RNA panels share one y range and preserve their signal values; the tutorial identifies the deposited signals and remapped read depths by their source units.</p>
+<p><a href="articles/dox-synteny-demo.html"><img src="articles/dox-synteny-demo_files/figure-html/dox-with-rna-1.png" alt="Three Drosophila loci with conserved flanks, an orange Dox model, native DNA alignments, and combined testis RNA-seq panels with right-hand y axes." width="100%" loading="lazy" style="background-color: white;"></a></p>
+<p><a href="articles/dox-synteny-demo.html">Explore the three-species Dox synteny tutorial</a>.</p>
+</div>
+<div class="section level3">
+<h3 id="id_4-visualizing-megabase-scale-haplotypes">
+<strong>4. Visualizing megabase-scale haplotypes</strong><a class="anchor" aria-label="anchor" href="#id_4-visualizing-megabase-scale-haplotypes"></a>
+</h3>
+<p>Compare Siamang H1, Gorilla H1, and Human CHM13 across 3.63 Mb MHC windows. <code><a href="reference/prepare_gene_lollipop.html">prepare_gene_lollipop()</a></code> assigns the 58 selected MHC genes to a shared four-row, six-column grid and stores their native anchors in the Syn object. <code><a href="reference/geom_gene_lollipop.html">geom_gene_lollipop()</a></code> retrieves that preparation automatically. Matching gene keys occupy the same cells, with empty cells reserved. Small native gene arrows, grey background genes, and direct DNA-alignment ribbons retain the genomic context below the enlarged heads.</p>
+<p><a href="articles/mhc-continuous-demo.html"><img src="articles/figures/mhc-three-species.png" alt="Siamang H1, Gorilla H1, and Human CHM13 with 58 gene-lollipop heads in shared row-and-column slots, native gene spans, grey background genes, and two DNA-alignment panels." width="100%" loading="lazy" style="background-color: white;"></a></p>
+<p><a href="articles/mhc-continuous-demo.html">Explore the MHC haplotype tutorial</a>.</p>
+</div>
+<div class="section level3">
+<h3 id="package-map">Package map<a class="anchor" aria-label="anchor" href="#package-map"></a>
+</h3>
+<p>The main containers and preparation functions are:</p>
+<table class="table">
+<colgroup>
+<col width="50%">
+<col width="50%">
+</colgroup>
+<thead><tr>
+<th>Task</th>
+<th>Objects or functions</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>Store genomes and annotations</td>
+<td>
+<code>SynIndividual</code>, <code>SynFeatureAnnotation</code>, <code>SynBigWigAnnotation</code>, <code>SynVCFAnnotation</code>
+</td>
+</tr>
+<tr>
+<td>Store protein features</td>
+<td>
+<code>SynProteinDomainAnnotation</code>, <code>SynProteinMutationAnnotation</code>
+</td>
+</tr>
+<tr>
+<td>Build comparisons</td>
+<td>
+<code>SynSpecies</code>, <code>SynPairAlignment</code>, <code>SynMultiAlignment</code>, <code>HomologyAnnotation</code>
+</td>
+</tr>
+<tr>
+<td>Attach evidence</td>
+<td>
+<code><a href="reference/add_individual.html">add_individual()</a></code>, <code><a href="reference/add_annotation.html">add_annotation()</a></code>, <code><a href="reference/add_pairwise_alignment.html">add_pairwise_alignment()</a></code>, <code><a href="reference/add_homology_annotation.html">add_homology_annotation()</a></code>
+</td>
+</tr>
+<tr>
+<td>Inspect stored data</td>
+<td>
+<code><a href="reference/query_features.html">query_features()</a></code>, <code><a href="reference/query_signal.html">query_signal()</a></code>, <code><a href="reference/query_variants.html">query_variants()</a></code>, <code><a href="reference/query_domains.html">query_domains()</a></code>
+</td>
+</tr>
+<tr>
+<td>Prepare reusable views</td>
+<td>
+<code><a href="reference/project_mutations_to_genome.html">project_mutations_to_genome()</a></code>, <code><a href="reference/prepare_genomic_layout.html">prepare_genomic_layout()</a></code>, <code><a href="reference/prepare_gene_lollipop.html">prepare_gene_lollipop()</a></code>
+</td>
+</tr>
+<tr>
+<td>Prepare panel layouts</td>
+<td>
+<code><a href="reference/store_chain_layout.html">store_chain_layout()</a></code>, <code><a href="reference/set_panel_xlim.html">set_panel_xlim()</a></code>, <code>SynLayout</code>, <code>SynLocusSet</code>
+</td>
+</tr>
+<tr>
+<td>Draw models and evidence</td>
+<td>
+<code><a href="reference/geom_exon2.html">geom_exon2()</a></code>, <code><a href="reference/geom_genetag.html">geom_genetag()</a></code>, <code><a href="reference/geom_gene_lollipop.html">geom_gene_lollipop()</a></code>, <code><a href="reference/geom_nuclink.html">geom_nuclink()</a></code>, <code><a href="reference/geom_coverage.html">geom_coverage()</a></code>, <code><a href="reference/geom_protein_lollipop.html">geom_protein_lollipop()</a></code>
+</td>
+</tr>
+<tr>
+<td>Set scales and appearance</td>
+<td>
+<code><a href="reference/facet_genomics.html">facet_genomics()</a></code>, <code><a href="reference/scale_x_ggexon_genomic.html">scale_x_ggexon_genomic()</a></code>, <code><a href="reference/theme_ggexon_track.html">theme_ggexon_track()</a></code>, <code><a href="reference/theme_ggexon_clean.html">theme_ggexon_clean()</a></code>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Use the function reference for supported inputs, selectors, and additional geoms. Ordinary ggplot2 layers, scales, themes, and <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave()</a></code> remain available.</p>
+</div>
+<div class="section level3">
+<h3 id="learn-more">Learn more<a class="anchor" aria-label="anchor" href="#learn-more"></a>
+</h3>
+<p>Start with <a href="articles/ggexon-workflow.html">0. Basic usage</a> for data objects, geoms, scales, and panel layouts. Browse the <a href="articles/index.html">tutorials</a> for the four complete examples, or use the <a href="reference/index.html">function reference</a> for individual classes and verbs.</p>
+<p>The <a href="https://github.com/DongyaoLiu/ggexon/blob/HEAD/pkgdown/archive/hox-cluster-expansion-demo.Rmd" class="external-link">archived HOX matrix example</a> retains the gene-slot comparison, plotting code, and source audit trail.</p>
+</div>
+<div class="section level3">
+<h3 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
+</h3>
+<p><code>ggexon</code> was developed while visualizing the <code>sept-1</code>/<code>zina-1</code> toxin-antidote locus. If you use the package in your work, please also cite:</p>
 <blockquote>
 <p>Liu D, Zheng C. sept-1/zina-1 is an Ancient Toxin-Antidote System in Caenorhabditis elegans. bioRxiv. 2025. <a href="https://www.biorxiv.org/content/10.1101/2025.11.28.691152v1" class="external-link uri">https://www.biorxiv.org/content/10.1101/2025.11.28.691152v1</a></p>
 </blockquote>
+</div>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
@@ -343,7 +281,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

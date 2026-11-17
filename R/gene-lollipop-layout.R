@@ -117,6 +117,54 @@
   to_upper_ascii(grDevices::rgb(rgb[,1], rgb[,2], rgb[,3], maxColorValue = 255))
 }
 
+# A prepared grid reserves every declared cell, including unoccupied cells.
+# Columns therefore have identical centres in equally sized panels.
+.gene_lollipop_grid <- function(anchor_mm, width_mm, panel_width_mm,
+    head_row, head_col, nrow, ncol, gap_mm = .8, max_shift_mm = 25,
+    lane_spacing_mm = .65, lane_clearance_mm = .5) {
+  width_mm <- .genebox_positive_number(width_mm, "width_mm")
+  panel_width_mm <- .genebox_positive_number(panel_width_mm, "panel_width_mm")
+  for (arg in c("nrow", "ncol")) {
+    v <- get(arg)
+    if (!is.numeric(v) || length(v) != 1L || !is.finite(v) || v < 1 || v != floor(v))
+      stop("Grid dimension `", arg, "` must be one positive integer.", call. = FALSE)
+  }
+  for (arg in c("gap_mm", "max_shift_mm")) {
+    v <- get(arg)
+    if (!is.numeric(v) || length(v) != 1L || !is.finite(v) || v < 0)
+      stop("`", arg, "` must be one nonnegative finite number.", call. = FALSE)
+  }
+  .genebox_positive_number(lane_spacing_mm, "lane_spacing_mm")
+  .genebox_positive_number(lane_clearance_mm, "lane_clearance_mm")
+  if (!is.numeric(anchor_mm) || any(!is.finite(anchor_mm)))
+    stop("All anchors must be finite numbers.", call. = FALSE)
+  n <- length(anchor_mm)
+  for (arg in c("head_row", "head_col")) {
+    v <- get(arg)
+    limit <- if (arg == "head_row") nrow else ncol
+    if (!is.numeric(v) || length(v) != n || any(!is.finite(v)) ||
+        any(v < 1 | v != floor(v) | v > limit))
+      stop("`", arg, "` must identify a valid grid row or column for every gene.", call. = FALSE)
+  }
+  if (anyDuplicated(paste(head_row, head_col)))
+    stop("Two genes cannot occupy the same grid cell in one panel.", call. = FALSE)
+  gutter <- (nrow - 1) * lane_spacing_mm + 2 * lane_clearance_mm
+  required <- ncol * (width_mm + gutter) + (ncol - 1) * gap_mm
+  if (required > panel_width_mm + 1e-8)
+    stop("Shared gene grid cannot fit: increase output width or reduce columns/head width.", call. = FALSE)
+  centres <- if (ncol == 1L) (panel_width_mm + gutter) / 2 else
+    seq(width_mm / 2 + gutter, panel_width_mm - width_mm / 2, length.out = ncol)
+  head <- centres[head_col]
+  if (any(abs(head - anchor_mm) > max_shift_mm + 1e-8))
+    stop("Shared gene grid exceeds max_shift_mm; increase the allowed displacement.", call. = FALSE)
+  left <- head - width_mm / 2
+  data.frame(anchor_x_mm = anchor_mm, head_x_mm = head,
+    row = as.integer(head_row), left_mm = left, right_mm = head + width_mm / 2,
+    column = as.integer(head_col),
+    display_order = as.integer((head_col - 1) * nrow + nrow - head_row + 1),
+    channel_x_mm = left - gutter + lane_clearance_mm + (nrow - head_row) * lane_spacing_mm)
+}
+
 # Fixed row identities retain blank slots and start a new column whenever
 # display order would otherwise run upwards or put two heads in one cell.
 .gene_lollipop_fixed_columns <- function(anchor_mm, width_mm, panel_width_mm,

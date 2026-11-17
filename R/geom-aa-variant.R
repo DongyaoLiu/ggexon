@@ -295,7 +295,7 @@ syn_to_aa_variant_df <- function(x,
   }
 
   individual <- resolve_syn_individual(x, species = species)
-  ann <- resolve_syn_protein_mutation_annotation(
+  ann <- .find_genomic_projection(individual, annotation, "mutation") %||% resolve_syn_protein_mutation_annotation(
     individual, annotation = annotation, allow_missing = TRUE
   )
   if (is.null(ann)) {

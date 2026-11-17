@@ -2,23 +2,13 @@
 
 ### Learn ggexon
 
-- [ggexon
-  Workflow](https://dongyaoliu.github.io/ggexon/articles/ggexon-workflow.md):
-- [HOX Cluster Expansion Across
-  Chordates](https://dongyaoliu.github.io/ggexon/articles/hox-cluster-expansion-demo.md):
-- [Build a three-species synteny figure layer by
-  layer](https://dongyaoliu.github.io/ggexon/articles/dox-synteny-demo.md):
-- [CD44 Splice Variant Alignment
-  Demo](https://dongyaoliu.github.io/ggexon/articles/cd44-splice-variants-demo.md):
-- [AS3MT: transcripts, DNA and
-  RNA-seq](https://dongyaoliu.github.io/ggexon/articles/as3mt-splice-variants-demo.md):
-- [HLA-A Protein Variants: Dense Multiallelic
-  Lollipops](https://dongyaoliu.github.io/ggexon/articles/hla-a-lollipop-demo.md):
-- [Haplotype representation of the MHC region across
-  apes](https://dongyaoliu.github.io/ggexon/articles/mhc-continuous-demo.md):
-- [PEEL-1 Raw BigWig
-  Coverage](https://dongyaoliu.github.io/ggexon/articles/bigwig-coverage-demo.md):
-- [Yeast cox1 Intron Architecture
-  Demo](https://dongyaoliu.github.io/ggexon/articles/cox1-yeast-demo.md):
-- [ggexon Classes, Geoms, Facets, and
-  Guides](https://dongyaoliu.github.io/ggexon/articles/ggexon-classes-and-verbs.md):
+- [0. Basic
+  usage](https://dongyaoliu.github.io/ggexon/articles/ggexon-workflow.md):
+- [1. Projecting amino acid changes onto transcript
+  models](https://dongyaoliu.github.io/ggexon/articles/hla-a-lollipop-demo.md):
+- [2. Comparing alternatively spliced
+  transcripts](https://dongyaoliu.github.io/ggexon/articles/as3mt-splice-variants-demo.md):
+- [3. Visualizing local synteny across
+  species](https://dongyaoliu.github.io/ggexon/articles/dox-synteny-demo.md):
+- [4. Visualizing megabase-scale
+  haplotypes](https://dongyaoliu.github.io/ggexon/articles/mhc-continuous-demo.md):

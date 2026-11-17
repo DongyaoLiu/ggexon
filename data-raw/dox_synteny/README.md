@@ -3,11 +3,14 @@
 The offline input bundle is in `inst/extdata/dox_synteny/`. It compares
 D. mauritiana, D. simulans, and D. sechellia at the Dox insertion locus
 illustrated in [Vedanayagam et al. (2021), Extended Data Figure 5](https://pmc.ncbi.nlm.nih.gov/articles/PMC8665063/#F11).
-There are three species groups, each with separate RNA/annotation subpanels,
+There are three species groups, each with one combined RNA track above its annotation,
 two nucleotide-link panels, and 2/3/2 displayed genes. Annotation : link : RNA
-heights are 1 : 0.5 : 0.5. The figure demonstrates the new
-`facet_genomics(coverage_panel_height = ...)` argument and existing independent
-RNA y limits; it requires a ggexon version with that argument.
+heights are 1 : 0.5 : 0.5. The figure uses
+`facet_genomics(scales = "free_x", coverage_panel_height = 0.5)` and
+`scale_panel_coverage("fixed_y")` for a shared RNA y scale.
+Gene bodies are centred with `center_panel_annotation()`. RNA axes are on
+the right, and `strip_group = "individual"` centres each outside species label
+over its RNA and annotation panels.
 
 Run from the repository root:
 
@@ -21,6 +24,8 @@ python3 data-raw/dox_synteny/remap-dsim-rnaseq.py --download
 python3 data-raw/dox_synteny/build-dox-data.py
 
 # Convert verified tables into native GTF/PAF/BigWig tutorial inputs.
+# Combined .RNA.bw files sum forward and reverse magnitudes at each base;
+# separate-strand BigWigs remain available for Basic usage.
 # Requires rtracklayer on macOS or Linux; values and coordinates are retained.
 Rscript data-raw/dox_synteny/prepare-dox-objects.R
 
@@ -57,7 +62,10 @@ Two source details are essential when reusing the example:
   SRR23418969 (40,381,684 paired-end read pairs), remapped to the exact plotted
   assembly. Its incompatible deposited BigWigs remain excluded. No coordinate
   offset is inferred. Dsim is raw read depth, whereas the outer species retain
-  deposited signal units; independent y scales are used for visualization.
+  deposited signal units. The RNA panels share one numeric y scale, although
+  the different source units still preclude between-species expression inference.
+  The tutorial combines forward and reverse magnitudes into one signal per
+  species without smoothing or additional normalization.
 
 The remapping script verifies all three compressed input files against their
 public MD5 checksums and the full decompressed genome SHA256. It validates the

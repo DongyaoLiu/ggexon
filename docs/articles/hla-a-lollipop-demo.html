@@ -5,14 +5,14 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>HLA-A Protein Variants: Dense Multiallelic Lollipops • ggexon</title>
+<title>1. Projecting amino acid changes onto transcript models • ggexon</title>
 <script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_3-0.4.10/font.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Source_Sans_3-0.4.10/font.css" rel="stylesheet">
 <link href="../deps/Source_Code_Pro-0.4.10/font.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="HLA-A Protein Variants: Dense Multiallelic Lollipops">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="1. Projecting amino acid changes onto transcript models">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -34,15 +34,11 @@
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-tutorials" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Tutorials</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-tutorials">
-<li><a class="dropdown-item" href="../articles/ggexon-workflow.html">Complete workflow</a></li>
-    <li><a class="dropdown-item" href="../articles/hox-cluster-expansion-demo.html">HOX cluster expansion</a></li>
-    <li><a class="dropdown-item" href="../articles/dox-synteny-demo.html">Three-species synteny and RNA-seq</a></li>
-    <li><a class="dropdown-item" href="../articles/cd44-splice-variants-demo.html">CD44 splice variant alignment</a></li>
-    <li><a class="dropdown-item" href="../articles/as3mt-splice-variants-demo.html">AS3MT transcripts, DNA and RNA-seq</a></li>
-    <li><a class="dropdown-item" href="../articles/hla-a-lollipop-demo.html">HLA-A protein variant lollipops</a></li>
-    <li><a class="dropdown-item" href="../articles/mhc-continuous-demo.html">MHC haplotypes across apes</a></li>
-    <li><a class="dropdown-item" href="../articles/bigwig-coverage-demo.html">PEEL-1 raw BigWig coverage</a></li>
-    <li><a class="dropdown-item" href="../articles/ggexon-classes-and-verbs.html">Classes, geoms, facets, and guides</a></li>
+<li><a class="dropdown-item" href="../articles/ggexon-workflow.html">0. Basic usage</a></li>
+    <li><a class="dropdown-item" href="../articles/hla-a-lollipop-demo.html">1. Projecting amino acid changes onto transcript models</a></li>
+    <li><a class="dropdown-item" href="../articles/as3mt-splice-variants-demo.html">2. Comparing alternatively spliced transcripts</a></li>
+    <li><a class="dropdown-item" href="../articles/dox-synteny-demo.html">3. Visualizing local synteny across species</a></li>
+    <li><a class="dropdown-item" href="../articles/mhc-continuous-demo.html">4. Visualizing megabase-scale haplotypes</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
@@ -65,17 +61,17 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
-      <h1>HLA-A Protein Variants: Dense Multiallelic Lollipops</h1>
-            
-      
-      <small class="dont-index">Source: <a href="https://github.com/DongyaoLiu/ggexon/blob/main/vignettes/hla-a-lollipop-demo.Rmd" class="external-link"><code>vignettes/hla-a-lollipop-demo.Rmd</code></a></small>
+      <h1>1. Projecting amino acid changes onto transcript models</h1>
+
+
+      <small class="dont-index">Source: <a href="https://github.com/DongyaoLiu/ggexon/blob/HEAD/vignettes/hla-a-lollipop-demo.Rmd" class="external-link"><code>vignettes/hla-a-lollipop-demo.Rmd</code></a></small>
       <div class="d-none name"><code>hla-a-lollipop-demo.Rmd</code></div>
     </div>
 
-    
-    
+
+
 <div class="section level2">
-<h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
+<h2 id="a-dense-landscape-of-hla-a-variation">A dense landscape of HLA-A variation<a class="anchor" aria-label="anchor" href="#a-dense-landscape-of-hla-a-variation"></a>
 </h2>
 <p>This example summarizes <strong>5,998 named HLA-A alleles</strong>,
 an MHC class I heavy chain, from IPD-IMGT/HLA release
@@ -106,29 +102,66 @@ Counts reflect database representation, not individuals, independent
 observations, or population frequencies.</p>
 </div>
 <div class="section level2">
-<h2 id="step-1--load-the-offline-inputs">Step 1. Load the offline inputs<a class="anchor" aria-label="anchor" href="#step-1--load-the-offline-inputs"></a>
+<h2 id="prepare-one-syn-object">Prepare one Syn object<a class="anchor" aria-label="anchor" href="#prepare-one-syn-object"></a>
 </h2>
+<p>Use one <code>SynIndividual</code> for the reference allele
+throughout this tutorial. It holds the reference FASTA and exon
+annotation, the reference protein, and two attached protein
+annotations:</p>
+<ul>
+<li>
+<code>hla_substitutions</code>: counts of amino-acid alternatives,
+keyed to the reference transcript.</li>
+<li>
+<code>hla_regions</code>: the six structural regions, using the same
+transcript key.</li>
+</ul>
+<p>The example loader reads the bundled offline files, summarizes the
+alleles, and attaches these annotations. No separate mutation, domain,
+or exon tables need to be prepared before plotting.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dongyaoliu.github.io/ggexon/">ggexon</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: package 'ggplot2' was built under R version 4.4.3</span></span>
 <span></span>
 <span><span class="va">demo_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"hla_a_lollipop"</span>, package <span class="op">=</span> <span class="st">"ggexon"</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/source.html" class="external-link">source</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">demo_dir</span>, <span class="st">"load-hla-a-example.R"</span><span class="op">)</span>, local <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/source.html" class="external-link">source</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">demo_dir</span>, <span class="st">"plot-hla-a-example.R"</span><span class="op">)</span>, local <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/source.html" class="external-link">source</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">demo_dir</span>, <span class="st">"project-hla-a-example.R"</span><span class="op">)</span>, local <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">hla</span> <span class="op">&lt;-</span> <span class="fu">load_hla_a_example</span><span class="op">(</span><span class="va">demo_dir</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
-<span>  named_alleles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">hla</span><span class="op">$</span><span class="va">alleles</span><span class="op">)</span>,</span>
-<span>  distinct_mature_proteins <span class="op">=</span> <span class="va">hla</span><span class="op">$</span><span class="va">distinct_mature_proteins</span>,</span>
-<span>  substitutions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">hla</span><span class="op">$</span><span class="va">mutations</span><span class="op">)</span>,</span>
-<span>  variable_residues <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">hla</span><span class="op">$</span><span class="va">mutations</span><span class="op">$</span><span class="va">position</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">hla</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "SynIndividual"</span></span>
+<span><span class="co">#&gt; attr(,"package")</span></span>
+<span><span class="co">#&gt; [1] "ggexon"</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="fu"><a href="../reference/get_annotation.html">get_annotation</a></span><span class="op">(</span><span class="va">hla</span>, <span class="st">"hla_substitutions"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "SynProteinMutationAnnotation"</span></span>
+<span><span class="co">#&gt; attr(,"package")</span></span>
+<span><span class="co">#&gt; [1] "ggexon"</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="fu"><a href="../reference/get_annotation.html">get_annotation</a></span><span class="op">(</span><span class="va">hla</span>, <span class="st">"hla_regions"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "SynProteinDomainAnnotation"</span></span>
+<span><span class="co">#&gt; attr(,"package")</span></span>
+<span><span class="co">#&gt; [1] "ggexon"</span></span></code></pre></div>
+<p><code>hla</code> is the object passed to every plot. The allele
+manifest, original protein sequences, residue-state counts, and source
+checksums are retained in the object’s metadata.
+<code>hla_a_evidence(hla)</code> retrieves them for inspection. They are
+supporting evidence, not separate plotting inputs. The helpers are
+example functions, rather than exported package functions.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  named_alleles <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="fu">hla_a_evidence</span><span class="op">(</span><span class="va">hla</span><span class="op">)</span><span class="op">$</span><span class="va">alleles</span><span class="op">)</span>,</span>
+<span>  distinct_mature_proteins <span class="op">=</span> <span class="fu">hla_a_evidence</span><span class="op">(</span><span class="va">hla</span><span class="op">)</span><span class="op">$</span><span class="va">distinct_mature_proteins</span>,</span>
+<span>  substitutions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="fu"><a href="../reference/query_protein_mutations.html">query_protein_mutations</a></span><span class="op">(</span><span class="va">hla</span>, annotation <span class="op">=</span> <span class="st">"hla_substitutions"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  variable_residues <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="fu"><a href="../reference/query_protein_mutations.html">query_protein_mutations</a></span><span class="op">(</span></span>
+<span>    <span class="va">hla</span>, annotation <span class="op">=</span> <span class="st">"hla_substitutions"</span></span>
+<span>  <span class="op">)</span><span class="op">$</span><span class="va">mature_position</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt;   named_alleles distinct_mature_proteins substitutions variable_residues</span></span>
 <span><span class="co">#&gt; 1          5998                     3188          1212               334</span></span></code></pre></div>
 <p>The allele manifest retains every exact name and sequence checksum.
 The original FASTA records are unchanged and bundled with gzip
-compression. The loader and plotting functions are example helpers, not
-new exported package functions.</p>
+compression.</p>
 <div class="section level3">
 <h3 id="protein-coordinates-and-structural-regions">Protein coordinates and structural regions<a class="anchor" aria-label="anchor" href="#protein-coordinates-and-structural-regions"></a>
 </h3>
@@ -136,18 +169,27 @@ new exported package functions.</p>
 The plot uses <strong>mature-protein positions 1–341</strong>, so mature
 residue 156 is precursor residue 180. The signal peptide is excluded
 from comparison, while the original bundled sequences retain it.</p>
+<p>The stored mutation <code>position</code> and structural
+<code>start</code>/<code>end</code> columns use <strong>precursor
+coordinates</strong> so they can be projected through the reference CDS.
+The same annotations also retain <code>mature_position</code>,
+<code>mature_start</code>, and <code>mature_end</code> columns.
+Selecting these columns gives the mature-protein view without creating a
+second set of annotations or changing the stored coordinates.</p>
 <p>Structural boundaries come from the bundled UniProt
 <strong>P04439</strong> snapshot, shifted by 24 residues. Its displayed
 sequence is A*03:01; only the shared structural boundaries annotate this
 equal-length HLA-A track. All substitutions are computed against the
 selected A*02:01 reference.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">hla</span><span class="op">$</span><span class="va">domains</span>, col.names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Protein region"</span>, <span class="st">"Start"</span>, <span class="st">"End"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="../reference/query_domains.html">query_domains</a></span><span class="op">(</span><span class="fu"><a href="../reference/get_annotation.html">get_annotation</a></span><span class="op">(</span><span class="va">hla</span>, <span class="st">"hla_regions"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">[</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"domain"</span>, <span class="st">"mature_start"</span>, <span class="st">"mature_end"</span><span class="op">)</span><span class="op">]</span>,</span>
+<span>  col.names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Protein region"</span>, <span class="st">"Mature start"</span>, <span class="st">"Mature end"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="left">Protein region</th>
-<th align="right">Start</th>
-<th align="right">End</th>
+<th align="right">Mature start</th>
+<th align="right">Mature end</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
@@ -191,10 +233,14 @@ to the exact reference allele’s coding structure.</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="step-2--draw-the-dense-lollipop-summary">Step 2. Draw the dense lollipop summary<a class="anchor" aria-label="anchor" href="#step-2--draw-the-dense-lollipop-summary"></a>
+<h2 id="dense-lollipop-summary">Dense lollipop summary<a class="anchor" aria-label="anchor" href="#dense-lollipop-summary"></a>
 </h2>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">plots</span> <span class="op">&lt;-</span> <span class="fu">plot_hla_a_example</span><span class="op">(</span><span class="va">hla</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Scale for <span style="color: #00BB00;">y</span> is already present.</span></span>
+<span><span class="co">#&gt; Adding another scale for <span style="color: #00BB00;">y</span>, which will replace the existing scale.</span></span>
+<span><span class="co">#&gt; Scale for <span style="color: #00BB00;">y</span> is already present.</span></span>
+<span><span class="co">#&gt; Adding another scale for <span style="color: #00BB00;">y</span>, which will replace the existing scale.</span></span>
 <span><span class="va">plots</span><span class="op">$</span><span class="va">overview</span></span></code></pre></div>
 <div class="figure">
 <img src="hla-a-lollipop-demo_files/figure-html/hla-a-overview-1.png" class="r-plt" alt="A dense HLA-A lollipop landscape containing 1212 substitution heads at 334 residues from 5998 named alleles. Heads are coloured by amino-acid group, with a logarithmic count axis and labelled structural regions beneath." width="2200"><p class="caption">
@@ -227,27 +273,30 @@ alternative identities remain in the table.</li>
 at equal counts. No substitutions are filtered or sampled out of the
 plot. The close-up and exported table provide exact values when the
 overview is too crowded.</p>
-<p>The shared helper uses <code><a href="../reference/protein_lollipop_data.html">protein_lollipop_data()</a></code> to
-prepare the track and count heights. The key preparation arguments
-are:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">prepared</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/protein_lollipop_data.html">protein_lollipop_data</a></span><span class="op">(</span></span>
-<span>  <span class="va">hla</span><span class="op">$</span><span class="va">mutations</span>,</span>
-<span>  domains <span class="op">=</span> <span class="va">hla</span><span class="op">$</span><span class="va">domains</span>, domain <span class="op">=</span> <span class="st">"domain"</span>,</span>
-<span>  protein_length <span class="op">=</span> <span class="va">hla</span><span class="op">$</span><span class="va">protein_length</span>, protein_start <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  mutation_y_by <span class="op">=</span> <span class="st">"allele_count"</span>,</span>
-<span>  mutation_y_trans <span class="op">=</span> <span class="st">"log10"</span>,</span>
-<span>  mutation_y_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log10</a></span><span class="op">(</span><span class="va">hla</span><span class="op">$</span><span class="va">mutations</span><span class="op">$</span><span class="va">allele_count</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  spread_threshold <span class="op">=</span> <span class="fl">0</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<p><code>hla_a_lollipop_layout()</code> then applies symmetric offsets
-to the head coordinates and recomputes each curve from its original
-anchor. <code><a href="../reference/geom_protein_lollipop.html">geom_protein_lollipop()</a></code> draws the structural track;
-ordinary ggplot2 line and point layers draw the prepared stems and heads
-with group colours and transparency. This bounded fanning is specific to
-this example; the package’s default spreading API is unchanged.</p>
+<p>The plot starts with <code>ggexon(hla)</code>.
+<code><a href="../reference/geom_protein_lollipop.html">geom_protein_lollipop()</a></code> resolves the mutation and region
+annotations from that object during plot build. The core
+protein-coordinate recipe is:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">hla</span><span class="op">$</span><span class="va">mutations</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mutation"</span>, <span class="st">"allele_count"</span>, <span class="st">"n_alternatives"</span>, <span class="st">"amino_acid_group"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">hla</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_protein_lollipop.html">geom_protein_lollipop</a></span><span class="op">(</span></span>
+<span>    annotation <span class="op">=</span> <span class="st">"hla_substitutions"</span>, domain_annotation <span class="op">=</span> <span class="st">"hla_regions"</span>,</span>
+<span>    position <span class="op">=</span> <span class="st">"mature_position"</span>, domain_start <span class="op">=</span> <span class="st">"mature_start"</span>, domain_end <span class="op">=</span> <span class="st">"mature_end"</span>,</span>
+<span>    domain <span class="op">=</span> <span class="st">"domain"</span>, protein_length <span class="op">=</span> <span class="fl">341</span>, protein_start <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>    mutation_y_by <span class="op">=</span> <span class="st">"allele_count"</span>, mutation_y_trans <span class="op">=</span> <span class="st">"log10"</span>,</span>
+<span>    mutation_y_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log10</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">4667</span><span class="op">)</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span>, spread_threshold <span class="op">=</span> <span class="fl">0</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+<p>The dense example adds bounded fanning through ggplot2 layer data
+functions. Each function receives the plot’s <code>hla</code> object,
+queries its attached annotation, and computes stems or heads at build
+time. <code>hla_a_lollipop_layout()</code> applies symmetric offsets and
+retains every true residue anchor. This keeps the existing colour and
+transparency controls without passing precomputed plotting tables to
+<code><a href="../reference/ggexon.html">ggexon()</a></code>. Bounded fanning is specific to this example; the
+package’s default spreading API is unchanged.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/query_protein_mutations.html">query_protein_mutations</a></span><span class="op">(</span><span class="va">hla</span>, annotation <span class="op">=</span> <span class="st">"hla_substitutions"</span><span class="op">)</span><span class="op">[</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mutation"</span>, <span class="st">"allele_count"</span>, <span class="st">"n_alternatives"</span>, <span class="st">"amino_acid_group"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   mutation allele_count n_alternatives amino_acid_group</span></span>
 <span><span class="co">#&gt; 1      G1A            1              4        Aliphatic</span></span>
 <span><span class="co">#&gt; 2      G1D            3              4           Acidic</span></span>
@@ -257,13 +306,13 @@ this example; the package’s default spreading API is unchanged.</p>
 <span><span class="co">#&gt; 6      S2F            3              4         Aromatic</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="step-3--compare-multiple-alternatives-at-residue-156">Step 3. Compare multiple alternatives at residue 156<a class="anchor" aria-label="anchor" href="#step-3--compare-multiple-alternatives-at-residue-156"></a>
+<h2 id="multiple-alternatives-at-residue-156">Multiple alternatives at residue 156<a class="anchor" aria-label="anchor" href="#multiple-alternatives-at-residue-156"></a>
 </h2>
 <p>The reference has <strong>L</strong> at mature residue 156. In this
 expanded panel there are <strong>five</strong> alternative amino acids,
 each counted separately:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">focus_states</span> <span class="op">&lt;-</span> <span class="va">hla</span><span class="op">$</span><span class="va">states</span><span class="op">[</span><span class="va">hla</span><span class="op">$</span><span class="va">states</span><span class="op">$</span><span class="va">position</span> <span class="op">==</span> <span class="va">hla</span><span class="op">$</span><span class="va">focus_position</span>, <span class="op">]</span></span>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">focus_states</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="fu">hla_a_evidence</span><span class="op">(</span><span class="va">hla</span><span class="op">)</span><span class="op">$</span><span class="va">states</span>, <span class="va">position</span> <span class="op">==</span> <span class="fl">156</span><span class="op">)</span></span>
 <span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">focus_states</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ref"</span>, <span class="st">"alt"</span>, <span class="st">"is_reference"</span>, <span class="st">"allele_count"</span><span class="op">)</span><span class="op">]</span>,</span>
 <span>             col.names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Reference"</span>, <span class="st">"Observed"</span>, <span class="st">"Reference match"</span>, <span class="st">"Named alleles"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
@@ -319,14 +368,14 @@ each counted separately:</p>
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">focus_states</span><span class="op">$</span><span class="va">allele_count</span><span class="op">)</span> <span class="op">==</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">hla</span><span class="op">$</span><span class="va">alleles</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">focus_states</span><span class="op">$</span><span class="va">allele_count</span><span class="op">)</span> <span class="op">==</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="fu">hla_a_evidence</span><span class="op">(</span><span class="va">hla</span><span class="op">)</span><span class="op">$</span><span class="va">alleles</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>There are <strong>3,172 reference matches</strong>, plus
 <strong>L156F (2)</strong>, <strong>L156M (1)</strong>, <strong>L156Q
 (1,184)</strong>, <strong>L156R (596)</strong>, and <strong>L156W
 (1,043)</strong>. These sum to 5,998. Reference matches remain in the
 state table and are not substitution heads.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">plots</span><span class="op">$</span><span class="va">focus</span></span></code></pre></div>
 <div class="figure">
 <img src="hla-a-lollipop-demo_files/figure-html/hla-a-multiallelic-focus-1.png" class="r-plt" alt="Five separate heads for L156F, L156M, L156Q, L156R and L156W share the true residue 156 anchor. Their respective labelled counts are 2, 1, 1184, 596 and 1043." width="2200"><p class="caption">
@@ -341,7 +390,7 @@ without producing unwieldy lists of thousands of names in each table
 cell.</p>
 </div>
 <div class="section level2">
-<h2 id="step-4--project-onto-the-reference-exonintron-model">Step 4. Project onto the reference exon–intron model<a class="anchor" aria-label="anchor" href="#step-4--project-onto-the-reference-exonintron-model"></a>
+<h2 id="project-onto-the-reference-exonintron-model">Project onto the reference exon–intron model<a class="anchor" aria-label="anchor" href="#project-onto-the-reference-exonintron-model"></a>
 </h2>
 <p>The same 1,212 substitutions can be placed above the <strong>eight
 coding exons and seven introns</strong> of A*02:01:01:01. The bundled
@@ -354,12 +403,12 @@ coding region from ATG to stop; untranslated flanks are outside the
 displayed model. Other alleles’ substitutions are projected onto this
 one reference structure, not onto separate allele-specific intron
 models.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/source.html" class="external-link">source</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">demo_dir</span>, <span class="st">"project-hla-a-example.R"</span><span class="op">)</span>, local <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="va">gene</span> <span class="op">&lt;-</span> <span class="fu">load_hla_a_gene_model</span><span class="op">(</span><span class="va">hla</span>, <span class="va">demo_dir</span><span class="op">)</span></span>
-<span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">gene</span><span class="op">$</span><span class="va">structure</span>, col.names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Feature"</span>, <span class="st">"Number"</span>, <span class="st">"Start"</span>, <span class="st">"End"</span>, <span class="st">"Length (bp)"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="fu">hla_a_gene_structure</span><span class="op">(</span><span class="va">hla</span><span class="op">)</span>,</span>
+<span>  col.names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Feature"</span>, <span class="st">"Number"</span>, <span class="st">"Start"</span>, <span class="st">"End"</span>, <span class="st">"Length (bp)"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
+<th align="left"></th>
 <th align="left">Feature</th>
 <th align="right">Number</th>
 <th align="right">Start</th>
@@ -368,6 +417,7 @@ models.</p>
 </tr></thead>
 <tbody>
 <tr class="odd">
+<td align="left">1</td>
 <td align="left">exon</td>
 <td align="right">1</td>
 <td align="right">301</td>
@@ -375,6 +425,7 @@ models.</p>
 <td align="right">73</td>
 </tr>
 <tr class="even">
+<td align="left">9</td>
 <td align="left">intron</td>
 <td align="right">1</td>
 <td align="right">374</td>
@@ -382,6 +433,7 @@ models.</p>
 <td align="right">130</td>
 </tr>
 <tr class="odd">
+<td align="left">2</td>
 <td align="left">exon</td>
 <td align="right">2</td>
 <td align="right">504</td>
@@ -389,6 +441,7 @@ models.</p>
 <td align="right">270</td>
 </tr>
 <tr class="even">
+<td align="left">10</td>
 <td align="left">intron</td>
 <td align="right">2</td>
 <td align="right">774</td>
@@ -396,6 +449,7 @@ models.</p>
 <td align="right">241</td>
 </tr>
 <tr class="odd">
+<td align="left">3</td>
 <td align="left">exon</td>
 <td align="right">3</td>
 <td align="right">1015</td>
@@ -403,6 +457,7 @@ models.</p>
 <td align="right">276</td>
 </tr>
 <tr class="even">
+<td align="left">11</td>
 <td align="left">intron</td>
 <td align="right">3</td>
 <td align="right">1291</td>
@@ -410,6 +465,7 @@ models.</p>
 <td align="right">600</td>
 </tr>
 <tr class="odd">
+<td align="left">4</td>
 <td align="left">exon</td>
 <td align="right">4</td>
 <td align="right">1891</td>
@@ -417,6 +473,7 @@ models.</p>
 <td align="right">276</td>
 </tr>
 <tr class="even">
+<td align="left">12</td>
 <td align="left">intron</td>
 <td align="right">4</td>
 <td align="right">2167</td>
@@ -424,6 +481,7 @@ models.</p>
 <td align="right">99</td>
 </tr>
 <tr class="odd">
+<td align="left">5</td>
 <td align="left">exon</td>
 <td align="right">5</td>
 <td align="right">2266</td>
@@ -431,6 +489,7 @@ models.</p>
 <td align="right">117</td>
 </tr>
 <tr class="even">
+<td align="left">13</td>
 <td align="left">intron</td>
 <td align="right">5</td>
 <td align="right">2383</td>
@@ -438,6 +497,7 @@ models.</p>
 <td align="right">438</td>
 </tr>
 <tr class="odd">
+<td align="left">6</td>
 <td align="left">exon</td>
 <td align="right">6</td>
 <td align="right">2821</td>
@@ -445,6 +505,7 @@ models.</p>
 <td align="right">33</td>
 </tr>
 <tr class="even">
+<td align="left">14</td>
 <td align="left">intron</td>
 <td align="right">6</td>
 <td align="right">2854</td>
@@ -452,6 +513,7 @@ models.</p>
 <td align="right">142</td>
 </tr>
 <tr class="odd">
+<td align="left">7</td>
 <td align="left">exon</td>
 <td align="right">7</td>
 <td align="right">2996</td>
@@ -459,6 +521,7 @@ models.</p>
 <td align="right">48</td>
 </tr>
 <tr class="even">
+<td align="left">15</td>
 <td align="left">intron</td>
 <td align="right">7</td>
 <td align="right">3044</td>
@@ -466,6 +529,7 @@ models.</p>
 <td align="right">169</td>
 </tr>
 <tr class="odd">
+<td align="left">8</td>
 <td align="left">exon</td>
 <td align="right">8</td>
 <td align="right">3213</td>
@@ -474,61 +538,259 @@ models.</p>
 </tr>
 </tbody>
 </table>
-<p><code>load_hla_a_gene_model()</code> attaches a
-<code>SynProteinMutationAnnotation</code> to a
-<code>SynIndividual</code> containing the reference GFF3, then calls
-<code><a href="../reference/project_mutations_to_genome.html">project_mutations_to_genome()</a></code>. Projection uses
-<strong>precursor positions</strong>, so the loader adds 24 to each
-mature residue first. A codon crossing a splice junction is represented
-by multiple exonic fragments. Its lollipop anchors to the longest
-fragment, rather than an interval midpoint that could fall inside an
-intron.</p>
-<p>For example, mature residue 1 spans reference genomic base 373 in
-exon 1 and bases 504–505 in exon 2. Its anchor is
-<strong>504.5</strong>, on the exonic two-base fragment.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">genomic_plot</span> <span class="op">&lt;-</span> <span class="fu">plot_hla_a_gene_example</span><span class="op">(</span><span class="va">hla</span>, <span class="va">gene</span>, intron_factor <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
-<span><span class="va">genomic_plot</span><span class="op">$</span><span class="va">plot</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="store-the-genomic-projection">Store the genomic projection<a class="anchor" aria-label="anchor" href="#store-the-genomic-projection"></a>
+</h3>
+<p>The exon model and <code>hla_substitutions</code> are already
+attached to <code>hla</code>. Run the projection verb before building
+the plot. With <code>store = TRUE</code>, it returns the updated Syn
+object and attaches a named genomic annotation:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">hla</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/project_mutations_to_genome.html">project_mutations_to_genome</a></span><span class="op">(</span></span>
+<span>  <span class="va">hla</span>, annotation <span class="op">=</span> <span class="st">"hla_substitutions"</span>, transcripts <span class="op">=</span> <span class="st">"HLA_A0201_tx"</span>,</span>
+<span>  store <span class="op">=</span> <span class="cn">TRUE</span>, name <span class="op">=</span> <span class="st">"hla_genomic"</span></span>
+<span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="fu"><a href="../reference/get_annotation.html">get_annotation</a></span><span class="op">(</span><span class="va">hla</span>, <span class="st">"hla_genomic"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "SynGenomicProjectionAnnotation"</span></span>
+<span><span class="co">#&gt; attr(,"package")</span></span>
+<span><span class="co">#&gt; [1] "ggexon"</span></span></code></pre></div>
+<p><strong>This verb converts amino-acid positions to genomic base
+pairs.</strong> It reads precursor positions and follows the selected
+transcript’s CDS blocks. The original protein annotation, including its
+mature-coordinate columns, remains available for the preceding protein
+view.</p>
+<p>For a codon crossing a splice junction, the stored projection retains
+each exonic fragment and one marker anchor on the longest fragment. For
+example:</p>
+<p><strong>Mature residue 1 → precursor residue 25 → genomic fragments
+373 and 504–505.</strong></p>
+<p>Inspect the stored result directly, without projecting again:</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="../reference/query_genomic_projection.html">query_genomic_projection</a></span><span class="op">(</span><span class="va">hla</span>, <span class="st">"hla_genomic"</span><span class="op">)</span>, <span class="va">mature_position</span> <span class="op">==</span> <span class="fl">1</span>,</span>
+<span>  select <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mature_position"</span>, <span class="st">"position"</span>, <span class="st">"seqnames"</span>, <span class="st">"xmin"</span>, <span class="st">"xmax"</span><span class="op">)</span></span>
+<span><span class="op">)</span><span class="op">)</span>, col.names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Mature residue"</span>, <span class="st">"Precursor residue"</span>, <span class="st">"Reference sequence"</span>,</span>
+<span>                  <span class="st">"Genomic start (bp)"</span>, <span class="st">"Genomic end (bp)"</span><span class="op">)</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<table class="table">
+<colgroup>
+<col width="17%">
+<col width="20%">
+<col width="21%">
+<col width="21%">
+<col width="19%">
+</colgroup>
+<thead><tr class="header">
+<th align="right">Mature residue</th>
+<th align="right">Precursor residue</th>
+<th align="left">Reference sequence</th>
+<th align="right">Genomic start (bp)</th>
+<th align="right">Genomic end (bp)</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">25</td>
+<td align="left">HLA00005</td>
+<td align="right">373</td>
+<td align="right">373</td>
+</tr>
+<tr class="even">
+<td align="right">1</td>
+<td align="right">25</td>
+<td align="left">HLA00005</td>
+<td align="right">504</td>
+<td align="right">505</td>
+</tr>
+</tbody>
+</table>
+<p>The marker anchor for this split codon is <strong>504.5</strong>, the
+centre of bases 504–505. It lies on coding sequence even though the
+codon crosses an intron.</p>
+<p>Project the attached protein regions through the same reference CDS.
+Their stored boundaries also use precursor positions. The projection
+splits each region into its exonic fragments:</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">hla</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/project_domains_to_genome.html">project_domains_to_genome</a></span><span class="op">(</span></span>
+<span>  <span class="va">hla</span>, annotation <span class="op">=</span> <span class="st">"hla_regions"</span>, transcripts <span class="op">=</span> <span class="st">"HLA_A0201_tx"</span>,</span>
+<span>  store <span class="op">=</span> <span class="cn">TRUE</span>, name <span class="op">=</span> <span class="st">"hla_genomic_regions"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="prepare-one-layout-for-every-layer">Prepare one layout for every layer<a class="anchor" aria-label="anchor" href="#prepare-one-layout-for-every-layer"></a>
+</h3>
+<p>Prepare intron spacing and head positions on the same object.
+<code>intron_factor</code> sets the shared exon-union map;
+<code>head_spread</code> bounds the sideways fanning of alternatives
+sharing an anchor. The verb computes the stems from those same anchors
+and head positions. Heights retain the existing
+<code>log10(count + 1)</code> convention; the exon model sits below
+count 1.</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">hla</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/prepare_genomic_layout.html">prepare_genomic_layout</a></span><span class="op">(</span></span>
+<span>  <span class="va">hla</span>, annotation <span class="op">=</span> <span class="st">"hla_genomic"</span>, name <span class="op">=</span> <span class="st">"hla_lollipops"</span>,</span>
+<span>  intron_factor <span class="op">=</span> <span class="fl">3</span>, head_spread <span class="op">=</span> <span class="fl">4.8</span>,</span>
+<span>  mutation_y_by <span class="op">=</span> <span class="st">"allele_count"</span>, mutation_y_trans <span class="op">=</span> <span class="st">"log10"</span>,</span>
+<span>  mutation_y_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log10</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">4667</span><span class="op">)</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span>,</span>
+<span>  track_ymin <span class="op">=</span> <span class="op">-</span><span class="fl">0.34</span>, track_ymax <span class="op">=</span> <span class="op">-</span><span class="fl">0.08</span>, stem_points <span class="op">=</span> <span class="fl">24</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>The stored layout keeps original genomic coordinates plus one shared
+display map. Its head, stem, and exon tables can be inspected with
+<code>query_genomic_layout(hla, "hla_lollipops", component = "mutations")</code>
+(or <code>"stems"</code> and <code>"exons"</code>). These are views of
+prepared state, rather than separate inputs that the reader must
+construct.</p>
+</div>
+<div class="section level3">
+<h3 id="draw-the-prepared-result">Draw the prepared result<a class="anchor" aria-label="anchor" href="#draw-the-prepared-result"></a>
+</h3>
+<p>All spatial layers and the x scale select
+<code>genomic_layout = "hla_lollipops"</code>. They read the prepared
+geometry without projecting or spreading positions again. The shared map
+is applied once across the plot.</p>
+<p>Define separate palettes for amino-acid alternatives and protein
+regions, plus the counts to label on the y axis. Protein regions use six
+colours from <a href="https://sronpersonalpages.nl/~pault/#sec:qualitative" class="external-link">Paul Tol’s
+Bright qualitative palette</a>, so neighbouring regions differ in
+hue:</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">aa_colours</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>  Aliphatic <span class="op">=</span> <span class="st">"#E69F00"</span>, Aromatic <span class="op">=</span> <span class="st">"#56B4E9"</span>, Polar <span class="op">=</span> <span class="st">"#009E73"</span>,</span>
+<span>  Basic <span class="op">=</span> <span class="st">"#CC79A7"</span>, Acidic <span class="op">=</span> <span class="st">"#D55E00"</span>, `Gly / Pro` <span class="op">=</span> <span class="st">"#0072B2"</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">region_colours</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>  `Alpha-1` <span class="op">=</span> <span class="st">"#4477AA"</span>, `Alpha-2` <span class="op">=</span> <span class="st">"#EE6677"</span>, `Alpha-3` <span class="op">=</span> <span class="st">"#228833"</span>,</span>
+<span>  `Connecting peptide` <span class="op">=</span> <span class="st">"#CCBB44"</span>, Transmembrane <span class="op">=</span> <span class="st">"#66CCEE"</span>, Cytoplasmic <span class="op">=</span> <span class="st">"#AA3377"</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">count_breaks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">10</span>, <span class="fl">100</span>, <span class="fl">1000</span>, <span class="fl">5000</span><span class="op">)</span></span></code></pre></div>
+<p>Build the plot directly from <code>hla</code>.
+<code><a href="../reference/geom_exon2.html">geom_exon2()</a></code> draws the prepared exon model;
+<code><a href="../reference/geom_motif.html">geom_motif()</a></code> overlays the projected protein regions at the
+same height; <code><a href="../reference/geom_protein_lollipop.html">geom_protein_lollipop()</a></code> draws the anchored
+stems and heads. The region blocks use the same intron map as the exon
+model. Grey bases represent the signal peptide and stop codon, outside
+the mature-protein regions. The exon-number labels read the stored exon
+coordinates from the same object. The code below includes all colours,
+axis labels, and theme settings used in the rendered figure:</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">genomic_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">hla</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_exon2.html">geom_exon2</a></span><span class="op">(</span></span>
+<span>    genomic_layout <span class="op">=</span> <span class="st">"hla_lollipops"</span>,</span>
+<span>    intron_shape <span class="op">=</span> <span class="st">"chevron"</span>, intron_peak <span class="op">=</span> <span class="fl">0.12</span>,</span>
+<span>    fill <span class="op">=</span> <span class="st">"#DDE3E8"</span>, colour <span class="op">=</span> <span class="st">"#8193A1"</span>, linewidth <span class="op">=</span> <span class="fl">0.35</span>,</span>
+<span>    transcript_backbone_colour <span class="op">=</span> <span class="st">"#647E8A"</span>, show.legend <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_motif.html">geom_motif</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">motif</span><span class="op">)</span>, annotation <span class="op">=</span> <span class="st">"hla_genomic_regions"</span>,</span>
+<span>    genomic_layout <span class="op">=</span> <span class="st">"hla_lollipops"</span>, colour <span class="op">=</span> <span class="cn">NA</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/geom_protein_lollipop.html">geom_protein_lollipop</a></span><span class="op">(</span></span>
+<span>    genomic_layout <span class="op">=</span> <span class="st">"hla_lollipops"</span>, score <span class="op">=</span> <span class="st">"amino_acid_group"</span>,</span>
+<span>    show_backbone <span class="op">=</span> <span class="cn">FALSE</span>, show_domains <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>    stem_colour <span class="op">=</span> <span class="cn">NULL</span>, stem_linewidth <span class="op">=</span> <span class="fl">0.14</span>, stem_alpha <span class="op">=</span> <span class="fl">0.27</span>,</span>
+<span>    point_size <span class="op">=</span> <span class="fl">0.65</span>, point_alpha <span class="op">=</span> <span class="fl">0.9</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_text.html" class="external-link">geom_text</a></span><span class="op">(</span></span>
+<span>    data <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">model</span><span class="op">)</span> <span class="fu"><a href="../reference/query_genomic_layout.html">query_genomic_layout</a></span><span class="op">(</span><span class="va">model</span>, <span class="st">"hla_lollipops"</span>, <span class="st">"exons"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="op">(</span><span class="va">xmin</span> <span class="op">+</span> <span class="va">xmax</span><span class="op">)</span> <span class="op">/</span> <span class="fl">2</span>, label <span class="op">=</span> <span class="va">exon_number</span><span class="op">)</span>,</span>
+<span>    y <span class="op">=</span> <span class="op">-</span><span class="fl">0.53</span>, size <span class="op">=</span> <span class="fl">8</span> <span class="op">/</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="va"><a href="https://ggplot2.tidyverse.org/reference/graphical-units.html" class="external-link">.pt</a></span>, colour <span class="op">=</span> <span class="st">"#344854"</span>,</span>
+<span>    inherit.aes <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/scale_x_ggexon_genomic.html">scale_x_ggexon_genomic</a></span><span class="op">(</span></span>
+<span>    genomic_layout <span class="op">=</span> <span class="st">"hla_lollipops"</span>,</span>
+<span>    guide <span class="op">=</span> <span class="fu"><a href="../reference/guide_x_ggexon_piecewise.html">guide_x_ggexon_piecewise</a></span><span class="op">(</span>by <span class="op">=</span> <span class="st">"panel"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_colour_manual</a></span><span class="op">(</span></span>
+<span>    <span class="st">"Alternative amino acid"</span>, values <span class="op">=</span> <span class="va">aa_colours</span>,</span>
+<span>    breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">aa_colours</span><span class="op">)</span>, drop <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_fill_manual</a></span><span class="op">(</span></span>
+<span>    <span class="st">"Protein region"</span>, values <span class="op">=</span> <span class="va">region_colours</span>,</span>
+<span>    breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">region_colours</span><span class="op">)</span>, drop <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span></span>
+<span>    breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log10</a></span><span class="op">(</span><span class="va">count_breaks</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span>,</span>
+<span>    labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org/reference/label_number.html" class="external-link">label_comma</a></span><span class="op">(</span><span class="op">)</span><span class="op">(</span><span class="va">count_breaks</span><span class="op">)</span>,</span>
+<span>    limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.8</span>, <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log10</a></span><span class="op">(</span><span class="fl">5001</span><span class="op">)</span> <span class="op">+</span> <span class="fl">0.18</span><span class="op">)</span>,</span>
+<span>    expand <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/expansion.html" class="external-link">expansion</a></span><span class="op">(</span>mult <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.035</span>, <span class="fl">0.08</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
+<span>    title <span class="op">=</span> <span class="st">"HLA-A  /  variants on the gene model"</span>,</span>
+<span>    subtitle <span class="op">=</span> <span class="st">"5,998 named alleles    /    1,212 substitutions    /    8 coding exons + 7 introns    /    introns ÷ 3"</span>,</span>
+<span>    x <span class="op">=</span> <span class="st">"Reference allele A*02:01:01:01  /  HLA00005 allele-local genomic coordinates"</span>,</span>
+<span>    y <span class="op">=</span> <span class="st">"Allele count (log scale)"</span>,</span>
+<span>    caption <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span></span>
+<span>      <span class="st">"Stem anchors follow the reference CDS, including splice-split codons. "</span>,</span>
+<span>      <span class="st">"The numbered coding-exon model spans ATG to stop.\n"</span>,</span>
+<span>      <span class="st">"Coloured exon segments show mature-protein regions; grey bases are outside them.\n"</span>,</span>
+<span>      <span class="st">"Exons at native scale; intron gaps ÷ 3. Scale bars show actual base-pair lengths. "</span>,</span>
+<span>      <span class="st">"Database counts, not population frequencies."</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guides.html" class="external-link">guides</a></span><span class="op">(</span></span>
+<span>    colour <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html" class="external-link">guide_legend</a></span><span class="op">(</span>nrow <span class="op">=</span> <span class="fl">1</span>, order <span class="op">=</span> <span class="fl">1</span>, override.aes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">2.4</span>, alpha <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    fill <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html" class="external-link">guide_legend</a></span><span class="op">(</span>nrow <span class="op">=</span> <span class="fl">1</span>, order <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span>base_size <span class="op">=</span> <span class="fl">10</span>, base_family <span class="op">=</span> <span class="st">"Helvetica"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span></span>
+<span>    panel.grid.minor <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>    panel.grid.major.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_blank</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>    panel.grid.major.y <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_line</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="st">"#E5E9EC"</span>, linewidth <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span>,</span>
+<span>    axis.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="st">"#5E6C78"</span><span class="op">)</span>,</span>
+<span>    axis.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="st">"#344854"</span><span class="op">)</span>,</span>
+<span>    axis.title.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span>t <span class="op">=</span> <span class="fl">10</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    plot.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span></span>
+<span>      size <span class="op">=</span> <span class="fl">23</span>, face <span class="op">=</span> <span class="st">"bold"</span>, colour <span class="op">=</span> <span class="st">"#203747"</span>, margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span>b <span class="op">=</span> <span class="fl">7</span><span class="op">)</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    plot.subtitle <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">11</span>, colour <span class="op">=</span> <span class="st">"#5E6C78"</span>, margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span>b <span class="op">=</span> <span class="fl">18</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    plot.caption <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span></span>
+<span>      size <span class="op">=</span> <span class="fl">9</span>, hjust <span class="op">=</span> <span class="fl">0</span>, colour <span class="op">=</span> <span class="st">"#697884"</span>, margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span>t <span class="op">=</span> <span class="fl">14</span><span class="op">)</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    plot.title.position <span class="op">=</span> <span class="st">"plot"</span>, plot.caption.position <span class="op">=</span> <span class="st">"plot"</span>,</span>
+<span>    legend.position <span class="op">=</span> <span class="st">"bottom"</span>, legend.box <span class="op">=</span> <span class="st">"vertical"</span>,</span>
+<span>    legend.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>face <span class="op">=</span> <span class="st">"bold"</span><span class="op">)</span>,</span>
+<span>    legend.key.width <span class="op">=</span> <span class="fu">grid</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">9</span>, <span class="st">"mm"</span><span class="op">)</span>,</span>
+<span>    plot.margin <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="fl">16</span>, <span class="fl">18</span>, <span class="fl">12</span>, <span class="fl">14</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="va">genomic_plot</span></span></code></pre></div>
 <div class="figure">
-<img src="hla-a-lollipop-demo_files/figure-html/hla-a-gene-plot-1.png" class="r-plt" alt="The 1212 HLA-A substitution lollipops projected above eight numbered coding exons and seven visible introns. Introns are compressed three-fold while exon widths retain their native scale. Separate exon and intron scale bars show their different display scales." width="2200"><p class="caption">
-Splice-aware projection onto the exact A*02:01:01:01 coding-exon model.
-Exon lengths are unchanged and each intron is displayed at one-third its
-original length.
+<img src="hla-a-lollipop-demo_files/figure-html/hla-a-gene-plot-1.png" class="r-plt" alt="The 1212 HLA-A substitution lollipops projected above eight numbered coding exons, with six protein regions shown as distinct blue, rose, green, yellow, cyan and purple segments within the exon band. Introns are compressed three-fold while exon widths retain their native scale. Separate legends identify mutation alternatives and protein regions." width="2200"><p class="caption">
+Amino-acid substitutions and protein regions are projected through the
+same reference CDS. Region blocks split at splice junctions and occupy
+the full exon height. One shared genomic map compresses introns
+three-fold while preserving exon lengths.
 </p>
 </div>
-<p>The scale configuration is:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/ggexon.html">ggexon</a></span><span class="op">(</span><span class="va">exons</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>xmin <span class="op">=</span> <span class="va">xmin</span>, xmax <span class="op">=</span> <span class="va">xmax</span>, ymin <span class="op">=</span> <span class="va">ymin</span>,</span>
-<span>                   transcripts <span class="op">=</span> <span class="va">transcripts</span>, strand <span class="op">=</span> <span class="va">strand</span>,</span>
-<span>                   type <span class="op">=</span> <span class="va">type</span>, track <span class="op">=</span> <span class="va">track</span>, group <span class="op">=</span> <span class="va">group</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/geom_exon2.html">geom_exon2</a></span><span class="op">(</span>compress_introns <span class="op">=</span> <span class="cn">FALSE</span>, intron_shape <span class="op">=</span> <span class="st">"chevron"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="co"># Add the projected stems and heads, then apply one shared genomic transform:</span></span>
-<span>  <span class="fu"><a href="../reference/scale_x_ggexon_genomic.html">scale_x_ggexon_genomic</a></span><span class="op">(</span></span>
-<span>    intron_factor <span class="op">=</span> <span class="fl">3</span>,</span>
-<span>    guide <span class="op">=</span> <span class="fu"><a href="../reference/guide_x_ggexon_piecewise.html">guide_x_ggexon_piecewise</a></span><span class="op">(</span>by <span class="op">=</span> <span class="st">"panel"</span><span class="op">)</span></span>
-<span>  <span class="op">)</span></span></code></pre></div>
-<p><code>compress_introns = FALSE</code> disables
-<code><a href="../reference/geom_exon2.html">geom_exon2()</a></code>’s own compression so the scale is applied
-<strong>once</strong>, consistently to exons, introns, stems, heads, and
-exon labels. An intron of 600 bp therefore occupies 200 exon-scale
-units; a 276-bp exon still occupies 276. Set
-<code>intron_factor = 1</code> for an uncompressed view.</p>
+<p>Here <code><a href="../reference/geom_protein_lollipop.html">geom_protein_lollipop()</a></code> uses the stored
+<strong>genomic</strong> layout. Its ordinary mode still draws protein
+coordinates; the selected layout makes this choice explicit. Optional
+<code>geom_mutation_label(genomic_layout = "hla_lollipops")</code> reads
+the same head positions, so labels cannot acquire a different
+spread.</p>
+<p>Change intron compression or head spacing by running
+<code><a href="../reference/prepare_genomic_layout.html">prepare_genomic_layout()</a></code> again. The scale reads the
+prepared map, and exon layers disable their own schematic compression.
+An intron of 600 bp occupies 200 exon-scale units; a 276-bp exon still
+occupies 276. Use <code>intron_factor = 1</code> during preparation for
+an uncompressed view. Changing source mutations or CDS structure
+requires projection and layout preparation again; stale prepared state
+raises an error.</p>
 <p>Rectangles run from <code>start - 0.5</code> to
 <code>end + 0.5</code>, the edges of the first and last base. This makes
 a 73-base exon exactly 73 coordinate units wide and the first intron
 exactly 130, avoiding an off-by-one error from inclusive endpoints.
 Codon anchors retain their original genomic base-centre coordinates. The
 guide reports <strong>73 bp</strong> for the representative exon and
-<strong>130 bp /3</strong> for the intron.</p>
+<strong>130 bp</strong> for the intron.</p>
+</div>
 </div>
 <div class="section level2">
-<h2 id="reproducing-and-customizing">Reproducing and customizing<a class="anchor" aria-label="anchor" href="#reproducing-and-customizing"></a>
+<h2 id="reproduce-and-customize">Reproduce and customize<a class="anchor" aria-label="anchor" href="#reproduce-and-customize"></a>
 </h2>
 <p>From the repository root:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="ex">python3</span> data-raw/hla_a_lollipop/build-hla-a-demo.py</span>
-<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a><span class="ex">Rscript</span> data-raw/hla_a_lollipop/verify-hla-a-demo.R</span>
-<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a><span class="ex">Rscript</span> data-raw/hla_a_lollipop/verify-hla-a-gene-model.R</span>
-<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a><span class="ex">Rscript</span> data-raw/hla_a_lollipop/render-hla-a-figure.R</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="ex">python3</span> data-raw/hla_a_lollipop/build-hla-a-demo.py</span>
+<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a><span class="ex">Rscript</span> data-raw/hla_a_lollipop/verify-hla-a-demo.R</span>
+<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a><span class="ex">Rscript</span> data-raw/hla_a_lollipop/verify-hla-a-gene-model.R</span>
+<span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a><span class="ex">Rscript</span> data-raw/hla_a_lollipop/render-hla-a-figure.R</span></code></pre></div>
 <p>The builder pins the source commit and checks all selected sequences
 against the official gapped alignment. The renderer exports overview and
 close-up and gene-model <strong>vector PDF and PNG</strong> files,
@@ -539,10 +801,9 @@ counts to <code>data-raw/hla_a_lollipop/preview</code>.</p>
 size, head size, stem opacity, or the maximum local fan width. The
 default 240 × 135 mm canvas provides space for the dense overview. Every
 substitution is drawn in both the vector and raster exports.</p>
-</div>
-<div class="section level2">
-<h2 id="sources-and-attribution">Sources and attribution<a class="anchor" aria-label="anchor" href="#sources-and-attribution"></a>
-</h2>
+<div class="section level3">
+<h3 id="sources-and-attribution">Sources and attribution<a class="anchor" aria-label="anchor" href="#sources-and-attribution"></a>
+</h3>
 <ul>
 <li>
 <a href="https://www.ebi.ac.uk/ipd/imgt/hla/" class="external-link">IPD-IMGT/HLA</a>
@@ -569,6 +830,7 @@ alignment conventions</a>: mature-protein numbering and alignment
 symbols.</li>
 </ul>
 </div>
+</div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
 </div>
@@ -580,7 +842,7 @@ symbols.</li>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

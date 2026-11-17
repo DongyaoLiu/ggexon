@@ -3,7 +3,7 @@
   "dox_cds_source": "https://media.springernature.com/original/springer-static/esm/art%3A10.1038%2Fs41559-021-01592-z/MediaObjects/41559_2021_1592_MOESM2_ESM.xlsx",
   "coordinate_system": "1-based inclusive; all seqnames aliased to X, original contigs in windows.tsv",
   "RNA_seq": "Testis, biological replicate 1; GSE185361. Dmau/Dsech: deposited strand signals. Dsim: complete SRR23418969 library remapped directly to the plotted assembly.",
-  "signal_units": "Dmau/Dsech: author-deposited BigWig values. Dsim: unnormalized primary read depth, MAPQ>=20. Independent y scales; no between-species expression inference.",
+  "signal_units": "Dmau/Dsech: author-deposited BigWig values. Dsim: unnormalized primary read depth, MAPQ>=20. Different source units; no between-species expression inference.",
   "RNA_seq_remapping": {
     "run": "SRR23418969",
     "sample": "GSM7039340",

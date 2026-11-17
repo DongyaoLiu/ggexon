@@ -5,7 +5,7 @@
 \alias{FacetGenomics}
 \title{ggproto backend for \code{facet_genomics()}}
 \format{
-An object of class \code{FacetGenomics} (inherits from \code{FacetWrap}, \code{Facet}, \code{ggproto}, \code{gg}) of length 6.
+An object of class \code{FacetGenomics} (inherits from \code{FacetWrap}, \code{Facet}, \code{ggproto}, \code{gg}) of length 7.
 }
 \usage{
 FacetGenomics

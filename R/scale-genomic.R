@@ -54,6 +54,11 @@
 #' @param guide Axis guide. Use `waiver()` or `"genomic"` for ordinary
 #'   genomic-coordinate ticks, `"none"` to hide transformed x-axis ticks, or
 #'   [guide_x_ggexon_piecewise()] for representative exon/intron scale bars.
+#' @param ... Reserved for future arguments. Must be empty.
+#' @param genomic_layout Optional name of a prepared genomic layout stored on
+#'   the plot's `SynIndividual` objects. Its cached exon map replaces training
+#'   from visible exon layers. An explicitly supplied `intron_factor` must
+#'   agree with the prepared layout.
 #'
 #' @return A ggexon x-scale specification.
 #' @export
@@ -64,7 +69,16 @@ scale_x_ggexon_genomic <- function(intron_factor = 10,
                                    labels = waiver(),
                                    minor_breaks = NULL,
                                    n.breaks = 5,
-                                   guide = waiver()) {
+                                   guide = waiver(),
+                                   ...,
+                                   genomic_layout = NULL) {
+  intron_factor_explicit <- !missing(intron_factor)
+  rlang::check_dots_empty()
+  if (!is.null(genomic_layout) &&
+      (!is.character(genomic_layout) || length(genomic_layout) != 1L ||
+       is.na(genomic_layout) || !nzchar(genomic_layout))) {
+    stop("`genomic_layout` must be one non-empty character value or `NULL`.", call. = FALSE)
+  }
   match_by <- match.arg(match_by)
   guide <- ggexon_genomic_x_normalize_guide(guide)
   if (!is.numeric(intron_factor) ||
@@ -89,7 +103,7 @@ scale_x_ggexon_genomic <- function(intron_factor = 10,
     }
   }
 
-  structure(
+  spec <- structure(
     list(
       intron_factor = as.numeric(intron_factor),
       species = species,
@@ -102,6 +116,11 @@ scale_x_ggexon_genomic <- function(intron_factor = 10,
     ),
     class = "ggexon_genomic_x_scale_spec"
   )
+  if (!is.null(genomic_layout)) {
+    spec$genomic_layout <- genomic_layout
+    spec$intron_factor_explicit <- intron_factor_explicit
+  }
+  spec
 }
 
 #' Draw representative exon and intron scale bars for genomic x scaling
@@ -109,7 +128,8 @@ scale_x_ggexon_genomic <- function(intron_factor = 10,
 #' `guide_x_ggexon_piecewise()` is used with [scale_x_ggexon_genomic()] to
 #' replace ordinary x-axis ticks with representative first-exon and first-intron
 #' scale bars. This is useful because intron-compressed tracks use different
-#' display scales for exon and intron regions.
+#' display scales for exon and intron regions. Within each group, the bars share
+#' one horizontal baseline and their labels show only original lengths in bp.
 #'
 #' @param by Grouping used to choose representative intervals. `"transcripts"`
 #'   draws one first-exon/first-intron pair per transcript, `"track"` draws one
@@ -120,6 +140,8 @@ scale_x_ggexon_genomic <- function(intron_factor = 10,
 #' @param label Logical; draw text labels for representative intervals.
 #' @param show_exon,show_intron Logical; include representative exon and/or
 #'   intron scale bars.
+#' @param linewidth Optional non-negative line width in millimetres for both
+#'   bars and their end ticks. `NULL` uses the corresponding axis theme settings.
 #'
 #' @return A ggexon genomic x-axis guide specification.
 #' @export
@@ -128,7 +150,8 @@ guide_x_ggexon_piecewise <- function(by = c("transcripts", "track", "panel"),
                                      position = c("bottom"),
                                      label = TRUE,
                                      show_exon = TRUE,
-                                     show_intron = TRUE) {
+                                     show_intron = TRUE,
+                                     linewidth = NULL) {
   by <- match.arg(by)
   representative <- match.arg(representative)
   position <- match.arg(position)
@@ -144,6 +167,11 @@ guide_x_ggexon_piecewise <- function(by = c("transcripts", "track", "panel"),
   if (!isTRUE(show_exon) && !isTRUE(show_intron)) {
     stop("At least one of `show_exon` or `show_intron` must be `TRUE`.", call. = FALSE)
   }
+  if (!is.null(linewidth) &&
+      (!is.numeric(linewidth) || length(linewidth) != 1L ||
+       is.na(linewidth) || !is.finite(linewidth) || linewidth < 0)) {
+    stop("`linewidth` must be one non-negative finite number.", call. = FALSE)
+  }
 
   structure(
     list(
@@ -153,7 +181,8 @@ guide_x_ggexon_piecewise <- function(by = c("transcripts", "track", "panel"),
       position = position,
       label = label,
       show_exon = show_exon,
-      show_intron = show_intron
+      show_intron = show_intron,
+      linewidth = linewidth
     ),
     class = c("ggexon_genomic_x_piecewise_guide", "ggexon_genomic_x_guide")
   )
@@ -235,6 +264,9 @@ train_ggexon_genomic_x_scale <- function(data, layers, scale_spec, layout = NULL
     layer_x_aesthetics = lapply(layers, function(layer) {
       layer$geom$ggexon_genomic_x_aesthetics %||% character()
     })), class = "ggexon_trained_genomic_x_scale")
+  if (!is.null(scale_spec$genomic_layout)) {
+    return(train_prepared_ggexon_genomic_x_scale(data, layers, scale_spec, layout, registry))
+  }
   source_rows <- lapply(data[contributors], ggexon_genomic_x_source_rows)
   source_rows <- source_rows[lengths(source_rows) > 0L]
   if (length(source_rows) == 0L) {
@@ -300,6 +332,132 @@ train_ggexon_genomic_x_scale <- function(data, layers, scale_spec, layout = NULL
   registry$maps <- transforms
   registry$panel_map <- panel_map
   registry$axis_data <- axis_data
+  registry
+}
+
+# Cached maps remain independent of facets. Resolve their owners first, then
+# bind copies to the source PANEL ids chosen by this build's resolved layout.
+train_prepared_ggexon_genomic_x_scale <- function(data, layers, scale_spec, layout, registry) {
+  plot_data <- layout$facet_params$plot_data %||% NULL
+  syn_data <- find_syn_plot_data(layers, plot_data)
+  if (is.null(syn_data)) {
+    stop("`genomic_layout` needs SynIndividual or SynSpecies plot or layer data.", call. = FALSE)
+  }
+  for (layer in layers) {
+    source <- layer$data
+    if ((methods::is(source, "SynIndividual") || methods::is(source, "SynSpecies")) &&
+        !identical(source, syn_data)) {
+      stop("Ambiguous layer-owned Syn objects for `genomic_layout`; use one Syn plot source.", call. = FALSE)
+    }
+    selected <- layer$geom_params$genomic_layout %||%
+      attr(source, "ggexon_genomic_layout", exact = TRUE)
+    if (!is.null(selected) && !identical(selected, scale_spec$genomic_layout)) {
+      stop("Layer `genomic_layout` must match the scale's prepared layout.", call. = FALSE)
+    }
+  }
+  owners <- if (methods::is(syn_data, "SynIndividual")) {
+    stats::setNames(list(syn_data), syn_id(syn_data))
+  } else individuals(syn_data)
+  owner_ids <- vapply(owners, syn_id, character(1))
+  layout_df <- layout$layout %||% NULL
+  if (!is.data.frame(layout_df) || nrow(layout_df) == 0L) {
+    panels <- sort(unique(unlist(lapply(data, function(df) {
+      if (is.data.frame(df) && "PANEL" %in% names(df)) ggexon_panel_id(df$PANEL)
+    }))))
+    if (length(owners) != 1L || length(panels) != 1L) {
+      stop("`genomic_layout` needs a resolved layout identifying its source panels.", call. = FALSE)
+    }
+    layout_df <- data.frame(PANEL = panels, track = owner_ids[[1L]])
+  }
+  roles <- link_panel_type(layout_df)
+  source_rows <- which(is.na(roles) | roles == "annotation")
+  selected_panels <- ggexon_genomic_x_selected_panels(scale_spec, layout,
+    ggexon_panel_id(layout_df$PANEL[source_rows]))
+  if (!is.null(selected_panels)) {
+    source_rows <- source_rows[ggexon_panel_id(layout_df$PANEL[source_rows]) %in% selected_panels]
+  }
+  if (length(source_rows) == 0L) {
+    stop("`genomic_layout` could not identify an annotation source panel.", call. = FALSE)
+  }
+
+  maps <- list()
+  axis_sources <- list()
+  caches <- vector("list", length(owners))
+  identity_columns <- intersect(c("individual", "species", "id", "strain", "strains"), names(layout_df))
+  for (row in source_rows) {
+    panel <- ggexon_panel_id(layout_df$PANEL[[row]])
+    identities <- unlist(lapply(layout_df[row, identity_columns, drop = FALSE], as.character),
+      use.names = FALSE)
+    identities <- identities[!is.na(identities) & nzchar(identities)]
+    owner <- which(owner_ids %in% identities | names(owners) %in% identities)
+    track <- as.character(layout_df$track[[row]] %||% NA_character_)
+    if (length(owner) == 0L && length(identities) == 0L) {
+      owner <- which(owner_ids == track | names(owners) == track)
+    }
+    if (length(owner) == 0L && length(identities) == 0L &&
+        (is.na(track) || !nzchar(track)) && length(owners) == 1L && length(source_rows) == 1L) {
+      owner <- 1L
+    }
+    if (length(owner) != 1L) {
+      stop("`genomic_layout` source panel identity does not identify one Syn individual/track.", call. = FALSE)
+    }
+    individual <- owners[[owner]]
+    cached <- caches[[owner]]
+    if (is.null(cached)) {
+      cached <- .get_genomic_layout(individual, scale_spec$genomic_layout)
+      caches[[owner]] <- cached
+    }
+    if (!identical(as.character(cached$track), syn_id(individual))) {
+      stop("Prepared genomic layout source track conflicts with its Syn individual identity.", call. = FALSE)
+    }
+    if (isTRUE(scale_spec$intron_factor_explicit) &&
+        !isTRUE(all.equal(scale_spec$intron_factor, cached$intron_factor))) {
+      stop("`intron_factor` conflicts with the prepared genomic layout.", call. = FALSE)
+    }
+    bound_panels <- panel
+    if ("x_source_panel" %in% names(layout_df)) {
+      bound_panels <- c(panel, ggexon_panel_id(layout_df$PANEL[
+        ggexon_panel_id(layout_df$x_source_panel) %in% panel]))
+    }
+    source_chr <- as.character(layout_df$xlim_chr[
+      ggexon_panel_id(layout_df$PANEL) %in% bound_panels])
+    source_chr <- source_chr[!is.na(source_chr) & nzchar(source_chr)]
+    if (any(source_chr != cached$chr)) {
+      stop("Source panel chromosome conflicts with the prepared genomic layout.", call. = FALSE)
+    }
+    for (df in data) {
+      if (!is.data.frame(df) || !"PANEL" %in% names(df)) next
+      hit <- ggexon_panel_id(df$PANEL) %in% bound_panels
+      for (column in intersect(c("seqnames", "chr"), names(df))) {
+        chromosomes <- unique(as.character(df[[column]][hit]))
+        chromosomes <- chromosomes[!is.na(chromosomes) & nzchar(chromosomes)]
+        if (any(chromosomes != cached$chr)) {
+          stop("Layer chromosome conflicts with the prepared genomic layout.", call. = FALSE)
+        }
+      }
+    }
+    map <- cached$map
+    map$PANEL <- panel
+    maps[[as.character(panel)]] <- map
+    source <- cached$source_rows
+    source$PANEL <- panel
+    axis_sources[[as.character(panel)]] <- source
+  }
+  panel_ids <- as.integer(names(maps))
+  panel_map <- stats::setNames(panel_ids, as.character(panel_ids))
+  if ("x_source_panel" %in% names(layout_df)) {
+    for (i in seq_len(nrow(layout_df))) {
+      source <- ggexon_panel_id(layout_df$x_source_panel[[i]])
+      panel <- ggexon_panel_id(layout_df$PANEL[[i]])
+      if (!is.na(source) && as.character(source) %in% names(maps) && !is.na(panel)) {
+        panel_map[as.character(panel)] <- source
+      }
+    }
+  }
+  registry$maps <- maps
+  registry$panel_map <- panel_map
+  registry$axis_data <- ggexon_genomic_x_piecewise_axis_data(
+    do.call(rbind, axis_sources), maps, scale_spec)
   registry
 }
 
@@ -565,13 +723,9 @@ ggexon_genomic_x_axis_interval <- function(group_df,
 }
 
 ggexon_genomic_x_axis_label <- function(region_type, genomic_width, plot_width) {
-  if (identical(region_type, "intron") && is.finite(plot_width) && plot_width > 0) {
-    factor <- genomic_width / plot_width
-    if (is.finite(factor) && factor > 1.01) {
-      return(paste0("intron ", ggexon_format_bp(genomic_width), " /", signif(factor, 3)))
-    }
-  }
-  paste(region_type, ggexon_format_bp(genomic_width))
+  if (!is.finite(genomic_width)) return(NA_character_)
+  paste0(format(round(abs(genomic_width)), trim = TRUE, big.mark = ",",
+    scientific = FALSE), " bp")
 }
 
 ggexon_format_bp <- function(x) {

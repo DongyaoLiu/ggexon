@@ -26,7 +26,8 @@ geom_motif(
   model = "all",
   motif = NULL,
   y_offset = NULL,
-  inherit.aes = TRUE
+  inherit.aes = TRUE,
+  genomic_layout = NULL
 )
 ```
 
@@ -85,6 +86,12 @@ geom_motif(
 
   Vertical offset applied to the motif band so protein domains can be
   separated from exon rectangles on the same genomic track.
+
+- genomic_layout:
+
+  Optional prepared genomic layout name. Requires an explicitly named
+  stored domain projection in `annotation`; segments use the cached
+  transcript, chromosome, exon height, and base-edge convention.
 
 ## Value
 

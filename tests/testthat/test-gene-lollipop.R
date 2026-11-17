@@ -1,3 +1,7 @@
+test_that("the gene-lollipop layer remains part of the exported plotting API", {
+  expect_true("geom_gene_lollipop" %in% getNamespaceExports("ggexon"))
+})
+
 test_that("gene-lollipop packing is compact, ordered, bounded and lossless", {
   anchors <- c(3, rep(35, 14), 75, 98)
   d <- .gene_lollipop_pack(anchors, 12, 100, gap_mm = 1, max_shift_mm = 20)

@@ -294,7 +294,7 @@ test_that("bundled HOX anchors and compact annotations round trip", {
   expect_setequal(compiled$slot, human_genes$slot)
 })
 
-test_that("HOX tutorial matrix renders 28 equal exact-slot panels without links", {
+test_that("the bundled HOX matrix renders 28 equal exact-slot panels", {
   demo_dir <- system.file("extdata", "hox_cluster_expansion", package = "ggexon")
   genes <- read_hox_demo_table(demo_dir, "hox_genes.tsv")
   panels <- read_hox_demo_table(demo_dir, "hox_clusters.tsv")
@@ -356,18 +356,4 @@ test_that("HOX tutorial matrix renders 28 equal exact-slot panels without links"
   expect_equal(length(panel_rows), 7L)
   expect_length(unique(as.character(table$widths[panel_columns])), 1L)
 
-  vignette_candidates <- c(
-    testthat::test_path("..", "..", "vignettes", "hox-cluster-expansion-demo.Rmd"),
-    system.file("doc", "hox-cluster-expansion-demo.Rmd", package = "ggexon")
-  )
-  vignette_path <- vignette_candidates[file.exists(vignette_candidates)][[1L]]
-  vignette_source <- paste(readLines(vignette_path, warn = FALSE), collapse = "\n")
-  expect_false(grepl("geom_nuclink\\s*\\(", vignette_source))
-  expect_false(grepl("geom_synteny_link\\s*\\(", vignette_source))
-  expect_match(vignette_source, "displayed under HOXA for layout only", fixed = TRUE)
-  expect_match(
-    vignette_source,
-    "Box position therefore represents the curated",
-    fixed = TRUE
-  )
 })

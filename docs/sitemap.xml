@@ -3,14 +3,9 @@
 <url><loc>https://dongyaoliu.github.io/ggexon/LICENSE-text.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/LICENSE.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/articles/as3mt-splice-variants-demo.html</loc></url>
-<url><loc>https://dongyaoliu.github.io/ggexon/articles/bigwig-coverage-demo.html</loc></url>
-<url><loc>https://dongyaoliu.github.io/ggexon/articles/cd44-splice-variants-demo.html</loc></url>
-<url><loc>https://dongyaoliu.github.io/ggexon/articles/cox1-yeast-demo.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/articles/dox-synteny-demo.html</loc></url>
-<url><loc>https://dongyaoliu.github.io/ggexon/articles/ggexon-classes-and-verbs.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/articles/ggexon-workflow.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/articles/hla-a-lollipop-demo.html</loc></url>
-<url><loc>https://dongyaoliu.github.io/ggexon/articles/hox-cluster-expansion-demo.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/articles/index.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/articles/mhc-continuous-demo.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/authors.html</loc></url>
@@ -36,6 +31,7 @@
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/SynFeatureAnnotation-class.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/SynFeatureAnnotation.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/SynGenomeAnnotation-class.html</loc></url>
+<url><loc>https://dongyaoliu.github.io/ggexon/reference/SynGenomicProjectionAnnotation-class.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/SynIndAnnotation-class.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/SynIndividual-class.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/SynIndividual.html</loc></url>
@@ -162,6 +158,8 @@
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/patch_annotation.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/patch_annotation_from_gff.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/plot_ggtree_genomic_alignment.html</loc></url>
+<url><loc>https://dongyaoliu.github.io/ggexon/reference/prepare_gene_lollipop.html</loc></url>
+<url><loc>https://dongyaoliu.github.io/ggexon/reference/prepare_genomic_layout.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/project_domains_to_genome.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/project_mutations_to_genome.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/projected_domains.html</loc></url>
@@ -171,6 +169,9 @@
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/query_annotation.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/query_domains.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/query_features.html</loc></url>
+<url><loc>https://dongyaoliu.github.io/ggexon/reference/query_gene_lollipop.html</loc></url>
+<url><loc>https://dongyaoliu.github.io/ggexon/reference/query_genomic_layout.html</loc></url>
+<url><loc>https://dongyaoliu.github.io/ggexon/reference/query_genomic_projection.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/query_protein_mutations.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/query_signal.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/query_species.html</loc></url>
@@ -217,4 +218,3 @@
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/use_locus_grid.html</loc></url>
 <url><loc>https://dongyaoliu.github.io/ggexon/reference/waiver.html</loc></url>
 </urlset>
-

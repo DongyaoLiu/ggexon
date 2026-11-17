@@ -73,6 +73,8 @@ read_protein_mutation_counts <- function(file,
 #'   amino-acid codes.
 #' @param protein_length Optional protein length used to clamp
 #'   `protein_ranges`.
+#' @param ids Optional identifiers matched against the annotation's `keytype`,
+#'   for example transcript IDs when `keytype = "transcript_id"`.
 #'
 #' @return A `data.frame` of matching mutation records.
 #' @export
@@ -88,9 +90,17 @@ query_protein_mutations <- function(x,
                                     domains = NULL,
                                     protein_domains = NULL,
                                     ref = NULL,
-                                    protein_length = NULL) {
+                                    protein_length = NULL,
+                                    ids = NULL) {
   if (methods::is(x, "SynProteinMutationAnnotation")) {
     out <- protein_mutation_data(x)
+    if (!is.null(ids)) {
+      if (!x@keytype %in% names(out)) {
+        stop("The mutation table does not contain the key column: ", x@keytype,
+          call. = FALSE)
+      }
+      out <- out[as.character(out[[x@keytype]]) %in% as.character(ids), , drop = FALSE]
+    }
     index <- protein_mutation_individual_index(x)
     if (nrow(index) == 0L) {
       index <- attr(out, "individual_index", exact = TRUE) %||% index
@@ -115,6 +125,7 @@ query_protein_mutations <- function(x,
     ann <- resolve_syn_protein_mutation_annotation(x, annotation = annotation)
     return(query_protein_mutations(
       ann,
+      ids = ids,
       genes = genes,
       event_type = event_type,
       min_sample_count = min_sample_count,
@@ -153,6 +164,7 @@ query_protein_mutations <- function(x,
       }
       one <- query_protein_mutations(
         ann,
+        ids = ids,
         genes = genes,
         event_type = event_type,
         min_sample_count = min_sample_count,

@@ -21,7 +21,10 @@ geom_alignseq(
   max_columns = 60,
   na.rm = FALSE,
   show.legend = FALSE,
-  ...
+  ...,
+  sequence_position = c("auto", "left", "center", "right"),
+  colour_scheme = c("nucleotide", "difference"),
+  difference_colours = c(aligned = "#E6E6E6", mismatch = "#E69F00", indel = "#D73027")
 )
 ```
 
@@ -46,8 +49,8 @@ geom_alignseq(
 
   `"markers"` (default) or `"rows"`. Rows display all selected columns
   as an equally spaced DNA row in each sequence's own annotation panel,
-  connected to its genomic extent. Row mode requires one contiguous
-  alignment-column selection per sequence.
+  connected to the midpoint of its displayed genomic interval. Row mode
+  requires one contiguous alignment-column selection per sequence.
 
 - size:
 
@@ -59,7 +62,7 @@ geom_alignseq(
 
 - background:
 
-  Logical; draw pale nucleotide backgrounds.
+  Logical; draw nucleotide backgrounds.
 
 - max_columns:
 
@@ -68,10 +71,41 @@ geom_alignseq(
 
 - na.rm, show.legend, ...:
 
-  Standard layer arguments. Event colours and shapes are fixed:
-  substitution blue circle, insertion orange triangle, deletion purple
-  inverted triangle, ambiguous grey cross. No fill scale is added, so
-  existing exon and link palettes remain available.
+  Standard layer arguments. Event colours and shapes use the default
+  nucleotide scheme: substitution blue circle, insertion orange
+  triangle, deletion purple inverted triangle, ambiguous grey cross. The
+  difference scheme also uses its palette for substitution and indel
+  markers. No fill scale is added, so existing exon and link palettes
+  remain available.
+
+- sequence_position:
+
+  Horizontal placement of sequence blocks: `"auto"` (default), `"left"`,
+  `"center"`, or `"right"`. Automatic placement stays near the genomic
+  anchor and moves blocks apart before stacking. Explicit positions keep
+  their horizontal alignment and stack overlapping blocks vertically.
+  Placement is in panel space after genomic scaling, including on
+  reversed panels. Blocks are kept within the available space with room
+  for sequence names, so wide centred blocks may shift right to fit.
+
+- colour_scheme:
+
+  `"nucleotide"` (default) colours A/C/G/T bases separately.
+  `"difference"` uses a neutral background for aligned columns, one
+  colour for substitutions, and another for insertions and deletions.
+  Both sequences highlight the same differing alignment columns.
+  Ambiguous IUPAC bases remain neutral rather than being called verified
+  mismatches.
+
+- difference_colours:
+
+  Named character vector of three colours with keys `aligned`,
+  `mismatch`, and `indel`. Used with `colour_scheme = "difference"`.
+  Defaults to grey aligned columns, orange mismatches, and red indels.
+  Text switches between black and white for readable contrast, assuming
+  a white panel background when colours are translucent. With
+  `background = FALSE`, mismatch and indel colours apply to the letters,
+  while aligned letters retain their neutral grey shade.
 
 ## Value
 
@@ -81,8 +115,9 @@ are required. In ggexon, use with annotation data and
 
 ## Details
 
-Smooth curved connectors retain their exact genomic and callout
-endpoints. Marker and connector anchors follow
+Each sequence block has one smooth curved connector from the midpoint of
+its displayed genomic interval to the bottom centre of the sequence
+block. Marker and connector anchors follow
 [`scale_x_ggexon_genomic()`](https://dongyaoliu.github.io/ggexon/reference/scale_x_ggexon_genomic.md)
 automatically. Callout columns are equally spaced in panel space
 **after** genomic scaling: they are schematic alignment detail, not an
