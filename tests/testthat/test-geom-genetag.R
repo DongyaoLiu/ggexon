@@ -1,3 +1,25 @@
+test_that("outside labels retain separation when constrained at a genomic boundary", {
+  labels <- data.frame(track = "one", label_pos = "top", label_lane = 1L,
+    label_x = c(70, 98), est_width = c(20, 20))
+  placed <- .genetag_spread_outside_labels(labels,
+    data_xmin = 0, data_xmax = 100, data_range = 100)
+  expect_false(isTRUE(attr(placed, "unresolved_collision")))
+  expect_true(all(placed$label_x - placed$est_width / 2 >= 0))
+  expect_true(all(placed$label_x + placed$est_width / 2 <= 100))
+  expect_gte(diff(placed$label_x), 20.5)
+
+  labels$label_x <- c(2, 30)
+  placed <- .genetag_spread_outside_labels(labels,
+    data_xmin = 0, data_xmax = 100, data_range = 100)
+  expect_false(isTRUE(attr(placed, "unresolved_collision")))
+  expect_gte(diff(placed$label_x), 20.5)
+
+  labels$est_width <- c(60, 60)
+  impossible <- .genetag_spread_outside_labels(labels,
+    data_xmin = 0, data_xmax = 100, data_range = 100)
+  expect_true(isTRUE(attr(impossible, "unresolved_collision")))
+})
+
 test_that("geom_genetag polygon data uses exon bodies with strand triangles", {
   data <- data.frame(
     xmin = c(0, 10),

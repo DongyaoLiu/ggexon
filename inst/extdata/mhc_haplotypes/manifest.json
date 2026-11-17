@@ -1,0 +1,141 @@
+{
+  "source": {
+    "repository_commit": "eabd8aa7fc081bd6349bd65709e98d9c02d6f99f",
+    "files": [
+      {
+        "file": "windows.tsv",
+        "original_path": "data-raw/ape_paper/results/mhc_continuous/windows.tsv",
+        "original_sha256": "f0aed0407f63f03809db1b3970049ec8b3d428052fe31c0340ff146c5f39a0d5",
+        "selected_rows": 3
+      },
+      {
+        "file": "curated-mhc.tsv",
+        "original_path": "data-raw/ape_paper/results/mhc_full/genes.tsv",
+        "original_sha256": "3a86761dd73c4007db600d6e0deeaad9e70a36c6ea577aaff503932e41e2a975",
+        "selected_rows": 77
+      },
+      {
+        "file": "context-models.tsv.gz",
+        "original_path": "data-raw/ape_paper/results/mhc_continuous/gene_models_with_recovered_context/models.tsv",
+        "original_sha256": "fb99ebe66f657a002d431bcf46ef8823661096f98675f3597fa4788ca019ba18",
+        "selected_rows": 3701
+      }
+    ],
+    "paper": "https://doi.org/10.1038/s41586-025-08816-3",
+    "browser_revision": "603f414e9278545a1c8dcf416f3226e7a3d07e86"
+  },
+  "selection": [
+    "SSYh1",
+    "GGOh1",
+    "HSAh1"
+  ],
+  "window_rule": "Equal native spans: longest functional MHC extent among the selected tracks plus 200 kb; centred per track.",
+  "coordinates": "GFF3/TSV: one-based closed native assembly coordinates; PAF starts: zero-based; no pre-reversal.",
+  "filtering": "Retain functional curated MHC. Context: remove explicit pseudogene types, background symbols annotated as pseudogene in CHM13, and overlapping duplicate curated loci; choose the longest exonic transcript per overlapping same-name/strand locus.",
+  "background_status": "CAT biotypes are unspecified. The background symbol filter is a display choice, not an ape functional-status inference.",
+  "alignment_filter": "Direct minimap2 asm20; no secondary records; split at indels >=1000 bp; each span >=500 bp and identity >=70%; short internal indels remain inside ribbon envelopes; PAF mapQ 255 denotes unknown.",
+  "minimap2_version": "2.31-r1302",
+  "sequences": [
+    {
+      "track": "SSYh1",
+      "sha256": "8da0afd11f1e205b1ccdd8085f5bea82f122c813977cd4d407a3fd8155e87dd5",
+      "sequence_url": "https://genomeark.s3.amazonaws.com/species/Symphalangus_syndactylus/mSymSyn1/assembly_curated/mSymSyn1_v2.0.2bit",
+      "chr": "chr23_hap1",
+      "start": 38374018,
+      "end": 42002223,
+      "chr_length": 78312223
+    },
+    {
+      "track": "GGOh1",
+      "sha256": "e8bea076a69d25e0668f9f802459bb637e064c2cefb58ae6cb6cff17ed9519d9",
+      "sequence_url": "https://genomeark.s3.amazonaws.com/species/Gorilla_gorilla/mGorGor1/assembly_curated/mGorGor1_v2.0.2bit",
+      "chr": "chr5_mat_hsa6",
+      "start": 47277843,
+      "end": 50906048,
+      "chr_length": 199452338
+    },
+    {
+      "track": "HSAh1",
+      "sha256": "1a6eb38a1d69ac7c7a990cd2ee32f21d1bb39705e5c9aa19634e2596326dd8fa",
+      "sequence_url": "https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/browser/CHM13/chm13v2.0.2bit",
+      "chr": "chr6",
+      "start": 29439185,
+      "end": 33067390,
+      "chr_length": 172126628
+    }
+  ],
+  "alignments": [
+    {
+      "name": "SSYh1_GGOh1",
+      "target": "SSYh1",
+      "query": "GGOh1",
+      "command": [
+        "minimap2",
+        "-x",
+        "asm20",
+        "-c",
+        "--eqx",
+        "--secondary=no",
+        "-t",
+        "2",
+        "SSYh1.fa",
+        "GGOh1.fa"
+      ],
+      "raw_paf_sha256": "1244ead4609945658ce379015139169a6675ce7b596541c7fe0b6f56455b9713",
+      "blocks": 108
+    },
+    {
+      "name": "GGOh1_HSAh1",
+      "target": "GGOh1",
+      "query": "HSAh1",
+      "command": [
+        "minimap2",
+        "-x",
+        "asm20",
+        "-c",
+        "--eqx",
+        "--secondary=no",
+        "-t",
+        "2",
+        "GGOh1.fa",
+        "HSAh1.fa"
+      ],
+      "raw_paf_sha256": "99e7f77bc832218f10faa5219283ee7a63d25c9a855bf4ae9725eefa4181daba",
+      "blocks": 44
+    }
+  ],
+  "files": [
+    {
+      "file": "GGOh1.gff3",
+      "md5": "cdd33e20c8048fbf365e873f8affdcbc"
+    },
+    {
+      "file": "GGOh1_HSAh1.paf",
+      "md5": "3c2ce32bcf5e98ce444af9da7fe314f3"
+    },
+    {
+      "file": "HSAh1.gff3",
+      "md5": "c90673abbbd62bfd105c09230102f224"
+    },
+    {
+      "file": "SSYh1.gff3",
+      "md5": "ff7d5f487d8ad821e59454f92457efe1"
+    },
+    {
+      "file": "SSYh1_GGOh1.paf",
+      "md5": "ddb2df384299368852932ac6cecf44db"
+    },
+    {
+      "file": "genes.tsv",
+      "md5": "d85fe6bfded89e589c1185bdda126a80"
+    },
+    {
+      "file": "links.tsv",
+      "md5": "58a800ce2e4124385c5760370ec75a2e"
+    },
+    {
+      "file": "windows.tsv",
+      "md5": "0270533b6a7767168d30a315832e783e"
+    }
+  ]
+}

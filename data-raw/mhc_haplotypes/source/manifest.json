@@ -1,0 +1,25 @@
+{
+  "repository_commit": "eabd8aa7fc081bd6349bd65709e98d9c02d6f99f",
+  "files": [
+    {
+      "file": "windows.tsv",
+      "original_path": "data-raw/ape_paper/results/mhc_continuous/windows.tsv",
+      "original_sha256": "f0aed0407f63f03809db1b3970049ec8b3d428052fe31c0340ff146c5f39a0d5",
+      "selected_rows": 3
+    },
+    {
+      "file": "curated-mhc.tsv",
+      "original_path": "data-raw/ape_paper/results/mhc_full/genes.tsv",
+      "original_sha256": "3a86761dd73c4007db600d6e0deeaad9e70a36c6ea577aaff503932e41e2a975",
+      "selected_rows": 77
+    },
+    {
+      "file": "context-models.tsv.gz",
+      "original_path": "data-raw/ape_paper/results/mhc_continuous/gene_models_with_recovered_context/models.tsv",
+      "original_sha256": "fb99ebe66f657a002d431bcf46ef8823661096f98675f3597fa4788ca019ba18",
+      "selected_rows": 3701
+    }
+  ],
+  "paper": "https://doi.org/10.1038/s41586-025-08816-3",
+  "browser_revision": "603f414e9278545a1c8dcf416f3226e7a3d07e86"
+}

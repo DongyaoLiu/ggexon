@@ -1,0 +1,4 @@
+track	label	assembly	chr	start	end	orientation	sequence_url	chr_length
+SSYh1	Siamang H1	mSymSyn1_v2.0	chr23_hap1	38374018	42002223	-	https://genomeark.s3.amazonaws.com/species/Symphalangus_syndactylus/mSymSyn1/assembly_curated/mSymSyn1_v2.0.2bit	78312223
+GGOh1	Gorilla H1	mGorGor1_v2.0	chr5_mat_hsa6	47277843	50906048	+	https://genomeark.s3.amazonaws.com/species/Gorilla_gorilla/mGorGor1/assembly_curated/mGorGor1_v2.0.2bit	199452338
+HSAh1	Human CHM13	T2T-CHM13v2.0	chr6	29439185	33067390	+	https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/browser/CHM13/chm13v2.0.2bit	172126628

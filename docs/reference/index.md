@@ -98,6 +98,9 @@ links, trees, and protein mutation summaries.
   : Draw splice junction arcs on annotation or coverage panels
 - [`geom_genetag()`](https://dongyaoliu.github.io/ggexon/reference/geom_genetag.md)
   : Draw gene tags as exon bodies with strand-direction triangles
+- [`geom_gene_lollipop()`](https://dongyaoliu.github.io/ggexon/reference/geom_gene_lollipop.md)
+  [`GeomGeneLollipop`](https://dongyaoliu.github.io/ggexon/reference/geom_gene_lollipop.md)
+  : Draw labelled gene arrows on stems at true genomic positions
 - [`geom_genebox()`](https://dongyaoliu.github.io/ggexon/reference/geom_genebox.md)
   : Draw fixed-size gene boxes with internal strand arrows
 - [`GeomGeneBox`](https://dongyaoliu.github.io/ggexon/reference/GeomGeneBox.md)
@@ -285,6 +288,9 @@ stored layout information to Syn containers.
 - [`prepare_genomic_layout()`](https://dongyaoliu.github.io/ggexon/reference/prepare_genomic_layout.md)
   : Prepare shared genomic geometry on a Syn object
 
+- [`prepare_gene_lollipop()`](https://dongyaoliu.github.io/ggexon/reference/prepare_gene_lollipop.md)
+  : Prepare a shared gene-lollipop grid
+
 ## Load, query, and transform annotations
 
 Materialize annotation data, query layer payloads, import homology, and
@@ -324,6 +330,8 @@ derive sequence or protein-level summaries.
   : Inspect a stored genomic protein projection
 - [`query_genomic_layout()`](https://dongyaoliu.github.io/ggexon/reference/query_genomic_layout.md)
   : Inspect shared prepared genomic coordinates
+- [`query_gene_lollipop()`](https://dongyaoliu.github.io/ggexon/reference/query_gene_lollipop.md)
+  : Inspect a prepared gene-lollipop grid
 - [`projected_domains()`](https://dongyaoliu.github.io/ggexon/reference/projected_domains.md)
   : Access stored projected protein-domain tables
 - [`homology_table()`](https://dongyaoliu.github.io/ggexon/reference/homology_table.md)
@@ -497,6 +505,10 @@ and reexports.
   : v=1.0 author = "LIU Dongyao" LabWebsite: "www.zhenglabhku.org"
   E-mail = "dongyao@connect.hku.hk" Description: designed to draw gene
   without exon information. An arrow.
+
+- [`geom_gene_lollipop()`](https://dongyaoliu.github.io/ggexon/reference/geom_gene_lollipop.md)
+  [`GeomGeneLollipop`](https://dongyaoliu.github.io/ggexon/reference/geom_gene_lollipop.md)
+  : Draw labelled gene arrows on stems at true genomic positions
 
 - [`GeomCoverage`](https://dongyaoliu.github.io/ggexon/reference/GeomCoverage.md)
   : Coverage geom ggproto

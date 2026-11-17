@@ -2315,6 +2315,23 @@ drawDetails.ggexonGenetagLabelGrob <- function(x, recording = TRUE) {
         }
       }
     }
+    # Apply the bounds together with neighbour spacing. Independent clipping
+    # after spreading can otherwise move edge labels back onto their neighbours.
+    tolerance <- 64 * .Machine$double.eps * max(1, abs(data_xmin), abs(data_xmax))
+    bounded_dist <- dist + tolerance
+    required <- sum(2 * halfw) + (n - 1L) * (min_gap + tolerance)
+    if (is.finite(required) && required <= data_xmax - data_xmin) {
+      lower <- data_xmin + halfw
+      upper <- data_xmax - halfw
+      x <- pmin(pmax(x, lower), upper)
+      for (j in 2L:n) x[j] <- max(x[j], x[j - 1L] + bounded_dist[j - 1L])
+      x[n] <- min(x[n], upper[n])
+      for (j in seq.int(n - 1L, 1L)) {
+        x[j] <- min(x[j], x[j + 1L] - bounded_dist[j])
+      }
+      x[1L] <- max(x[1L], lower[1L])
+      for (j in 2L:n) x[j] <- max(x[j], x[j - 1L] + bounded_dist[j - 1L])
+    }
     data$label_x[idx] <- x
   }
   data <- .genetag_constrain_label_x(data, data_xmin, data_xmax)

@@ -1,33 +1,25 @@
----
-title: "2. Comparing alternatively spliced transcripts"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{2. Comparing alternatively spliced transcripts}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
----
+# 2. Comparing alternatively spliced transcripts
 
-
-
-# Compare transcript structures, then add evidence
+## Compare transcript structures, then add evidence
 
 This example compares human full-length AS3MT, a **paper-defined d2d3
-reconstruction**, and chimpanzee full-length AS3MT. The reconstructed human
-transcript skips exons 2 and 3. We first compare the transcript models, then
-inspect DNA at the exon-1 repeat.
+reconstruction**, and chimpanzee full-length AS3MT. The reconstructed
+human transcript skips exons 2 and 3. We first compare the transcript
+models, then inspect DNA at the exon-1 repeat.
 
-Human coordinates use **GRCh38**; chimpanzee coordinates use **Pan_tro_3.0**.
-Each assembly has its own genomic axis. All inputs are bundled and work offline.
+Human coordinates use **GRCh38**; chimpanzee coordinates use
+**Pan_tro_3.0**. Each assembly has its own genomic axis. All inputs are
+bundled and work offline.
 
-# Prepare one comparative Syn object
+## Prepare one comparative Syn object
 
-The loader returns a `SynSpecies`. It contains two `SynIndividual` objects,
-their feature annotations and a named human-chimpanzee alignment. Original
-repeat sequences, source specifications and supporting evidence stay in the
-object's metadata.
-
+The loader returns a `SynSpecies`. It contains two `SynIndividual`
+objects, their feature annotations and a named human-chimpanzee
+alignment. Original repeat sequences, source specifications and
+supporting evidence stay in the object’s metadata.
 
 ``` r
+
 library(ggexon)
 library(ggplot2)
 
@@ -46,15 +38,15 @@ nrow(pairwise_alignment_data(as3mt, alignment = "human_chimp"))
 #> [1] 37
 ```
 
-The alignment contains **37 ungapped LASTZ blocks**, selected from the two
-highest original identity categories.
+The alignment contains **37 ungapped LASTZ blocks**, selected from the
+two highest original identity categories.
 
-## Prepare reusable annotation views
+### Prepare reusable annotation views
 
 Prepare the remaining overlays on the same object before plotting:
 
-
 ``` r
+
 as3mt <- prepare_as3mt_example(as3mt)
 
 head(as3mt_plot_data(as3mt, "exon_labels")[,
@@ -68,29 +60,32 @@ head(as3mt_plot_data(as3mt, "exon_labels")[,
 #> 6 human_full    6 102874592 102874661    E6
 ```
 
-`prepare_as3mt_example()` is an example helper. It derives exon labels from
-stored CDS and UTR features, retains full-reference exon numbers, and
-prepares repeat outlines and donor marks. It also runs `alignseq_data()` on
-the stored DNA alignment to prepare sequence rows and difference markers.
+`prepare_as3mt_example()` is an example helper. It derives exon labels
+from stored CDS and UTR features, retains full-reference exon numbers,
+and prepares repeat outlines and donor marks. It also runs
+[`alignseq_data()`](https://dongyaoliu.github.io/ggexon/reference/alignseq_data.md)
+on the stored DNA alignment to prepare sequence rows and difference
+markers.
 
-`as3mt_plot_data()` reads a named prepared view. Transcript and alignment
-layers use native Syn dispatch; DNA and annotation overlays read their
-prepared views from `as3mt`. The source files are loaded once. Genomic
-positions stay unchanged during preparation; one `scale_x_ggexon_genomic()`
-per plot supplies intron compression for its layers. Run preparation again
-after changing the stored feature models or DNA evidence.
+`as3mt_plot_data()` reads a named prepared view. Transcript and
+alignment layers use native Syn dispatch; DNA and annotation overlays
+read their prepared views from `as3mt`. The source files are loaded
+once. Genomic positions stay unchanged during preparation; one
+[`scale_x_ggexon_genomic()`](https://dongyaoliu.github.io/ggexon/reference/scale_x_ggexon_genomic.md)
+per plot supplies intron compression for its layers. Run preparation
+again after changing the stored feature models or DNA evidence.
 
-# Compare the transcript models
+## Compare the transcript models
 
-Human full-length AS3MT is blue; d2d3 is orange; chimpanzee AS3MT is grey.
-Gold identifies E2/E3 in the full-length human model. The reconstructed
-transcript omits these two exons and retains **E1 and
+Human full-length AS3MT is blue; d2d3 is orange; chimpanzee AS3MT is
+grey. Gold identifies E2/E3 in the full-length human model. The
+reconstructed transcript omits these two exons and retains **E1 and
 E4–E11**, including its untranslated first exon.
 
 Define the colours and text settings used below:
 
-
 ``` r
+
 base_size <- 8
 base_family <- "serif"
 text_mm <- base_size / ggplot2::.pt
@@ -102,14 +97,16 @@ fill_colours <- c(
 )
 ```
 
-Build the plot directly from the object. `compress_introns = FALSE` disables
-`geom_exon2()`'s own schematic spacing. The shared x scale then compresses
-introns **30-fold**, preserving exon widths and keeping links and labels
-aligned with the transcript models. Select the `human` and `chimp`
-annotation panels explicitly.
-
+Build the plot directly from the object. `compress_introns = FALSE`
+disables
+[`geom_exon2()`](https://dongyaoliu.github.io/ggexon/reference/geom_exon2.md)’s
+own schematic spacing. The shared x scale then compresses introns
+**30-fold**, preserving exon widths and keeping links and labels aligned
+with the transcript models. Select the `human` and `chimp` annotation
+panels explicitly.
 
 ``` r
+
 transcript_plot <- ggexon(as3mt) +
   geom_exon2(
     aes(xmin = xmin - 0.5, xmax = xmax + 0.5, ymin = isoform_y,
@@ -158,39 +155,45 @@ transcript_plot <- ggexon(as3mt) +
 transcript_plot
 ```
 
-<div class="figure">
-<img src="/private/var/folders/1q/c2x4tgc13k71k6n_lb5m_7n00000gn/T/RtmpMmBUJk/as3mt-markdown-149147bbf9dee/as3mt-splice-variants-demo_files/figure-html/as3mt-pairwise-1.png" alt="Human full-length and reconstructed d2d3 transcript rows above chimpanzee AS3MT. Gold E2/E3 in the full-length model are absent from d2d3. Genomic ribbons follow the shared compressed axes."  />
-<p class="caption">Transcript models and ungapped DNA similarity. Introns are compressed 30-fold.</p>
-</div>
+![Human full-length and reconstructed d2d3 transcript rows above
+chimpanzee AS3MT. Gold E2/E3 in the full-length model are absent from
+d2d3. Genomic ribbons follow the shared compressed
+axes.](as3mt-splice-variants-demo_files/figure-html/as3mt-pairwise-1.png)
+
+Transcript models and ungapped DNA similarity. Introns are compressed
+30-fold.
 
 The two ribbon colours represent **97.1–98.3%** and **98.3–100%** LASTZ
-identity. The 37 blocks split into 57 polygon pieces at scale boundaries.
-These links show genomic DNA similarity.
+identity. The 37 blocks split into 57 polygon pieces at scale
+boundaries. These links show genomic DNA similarity.
 
-# Inspect DNA at the exon-1 repeat
+## Inspect DNA at the exon-1 repeat
 
-The selected human reference contains three **36-bp VNTR** units; the chimp
-reference has one imperfect homolog, with 34 of 36 matching bases. The terminal
-unit spans 24 exonic and 12 intronic bases. Both references retain the **GT** donor:
+The selected human reference contains three **36-bp VNTR** units; the
+chimp reference has one imperfect homolog, with 34 of 36 matching bases.
+The terminal unit spans 24 exonic and 12 intronic bases. Both references
+retain the **GT** donor:
 
-```text
+``` text
 CCTGAGTCGCAGGCCGAGGAGACA | GTGAGTGCGCGC
          human exon 1  | intron 1
 ```
 
-The aligned strings and genomic anchors are stored in `as3mt`. Preparation
-uses an explicitly named human reference in `alignseq_data()`. A `-` is an
-alignment gap and consumes no genomic base. The donor-anchored alignment,
-verified against the bundled FASTAs, places 72 chimp gap columns opposite
-two human repeat copies.
+The aligned strings and genomic anchors are stored in `as3mt`.
+Preparation uses an explicitly named human reference in
+[`alignseq_data()`](https://dongyaoliu.github.io/ggexon/reference/alignseq_data.md).
+A `-` is an alignment gap and consumes no genomic base. The
+donor-anchored alignment, verified against the bundled FASTAs, places 72
+chimp gap columns opposite two human repeat copies.
 
-For a close-up, use two annotation panels and change the windows on a copy
-of the same Syn object.
-`geom_alignseq()` currently requires its prepared table explicitly, so query
-the stored `dna_rows` view. Gene models still resolve from the Syn object:
-
+For a close-up, use two annotation panels and change the windows on a
+copy of the same Syn object.
+[`geom_alignseq()`](https://dongyaoliu.github.io/ggexon/reference/geom_alignseq.md)
+currently requires its prepared table explicitly, so query the stored
+`dna_rows` view. Gene models still resolve from the Syn object:
 
 ``` r
+
 sequence_model <- as3mt
 species_layout(sequence_model) <- SynLayout(
   panels = data.frame(PANEL = 1:2, ROW = 1:2, COL = 1,
@@ -230,24 +233,29 @@ sequence_plot <- ggexon(sequence_model) +
 sequence_plot
 ```
 
-<img src="/private/var/folders/1q/c2x4tgc13k71k6n_lb5m_7n00000gn/T/RtmpMmBUJk/as3mt-markdown-149147bbf9dee/as3mt-splice-variants-demo_files/figure-html/as3mt-alignseq-rows-1.png" alt="Terminal repeat DNA above human and chimpanzee exon-1 models. Aligned bases are grey and mismatches orange. A donor mark divides 24 exonic and 12 intronic bases."  />
+![Terminal repeat DNA above human and chimpanzee exon-1 models. Aligned
+bases are grey and mismatches orange. A donor mark divides 24 exonic and
+12 intronic
+bases.](as3mt-splice-variants-demo_files/figure-html/as3mt-alignseq-rows-1.png)
 
-Sequence letters are equally spaced schematically. Their connector anchors
-use genomic positions. Grey marks aligned bases, orange marks mismatches,
-and red marks indels. The DNA colours are independent of transcript colours.
+Sequence letters are equally spaced schematically. Their connector
+anchors use genomic positions. Grey marks aligned bases, orange marks
+mismatches, and red marks indels. The DNA colours are independent of
+transcript colours.
 
-# Combine the evidence
+## Combine the evidence
 
-Reuse `transcript_plot` and add the stored DNA markers, repeat outlines and donor
-marks. Each species displays its own sequence callout. All genomic anchors
-follow the same scale as the corresponding transcript model:
+Reuse `transcript_plot` and add the stored DNA markers, repeat outlines
+and donor marks. Each species displays its own sequence callout. All
+genomic anchors follow the same scale as the corresponding transcript
+model:
 
 Set panel heights in row order: human annotation, genomic links, then
-chimpanzee annotation. The chimpanzee panel is half the human panel's height;
-the link panel keeps its compact height.
-
+chimpanzee annotation. The chimpanzee panel is half the human panel’s
+height; the link panel keeps its compact height.
 
 ``` r
+
 combined_plot <- transcript_plot +
   geom_alignseq(
     data = as3mt_plot_data(as3mt, "dna_markers"), colour_scheme = "difference",
@@ -273,30 +281,38 @@ combined_plot <- transcript_plot +
 combined_plot
 ```
 
-<div class="figure">
-<img src="/private/var/folders/1q/c2x4tgc13k71k6n_lb5m_7n00000gn/T/RtmpMmBUJk/as3mt-markdown-149147bbf9dee/as3mt-splice-variants-demo_files/figure-html/as3mt-alignseq-1.png" alt="Human full-length and reconstructed d2d3 transcript models above chimpanzee AS3MT, with genomic ribbons, purple repeat outlines and species-specific DNA callouts. The chimp deletion marker reads minus 72 bp relative to the selected human reference."  />
-<p class="caption">One comparative Syn object supplies transcript structures, genomic links and DNA detail.</p>
-</div>
+![Human full-length and reconstructed d2d3 transcript models above
+chimpanzee AS3MT, with genomic ribbons, purple repeat outlines and
+species-specific DNA callouts. The chimp deletion marker reads minus 72
+bp relative to the selected human
+reference.](as3mt-splice-variants-demo_files/figure-html/as3mt-alignseq-1.png)
 
-Cai et al. tested otherwise matched **two- and three-repeat human minigenes**;
-three repeats produced more d2d3. This supports repeat-dependent splicing
-regulation, but does not establish sufficiency for the isoform's evolutionary
-origin. The human allele experiment differs by **36 bp**. The figure's **−72 bp**
-marker compares the selected chimp and human references. Two base differences
-in the chimp homolog are sequence context, not demonstrated causal SNVs.
+One comparative Syn object supplies transcript structures, genomic links
+and DNA detail.
 
-# Sources and reproducibility
+Cai et al. tested otherwise matched **two- and three-repeat human
+minigenes**; three repeats produced more d2d3. This supports
+repeat-dependent splicing regulation, but does not establish sufficiency
+for the isoform’s evolutionary origin. The human allele experiment
+differs by **36 bp**. The figure’s **−72 bp** marker compares the
+selected chimp and human references. Two base differences in the chimp
+homolog are sequence context, not demonstrated causal SNVs.
 
-- [Li et al. (2016), doi:10.1038/nm.4096](https://doi.org/10.1038/nm.4096):
-  d2d3 reconstruction and repeat sequence.
-- [Cai et al. (2021), doi:10.1093/schbul/sbaa098](https://doi.org/10.1093/schbul/sbaa098):
+## Sources and reproducibility
+
+- [Li et al. (2016),
+  doi:10.1038/nm.4096](https://doi.org/10.1038/nm.4096): d2d3
+  reconstruction and repeat sequence.
+- [Cai et al. (2021),
+  doi:10.1093/schbul/sbaa098](https://doi.org/10.1093/schbul/sbaa098):
   human VNTR minigene comparison.
 
-The installed `extdata/as3mt` directory contains all inputs, example preparation
-functions and provenance. `as3mt_evidence(as3mt)` retains the original repeat
-sequences, source specifications and alignment evidence for inspection.
+The installed `extdata/as3mt` directory contains all inputs, example
+preparation functions and provenance. `as3mt_evidence(as3mt)` retains
+the original repeat sequences, source specifications and alignment
+evidence for inspection.
 
-Repository preparation and export scripts are in `data-raw/as3mt`. Genomic
-ribbons use LASTZ `--nogapped --chain` blocks. Existing figure-export helpers
-remain available;
-the plotting commands used in this tutorial are shown above.
+Repository preparation and export scripts are in `data-raw/as3mt`.
+Genomic ribbons use LASTZ `--nogapped --chain` blocks. Existing
+figure-export helpers remain available; the plotting commands used in
+this tutorial are shown above.

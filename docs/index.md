@@ -89,17 +89,18 @@ tutorial](https://dongyaoliu.github.io/ggexon/articles/dox-synteny-demo.md).
 ### **4. Visualizing megabase-scale haplotypes**
 
 Compare gene organization and sequence alignments across the major
-histocompatibility complex (MHC). This compact view shows human CHM13,
-two gorilla haplotypes, and one siamang haplotype on a common base-pair
-scale. Small arrows retain gene spans and direction; enlarged labels
-identify MHC genes above the surrounding annotations and alignment
-ribbons. The tutorial also includes the complete thirteen-track
-comparison across apes.
+histocompatibility complex (MHC). This compact view shows Siamang H1,
+Gorilla H1, and Human CHM13 on a common base-pair scale. Small arrows
+retain gene spans and direction; enlarged directional gene-lollipop
+heads carry MHC labels and connect to their native positions. Prepare
+the three-haplotype Syn object first, then add gene spans, heads, and
+links.
 
-[![Four megabase-scale MHC haplotypes from siamang, gorilla, and human,
-with native gene spans, enlarged gene labels, variable-region
-annotations, and nucleotide-alignment
-ribbons.](articles/figures/mhc-three-species.png)](https://dongyaoliu.github.io/ggexon/articles/mhc-continuous-demo.md)
+[![Three compact MHC haplotypes: Siamang H1, Gorilla H1, and Human
+CHM13, with labelled gene-lollipop heads connected to native functional
+MHC gene spans, grey background genes, and two direct
+nucleotide-alignment
+panels.](articles/figures/mhc-three-species.png)](https://dongyaoliu.github.io/ggexon/articles/mhc-continuous-demo.md)
 
 [Explore the MHC haplotype
 tutorial](https://dongyaoliu.github.io/ggexon/articles/mhc-continuous-demo.md).

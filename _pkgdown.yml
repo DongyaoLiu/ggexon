@@ -80,6 +80,7 @@ reference:
   - geom_coverage
   - geom_junction
   - geom_genetag
+  - geom_gene_lollipop
   - geom_genebox
   - GeomGeneBox
   - geom_genelabel
@@ -153,6 +154,7 @@ reference:
   - store_chain_layout
   - store_projected_domains
   - prepare_genomic_layout
+  - prepare_gene_lollipop
 
 - title: Load, query, and transform annotations
   desc: Materialize annotation data, query layer payloads, import homology, and derive sequence or protein-level summaries.
@@ -174,6 +176,7 @@ reference:
   - project_mutations_to_genome
   - query_genomic_projection
   - query_genomic_layout
+  - query_gene_lollipop
   - projected_domains
   - homology_table
   - reference_species
@@ -237,6 +240,7 @@ reference:
   - FacetGenomicTree
   - GeomExon
   - GeomGene
+  - GeomGeneLollipop
   - GeomCoverage
   - GeomCoverageMUT
   - GeomAaVariant
