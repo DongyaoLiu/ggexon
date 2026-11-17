@@ -94,7 +94,8 @@ for the reproducible offline example and aligned DNA repeat detail.
 
 This offline example compares *D. mauritiana*, *D. simulans*, and
 *D. sechellia*, with 2/3/2 displayed genes and two nucleotide-link panels.
-Each species has a separate RNA-seq subpanel above its annotation.
+Each species has one combined RNA-seq subpanel above its annotation,
+summing forward and reverse signal magnitudes at each genomic base.
 It connects conserved gene order to exon structure, local DNA alignments,
 and testis RNA-seq. The additional `Dox` model contains three coding exons
 mapped exactly from the published CDS. RNA-seq is shown for all three
@@ -102,13 +103,15 @@ species. The full *D. simulans* replicate-1 read library is remapped directly
 to the plotted assembly; the two outer species retain deposited signals.
 Both original genomic scale and gap compression are demonstrated.
 `facet_genomics(coverage_panel_height = 0.5, link_panel_height = 0.5)` sets
-annotation : link : RNA heights to 1 : 0.5 : 0.5. Independent RNA y limits make
-all three peaks similarly tall while preserving signal values. Dsim read
-depth and the outer-species deposited signal units are identified separately.
+annotation : link : RNA heights to 1 : 0.5 : 0.5. `scales = "free_x"` retains
+each assembly's genomic axis; the RNA panels share one y range and retain
+their signal values (×1). Dsim read depth and the outer-species deposited
+signal units are identified separately.
 
 The detailed `vignette("dox-synteny-demo", package = "ggexon")` constructs
 `SynIndividual`/`SynSpecies` data objects from bundled GTF, PAF, and BigWig
-files, then adds annotations, linkage, and RNA-seq layer by layer. Model
+files, attaches the annotations and alignments, and prepares layouts before
+drawing gene models, linkage, and RNA-seq layer by layer. Model
 descriptions, signal units, and source details are in the tutorial text.
 
 ## Installation

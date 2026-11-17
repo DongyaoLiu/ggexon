@@ -27,7 +27,8 @@ facet_genomics(
   reverse_x_match_by = c("auto", "species", "strain", "id", "track"),
   xlim = NULL,
   xlim_chr = NULL,
-  coverage_panel_height = NULL
+  coverage_panel_height = NULL,
+  strip_group = "panel"
 )
 }
 \arguments{
@@ -124,6 +125,15 @@ with another panel role retain their height. This changes physical panel
 size, not signal values or y limits; use \code{\link[=scale_panel_coverage]{scale_panel_coverage()}} for
 independent coverage y ranges. Legacy combined annotation/coverage panels
 are not resized.}
+
+\item{strip_group}{\code{"panel"} (the default) keeps one strip per panel.
+\code{"individual"} draws one side strip spanning consecutive coverage and
+annotation panels belonging to the same individual in a Syn layout.
+The annotation panel supplies the label, including the existing labeller
+and strip styling. Coverage aliases are matched through their stored
+individual. Link panels, gaps, and column boundaries end a group.
+Requires \code{strip.position = "left"} or \code{"right"}. Pair with
+\code{\link[=theme_ggexon_side_strips]{theme_ggexon_side_strips()}} to place labels outside the axes.}
 }
 \value{
 A \code{FacetGenomics} ggproto object.

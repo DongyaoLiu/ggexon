@@ -32,7 +32,8 @@ facet_genomics(
   reverse_x_match_by = c("auto", "species", "strain", "id", "track"),
   xlim = NULL,
   xlim_chr = NULL,
-  coverage_panel_height = NULL
+  coverage_panel_height = NULL,
+  strip_group = "panel"
 )
 ```
 
@@ -180,6 +181,18 @@ facet_genomics(
   [`scale_panel_coverage()`](https://dongyaoliu.github.io/ggexon/reference/scale_panel_coverage.md)
   for independent coverage y ranges. Legacy combined annotation/coverage
   panels are not resized.
+
+- strip_group:
+
+  `"panel"` (the default) keeps one strip per panel. `"individual"`
+  draws one side strip spanning consecutive coverage and annotation
+  panels belonging to the same individual in a Syn layout. The
+  annotation panel supplies the label, including the existing labeller
+  and strip styling. Coverage aliases are matched through their stored
+  individual. Link panels, gaps, and column boundaries end a group.
+  Requires `strip.position = "left"` or `"right"`. Pair with
+  [`theme_ggexon_side_strips()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_side_strips.md)
+  to place labels outside the axes.
 
 ## Value
 

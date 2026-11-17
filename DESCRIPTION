@@ -101,6 +101,7 @@ Collate:
     'odgi.R'
     'output-size.R'
     'panel-scales.R'
+    'panel-strips.R'
     'panel-windows.R'
     'plot-build.R'
     'protein-mutation-annotation.R'

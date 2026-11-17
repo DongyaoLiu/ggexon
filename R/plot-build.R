@@ -1278,6 +1278,7 @@ S7::method(ggexon_gtable, class_ggexon_built) <- function(data) {
   plot_table <- inject_genomic_piecewise_axis(plot_table, build)
   plot_table <- inject_strip_scale_x_axis(plot_table, build)
   plot_table <- apply_link_panel_layout(plot_table, build)
+  plot_table <- apply_individual_panel_strips(plot_table, build)
   # Legends
   legend_box <- plot@guides$assemble(theme)
   plot_table <- table_add_legends(plot_table, legend_box, theme)

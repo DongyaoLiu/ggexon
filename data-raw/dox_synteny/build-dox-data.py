@@ -395,7 +395,7 @@ def main():
     manifest = dict(paper=PAPER, dox_cds_source=SUPPLEMENT,
                     coordinate_system="1-based inclusive; all seqnames aliased to X, original contigs in windows.tsv",
                     RNA_seq="Testis, biological replicate 1; GSE185361. Dmau/Dsech: deposited strand signals. Dsim: complete SRR23418969 library remapped directly to the plotted assembly.",
-                    signal_units="Dmau/Dsech: author-deposited BigWig values. Dsim: unnormalized primary read depth, MAPQ>=20. Independent y scales; no between-species expression inference.",
+                    signal_units="Dmau/Dsech: author-deposited BigWig values. Dsim: unnormalized primary read depth, MAPQ>=20. Different source units; no between-species expression inference.",
                     RNA_seq_remapping=dict(run=qc["run"], sample=qc["sample"], read_pairs=qc["read_pairs"],
                         assembly=qc["assembly"], provenance_file="Dsim-remapping-qc.json"),
                     alignment=dict(tool=lastz_version, mode="--nogapped --chain", minimum_length=80,

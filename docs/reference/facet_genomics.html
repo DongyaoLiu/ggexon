@@ -78,7 +78,8 @@ intermediate link panels used by <code><a href="geom_nuclink.html">geom_nuclink(
 <span>  reverse_x_match_by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"auto"</span>, <span class="st">"species"</span>, <span class="st">"strain"</span>, <span class="st">"id"</span>, <span class="st">"track"</span><span class="op">)</span>,</span>
 <span>  xlim <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  xlim_chr <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  coverage_panel_height <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  coverage_panel_height <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  strip_group <span class="op">=</span> <span class="st">"panel"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -222,6 +223,17 @@ with another panel role retain their height. This changes physical panel
 size, not signal values or y limits; use <code><a href="scale_panel_coverage.html">scale_panel_coverage()</a></code> for
 independent coverage y ranges. Legacy combined annotation/coverage panels
 are not resized.</p></dd>
+
+
+<dt id="arg-strip-group">strip_group<a class="anchor" aria-label="anchor" href="#arg-strip-group"></a></dt>
+<dd><p><code>"panel"</code> (the default) keeps one strip per panel.
+<code>"individual"</code> draws one side strip spanning consecutive coverage and
+annotation panels belonging to the same individual in a Syn layout.
+The annotation panel supplies the label, including the existing labeller
+and strip styling. Coverage aliases are matched through their stored
+individual. Link panels, gaps, and column boundaries end a group.
+Requires <code>strip.position = "left"</code> or <code>"right"</code>. Pair with
+<code><a href="theme_ggexon_side_strips.html">theme_ggexon_side_strips()</a></code> to place labels outside the axes.</p></dd>
 
 </dl></div>
     <div class="section level2">

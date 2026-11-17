@@ -12,7 +12,7 @@ FacetGenomics
 ## Format
 
 An object of class `FacetGenomics` (inherits from `FacetWrap`, `Facet`,
-`ggproto`, `gg`) of length 6.
+`ggproto`, `gg`) of length 7.
 
 ## Details
 

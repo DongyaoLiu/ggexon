@@ -74,8 +74,9 @@ Place a gene in its surrounding genomic context. This three-species
 *Dox* coding model in *D. simulans*, nucleotide-alignment ribbons, and
 testis RNA-seq tracks. The tutorial builds the figure layer by layer,
 showing how gene order, exon structure, and transcriptional signal can
-be inspected together. RNA panels use independent y scales and retain
-their source units.
+be inspected together. RNA panels share one y scale and retain their
+source values (×1). The deposited signals and remapped read depths have
+different source units.
 
 [![Three Drosophila loci with conserved flanking genes, an additional
 Dox model in D. simulans, nucleotide-alignment ribbons, and separate

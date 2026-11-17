@@ -34,6 +34,14 @@
 #' @param dir Wrapping direction. Single-letter values are normalized using
 #'   `as.table`.
 #' @param strip.position Position of facet strips.
+#' @param strip_group `"panel"` (the default) keeps one strip per panel.
+#'   `"individual"` draws one side strip spanning consecutive coverage and
+#'   annotation panels belonging to the same individual in a Syn layout.
+#'   The annotation panel supplies the label, including the existing labeller
+#'   and strip styling. Coverage aliases are matched through their stored
+#'   individual. Link panels, gaps, and column boundaries end a group.
+#'   Requires `strip.position = "left"` or `"right"`. Pair with
+#'   [`theme_ggexon_side_strips()`] to place labels outside the axes.
 #' @param axes Which axes to draw.
 #' @param axis.labels Which axis labels to draw.
 #' @param link_panel_height Optional relative height for link panels. Supply a
@@ -133,7 +141,9 @@ facet_genomics <- function(facets, nrow = NULL, ncol = NULL, scales = "fixed",
                        reverse_x = NULL,
                        reverse_x_match_by = c("auto", "species", "strain", "id", "track"),
                        xlim = NULL, xlim_chr = NULL,
-                       coverage_panel_height = NULL) {
+                       coverage_panel_height = NULL,
+                       strip_group = "panel") {
+  strip_group <- arg_match0(strip_group, c("panel", "individual"))
   scales <- arg_match0(scales %||% "fixed", c("fixed", "free_x", "free_y", "free"))
   dir <- arg_match0(dir, c("h", "v", "lt", "tl", "lb", "bl", "rt", "tr", "rb", "br"))
   link_axis <- arg_match0(link_axis %||% "inherit", c("inherit", "none", "x", "y"))
@@ -190,6 +200,10 @@ facet_genomics <- function(facets, nrow = NULL, ncol = NULL, scales = "fixed",
 
 
   strip.position <- arg_match0(strip.position, c("top", "bottom", "left", "right"))
+  if (identical(strip_group, "individual") &&
+      !strip.position %in% c("left", "right")) {
+    cli::cli_abort("{.arg strip_group} = {.val individual} requires side strips: {.val left} or {.val right}.")
+  }
 
   check_number_whole(ncol, allow_null = TRUE, min = 1)
   check_number_whole(nrow, allow_null = TRUE, min = 1)
@@ -208,6 +222,7 @@ facet_genomics <- function(facets, nrow = NULL, ncol = NULL, scales = "fixed",
       free = free,
       as.table = as.table,
       strip.position = strip.position,
+      strip_group = strip_group,
       drop = drop,
       ncol = ncol,
       nrow = nrow,

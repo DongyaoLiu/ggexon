@@ -31,16 +31,34 @@ for (i in seq_along(plots)) {
   }
   layout <- as.data.frame(built@layout$layout)
   stopifnot(identical(as.character(layout$panel_type), expected[[min(i, 3L)]]))
+  bounded <- layout$panel_type %in% c("coverage", "annotation") &
+    layout$track %in% c("Dmau", "Dsech")
+  stopifnot(all(layout$xlim_max[bounded] == 9440000))
+  for (row in which(bounded)) {
+    panel <- as.integer(layout$PANEL[row])
+    limits <- c(layout$xlim_min[row], layout$xlim_max[row])
+    transform <- built@layout$genomic_x_transforms[[as.character(panel)]]
+    if (!is.null(transform)) limits <- ggexon:::ggexon_genomic_to_plot_x(limits, transform)
+    stopifnot(isTRUE(all.equal(built@layout$panel_params[[panel]]$x.range, limits)))
+  }
+  annotation_ids <- as.integer(layout$PANEL[layout$panel_type == "annotation"])
+  centers <- ggexon:::annotation_panel_body_centers(built@data, annotation_ids)
+  for (panel in annotation_ids) {
+    stopifnot(isTRUE(all.equal(mean(built@layout$panel_params[[panel]]$y.range),
+      unname(centers[[as.character(panel)]]))))
+  }
   table <- withCallingHandlers(ggplot2::ggplot_gtable(built),
     warning = function(w) stop("Tutorial draw warning: ", conditionMessage(w)))
+  stopifnot(sum(grepl("^strip-l-individual-", table$layout$name)) == 3L)
   if (i >= 3L) {
+    stopifnot(length(unique(layout$SCALE_Y[layout$panel_type == "coverage"])) == 1L)
     index <- match(paste0("panel-", layout$COL, "-", layout$ROW), table$layout$name)
     heights <- as.numeric(table$heights[table$layout$t[index]])
     stopifnot(isTRUE(all.equal(heights, c(.5, 1, .5, .5, 1, .5, .5, 1))))
     for (id in tutorial$species_ids) {
       panel <- as.integer(layout$PANEL[layout$panel_type == "coverage" & layout$track == id])
       stopifnot(isTRUE(all.equal(built@layout$panel_params[[panel]]$y.range,
-        c(0, 1.1 * unname(tutorial$peaks[id])))))
+        tutorial$rna_limits)))
     }
   }
   cat(names(plots)[i], ":", nrow(layout), "panels; object-backed layers verified\n")

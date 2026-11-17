@@ -1,11 +1,12 @@
 # Compact three-species Dox synteny example
 
 Three species groups, two nucleotide-link panels, and 2/3/2 displayed loci.
-Each species has an RNA subpanel above its annotation. The Dsim signal is
+Each species has one combined RNA subpanel above its annotation. The Dsim signal is
 remapped from the complete original read library to the plotted assembly.
-The tutorial constructs native data objects and builds annotation-only,
+The tutorial prepares the native data objects, attached annotations,
+alignments, and layouts first, then builds annotation-only,
 annotation/linkage, and annotation/linkage/RNA figures layer by layer.
-Model descriptions, signal units, and provenance are in the tutorial text.
+Detailed provenance and interpretation are documented below.
 The source study is [Vedanayagam et al. (2021), Extended Data Figure 5](https://pmc.ncbi.nlm.nih.gov/articles/PMC8665063/#F11).
 Local testis RNA-seq for all three species is from GSE185361.
 
@@ -22,19 +23,32 @@ plot_dox_example(example, coverage_panel_height = 0.5, link_panel_height = 0.5)$
 ```
 
 The helper uses an explicit eight-row SynLayout. Annotation, link, and RNA
-heights have ratio 1 : 0.5 : 0.5, controlled by `facet_genomics()`'s
-`link_panel_height` and `coverage_panel_height` arguments. RNA y limits use
-`scale_panel_coverage("free_y", limits = ...)`: zero through 1.1 times each
-species' peak. Deposited outer-species scores and remapped Dsim read depths
-are unchanged; visual peak heights are comparable because all RNA panels
-use independent y scales. The units are explicitly different.
+heights have ratio `1 : 0.5 : 0.5`, controlled by `facet_genomics()`'s
+`link_panel_height` and `coverage_panel_height` arguments. `scales = "free_x"`
+keeps the genomic axes independent. `scale_panel_coverage("fixed_y")` shares
+one RNA y scale, with limits from zero through 1.1 times the largest peak
+across species. Each track sums the magnitudes of forward and reverse scores
+at each genomic base, without smoothing or additional normalization.
+The legend marks the signal as ×1; no local region is magnified.
+Dsim read depth and the deposited outer-species signal have different units,
+so peak heights do not measure
+relative expression across species.
+
+`center_panel_annotation()` centres gene bodies without manual annotation
+y limits. RNA y axes are on the right. The outside species labels use
+`facet_genomics(strip.position = "left", strip_group = "individual")` with
+`theme_ggexon_side_strips("left")`, so one name spans each combined RNA/gene block.
+Both RNA and gene panels end at 9.44 Mb for Dmau and Dsech; Dsim keeps its
+source window. This display override does not change `windows.tsv` or the data.
 
 Files:
 
-- `objects/`: three GTFs, two PAFs, and six BigWigs for the object-first
+- `objects/`: three GTFs, two PAFs, and nine BigWigs for the object-first
   tutorial. GTFs contain gene/transcript spans and disjoint CDS/UTR pieces;
-  PAFs encode the verified LASTZ blocks; BigWigs retain plus and reverse
-  magnitudes at the original genomic coordinates. `objects/manifest.json`
+  PAFs encode the verified LASTZ blocks. Three `.RNA.bw` files sum forward
+  and reverse signal magnitudes at each base. The six original `.RNAplus.bw`
+  and `.RNAminus.bw` files remain available for Basic usage.
+  `objects/manifest.json`
   records original table hashes and native file hashes. Prepare these views
   with `data-raw/dox_synteny/prepare-dox-objects.R` on macOS or Linux.
 - `windows.tsv`: exact assembly accessions, original contigs, 1-based inclusive
@@ -47,14 +61,15 @@ Files:
 - `genes.tsv`: the two flank models and the additional Dsim Dox locus.
 - `Dox-published-CDS.fa`: the 474-nt spliced CDS from Supplementary Table 1.
   A unique, end-to-end, 100%-identity splice alignment to the Dsim window
-  defines three coding exons in `features.tsv`, at X:9,250,280–9,250,879 on
+  defines three coding exons in `features.tsv`, at X:9,250,280-9,250,879 on
   the minus strand (CIGAR `285M63N42M63N147M`). UTRs and the full-length
   transcript are not reconstructed.
 - `coverage.tsv.gz`: deposited Dmau/Dsech forward/reverse BigWig scores, plus
   Dsim per-base primary read depth from remapped SRR23418969. All rows use the
   exact plotted assembly coordinates. Negative reverse scores are reflected
-  to positive magnitudes only for plotting. No smoothing or additional library
-  normalization is applied. Dsim excludes secondary/supplementary alignments,
+  to positive magnitudes before combining the two strands for plotting.
+  No smoothing or additional library normalization is applied.
+  Dsim excludes secondary/supplementary alignments,
   MAPQ <20, intron and deletion bases; overlapping mates each count. Nonzero
   runs encode actual per-base depth without expanding the bundled file.
 - `Dsim-remapping-qc.json`: complete-library read count, source FASTQ/reference
@@ -67,5 +82,52 @@ Files:
 - `manifest.json`: source URLs, extraction byte-range checksums and settings,
   and MD5 checksums of the bundled sequence/data files.
 
-See `vignette("dox-synteny-demo", package = "ggexon")` for the plot grammar
-and source details. Preparation scripts are in `data-raw/dox_synteny/`.
+## Data provenance and interpretation
+
+The flanks are common *D. melanogaster* RefSeq models `NM_132346` and
+`NM_132348` mapped by UCSC GenArk to the selected species assemblies. The
+orange model comes from the published 474-nt Dox CDS. A unique, end-to-end,
+100%-identity splice alignment places it at Dsim X:9,250,280-9,250,879 on the
+minus strand, with CIGAR `285M63N42M63N147M`. Joining those three coding exons
+and reverse-complementing them reconstructs the published CDS exactly.
+The figure does not reconstruct the full Dox transcript.
+
+RNA-seq comes from [GSE185361](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE185361),
+specifically [GSM5611558](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM5611558),
+[GSM7039340](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM7039340), and
+[GSM5611560](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM5611560).
+The deposited Dsim BigWigs use an X chromosome of 22,976,950 bp, whereas the
+plotted GenBank assembly has 23,123,156 bp. They were excluded. The complete
+original library [SRR23418969](https://www.ebi.ac.uk/ena/browser/view/SRR23418969),
+containing 40,381,684 read pairs, was remapped directly to GCA_004382185.1
+with minimap2's `splice:sr` preset. No coordinate offset was inferred.
+
+Dsim coverage retains primary alignments with MAPQ >=20 and excludes intron
+and deletion bases; overlapping mates each contribute to read depth.
+Canonical splice motifs support a reverse-stranded paired library, with read 1
+antisense and read 2 sense. Input checksums, the full reference sequence, the
+BAM chromosome dictionary, and the complete-library read count were verified.
+The coverage agrees with an independent samtools depth calculation at all
+43,781 plotted bases. `Dsim-remapping-qc.json` records these checks and the
+mapping statistics. Dmau and Dsech retain author-deposited coverage values.
+
+`manifest.json` records original source URLs, sequence and data checksums,
+BigWig extraction ranges, and alignment settings. `objects/manifest.json`
+records how the native tutorial files relate to the verified tables, with
+input/output checksums. The GTF/PAF conversion retains the source intervals.
+The combined BigWigs sum forward and reverse signal magnitudes at each base;
+the original strand files remain available for the Basic usage example.
+
+For source details, see the [primary locus paper](https://doi.org/10.1038/s41559-021-01592-z),
+its [Supplementary Table 1](https://media.springernature.com/original/springer-static/esm/art%3A10.1038%2Fs41559-021-01592-z/MediaObjects/41559_2021_1592_MOESM2_ESM.xlsx),
+the [assembly paper](https://doi.org/10.1101/gr.263442.120), and the
+[minimap2 short RNA-seq documentation](https://github.com/lh3/minimap2#map-short-rna-seq-reads).
+
+To prepare the files again from the repository, run
+`remap-dsim-rnaseq.py`, `build-dox-data.py`, then
+`Rscript data-raw/dox_synteny/prepare-dox-objects.R`.
+The large raw-read/reference/BAM cache stays outside the bundled inputs.
+Rendering the tutorial uses only the bundled files.
+
+See `vignette("dox-synteny-demo", package = "ggexon")` for the plot grammar.
+Preparation scripts are in `data-raw/dox_synteny/`.

@@ -12,6 +12,23 @@ load_dox_example <- function(demo_dir = system.file("extdata", "dox_synteny", pa
   coverage$track <- factor(coverage$species, levels = track_levels)
   coverage$signal <- abs(coverage$score)
   coverage$signal_class <- ifelse(coverage$strand == "+", "RNA +", "RNA -")
+  # Sum strand magnitudes on their genomic intervals, including overlaps.
+  coverage_total <- do.call(rbind, lapply(seq_len(nrow(windows)), function(i) {
+    w <- windows[i, ]
+    s <- coverage[coverage$species == w$species, ]
+    signal <- IRanges::coverage(
+      IRanges::IRanges(s$start - w$start + 1L, s$end - w$start + 1L),
+      weight = abs(s$score), width = w$end - w$start + 1L
+    )
+    lengths <- S4Vectors::runLength(signal)
+    ends <- cumsum(lengths)
+    values <- S4Vectors::runValue(signal)
+    keep <- values > 0
+    data.frame(species = w$species,
+      track = factor(w$species, levels = track_levels),
+      start = (w$start + ends - lengths)[keep],
+      end = (w$start + ends - 1L)[keep], signal = values[keep])
+  }))
   links$track <- factor(paste0("link_", links$tspecies, "_", links$qspecies), levels = track_levels)
   links$identity_band <- cut(links$identity, c(85, 95, 98, 100),
     include.lowest = TRUE, right = TRUE, labels = c("85-95%", "95-98%", "98-100%"))
@@ -53,6 +70,7 @@ load_dox_example <- function(demo_dir = system.file("extdata", "dox_synteny", pa
   panels$xlim_min <- windows$start[wi] - .5
   panels$xlim_max <- windows$end[wi] + .5
   list(windows = windows, genes = genes, exons = exons, coverage = coverage,
+    coverage_total = coverage_total,
     links = links, limits = limits, panels = panels, demo_dir = demo_dir,
     manifest = jsonlite::fromJSON(file.path(demo_dir, "manifest.json")))
 }
@@ -62,26 +80,24 @@ plot_dox_example <- function(example = load_dox_example(), intron_factor = 1,
                              coverage_panel_height = .5, link_panel_height = .5) {
   stopifnot(length(intron_factor) == 1L, is.finite(intron_factor), intron_factor > 0)
   palette <- c("CG42797" = "#246589", "Ptpmeg2" = "#246589", "Dox" = "#D55E00",
-    "RNA +" = "#749CB5", "RNA -" = "#67AD91",
+    "RNA-seq" = "#749CB5",
     "85-95%" = "#E2E7ED", "95-98%" = "#A4BCD0", "98-100%" = "#497D9F")
   labels <- example$genes
-  labels$x <- (labels$start + labels$end) / 2
-  labels$y <- 1.8
-  labels$label <- labels$gene_name
   species_ids <- as.character(example$windows$species)
-  coverage_limits <- stats::setNames(lapply(species_ids, function(id)
-    c(0, max(example$coverage$signal[example$coverage$species == id]) * 1.1)),
-    species_ids)
+  panels <- example$panels
+  panels$xlim_max[panels$track %in% c("Dmau", "Dsech")] <- 9440000L
+  coverage_limits <- c(0, max(example$coverage_total$signal) * 1.1)
   peaks <- do.call(rbind, lapply(species_ids, function(id) {
     w <- example$windows[example$windows$species == id, ]
     data.frame(track = factor(id, levels = levels(example$genes$track)),
-      x = w$end, y = coverage_limits[[id]][[2L]] * .96,
-      label = paste0("max ", round(max(example$coverage$signal[example$coverage$species == id]), 1)),
+      x = min(w$end, panels$xlim_max[panels$track == id]),
+      y = max(example$coverage_total$signal) * .96,
+      label = paste0("max ", round(max(example$coverage_total$signal[example$coverage_total$species == id]), 1)),
       .ggexon_panel_role = "coverage")
   }))
   species <- ggexon::SynSpecies(name = "Dox insertion locus")
   ggexon::species_layout(species) <- ggexon::SynLayout(
-    panels = example$panels, free = list(x = TRUE, y = TRUE))
+    panels = panels, free = list(x = TRUE, y = FALSE))
   size_mm <- base_size / (72.27 / 25.4)
   exon_layer <- function(data, backbone_colour) {
     ggexon::geom_exon2(data = data,
@@ -94,14 +110,19 @@ plot_dox_example <- function(example = load_dox_example(), intron_factor = 1,
       show.legend = FALSE, inherit.aes = FALSE)
   }
   p <- ggexon::ggexon(species) +
-    ggplot2::geom_blank(data = example$limits, ggplot2::aes(x = x, y = y)) +
-    ggexon::geom_coverage(data = example$coverage,
+    ggplot2::geom_blank(data = example$limits[, setdiff(names(example$limits), "y")],
+      ggplot2::aes(x = x)) +
+    ggexon::geom_coverage(data = example$coverage_total,
       ggplot2::aes(xmin = start, xmax = end, coverage = signal, track = track,
-        fill = signal_class), inherit.aes = FALSE, alpha = .85) +
+        fill = "RNA-seq"), inherit.aes = FALSE, alpha = .85) +
     exon_layer(example$exons[example$exons$gene_name != "Dox", ], "#4D6A7A") +
     exon_layer(example$exons[example$exons$gene_name == "Dox", ], unname(palette["Dox"])) +
-    ggplot2::geom_text(data = labels,
-      ggplot2::aes(x = x, y = y, label = label, colour = gene_name),
+    ggexon::geom_genelabel(data = labels,
+      ggplot2::aes(xmin = start, xmax = end, ymin = 1,
+        transcripts = transcript_id, strand = strand, track = track,
+        label = gene_name, colour = gene_name),
+      exon_height = .48, force_flat = TRUE, label_offset_fraction = 1.2,
+      show_link = FALSE,
       size = size_mm, family = base_family, fontface = "italic", inherit.aes = FALSE,
       show.legend = FALSE) +
     ggplot2::geom_text(data = peaks, ggplot2::aes(x = x, y = y, label = label),
@@ -112,24 +133,32 @@ plot_dox_example <- function(example = load_dox_example(), intron_factor = 1,
         qspecies = qspecies, qchr = qchr, qstart = qstart, qend = qend,
         strand = strand, group = group, fill = identity_band),
       alpha = .55, colour = NA, inherit.aes = FALSE) +
-    ggexon::facet_genomics(ggplot2::vars(track), ncol = 1, scales = "free",
-      strip.position = "left", link_panel_height = link_panel_height,
+    ggexon::facet_genomics(ggplot2::vars(track), ncol = 1, scales = "free_x",
+      strip.position = "left", strip_group = "individual", link_panel_height = link_panel_height,
       coverage_panel_height = coverage_panel_height,
       link_axis = "none", link_strip = "blank", annotation_axis = "all",
       labeller = ggplot2::as_labeller(c(Dmau = "D. mauritiana", Dsim = "D. simulans",
         Dsech = "D. sechellia", link_Dmau_Dsim = "", link_Dsim_Dsech = ""))) +
-    ggexon::scale_panel_coverage("free_y", limits = coverage_limits) +
+    ggexon::scale_panel_coverage("fixed_y") +
+    ggexon::scale_panel_annotation("fixed_y") +
+    ggexon::center_panel_annotation() +
+    ggplot2::scale_y_continuous(position = "right",
+      breaks = scales::breaks_width(100),
+      expand = ggplot2::expansion(mult = c(0, .1))) +
     ggplot2::scale_fill_manual(values = palette,
-      breaks = c("RNA +", "RNA -", "85-95%", "95-98%", "98-100%"),
-      labels = c("RNA-seq +", "RNA-seq - (magnitude)", "DNA 85-95%", "DNA 95-98%", "DNA 98-100%"),
+      breaks = c("RNA-seq", "85-95%", "95-98%", "98-100%"),
+      labels = c("RNA-seq (combined, ×1)", "DNA 85-95%", "DNA 95-98%", "DNA 98-100%"),
       name = NULL) +
     ggplot2::scale_colour_manual(values = palette, guide = "none") +
+    ggplot2::scale_x_continuous(oob = scales::oob_keep,
+      expand = ggplot2::expansion(mult = 0)) +
     ggexon::scale_x_ggexon_genomic(intron_factor = intron_factor,
       n.breaks = 4, labels = scales::label_number(scale = 1e-6, suffix = " Mb", accuracy = .01)) +
     ggplot2::labs(x = NULL, y = NULL) +
     ggexon::theme_ggexon_track(base_size = base_size, base_family = base_family,
-      show_x_axis = TRUE, show_y_axis = FALSE, show_x_grid = FALSE,
+      show_x_axis = TRUE, show_y_axis = TRUE, show_x_grid = FALSE,
       show_legend = TRUE) +
+    ggexon::theme_ggexon_side_strips("left", base_size = base_size, face = "italic") +
     ggplot2::theme(strip.text.y.left = ggplot2::element_text(angle = 0, face = "italic"),
       strip.background = ggplot2::element_blank(), panel.border = ggplot2::element_blank(),
       legend.position = "bottom", legend.text = ggplot2::element_text(size = base_size),

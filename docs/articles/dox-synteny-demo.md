@@ -1,33 +1,56 @@
 # 3. Visualizing local synteny across species
 
-## The example
+## Compare gene structure, alignment, and RNA-seq
 
-This tutorial builds a compact comparison of *Drosophila mauritiana*,
-*D. simulans*, and *D. sechellia*. The displayed windows contain two
-conserved flanking genes, `CG42797` and `Ptpmeg2`, with an additional
-`Dox` coding model in *D. simulans*. There are 2, 3, and 2 displayed
-gene models, respectively. The locus comes from [Extended Data Figure 5
-of Vedanayagam et al.
+Compare the Dox locus in *Drosophila mauritiana*, *D. simulans*, and *D.
+sechellia*. Each window contains the flanking genes `CG42797` and
+`Ptpmeg2`; *D. simulans* also contains a `Dox` coding model. The locus
+comes from [Extended Data Figure 5 of Vedanayagam et al.
 (2021)](https://pmc.ncbi.nlm.nih.gov/articles/PMC8665063/#F11).
 
-The example connects local gene order to exon structure, nucleotide
-alignment, and transcriptional signal. It is a visualization exercise; a
-chromosome-wide macrosynteny analysis would require a larger genomic
-window.
+Prepare one `SynSpecies` containing the three assemblies, their feature
+and RNA-seq annotations, and two pairwise alignments. Then draw the gene
+models, add nucleotide links, and place one combined RNA-seq track above
+each species. All plotting inputs are bundled and work offline. See the
+[data
+README](https://github.com/DongyaoLiu/ggexon/blob/HEAD/inst/extdata/dox_synteny/README.md#data-provenance-and-interpretation)
+for detailed provenance, model reconstruction, and remapping checks.
 
-We will first draw three annotation panels, add two nucleotide-link
-panels, and finally place a testis RNA-seq panel above each annotation.
-Each stage starts with a data object and adds ordinary ggexon/ggplot2
-layers. The code uses the public object APIs and small bundled files, so
-downloading genomes or remapping reads is unnecessary when following the
-tutorial.
+## Present the inputs
 
-## 1. Inspect the inputs
+The annotation models and alignments describe the selected chromosome-X
+windows. RNA-seq comes from **testis biological replicate 1** in [GEO
+series
+GSE185361](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE185361):
 
-Use a ggexon version that includes `coverage_panel_height`. The complete
-workflow runs on macOS or Linux because rtracklayer’s BigWig backend is
-unavailable on Windows. The GTF/PAF annotation and linkage steps do not
-require BigWig support.
+| Species | RNA-seq sample | Signal used here |
+|:---|:---|:---|
+| *D. mauritiana* | [GSM5611558](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM5611558) | Deposited forward and reverse BigWigs |
+| *D. simulans* | [GSM7039340](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM7039340) | Original paired-end reads, [SRR23418969](https://www.ebi.ac.uk/ena/browser/view/SRR23418969), remapped to the plotted assembly |
+| *D. sechellia* | [GSM5611560](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM5611560) | Deposited forward and reverse BigWigs |
+
+The deposited *D. simulans* BigWigs use a different assembly, so the
+bundle uses coverage recomputed from the complete original read library
+on **GCA_004382185.1**. The other two species retain deposited signal
+values. These units differ: use the tracks to compare signal position
+and shape; cross-species peak heights do not measure relative expression
+abundance.
+
+For this tutorial, strand separation is unnecessary. Preparation
+combines the two source tracks **at each genomic base**:
+
+``` text
+combined signal = abs(forward signal) + abs(reverse signal)
+```
+
+The reverse source scores use a negative sign to identify strand.
+Summing the magnitudes prevents cancellation where both strands have
+signal. Preparation retains genomic positions and applies no smoothing
+or additional normalization. Each species has one `.RNA.bw` file. The
+original strand files remain available for the separate-strand example
+in Basic usage.
+
+Locate the installed files and inspect their assembly windows:
 
 ``` r
 
@@ -50,36 +73,34 @@ knitr::kable(windows[, c("name", "accession", "chrom", "start", "end", "sample")
 | D. simulans   | GCA_004382185.1 | CM015611.1  | 9233164 | 9276944 | GSM7039340 |
 | D. sechellia  | GCF_004382195.1 | NC_045954.1 | 9396969 | 9444821 | GSM5611560 |
 
-All plotting files use `X` as a chromosome-name alias. Their positions
-remain coordinates on the assemblies listed above, rather than positions
-within a short FASTA window. GTF starts and ends are 1-based inclusive.
-PAF source files use their standard 0-based half-open coordinates;
-ggexon converts those starts when importing them. Do not subtract one
-again after import. Supply integer genomic bounds for object queries and
-stored panel windows.
-
-The `objects/` directory contains native file views of the verified
-tables:
-
-| Files | Contents | Object used below |
+| Files in `objects/` | Contents | Object used below |
 |:---|:---|:---|
 | `Dmau.gtf`, `Dsim.gtf`, `Dsech.gtf` | Gene/transcript spans and disjoint CDS/UTR pieces | `SynIndividual`, with a feature annotation |
-| `Dmau_Dsim.paf`, `Dsim_Dsech.paf` | The two sets of ungapped LASTZ blocks | `SynPairAlignment` |
-| `*.RNAplus.bw`, `*.RNAminus.bw` | Forward signal and reverse-strand magnitude | `SynBigWigAnnotation` |
+| `Dmau_Dsim.paf`, `Dsim_Dsech.paf` | Ungapped LASTZ alignment blocks | `SynPairAlignment` |
+| `Dmau.RNA.bw`, `Dsim.RNA.bw`, `Dsech.RNA.bw` | Combined RNA-seq signal | `SynBigWigAnnotation` |
 
-The GTFs are curated display models derived from the source annotations,
-not new native annotations. CDS and UTR pieces do not overlap. Selecting
-`annotation_type = "all"` draws both types, with thinner UTR boxes. The
-Dox model contains three coding exons, with no reconstructed UTRs. CDS
-phase was not reconstructed in these display GTFs.
+All plotting files use `X` as a chromosome-name alias and retain
+coordinates on the listed assemblies. GTF and queried feature intervals
+are one-based and inclusive. Raw PAF starts are zero-based; the ggexon
+importer converts them once. Do not subtract one again after import.
 
-## 2. Build the annotation data object
+The GTFs are curated display models derived from source annotations. CDS
+and UTR pieces do not overlap. The Dox model contains three coding
+exons; its UTRs and CDS phase were not reconstructed. A full genome
+FASTA is not needed to draw these imported features.
 
-A `SynIndividual` holds one assembly’s annotation and associated tracks.
-A `SynSpecies` collects the three individuals and, later, their
-alignments. `SynIndividual(annotation_file = ...)` attaches a default
-feature annotation; the plotting layers query it when the figure is
-built.
+The BigWig backend requires macOS or Linux. The annotation and alignment
+plots can also be followed on Windows.
+
+## Prepare the comparative Syn object
+
+### Attach the feature and RNA-seq annotations
+
+A `SynIndividual` stores one assembly’s annotation layers. Its
+constructor attaches the GTF as the default feature annotation. Add the
+combined BigWig as a named `RNA_seq` annotation, then collect the three
+individuals in one `SynSpecies`. Keep the assembly accession, sample ID,
+and signal units with the data:
 
 ``` r
 
@@ -92,19 +113,132 @@ for (id in species_ids) {
     annotation_format = "gtf",
     metadata = list(assembly = w$accession, original_contig = w$chrom)
   )
+  signal_unit <- if (id == "Dsim") "primary read depth" else "deposited signal"
+  individual <- add_annotation(individual, SynBigWigAnnotation(
+    name = "RNA_seq",
+    bigwig_file = file.path(object_dir, paste0(id, ".RNA.bw")),
+    metadata = list(sample = w$sample, signal_unit = signal_unit,
+      score_handling = "sum of forward and reverse signal magnitudes")
+  ))
   comparison <- add_individual(comparison, individual)
 }
 individual_names(comparison)
 #> [1] "Dmau"  "Dsim"  "Dsech"
+names(comparison@individuals[["Dsim"]]@annotations)
+#> [1] "default" "RNA_seq"
+```
 
-# Store three annotation rows with the exact source windows.
-annotation_panels <- data.frame(PANEL = 1:3, ROW = 1:3, COL = 1L,
-  track = species_ids, species = species_ids, panel_type = "annotation",
-  xlim_chr = "X", xlim_min = windows$start - 1L, xlim_max = windows$end + 1L)
-species_layout(comparison) <- SynLayout(panels = annotation_panels,
-  free = list(x = TRUE, y = TRUE))
+The object now owns the gene models and RNA-seq files. Plotting layers
+can select them by individual ID and annotation name; no separate
+coverage table is needed for plotting. Attaching a BigWig records its
+location; regional queries read the signal when needed.
 
-# Query the object to inspect its gene records.
+### Attach the two pairwise alignments
+
+An alignment belongs to the collection because it connects two
+individuals. In these PAF files the upper species is the target and the
+lower species is the query. Use the same IDs as in the individual
+constructors:
+
+``` r
+
+comparison <- add_pairwise_alignment(comparison,
+  SynPairAlignment(name = "Dmau_Dsim", target_individual = "Dmau",
+    query_individual = "Dsim", file = file.path(object_dir, "Dmau_Dsim.paf"),
+    format = "paf"))
+comparison <- add_pairwise_alignment(comparison,
+  SynPairAlignment(name = "Dsim_Dsech", target_individual = "Dsim",
+    query_individual = "Dsech", file = file.path(object_dir, "Dsim_Dsech.paf"),
+    format = "paf"))
+blocks <- pairwise_alignment_data(comparison, alignment = "Dmau_Dsim")
+head(blocks[, c("tchr", "tstart", "tend", "qchr", "qstart", "qend", "nmatch", "alen")])
+#>   tchr  tstart    tend qchr  qstart    qend nmatch alen
+#> 1    X 9389708 9391056    X 9233164 9234512   1320 1349
+#> 2    X 9390980 9393590    X 9234439 9237049   2581 2611
+#> 3    X 9393578 9395394    X 9237019 9238835   1812 1817
+#> 4    X 9395388 9404797    X 9238828 9248237   9382 9410
+#> 5    X 9405255 9405355    X 9251708 9251808     92  101
+#> 6    X 9405479 9406993    X 9252035 9253549   1476 1515
+```
+
+The files contain 41 Dmau-Dsim blocks and 98 Dsim-Dsech blocks. LASTZ
+generated the ungapped, chained alignments; retained blocks are at least
+80 bp long and at least 85% identical. No block is removed because it
+overlaps Dox.
+
+### Store the panel order and genomic windows
+
+Store the complete eight-row layout before plotting: RNA-seq above each
+annotation, with a link row between neighboring species. Coverage and
+annotation rows share a `track` name; `panel_type` distinguishes their
+roles. Each pair shares its assembly’s genomic window. Keep the left
+display margins, and set the right edge to **9.44 Mb** for Dmau and
+Dsech. The source windows in `windows.tsv` remain the original
+extraction ranges; Dmau’s added right-edge space extends beyond its
+bundled data.
+
+``` r
+
+window_limits <- setNames(lapply(seq_len(nrow(windows)), function(i)
+  c(windows$start[i] - 1L, windows$end[i] + 1L)), species_ids)
+for (id in c("Dmau", "Dsech")) window_limits[[id]][2] <- 9440000L
+
+panels <- data.frame(
+  PANEL = 1:8, ROW = 1:8, COL = 1L,
+  track = c("Dmau", "Dmau", "link_Dmau_Dsim", "Dsim", "Dsim",
+    "link_Dsim_Dsech", "Dsech", "Dsech"),
+  panel_type = c("coverage", "annotation", "link", "coverage", "annotation",
+    "link", "coverage", "annotation"),
+  tspecies = c(NA, NA, "Dmau", NA, NA, "Dsim", NA, NA),
+  qspecies = c(NA, NA, "Dsim", NA, NA, "Dsech", NA, NA)
+)
+wi <- match(panels$track, windows$species)
+panels$species <- windows$species[wi]
+panels$xlim_chr <- ifelse(is.na(wi), NA_character_, "X")
+panels$xlim_min <- vapply(window_limits, function(x) x[1], numeric(1))[wi]
+panels$xlim_max <- vapply(window_limits, function(x) x[2], numeric(1))[wi]
+species_layout(comparison) <- SynLayout(panels = panels,
+  free = list(x = TRUE, y = FALSE))
+panels[, c("ROW", "track", "panel_type")]
+#>   ROW           track panel_type
+#> 1   1            Dmau   coverage
+#> 2   2            Dmau annotation
+#> 3   3  link_Dmau_Dsim       link
+#> 4   4            Dsim   coverage
+#> 5   5            Dsim annotation
+#> 6   6 link_Dsim_Dsech       link
+#> 7   7           Dsech   coverage
+#> 8   8           Dsech annotation
+```
+
+Prepare two views for the earlier plotting stages. They retain the same
+individuals, annotations, and alignments; only their panel layouts
+differ:
+
+``` r
+
+annotation_view <- comparison
+annotation_panels <- panels[panels$panel_type == "annotation", ]
+annotation_panels$PANEL <- annotation_panels$ROW <- seq_len(nrow(annotation_panels))
+species_layout(annotation_view) <- SynLayout(panels = annotation_panels,
+  free = list(x = TRUE, y = FALSE))
+
+link_view <- comparison
+linked_panels <- panels[panels$panel_type != "coverage", ]
+linked_panels$PANEL <- linked_panels$ROW <- seq_len(nrow(linked_panels))
+species_layout(link_view) <- SynLayout(panels = linked_panels,
+  free = list(x = TRUE, y = FALSE))
+```
+
+### Inspect the annotations and combined signal
+
+Query gene records and combined RNA-seq from the prepared object. Use
+the same y range for all three RNA panels, from zero to
+`1.1 * max(peaks)`. This leaves space above the largest signal without
+rescaling any scores:
+
+``` r
+
 dsim_genes <- query_features(comparison@individuals[["Dsim"]],
   chr = "X", feature_type = "gene", all = TRUE)
 as.data.frame(dsim_genes)[, c("seqnames", "start", "end", "strand", "gene_name")]
@@ -114,54 +248,68 @@ as.data.frame(dsim_genes)[, c("seqnames", "start", "end", "strand", "gene_name")
 #> 3        X 9255161 9276944      -   Ptpmeg2
 ```
 
-A full genome FASTA is not needed to draw imported features. The bundled
-FASTAs contain only the selected windows, so they are not passed as
-whole-chromosome genomes to these constructors. The assembly and
-original contig remain in the individual metadata and the source
-manifest. The documented `individuals` slot provides access to an
-individual by its ID; its `annotations` slot stores the named annotation
-objects.
+``` r
 
-### Define colors, windows, and a common style
+peaks <- setNames(vapply(species_ids, function(id) {
+  individual <- comparison@individuals[[id]]
+  w <- windows[windows$species == id, ]
+  signal <- query_signal(get_annotation(individual, "RNA_seq"), "X", w$start, w$end)
+  max(S4Vectors::mcols(signal)$score)
+}, numeric(1)), species_ids)
+rna_limits <- c(0, 1.1 * max(peaks))
+knitr::kable(data.frame(species = species_ids, peak = unname(peaks),
+  unit = c("deposited signal", "primary read depth", "deposited signal")),
+  row.names = FALSE)
+```
 
-Keep the full selected interval visible in every stage. A named list of
-x limits lets each species retain its own coordinates. RNA and
-annotation panels will share the corresponding genomic window later. A
-one-base integer display margin keeps the half-base rectangle edges
-inside the panel limits; the files still contain only the original
-source windows.
+| species |   peak | unit               |
+|:--------|-------:|:-------------------|
+| Dmau    | 313.49 | deposited signal   |
+| Dsim    | 279.00 | primary read depth |
+| Dsech   | 147.83 | deposited signal   |
+
+## Choose the geoms, scales, facet, and theme
+
+### Define the common plotting settings
+
+Use blue for the two flanking genes, orange for Dox, and one blue
+RNA-seq fill. Ribbon colours show nucleotide identity.
+`scales = "free_x"` keeps each species’ genomic axis independent; the
+RNA panels share one y scale. Keep genomic spacing with
+`intron_factor = 1`.
 
 ``` r
 
 palette <- c(
   "CG42797" = "#246589", "Ptpmeg2" = "#246589", "Dox" = "#D55E00",
-  "RNA +" = "#749CB5", "RNA -" = "#67AD91",
+  "RNA-seq" = "#749CB5",
   "85-95%" = "#E2E7ED", "95-98%" = "#A4BCD0", "98-100%" = "#497D9F"
 )
-window_limits <- setNames(lapply(seq_len(nrow(windows)), function(i)
-  c(windows$start[i] - 1L, windows$end[i] + 1L)), species_ids)
 chromosomes <- setNames(rep("X", length(species_ids)), species_ids)
-annotation_limits <- setNames(rep(list(c(0.5, 2.1)), length(species_ids)), species_ids)
 strip_labels <- c(Dmau = "D. mauritiana", Dsim = "D. simulans",
   Dsech = "D. sechellia", link_Dmau_Dsim = "", link_Dsim_Dsech = "")
 text_size <- 9 / (72.27 / 25.4)  # ggplot2 geom text sizes use millimeters.
 
 plot_style <- list(
-  facet_genomics(vars(track), ncol = 1, scales = "free",
-    strip.position = "left", labeller = as_labeller(strip_labels),
+  facet_genomics(vars(track), ncol = 1, scales = "free_x",
+    strip.position = "left", strip_group = "individual",
+    labeller = as_labeller(strip_labels),
     xlim = window_limits, xlim_chr = chromosomes,
     link_panel_height = 0.5, coverage_panel_height = 0.5,
     link_axis = "none", link_strip = "blank", annotation_axis = "all"),
-  scale_panel_annotation("free_y", limits = annotation_limits),
+  scale_panel_annotation("fixed_y"),
+  center_panel_annotation(),
   scale_fill_manual(values = palette,
-    breaks = c("RNA +", "RNA -", "85-95%", "95-98%", "98-100%"),
-    labels = c("RNA-seq +", "RNA-seq - (magnitude)",
+    breaks = c("RNA-seq", "85-95%", "95-98%", "98-100%"),
+    labels = c("RNA-seq (combined, ×1)",
       "DNA 85-95%", "DNA 95-98%", "DNA 98-100%"), name = NULL),
   scale_colour_manual(values = palette, guide = "none"),
+  scale_x_continuous(oob = scales::oob_keep, expand = expansion(mult = 0)),
   scale_x_ggexon_genomic(intron_factor = 1, n.breaks = 4,
     labels = scales::label_number(scale = 1e-6, suffix = " Mb", accuracy = 0.01)),
   theme_ggexon_track(base_size = 9, show_x_axis = TRUE,
     show_y_axis = FALSE, show_x_grid = FALSE, show_legend = TRUE),
+  theme_ggexon_side_strips("left", base_size = 9, face = "italic"),
   theme(strip.text.y.left = element_text(angle = 0, face = "italic"),
     strip.background = element_blank(), panel.border = element_blank(),
     legend.position = "bottom", legend.key.width = grid::unit(4, "mm"),
@@ -172,16 +320,31 @@ plot_style <- list(
 )
 ```
 
-The facet sets physical row heights. Annotation rows have relative
-height **1**; linkage and RNA rows each have height **0.5**. This
-setting changes the space allocated to a panel. The y limits control the
-signal drawn within that space and are set separately.
+Annotation rows have relative height **1**; link and RNA rows each have
+height **0.5**. These settings allocate panel space. The shared RNA y
+limits above control the signal range within that space. `oob_keep`
+retains intervals crossing a display boundary so they are clipped at the
+panel edge rather than dropped. Zero x expansion keeps the plotted axis
+edges at the requested window limits.
 
-## 3. Plot only the annotations
+[`center_panel_annotation()`](https://dongyaoliu.github.io/ggexon/reference/center_panel_annotation.md)
+centres the gene bodies vertically in their own panels. `free_x`
+controls horizontal scales; it does not centre annotations. Avoid manual
+annotation y limits here, because named limits take precedence over
+centring.
+[`theme_ggexon_side_strips()`](https://dongyaoliu.github.io/ggexon/reference/theme_ggexon_side_strips.md)
+puts the species names outside the axes. With
+`strip_group = "individual"`, each name spans that individual’s RNA-seq
+and annotation panels, including their unequal physical heights.
 
-Build the annotation layers separately from the data object. The first
-layer queries the imported transcript structures; the second adds gene
-names. Both inherit their data from `ggexon(comparison)`.
+### Draw the gene models
+
+Both annotation layers inherit their data from the Syn object.
+`geom_exon2(annotation_type = "all")` draws thick CDS and thinner UTR
+pieces. The half-base offsets place rectangle edges around inclusive
+base positions.
+[`geom_genelabel()`](https://dongyaoliu.github.io/ggexon/reference/geom_genelabel.md)
+reads the gene records and adds italic names:
 
 ``` r
 
@@ -199,18 +362,9 @@ annotation_layers <- list(
 )
 ```
 
-The positional columns and transcript identifiers are resolved from the
-annotations. `gene_name` supplies the fill and outline mappings, so Dox
-uses the same orange for its exon fill, intron connectors, and direction
-arrow. Thin outlines keep the short exon gaps visible. `ymin = 1` keeps
-the models on a common row, and the half-base offsets make box edges
-span their inclusive intervals.
-[`geom_genelabel()`](https://dongyaoliu.github.io/ggexon/reference/geom_genelabel.md)
-queries the gene records and adds the names.
-
 ``` r
 
-p_annotation <- ggexon(comparison) + annotation_layers + plot_style
+p_annotation <- ggexon(annotation_view) + annotation_layers + plot_style
 p_annotation
 ```
 
@@ -218,60 +372,18 @@ p_annotation
 and an orange Dox coding model in D.
 simulans.](dox-synteny-demo_files/figure-html/dox-annotation-only-1.png)
 
-At this stage there are three annotation panels. The blue models show
-the conserved flanks; the orange model marks the additional Dox coding
-locus in Dsim. UTR pieces are thin, CDS pieces are thick, and terminal
-arrows indicate strand. Genomic distances are retained because intron
+The blue models show the two conserved flanks; the orange model shows
+the additional Dox coding locus in *D. simulans*. Terminal arrows
+indicate strand. Genomic distances are retained because intron
 compression is disabled.
 
-## 4. Attach alignments and add the linkage layers
+### Add nucleotide links
 
-An alignment belongs to the species collection because it connects two
-individuals. Attach each PAF with the same IDs used when constructing
-the individuals. In these files, the upper species is the target and the
-lower species is the query.
-
-``` r
-
-comparison <- add_pairwise_alignment(comparison,
-  SynPairAlignment(name = "Dmau_Dsim", target_individual = "Dmau",
-    query_individual = "Dsim", file = file.path(object_dir, "Dmau_Dsim.paf"),
-    format = "paf"))
-comparison <- add_pairwise_alignment(comparison,
-  SynPairAlignment(name = "Dsim_Dsech", target_individual = "Dsim",
-    query_individual = "Dsech", file = file.path(object_dir, "Dsim_Dsech.paf"),
-    format = "paf"))
-
-# Insert a link row between each neighboring pair of annotation rows.
-linked_panels <- data.frame(PANEL = 1:5, ROW = 1:5, COL = 1L,
-  track = c("Dmau", "link_Dmau_Dsim", "Dsim", "link_Dsim_Dsech", "Dsech"),
-  panel_type = c("annotation", "link", "annotation", "link", "annotation"),
-  tspecies = c(NA, "Dmau", NA, "Dsim", NA),
-  qspecies = c(NA, "Dsim", NA, "Dsech", NA))
-wi <- match(linked_panels$track, windows$species)
-linked_panels$species <- windows$species[wi]
-linked_panels$xlim_chr <- ifelse(is.na(wi), NA_character_, "X")
-linked_panels$xlim_min <- windows$start[wi] - 1L
-linked_panels$xlim_max <- windows$end[wi] + 1L
-species_layout(comparison) <- SynLayout(panels = linked_panels,
-  free = list(x = TRUE, y = TRUE))
-
-blocks <- pairwise_alignment_data(comparison, alignment = "Dmau_Dsim")
-head(blocks[, c("tchr", "tstart", "tend", "qchr", "qstart", "qend", "nmatch", "alen")])
-#>   tchr  tstart    tend qchr  qstart    qend nmatch alen
-#> 1    X 9389708 9391056    X 9233164 9234512   1320 1349
-#> 2    X 9390980 9393590    X 9234439 9237049   2581 2611
-#> 3    X 9393578 9395394    X 9237019 9238835   1812 1817
-#> 4    X 9395388 9404797    X 9238828 9248237   9382 9410
-#> 5    X 9405255 9405355    X 9251708 9251808     92  101
-#> 6    X 9405479 9406993    X 9252035 9253549   1476 1515
-```
-
-These are the same 41 Dmau-Dsim blocks and 98 Dsim-Dsech blocks stored
-in `links.tsv`. LASTZ generated the ungapped, chained alignments; the
-retained blocks are at least 80 bp long and at least 85% identical. PAF
-mapQ is 255 (unknown), rather than an estimated mapping quality. No
-block is removed because it overlaps Dox.
+Select each stored alignment by name.
+[`geom_nuclink()`](https://dongyaoliu.github.io/ggexon/reference/geom_nuclink.md)
+resolves its species, chromosomes, and interval endpoints from the
+object. Fill encodes `100 * nmatch / alen`, the percentage of matching
+bases in an ungapped block:
 
 ``` r
 
@@ -289,15 +401,12 @@ link_layers <- list(
 )
 ```
 
-`alignment = ...` selects a stored alignment by name. The layer resolves
-its species, chromosomes, and interval endpoints from that object. Fill
-encodes `100 * nmatch / alen`, the percentage of matching bases in each
-ungapped block. This is nucleotide identity, not an orthology
-assignment.
+Use the prepared five-panel view and reuse the annotation layers and
+style:
 
 ``` r
 
-p_links <- ggexon(comparison) + annotation_layers + link_layers + plot_style
+p_links <- ggexon(link_view) + annotation_layers + link_layers + plot_style
 p_links
 ```
 
@@ -305,139 +414,38 @@ p_links
 three species, each at half the annotation-panel
 height.](dox-synteny-demo_files/figure-html/dox-with-links-1.png)
 
-The updated data object now supplies alignments as well as features. We
-start a new `ggexon(comparison)` and reuse the annotation layers, then
-add the link layers. An earlier plot keeps the object it was created
-with; updating the `comparison` variable does not retroactively add data
-to `p_annotation`.
+Each ribbon connects intervals on the two neighboring genomic axes. The
+link panel has no independent genomic axis. These are sequence-alignment
+spans; they do not assign gene orthology. The additional Dsim sequence
+around Dox interrupts the otherwise conserved local structure.
 
-The result has five panels: annotation, linkage, annotation, linkage,
-annotation. Each ribbon connects real intervals on the two adjacent
-genomic rulers. The link panels have no independent genomic axis. Around
-Dox, the additional Dsim sequence interrupts the otherwise conserved
-local structure.
+### Add one combined RNA-seq track per species
 
-## 5. Attach RNA-seq tracks to the individuals
-
-Each individual receives two named signal annotations: `RNA_plus` and
-`RNA_minus`. The minus files store the magnitude of the original reverse
-signal as a nonnegative score, so both strands can be drawn above zero.
-The signed audit values remain in `coverage.tsv.gz`.
-
-``` r
-
-for (id in species_ids) {
-  individual <- comparison@individuals[[id]]
-  signal_unit <- if (id == "Dsim") "primary read depth" else "deposited signal"
-  individual <- add_annotation(individual,
-    SynBigWigAnnotation(name = "RNA_plus",
-      bigwig_file = file.path(object_dir, paste0(id, ".RNAplus.bw")),
-      metadata = list(transcript_strand = "+", signal_unit = signal_unit)))
-  individual <- add_annotation(individual,
-    SynBigWigAnnotation(name = "RNA_minus",
-      bigwig_file = file.path(object_dir, paste0(id, ".RNAminus.bw")),
-      metadata = list(transcript_strand = "-", signal_unit = signal_unit,
-        score_handling = "reverse-strand magnitude")))
-  comparison <- add_individual(comparison, individual)
-}
-names(comparison@individuals[["Dsim"]]@annotations)
-#> [1] "default"   "RNA_plus"  "RNA_minus"
-```
-
-The files contain local testis RNA-seq from biological replicate 1. Dmau
-and Dsech retain deposited signal values. Dsim uses unnormalized primary
-read depth from the complete original library remapped to the plotted
-assembly. These units differ between the middle and outer species; the
-figure compares signal shape and genomic position rather than expression
-abundance between species.
-
-### Set y limits from the data objects
-
-Query each strand over the exact selected window, then find the larger
-peak. A y maximum of `1.1 * peak` puts each species’ highest peak at
-approximately 91% of its RNA panel height. This changes the view without
-changing the stored scores, smoothing the signal, or clipping its
-maximum.
-
-``` r
-
-peaks <- setNames(vapply(species_ids, function(id) {
-  individual <- comparison@individuals[[id]]
-  w <- windows[windows$species == id, ]
-  max(vapply(c("RNA_plus", "RNA_minus"), function(name) {
-    signal <- query_signal(get_annotation(individual, name), "X", w$start, w$end)
-    max(S4Vectors::mcols(signal)$score)
-  }, numeric(1)))
-}, numeric(1)), species_ids)
-rna_limits <- lapply(peaks, function(peak) c(0, 1.1 * peak))
-knitr::kable(data.frame(species = species_ids, peak = unname(peaks),
-  unit = c("deposited signal", "primary read depth", "deposited signal")),
-  row.names = FALSE)
-```
-
-| species |   peak | unit               |
-|:--------|-------:|:-------------------|
-| Dmau    | 313.49 | deposited signal   |
-| Dsim    | 276.00 | primary read depth |
-| Dsech   | 145.85 | deposited signal   |
-
-### Store the interleaved panel order
-
-Use an explicit `SynLayout` to put each RNA panel immediately above its
-own annotation. Coverage and annotation have the same public `track`
-name, with `panel_type` distinguishing their roles. The two linkage rows
-name their source species. Their endpoints will continue to use
-annotation panels.
-
-``` r
-
-panels <- data.frame(
-  PANEL = 1:8, ROW = 1:8, COL = 1L,
-  track = c("Dmau", "Dmau", "link_Dmau_Dsim", "Dsim", "Dsim",
-    "link_Dsim_Dsech", "Dsech", "Dsech"),
-  panel_type = c("coverage", "annotation", "link", "coverage", "annotation",
-    "link", "coverage", "annotation"),
-  tspecies = c(NA, NA, "Dmau", NA, NA, "Dsim", NA, NA),
-  qspecies = c(NA, NA, "Dsim", NA, NA, "Dsech", NA, NA)
-)
-wi <- match(panels$track, windows$species)
-panels$species <- windows$species[wi]
-panels$xlim_chr <- ifelse(is.na(wi), NA_character_, "X")
-panels$xlim_min <- windows$start[wi] - 1L
-panels$xlim_max <- windows$end[wi] + 1L
-species_layout(comparison) <- SynLayout(panels = panels,
-  free = list(x = TRUE, y = TRUE))
-panels[, c("ROW", "track", "panel_type")]
-#>   ROW           track panel_type
-#> 1   1            Dmau   coverage
-#> 2   2            Dmau annotation
-#> 3   3  link_Dmau_Dsim       link
-#> 4   4            Dsim   coverage
-#> 5   5            Dsim annotation
-#> 6   6 link_Dsim_Dsech       link
-#> 7   7           Dsech   coverage
-#> 8   8           Dsech annotation
-```
-
-### Add the coverage layers
-
-Select the attached signal by its annotation name. Because the two
-coverage layers request the same species and windows, their forward and
-reverse signals share each species’ coverage panel. The species’
-annotation panel remains a separate panel with its own y range.
+Use the complete `comparison` object and select its `RNA_seq`
+annotation. One
+[`geom_coverage()`](https://dongyaoliu.github.io/ggexon/reference/geom_coverage.md)
+call reads the three attached BigWigs. The stored layout places each
+signal above its own gene models, sharing that individual’s genomic x
+scale. `scale_panel_coverage("fixed_y")` gives all three RNA panels one
+quantitative y scale. The legend marks the signal as **×1**: no region
+or track receives a height multiplier.
 
 ``` r
 
 rna_layers <- list(
-  geom_coverage(aes(fill = "RNA +"), annotation = "RNA_plus", alpha = 0.85),
-  geom_coverage(aes(fill = "RNA -"), annotation = "RNA_minus", alpha = 0.85)
+  geom_coverage(aes(fill = "RNA-seq"), annotation = "RNA_seq", alpha = 0.85)
 )
 p_rna <- ggexon(comparison) +
   annotation_layers +
   link_layers +
   rna_layers +
   plot_style +
-  scale_panel_coverage("free_y", limits = rna_limits)
+  scale_panel_coverage("fixed_y") +
+  scale_y_continuous(name = "RNA-seq signal", position = "right",
+    breaks = scales::breaks_width(100),
+    guide = guide_axis(check.overlap = TRUE),
+    expand = expansion(mult = c(0, 0.1))) +
+  theme(axis.text.y = element_text(), axis.ticks.y = element_line())
 ```
 
 ``` r
@@ -445,18 +453,35 @@ p_rna <- ggexon(comparison) +
 p_rna
 ```
 
-![Complete eight-panel figure: testis RNA-seq above each species
-annotation, two smaller nucleotide-link panels, and orange Dox coding
-exons in D.
+![Three species with one combined testis RNA-seq track above each
+centred gene annotation. RNA y axes appear on the right. Each species
+name is centred outside the left edge of its combined RNA and gene
+panels. Two nucleotide-link panels connect the species, and Dox is
+orange in D.
 simulans.](dox-synteny-demo_files/figure-html/dox-with-rna-1.png)
 
-The complete figure has three RNA panels, three annotation panels, and
-two linkage panels. Blue RNA signal is the forward strand; green is the
-reverse strand’s magnitude. RNA peaks occupy similar fractions of their
-panels because the y scales are independent. The separate units and the
-values in the table above are needed when interpreting those peaks.
+The figure combines UCSC GenArk flank annotations and testis RNA-seq
+from
+[GSE185361](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE185361)
+with an orange, three-exon Dox coding model in D. simulans reconstructed
+from the 474-nt CDS published by [Vedanayagam et
+al. (2021)](https://doi.org/10.1038/s41559-021-01592-z).
 
-## 6. Adjust panel heights or compress genomic gaps
+The complete figure has three RNA panels, three annotation panels, and
+two link panels. Equal RNA heights now represent equal numeric signal
+values; the lower Dsech peak remains lower on the shared axis. Read the
+signal units in the table above: deposited scores and remapped read
+depths remain different measurements. A peak near Dox locates
+transcriptional signal; the combined track does not identify its
+transcript strand.
+
+`position = "right"` places the RNA y axes on the right. The upper 10%
+expansion supplies the range recorded in `rna_limits`, without imposing
+RNA-sized y limits on the annotation panels. Gene-panel y positions only
+arrange the models and labels; the centring helper keeps the bodies at
+the vertical midpoint of each panel.
+
+## Adjust panel heights or compress genomic gaps
 
 To make the linkage or RNA rows smaller, replace the facet with
 different physical heights. Reuse the other facet settings so the
@@ -464,8 +489,9 @@ genomic windows and strip labels remain the same.
 
 ``` r
 
-p_rna + facet_genomics(vars(track), ncol = 1, scales = "free",
-  strip.position = "left", labeller = as_labeller(strip_labels),
+p_rna + facet_genomics(vars(track), ncol = 1, scales = "free_x",
+  strip.position = "left", strip_group = "individual",
+  labeller = as_labeller(strip_labels),
   xlim = window_limits, xlim_chr = chromosomes,
   link_panel_height = 0.3, coverage_panel_height = 0.4,
   link_axis = "none", link_strip = "blank", annotation_axis = "all")
@@ -494,12 +520,19 @@ p_compressed
 signals and nucleotide links remain aligned with exon
 models.](dox-synteny-demo_files/figure-html/dox-compressed-1.png)
 
+The figure combines UCSC GenArk flank annotations and testis RNA-seq
+from
+[GSE185361](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE185361)
+with an orange, three-exon Dox coding model in D. simulans reconstructed
+from the 474-nt CDS published by [Vedanayagam et
+al. (2021)](https://doi.org/10.1038/s41559-021-01592-z).
+
 Gaps include intergenic sequence as well as introns. The compressed view
 has no single uniform base-pair scale. Keep genomic coordinates in the
 objects; do not compress annotation, signal, or alignment coordinates
 before plotting.
 
-## 7. Export the plots
+## Export the plots
 
 Keep `p_annotation`, `p_links`, and `p_rna` as separate objects so you
 can export each stage or reuse it in a presentation. These commands
@@ -516,60 +549,3 @@ ggsave("dox-with-rna.pdf", p_rna, width = 9.5, height = 6.5,
 ggsave("dox-with-rna.png", p_rna, width = 9.5, height = 6.5,
   units = "in", dpi = 300, bg = "white")
 ```
-
-## Data provenance and interpretation
-
-The flanks are common *D. melanogaster* RefSeq models `NM_132346` and
-`NM_132348` mapped by UCSC GenArk to the selected species assemblies.
-The orange model comes from the published 474-nt Dox CDS. A unique,
-end-to-end, 100%-identity splice alignment places it at Dsim
-X:9,250,280-9,250,879 on the minus strand, with CIGAR
-`285M63N42M63N147M`. Joining those three coding exons and
-reverse-complementing them reconstructs the published CDS exactly. The
-figure does not reconstruct the full Dox transcript.
-
-RNA-seq comes from
-[GSE185361](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE185361),
-specifically
-[GSM5611558](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM5611558),
-[GSM7039340](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM7039340),
-and
-[GSM5611560](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM5611560).
-The deposited Dsim BigWigs use an X chromosome of 22,976,950 bp, whereas
-the plotted GenBank assembly has 23,123,156 bp. They were excluded. The
-complete original library
-[SRR23418969](https://www.ebi.ac.uk/ena/browser/view/SRR23418969),
-containing 40,381,684 read pairs, was remapped directly to
-GCA_004382185.1 with minimap2’s `splice:sr` preset. No coordinate offset
-was inferred.
-
-Dsim coverage retains primary alignments with MAPQ \>=20 and excludes
-intron and deletion bases; overlapping mates each contribute to read
-depth. Canonical splice motifs support a reverse-stranded paired
-library, with read 1 antisense and read 2 sense. Input checksums, the
-full reference sequence, the BAM chromosome dictionary, and the
-complete-library read count were verified. The coverage agrees with an
-independent samtools depth calculation at all 43,781 plotted bases.
-`Dsim-remapping-qc.json` records these checks and the mapping
-statistics. Dmau and Dsech retain author-deposited coverage values.
-
-`manifest.json` records original source URLs, sequence and data
-checksums, BigWig extraction ranges, and alignment settings.
-`objects/manifest.json` records how the native tutorial files relate to
-the verified tables, with input/output checksums. The GTF/PAF/BigWig
-conversion changes file formats, not the underlying genomic intervals or
-signal magnitudes.
-
-For source details, see the [primary locus
-paper](https://doi.org/10.1038/s41559-021-01592-z), its [Supplementary
-Table
-1](https://media.springernature.com/original/springer-static/esm/art%3A10.1038%2Fs41559-021-01592-z/MediaObjects/41559_2021_1592_MOESM2_ESM.xlsx),
-the [assembly paper](https://doi.org/10.1101/gr.263442.120), and the
-[minimap2 short RNA-seq
-documentation](https://github.com/lh3/minimap2#map-short-rna-seq-reads).
-
-To prepare the files again from the repository, run
-`remap-dsim-rnaseq.py`, `build-dox-data.py`, then
-`Rscript data-raw/dox_synteny/prepare-dox-objects.R`. The large
-raw-read/reference/BAM cache stays outside the bundled inputs. Rendering
-this article uses only the bundled files.
