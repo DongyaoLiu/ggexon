@@ -2,7 +2,9 @@ test_that("AS3MT offline inputs preserve ungapped blocks and top-two selection",
   demo_dir <- system.file("extdata", "as3mt", package = "ggexon")
   env <- new.env(parent = globalenv())
   sys.source(file.path(demo_dir, "load-as3mt-example.R"), envir = env)
-  example <- env$load_as3mt_example(demo_dir)
+  model <- env$load_as3mt_example(demo_dir)
+  expect_s4_class(model, "SynSpecies")
+  example <- env$.as3mt_legacy_view(model)
   expect_s4_class(example$comparison, "SynSpecies")
   expect_true(methods::validObject(example$comparison))
   expect_equal(nrow(example$links), 93L)
@@ -73,7 +75,7 @@ test_that("AS3MT loads portably and uses native scaling at different compression
   env <- new.env(parent = globalenv())
   sys.source(file.path(portable, "load-as3mt-example.R"), envir = env)
   example <- env$load_as3mt_example(portable)
-  original <- pairwise_alignment_data(example$comparison, alignment = "human_chimp")
+  original <- pairwise_alignment_data(example, alignment = "human_chimp")
   for (factor in c(10, 30)) {
     result <- env$plot_as3mt_example(example, intron_factor = factor)
     i <- which(vapply(result$plot$layers,
@@ -86,7 +88,7 @@ test_that("AS3MT loads portably and uses native scaling at different compression
     expect_equal(introns$plot_width * factor, introns$genomic_width, tolerance = 1e-5)
     expect_silent(ggplot2::ggplot_gtable(result$build))
   }
-  expect_equal(pairwise_alignment_data(example$comparison, alignment = "human_chimp"), original)
+  expect_equal(pairwise_alignment_data(example, alignment = "human_chimp"), original)
 })
 
 test_that("AS3MT gapped DNA example retains verified event counts and explicit details", {

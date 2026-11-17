@@ -85,11 +85,7 @@ genomic alignment blocks at both panels' scale boundaries and maps the pieces
 to the same exon/intron scales. The plot retains only the two highest identity
 categories of the ungapped LASTZ alignment.
 
-The tutorial also aligns matched human GTEx coverage and counted splice
-junctions to the compressed gene model. `geom_junction()` distinguishes
-exon inclusion from E1→E4 skipping, while preserving source signal values.
-
-See the [AS3MT transcript, DNA and RNA-seq tutorial](https://dongyaoliu.github.io/ggexon/articles/as3mt-splice-variants-demo.html)
+See the [AS3MT transcript and DNA tutorial](https://dongyaoliu.github.io/ggexon/articles/as3mt-splice-variants-demo.html)
 for the reproducible offline example and aligned DNA repeat detail.
 
 ## Compact Three-Species Dox Synteny

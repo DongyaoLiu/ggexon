@@ -56,17 +56,15 @@ tutorial](https://dongyaoliu.github.io/ggexon/articles/hla-a-lollipop-demo.md).
 
 Compare human and chimpanzee AS3MT gene models alongside a paper-defined
 human exon-skipping reconstruction. The combined view connects
-transcript structure, aligned DNA at an exon-intron junction, RNA-seq
-coverage, and counted splice junctions. Exon widths are preserved while
-introns are compressed, keeping sequence detail aligned with the
-surrounding gene structure.
+transcript structure and aligned DNA at an exon-intron junction. Exon
+widths are preserved while introns are compressed, keeping sequence
+detail aligned with the surrounding gene structure.
 
-[![Human and chimpanzee AS3MT models with aligned repeat sequences,
-nucleotide ribbons, and human RNA-seq coverage and splice-junction
-counts on a shared intron-compressed
+[![Human and chimpanzee AS3MT models with aligned repeat sequences and
+nucleotide ribbons on a shared intron-compressed
 display.](articles/as3mt-splice-variants-demo_files/figure-html/as3mt-alignseq-1.png)](https://dongyaoliu.github.io/ggexon/articles/as3mt-splice-variants-demo.md)
 
-[Explore the AS3MT transcript, DNA, and RNA-seq
+[Explore the AS3MT transcript and DNA
 tutorial](https://dongyaoliu.github.io/ggexon/articles/as3mt-splice-variants-demo.md).
 
 ### **3. Visualizing local synteny across species**

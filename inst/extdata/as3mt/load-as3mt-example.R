@@ -32,6 +32,13 @@ load_as3mt_example <- function(demo_dir = system.file("extdata", "as3mt", packag
     ggexon::annotation_data(individual) <- features
     comparison <- ggexon::add_individual(comparison, individual)
   }
+  human <- comparison@individuals[["human"]]
+  human <- ggexon::add_annotation(human, ggexon::SynBigWigAnnotation(
+    "gtex_ba9", file.path(demo_dir, "human-rnaseq-GTEX-15G19.bw"),
+    metadata = list(sample = "GTEX-15G19-0011-R10b-SM-7KUG4.1",
+      assembly = "GRCh38", source = "lossless re-encoding of the bundled interval snapshot")
+  ))
+  comparison <- ggexon::add_individual(comparison, human)
   alignment <- ggexon::SynPairAlignment(name = "human_chimp", target_individual = "human",
     query_individual = "chimp", file = "<AS3MT ungapped genomic links>",
     format = "paf", data = selected,
@@ -43,15 +50,31 @@ load_as3mt_example <- function(demo_dir = system.file("extdata", "as3mt", packag
     xlim = list(human = c(102869400, 102902000), chimp = c(104324090, 104356300)),
     xlim_chr = c(human = "chr10", chimp = "chr10"))
   methods::validObject(comparison)
-  list(comparison = comparison, specification = specification, exons = exons,
+  comparison@metadata$as3mt <- list(specification = specification, exons = exons,
     links = links, selected_links = selected,
     organoid_values = read_table("organoid-reported-values.tsv"),
-    organoid_summary = read_table("organoid-summary.tsv"))
+    organoid_summary = read_table("organoid-summary.tsv"),
+    vntr = readRDS(file.path(demo_dir, "vntr-dna.rds")),
+    signal = read_table("human-rnaseq-GTEX-15G19.tsv"),
+    junctions = read_table("human-junctions-GTEX-15G19.tsv"))
+  comparison
+}
+
+as3mt_evidence <- function(model) {
+  stopifnot(methods::is(model, "SynSpecies"), !is.null(model@metadata$as3mt))
+  model@metadata$as3mt
+}
+
+# Compatibility view for the existing figure-export helpers.
+.as3mt_legacy_view <- function(model) {
+  if (!methods::is(model, "SynSpecies")) return(model)
+  c(list(comparison = model), as3mt_evidence(model))
 }
 
 plot_as3mt_example <- function(example, intron_factor = 30, base_size = 8, base_family = "serif",
                                link_data = NULL, junction_evidence = FALSE) {
   stopifnot(is.numeric(intron_factor), length(intron_factor) == 1L, intron_factor > 0)
+  example <- .as3mt_legacy_view(example)
   palette <- c(human_full = "#0072B2", human_short = "#D55E00", chimp = "#64748B",
     skipped_exons = "#E69F00")
   bands <- levels(example$links$identity_band)
@@ -118,9 +141,10 @@ plot_as3mt_example <- function(example, intron_factor = 30, base_size = 8, base_
 # Coverage and junctions come from the same independent human GTEx donor.
 as3mt_rnaseq_data <- function(demo_dir, junction_panel = c("coverage", "annotation")) {
   junction_panel <- match.arg(junction_panel)
-  signal <- utils::read.delim(file.path(demo_dir, "human-rnaseq-GTEX-15G19.tsv"))
+  model <- if (methods::is(demo_dir, "SynSpecies")) demo_dir else load_as3mt_example(demo_dir)
+  signal <- as3mt_evidence(model)$signal
   signal$track <- "human"
-  junctions <- utils::read.delim(file.path(demo_dir, "human-junctions-GTEX-15G19.tsv"))
+  junctions <- as3mt_evidence(model)$junctions
   junctions$track <- "human"
   # Genomic splice boundaries are the edges between the adjacent bases.
   junctions$x <- junctions$donor + .5
@@ -176,7 +200,7 @@ plot_as3mt_coverage <- function(demo_dir = system.file("extdata", "as3mt", packa
                                 junction_panel = c("coverage", "annotation")) {
   junction_panel <- match.arg(junction_panel)
   example <- load_as3mt_example(demo_dir)
-  rna <- as3mt_rnaseq_data(demo_dir, junction_panel)
+  rna <- as3mt_rnaseq_data(example, junction_panel)
   plot <- as3mt_add_rnaseq(
     plot_as3mt_example(example, intron_factor, base_size, base_family,
       junction_evidence = junction_panel == "annotation")$plot,
@@ -196,8 +220,8 @@ plot_as3mt_alignseq <- function(demo_dir = system.file("extdata", "as3mt", packa
                                show_coverage = TRUE,
                                junction_panel = c("coverage", "annotation")) {
   junction_panel <- match.arg(junction_panel)
-  example <- load_as3mt_example(demo_dir)
-  a <- readRDS(file.path(demo_dir, "vntr-dna.rds"))
+  example <- .as3mt_legacy_view(load_as3mt_example(demo_dir))
+  a <- example$vntr
   d <- ggexon::alignseq_data(a$aligned, a$anchors, reference = "human",
     regions = a$regions, details = a$details, flank = a$flank)
   d$y <- ifelse(d$sequence == "human", 2.65, 1.5)
@@ -252,7 +276,7 @@ plot_as3mt_alignseq <- function(demo_dir = system.file("extdata", "as3mt", packa
       axis.ticks.x = ggplot2::element_blank(), axis.line.x = ggplot2::element_blank())
   signal <- junctions <- NULL
   if (isTRUE(show_coverage)) {
-    rna <- as3mt_rnaseq_data(demo_dir, junction_panel)
+    rna <- as3mt_rnaseq_data(example$comparison, junction_panel)
     signal <- rna$signal
     junctions <- rna$junctions
     plot <- as3mt_add_rnaseq(plot, rna, base_size, base_family) +

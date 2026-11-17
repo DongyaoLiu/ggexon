@@ -55,14 +55,14 @@ not population frequencies.
 ### **2. Comparing alternatively spliced transcripts**
 
 Compare human and chimpanzee AS3MT gene models alongside a paper-defined human
-exon-skipping reconstruction. The combined view connects transcript structure,
-aligned DNA at an exon-intron junction, RNA-seq coverage, and counted splice
-junctions. Exon widths are preserved while introns are compressed, keeping
+exon-skipping reconstruction. The combined view connects transcript structure
+and aligned DNA at an exon-intron junction. Exon widths are preserved while
+introns are compressed, keeping
 sequence detail aligned with the surrounding gene structure.
 
-<a href="articles/as3mt-splice-variants-demo.html"><img src="articles/as3mt-splice-variants-demo_files/figure-html/as3mt-alignseq-1.png" alt="Human and chimpanzee AS3MT models with aligned repeat sequences, nucleotide ribbons, and human RNA-seq coverage and splice-junction counts on a shared intron-compressed display." width="100%" loading="lazy" style="background-color: white;"></a>
+<a href="articles/as3mt-splice-variants-demo.html"><img src="articles/as3mt-splice-variants-demo_files/figure-html/as3mt-alignseq-1.png" alt="Human and chimpanzee AS3MT models with aligned repeat sequences and nucleotide ribbons on a shared intron-compressed display." width="100%" loading="lazy" style="background-color: white;"></a>
 
-[Explore the AS3MT transcript, DNA, and RNA-seq tutorial](articles/as3mt-splice-variants-demo.html).
+[Explore the AS3MT transcript and DNA tutorial](articles/as3mt-splice-variants-demo.html).
 
 ### **3. Visualizing local synteny across species**
 
