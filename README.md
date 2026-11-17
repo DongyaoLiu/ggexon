@@ -87,7 +87,7 @@ prepares protein annotations, projects them through the reference CDS, and
 stores a shared genomic layout before plotting. Lollipop heights describe
 database allele counts, not population frequencies.
 
-[![HLA-A substitutions projected onto eight coding exons, with introns compressed three-fold and lollipop heights showing named allele counts.](docs/articles/hla-a-lollipop-demo_files/figure-html/hla-a-gene-plot-1.png)](https://dongyaoliu.github.io/ggexon/articles/hla-a-lollipop-demo.html)
+[![HLA-A substitutions projected onto eight coding exons, with introns compressed three-fold and lollipop heights showing named allele counts.](man/figures/hla-a-genomic-lollipop-demo.png)](https://dongyaoliu.github.io/ggexon/articles/hla-a-lollipop-demo.html)
 
 [Explore the HLA-A protein and gene-model tutorial](https://dongyaoliu.github.io/ggexon/articles/hla-a-lollipop-demo.html).
 
@@ -99,7 +99,7 @@ transcript models, nucleotide ribbons, and aligned DNA at the exon-1 repeat.
 One shared x scale compresses introns while preserving exon widths and the
 alignment between layers.
 
-[![Human and chimpanzee AS3MT models with aligned repeat sequences and nucleotide ribbons on an intron-compressed display.](docs/articles/as3mt-splice-variants-demo_files/figure-html/as3mt-alignseq-1.png)](https://dongyaoliu.github.io/ggexon/articles/as3mt-splice-variants-demo.html)
+[![Human and chimpanzee AS3MT models with aligned repeat sequences and nucleotide ribbons on an intron-compressed display.](man/figures/as3mt-splice-variants-demo.png)](https://dongyaoliu.github.io/ggexon/articles/as3mt-splice-variants-demo.html)
 
 [Explore the AS3MT transcript and DNA tutorial](https://dongyaoliu.github.io/ggexon/articles/as3mt-splice-variants-demo.html).
 
@@ -113,7 +113,7 @@ retains its genomic axis. RNA panels share one y range and preserve their
 signal values; the tutorial identifies the deposited signals and remapped
 read depths by their source units.
 
-[![Three Drosophila loci with conserved flanks, an orange Dox model, native DNA alignments, and combined testis RNA-seq panels with right-hand y axes.](docs/articles/dox-synteny-demo_files/figure-html/dox-with-rna-1.png)](https://dongyaoliu.github.io/ggexon/articles/dox-synteny-demo.html)
+[![Three Drosophila loci with conserved flanks, an orange Dox model, native DNA alignments, and combined testis RNA-seq panels with right-hand y axes.](man/figures/dox-three-species-demo.png)](https://dongyaoliu.github.io/ggexon/articles/dox-synteny-demo.html)
 
 [Explore the three-species Dox synteny tutorial](https://dongyaoliu.github.io/ggexon/articles/dox-synteny-demo.html).
 
@@ -127,7 +127,7 @@ gene keys occupy the same cells, with empty cells reserved. Small native gene
 arrows, grey background genes, and direct DNA-alignment ribbons retain the
 genomic context below the enlarged heads.
 
-[![Siamang H1, Gorilla H1, and Human CHM13 with 58 gene-lollipop heads in shared row-and-column slots, native gene spans, grey background genes, and two DNA-alignment panels.](docs/articles/figures/mhc-three-species.png)](https://dongyaoliu.github.io/ggexon/articles/mhc-continuous-demo.html)
+[![Siamang H1, Gorilla H1, and Human CHM13 with 58 gene-lollipop heads in shared row-and-column slots, native gene spans, grey background genes, and two DNA-alignment panels.](man/figures/mhc-three-haplotypes.png)](https://dongyaoliu.github.io/ggexon/articles/mhc-continuous-demo.html)
 
 [Explore the MHC haplotype tutorial](https://dongyaoliu.github.io/ggexon/articles/mhc-continuous-demo.html).
 
@@ -161,6 +161,15 @@ for individual classes and verbs.
 
 The [archived HOX matrix example](pkgdown/archive/hox-cluster-expansion-demo.Rmd)
 retains the gene-slot comparison, plotting code, and source audit trail.
+
+## Building the website
+
+The website is built from `pkgdown/index.md`, `vignettes/`, and the package
+reference documentation. Run `pkgdown::build_site()` to preview it locally.
+The generated `docs/` site is ignored by Git; GitHub Actions builds and
+deploys it directly to GitHub Pages. README preview images are kept in
+`man/figures`. HTML snapshots under `data-raw/ape_paper/source_metadata`
+document the original data sources and are retained as audit records.
 
 ## Citation
 

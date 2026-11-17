@@ -96,4 +96,4 @@ for (i in seq_along(plots)) {
 file.copy(file.path(out, "mhc_three_haplotypes.png"),
   "vignettes/figures/mhc-three-species.png", overwrite = TRUE)
 file.copy(file.path(out, "mhc_three_haplotypes.png"),
-  "docs/articles/figures/mhc-three-species.png", overwrite = TRUE)
+  "man/figures/mhc-three-haplotypes.png", overwrite = TRUE)

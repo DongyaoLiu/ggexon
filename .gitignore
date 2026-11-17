@@ -6,6 +6,7 @@ tests/ldy_test.R
 Rplots.pdf
 .DS_Store
 CLAUDE.md
-docs/CLAUDE.html
-docs/CLAUDE.md
+# pkgdown output is deployed as an artifact; existing local drafts stay visible.
+/docs/*
+!/docs/superpowers/
 tests/testthat/Rplots.pdf

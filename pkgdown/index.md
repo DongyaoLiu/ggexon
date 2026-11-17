@@ -1,11 +1,5 @@
 # ggexon
 
-<style>
-#main h3 {
-  font-weight: 500;
-}
-</style>
-
 ## Genomic visualization across scales
 
 **Grammar of genomic annotations, synteny, and associated data.**
@@ -91,7 +85,7 @@ prepares protein annotations, projects them through the reference CDS, and
 stores a shared genomic layout before plotting. Lollipop heights describe
 database allele counts, not population frequencies.
 
-<a href="articles/hla-a-lollipop-demo.html"><img src="articles/hla-a-lollipop-demo_files/figure-html/hla-a-gene-plot-1.png" alt="HLA-A substitutions projected onto eight coding exons, with introns compressed three-fold and lollipop heights showing named allele counts." width="100%" loading="lazy" style="background-color: white;"></a>
+[![HLA-A substitutions projected onto eight coding exons, with introns compressed three-fold and lollipop heights showing named allele counts.](man/figures/hla-a-genomic-lollipop-demo.png)](articles/hla-a-lollipop-demo.html)
 
 [Explore the HLA-A protein and gene-model tutorial](articles/hla-a-lollipop-demo.html).
 
@@ -103,7 +97,7 @@ transcript models, nucleotide ribbons, and aligned DNA at the exon-1 repeat.
 One shared x scale compresses introns while preserving exon widths and the
 alignment between layers.
 
-<a href="articles/as3mt-splice-variants-demo.html"><img src="articles/as3mt-splice-variants-demo_files/figure-html/as3mt-alignseq-1.png" alt="Human and chimpanzee AS3MT models with aligned repeat sequences and nucleotide ribbons on an intron-compressed display." width="100%" loading="lazy" style="background-color: white;"></a>
+[![Human and chimpanzee AS3MT models with aligned repeat sequences and nucleotide ribbons on an intron-compressed display.](man/figures/as3mt-splice-variants-demo.png)](articles/as3mt-splice-variants-demo.html)
 
 [Explore the AS3MT transcript and DNA tutorial](articles/as3mt-splice-variants-demo.html).
 
@@ -117,7 +111,7 @@ retains its genomic axis. RNA panels share one y range and preserve their
 signal values; the tutorial identifies the deposited signals and remapped
 read depths by their source units.
 
-<a href="articles/dox-synteny-demo.html"><img src="articles/dox-synteny-demo_files/figure-html/dox-with-rna-1.png" alt="Three Drosophila loci with conserved flanks, an orange Dox model, native DNA alignments, and combined testis RNA-seq panels with right-hand y axes." width="100%" loading="lazy" style="background-color: white;"></a>
+[![Three Drosophila loci with conserved flanks, an orange Dox model, native DNA alignments, and combined testis RNA-seq panels with right-hand y axes.](man/figures/dox-three-species-demo.png)](articles/dox-synteny-demo.html)
 
 [Explore the three-species Dox synteny tutorial](articles/dox-synteny-demo.html).
 
@@ -131,7 +125,7 @@ gene keys occupy the same cells, with empty cells reserved. Small native gene
 arrows, grey background genes, and direct DNA-alignment ribbons retain the
 genomic context below the enlarged heads.
 
-<a href="articles/mhc-continuous-demo.html"><img src="articles/figures/mhc-three-species.png" alt="Siamang H1, Gorilla H1, and Human CHM13 with 58 gene-lollipop heads in shared row-and-column slots, native gene spans, grey background genes, and two DNA-alignment panels." width="100%" loading="lazy" style="background-color: white;"></a>
+[![Siamang H1, Gorilla H1, and Human CHM13 with 58 gene-lollipop heads in shared row-and-column slots, native gene spans, grey background genes, and two DNA-alignment panels.](man/figures/mhc-three-haplotypes.png)](articles/mhc-continuous-demo.html)
 
 [Explore the MHC haplotype tutorial](articles/mhc-continuous-demo.html).
 
