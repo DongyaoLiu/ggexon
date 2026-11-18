@@ -35,21 +35,24 @@ test_that("AS3MT exon labels follow the loaded transcript rows", {
   features <- as.data.frame(query_features(human, feature_type = NULL, all = TRUE))
   expect_equal(unique(features$isoform_y[features$transcript_id == "human_short"]), 1.8)
   expect_equal(unique(features$isoform_y[features$transcript_id == "human_full"]), .7)
-  expect_equal(unique(labels$y[labels$id == "human_short"]), 2.45)
-  expect_equal(labels$y[labels$id == "human_full" & labels$exon == 2L], 1.6)
-  expect_equal(unique(labels$y[labels$id == "human_full" & labels$exon != 2L]), 1.35)
-  expect_equal(unique(labels$y[labels$id == "chimp" & labels$exon != 2L]), 1.35)
-  expect_equal(labels$y[labels$id == "chimp" & labels$exon == 2L], 1.6)
+  chimp <- individuals(model)[["chimp"]]
+  chimp_features <- as.data.frame(query_features(chimp, feature_type = NULL, all = TRUE))
+  features <- rbind(features, chimp_features)
+  row_y <- features$isoform_y[match(labels$id, features$transcript_id)]
+  expect_true(all(labels$y < row_y))
 
   # Labels follow the transcript even when the stored model is moved again.
+  short_labels_y <- labels$y[labels$id == "human_short"]
+  shift <- .3
   moved <- annotation_data(human)
   md <- S4Vectors::mcols(moved)
-  md$isoform_y[md$transcript_id == "human_short"] <- 2.1
+  short <- md$transcript_id == "human_short"
+  md$isoform_y[short] <- md$isoform_y[short] + shift
   S4Vectors::mcols(moved) <- md
   annotation_data(human) <- moved
   model <- fixture$helpers$prepare_as3mt_example(add_individual(model, human))
   labels <- fixture$helpers$as3mt_plot_data(model, "exon_labels")
-  expect_equal(unique(labels$y[labels$id == "human_short"]), 2.75)
+  expect_equal(labels$y[labels$id == "human_short"], short_labels_y + shift)
 })
 
 test_that("the AS3MT exon-label helper leaves DNA preparation to the package", {

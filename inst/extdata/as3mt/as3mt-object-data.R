@@ -10,13 +10,13 @@ prepare_as3mt_example <- function(model) {
     do.call(rbind, lapply(groups, function(i) data.frame(
       id = as.character(features$transcript_id[i[1]]), exon = as.integer(features$exon_number[i[1]]),
       start = min(features$start[i]), end = max(features$end[i]), track = track,
-      y = features$isoform_y[i[1]] + .65)))
+      y = features$isoform_y[i[1]] - .35)))
   }))
   labels <- labels[order(match(labels$track, ggexon::individual_names(model)),
     -labels$y, labels$id, labels$exon), ]
   rownames(labels) <- NULL
   labels$x <- (labels$start + labels$end) / 2
-  labels$y[labels$exon == 2] <- labels$y[labels$exon == 2] + .25
+  labels$y[labels$exon == 2] <- labels$y[labels$exon == 2] + .15
   labels$label <- paste0("E", labels$exon)
   model@metadata$as3mt$plot_data <- list(exon_labels = labels)
   model

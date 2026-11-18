@@ -51,6 +51,8 @@ highest original identity categories.
 Prepare exon labels and store two views of the aligned VNTR DNA on the same
 object. The combined view keeps the full alignment and selects the terminal
 repeat for the callouts. The close-up view selects just the terminal repeat.
+Query the combined view to count the chimpanzee gap columns across the full
+alignment.
 
 ```{r as3mt-prepare}
 as3mt <- prepare_as3mt_example(as3mt)
@@ -72,6 +74,8 @@ as3mt <- prepare_alignseq(
 
 head(as3mt_plot_data(as3mt, "exon_labels")[,
   c("id", "exon", "start", "end", "label")])
+chimp_dna <- query_alignseq(as3mt, name = "as3mt_vntr", individual = "chimp")
+sum(chimp_dna$base == "-")
 dna_detail <- query_alignseq(as3mt, name = "as3mt_vntr_detail")
 dna_detail[dna_detail$boundary_after, c("individual", "chr", "position", "boundary_label")]
 ```
@@ -146,7 +150,7 @@ transcript_plot <- ggexon(as3mt) +
   scale_x_ggexon_genomic(
     intron_factor = 30, guide = guide_x_ggexon_piecewise(by = "panel")
   ) +
-  scale_panel_annotation("free_y", limits = list(human = c(0.15, 3.1), chimp = c(0.3, 1.8))) +
+  scale_panel_annotation("free_y", limits = list(human = c(0.15, 3.1), chimp = c(0.15, 1.8))) +
   labs(x = NULL, y = NULL,
     caption = "Thick boxes show CDS and thin boxes show UTR. The upper human row is the d2d3 reconstruction.") +
   theme_ggexon_track(

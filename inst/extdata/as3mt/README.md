@@ -1,12 +1,39 @@
 # Offline AS3MT example inputs
 
-Source `load-as3mt-example.R` and `as3mt-object-data.R`. `load_as3mt_example()`
-returns one `SynSpecies` containing human/chimpanzee annotations, the selected
-alignment. Run `prepare_as3mt_example()` once to attach named views for exon
-labels, aligned DNA, repeat outlines and donor marks. The tutorial shows the
-plotting commands directly from `ggexon(as3mt)`.
-`as3mt_evidence()` reads original evidence, and `as3mt_plot_data()` reads a
-prepared view. Existing figure-export helpers remain available.
+`load_as3mt_example()` returns one `SynSpecies` with human and chimpanzee
+annotations and selected genomic links. `prepare_as3mt_example()` derives
+the tutorial's exon labels, which `as3mt_plot_data(as3mt, "exon_labels")`
+retrieves. `as3mt_evidence()` provides the bundled alignment inputs for
+`prepare_alignseq()`. Inspect the named preparation with `query_alignseq()`
+or draw it directly from the Syn object with `geom_alignseq()`.
+
+```r
+library(ggexon)
+demo_dir <- system.file("extdata", "as3mt", package = "ggexon")
+source(file.path(demo_dir, "load-as3mt-example.R"))
+source(file.path(demo_dir, "as3mt-object-data.R"))
+as3mt <- prepare_as3mt_example(load_as3mt_example(demo_dir))
+vntr <- as3mt_evidence(as3mt)$vntr
+as3mt <- prepare_alignseq(
+  as3mt, vntr$aligned, vntr$anchors, reference = vntr$reference,
+  name = "as3mt_vntr", regions = vntr$regions, details = vntr$details,
+  flank = vntr$flank
+)
+chimp <- query_alignseq(as3mt, name = "as3mt_vntr", individual = "chimp")
+sum(chimp$base == "-")
+
+ggexon(as3mt) +
+  geom_exon2(ggplot2::aes(xmin = xmin - .5, xmax = xmax + .5, ymin = isoform_y),
+    annotation_type = "all", exon_height = .42, compress_introns = FALSE) +
+  geom_alignseq(alignment = "as3mt_vntr", anchor = "transcript",
+    transcripts = c(human = "human_short", chimp = "chimp"),
+    show_markers = FALSE, colour_scheme = "difference") +
+  facet_genomics(ggplot2::vars(track), scales = "free_x", ncol = 1) +
+  scale_x_ggexon_genomic(intron_factor = 30)
+```
+
+The `as3mt-splice-variants-demo` vignette shows the donor boundaries, the
+terminal-repeat close-up and the full comparative figure.
 
 `human-rnaseq-GTEX-15G19.bw` is a small BigWig re-encoding of the verified TSV
 snapshot, rebuilt by `data-raw/as3mt/prepare-coverage-bigwig.R`. Every interval
