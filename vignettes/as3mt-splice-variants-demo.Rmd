@@ -86,9 +86,10 @@ stored CDS and UTR features and retains full-reference exon numbers.
 aligned bases, difference events and donor boundaries under each view name.
 `query_alignseq()` inspects the stored rows in their native genomic
 coordinates. The transcript, alignment and DNA layers resolve their data
-from the Syn object. Refresh the exon labels after editing the feature
-models. Prepare the DNA views again after changing their aligned strings,
-anchors or selected windows.
+from the Syn object, and the DNA connectors follow the plotted gene geometry.
+Refresh the exon labels after editing the feature models. Run
+`prepare_alignseq()` again when the DNA inputs change or a prepared view has
+been cleared from the plot cache.
 
 # Compare the transcript models
 
