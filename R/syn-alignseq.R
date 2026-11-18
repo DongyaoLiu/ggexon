@@ -105,15 +105,23 @@ bind_alignseq_transcripts <- function(data, layers) {
     for (indices in groups) {
       j <- indices[1L]
       target <- targets[j]
+      chromosomes <- unique(as.character(d$source_chr[indices]))
+      chromosomes <- chromosomes[!is.na(chromosomes) & nzchar(chromosomes)]
+      if (length(chromosomes) > 1L)
+        stop("Ambiguous chromosomes for DNA sequence `", d$sequence[j], "`.", call. = FALSE)
       models <- lapply(data[exons], function(e) {
         identity <- e$transcript_id %||% e$transcripts
         visible <- is.finite(e$xmin) & is.finite(e$xmax) & is.finite(e$ymin) & is.finite(e$ymax)
+        if (length(chromosomes) && !is.null(e$source_chr)) {
+          visible <- visible & (is.na(e$source_chr) | e$source_chr == "" | e$source_chr == chromosomes)
+        }
         e[which(visible & e$PANEL == d$PANEL[j] & e$track == d$track[j] & identity == target),
           , drop = FALSE]
       })
       matches <- which(vapply(models, nrow, integer(1)) > 0L)
       if (!length(matches)) stop("No displayed exon geometry for transcript `", target,
-        "` on track `", d$track[j], "`; add a matching exon layer.", call. = FALSE)
+        "` on track `", d$track[j], "`", if (length(chromosomes)) paste0(" on chromosome `", chromosomes, "`"),
+        "; add a matching exon layer.", call. = FALSE)
       if (length(matches) > 1L) stop("Ambiguous displayed exon layers for transcript `",
         target, "`; select one exon layer for this target.", call. = FALSE)
       e <- models[[matches]]

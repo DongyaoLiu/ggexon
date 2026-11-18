@@ -174,3 +174,27 @@ test_that("scale censoring an earlier exon leaves visible transcript attachments
   exon <- subset(b@data[[1]], track == "a" & transcripts == "tx1" & is.finite(xmin))
   expect_equal(unique(d$yend), exon$ymax)
 })
+
+test_that("transcript connectors respect known chromosomes of DNA and exons", {
+  model <- prepared_genomic_fixture("a")
+  build <- function(chr) {
+    anchors <- data.frame(sequence = c("h", "q"), track = "a", strand = "+",
+      start = 200, chr = chr)
+    saved <- prepare_alignseq(model, c(h = "ACTG", q = "AC-G"), anchors, "h",
+      details = c(200, 203), flank = 0)
+    ggexon_build(ggexon(saved) + geom_exon2(compress_introns = FALSE) +
+      geom_alignseq(anchor = "transcript", transcripts = c(a = "tx1")))
+  }
+  expect_error(build("chr2"), "No displayed exon.*tx1.*chr2")
+  expect_equal(unique(build("chr1")@data[[2]]$xend), c(201.5, 201))
+  expect_equal(unique(build(NA_character_)@data[[2]]$xend), c(201.5, 201))
+
+  dna <- query_alignseq(native_dna(dna_pair()), individual = "a")
+  exon <- data.frame(xmin = 190, xmax = 215, ymin = 2, transcripts = "tx1",
+    track = "a", type = "exon", strand = "+", seqnames = "chr2")
+  p <- ggexon(exon, ggplot2::aes(xmin = xmin, xmax = xmax, ymin = ymin,
+    transcripts = transcripts, track = track, type = type, strand = strand)) +
+    geom_exon2(compress_introns = FALSE)
+  expect_error(ggexon_build(p + geom_alignseq(dna, anchor = "transcript",
+    transcripts = c(a = "tx1"))), "No displayed exon.*tx1.*chr1")
+})

@@ -48,6 +48,13 @@ LayerSyn <- ggproto(
       self$computed_mapping <- self$mapping
     }
 
+    # Preserve the native locus for cross-layer geometry matching. Tables
+    # from Syn annotations and explicit tables can use different column names.
+    chr <- intersect(self$geom$chromosome_columns, names(data))
+    if (length(chr)) {
+      self$computed_mapping$source_chr <- rlang::new_quosure(rlang::sym(chr[1L]), rlang::empty_env())
+    }
+
     attr(data, "layout") <- self$layout
     if (!is.null(syn_layout_override)) {
       attr(data, "syn_layout_override") <- syn_layout_override
