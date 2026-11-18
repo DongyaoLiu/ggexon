@@ -1113,9 +1113,9 @@ build_ggexon <- S7::method(ggexon_build, class_ggexon) <- function(plot, ...) {
         data <- .strip_scale_restore_raw_genomic_x(data)
       }
     }
-    data <- bind_alignseq_transcripts(data, layers)
     # Apply position adjustments
     data <- by_layer(function(l, d) l$compute_position(d, layout), layers, data, "computing position")
+    data <- bind_alignseq_transcripts(data, layers)
 
     first_class_coverage <- has_first_class_coverage_panels(layout)
     coverage_bands <- NULL

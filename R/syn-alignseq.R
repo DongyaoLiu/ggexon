@@ -88,6 +88,13 @@ bind_alignseq_transcripts <- function(data, layers) {
   for (i in alignments) {
     d <- data[[i]]
     if (!nrow(d)) next
+    # Position scales may censor bases before geom setup. Only displayed
+    # bases contribute to the midpoint or require a transcript target.
+    d <- d[is.finite(d$x) & is.finite(d$y), , drop = FALSE]
+    if (!nrow(d)) {
+      data[[i]] <- d
+      next
+    }
     params <- layers[[i]]$geom_params
     id <- as.character(d$individual %||% d$track)
     targets <- unname(params$transcripts[id])
@@ -100,14 +107,17 @@ bind_alignseq_transcripts <- function(data, layers) {
       target <- targets[j]
       models <- lapply(data[exons], function(e) {
         identity <- e$transcript_id %||% e$transcripts
-        e[which(e$PANEL == d$PANEL[j] & e$track == d$track[j] & identity == target), , drop = FALSE]
+        visible <- is.finite(e$xmin) & is.finite(e$xmax) & is.finite(e$ymin) & is.finite(e$ymax)
+        e[which(visible & e$PANEL == d$PANEL[j] & e$track == d$track[j] & identity == target),
+          , drop = FALSE]
       })
-      models <- Filter(nrow, models)
-      if (!length(models)) stop("No displayed exon geometry for transcript `", target,
+      matches <- which(vapply(models, nrow, integer(1)) > 0L)
+      if (!length(matches)) stop("No displayed exon geometry for transcript `", target,
         "` on track `", d$track[j], "`; add a matching exon layer.", call. = FALSE)
-      if (length(models) > 1L) stop("Ambiguous displayed exon layers for transcript `",
+      if (length(matches) > 1L) stop("Ambiguous displayed exon layers for transcript `",
         target, "`; select one exon layer for this target.", call. = FALSE)
-      e <- models[[1L]]
+      e <- models[[matches]]
+      position <- layers[[exons[matches]]]$position
       if (length(unique(e$y_middle)) != 1L || length(unique(e$transcripts)) != 1L)
         stop("Ambiguous displayed rows for transcript `", target, "`.", call. = FALSE)
       # Exon2 may compress this particular transcript locally. Interpolate
@@ -123,6 +133,13 @@ bind_alignseq_transcripts <- function(data, layers) {
         raw <- d$x[indices]
         d$x[indices] <- stats::approx(source, display, xout = raw, ties = mean,
           rule = 2)$y + pmin(raw - min(source), 0) + pmax(raw - max(source), 0)
+      } else if (inherits(position, "PositionNudge")) {
+        # With a shared map the bases are already in panel coordinates.
+        # Apply the same display-space offset as the matching feature.
+        nudge <- unique(position$x %||% e$nudge_x %||% 0)
+        if (length(nudge) != 1L || !is.finite(nudge))
+          stop("Transcript anchoring requires a constant horizontal position nudge.", call. = FALSE)
+        d$x[indices] <- d$x[indices] + nudge
       }
       d$y[indices] <- max(e$ymax)
       chunks <- if (params$mode == "rows") list(indices) else split(indices, d$detail_id[indices])

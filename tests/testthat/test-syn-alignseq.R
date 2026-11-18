@@ -145,3 +145,32 @@ test_that("an unknown anchor chromosome requires an unambiguous recipient", {
   expect_equal(unique(as.character(d$track)), "a_second")
   expect_equal(d$x, 200:203)
 })
+
+test_that("transcript connectors follow the displayed exon's position nudge", {
+  model <- native_dna(dna_pair(TRUE))
+  for (shared_scale in c(FALSE, TRUE)) {
+    p <- ggexon(model) +
+      geom_exon2(compress_introns = FALSE, position = ggplot2::position_nudge(x = 3, y = 2)) +
+      geom_alignseq(anchor = "transcript", transcripts = c(a = "tx1", b = "tx2")) +
+      facet_genomics(ggplot2::vars(track))
+    if (shared_scale) p <- p + scale_x_ggexon_genomic(intron_factor = 8, match_by = "track")
+    b <- ggexon_build(p)
+    d <- subset(b@data[[2]], track == "a")
+    exon <- subset(b@data[[1]], track == "a" & transcripts == "tx1" & genomic_xmin > 190)
+    expect_equal(unique(d$xend), exon$xmin + 201.5 - exon$genomic_xmin)
+    expect_equal(unique(d$yend), exon$ymax)
+  }
+})
+
+test_that("scale censoring an earlier exon leaves visible transcript attachments intact", {
+  # One DNA base and the earlier exon fall outside the scale limits.
+  model <- native_dna(dna_pair(TRUE), start = c(198, 300))
+  p <- ggexon(model) + geom_exon2(compress_introns = FALSE) +
+    geom_alignseq(anchor = "transcript", transcripts = c(a = "tx1", b = "tx2")) +
+    ggplot2::scale_x_continuous(limits = c(199, 309)) + facet_genomics(ggplot2::vars(track))
+  b <- ggexon_build(p)
+  d <- subset(b@data[[2]], track == "a" & is.finite(x))
+  expect_equal(unique(d$xend), 200)
+  exon <- subset(b@data[[1]], track == "a" & transcripts == "tx1" & is.finite(xmin))
+  expect_equal(unique(d$yend), exon$ymax)
+})
