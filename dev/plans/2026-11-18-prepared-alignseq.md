@@ -94,8 +94,8 @@ Rd/NAMESPACE files. Preserve the authored roxygen Collate prerequisites.
 - [x] Update figure text and retain the original DNA evidence/provenance.
 - [x] Generate public documentation and expose the new verbs in the website
   function reference.
-- [ ] Render the tutorial, inspect the final image, and run the full test suite.
-- [ ] Install from a clean source build, run an installed tutorial smoke, and
+- [x] Render the tutorial, inspect the final image, and run the full test suite.
+- [x] Install from a clean source build, run an installed tutorial smoke, and
   request final whole-change review; resolve findings before completion.
 
 ## Completion evidence
@@ -103,3 +103,20 @@ Rd/NAMESPACE files. Preserve the authored roxygen Collate prerequisites.
 Record focused red/green results, full test summary, installed smoke, rendered
 figure paths, and review verdict in this plan's local SDD ledger. Final delivery
 must name the new verb/query usage and provide the updated tutorial preview.
+
+## Verified outcome
+
+- Full `devtools::test()` run: 5,279 assertions passed, with zero failures,
+  errors, warnings or skips.
+- Clean tracked-source package build and isolated installation passed; the
+  actual tutorial rendered against the installed package.
+- Rendered connector origins match the displayed E1 geometry, event markers
+  are absent, and human d2d3 is above full length.
+- Known cross-chromosome target mismatches are rejected in the installed
+  package; matching and unspecified chromosome cases have regression tests.
+- The installed tutorial image matches the canonical AS3MT preview exactly.
+- The website, updated article and both new public API pages built successfully.
+- All task reviews and the final whole-change review are approved.
+
+The changes are retained on the local `codex/prepared-alignseq` branch for
+review. The published v1.0.0 tag and original checkout remain unchanged.
