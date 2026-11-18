@@ -3,6 +3,8 @@
 #' Prepare native nucleotide and event rows from two already aligned DNA
 #' strings using [alignseq_data()]. The participating individuals store the
 #' prepared rows and input recipe under the supplied name in [plot_cache()].
+#' Preparing an existing name replaces that alignment across the supplied
+#' object.
 #'
 #' @inheritParams alignseq_data
 #' @param x A SynIndividual or SynSpecies.
@@ -39,16 +41,21 @@ prepare_alignseq <- function(x, aligned, anchors, reference, name = "alignseq",
 
   recipe <- list(aligned = aligned, anchors = anchors, reference = reference,
     regions = regions, details = details, flank = flank, boundaries = boundaries)
-  for (id in ids) {
+  for (id in names(all)) {
     ind <- all[[id]]
-    data <- rows[rows$individual == id, , drop = FALSE]
-    rownames(data) <- NULL
-    ind@plot_cache$alignseq[[name]] <- list(data = data, recipe = recipe)
-    ind@metadata$.ggexon_alignseq[[name]] <- TRUE
+    if (id %in% ids) {
+      data <- rows[rows$individual == id, , drop = FALSE]
+      rownames(data) <- NULL
+      ind@plot_cache[["alignseq"]][[name]] <- list(data = data, recipe = recipe)
+      ind@metadata[[".ggexon_alignseq"]][[name]] <- TRUE
+    } else {
+      ind@plot_cache[["alignseq"]][[name]] <- NULL
+      ind@metadata[[".ggexon_alignseq"]][[name]] <- NULL
+    }
     all[[id]] <- ind
   }
   if (methods::is(x, "SynIndividual")) return(all[[1L]])
-  x@individuals[ids] <- all[ids]
+  x@individuals <- all
   x
 }
 
@@ -93,14 +100,14 @@ query_alignseq <- function(x, name = NULL, individual = NULL, chr = NULL,
   }
 
   name <- .prepared_alignseq_name(selected, name, all)
-  tables <- lapply(selected, function(ind) .prepared_alignseq_entry(ind, name)$data)
-  tables <- Filter(Negate(is.null), tables)
+  entries <- .prepared_alignseq_entries(selected, name)
+  tables <- lapply(entries, `[[`, "data")
   if (!length(tables)) {
     # A named alignment can be present on individuals outside the selection.
     # Use a cached table to preserve the column types for the empty result.
     remaining <- all[setdiff(names(all), names(selected))]
     template <- Filter(Negate(is.null), lapply(remaining, function(ind) {
-      ind@plot_cache$alignseq[[name]]$data
+      ind@plot_cache[["alignseq"]][[name]]$data
     }))
     if (!length(template)) {
       stop("Prepared alignment `", name, "` has a cleared cache; run `prepare_alignseq()` again.",
@@ -128,7 +135,7 @@ query_alignseq <- function(x, name = NULL, individual = NULL, chr = NULL,
 .prepared_alignseq_name <- function(selected, name = NULL, all = selected) {
   candidates <- if (is.null(name)) selected else all
   available <- unique(unlist(lapply(candidates, function(ind) {
-    union(names(ind@plot_cache$alignseq), names(ind@metadata$.ggexon_alignseq))
+    union(names(ind@plot_cache[["alignseq"]]), names(ind@metadata[[".ggexon_alignseq"]]))
   }), use.names = FALSE))
   if (!is.null(name)) {
     .genomic_name(name, "name")
@@ -149,9 +156,22 @@ query_alignseq <- function(x, name = NULL, individual = NULL, chr = NULL,
   available[[1L]]
 }
 
+.prepared_alignseq_entries <- function(selected, name) {
+  entries <- Filter(Negate(is.null), lapply(selected, .prepared_alignseq_entry, name = name))
+  if (length(entries) > 1L) {
+    recipe <- entries[[1L]][["recipe"]]
+    compatible <- vapply(entries, function(entry) identical(entry[["recipe"]], recipe), logical(1))
+    if (!all(compatible)) {
+      stop("Prepared alignment `", name, "` contains incompatible recipes; ",
+        "run `prepare_alignseq()` on the comparison or use distinct names.", call. = FALSE)
+    }
+  }
+  entries
+}
+
 .prepared_alignseq_entry <- function(ind, name) {
-  entry <- ind@plot_cache$alignseq[[name]]
-  if (is.null(entry) && isTRUE(ind@metadata$.ggexon_alignseq[[name]])) {
+  entry <- ind@plot_cache[["alignseq"]][[name]]
+  if (is.null(entry) && isTRUE(ind@metadata[[".ggexon_alignseq"]][[name]])) {
     stop("Prepared alignment `", name, "` has a cleared cache for `", syn_id(ind),
       "`; run `prepare_alignseq()` again.", call. = FALSE)
   }

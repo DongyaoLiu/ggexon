@@ -130,3 +130,52 @@ test_that("a cleared prepared alignment requires preparation again", {
   expect_error(query_alignseq(single, "alignseq"), "cleared cache.*prepare_alignseq")
   expect_equal(nrow(query_alignseq(saved, individual = "ref")), 8)
 })
+
+test_that("preparing the same name replaces all previous participants", {
+  f <- prepared_alignseq_fixture()
+  x <- add_individual(f$x, SynIndividual(id = "third"))
+  initial <- prepare_alignseq(x, f$aligned, f$anchors, "ref_dna", name = "keep")
+  initial <- prepare_alignseq(initial, f$aligned, f$anchors, "ref_dna")
+
+  anchors <- f$anchors
+  anchors$track <- c("other", "third")
+  anchors$start <- c(800, 205)
+  updated <- prepare_alignseq(initial, f$aligned, anchors, "ref_dna")
+  d <- query_alignseq(updated, name = "alignseq")
+  expect_setequal(d$individual, c("other", "third"))
+  expect_equal(d$x[d$individual == "other"][1L], 800)
+  expect_equal(d$x[d$individual == "third"][1L], 205)
+  expect_identical(query_alignseq(updated, individual = "ref"),
+    query_alignseq(initial, name = "keep", individual = "ref"))
+  expect_equal(nrow(query_alignseq(updated, name = "alignseq", individual = "ref")), 0)
+  expect_setequal(query_alignseq(initial, name = "alignseq")$individual, c("other", "ref"))
+})
+
+test_that("a shared name cannot mix independently prepared comparisons", {
+  f <- prepared_alignseq_fixture()
+  a <- prepare_alignseq(SynIndividual(id = "ref"), f$aligned,
+    transform(f$anchors, track = "ref"), "ref_dna")
+  b <- prepare_alignseq(SynIndividual(id = "other"), f$aligned,
+    transform(f$anchors, track = "other"), "query_dna")
+  both <- add_individual(SynSpecies("assembled"), a, b)
+  expect_error(query_alignseq(both), "incompatible.*prepare_alignseq")
+  expect_error(query_alignseq(both, name = "alignseq"), "incompatible.*prepare_alignseq")
+})
+
+test_that("similarly named plot caches and metadata remain independent", {
+  f <- prepared_alignseq_fixture()
+  single <- individuals(f$x)[["ref"]]
+  plot_cache(single) <- list(alignseq_diagnostics = list(fake = "cache"))
+  syn_metadata(single) <- list(.ggexon_alignseq_diagnostics = list(old = "metadata"))
+
+  expect_error(query_alignseq(single), "No prepared alignment")
+  expect_error(query_alignseq(single, name = "fake"), "Unknown prepared alignment")
+  expect_error(query_alignseq(single, name = "old"), "Unknown prepared alignment")
+  saved <- prepare_alignseq(single, f$aligned,
+    transform(f$anchors, track = "ref"), "ref_dna")
+  expect_identical(plot_cache(saved)[["alignseq_diagnostics"]],
+    plot_cache(single)[["alignseq_diagnostics"]])
+  expect_identical(syn_metadata(saved)[[".ggexon_alignseq_diagnostics"]],
+    syn_metadata(single)[[".ggexon_alignseq_diagnostics"]])
+  expect_equal(nrow(query_alignseq(saved)), 16)
+})
