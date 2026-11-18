@@ -48,30 +48,47 @@ highest original identity categories.
 
 ## Prepare reusable annotation views
 
-Prepare the remaining overlays on the same object before plotting:
+Prepare exon labels and store two views of the aligned VNTR DNA on the same
+object. The combined view keeps the full alignment and selects the terminal
+repeat for the callouts. The close-up view selects just the terminal repeat.
 
 ```{r as3mt-prepare}
 as3mt <- prepare_as3mt_example(as3mt)
 
+vntr <- as3mt_evidence(as3mt)$vntr
+donor_boundaries <- data.frame(
+  sequence = names(vntr$donor_after), position = unname(vntr$donor_after),
+  label = "E1 donor | intron 1"
+)
+as3mt <- prepare_alignseq(
+  as3mt, vntr$aligned, vntr$anchors, reference = vntr$reference,
+  name = "as3mt_vntr", regions = vntr$regions, details = vntr$details,
+  flank = vntr$flank, boundaries = donor_boundaries
+)
+as3mt <- prepare_alignseq(
+  as3mt, vntr$aligned, vntr$anchors, reference = vntr$reference,
+  name = "as3mt_vntr_detail", regions = vntr$details, boundaries = donor_boundaries
+)
+
 head(as3mt_plot_data(as3mt, "exon_labels")[,
   c("id", "exon", "start", "end", "label")])
+dna_detail <- query_alignseq(as3mt, name = "as3mt_vntr_detail")
+dna_detail[dna_detail$boundary_after, c("individual", "chr", "position", "boundary_label")]
 ```
 
 `prepare_as3mt_example()` is an example helper. It derives exon labels from
-stored CDS and UTR features, retains full-reference exon numbers, and
-prepares repeat outlines and donor marks. It also runs `alignseq_data()` on
-the stored DNA alignment to prepare sequence rows and difference markers.
-
-`as3mt_plot_data()` reads a named prepared view. Transcript and alignment
-layers use native Syn dispatch; DNA and annotation overlays read their
-prepared views from `as3mt`. The source files are loaded once. Genomic
-positions stay unchanged during preparation; one `scale_x_ggexon_genomic()`
-per plot supplies intron compression for its layers. Run preparation again
-after changing the stored feature models or DNA evidence.
+stored CDS and UTR features and retains full-reference exon numbers.
+`as3mt_plot_data()` retrieves those labels. `prepare_alignseq()` stores
+aligned bases, difference events and donor boundaries under each view name.
+`query_alignseq()` inspects the stored rows in their native genomic
+coordinates. The transcript, alignment and DNA layers resolve their data
+from the Syn object. Refresh the exon labels after editing the feature
+models. Prepare the DNA views again after changing their aligned strings,
+anchors or selected windows.
 
 # Compare the transcript models
 
-Human full-length AS3MT is blue; d2d3 is orange; chimpanzee AS3MT is grey.
+Human d2d3 is orange and sits above full-length AS3MT in blue. Chimpanzee AS3MT is grey.
 Gold identifies E2/E3 in the full-length human model. The reconstructed
 transcript omits these two exons and retains **E1 and
 E4–E11**, including its untranslated first exon.
@@ -96,7 +113,7 @@ introns **30-fold**, preserving exon widths and keeping links and labels
 aligned with the transcript models. Select the `human` and `chimp`
 annotation panels explicitly.
 
-```{r as3mt-pairwise, fig.alt="Human full-length and reconstructed d2d3 transcript rows above chimpanzee AS3MT. Gold E2/E3 in the full-length model are absent from d2d3. Genomic ribbons follow the shared compressed axes.", fig.cap="Transcript models and ungapped DNA similarity. Introns are compressed 30-fold."}
+```{r as3mt-pairwise, fig.alt="The reconstructed human d2d3 row sits above the full-length human model. The full-length model includes gold E2 and E3. Genomic ribbons connect the human and chimpanzee panels on compressed axes.", fig.cap="Transcript models and ungapped DNA similarity. Introns are compressed 30-fold."}
 transcript_plot <- ggexon(as3mt) +
   geom_exon2(
     aes(xmin = xmin - 0.5, xmax = xmax + 0.5, ymin = isoform_y,
@@ -131,7 +148,7 @@ transcript_plot <- ggexon(as3mt) +
   ) +
   scale_panel_annotation("free_y", limits = list(human = c(0.15, 3.1), chimp = c(0.3, 1.8))) +
   labs(x = NULL, y = NULL,
-    caption = "Thick boxes: CDS; thin boxes: UTR. Lower human row: paper-defined d2d3 reconstruction.") +
+    caption = "Thick boxes show CDS and thin boxes show UTR. The upper human row is the d2d3 reconstruction.") +
   theme_ggexon_track(
     base_size = base_size, base_family = base_family,
     show_x_axis = TRUE, show_x_grid = FALSE, show_legend = TRUE
@@ -160,16 +177,15 @@ CCTGAGTCGCAGGCCGAGGAGACA | GTGAGTGCGCGC
          human exon 1  | intron 1
 ```
 
-The aligned strings and genomic anchors are stored in `as3mt`. Preparation
-uses an explicitly named human reference in `alignseq_data()`. A `-` is an
-alignment gap and consumes no genomic base. The donor-anchored alignment,
+The aligned strings and genomic anchors are stored in `as3mt`. The preparation
+uses the specified human reference. A `-` is an alignment gap and consumes
+no genomic base. The donor-anchored alignment,
 verified against the bundled FASTAs, places 72 chimp gap columns opposite
 two human repeat copies.
 
 For a close-up, use two annotation panels and change the windows on a copy
-of the same Syn object.
-`geom_alignseq()` currently requires its prepared table explicitly, so query
-the stored `dna_rows` view. Gene models still resolve from the Syn object:
+of the same Syn object. `geom_alignseq()` reads the named
+`as3mt_vntr_detail` view and connects each sequence to its selected transcript.
 
 ```{r as3mt-alignseq-rows, fig.height=5, fig.alt="Terminal repeat DNA above human and chimpanzee exon-1 models. Aligned bases are grey and mismatches orange. A donor mark divides 24 exonic and 12 intronic bases."}
 sequence_model <- as3mt
@@ -193,7 +209,8 @@ sequence_plot <- ggexon(sequence_model) +
     arrow_width = 1e-8, colour = NA
   ) +
   geom_alignseq(
-    data = as3mt_plot_data(sequence_model, "dna_rows"), mode = "rows",
+    alignment = "as3mt_vntr_detail", mode = "rows",
+    anchor = "transcript", transcripts = c(human = "human_short", chimp = "chimp"),
     colour_scheme = "difference", size = text_mm, family = "mono"
   ) +
   facet_genomics(vars(track), scales = "free_x", ncol = 1,
@@ -217,46 +234,35 @@ and red marks indels. The DNA colours are independent of transcript colours.
 
 # Combine the evidence
 
-Reuse `transcript_plot` and add the stored DNA markers, repeat outlines and donor
-marks. Each species displays its own sequence callout. All genomic anchors
-follow the same scale as the corresponding transcript model:
+Add the terminal-repeat callouts to `transcript_plot` using the
+`as3mt_vntr` preparation. Each connector follows the transcript geometry on
+its compressed genomic axis. The human callout attaches to d2d3 and the
+chimpanzee callout attaches to its single model. `show_markers = FALSE`
+hides event glyphs and their labels while preserving the sequence colours.
 
-Set panel heights in row order: human annotation, genomic links, then
-chimpanzee annotation. The chimpanzee panel is half the human panel's height;
-the link panel keeps its compact height.
+Set panel heights in the order of human annotation, genomic links and
+chimpanzee annotation. The chimpanzee panel is half the height of the human
+panel, and the link panel stays compact.
 
-```{r as3mt-alignseq, warning=FALSE, fig.height=6, fig.alt="Human full-length and reconstructed d2d3 transcript models above chimpanzee AS3MT, with genomic ribbons, purple repeat outlines and species-specific DNA callouts. The chimp deletion marker reads minus 72 bp relative to the selected human reference.", fig.cap="One comparative Syn object supplies transcript structures, genomic links and DNA detail."}
+```{r as3mt-alignseq, warning=FALSE, fig.height=6, fig.alt="Human d2d3 sits above the full-length human model. Genomic ribbons connect the human and chimpanzee panels. DNA callouts attach to d2d3 and the chimpanzee transcript.", fig.cap="One comparative Syn object supplies transcript structures, genomic links and DNA detail."}
 combined_plot <- transcript_plot +
   geom_alignseq(
-    data = as3mt_plot_data(as3mt, "dna_markers"), colour_scheme = "difference",
-    size = text_mm, family = "mono"
-  ) +
-  geom_rect(
-    data = function(model) as3mt_plot_data(model, "repeats"),
-    aes(xmin = start - 0.5, xmax = end + 0.5, ymin = y + 0.08, ymax = y + 0.34),
-    inherit.aes = FALSE, fill = NA, colour = "#CC79A7", linewidth = 0.55
-  ) +
-  geom_segment(
-    data = function(model) as3mt_plot_data(model, "donors"),
-    aes(x = x, xend = x, y = y, yend = yend),
-    inherit.aes = FALSE, colour = "grey20", linewidth = 0.35
+    alignment = "as3mt_vntr", anchor = "transcript",
+    transcripts = c(human = "human_short", chimp = "chimp"),
+    show_markers = FALSE, colour_scheme = "difference", size = text_mm, family = "mono"
   ) +
   scale_panel_annotation("free_y", limits = list(human = c(0.15, 4.1), chimp = c(0.2, 2.8))) +
   theme(panel.heights = grid::unit(c(1, 0.35, 0.5), "null")) +
-  labs(caption = paste(
-    "VNTR units are outlined in purple.",
-    "Chimp −72 bp is relative to the selected human reference; d2d3 is a reconstructed model.",
-    sep = "\n"
-  ))
+  labs(caption = "The chimp sequence is 72 bp shorter than the selected human VNTR reference. d2d3 is reconstructed.")
 combined_plot
 ```
 
 Cai et al. tested otherwise matched **two- and three-repeat human minigenes**;
 three repeats produced more d2d3. This supports repeat-dependent splicing
 regulation, but does not establish sufficiency for the isoform's evolutionary
-origin. The human allele experiment differs by **36 bp**. The figure's **−72 bp**
-marker compares the selected chimp and human references. Two base differences
-in the chimp homolog are sequence context, not demonstrated causal SNVs.
+origin. The human allele experiment differs by **36 bp**. The **−72 bp**
+difference compares the selected chimp and human references. The two base
+differences in the chimp homolog provide sequence context.
 
 # Sources and reproducibility
 

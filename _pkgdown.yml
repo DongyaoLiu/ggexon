@@ -90,6 +90,8 @@ reference:
   - geom_aa_variant
   - geom_alignseq
   - alignseq_data
+  - prepare_alignseq
+  - query_alignseq
   - geom_nuclink
   - geom_synteny_link
   - geom_genelink
