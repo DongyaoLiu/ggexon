@@ -6,18 +6,24 @@ as3mt_syn_fixture <- function() {
   list(model = env$load_as3mt_example(dir), helpers = env, dir = dir)
 }
 
-test_that("AS3MT loads one comparative object with interval-native human coverage", {
+test_that("AS3MT loads one comparative object with human coverage annotation", {
   fixture <- as3mt_syn_fixture()
   model <- fixture$model
   expect_s4_class(model, "SynSpecies")
   expect_setequal(individual_names(model), c("human", "chimp"))
   human <- individuals(model)[["human"]]
   expect_s4_class(get_annotation(human, "gtex_ba9"), "SynBigWigAnnotation")
+  expect_equal(nrow(pairwise_alignment_data(model, "human_chimp")), 37L)
+})
+
+test_that("AS3MT human BigWig coverage retains the source intervals", {
+  skip_on_os("windows") # rtracklayer BigWig I/O is unsupported on Windows.
+  fixture <- as3mt_syn_fixture()
+  human <- individuals(fixture$model)[["human"]]
   source <- utils::read.delim(file.path(fixture$dir, "human-rnaseq-GTEX-15G19.tsv"))
   signal <- as.data.frame(query_signal(get_annotation(human, "gtex_ba9"),
     "chr10", 102869400, 102902000))
   expect_equal(signal[, c("start", "end", "score")], source[, c("start", "end", "score")])
-  expect_equal(nrow(pairwise_alignment_data(model, "human_chimp")), 37L)
 })
 
 test_that("prepared AS3MT views retain transcript and DNA evidence without RNA panels", {

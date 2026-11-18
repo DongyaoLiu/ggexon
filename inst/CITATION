@@ -1,0 +1,22 @@
+citHeader("To cite ggexon and the study that motivated its development:")
+
+bibentry(
+  bibtype = "Manual",
+  title = "ggexon: Harmonizing Visualization of Genomic Synteny Across Genomes",
+  author = person("Dongyao", "Liu"),
+  year = "2026",
+  note = paste("R package version", meta$Version),
+  url = "https://dongyaoliu.github.io/ggexon/"
+)
+
+bibentry(
+  bibtype = "Article",
+  title = "sept-1/zina-1 is an ancient toxin-antidote system in Caenorhabditis elegans",
+  author = c(person("Dongyao", "Liu"), person("Chaogu", "Zheng")),
+  year = "2026",
+  journal = "PLOS Biology",
+  volume = "24",
+  number = "7",
+  pages = "e3003563",
+  doi = "10.1371/journal.pbio.3003563"
+)

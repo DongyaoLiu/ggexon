@@ -1,3 +1,6 @@
 # Preserve the original formatting of the supplied NCBI GenBank snapshots.
 /data-raw/as3mt/handoff/sources/*.gb -whitespace
 /inst/extdata/as3mt/handoff/sources/*.gb -whitespace
+
+# Bundled data and provenance manifests must retain identical bytes on every OS.
+/inst/extdata/** -text

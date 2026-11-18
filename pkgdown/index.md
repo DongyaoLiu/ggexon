@@ -16,11 +16,11 @@ transformations; themes control appearance.
 
 ### **Installation**
 
-`ggexon` is a development package. Install it from GitHub:
+Install the stable 1.0.0 release from GitHub:
 
 ```r
 install.packages("remotes")
-remotes::install_github("DongyaoLiu/ggexon")
+remotes::install_github("DongyaoLiu/ggexon@v1.0.0")
 ```
 
 If your R installation cannot resolve the Bioconductor dependencies,
@@ -163,6 +163,8 @@ retains the gene-slot comparison, plotting code, and source audit trail.
 `ggexon` was developed while visualizing the `sept-1`/`zina-1` toxin-antidote
 locus. If you use the package in your work, please also cite:
 
-> Liu D, Zheng C. sept-1/zina-1 is an Ancient Toxin-Antidote System in
-> Caenorhabditis elegans. bioRxiv. 2025.
-> <https://www.biorxiv.org/content/10.1101/2025.11.28.691152v1>
+> Liu D, Zheng C (2026). sept-1/zina-1 is an ancient toxin-antidote system in
+> Caenorhabditis elegans. PLOS Biology 24(7): e3003563.
+> <https://doi.org/10.1371/journal.pbio.3003563>
+
+Run `citation("ggexon")` for the package and article citations, including BibTeX.
