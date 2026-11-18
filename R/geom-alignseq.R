@@ -29,9 +29,10 @@
 #' @param anchor Connector origin. `"track"` uses the prepared sequence row.
 #'   `"transcript"` uses the displayed exon edge, or the transcript backbone
 #'   between exons. This requires a matching exon layer in [ggexon()].
-#' @param transcripts Named character vector mapping individual IDs to displayed
-#'   transcript IDs for `anchor = "transcript"`. For explicit tables without an
-#'   individual column, use track names.
+#' @param transcripts Named character vector mapping individual IDs to source
+#'   transcript IDs for `anchor = "transcript"`. Source IDs remain usable when
+#'   transcript display labels change. For explicit tables without an individual
+#'   column, use track names and the displayed `transcripts` values.
 #' @param mapping Optional aesthetic overrides. Prepared metadata and x/y/track
 #'   are mapped automatically. Use anchor `track` names matching the annotation
 #'   facet, never a link-panel track.

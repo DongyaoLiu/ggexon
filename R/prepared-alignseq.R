@@ -2,7 +2,7 @@
 #'
 #' Prepare native nucleotide and event rows from two already aligned DNA
 #' strings using [alignseq_data()]. The participating individuals store the
-#' prepared rows and input recipe under the supplied name in [plot_cache()].
+#' prepared rows and input recipe under the supplied name in their `plot_cache` slot.
 #' Preparing an existing name replaces that alignment across the supplied
 #' object.
 #'
