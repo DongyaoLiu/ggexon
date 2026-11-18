@@ -5,6 +5,7 @@ GeomExon <- ggproto("GeomExon", Geom,
                       ggexon_panel_role = "annotation",
                       ggexon_genomic_x_train = TRUE,
                       required_aes = c("ymin", "xmin", "xmax", "transcripts","strand", "track", "type"),
+                      optional_aes = "transcript_id",
                       non_missing_aes = c("linewidth", "shape"),
                       extra_params = c("exon_height", "transcript_backbone_ratio", "transcript_arrow_ratio",
                                        "transcript_arrow_length", "transcript_backbone_fill",
@@ -143,7 +144,7 @@ GeomExon <- ggproto("GeomExon", Geom,
                         context = context
                       )
                     },
-                    syn_default_aes = c("xmin", "xmax", "ymin", "transcripts", "strand", "track", "type", "group")
+                    syn_default_aes = c("xmin", "xmax", "ymin", "transcripts", "transcript_id", "strand", "track", "type", "group")
 )
 
 .apply_transcript_backbone_aes <- function(data, fill = NULL, colour = NULL,

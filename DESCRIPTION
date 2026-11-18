@@ -114,6 +114,7 @@ Collate:
     'subsetting-overview.R'
     'syn-layer.R'
     'prepared-alignseq.R'
+    'syn-alignseq.R'
     'prepared-genomic.R'
     'prepared-gene-lollipop.R'
     'syn-protein-lollipop.R'

@@ -578,7 +578,7 @@ collect_layout_panel_windows <- function(
     individual <- individuals(syn_data)[[species_name]]
     window <- list(
       chr = if (methods::is(individual, "SynIndividual")) {
-        resolve_syn_seqname(individual, xlim_chr[[i]])
+        resolve_syn_seqname_or_raw(individual, xlim_chr[[i]])
       } else {
         xlim_chr[[i]]
       },
@@ -687,6 +687,7 @@ collect_syn_annotation_requests <- function(layer, syn_data, plot_data) {
         identical(layer$geom, GeomGeneBox) ||
         identical(layer$geom, GeomGeneLollipop) ||
         identical(layer$geom, GeomGeneTag) ||
+        identical(layer$geom, GeomAlignseq) ||
         identical(layer$geom, GeomMotif))) {
     return(list())
   }
@@ -706,7 +707,7 @@ collect_syn_annotation_requests <- function(layer, syn_data, plot_data) {
       species = species_name,
       explicit_species = !is.null(params$species),
       chr = params$chr,
-      subset = params$subset
+      subset = if (identical(layer$geom, GeomAlignseq)) NULL else params$subset
     )
   })
 }
