@@ -265,6 +265,9 @@ test_that("preparation queries indexed VCFs on chromosomes with matching records
   Rsamtools::bgzip(fixture$vcf_file, dest = bgzf)
   index <- Rsamtools::indexTabix(bgzf, format = "vcf")
   indexed <- SynVCFAnnotation("population", bgzf, index_file = index)
+  cached <- query_variants(indexed, "chrR", 1L, 536870912L)
+  cached$INFO <- "AF=.75"
+  indexed@region_cache[["chrR:1:536870912"]] <- cached
   ref <- add_annotation(individuals(fixture$x)[["ref"]], indexed)
   fixture$x <- add_individual(fixture$x, ref)
   expect_equal(query_allele_frequency(af_data_prepare(fixture))$af, .25)
@@ -302,4 +305,42 @@ test_that("preparation uses the track of an unloaded ODGI pair", {
     query_allele_frequency(af_data_prepare(fixture))$track,
     "link_graph__query__ref"
   )
+})
+
+test_that("preparation refreshes frequency from the VCF file despite a legacy region cache", {
+  fixture <- af_data_fixture()
+  cached <- query_variants(fixture$vcf, "chrR", 1L, .Machine$integer.max)
+  cached$INFO <- "AF=.75"
+  fixture$vcf@region_cache[["chrR:1:2147483647"]] <- cached
+  ref <- add_annotation(individuals(fixture$x)[["ref"]], fixture$vcf)
+  fixture$x <- add_individual(fixture$x, ref)
+  x <- af_data_prepare(fixture)
+  expect_equal(query_allele_frequency(x)$af, .25)
+
+  writeLines(c(
+    "##fileformat=VCFv4.2",
+    "#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO",
+    "chrR\t101\trs1\tA\tG\t60\tPASS\tAF=.625"
+  ), fixture$vcf_file)
+  expect_error(query_allele_frequency(x), "prepare_allele_frequency")
+  refreshed <- prepare_allele_frequency(x, "population", "snps")
+  expect_equal(query_allele_frequency(refreshed)$af, .625)
+  expect_identical(get_annotation(individuals(refreshed)[["ref"]], "population"), fixture$vcf)
+})
+
+test_that("the preparation registry preserves unrelated species metadata", {
+  for (user_value in list("user notes", list(allele_frequency = list(snps = "user notes")))) {
+    fixture <- af_data_fixture()
+    user_metadata <- list(
+      allele_frequency = user_value,
+      allele_frequency_other = "other notes",
+      .ggexon_allele_frequency_other = "private-looking notes"
+    )
+    fixture$x@metadata <- user_metadata
+
+    expect_error(query_allele_frequency(fixture$x), "No allele-frequency preparations")
+    x <- af_data_prepare(fixture)
+    expect_equal(query_allele_frequency(x)$af, .25)
+    expect_identical(x@metadata[names(user_metadata)], user_metadata)
+  }
 })

@@ -245,7 +245,7 @@ add_snp_annotation <- function(x, annotation) {
   }
   validObject(annotation)
   .snp_alignment(x, annotation)
-  annotation@plot_cache$allele_frequency <- NULL
+  annotation@plot_cache[["allele_frequency"]] <- NULL
   annotations <- snp_annotations(x)
   annotations[[annotation_name(annotation)]] <- annotation
   x@metadata$ggexon_snp_annotations <- annotations

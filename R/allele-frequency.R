@@ -118,22 +118,36 @@
 }
 
 .query_allele_frequency_vcf <- function(vcf, chromosomes) {
-  end <- .Machine$integer.max
   path <- source_file(vcf)
-  if (grepl("\\.gz$", path, ignore.case = TRUE) && !is.na(vcf@index_file) &&
-      nzchar(vcf@index_file) && file.exists(path) && file.exists(vcf@index_file)) {
-    tabix <- Rsamtools::TabixFile(path, index = vcf@index_file)
-    chromosomes <- intersect(chromosomes, Rsamtools::seqnamesTabix(tabix))
-    # scanTabix limits the end of a queried interval to 2^29.
-    end <- 536870912L
+  if (.is_bcf_file(path)) {
+    .abort_unsupported_bcf()
   }
   if (length(chromosomes) == 0L) {
     return(as.data.frame(.vcf_lines_to_dataframe(character())))
   }
-  records <- lapply(chromosomes, function(chr) {
-    as.data.frame(query_variants(vcf, chr, 1L, end))
-  })
-  do.call(rbind, records)
+
+  indexed <- grepl("[.]gz$", path, ignore.case = TRUE) && !is.na(vcf@index_file) &&
+    nzchar(vcf@index_file) && file.exists(path) && file.exists(vcf@index_file)
+  if (indexed) {
+    tabix <- Rsamtools::TabixFile(path, index = vcf@index_file)
+    chromosomes <- intersect(chromosomes, Rsamtools::seqnamesTabix(tabix))
+    if (length(chromosomes) == 0L) {
+      return(as.data.frame(.vcf_lines_to_dataframe(character())))
+    }
+    # Prepare from the current file regardless of compatibility caches.
+    vcf@region_cache <- list()
+    records <- lapply(chromosomes, function(chr) {
+      # scanTabix limits the end of a queried interval to 2^29.
+      as.data.frame(query_variants(vcf, chr, 1L, 536870912L))
+    })
+    return(do.call(rbind, records))
+  }
+
+  lines <- .read_delimited_annotation_lines(path, skip_pattern = "^#")
+  chr_index <- match(sub("\t.*$", "", lines), chromosomes)
+  lines <- lines[order(chr_index, na.last = NA, method = "radix")]
+  records <- as.data.frame(.vcf_lines_to_dataframe(lines))
+  records[which(records$POS >= 1L), , drop = FALSE]
 }
 
 #' Prepare population allele frequencies for a linkage panel
@@ -205,19 +219,21 @@ prepare_allele_frequency <- function(x, vcf, snps, name = "allele_frequency", af
   }
 
   sources <- snp_annotations(x)
-  old_snps <- x@metadata[["allele_frequency"]][[name]]$snps
+  registry <- x@metadata[[".ggexon_allele_frequency"]]
+  old_snps <- registry[[name]]$snps
   if (!is.null(old_snps) && !identical(old_snps, snps) &&
       old_snps %in% names(sources)) {
-    sources[[old_snps]]@plot_cache$allele_frequency[[name]] <- NULL
+    sources[[old_snps]]@plot_cache[["allele_frequency"]][[name]] <- NULL
   }
-  snp@plot_cache$allele_frequency[[name]] <- payload
+  snp@plot_cache[["allele_frequency"]][[name]] <- payload
   sources[[snps]] <- snp
   x@metadata$ggexon_snp_annotations <- sources
-  x@metadata$allele_frequency[[name]] <- list(
+  registry[[name]] <- list(
     snps = snps, vcf = vcf, alignment = snp@alignment, af_field = af_field,
     reference_individual = snp@reference_individual, query_individual = snp@query_individual,
     signatures = signatures, payload_hash = rlang::hash(payload)
   )
+  x@metadata[[".ggexon_allele_frequency"]] <- registry
   if (length(counts) > 0L) {
     warning(
       "Excluded ", nrow(matched$excluded), " VCF rows on the SNP source's reference chromosomes (",
@@ -232,7 +248,7 @@ prepare_allele_frequency <- function(x, vcf, snps, name = "allele_frequency", af
   if (!methods::is(x, "SynSpecies")) {
     stop("Supply a SynSpecies object.", call. = FALSE)
   }
-  registry <- x@metadata[["allele_frequency"]]
+  registry <- x@metadata[[".ggexon_allele_frequency"]]
   if (length(registry) == 0L) {
     stop("No allele-frequency preparations. Run `prepare_allele_frequency()` first.",
          call. = FALSE)
@@ -252,7 +268,7 @@ prepare_allele_frequency <- function(x, vcf, snps, name = "allele_frequency", af
     snp <- .get_snp_annotation(x, entry$snps)
     pair <- .snp_alignment(x, snp)
     vcf <- .allele_frequency_vcf(x, snp, entry$vcf)
-    cached <- snp@plot_cache$allele_frequency[[name]]
+    cached <- snp@plot_cache[["allele_frequency"]][[name]]
     if (identical(entry$alignment, snp@alignment) &&
         identical(entry$reference_individual, snp@reference_individual) &&
         identical(entry$query_individual, snp@query_individual) &&
