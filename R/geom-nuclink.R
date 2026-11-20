@@ -155,6 +155,17 @@ geom_synteny_link <- function(mapping = NULL, data = NULL,
   )
 }
 
+# Link layers use the panel parameters of both source tracks.
+draw_link_layer <- function(self, data, params, layout, coord) {
+  params <- params[intersect(names(params), self$parameters())]
+  panels <- split(data, factor(data$PANEL, levels = layout$layout$PANEL))
+  lapply(panels, function(rows) {
+    if (!nrow(rows)) return(zeroGrob())
+    panel <- as.integer(rows$PANEL[[1L]])
+    inject(self$draw_panel(rows, layout$panel_params, coord, panel, !!!params))
+  })
+}
+
 GeomNucLink <- ggproto("GeomPanel", Geom,
                              required_aes = c("tspecies", "tchr", "tstart", "tend", "strand",
                                               "qspecies", "qchr", "qstart", "qend"),
@@ -226,28 +237,7 @@ GeomNucLink <- ggproto("GeomPanel", Geom,
                                melt_data
                              },
 
-                         draw_layer = function(self, data, params, layout, coord) {
-                         if (empty(data)) {
-                           n <- if (is.factor(data$PANEL)) nlevels(data$PANEL) else 1L
-                           return(rep(list(zeroGrob()), n))
-                         }
-
-                         # Trim off extra parameters
-                         params <- params[intersect(names(params), self$parameters())]
-
-                         if (nlevels(as.factor(data$PANEL)) > 1L) {
-                           data_panels <- split(data, data$PANEL)
-                         } else {
-                           data_panels <- list(data)
-                         }
-
-
-                         lapply(data_panels, function(data) {
-                           if (empty(data)) return(zeroGrob())
-                           panel = data$PANEL[1]
-                           inject(self$draw_panel(data, layout$panel_params, coord, panel, !!!params))
-                         })
-                       },
+                         draw_layer = draw_link_layer,
                        draw_panel = function(data, panel_params, coord, panel, rule = "evenodd",
                                              lineend = "butt", linejoin = "round", linemitre = 10){
                        data <- ggplot2:::fix_linewidth(data, snake_class(self))

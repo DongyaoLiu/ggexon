@@ -1495,3 +1495,36 @@ exports the first model view.
 The [function reference](../reference/index.html) describes individual classes,
 geoms, facets, and scales. The four [biological tutorials](index.html) expand
 these recipes with documented sources.
+
+## Population allele frequencies inside a linkage panel
+
+Attach the population VCF to the individual whose assembly supplied the VCF
+reference coordinates. Import the matching MUMmer correspondence table with
+`SynSNPAnnotation()`, giving the reference individual, the alternate
+individual and their stored pairwise alignment name. Generate this table
+upstream with `show-snps -ClrTHI pair.delta`. The pairwise alignment supplies
+the ribbon. Each accepted difference supplies a reference position and its
+corresponding native position on the alternate assembly.
+
+```{r allele-frequency-workflow, eval=FALSE}
+strains <- strains |>
+  add_snp_annotation(SynSNPAnnotation(
+    "differences", "pair.snps", "reference", "alternate", "assembly_pair"
+  )) |>
+  prepare_allele_frequency("population", "differences", name = "population_AF")
+query_allele_frequency(strains, component = "excluded")
+query_allele_frequency(strains, component = "summary")
+
+# Add to a faceted annotation plot with geom_nuclink(alignment = "assembly_pair").
+geom_allele_frequency(preparation = "population_AF", mapping = aes(colour = af))
+```
+
+Preparation reads one ALT frequency per biallelic SNP from the VCF INFO field
+`AF` (choose another field with `af_field`). Only uniquely matched nucleotide
+differences contribute points. The exclusion table gives a reason for each
+rejected VCF row on the queried chromosomes. A point at AF = 0 touches the
+reference edge, AF = 1 touches the alternate edge, and AF = 0.5 lies halfway
+between the two displayed positions, including when panels use intron
+compression or a reversed x-axis. To run the complete example with tiny
+self-contained inputs, use
+`source(system.file("examples", "allele-frequency.R", package = "ggexon"))`.

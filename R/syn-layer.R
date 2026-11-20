@@ -56,6 +56,28 @@ LayerSyn <- ggproto(
   }
 )
 
+# The facet resolves link tracks before ggplot2's normal aesthetic evaluation.
+# Materialize only the routing columns that the user supplied through mappings.
+LayerAlleleFrequency <- ggproto("LayerAlleleFrequency", LayerSyn,
+  setup_layer = function(self, data, plot) {
+    coord <- plot@coordinates
+    if (!inherits(coord, "CoordCartesian") || inherits(coord, "CoordFlip"))
+      cli::cli_abort("{.fn geom_allele_frequency} requires unflipped Cartesian coordinates.")
+    explicit <- self$mapping
+    if (isTRUE(self$inherit.aes)) {
+      explicit <- ggplot2:::defaults(explicit, plot@mapping)
+    }
+    routing <- intersect(c("track", "tspecies", "qspecies", "tstart", "qstart", "tchr", "qchr"),
+                         names(explicit))
+    data[routing] <- lapply(explicit[routing], rlang::eval_tidy, data = data)
+    explicit[routing] <- syn_identity_mapping(routing)
+    self$mapping <- ggplot2::class_mapping(ggplot2:::defaults(
+      explicit, syn_default_mapping(data, self)
+    ))
+    ggproto_parent(LayerSyn, self)$setup_layer(data, plot)
+  }
+)
+
 is_syn_layer_input <- function(layer, plot_data) {
   (inherits(layer$data, "waiver") &&
      (methods::is(plot_data, "SynSpecies") || methods::is(plot_data, "SynIndividual"))) ||
@@ -712,7 +734,7 @@ collect_syn_annotation_requests <- function(layer, syn_data, plot_data) {
 }
 
 collect_syn_link_requests <- function(layer, syn_data, plot_data) {
-  if (!identical(layer$geom, GeomNucLink)) {
+  if (!identical(ggexon_layer_panel_role(layer), "link")) {
     return(list())
   }
   if (!is_syn_layer_input(layer, plot_data)) {
@@ -720,6 +742,10 @@ collect_syn_link_requests <- function(layer, syn_data, plot_data) {
   }
 
   params <- syn_layer_params(layer)
+  if (identical(layer$geom, GeomAlleleFrequency)) {
+    source <- if (methods::is(layer$data, "SynSpecies")) layer$data else syn_data
+    params$alignment <- .allele_frequency_entry(source, params$preparation)$alignment
+  }
   alignment <- resolve_plot_alignment_name(syn_data, params$alignment)
   alignments <- if (length(alignment) == 0L || is.null(alignment)) NULL else as.character(alignment)
 

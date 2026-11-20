@@ -1,3 +1,11 @@
+# Development version
+
+* Plot biallelic population allele frequencies along linkage ribbons with
+  `geom_allele_frequency()`. Import MUMmer SNP correspondences with
+  `SynSNPAnnotation()`, match them to a reference VCF with
+  `prepare_allele_frequency()`, and inspect matches and exclusions with
+  `query_allele_frequency()`.
+
 # ggexon 1.0.0
 
 First stable release.

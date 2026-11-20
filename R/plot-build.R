@@ -1019,11 +1019,17 @@ build_ggexon <- S7::method(ggexon_build, class_ggexon) <- function(plot, ...) {
     layout$center_annotation_panels <- plot@center_annotation_panels
     data <- layout$setup(data, plot@data, plot@plot_env)
 
+    for (i in seq_along(layers)) {
+      if (identical(layers[[i]]$geom, GeomAlleleFrequency)) {
+        data[[i]] <- .af_filter_panel_windows(data[[i]], layout$layout)
+      }
+    }
+
     # add aesthetics mapping to preserve link-anchor metadata. this is specialized for ggexon
 
     lapply(seq_along(layers), function(i) {
       # only consider link layers
-      if (identical(layers[[i]]$geom, GeomNucLink)){
+      if (identical(ggexon_layer_panel_role(layers[[i]]), "link")) {
         mapping_names <- names(layers[[i]]$computed_mapping)
         available_metadata <- intersect(
           c("target_anchor_y", "query_anchor_y", "t_panel", "q_panel"),
