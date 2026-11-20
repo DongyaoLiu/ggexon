@@ -5,7 +5,7 @@
 \title{Annotate pairwise DNA differences with anchored sequence detail}
 \usage{
 geom_alignseq(
-  data,
+  data = NULL,
   mapping = NULL,
   mode = c("markers", "rows"),
   size = 2.5,
@@ -17,11 +17,20 @@ geom_alignseq(
   ...,
   sequence_position = c("auto", "left", "center", "right"),
   colour_scheme = c("nucleotide", "difference"),
-  difference_colours = c(aligned = "#E6E6E6", mismatch = "#E69F00", indel = "#D73027")
+  difference_colours = c(aligned = "#E6E6E6", mismatch = "#E69F00", indel = "#D73027"),
+  alignment = NULL,
+  species = NULL,
+  chr = NULL,
+  subset = NULL,
+  show_markers = TRUE,
+  anchor = c("track", "transcript"),
+  transcripts = NULL
 )
 }
 \arguments{
-\item{data}{A table returned by \code{\link[=alignseq_data]{alignseq_data()}}. Must be supplied explicitly.
+\item{data}{A table returned by \code{\link[=alignseq_data]{alignseq_data()}}, a Syn object, or NULL to
+use the Syn object supplied to \code{\link[=ggexon]{ggexon()}}. For explicit tables,
+\code{track} identifies the receiving annotation panel.
 Optional \code{boundary_after} (logical) and \code{boundary_label} (character) columns
 mark verified boundaries, such as splice donors, after selected bases in
 the equally spaced sequence detail. These do not alter the DNA strings.}
@@ -72,13 +81,31 @@ Text switches between black and white for readable contrast, assuming a
 white panel background when colours are translucent. With
 \code{background = FALSE}, mismatch and indel colours apply to the letters,
 while aligned letters retain their neutral grey shade.}
+
+\item{alignment}{Name stored by \code{\link[=prepare_alignseq]{prepare_alignseq()}}. Omit when the selected
+individuals have one applicable preparation.}
+
+\item{species, chr, subset}{Optional selectors for Syn input. Select individuals
+or annotation tracks with \code{species}, chromosomes with \code{chr} and an inclusive
+length-two interval in native coordinates with \code{subset}.}
+
+\item{show_markers}{Draw event points and their length labels in marker mode.}
+
+\item{anchor}{Connector origin. \code{"track"} uses the prepared sequence row.
+\code{"transcript"} uses the displayed exon edge, or the transcript backbone
+between exons. This requires a matching exon layer in \code{\link[=ggexon]{ggexon()}}.}
+
+\item{transcripts}{Named character vector mapping individual IDs to source
+transcript IDs for \code{anchor = "transcript"}. Source IDs remain usable when
+transcript display labels change. For explicit tables without an individual
+column, use track names and the displayed \code{transcripts} values.}
 }
 \value{
 A ggplot2 layer using a native annotation geom. Cartesian coordinates
 are required. In ggexon, use with annotation data and \code{\link[=facet_genomics]{facet_genomics()}}.
 }
 \description{
-\code{geom_alignseq()} draws data prepared by \code{\link[=alignseq_data]{alignseq_data()}} on annotation
+\code{geom_alignseq()} draws DNA prepared by \code{\link[=prepare_alignseq]{prepare_alignseq()}} or \code{\link[=alignseq_data]{alignseq_data()}} on annotation
 panels. In marker mode, all nonmatching events in the selected regions are
 drawn; contiguous indels have one marker, labelled with their length. Only
 explicitly selected \code{details} windows receive DNA callouts on their respective annotation panels. Nearby

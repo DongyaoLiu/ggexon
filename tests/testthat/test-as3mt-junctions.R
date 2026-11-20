@@ -56,6 +56,8 @@ test_that("AS3MT can keep junction evidence on the human annotation instead", {
   demo_dir <- system.file("extdata", "as3mt", package = "ggexon")
   env <- new.env(parent = globalenv())
   sys.source(file.path(demo_dir, "load-as3mt-example.R"), envir = env)
+  model <- env$load_as3mt_example(demo_dir)
+  metadata <- S4Vectors::mcols(annotation_data(individuals(model)[["human"]]))
   for (helper in c("plot_as3mt_alignseq", "plot_as3mt_coverage")) {
     result <- env[[helper]](demo_dir, junction_panel = "annotation")
     built <- ggexon_build(result$plot)
@@ -67,7 +69,10 @@ test_that("AS3MT can keep junction evidence on the human annotation instead", {
     expect_length(index, 1L)
     arcs <- built@data[[index]]
     expect_identical(unique(as.integer(arcs$PANEL)), human)
-    expect_equal(arcs$y, c(2.22, 2.22, 2.22, 1.12))
+    targets <- ifelse(result$junctions$event == "inclusion", "human_full", "human_short")
+    expected_y <- metadata$isoform_y[match(targets, metadata$transcript_id)] + .42
+    expect_equal(arcs$y, expected_y)
+    expect_equal(arcs$yend, expected_y)
     expect_equal(result$junctions$reads, c(9L, 10L, 11L, 12L))
     expect_silent(ggplot2::ggplot_gtable(built))
   }

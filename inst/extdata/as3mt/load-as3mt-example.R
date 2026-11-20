@@ -25,7 +25,7 @@ load_as3mt_example <- function(demo_dir = system.file("extdata", "as3mt", packag
     features <- ggexon::annotation_data(individual)
     md <- S4Vectors::mcols(features)
     md$model <- as.character(md$transcript_id)
-    md$isoform_y <- ifelse(md$model == "human_full", 1.8, .7)
+    md$isoform_y <- ifelse(md$model == "human_short", 1.8, .7)
     md$exon_class <- ifelse(md$model == "human_full" & md$exon_number %in% c(2, 3),
       "skipped_exons", md$model)
     S4Vectors::mcols(features) <- md
@@ -71,6 +71,14 @@ as3mt_evidence <- function(model) {
   c(list(comparison = model), as3mt_evidence(model))
 }
 
+.as3mt_model_rows <- function(model) {
+  rows <- do.call(rbind, lapply(model@individuals, function(individual) {
+    md <- S4Vectors::mcols(ggexon::annotation_data(individual))
+    unique(data.frame(id = as.character(md$transcript_id), y = md$isoform_y))
+  }))
+  stats::setNames(rows$y, rows$id)
+}
+
 plot_as3mt_example <- function(example, intron_factor = 30, base_size = 8, base_family = "serif",
                                link_data = NULL, junction_evidence = FALSE) {
   stopifnot(is.numeric(intron_factor), length(intron_factor) == 1L, intron_factor > 0)
@@ -81,17 +89,22 @@ plot_as3mt_example <- function(example, intron_factor = 30, base_size = 8, base_
   palette <- c(palette, stats::setNames(scales::pal_viridis()(length(bands)), bands))
   lab <- example$exons
   lab$track <- ifelse(lab$id == "chimp", "chimp", "human")
+  row_y <- .as3mt_model_rows(example$comparison)
+  lab$isoform_y <- unname(row_y[lab$id])
   lab$x <- (lab$start + lab$end) / 2
-  lab$y <- ifelse(lab$id == "human_full", 2.45, 1.35)
+  lab$y <- lab$isoform_y + .65
   lab$y[lab$exon == 2] <- lab$y[lab$exon == 2] + .25
   lab$label <- paste0("E", lab$exon)
   if (isTRUE(junction_evidence)) {
     # The first two introns are very narrow after compression. Put E2 below
     # its exon so its name does not overlap the counted inclusion arcs.
-    lab$y[lab$id == "human_full" & lab$exon == 2] <- 1.6
+    lab$y[lab$id == "human_full" & lab$exon == 2] <- row_y[["human_full"]] - .2
   }
+  short_y <- row_y[["human_short"]]
   ghosts <- lab[lab$id == "human_full" & lab$exon %in% c(2, 3), ]
-  junction <- data.frame(track = "human", x = 102870950, y = .35, label = "E1 → E4")
+  ghosts$ymin <- short_y - .1
+  ghosts$ymax <- short_y + .3
+  junction <- data.frame(track = "human", x = 102870950, y = short_y - .35, label = "E1 → E4")
   attr(junction, "ggexon_panel_role") <- "annotation"
   text_mm <- base_size / (72.27 / 25.4)
   plot <- ggexon::ggexon(example$comparison) +
@@ -103,7 +116,7 @@ plot_as3mt_example <- function(example, intron_factor = 30, base_size = 8, base_
     ggplot2::geom_text(data = lab, ggplot2::aes(x = x, y = y, label = label),
       inherit.aes = FALSE, family = base_family, size = text_mm) +
     ggplot2::geom_rect(data = ghosts, ggplot2::aes(xmin = start - .5, xmax = end + .5,
-      ymin = .6, ymax = 1), inherit.aes = FALSE, fill = NA, colour = palette[["human_short"]],
+      ymin = ymin, ymax = ymax), inherit.aes = FALSE, fill = NA, colour = palette[["human_short"]],
       linetype = "dashed", linewidth = .3) +
     ggplot2::geom_text(data = junction, ggplot2::aes(x = x, y = y, label = label),
       inherit.aes = FALSE, family = base_family, size = text_mm, colour = palette[["human_short"]]) +
@@ -167,7 +180,8 @@ as3mt_rnaseq_data <- function(demo_dir, junction_panel = c("coverage", "annotati
     justification <- c("E1-E2" = 1.5, "E2-E3" = 0, "E3-E4" = 1, "E1-E4" = .5)
     junctions$label_hjust <- unname(justification[keys])
   } else {
-    junctions$y <- ifelse(junctions$event == "skipping", 1.12, 2.22)
+    target <- ifelse(junctions$event == "skipping", "human_short", "human_full")
+    junctions$y <- unname(.as3mt_model_rows(model)[target]) + .42
     junctions$yend <- junctions$y
     junctions$height <- c(.3, .7, .4, .4)
     junctions$label_hjust <- .5

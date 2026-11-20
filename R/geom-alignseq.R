@@ -1,6 +1,6 @@
 #' Annotate pairwise DNA differences with anchored sequence detail
 #'
-#' `geom_alignseq()` draws data prepared by [alignseq_data()] on annotation
+#' `geom_alignseq()` draws DNA prepared by [prepare_alignseq()] or [alignseq_data()] on annotation
 #' panels. In marker mode, all nonmatching events in the selected regions are
 #' drawn; contiguous indels have one marker, labelled with their length. Only
 #' explicitly selected `details` windows receive DNA callouts on their respective annotation panels. Nearby
@@ -14,10 +14,25 @@
 #' Each panel displays only its own sequence in the supplied orientation.
 #' Markers describe the query relative to the reference, not evolutionary change.
 #'
-#' @param data A table returned by [alignseq_data()]. Must be supplied explicitly.
+#' @param data A table returned by [alignseq_data()], a Syn object, or NULL to
+#'   use the Syn object supplied to [ggexon()]. For explicit tables,
+#'   `track` identifies the receiving annotation panel.
 #'   Optional `boundary_after` (logical) and `boundary_label` (character) columns
 #'   mark verified boundaries, such as splice donors, after selected bases in
 #'   the equally spaced sequence detail. These do not alter the DNA strings.
+#' @param alignment Name stored by [prepare_alignseq()]. Omit when the selected
+#'   individuals have one applicable preparation.
+#' @param species,chr,subset Optional selectors for Syn input. Select individuals
+#'   or annotation tracks with `species`, chromosomes with `chr` and an inclusive
+#'   length-two interval in native coordinates with `subset`.
+#' @param show_markers Draw event points and their length labels in marker mode.
+#' @param anchor Connector origin. `"track"` uses the prepared sequence row.
+#'   `"transcript"` uses the displayed exon edge, or the transcript backbone
+#'   between exons. This requires a matching exon layer in [ggexon()].
+#' @param transcripts Named character vector mapping individual IDs to source
+#'   transcript IDs for `anchor = "transcript"`. Source IDs remain usable when
+#'   transcript display labels change. For explicit tables without an individual
+#'   column, use track names and the displayed `transcripts` values.
 #' @param mapping Optional aesthetic overrides. Prepared metadata and x/y/track
 #'   are mapped automatically. Use anchor `track` names matching the annotation
 #'   facet, never a link-panel track.
@@ -59,25 +74,56 @@
 #'   are required. In ggexon, use with annotation data and [facet_genomics()].
 #' @seealso [alignseq_data()], [geom_exon2()], [scale_x_ggexon_genomic()]
 #' @export
-geom_alignseq <- function(data, mapping = NULL, mode = c("markers", "rows"),
+geom_alignseq <- function(data = NULL, mapping = NULL, mode = c("markers", "rows"),
                           size = 2.5, family = "mono", background = TRUE,
                           max_columns = 60, na.rm = FALSE, show.legend = FALSE, ...,
                           sequence_position = c("auto", "left", "center", "right"),
                           colour_scheme = c("nucleotide", "difference"),
                           difference_colours = c(aligned = "#E6E6E6",
-                            mismatch = "#E69F00", indel = "#D73027")) {
+                            mismatch = "#E69F00", indel = "#D73027"),
+                          alignment = NULL, species = NULL, chr = NULL, subset = NULL,
+                          show_markers = TRUE, anchor = c("track", "transcript"),
+                          transcripts = NULL) {
   mode <- match.arg(mode)
   sequence_position <- match.arg(sequence_position)
   colour_scheme <- match.arg(colour_scheme)
   if (colour_scheme == "difference") .alignseq_validate_difference_colours(difference_colours)
-  fields <- c("x", "y", "track", "sequence", "reference", "query", "column", "base",
-    "reference_base", "query_base", "event_type", "event_id", "event_length", "detail_id")
-  if (missing(data) || !is.data.frame(data) || !all(fields %in% names(data)))
-    stop("Supply a table prepared by alignseq_data().", call. = FALSE)
+  anchor <- match.arg(anchor)
+  if (!is.logical(show_markers) || length(show_markers) != 1L || is.na(show_markers))
+    stop("Supply one logical value for show_markers.", call. = FALSE)
+  if (anchor == "transcript" && (!is.character(transcripts) || !length(transcripts) ||
+      is.null(names(transcripts)) || anyNA(names(transcripts)) || any(!nzchar(names(transcripts))) ||
+      anyDuplicated(names(transcripts)) || anyNA(transcripts) || any(!nzchar(transcripts))))
+    stop("Supply transcripts as a named character vector mapping individuals to transcript IDs.", call. = FALSE)
   if (!is.numeric(size) || length(size) != 1L || !is.finite(size) || size <= 0)
     stop("size must be positive.", call. = FALSE)
   if (!is.numeric(max_columns) || length(max_columns) != 1L || !is.finite(max_columns) || max_columns < 1)
     stop("max_columns must be positive.", call. = FALSE)
+  if (!is.null(subset) && (!is.numeric(subset) || length(subset) != 2L || any(!is.finite(subset))))
+    stop("Supply a finite length-two genomic subset.", call. = FALSE)
+  if (!is.null(chr) && (!is.character(chr) || anyNA(chr) || any(!nzchar(chr))))
+    stop("Supply chromosome names for chr.", call. = FALSE)
+  fields <- GeomAlignseq$syn_default_aes
+  defaults <- mapping
+  if (is.data.frame(data)) {
+    required <- setdiff(fields, c("boundary_after", "boundary_label", "individual"))
+    if (!all(required %in% names(data))) stop("Supply a table prepared by alignseq_data().", call. = FALSE)
+    .alignseq_validate_chunks(data, mode, max_columns)
+    if (!"boundary_after" %in% names(data)) data$boundary_after <- rep(FALSE, nrow(data))
+    if (!"boundary_label" %in% names(data)) data$boundary_label <- rep("", nrow(data))
+    defaults <- syn_identity_mapping(intersect(fields, names(data)))
+    for (nm in names(mapping)) defaults[[nm]] <- mapping[[nm]]
+  }
+  ggplot2::layer(data = data, mapping = defaults, stat = "identity", position = "identity",
+    geom = GeomAlignseq, layer_class = LayerSyn, inherit.aes = FALSE, show.legend = show.legend,
+    params = list(max_columns = max_columns, alignment = alignment, species = species, chr = chr, subset = subset,
+      show_markers = show_markers, anchor = anchor, transcripts = transcripts, mode = mode, sequence_position = sequence_position,
+      colour_scheme = colour_scheme, difference_colours = difference_colours,
+      size = size, family = family, background = background,
+      na.rm = na.rm, ...))
+}
+
+.alignseq_validate_chunks <- function(data, mode, max_columns) {
   groups <- if (mode == "rows") split(data$column, data$sequence) else
     split(data$column, interaction(data$sequence, data$detail_id, drop = TRUE))
   if (mode == "rows" && any(vapply(groups, function(x)
@@ -85,29 +131,25 @@ geom_alignseq <- function(data, mapping = NULL, mode = c("markers", "rows"),
     stop("Row mode requires a contiguous window; plot disjoint regions separately.", call. = FALSE)
   if (any(vapply(groups, function(x) length(unique(x)) > max_columns, logical(1))))
     stop("Sequence detail exceeds max_columns; select narrower regions or details.", call. = FALSE)
-  if (!"boundary_after" %in% names(data)) data$boundary_after <- rep(FALSE, nrow(data))
-  if (!"boundary_label" %in% names(data)) data$boundary_label <- rep("", nrow(data))
-  fields <- c(fields, "boundary_after", "boundary_label")
-  defaults <- ggplot2::aes(!!!stats::setNames(lapply(fields, rlang::sym), fields))
-  for (nm in names(mapping)) defaults[[nm]] <- mapping[[nm]]
-  ggplot2::layer(data = data, mapping = defaults, stat = "identity", position = "identity",
-    geom = GeomAlignseq, inherit.aes = FALSE, show.legend = show.legend,
-    params = list(mode = mode, sequence_position = sequence_position,
-      colour_scheme = colour_scheme, difference_colours = difference_colours,
-      size = size, family = family, background = background,
-      na.rm = na.rm, ...))
 }
 
 GeomAlignseq <- ggplot2::ggproto("GeomAlignseq", ggplot2::Geom,
   ggexon_panel_role = "annotation",
+  syn_data = function(x, layer) syn_alignseq_data(x, layer),
+  syn_default_aes = c("x", "y", "track", "individual", "sequence", "reference", "query",
+    "column", "base", "reference_base", "query_base", "event_type", "event_id",
+    "event_length", "detail_id", "boundary_after", "boundary_label"),
   required_aes = c("x", "y"),
-  optional_aes = c("track", "sequence", "reference", "query", "column", "base",
+  chromosome_columns = c("chr", "seqnames"),
+  optional_aes = c("source_chr", "track", "individual", "sequence", "reference", "query", "column", "base",
     "reference_base", "query_base", "event_type", "event_id", "event_length", "detail_id",
     "boundary_after", "boundary_label"),
   default_aes = ggplot2::aes(colour = "grey20", alpha = NA),
-  extra_params = c("na.rm", "mode", "sequence_position", "colour_scheme",
-    "difference_colours", "size", "family", "background"),
+  extra_params = c("max_columns", "na.rm", "mode", "sequence_position", "colour_scheme",
+    "difference_colours", "size", "family", "background", "alignment", "species", "chr",
+    "subset", "anchor", "transcripts", "show_markers"),
   setup_data = function(data, params) {
+    data <- data[!is.na(data$column), , drop = FALSE]
     # Reserve vertical space for callouts without adding synthetic x positions.
     count <- length(unique(stats::na.omit(data$detail_id)))
     data$ymin <- data$y - .15
@@ -117,13 +159,16 @@ GeomAlignseq <- ggplot2::ggproto("GeomAlignseq", ggplot2::Geom,
   },
   draw_key = ggplot2::draw_key_point,
   draw_panel = function(data, panel_params, coord, mode = "markers", size = 2.5,
-                        family = "mono", background = TRUE, na.rm = FALSE,
+                        family = "mono", background = TRUE, na.rm = FALSE, show_markers = TRUE,
+                        anchor = "track",
                         sequence_position = "auto", colour_scheme = "nucleotide",
                         difference_colours = c(aligned = "#E6E6E6",
                           mismatch = "#E69F00", indel = "#D73027")) {
     if (!nrow(data)) return(grid::zeroGrob())
     if (!inherits(coord, "CoordCartesian") || inherits(coord, "CoordFlip"))
       stop("geom_alignseq() requires unflipped Cartesian coordinates.", call. = FALSE)
+    if (anchor == "transcript" && !"yend" %in% names(data))
+      stop("Use ggexon() with a displayed exon layer for transcript anchoring.", call. = FALSE)
     grobs <- list()
     stem_grobs <- list()
     # Multiple sequence tracks can share an annotation panel; each y row is independent.
@@ -132,7 +177,7 @@ GeomAlignseq <- ggplot2::ggproto("GeomAlignseq", ggplot2::Geom,
     for (d in tracks) {
       d <- d[order(d$column), , drop = FALSE]
       base_y <- d$y[1]
-      if (mode == "markers") {
+      if (mode == "markers" && show_markers) {
         ev <- d[!is.na(d$event_id), , drop = FALSE]
         if (nrow(ev)) {
           ev <- do.call(rbind, lapply(split(ev, ev$event_id), function(e) {
@@ -169,7 +214,7 @@ GeomAlignseq <- ggplot2::ggproto("GeomAlignseq", ggplot2::Geom,
         chunk <- chunk[!duplicated(chunk$column), , drop = FALSE]
         n <- nrow(chunk)
         width <- min(.70, max(.16, n * .027))
-        anchor_x <- mean(range(chunk$x))
+        anchor_x <- if (anchor == "transcript") chunk$xend[1] else mean(range(chunk$x))
         anchor_fraction <- coord$transform(data.frame(x = anchor_x, y = base_y), panel_params)$x
         candidates <- .alignseq_position_candidates(width, anchor_fraction, sequence_position)
         lane <- 1L
@@ -188,7 +233,7 @@ GeomAlignseq <- ggplot2::ggproto("GeomAlignseq", ggplot2::Geom,
         occupied[[lane]][[length(occupied[[lane]]) + 1L]] <- c(left - .19, right)
         y0 <- base_y + .7 + (lane - 1) * .65
         xs <- from_fraction(left + (seq_len(n) - .5) * width / n)
-        connectors <- data.frame(x = anchor_x, y = base_y + .23,
+        connectors <- data.frame(x = anchor_x, y = if (anchor == "transcript") chunk$yend[1] else base_y + .23,
           xend = from_fraction(centre), yend = y0 - .15,
           colour = "grey60", linewidth = .25, linetype = 1, alpha = NA)
         curves <- .generate_lollipop_stems(connectors$x, connectors$y,

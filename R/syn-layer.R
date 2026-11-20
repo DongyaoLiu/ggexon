@@ -48,6 +48,13 @@ LayerSyn <- ggproto(
       self$computed_mapping <- self$mapping
     }
 
+    # Preserve the native locus for cross-layer geometry matching. Tables
+    # from Syn annotations and explicit tables can use different column names.
+    chr <- intersect(self$geom$chromosome_columns, names(data))
+    if (length(chr)) {
+      self$computed_mapping$source_chr <- rlang::new_quosure(rlang::sym(chr[1L]), rlang::empty_env())
+    }
+
     attr(data, "layout") <- self$layout
     if (!is.null(syn_layout_override)) {
       attr(data, "syn_layout_override") <- syn_layout_override
@@ -644,7 +651,7 @@ collect_layout_panel_windows <- function(
     individual <- individuals(syn_data)[[species_name]]
     window <- list(
       chr = if (methods::is(individual, "SynIndividual")) {
-        resolve_syn_seqname(individual, xlim_chr[[i]])
+        resolve_syn_seqname_or_raw(individual, xlim_chr[[i]])
       } else {
         xlim_chr[[i]]
       },
@@ -753,6 +760,7 @@ collect_syn_annotation_requests <- function(layer, syn_data, plot_data) {
         identical(layer$geom, GeomGeneBox) ||
         identical(layer$geom, GeomGeneLollipop) ||
         identical(layer$geom, GeomGeneTag) ||
+        identical(layer$geom, GeomAlignseq) ||
         identical(layer$geom, GeomMotif))) {
     return(list())
   }
@@ -772,7 +780,7 @@ collect_syn_annotation_requests <- function(layer, syn_data, plot_data) {
       species = species_name,
       explicit_species = !is.null(params$species),
       chr = params$chr,
-      subset = params$subset
+      subset = if (identical(layer$geom, GeomAlignseq)) NULL else params$subset
     )
   })
 }
