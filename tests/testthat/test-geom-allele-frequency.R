@@ -1,5 +1,5 @@
 af_points_plot <- function(rows, reversed = FALSE, reverse_x = NULL, compressed = FALSE,
-                           mapping = NULL) {
+                           mapping = NULL, point_params = list(), xlim = NULL) {
   order <- c("ref", "link_pair", "query")
   if (reversed) order <- rev(order)
   rows$track <- factor(rows$track, levels = order)
@@ -11,10 +11,10 @@ af_points_plot <- function(rows, reversed = FALSE, reverse_x = NULL, compressed 
   p <- ggexon() +
     geom_exon2(data = exons, ggplot2::aes(xmin = xmin, xmax = xmax, ymin = 1,
       transcripts = track, strand = "+", track = track, type = "exon"),
-      annotation_type = "all", compress_introns = FALSE) +
-    geom_allele_frequency(mapping, rows) +
+      annotation_type = "all", compress_introns = FALSE, na.rm = TRUE) +
+    do.call(geom_allele_frequency, c(list(mapping = mapping, data = rows), point_params)) +
     facet_genomics(ggplot2::vars(track), scales = "free_x", ncol = 1,
-                   reverse_x = reverse_x, reverse_x_match_by = "track") +
+                   reverse_x = reverse_x, reverse_x_match_by = "track", xlim = xlim) +
     ggplot2::scale_x_continuous(expand = c(0, 0))
   if (compressed) p <- p + scale_x_ggexon_genomic(intron_factor = 10)
   p
@@ -69,20 +69,51 @@ test_that("ordinary point scales control grob size shape and colour", {
   expect_length(unique(pts$gp$col), 4)
 })
 
+test_that("fixed point styles can vary by original SNP", {
+  p <- af_points_plot(af_geom_rows(), point_params = list(
+    colour = c("red", "blue", "green", "black"), size = 1:4, shape = 21:24,
+    fill = c("yellow", "purple", "white", "grey"), alpha = c(1, .5, 1, .5),
+    stroke = 1:4
+  ))
+  pts <- af_drawn_points(p)[[1]]
+  expect_equal(pts$gp$col, c("#FF0000", "#0000FF80", "#00FF00", "#00000080"))
+  expect_equal(pts$gp$fill, c("#FFFF00", "#A020F080", "#FFFFFF", "#BEBEBE80"))
+  expect_equal(pts$pch, 21:24)
+  expect_true(all(diff(pts$gp$fontsize - pts$gp$lwd) > 0))
+  expect_true(all(diff(pts$gp$lwd) > 0))
+  expect_equal(af_drawn_points(p)[[1]]$gp, pts$gp)
+})
+
+test_that("facet window filtering retains the surviving SNPs' fixed colours", {
+  rows <- af_geom_rows()
+  rows$tstart <- rows$tend <- c(20L, 40L, 60L, 80L)
+  p <- af_points_plot(rows, point_params = list(colour = c("red", "blue", "green", "black")),
+                      xlim = list(ref = c(30, 70)))
+
+  pts <- af_drawn_points(p)[[1]]
+  expect_equal(pts$gp$col, c("#0000FF", "#00FF00"))
+  expect_equal(as.numeric(pts$y), c(.75, .5))
+})
+
+test_that("fixed style vectors must match the number of original SNPs", {
+  p <- af_points_plot(af_geom_rows(), point_params = list(colour = rep("red", 16)))
+  expect_error(ggexon_build(p), "number of SNPs")
+})
+
 test_that("invalid frequencies fail at build time", {
   rows <- af_geom_rows()
   rows$af[2] <- 2
   expect_error(ggexon_build(af_points_plot(rows)), "Allele frequency must be numeric")
 })
 
-af_implicit_plot <- function(x, preparation = NULL, ...) {
+af_implicit_plot <- function(x, preparation = NULL, ..., point_params = list()) {
   genes <- data.frame(xmin = c(1, 800), xmax = c(90, 1200), track = c("ref", "query"))
   ggexon(x) +
     geom_exon2(data = genes, ggplot2::aes(xmin = xmin, xmax = xmax, ymin = 1,
       transcripts = track, strand = "+", track = track, type = "exon"),
-      annotation_type = "all", compress_introns = FALSE) +
+      annotation_type = "all", compress_introns = FALSE, na.rm = TRUE) +
     geom_nuclink(alignment = "pair") +
-    geom_allele_frequency(preparation = preparation) +
+    do.call(geom_allele_frequency, c(list(preparation = preparation), point_params)) +
     facet_genomics(ggplot2::vars(track), scales = "free_x", ncol = 1, ...)
 }
 
@@ -102,11 +133,44 @@ test_that("stored preparations route to their alignment and respect panel window
   expect_length(af_drawn_points(p), 0)
 })
 
+test_that("stored SNPs keep their fixed colours when selecting a chromosome window", {
+  fixture <- af_data_fixture(
+    sprintf("%d\tA\tG\t901\t1\t1\t2000\t2000\t1\t1\tchrR\tchrQ", c(20, 40, 60, 80)),
+    sprintf("chrR\t%d\t.\tA\tG\t.\tPASS\tAF=%s", c(20, 40, 60, 80), c(0, .25, .5, 1))
+  )
+  gtf <- withr::local_tempfile(fileext = ".gtf")
+  writeLines(sprintf('%s\ttest\texon\t1\t2000\t.\t+\t.\tgene_id "g"; transcript_id "t";',
+                     c("chrR", "chrQ")), gtf)
+  ref <- add_annotation(SynIndividual(id = "ref", annotation_file = gtf), fixture$vcf)
+  fixture$x <- add_individual(fixture$x, ref, SynIndividual(id = "query", annotation_file = gtf))
+  p <- af_implicit_plot(af_data_prepare(fixture),
+    xlim = list(ref = c(30, 70), query = c(800, 1200)),
+    xlim_chr = list(ref = "chrR", query = "chrQ"),
+    point_params = list(colour = c("red", "blue", "green", "black"))
+  )
+  pts <- af_drawn_points(p)[[1]]
+  expect_equal(pts$gp$col, c("#0000FF", "#00FF00"))
+  expect_equal(as.numeric(pts$y), c(.75, .5))
+})
+
 test_that("valid empty preparations draw no points", {
   fixture <- af_data_fixture(vcf_rows = "chrR\t101\t.\tA\tT\t.\tPASS\tAF=0.25")
   expect_warning(x <- af_data_prepare(fixture), "allele_mismatch")
   expect_no_warning(pts <- af_drawn_points(af_implicit_plot(x)))
   expect_length(pts, 0)
+})
+
+test_that("a constant track mapping on empty explicit data draws no points", {
+  rows <- af_geom_rows()[FALSE, ]
+  p <- af_points_plot(rows, mapping = ggplot2::aes(track = "link_pair"))
+
+  expect_no_warning(pts <- af_drawn_points(p))
+  expect_length(pts, 0L)
+})
+
+test_that("a routing mapping must supply one value or one per original SNP", {
+  p <- af_points_plot(af_geom_rows(), mapping = ggplot2::aes(track = c("link_pair", "link_pair")))
+  expect_error(ggexon_build(p), "recycle.*track.*size 2.*size 4")
 })
 
 test_that("missing panels and unsupported coordinates are reported explicitly", {

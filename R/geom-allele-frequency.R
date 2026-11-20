@@ -43,7 +43,7 @@ GeomAlleleFrequency <- ggproto("GeomAlleleFrequency", ggplot2::GeomPoint,
 
   syn_data = function(x, layer) {
     entry <- .allele_frequency_entry(x, syn_layer_params(layer)$preparation)
-    rows <- entry$variants
+    rows <- .af_index_style_rows(entry$variants, layer$aes_params)
     if (!nrow(rows)) return(rows)
     windows <- layer$syn_plot_context$windows
     for (side in c("t", "q")) {
@@ -75,6 +75,9 @@ GeomAlleleFrequency <- ggproto("GeomAlleleFrequency", ggplot2::GeomPoint,
     vertices <- GeomNucLink$setup_data(data, params)
     vertices$af <- data$af[vertices$id]
     vertices$reference_is_target <- data$reference_is_target[vertices$id]
+    if (".ggexon_af_row" %in% names(data)) {
+      vertices$.ggexon_af_row <- data$.ggexon_af_row[vertices$id]
+    }
     vertices
   },
 

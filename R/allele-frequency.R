@@ -26,7 +26,7 @@
 }
 
 .allele_frequency_track <- function(pair) {
-  tracks <- unique(as.character(pair@data$track))
+  tracks <- unique(as.character(pair@data[["track"]]))
   if (length(tracks) == 0L) {
     label <- alignment_name(pair)
     if (is.null(pair@data) && alignment_format(pair) == "odgi") {

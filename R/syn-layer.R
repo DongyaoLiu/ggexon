@@ -56,6 +56,28 @@ LayerSyn <- ggproto(
   }
 )
 
+.af_vector_styles <- function(params) {
+  styles <- intersect(names(ggplot2::GeomPoint$default_aes), names(params)[lengths(params) > 1L])
+  params[styles]
+}
+
+# Store original row indices before either context or facet window filtering.
+.af_index_style_rows <- function(data, params) {
+  styles <- .af_vector_styles(params)
+  if (length(styles)) {
+    n <- nrow(data)
+    invalid <- names(styles)[lengths(styles) != n]
+    if (length(invalid)) {
+      cli::cli_abort(c(
+        "Fixed point styles must have length 1 or the number of SNPs ({n}).",
+        "x" = "Check {.field {invalid}}."
+      ))
+    }
+    data$.ggexon_af_row <- seq_len(n)
+  }
+  data
+}
+
 # The facet resolves link tracks before ggplot2's normal aesthetic evaluation.
 # Materialize only the routing columns that the user supplied through mappings.
 LayerAlleleFrequency <- ggproto("LayerAlleleFrequency", LayerSyn,
@@ -69,12 +91,34 @@ LayerAlleleFrequency <- ggproto("LayerAlleleFrequency", LayerSyn,
     }
     routing <- intersect(c("track", "tspecies", "qspecies", "tstart", "qstart", "tchr", "qchr"),
                          names(explicit))
-    data[routing] <- lapply(explicit[routing], rlang::eval_tidy, data = data)
+    data[routing] <- lapply(routing, function(aesthetic) {
+      value <- rlang::eval_tidy(explicit[[aesthetic]], data = data)
+      vctrs::vec_recycle(value, nrow(data), x_arg = aesthetic)
+    })
+    if (!is_syn_layer_input(self, plot@data)) {
+      data <- .af_index_style_rows(data, self$aes_params)
+    }
     explicit[routing] <- syn_identity_mapping(routing)
     self$mapping <- ggplot2::class_mapping(ggplot2:::defaults(
       explicit, syn_default_mapping(data, self)
     ))
     ggproto_parent(LayerSyn, self)$setup_layer(data, plot)
+  },
+  compute_aesthetics = function(self, data, plot) {
+    evaluated <- ggproto_parent(LayerSyn, self)$compute_aesthetics(data, plot)
+    if (".ggexon_af_row" %in% names(data)) {
+      evaluated$.ggexon_af_row <- data$.ggexon_af_row
+    }
+    evaluated
+  },
+  compute_geom_2 = function(self, data, params = self$aes_params, ...) {
+    # Keep vector styles as fixed parameters so they bypass scales and guides.
+    if (".ggexon_af_row" %in% names(data)) {
+      styles <- .af_vector_styles(params)
+      params[names(styles)] <- lapply(styles, vctrs::vec_slice, i = data$.ggexon_af_row)
+      data$.ggexon_af_row <- NULL
+    }
+    ggproto_parent(LayerSyn, self)$compute_geom_2(data, params, ...)
   }
 )
 

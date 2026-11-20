@@ -78,6 +78,15 @@ test_that("stored alignment order determines columns while AF stays reference-re
   expect_equal(variants$af, 0.25)
 })
 
+test_that("a cached track_id column does not set the alignment track", {
+  fixture <- af_data_fixture()
+  fixture$pair@data$track_id <- "internal_17"
+  fixture$x <- add_pairwise_alignment(fixture$x, fixture$pair)
+
+  expect_identical(pairwise_alignment_data(fixture$pair)$track, "link_pair")
+  expect_identical(query_allele_frequency(af_data_prepare(fixture))$track, "link_pair")
+})
+
 test_that("invalid VCF rows are retained with one warning summarizing exclusions", {
   fixture <- af_data_fixture(c(
     "101\tA\tG\t901\t101\t101\t2000\t2000\t1\t1\tchrR\tchrQ",
