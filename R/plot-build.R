@@ -1432,6 +1432,9 @@ link_panel_height_unit <- function(link_panel_height) {
 link_panel_type <- function(layout_df) {
   if ("panel_type" %in% names(layout_df)) {
     panel_type <- as.character(layout_df$panel_type)
+  } else if (all(c("tspecies", "qspecies") %in% names(layout_df))) {
+    has_endpoints <- !is.na(layout_df$tspecies) & !is.na(layout_df$qspecies)
+    panel_type <- ifelse(has_endpoints, "link", "annotation")
   } else {
     panel_type <- rep(NA_character_, nrow(layout_df))
   }

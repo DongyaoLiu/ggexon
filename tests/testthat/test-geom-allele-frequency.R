@@ -127,3 +127,37 @@ test_that("alternate endpoint column names provide the facet its routing inputs"
     tspecies = target, qspecies = query, tstart = target_pos, qstart = query_pos)))
   expect_equal(as.numeric(pts[[1]]$x), c(.2,.3375,.475,.75))
 })
+
+for (track in c("link_pair", "population ribbon")) {
+  test_that(paste("explicit ribbon and point layers share one panel named", track), {
+    rows <- af_geom_rows()[2L, ]
+    reference <- if (track == "link_pair") "ref" else "ref_link_assembly"
+    rows$tspecies <- reference
+    rows$track <- factor(track, levels = c(reference, track, "query"))
+    annotations <- data.frame(track = factor(rep(c(reference, "query"), each = 2),
+      levels = c(reference, track, "query")), x = c(0, 100, 1000, 1400))
+    ribbon <- rows
+    ribbon$tstart <- 10
+    ribbon$tend <- 30
+    ribbon$qstart <- 1290
+    ribbon$qend <- 1310
+    p <- ggexon() +
+      ggplot2::geom_blank(data = annotations, ggplot2::aes(x = x, y = 1)) +
+      geom_nuclink(data = ribbon, ggplot2::aes(
+        tspecies = tspecies, qspecies = qspecies, tstart = tstart, tend = tend,
+        qstart = qstart, qend = qend, tchr = tchr, qchr = qchr, strand = strand)) +
+      geom_allele_frequency(data = rows) +
+      facet_genomics(ggplot2::vars(track), ncol = 1, scales = "free_x") +
+      ggplot2::scale_x_continuous(expand = c(0, 0))
+    b <- ggexon_build(p)
+    panels <- b@layout$layout
+    expect_equal(as.character(panels$track), c(reference, track, "query"))
+    expect_equal(link_panel_type(panels), c("annotation", "link", "annotation"))
+    expect_equal(nrow(b$data[[2]]), 4L)
+    expect_equal(nrow(b$data[[3]]), 4L)
+    points <- af_drawn_points(p)
+    expect_length(points, 1L)
+    expect_equal(as.numeric(points[[1]]$x), .3375)
+    expect_equal(as.numeric(points[[1]]$y), .75)
+  })
+}

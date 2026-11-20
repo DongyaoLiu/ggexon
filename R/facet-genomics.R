@@ -472,7 +472,7 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
       standard_layout <- if (annotation_scale_specified) {
         .compute_role_aware_standard_genomics_layout(data, params, self)
       } else {
-        .compute_standard_genomics_layout(data, params, self)
+        .raw_link_panel_metadata(.compute_standard_genomics_layout(data, params, self), data)
       }
       if (.has_facet_panel_xlim(params)) {
         return(
@@ -525,6 +525,7 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
       return(layout_null())
     }
     standard_layout <- .compute_standard_genomics_layout(data, params, self)
+    standard_layout <- .raw_link_panel_metadata(standard_layout, data)
     .apply_manual_facet_panel_xlim_to_layout(standard_layout, params)
   },
 
@@ -594,20 +595,8 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
   # source annotation panels it should borrow x ranges from.
   compute_alignment_layout = function(self, data, layout){
 
-    # compuate link data panel number
-    species_aln_list = lapply(data, function(df){
-      if("tspecies" %in% colnames(df)){
-        species_df = unique(df[ ,c("tspecies", "qspecies", "track")])
-      }
-    })
-    species_aln_list <- do.call(rbind, Filter(Negate(is.null), species_aln_list))
-
-    # PANEL ROW COL track SCALE_X SCALE_Y tspecies qspecies
-    layout2 = left_join(layout, species_aln_list, join_by(track == track))
-
-    # Sort each column so link panels sit between the annotation panels they
-    # connect, rather than where wrap-layout ordering happened to place them.
-    split_by_col = split(layout2, layout2$COL)
+    # Sort each column so link panels sit between their annotation panels.
+    split_by_col <- split(layout, layout$COL)
 
     split_by_col = lapply(split_by_col, function(df){
       if (nrow(df) == 0L) {
@@ -615,14 +604,14 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
       }
 
       df$.row_id <- seq_len(nrow(df))
+      is_link_row <- link_panel_type(df) == "link"
       annotation_rows <- df[
-        !stringr::str_detect(df$track, "link"),
+        !is_link_row,
         c("track", ".row_id"),
         drop = FALSE
       ]
 
       sort_key <- df$.row_id
-      is_link_row <- stringr::str_detect(df$track, "link")
 
       if (nrow(annotation_rows) > 0L && any(is_link_row)) {
         upper_pos <- pmin(
@@ -669,17 +658,13 @@ FacetGenomics <- ggproto("FacetGenomics", FacetWrap,
   # upper vs lower edge of the link panel.
   map_link_direction = function(self, data, layout){
 
-    link_rows <- if ("panel_type" %in% names(layout)) {
-      link_panel_type(layout) == "link"
-    } else {
-      stringr::str_detect(layout$track, "link")
-    }
+    link_rows <- link_panel_type(layout) == "link"
     link_rows[is.na(link_rows)] <- FALSE
     link_layout = layout[link_rows, , drop = FALSE]
 
 
     link_y_list = list()
-    for (i in 1:nrow(link_layout)) {
+    for (i in seq_len(nrow(link_layout))) {
       link_index = match(link_layout$PANEL[i], layout$PANEL)
 
 
@@ -1579,6 +1564,20 @@ synspecies_chain_layout <- function(x,
   }, logical(1)))
 }
 
+# Standard data-frame facets have no stored panel roles. Retain the actual
+# endpoint metadata so all later layout and scale steps use the same roles.
+.raw_link_panel_metadata <- function(layout, data) {
+  if (!"track" %in% names(layout)) return(layout)
+  pairs <- unique(.link_pairs_from_layers(data)[c("track", "tspecies", "qspecies")])
+  if (anyDuplicated(pairs$track)) {
+    cli::cli_abort("Each link track must identify one target/query pair.")
+  }
+  index <- match(layout$track, pairs$track)
+  layout$tspecies <- pairs$tspecies[index]
+  layout$qspecies <- pairs$qspecies[index]
+  layout
+}
+
 .link_pairs_from_layers <- function(data) {
   pair_rows <- lapply(data, function(df) {
     if (!is.data.frame(df) || !all(c("track", "tspecies", "qspecies") %in% names(df))) {
@@ -2266,7 +2265,7 @@ synspecies_chain_layout <- function(x,
 
   annotation_rows <- layout[
     !is.na(layout$track) &
-      !stringr::str_detect(layout$track, "link") &
+      link_panel_type(layout) == "annotation" &
       !duplicated(layout$track),
     c("track", "PANEL"),
     drop = FALSE

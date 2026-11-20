@@ -162,13 +162,8 @@ Layout2 <- ggproto("Layout2", Layout,
 
     # This is ggexon-specific: if link panels are present, let the facet
     # reorder panels and annotate the layout with source-panel metadata.
-    layout_has_link <- "track" %in% colnames(self$layout) && if (
-      "panel_type" %in% colnames(self$layout)
-    ) {
+    layout_has_link <- "track" %in% names(self$layout) &&
       any(link_panel_type(self$layout) == "link", na.rm = TRUE)
-    } else {
-      any(stringr::str_detect(self$layout$track, "link"), na.rm = TRUE)
-    }
     if (layout_has_link) {
       if (!"panel_type" %in% colnames(self$layout)) {
         self$layout <- self$facet$compute_alignment_layout(data, self$layout)
