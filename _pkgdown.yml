@@ -53,6 +53,7 @@ reference:
   - SynIndividual
   - SynFeatureAnnotation
   - SynVCFAnnotation
+  - SynSNPAnnotation
   - SynBigWigAnnotation
   - SynProteinDomainAnnotation
   - SynProteinMutationAnnotation
@@ -89,6 +90,7 @@ reference:
   - geom_mutation_label
   - geom_aa_variant
   - geom_alignseq
+  - geom_allele_frequency
   - alignseq_data
   - prepare_alignseq
   - query_alignseq
@@ -131,6 +133,7 @@ reference:
   - add_individual
   - add_individuals_from_folder
   - add_annotation
+  - add_snp_annotation
   - add_interproscan_annotation
   - add_protein_mutation_annotation
   - add_pairwise_alignment
@@ -167,6 +170,8 @@ reference:
   - protein_seq
   - query_features
   - query_variants
+  - query_snps
+  - query_allele_frequency
   - query_annotation
   - query_signal
   - query_domains
@@ -184,6 +189,7 @@ reference:
   - reference_species
   - query_species
   - homology_annotations
+  - snp_annotations
   - read_protein_mutation_counts
 
 - title: Subset, filter, and curate objects
@@ -225,6 +231,7 @@ reference:
 - title: Plot-ready data helpers
   desc: Convert Syn and tabular data into shapes consumed by ggexon layers.
   contents:
+  - prepare_allele_frequency
   - protein_lollipop_data
   - protein_mutation_data
   - syn_gr_to_exon_df
